@@ -1,0 +1,58 @@
+---
+type: workflow
+version: 1
+name: Publish Charts
+inputs:
+  parameters:
+    COMMIT:
+      default: "%%session.commit%%"
+    REPO:
+      default: "%%session.repo%%"
+steps:
+- CHECKOUT:
+    template: argo-checkout
+- PREPARE:
+    image: ruby
+    resources:
+      mem_mib: 500
+      cpu_cores: 0.1
+    command: ["sh", "-c"]
+    args: [ruby /src/scripts/publish.rb]
+    inputs:
+      artifacts:
+        CODE:
+          from: "%%steps.CHECKOUT.outputs.artifacts.CODE%%"
+          path: /src
+    outputs:
+      artifacts:
+        CODE:
+          path: /src/output
+- PUBLISH:
+    image: argoproj/argoscm:v2.0
+    command: ["sh", "-c"]
+    args: [
+      axscm clone %%inputs.parameters.REPO%% --commit gh-pages /src && cd /src && cp -r /output/* . &&
+      git add . && git commit -m "Build on `date`" &&
+      axscm clone %%inputs.parameters.REPO%% /src --commit gh-pages --merge=gh-pages --push]
+    resources:
+      mem_mib: 500
+      cpu_cores: 0.1
+    inputs:
+      artifacts:
+        CODE:
+          from: "%%steps.PREPARE.outputs.artifacts.CODE%%"
+          path: /output
+
+---
+type: policy
+version: 1
+name: Publish Charts Policy
+template: Publish Charts
+notifications:
+- when:
+  - on_failure
+  whom:
+  - committer
+  - author
+when:
+- event: on_push
