@@ -12,12 +12,12 @@ steps:
 - CHECKOUT:
     template: argo-checkout
 - PREPARE:
-    image: ruby
+    image: hypnoglow/kubernetes-helm:v2.6.1
     resources:
       mem_mib: 500
       cpu_cores: 0.1
     command: ["sh", "-c"]
-    args: [ruby /src/scripts/publish.rb]
+    args: [cd /src && helm init --client-only && ./scripts/publish.sh]
     inputs:
       artifacts:
         CODE:
