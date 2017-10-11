@@ -1,0 +1,21 @@
+replicaCount: 1
+image:
+  repository: argoproj/argo-lite
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  name: nginx
+  type: ClusterIP
+  externalPort: 8080
+  internalPort: 8080
+ingress:
+  enabled: false
+  hosts:
+    - chart-example.local
+resources:
+  limits:
+   cpu: 100m
+   memory: 512Mi
+  requests:
+   cpu: 100m
+   memory: 512Mi
