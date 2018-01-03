@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.controllerName}}-configmap
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  config: |
+    artifactRepository:
+{{ if .Values.installMinio }}
+      s3:
+        accessKeySecret:
+          key: accesskey
+          name: {{ .Release.Name }}-minio-user
+        bucket: {{ .Values.minioBucketName }}
+        endpoint: {{ .Release.Name }}-minio-svc:9000
+        insecure: true
+        secretKeySecret:
+          key: secretkey
+          name: {{ .Release.Name }}-minio-user
+{{ end }}
+    executorImage: "{{ .Values.imagesNamespace }}/{{ .Values.executorImage }}:{{ .Values.imagesTag }}"
