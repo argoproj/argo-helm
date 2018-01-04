@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ci
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-ci
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: ci
+          image: "{{ .Values.imageNamespace }}/{{ .Values.ciImage }}:{{ .Values.imageTag }}"
+          env:
+          - name: IN_CLUSTER
+            value: "true"
+          - name: NAMESPACE
+            value: 'default'
+          - name: ARGO_CI_IMAGE
+            value: {{ .Values.imageNamespace }}/{{ .Values.ciImage }}
+          ports:
+          - containerPort: 8001
+          - containerPort: 8002
