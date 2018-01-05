@@ -8,7 +8,11 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   config: |
+{{ if .Values.useReleaseAsInstanceID }}
+    instanceID: {{ .Release.Name }}
+{{ else }}
     instanceID: {{ .Values.instanceID }}
+{{ end }}
     artifactRepository:
 {{ if .Values.installMinio }}
       s3:
