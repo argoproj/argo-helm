@@ -23,6 +23,8 @@ spec:
             value: 'default'
           - name: ARGO_CI_IMAGE
             value: {{ .Values.imageNamespace }}/{{ .Values.ciImage }}
+          - name: CONTROLLER_INSTANCE_ID
+            value: {{ .Release.Name }}
           ports:
           - containerPort: 8001
           - containerPort: 8002
