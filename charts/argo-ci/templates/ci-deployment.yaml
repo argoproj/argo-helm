@@ -22,7 +22,7 @@ spec:
           - name: NAMESPACE
             value: 'default'
           - name: ARGO_CI_IMAGE
-            value: {{ .Values.imageNamespace }}/{{ .Values.ciImage }}
+            value: "{{ .Values.imageNamespace }}/{{ .Values.ciImage }}:{{ .Values.imageTag }}"
           - name: CONTROLLER_INSTANCE_ID
             value: {{ .Release.Name }}
           ports:
