@@ -18,14 +18,14 @@ data:
       s3:
         {{- if .Values.useStaticCredentials }}
         accessKeySecret:
-          key: {{ .Values.artifactAccessKeySecret }}
-          name: {{ .Values.artifactSecretName | default (printf "%s-%s" .Release.Name "minio-user") }}
+          key: {{ .Values.artifactRepository.s3.accessKeySecret.key }}
+          name: {{ .Values.artifactRepository.s3.accessKeySecret.name | default (printf "%s-%s" .Release.Name "minio-user") }}
         secretKeySecret:
-          key: {{ .Values.artifactSecretKeySecret }}
-          name: {{ .Values.artifactSecretName | default (printf "%s-%s" .Release.Name "minio-user") }}
+          key: {{ .Values.artifactRepository.s3.secretKeySecret.key }}
+          name: {{ .Values.artifactRepository.s3.secretKeySecret.name | default (printf "%s-%s" .Release.Name "minio-user") }}
         {{- end }}
-        bucket: {{ .Values.artifactBucketName | default .Values.minioBucketName }}
-        endpoint: {{ .Values.artifactEndpoint | default (printf "%s-%s" .Release.Name "minio-svc:9000") }}
-        insecure: {{ .Values.artifactInsecure }}
+        bucket: {{ .Values.artifactRepository.s3.bucket | default .Values.minioBucketName }}
+        endpoint: {{ .Values.artifactRepository.s3.endpoint | default (printf "%s-%s" .Release.Name "minio-svc:9000") }}
+        insecure: {{ .Values.artifactRepository.s3.insecure }}
       {{- end}}
     executorImage: "{{ .Values.imagesNamespace }}/{{ .Values.executorImage }}:{{ .Values.imagesTag }}"
