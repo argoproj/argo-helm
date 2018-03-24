@@ -1,29 +1,31 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controllerName}}-configmap
+  name: {{ .Release.Name }}-{{ .Values.controllerName }}-configmap
   labels:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
   config: |
-{{ if .Values.useReleaseAsInstanceID }}
+    {{- if .Values.useReleaseAsInstanceID }}
     instanceID: {{ .Release.Name }}
-{{ else }}
+    {{- else }}
     instanceID: {{ .Values.instanceID }}
-{{ end }}
+    {{- end }}
     artifactRepository:
-{{ if .Values.installMinio }}
+      {{- if or .Values.installMinio .Values.useDefaultArtifactRepo }}
       s3:
+        {{- if .Values.useStaticCredentials }}
         accessKeySecret:
-          key: accesskey
-          name: {{ .Release.Name }}-minio-user
-        bucket: {{ .Values.minioBucketName }}
-        endpoint: {{ .Release.Name }}-minio-svc:9000
-        insecure: true
+          key: {{ .Values.artifactRepository.s3.accessKeySecret.key }}
+          name: {{ .Values.artifactRepository.s3.accessKeySecret.name | default (printf "%s-%s" .Release.Name "minio-user") }}
         secretKeySecret:
-          key: secretkey
-          name: {{ .Release.Name }}-minio-user
-{{ end }}
+          key: {{ .Values.artifactRepository.s3.secretKeySecret.key }}
+          name: {{ .Values.artifactRepository.s3.secretKeySecret.name | default (printf "%s-%s" .Release.Name "minio-user") }}
+        {{- end }}
+        bucket: {{ .Values.artifactRepository.s3.bucket | default .Values.minioBucketName }}
+        endpoint: {{ .Values.artifactRepository.s3.endpoint | default (printf "%s-%s" .Release.Name "minio-svc:9000") }}
+        insecure: {{ .Values.artifactRepository.s3.insecure }}
+      {{- end}}
     executorImage: "{{ .Values.imagesNamespace }}/{{ .Values.executorImage }}:{{ .Values.imagesTag }}"

@@ -14,4 +14,4 @@ spec:
   selector:
     app: {{ .Release.Name }}-{{ .Values.uiName}}
   sessionAffinity: None
-  type: LoadBalancer
+  type: {{ .Values.uiServiceType }}
