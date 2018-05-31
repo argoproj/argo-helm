@@ -1,19 +1,27 @@
-imagesNamespace: argoproj
-controllerImage: workflow-controller
-uiImage: argoui
-executorImage: argoexec
-imagesTag: v2.1.1
-controllerName: workflow-controller
+images:
+  namespace: argoproj
+  controller: workflow-controller
+  ui: argoui
+  executor: argoexec
+  tag: v2.1.1
 
-# Enables ability to SSH into pod using web UI
-enableWebConsole: false
-uiName: ui
-uiServiceType: LoadBalancer
+controller:
+  serviceAccount: argo
+  name: workflow-controller
+  workflowNamespaces: 
+    - default
+  # If set to true then chart set controller instance id to release name
+  useReleaseAsInstanceID: false
+  instanceID:
+
+ui:
+  name: ui
+  serviceType: LoadBalancer
+  serviceAccount: argo-ui
+  # Enables ability to SSH into pod using web UI
+  enableWebConsole: false
+
 crdVersion: v1alpha1
-
-# If set to true then chart set controller instance id to release name
-useReleaseAsInstanceID: false
-instanceID:
 
 useDefaultArtifactRepo: false
 useStaticCredentials: true
@@ -21,12 +29,6 @@ useStaticCredentials: true
 # If set to true then chart installs minio and generate according artifactRepository section in workflow controller config map
 installMinio: true
 minioBucketName: argo-artifacts
-
-workflowServiceAccount: argo
-uiServiceAccount: argo-ui
-
-workflowNamespaces:
-  - default
 
 artifactRepository:
   s3:
