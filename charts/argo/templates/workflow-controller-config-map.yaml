@@ -6,7 +6,7 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    namespace: {{ .Release.namespace }}
+    namespace: {{ .Release.Namespace }}
 data:
   config: |
     {{- if .Values.controller.useReleaseAsInstanceID }}
@@ -15,7 +15,7 @@ data:
     instanceID: {{ .Values.controller.instanceID }}
     {{- end }}
     artifactRepository:
-      {{- if or .Values.installMinio .Values.useDefaultArtifactRepo }}
+      {{- if or .Values.minio.install .Values.useDefaultArtifactRepo }}
       s3:
         {{- if .Values.useStaticCredentials }}
         accessKeySecret:
@@ -25,7 +25,7 @@ data:
           key: {{ .Values.artifactRepository.s3.secretKeySecret.key }}
           name: {{ .Values.artifactRepository.s3.secretKeySecret.name | default (printf "%s-%s" .Release.Name "minio-user") }}
         {{- end }}
-        bucket: {{ .Values.artifactRepository.s3.bucket | default .Values.minioBucketName }}
+        bucket: {{ .Values.artifactRepository.s3.bucket | default .Values.minio.defaultBucket.name }}
         endpoint: {{ .Values.artifactRepository.s3.endpoint | default (printf "%s-%s" .Release.Name "minio-svc:9000") }}
         insecure: {{ .Values.artifactRepository.s3.insecure }}
       {{- end}}
