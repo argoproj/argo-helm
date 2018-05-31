@@ -11,7 +11,7 @@ controller:
   workflowNamespaces: 
     - default
   # If set to true then chart set controller instance id to release name
-  useReleaseAsInstanceID: false
+  useReleaseAsInstanceID: true
   instanceID:
 
 ui:
@@ -27,13 +27,18 @@ useDefaultArtifactRepo: false
 useStaticCredentials: true
 
 # If set to true then chart installs minio and generate according artifactRepository section in workflow controller config map
-installMinio: true
-minioBucketName: argo-artifacts
+minio:
+  # This is not used by the subchart, but makes sense to group here.
+  install: true
+  defaultBucket:
+    enabled: true
+    name: argo-artifacts
 
 artifactRepository:
   s3:
+    #default minio creds
     accessKeySecret:
-      key: accesskey
+      key: AKIAIOSFODNN7EXAMPLE
     secretKeySecret:
-      key: secretkey
+      key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
     insecure: true
