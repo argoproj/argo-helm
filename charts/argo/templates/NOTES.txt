@@ -11,7 +11,7 @@ kubectl get services -o wide | grep {{ .Release.Name }}-{{ .Values.uiName }}
 
 {{ if .Values.installMinio }}
 
-3. Access Minio UI and create bucket '{{ .Values.minioBucketName }}'. Minio UI is available on port 9000 and available via external URL. URL might be retrieved using following
+3. Access Minio UI and create bucket '{{ .Values.minio.defaultBucket.name }}'. Minio UI is available on port 9000 and available via external URL. URL might be retrieved using following
 command:
 
 kubectl get services -o wide | grep {{ .Release.Name }}-minio-svc
