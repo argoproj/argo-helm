@@ -1,21 +1,22 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.uiName}}
+  name: {{ .Release.Name }}-{{ .Values.ui.name}}
   labels:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    namspace: {{ .Release.Namespace }}
 spec:
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-{{ .Values.uiName}}
+        app: {{ .Release.Name }}-{{ .Values.ui.name}}
         release: {{ .Release.Name }}
     spec:
       containers:
         - name: ui
-          image: "{{ .Values.imagesNamespace }}/{{ .Values.uiImage }}:{{ .Values.imagesTag }}"
+          image: "{{ .Values.images.namespace }}/{{ .Values.images.ui }}:{{ .Values.images.tag }}"
           env:
           - name: IN_CLUSTER
             value: "true"

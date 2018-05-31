@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Release.name }}-{{ .Values.controllerName}}-cluster-role
+  name: {{ .Release.name }}-{{ .Values.controller.name}}-cluster-role
 rules:
 - apiGroups:
   - ""

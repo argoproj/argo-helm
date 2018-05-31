@@ -1,24 +1,25 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controllerName}}
+  name: {{ .Release.Name }}-{{ .Values.controller.name}}
   labels:
-    app: {{ .Release.Name }}-{{ .Values.controllerName}}
+    app: {{ .Release.Name }}-{{ .Values.controller.name}}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
+    namespace: {{ .Release.Namespace }}
     heritage: {{ .Release.Service }}
 spec:
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-{{ .Values.controllerName}}
+        app: {{ .Release.Name }}-{{ .Values.controller.name}}
         release: {{ .Release.Name }}
     spec:
       containers:
         - name: controller
-          image: "{{ .Values.imagesNamespace }}/{{ .Values.controllerImage }}:{{ .Values.imagesTag }}"
+          image: "{{ .Values.images.namespace }}/{{ .Values.images.controller }}:{{ .Values.images.tag }}"
           command: [ "workflow-controller" ]
-          args: ["--configmap", "{{ .Release.Name }}-{{ .Values.controllerName}}-configmap"]
+          args: ["--configmap", "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"]
           env:
           - name: ARGO_NAMESPACE
             valueFrom:
