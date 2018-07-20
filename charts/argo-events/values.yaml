@@ -1,0 +1,25 @@
+registry: argoproj
+imagePullPolicy: Always
+
+# Version of the Sensor CRD
+crdVersion: v1alpha1
+
+# If set to true then chart set controller instance id to release name
+useReleaseAsInstanceID: true
+instanceID: 1
+
+# controller
+controller:
+  name: sensor-controller
+  image: sensor-controller
+  tag: latest
+  replicaCount: 1
+  serviceAccount: argo-events
+
+# signal microservices
+signals:
+  serviceAccount: argo-signals
+  # this controls what the resource signal pod can listen to
+  listenRoles:
+    apiGroups: ["argoproj.io", ""]
+    resources: ["sensors", "workflows", "pods"]
