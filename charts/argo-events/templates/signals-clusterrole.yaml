@@ -1,0 +1,11 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Release.name }}-signals-cluster-role
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["watch", "list", "patch"]
+- apiGroups: {{ .Values.signals.listenRoles.apiGroups }}
+  resources: {{ .Values.signals.listenRoles.resources }}
+  verbs: ["get", "list", "watch"]
