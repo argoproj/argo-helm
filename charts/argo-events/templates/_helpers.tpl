@@ -28,7 +28,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
       "kind": "Sensor",
       "listKind": "SensorList",
       "plural": "sensors",
-      "singular": "sensor",
+      "singular": "sensor"
     },
     "scope": "Namespaced",
     "version": "v1alpha1"
