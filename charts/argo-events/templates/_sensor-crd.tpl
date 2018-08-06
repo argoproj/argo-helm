@@ -11,7 +11,7 @@
       "kind": "Sensor",
       "listKind": "SensorList",
       "plural": "sensors",
-      "singular": "sensor",
+      "singular": "sensor"
     },
     "scope": "Namespaced",
     "version": "v1alpha1"
