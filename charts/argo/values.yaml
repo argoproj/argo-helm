@@ -29,7 +29,7 @@ useStaticCredentials: true
 # If set to true then chart installs minio and generate according artifactRepository section in workflow controller config map
 minio:
   # This is not used by the subchart, but makes sense to group here.
-  install: true
+  install: false
   defaultBucket:
     enabled: true
     name: argo-artifacts
