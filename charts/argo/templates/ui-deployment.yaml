@@ -17,6 +17,7 @@ spec:
       annotations:
 {{ toYaml .Values.ui.podAnnotations | indent 8}}{{- end }}
     spec:
+      serviceAccountName: {{ .Values.ui.serviceAccount | quote }}
       containers:
         - name: ui
           image: "{{ .Values.images.namespace }}/{{ .Values.images.ui }}:{{ .Values.images.tag }}"

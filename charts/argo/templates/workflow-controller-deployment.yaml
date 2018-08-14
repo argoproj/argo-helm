@@ -18,7 +18,7 @@ spec:
       annotations:
 {{ toYaml .Values.controller.podAnnotations | indent 8}}{{- end }}
     spec:
-      serviceAccountName: {{ .Values.controller.serviceAccount }}
+      serviceAccountName: {{ .Values.controller.serviceAccount | quote }}
       containers:
         - name: controller
           image: "{{ .Values.images.namespace }}/{{ .Values.images.controller }}:{{ .Values.images.tag }}"
