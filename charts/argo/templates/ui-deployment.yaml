@@ -13,6 +13,9 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Values.ui.name}}
         release: {{ .Release.Name }}
+      {{- if .Values.ui.podAnnotations }}
+      annotations:
+{{ toYaml .Values.ui.podAnnotations | indent 8}}{{- end }}
     spec:
       containers:
         - name: ui
@@ -20,3 +23,7 @@ spec:
           env:
           - name: IN_CLUSTER
             value: "true"
+        {{- if .Values.ui.enableWebConsole }}
+          - name: ENABLE_WEB_CONSOLE
+            value: "true"
+        {{- end }}

@@ -14,12 +14,22 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Values.controller.name}}
         release: {{ .Release.Name }}
+      {{- if .Values.controller.podAnnotations }}
+      annotations:
+{{ toYaml .Values.controller.podAnnotations | indent 8}}{{- end }}
     spec:
+      serviceAccountName: {{ .Values.controller.serviceAccount }}
       containers:
         - name: controller
           image: "{{ .Values.images.namespace }}/{{ .Values.images.controller }}:{{ .Values.images.tag }}"
           command: [ "workflow-controller" ]
-          args: ["--configmap", "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"]
+          args:
+          - "--configmap"
+          - "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"
+          - "--loglevel"
+          - "{{ .Values.controller.logging.level }}"
+          - "--gloglevel"
+          - "{{ .Values.controller.logging.globallevel }}"
           env:
           - name: ARGO_NAMESPACE
             valueFrom:

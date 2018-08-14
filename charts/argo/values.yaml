@@ -5,40 +5,64 @@ images:
   executor: argoexec
   tag: v2.1.1
 
-controller:
-  serviceAccount: argo
-  name: workflow-controller
-  workflowNamespaces: 
-    - default
-  # If set to true then chart set controller instance id to release name
-  useReleaseAsInstanceID: true
-  instanceID:
-
-ui:
-  name: ui
-  serviceType: LoadBalancer
-  serviceAccount: argo-ui
-  # Enables ability to SSH into pod using web UI
-  enableWebConsole: false
-
 crdVersion: v1alpha1
 
+init:
+  # By default the installation will not set an explicit one, which will mean it uses `default` for the namespace the chart is
+  # being deployed to.  In RBAC clusters, that will almost certainly fail.  See the NOTES: section of the readme for more info.
+  serviceAccount: ""
+
+controller:
+  # podAnnotations is an optional map of annotations to be applied to the controller Pods
+  podAnnotations: {}
+  serviceAccount: argo
+  name: workflow-controller
+  workflowNamespaces:
+    - default
+  instanceID:
+    # `instanceID.enabled` configures the controller to filter workflow submissions
+    # to only those which have a matching instanceID attribute.
+    enabled: false
+    # NOTE: If `instanceID.enabled` is set to `true` then either `instanceID.userReleaseName`
+    # or `instanceID.explicitID` must be defined.
+    # useReleaseName: true
+    # explicitID: unique-argo-controller-identifier
+  logging:
+    level: info
+    globallevel: "0"
+
+ui:
+  # optional map of annotations to be applied to the ui Pods
+  podAnnotations: {}
+  name: ui
+  # Enables ability to SSH into pod using web UI
+  enableWebConsole: false
+  serviceType: LoadBalancer
+  serviceAccount: argo-ui
+  # Annotations to be applied to the UI Service
+  serviceAnnotations: {}
+
+# Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false
 useStaticCredentials: true
+artifactRepository:
+  s3:
+    # Note the `key` attribute is not the actual secret, it's the PATH to
+    # the contents in the associated secret, as defined by the `name` attribute.
+    accessKeySecret:
+      # name: <releaseName>-minio (default)
+      key: accesskey
+    secretKeySecret:
+      # name: <releaseName>-minio
+      key: secretkey
+    insecure: true
+    # bucket:
+    # endpoint:
 
-# If set to true then chart installs minio and generate according artifactRepository section in workflow controller config map
+# NOTE: These are setting attributes for the `minio` optional dependency
 minio:
-  # This is not used by the subchart, but makes sense to group here.
+  # If set to true then chart installs minio and generate according artifactRepository section in workflow controller config map
   install: true
   defaultBucket:
     enabled: true
     name: argo-artifacts
-
-artifactRepository:
-  s3:
-    #default minio creds
-    accessKeySecret:
-      key: AKIAIOSFODNN7EXAMPLE
-    secretKeySecret:
-      key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-    insecure: true

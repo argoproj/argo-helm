@@ -9,10 +9,12 @@ metadata:
     namespace: {{ .Release.Namespace }}
 data:
   config: |
-    {{- if .Values.controller.useReleaseAsInstanceID }}
+    {{- if .Values.controller.instanceID.enabled }}
+    {{- if .Values.controller.instanceID.useReleaseName }}
     instanceID: {{ .Release.Name }}
     {{- else }}
-    instanceID: {{ .Values.controller.instanceID }}
+    instanceID: {{ .Values.controller.instanceID.explicitID }}
+    {{- end }}
     {{- end }}
     artifactRepository:
       {{- if or .Values.minio.install .Values.useDefaultArtifactRepo }}
@@ -20,13 +22,13 @@ data:
         {{- if .Values.useStaticCredentials }}
         accessKeySecret:
           key: {{ .Values.artifactRepository.s3.accessKeySecret.key }}
-          name: {{ .Values.artifactRepository.s3.accessKeySecret.name | default (printf "%s-%s" .Release.Name "minio-user") }}
+          name: {{ .Values.artifactRepository.s3.accessKeySecret.name | default (printf "%s-%s" .Release.Name "minio") }}
         secretKeySecret:
           key: {{ .Values.artifactRepository.s3.secretKeySecret.key }}
-          name: {{ .Values.artifactRepository.s3.secretKeySecret.name | default (printf "%s-%s" .Release.Name "minio-user") }}
+          name: {{ .Values.artifactRepository.s3.secretKeySecret.name | default (printf "%s-%s" .Release.Name "minio") }}
         {{- end }}
         bucket: {{ .Values.artifactRepository.s3.bucket | default .Values.minio.defaultBucket.name }}
-        endpoint: {{ .Values.artifactRepository.s3.endpoint | default (printf "%s-%s" .Release.Name "minio-svc:9000") }}
+        endpoint: {{ .Values.artifactRepository.s3.endpoint | default (printf "%s-%s" .Release.Name "minio:9000") }}
         insecure: {{ .Values.artifactRepository.s3.insecure }}
       {{- end}}
     executorImage: "{{ .Values.images.namespace }}/{{ .Values.images.executor }}:{{ .Values.images.tag }}"

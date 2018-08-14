@@ -7,6 +7,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     namspace: {{ .Release.Namespace }}
+  {{- if .Values.ui.serviceAnnotations }}
+  annotations:
+{{ toYaml .Values.ui.serviceAnnotations | indent 4}}{{- end }}
 spec:
   ports:
   - port: 80
