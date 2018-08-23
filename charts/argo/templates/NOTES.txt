@@ -1,17 +1,10 @@
-1. Make sure Workflow CRD is created by running:
-
-echo '{"apiVersion": "apiextensions.k8s.io/v1beta1","kind": "CustomResourceDefinition", "metadata": {"name": "workflows.argoproj.io"},
-    "spec": {"group": "argoproj.io","names":
-        {"kind": "Workflow","listKind": "WorkflowList","plural": "workflows","shortNames": ["wf"],"singular": "workflow"}, "scope": "Namespaced","version": "v1alpha1"}}' \
-| kubectl create -f -
-
-2. Get Argo UI external IP/domain by running:
+1. Get Argo UI external IP/domain by running:
 
 kubectl get services -o wide | grep {{ .Release.Name }}-{{ .Values.uiName }}
 
 {{ if .Values.minio.install }}
 
-3. Access Minio UI and create bucket '{{ .Values.minio.defaultBucket.name }}'. Minio UI is available on port 9000 and available via external URL. URL might be retrieved using following
+2. Access Minio UI and create bucket '{{ .Values.minio.defaultBucket.name }}'. Minio UI is available on port 9000 and available via external URL. URL might be retrieved using following
 command:
 
 kubectl get services -o wide | grep {{ .Release.Name }}-minio-svc
