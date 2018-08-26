@@ -1,6 +1,6 @@
 {{- define "sensor-crd-json" }}
 {
-  "apiVersion": "apiextensions.k8s.io/v1beta1",
+  "apiVersion": "apiextensions.k8s.io/{{ .Values.crd.version }}",
   "kind": "CustomResourceDefinition",
   "metadata": {
     "name": "sensors.argoproj.io"
