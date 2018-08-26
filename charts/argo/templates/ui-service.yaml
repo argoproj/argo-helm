@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.ui.name}}
+  name: {{ .Release.Name }}-{{ .Values.ui.name }}
   labels:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
@@ -12,7 +12,7 @@ metadata:
 {{ toYaml .Values.ui.serviceAnnotations | indent 4}}{{- end }}
 spec:
   ports:
-  - port: 80
+  - port: {{ .Values.ui.servicePort }}
     protocol: TCP
     targetPort: 8001
   selector:
