@@ -10,6 +10,7 @@ spec:
   activeDeadlineSeconds: 100
   template:
     spec:
+      serviceAccountName: {{ .Values.crd.jobServiceAccount }}
       containers:
       - name: kubectl-apply
         image: lachlanevenson/k8s-kubectl
