@@ -37,10 +37,37 @@ ui:
   name: ui
   # Enables ability to SSH into pod using web UI
   enableWebConsole: false
-  serviceType: LoadBalancer
+  serviceType: ClusterIP
+  servicePort: 80
   serviceAccount: argo-ui
   # Annotations to be applied to the UI Service
   serviceAnnotations: {}
+  
+  ## Ingress configuration.
+  ## ref: https://kubernetes.io/docs/user-guide/ingress/
+  ##
+  ingress:
+    enabled: false
+
+    ## Annotations to be added to the web ingress.
+    ##
+    # annotations:
+    #   kubernetes.io/ingress.class: nginx
+    #   kubernetes.io/tls-acme: "true"
+
+    ## Hostnames.
+    ## Must be provided if Ingress is enabled.
+    ##
+    # hosts:
+    #   - argo.domain.com
+
+    ## TLS configuration.
+    ## Secrets must be manually created in the namespace.
+    ##
+    # tls:
+    #   - secretName: argo-ui-tls
+    #     hosts:
+    #       - argo.domain.com
 
 # Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false
