@@ -1,12 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ .Release.name }}-signals-binding
+  name: {{ .Release.name }}-{{ .Values.gatewayController.name}}-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ .Release.name }}-signals-cluster-role
+  name: {{ .Release.name }}-{{ .Values.gatewayController.name}}-cluster-role
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.signals.serviceAccount }}
+  name: {{ .Values.gatewayController.serviceAccount }}
   namespace: {{ .Release.Namespace }}

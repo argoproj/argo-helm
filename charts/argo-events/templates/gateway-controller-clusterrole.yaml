@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Release.name }}-{{ .Values.sensorController.name}}-cluster-role
+  name: {{ .Release.name }}-{{ .Values.gatewayController.name}}-cluster-role
 rules:
 - apiGroups: ["*"]
   resources: ["*"]
