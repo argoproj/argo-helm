@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Release.name }}-{{ .Values.controller.name}}-cluster-role
+rules:
+- apiGroups: ["argoproj.io"]
+  resources: ["sensors"]
+  verbs: ["get", "list", "watch", "update", "patch"]
+# The following rules define what the triggers can do
+- apiGroups: ["argoproj.io"]
+  resources: ["workflows"]
+  verbs: ["create", "delete"]
+- apiGroups: [""]
+  resources: ["configmaps", "secrets", "pods"]
+  verbs: ["get", "watch", "list", "patch"]

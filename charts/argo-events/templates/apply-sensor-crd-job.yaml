@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Release.Name }}-apply-workflow-crd
+  name: {{ .Release.Name }}-apply-sensor-crd
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-delete-policy: hook-succeeded
@@ -10,10 +10,10 @@ spec:
   activeDeadlineSeconds: 100
   template:
     spec:
-      serviceAccountName: {{ .Values.init.serviceAccount | quote }}
+      serviceAccountName: {{ .Values.crd.jobServiceAccount }}
       containers:
       - name: kubectl-apply
         image: lachlanevenson/k8s-kubectl
         command: ["/bin/sh"]
-        args: ["-c", 'echo ''{{- include "workflow-crd-json" .}}'' | kubectl apply -f -']
+        args: ["-c", 'echo ''{{- include "sensor-crd-json" .}}'' | kubectl apply -f -']
       restartPolicy: Never

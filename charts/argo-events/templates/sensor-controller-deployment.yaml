@@ -1,0 +1,33 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.controller.name }}
+  labels:
+    app: {{ .Release.Name }}-{{ .Values.controller.name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.controller.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.controller.name }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-{{ .Values.controller.name }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ .Values.controller.serviceAccount }}
+      containers:
+        - name: {{ .Values.controller.name }}
+          image: "{{ .Values.registry }}/{{ .Values.controller.image }}:{{ .Values.controller.tag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          env:
+            - name: SENSOR_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: SENSOR_CONFIG_MAP
+              value: {{ .Release.Name }}-{{ .Values.controller.name }}-configmap

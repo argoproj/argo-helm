@@ -1,0 +1,31 @@
+{{- if .Values.ui.ingress.enabled -}}
+{{- $serviceName := printf "%s-%s" .Release.Name .Values.ui.name -}}
+{{- $servicePort := .Values.ui.servicePort -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.ui.name }}
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    namspace: {{ .Release.Namespace }}
+  annotations:
+    {{- range $key, $value := .Values.ui.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  rules:
+    {{- range .Values.ui.ingress.hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+          - backend:
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+    {{- end -}}
+  {{- if .Values.ui.ingress.tls }}
+  tls:
+{{ toYaml .Values.ui.ingress.tls | indent 4 }}
+  {{- end -}}
+{{- end -}}

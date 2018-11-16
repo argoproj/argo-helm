@@ -15,19 +15,20 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "workflow-crd-json" }}
+{{- define "sensor-crd-json" }}
 {
   "apiVersion": "apiextensions.k8s.io/v1beta1",
   "kind": "CustomResourceDefinition",
   "metadata": {
-    "name": "workflows.argoproj.io"
+    "name": "sensors.argoproj.io"
   },
   "spec": {
     "group": "argoproj.io",
     "names": {
-      "kind": "Workflow",
-      "plural": "workflows",
-      "shortNames": ["wf"]
+      "kind": "Sensor",
+      "listKind": "SensorList",
+      "plural": "sensors",
+      "singular": "sensor"
     },
     "scope": "Namespaced",
     "version": "v1alpha1"
