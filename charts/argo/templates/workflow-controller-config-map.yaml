@@ -31,4 +31,3 @@ data:
         endpoint: {{ .Values.artifactRepository.s3.endpoint | default (printf "%s-%s" .Release.Name "minio:9000") }}
         insecure: {{ .Values.artifactRepository.s3.insecure }}
       {{- end}}
-    executorImage: "{{ .Values.images.namespace }}/{{ .Values.images.executor }}:{{ .Values.images.tag }}"

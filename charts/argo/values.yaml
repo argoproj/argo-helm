@@ -3,7 +3,7 @@ images:
   controller: workflow-controller
   ui: argoui
   executor: argoexec
-  tag: v2.1.1
+  tag: v2.2.1
 
 crdVersion: v1alpha1
 
@@ -35,8 +35,6 @@ ui:
   # optional map of annotations to be applied to the ui Pods
   podAnnotations: {}
   name: ui
-  # Enables ability to SSH into pod using web UI
-  enableWebConsole: false
   serviceType: ClusterIP
   servicePort: 80
   serviceAccount: argo-ui

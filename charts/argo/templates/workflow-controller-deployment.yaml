@@ -26,6 +26,8 @@ spec:
           args:
           - "--configmap"
           - "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"
+          - "--executor-image"
+          - "{{ .Values.images.namespace }}/{{ .Values.images.executor }}:{{ .Values.images.tag }}"
           - "--loglevel"
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"
