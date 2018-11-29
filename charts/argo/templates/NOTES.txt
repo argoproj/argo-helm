@@ -1,13 +1,10 @@
-1. Make sure Workflow CRD is created by running:
-
-echo '{"apiVersion": "apiextensions.k8s.io/v1beta1","kind": "CustomResourceDefinition", "metadata": {"name": "workflows.argoproj.io"},
-    "spec": {"group": "argoproj.io","names":
-        {"kind": "Workflow","listKind": "WorkflowList","plural": "workflows","shortNames": ["wf"],"singular": "workflow"}, "scope": "Namespaced","version": "v1alpha1"}}' \
-| kubectl create -f -
-
-2. Get Argo UI external IP/domain by running:
+1. Get Argo UI external IP/domain by running:
 
 kubectl --namespace {{ .Release.Namespace }} get services -o wide | grep {{ .Release.Name }}-{{ .Values.uiName }}
+
+2. Submit the hello-world workflow by running:
+
+argo submit https://raw.githubusercontent.com/argoproj/argo/master/examples/hello-world.yaml --watch
 
 {{ if .Values.minio.install }}
 

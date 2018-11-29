@@ -15,6 +15,7 @@ rules:
   - watch
   - update
   - patch
+  - delete
 - apiGroups:
   - ""
   resources:
@@ -34,9 +35,11 @@ rules:
   - argoproj.io
   resources:
   - workflows
+  - workflows/finalizers
   verbs:
   - get
   - list
   - watch
   - update
   - patch
+  - delete

@@ -22,7 +22,6 @@ Fields to note:
 * `controller.instanceID.useReleaseName`: If set to true then chart set controller instance id to release name
 * `controller.instanceID.explicitID`: Allows customization of an instance id for the workflow controller to monitor
 * `controller.workflowNamespaces`: This is a list of namespaces where workflows will be ran
-* `ui.enableWebConsole`: Enables ability to SSH into pod using web UI
 * `minio.install`: If this is true, we'll install [minio](https://github.com/kubernetes/charts/tree/master/stable/minio) and build out the artifactRepository section in workflow controller config map.
 * `artifactRepository.s3.accessKeySecret` and `artifactRepository.s3.secretKeySecret` These by default link to minio default credentials stored in the secret deployed by the minio chart.
 

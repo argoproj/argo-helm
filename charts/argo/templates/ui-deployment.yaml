@@ -24,7 +24,10 @@ spec:
           env:
           - name: IN_CLUSTER
             value: "true"
-        {{- if .Values.ui.enableWebConsole }}
-          - name: ENABLE_WEB_CONSOLE
-            value: "true"
-        {{- end }}
+          - name: ARGO_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: BASE_HREF
+            value: /
