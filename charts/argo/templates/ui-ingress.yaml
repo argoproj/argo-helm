@@ -9,7 +9,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    namspace: {{ .Release.Namespace }}
   annotations:
     {{- range $key, $value := .Values.ui.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}

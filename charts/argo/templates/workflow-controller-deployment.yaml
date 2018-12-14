@@ -6,7 +6,6 @@ metadata:
     app: {{ .Release.Name }}-{{ .Values.controller.name}}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
-    namespace: {{ .Release.Namespace }}
     heritage: {{ .Release.Service }}
 spec:
   template:
