@@ -21,7 +21,8 @@ server:
     pullPolicy: Always
     
 repoServer:
-  port: 8081
+  containerPort: 8081
+  servicePort: 8081
   image:
     repository: argoproj/argocd
     tag: v0.11.0
