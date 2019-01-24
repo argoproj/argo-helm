@@ -28,6 +28,45 @@ repoServer:
     tag: v0.11.0
     pullPolicy: Always
 
+config:
+  helmRepositories:
+    - name: privateRepo
+      url: http://chartmuseum.privatecloud.com
+      usernameSecret:
+        name: private-chartmuseum
+        key: username
+      passwordSecret:
+        name: private-chartmuseum
+        key: password
+    - name: incubator
+      url: https://kubernetes-charts-incubator.storage.googleapis.com/
+  repositories:
+    - url: git@gitlab.com:usersprivategroup/users-gitops-config.git
+      sshPrivateKeySecret:
+        key: privateKey
+        name: argocd-dev-key
+    - url: git@gitlab.com:accountingprivategroup/accounting-gitops-config.git
+      sshPrivateKeySecret:
+        key: privateKey
+        name: argocd-dev-key
+    dexConfig:
+    #   # Argo CD's externally facing base URL. Required for configuring SSO
+    #   # url: https://argo-cd-demo.argoproj.io
+    #
+    #   # A dex connector configuration. See documentation on how to configure SSO:
+    #   # https://github.com/argoproj/argo-cd/blob/master/docs/sso.md#2-configure-argocd-for-sso
+      connectors:
+        # GitHub example
+        - type: github
+          id: github
+          name: GitHub
+          config:
+            clientID: aabbccddeeff00112233
+            clientSecret: $dex.github.clientSecret
+            orgs:
+            - name: your-github-org
+              teams:
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
