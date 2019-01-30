@@ -1,5 +1,6 @@
+{{- if .Values.ui.enabled -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ .Values.ui.serviceAccount }}
-
+{{- end -}}
