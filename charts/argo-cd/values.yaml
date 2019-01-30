@@ -8,7 +8,8 @@ applicationController:
 
 server:
   containerPort: 8080
-  servicePort: 8080
+  servicePortHttp: 80
+  servicePortHttps: 443
   containerMetricsPort: 8082
   metricsPort: 8082
   image:
@@ -66,7 +67,25 @@ config:
             orgs:
             - name: your-github-org
               teams:
+rbac:
+#   # An RBAC policy .csv file containing additional policy and role definitions.
+#   # See https://github.com/argoproj/argo-cd/blob/master/docs/rbac.md on how to write RBAC policies.
+#   policy.csv: |
+#     # Give all members of "my-org:team-alpha" the ability to sync apps in "my-project"
+#     p, my-org:team-alpha, applications, sync, my-project/*, allow
+#     # Make all members of "my-org:team-beta" admins
+#     g, my-org:team-beta, role:admin
+  policy-csv: |
+    p, role:org-admin, applications, *, */*, allow
+    p, role:org-admin, clusters, get, *, allow
+    p, role:org-admin, repositories, get, *, allow
+    p, role:org-admin, repositories, create, *, allow
+    p, role:org-admin, repositories, update, *, allow
+    p, role:org-admin, repositories, delete, *, allow
 
+    g, your-github-org:your-team, role:org-admin
+  # The default role Argo CD will fall back to, when authorizing API requests
+  policy-default: role:readonly
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
