@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "argo-cd.fullname" . }}-rbac-cm
+data:
+{{- if .Values.rbac.policy-default }}
+  policy.default: {{ .Values.rbac.policy-default }}
+{{- end }}
+{{- if .Values.rbac.policy-csv }}
+  policy.csv: |
+{{ toYaml .Values.rbac.policy-csv | indent 4 }}
+{{- end }}
