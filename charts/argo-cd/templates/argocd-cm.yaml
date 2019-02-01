@@ -3,13 +3,11 @@ kind: ConfigMap
 metadata:
   name: {{ include "argo-cd.fullname" . }}-cm
   labels: 
-    app: {{ include "argo-cd.name" . }}-server
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-server
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
-    app.kubernetes.io/component: server
 data:
 {{- if .Values.config.helmRepositories }}
   helm.repositories: |
