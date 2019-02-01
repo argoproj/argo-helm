@@ -9,10 +9,10 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
 data:
-{{- if .Values.rbac.policy-default }}
-  policy.default: {{ .Values.rbac.policy-default }}
+{{- if .Values.rbac.policyDefault }}
+  policy.default: {{ .Values.rbac.policyDefault }}
 {{- end }}
-{{- if .Values.rbac.policy-csv }}
+{{- if .Values.rbac.policyCsv }}
   policy.csv: |
-{{ toYaml .Values.rbac.policy-csv | indent 4 }}
+{{ toYaml .Values.rbac.policyCsv | indent 4 }}
 {{- end }}
