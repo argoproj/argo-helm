@@ -3,7 +3,6 @@ kind: Service
 metadata:
   name: {{ include "argo-cd.fullname" . }}-repo-server
   labels:
-    app: {{ include "argo-cd.name" . }}-repo-server
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-repo-server
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -15,5 +14,4 @@ spec:
   - port: {{ .Values.repoServer.servicePort }}
     targetPort: {{ .Values.repoServer.servicePort }}
   selector:
-    app: {{ include "argo-cd.name" . }}-repo-server
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-repo-server

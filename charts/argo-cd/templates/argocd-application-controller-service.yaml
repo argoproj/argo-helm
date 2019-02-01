@@ -14,5 +14,4 @@ spec:
   - port: {{ .Values.applicationController.servicePort }}
     targetPort: {{ .Values.applicationController.containerPort }}
   selector:
-    app: {{ include "argo-cd.name" . }}-application-controller
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller

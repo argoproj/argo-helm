@@ -3,7 +3,6 @@ kind: RoleBinding
 metadata:
   name: {{ include "argo-cd.fullname" . }}-server
   labels:
-    app: {{ include "argo-cd.name" . }}-server
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-server
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

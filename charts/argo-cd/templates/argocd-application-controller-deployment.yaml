@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: {{ include "argo-cd.fullname" . }}-application-controller
   labels:
-    app: {{ include "argo-cd.name" . }}-application-controller
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -13,12 +12,10 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ include "argo-cd.name" . }}-application-controller
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller
   template:
     metadata:
       labels:
-        app: {{ include "argo-cd.name" . }}-application-controller
         app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller
         helm.sh/chart: {{ include "argo-cd.chart" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
