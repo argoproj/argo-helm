@@ -11,7 +11,7 @@ server:
   servicePortHttp: 80
   servicePortHttps: 443
   containerMetricsPort: 8082
-  metricsPort: 8082
+  serviceMetricsPort: 8082
   image:
     repository: argoproj/argocd
     tag: v0.11.0
@@ -50,31 +50,31 @@ config:
       sshPrivateKeySecret:
         key: privateKey
         name: argocd-dev-key
-    dexConfig:
+  dexConfig:
     #   # Argo CD's externally facing base URL. Required for configuring SSO
     #   # url: https://argo-cd-demo.argoproj.io
     #
     #   # A dex connector configuration. See documentation on how to configure SSO:
     #   # https://github.com/argoproj/argo-cd/blob/master/docs/sso.md#2-configure-argocd-for-sso
-      connectors:
-        # GitHub example
-        - type: github
-          id: github
-          name: GitHub
-          config:
-            clientID: aabbccddeeff00112233
-            clientSecret: $dex.github.clientSecret
-            orgs:
-            - name: your-github-org
-              teams:
+    connectors:
+      # GitHub example
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: aabbccddeeff00112233
+          clientSecret: $dex.github.clientSecret
+          orgs:
+          - name: your-github-org
+            teams:
   # The following keys hold the shared secret for authenticating GitHub/GitLab/BitBucket webhook
   # events. To enable webhooks, configure one or more of the following keys with the shared git
   # provider webhook secret. The payload URL configured in the git provider should use the
   # /api/webhook endpoint of your Argo CD instance (e.g. https://argocd.example.com/api/webhook)
-    # webhook:
-    #   githubSecret: 
-    #   gitlabSecret:
-    #   bitbucketSecret:
+  webhook:
+    githubSecret: 
+    gitlabSecret:
+    bitbucketSecret:
 rbac:
 #   # An RBAC policy .csv file containing additional policy and role definitions.
 #   # See https://github.com/argoproj/argo-cd/blob/master/docs/rbac.md on how to write RBAC policies.
@@ -83,17 +83,16 @@ rbac:
 #     p, my-org:team-alpha, applications, sync, my-project/*, allow
 #     # Make all members of "my-org:team-beta" admins
 #     g, my-org:team-beta, role:admin
-  policy-csv: |
+  policyCsv: |
     p, role:org-admin, applications, *, */*, allow
     p, role:org-admin, clusters, get, *, allow
     p, role:org-admin, repositories, get, *, allow
     p, role:org-admin, repositories, create, *, allow
     p, role:org-admin, repositories, update, *, allow
     p, role:org-admin, repositories, delete, *, allow
-
     g, your-github-org:your-team, role:org-admin
   # The default role Argo CD will fall back to, when authorizing API requests
-  policy-default: role:readonly
+  policyDefault: role:readonly
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
