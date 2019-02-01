@@ -67,6 +67,14 @@ config:
             orgs:
             - name: your-github-org
               teams:
+  # The following keys hold the shared secret for authenticating GitHub/GitLab/BitBucket webhook
+  # events. To enable webhooks, configure one or more of the following keys with the shared git
+  # provider webhook secret. The payload URL configured in the git provider should use the
+  # /api/webhook endpoint of your Argo CD instance (e.g. https://argocd.example.com/api/webhook)
+    # webhook:
+    #   githubSecret: 
+    #   gitlabSecret:
+    #   bitbucketSecret:
 rbac:
 #   # An RBAC policy .csv file containing additional policy and role definitions.
 #   # See https://github.com/argoproj/argo-cd/blob/master/docs/rbac.md on how to write RBAC policies.
