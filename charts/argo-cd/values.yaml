@@ -29,6 +29,14 @@ repoServer:
     tag: v0.11.0
     pullPolicy: Always
 
+# Standard Argo CD installation with cluster-admin access. 
+# Set this true if you plan to use Argo CD to deploy applications in the same cluster that 
+#     Argo CD runs in (i.e. kubernetes.svc.default). 
+# Will still be able to deploy to external clusters with inputted credentials.
+
+clusterAdminAccess:
+  enabled: true
+
 config:
   helmRepositories:
     - name: privateRepo
