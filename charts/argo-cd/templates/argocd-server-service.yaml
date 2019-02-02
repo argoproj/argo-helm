@@ -13,12 +13,12 @@ spec:
   ports:
   - name: http
     protocol: TCP
-    port: {{ .Values.repoServer.servicePortHttp }}
-    targetPort: {{ .Values.repoServer.containerPort }}
+    port: {{ .Values.server.servicePortHttp }}
+    targetPort: {{ .Values.server.containerPort }}
   - name: https
     protocol: TCP
-    port: {{ .Values.repoServer.servicePortHttps }}
-    targetPort: {{ .Values.repoServer.containerPort }}
+    port: {{ .Values.server.servicePortHttps }}
+    targetPort: {{ .Values.server.containerPort }}
   selector:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-server
 
