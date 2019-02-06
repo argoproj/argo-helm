@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "argo-cd.fullname" . }}-server
+  name: argocd-server
   labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-server
     helm.sh/chart: {{ include "argo-cd.chart" . }}
@@ -23,7 +23,7 @@ spec:
         app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
         app.kubernetes.io/component: server
     spec:
-      serviceAccountName: {{ include "argo-cd.fullname" . }}-server
+      serviceAccountName: argocd-server
       initContainers:
       - name: ui
         image: {{ .Values.server.uiInitImage.repository }}:{{ .Values.server.uiInitImage.tag }}

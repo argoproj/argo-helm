@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "argo-cd.fullname" . }}-server
+  name: argocd-server
   labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-server
     helm.sh/chart: {{ include "argo-cd.chart" . }}
