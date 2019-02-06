@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "argo-cd.fullname" . }}-application-controller
+  name: argocd-application-controller
   labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller
     helm.sh/chart: {{ include "argo-cd.chart" . }}
@@ -32,7 +32,7 @@ spec:
         - "10"
         image: {{ .Values.applicationController.image.repository }}:{{ .Values.applicationController.image.tag }}
         imagePullPolicy: {{ .Values.applicationController.image.pullPolicy }}
-        name: {{ include "argo-cd.name" . }}-application-controller
+        name: argocd-application-controller
         ports:
         - containerPort: {{ .Values.applicationController.containerPort }}
         readinessProbe:
@@ -40,4 +40,4 @@ spec:
             port: {{ .Values.applicationController.containerPort }}
           initialDelaySeconds: 5
           periodSeconds: 10
-      serviceAccountName: {{ include "argo-cd.name" . }}-application-controller
+      serviceAccountName: argocd-application-controller

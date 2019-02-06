@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "argo-cd.fullname" . }}-rbac-cm
+  name: argocd-rbac-cm
   labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}
     helm.sh/chart: {{ include "argo-cd.chart" . }}
@@ -13,6 +13,6 @@ data:
   policy.default: {{ .Values.rbac.policyDefault }}
 {{- end }}
 {{- if .Values.rbac.policyCsv }}
-  policy.csv: |
-{{ toYaml .Values.rbac.policyCsv | indent 4 }}
+  policy.csv:
+{{- toYaml .Values.rbac.policyCsv | indent 4 }}
 {{- end }}

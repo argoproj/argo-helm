@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
     app.kubernetes.io/component: server
-  name: {{ include "argo-cd.fullname" . }}-metrics
+  name: argocd-metrics
 spec:
   ports:
   - name: http

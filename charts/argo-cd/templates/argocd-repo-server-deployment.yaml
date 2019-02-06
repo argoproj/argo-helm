@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "argo-cd.fullname" . }}-repo-server
+  name: argocd-repo-server
   labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-repo-server
     helm.sh/chart: {{ include "argo-cd.chart" . }}
