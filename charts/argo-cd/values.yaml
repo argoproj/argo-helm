@@ -43,6 +43,17 @@ dexServer:
     tag: v0.11.0
     pullPolicy: Always
 
+# terminate tls at ArgoCD level
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  path: /
+  hosts:
+    - argocd.example.com
+
 # Standard Argo CD installation with cluster-admin access. 
 # Set this true if you plan to use Argo CD to deploy applications in the same cluster that 
 #     Argo CD runs in (i.e. kubernetes.svc.default). 
