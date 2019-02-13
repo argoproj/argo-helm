@@ -1,0 +1,128 @@
+applicationController:
+  containerPort: 8083
+  servicePort: 8083
+  image:
+    repository: argoproj/argocd
+    tag: v0.11.0
+    pullPolicy: Always
+
+server:
+  containerPort: 8080
+  servicePortHttp: 80
+  servicePortHttps: 443
+  containerMetricsPort: 8082
+  serviceMetricsPort: 8082
+  image:
+    repository: argoproj/argocd
+    tag: v0.11.0
+    pullPolicy: Always
+  uiInitImage:
+    repository: argoproj/argocd-ui
+    tag: v0.11.0
+    pullPolicy: Always
+    
+repoServer:
+  containerPort: 8081
+  servicePort: 8081
+  image:
+    repository: argoproj/argocd
+    tag: v0.11.0
+    pullPolicy: Always
+
+dexServer:
+  containerPortHttp: 5556
+  containerPortGrpc: 5557
+  servicePortHttp: 5556
+  servicePortGrpc: 5557
+  image:
+    repository: quay.io/dexidp/dex
+    tag: v2.12.0
+    pullPolicy: Always
+  initImage:
+    repository: argoproj/argocd
+    tag: v0.11.0
+    pullPolicy: Always
+
+# terminate tls at ArgoCD level
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  path: /
+  hosts:
+    - argocd.example.com
+
+# Standard Argo CD installation with cluster-admin access. 
+# Set this true if you plan to use Argo CD to deploy applications in the same cluster that 
+#     Argo CD runs in (i.e. kubernetes.svc.default). 
+# Will still be able to deploy to external clusters with inputted credentials.
+
+clusterAdminAccess:
+  enabled: true
+
+config:
+  helmRepositories:
+    # - name: privateRepo
+    #   url: http://chartmuseum.privatecloud.com
+    #   usernameSecret:
+    #     name: private-chartmuseum
+    #     key: username
+    #   passwordSecret:
+    #     name: private-chartmuseum
+    #     key: password
+    # - name: incubator
+    #   url: https://kubernetes-charts-incubator.storage.googleapis.com/
+  repositories:
+    # - url: git@gitlab.com:usersprivategroup/users-gitops-config.git
+    #   sshPrivateKeySecret:
+    #     key: privateKey
+    #     name: argocd-dev-key
+    # - url: git@gitlab.com:accountingprivategroup/accounting-gitops-config.git
+    #   sshPrivateKeySecret:
+    #     key: privateKey
+    #     name: argocd-dev-key
+  dexConfig:
+    #   # Argo CD's externally facing base URL. Required for configuring SSO
+    #   # url: https://argo-cd-demo.argoproj.io
+    #
+    #   # A dex connector configuration. See documentation on how to configure SSO:
+    #   # https://github.com/argoproj/argo-cd/blob/master/docs/sso.md#2-configure-argocd-for-sso
+    # connectors:
+    #   # GitHub example
+    #   - type: github
+    #     id: github
+    #     name: GitHub
+    #     config:
+    #       clientID: aabbccddeeff00112233
+    #       clientSecret: $dex.github.clientSecret
+    #       orgs:
+    #       - name: your-github-org
+    #         teams:
+  # The following keys hold the shared secret for authenticating GitHub/GitLab/BitBucket webhook
+  # events. To enable webhooks, configure one or more of the following keys with the shared git
+  # provider webhook secret. The payload URL configured in the git provider should use the
+  # /api/webhook endpoint of your Argo CD instance (e.g. https://argocd.example.com/api/webhook)
+  webhook:
+    githubSecret: 
+    gitlabSecret:
+    bitbucketSecret:
+rbac:
+#   # An RBAC policy .csv file containing additional policy and role definitions.
+#   # See https://github.com/argoproj/argo-cd/blob/master/docs/rbac.md on how to write RBAC policies.
+#   policy.csv: |
+#     # Give all members of "my-org:team-alpha" the ability to sync apps in "my-project"
+#     p, my-org:team-alpha, applications, sync, my-project/*, allow
+#     # Make all members of "my-org:team-beta" admins
+#     g, my-org:team-beta, role:admin
+  policyCsv: #|
+  #   p, role:org-admin, applications, *, */*, allow
+  #   p, role:org-admin, clusters, get, *, allow
+  #   p, role:org-admin, repositories, get, *, allow
+  #   p, role:org-admin, repositories, create, *, allow
+  #   p, role:org-admin, repositories, update, *, allow
+  #   p, role:org-admin, repositories, delete, *, allow
+  #   g, your-github-org:your-team, role:org-admin
+  # The default role Argo CD will fall back to, when authorizing API requests
+  policyDefault: #role:readonly

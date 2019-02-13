@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-metrics
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+    app.kubernetes.io/component: server
+  name: argocd-metrics
+spec:
+  ports:
+  - name: http
+    protocol: TCP
+    port: {{ .Values.server.serviceMetricsPort }}
+    targetPort: {{ .Values.server.containerMetricsPort }}
+  selector:
+    app: {{ include "argo-cd.name" . }}-server
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-server

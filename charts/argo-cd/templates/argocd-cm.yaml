@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  labels: 
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+data:
+{{- if .Values.config.helmRepositories }}
+  helm.repositories: |
+{{ toYaml .Values.config.helmRepositories | indent 4 }}
+{{- end }}
+{{- if .Values.config.repositories }}
+  repositories: |
+{{ toYaml .Values.config.repositories | indent 4 }}
+{{- end }}
+{{- if .Values.config.dexConfig }}
+  dex.config: |
+{{ toYaml .Values.config.dexConfig | indent 4 }}
+{{- end }}
