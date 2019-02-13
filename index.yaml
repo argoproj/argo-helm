@@ -2,15 +2,15 @@ apiVersion: v1
 entries:
   argo:
   - apiVersion: v1
-    created: 2018-12-14T11:03:04.626881-08:00
+    created: 2019-02-13T15:32:11.23369-08:00
     description: A Helm chart for Kubernetes
-    digest: 991b48c8768a8d88c295a92f8761dbfdff0f816f32d55d50f2d1d96a243cce38
+    digest: d5791be2a2e7971c7df73784602a99a8c2df790ffd22d5df1f5fc8fbf2a62fba
     name: argo
     urls:
     - argo-0.3.1.tgz
     version: 0.3.1
   - apiVersion: v1
-    created: 2018-12-14T11:03:04.624669-08:00
+    created: 2019-02-13T15:32:11.232223-08:00
     description: A Helm chart for Kubernetes
     digest: f88682348f4f2b470f1df840929a6a9ce584d8a499e0c0085a71371de9582275
     name: argo
@@ -18,7 +18,7 @@ entries:
     - argo-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v1
-    created: 2018-12-14T11:03:04.623227-08:00
+    created: 2019-02-13T15:32:11.230937-08:00
     description: A Helm chart for Kubernetes
     digest: eea1d669e5495c611aa6d51965fd8b7d71eac15382ab71ebbde73ca54af5a3fe
     name: argo
@@ -26,7 +26,7 @@ entries:
     - argo-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
-    created: 2018-12-14T11:03:04.621907-08:00
+    created: 2019-02-13T15:32:11.229544-08:00
     description: A Helm chart for Kubernetes
     digest: a0255641d6ae6bc533f5594003bf39f911ec35fc1198e6627ca84c93f3fd941f
     name: argo
@@ -34,24 +34,34 @@ entries:
     - argo-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
-    created: 2018-12-14T11:03:04.620968-08:00
+    created: 2019-02-13T15:32:11.228632-08:00
     description: A Helm chart for Kubernetes
     digest: f7393a1c9e0a25f19692857a4a9d20ed0199243712cd9d3af2f44995724c1909
     name: argo
     urls:
     - argo-0.1.0.tgz
     version: 0.1.0
+  argo-cd:
+  - apiVersion: v1
+    appVersion: "0.11"
+    created: 2019-02-13T15:32:11.234581-08:00
+    description: A Helm chart for Argo-CD
+    digest: 227cc7113081bf8289fb218ee92db43687fe0aa2e5a60a518bed905e05a9d139
+    name: argo-cd
+    urls:
+    - argo-cd-0.1.0.tgz
+    version: 0.1.0
   argo-ci:
   - apiVersion: v1
-    created: 2018-12-14T11:03:04.631165-08:00
+    created: 2019-02-13T15:32:11.239421-08:00
     description: A Helm chart for Kubernetes
-    digest: 52affbcf5dbb17ed4c88b79a398518af1b8167c4ee56dc6d4ca50188e03e00e5
+    digest: 5cb0a6f05a2f9dd416edd8065f0c9c9235b13488fdd6d8625ae0c49a9c1aedb0
     name: argo-ci
     urls:
     - argo-ci-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v1
-    created: 2018-12-14T11:03:04.629319-08:00
+    created: 2019-02-13T15:32:11.237624-08:00
     description: A Helm chart for Kubernetes
     digest: f02829653e882b567af9bc5885f718f67419e0f2029195039cb51b809376ba2f
     name: argo-ci
@@ -59,7 +69,7 @@ entries:
     - argo-ci-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
-    created: 2018-12-14T11:03:04.628255-08:00
+    created: 2019-02-13T15:32:11.236523-08:00
     description: A Helm chart for Kubernetes
     digest: 98bc05669752776344c6a01c74e65983bc30f213b08d597aa1ce72923664d931
     name: argo-ci
@@ -68,8 +78,26 @@ entries:
     version: 0.1.0
   argo-events:
   - apiVersion: v1
+    appVersion: 0.7.0
+    created: 2019-02-13T15:32:11.240348-08:00
+    description: A Helm chart to install Argo-Events in k8s Cluster
+    digest: c8556f19ded17919959d632a27a6b04b33b533b2b4eb1227e6d728c86c4137c1
+    keywords:
+    - argo-events
+    - sensor-controller
+    - gateway-controller
+    maintainers:
+    - name: Vaibhav Page
+    - name: Matt Magaldi
+    name: argo-events
+    sources:
+    - https://github.com/argoproj/argo-events
+    urls:
+    - argo-events-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v1
     appVersion: 0.1.0
-    created: 2018-12-14T11:03:04.631663-08:00
+    created: 2019-02-13T15:32:11.239909-08:00
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: dd2390a7ec47ad584787d01ff3ce34f868fa1f4acf996dd3dd1eb920abb2fc62
     keywords:
@@ -88,7 +116,7 @@ entries:
     version: 0.2.0
   argo-lite:
   - apiVersion: v1
-    created: 2018-12-14T11:03:04.631938-08:00
+    created: 2019-02-13T15:32:11.240636-08:00
     description: Lighweight workflow engine for Kubernetes
     digest: b83cb7173bcd4259723fd592b3438fc31dbc0a9cac44178b6f522bc75f1591f2
     icon: https://raw.githubusercontent.com/argoproj/argo/master/saas/axops/src/ui/src/assets/favicon/favicon-32x32.png
@@ -99,4 +127,4 @@ entries:
     urls:
     - argo-lite-0.1.0.tgz
     version: 0.1.0
-generated: 2018-12-14T11:03:04.619866-08:00
+generated: 2019-02-13T15:32:11.227536-08:00
