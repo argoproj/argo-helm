@@ -1,28 +1,28 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name }}
+  name: {{ .Release.Name }}-{{ .Values.sensorController.name }}
   labels:
-    app: {{ .Release.Name }}-{{ .Values.controller.name }}
+    app: {{ .Release.Name }}-{{ .Values.sensorController.name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.controller.replicaCount }}
+  replicas: {{ .Values.sensorController.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ .Values.controller.name }}
+      app: {{ .Release.Name }}-{{ .Values.sensorController.name }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-{{ .Values.controller.name }}
+        app: {{ .Release.Name }}-{{ .Values.sensorController.name }}
         release: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ .Values.controller.serviceAccount }}
+      serviceAccountName: {{ .Values.serviceAccount }}
       containers:
-        - name: {{ .Values.controller.name }}
-          image: "{{ .Values.registry }}/{{ .Values.controller.image }}:{{ .Values.controller.tag }}"
+        - name: {{ .Values.sensorController.name }}
+          image: "{{ .Values.registry }}/{{ .Values.sensorController.image }}:{{ .Values.sensorController.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           env:
             - name: SENSOR_NAMESPACE
@@ -30,4 +30,4 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: SENSOR_CONFIG_MAP
-              value: {{ .Release.Name }}-{{ .Values.controller.name }}-configmap
+              value: {{ .Release.Name }}-{{ .Values.sensorController.name }}-configmap
