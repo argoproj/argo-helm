@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-dex-server
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-dex-server
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+    app.kubernetes.io/component: dex-server  
+spec:
+  ports:
+  - name: http
+    protocol: TCP
+    port: {{ .Values.dexServer.servicePortHttp }}
+    targetPort: {{ .Values.dexServer.containerPortHttp }}
+  - name: grpc
+    protocol: TCP
+    port: {{ .Values.dexServer.servicePortGrpc }}
+    targetPort: {{ .Values.dexServer.containerPortGrpc }}
+  selector:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-dex-server

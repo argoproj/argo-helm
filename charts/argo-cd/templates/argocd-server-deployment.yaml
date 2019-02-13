@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-server
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-server
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+    app.kubernetes.io/component: server
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "argo-cd.name" . }}-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "argo-cd.name" . }}-server
+        helm.sh/chart: {{ include "argo-cd.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+        app.kubernetes.io/component: server
+    spec:
+      serviceAccountName: argocd-server
+      initContainers:
+      - name: ui
+        image: {{ .Values.server.uiInitImage.repository }}:{{ .Values.server.uiInitImage.tag }}
+        imagePullPolicy: {{ .Values.server.uiInitImage.pullPolicy }}
+        command: [cp, -r, /app, /shared]
+        volumeMounts:
+        - mountPath: /shared
+          name: static-files
+      containers:
+      - name: argocd-server
+        image: {{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}
+        imagePullPolicy: {{ .Values.server.image.pullPolicy }}
+        command: [argocd-server, --staticassets, /shared/app]
+        volumeMounts:
+        - mountPath: /shared
+          name: static-files
+        ports:
+        - containerPort: {{ .Values.server.containerPort }}
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.server.containerPort }}
+          initialDelaySeconds: 3
+          periodSeconds: 30
+      volumes:
+      - emptyDir: {}
+        name: static-files
