@@ -15,6 +15,7 @@ data:
     instanceID: {{ .Values.controller.instanceID.explicitID }}
     {{- end }}
     {{- end }}
+    containerRuntimeExecutor: {{ .Values.controller.containerRuntimeExecutor }}
     artifactRepository:
       {{- if or .Values.minio.install .Values.useDefaultArtifactRepo }}
       s3:
