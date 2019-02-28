@@ -9,4 +9,6 @@ metadata:
 data:
   config: |
     instanceID: {{ .Values.instanceID }}
+{{- if .Values.singleNamespace }}
     namespace: {{ .Values.namespace }}
+{{- end }}
