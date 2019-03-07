@@ -30,3 +30,6 @@ data:
         endpoint: {{ .Values.artifactRepository.s3.endpoint | default (printf "%s-%s" .Release.Name "minio:9000") }}
         insecure: {{ .Values.artifactRepository.s3.insecure }}
       {{- end}}
+    {{- if .Values.controller.metricsConfig.enabled }}
+    metricsConfig:
+{{ toYaml .Values.controller.metricsConfig | indent 6}}{{- end }}
