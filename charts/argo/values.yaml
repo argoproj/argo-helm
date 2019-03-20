@@ -40,7 +40,10 @@ ui:
   serviceAccount: argo-ui
   # Annotations to be applied to the UI Service
   serviceAnnotations: {}
-  
+  # Source ranges to allow access to service from. Only applies to
+  # service type `LoadBalancer`
+  loadBalancerSourceRanges: []
+
   ## Ingress configuration.
   ## ref: https://kubernetes.io/docs/user-guide/ingress/
   ##
