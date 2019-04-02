@@ -36,8 +36,14 @@ spec:
       - name: argocd-server
         image: {{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}
         imagePullPolicy: {{ .Values.server.image.pullPolicy }}
-        command: [argocd-server, --staticassets, /shared/app]
-        volumeMounts:
+        command:
+        - argocd-server
+        - --staticassets
+        - /shared/app
+        {{- range .Values.server.extraArgs }}
+        - {{. | quote }}
+        {{- end}}
+            volumeMounts:
         - mountPath: /shared
           name: static-files
         ports:
