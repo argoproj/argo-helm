@@ -42,8 +42,8 @@ spec:
         - /shared/app
         {{- range .Values.server.extraArgs }}
         - {{. | quote }}
-        {{- end}}
-            volumeMounts:
+        {{- end }}
+        volumeMounts:
         - mountPath: /shared
           name: static-files
         ports:
