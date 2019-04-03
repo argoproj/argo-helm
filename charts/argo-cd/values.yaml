@@ -100,6 +100,12 @@ config:
     #       orgs:
     #       - name: your-github-org
     #         teams:
+  url: # https://argocd.example.com/
+  oidcConfig:
+    # name: Okta
+    # issuer: https://dev-123456.oktapreview.com
+    # clientID: aaaabbbbccccddddeee
+    # clientSecret: $oidc.okta.clientSecret
   # The following keys hold the shared secret for authenticating GitHub/GitLab/BitBucket webhook
   # events. To enable webhooks, configure one or more of the following keys with the shared git
   # provider webhook secret. The payload URL configured in the git provider should use the
