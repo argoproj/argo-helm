@@ -21,3 +21,10 @@ data:
   dex.config: |
 {{ toYaml .Values.config.dexConfig | indent 4 }}
 {{- end }}
+{{- if .Values.config.url }}
+  url: {{ .Values.config.url }}
+{{- end }}
+{{- if .Values.config.oidcConfig }}
+  oidc.config: |
+{{ toYaml .Values.config.oidcConfig | indent 4 }}
+{{- end }}
