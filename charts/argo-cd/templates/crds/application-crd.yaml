@@ -4,7 +4,8 @@ metadata:
   labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}
     helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+#   Don't apply label due to https://github.com/argoproj/argo-cd/issues/1425
+#   app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
   name: applications.argoproj.io
