@@ -3,7 +3,7 @@ applicationController:
   servicePort: 8083
   image:
     repository: argoproj/argocd
-    tag: v0.11.0
+    tag: v0.12.0
     pullPolicy: Always
 
 server:
@@ -14,11 +14,11 @@ server:
   serviceMetricsPort: 8082
   image:
     repository: argoproj/argocd
-    tag: v0.11.0
+    tag: v0.12.0
     pullPolicy: Always
   uiInitImage:
     repository: argoproj/argocd-ui
-    tag: v0.11.0
+    tag: v0.12.0
     pullPolicy: Always
   extraArgs: []
     
@@ -27,7 +27,7 @@ repoServer:
   servicePort: 8081
   image:
     repository: argoproj/argocd
-    tag: v0.11.0
+    tag: v0.12.0
     pullPolicy: Always
 
 dexServer:
@@ -41,7 +41,7 @@ dexServer:
     pullPolicy: Always
   initImage:
     repository: argoproj/argocd
-    tag: v0.11.0
+    tag: v0.12.0
     pullPolicy: Always
 
 # terminate tls at ArgoCD level
@@ -127,3 +127,11 @@ rbac:
   #   g, your-github-org:your-team, role:org-admin
   # The default role Argo CD will fall back to, when authorizing API requests
   policyDefault: #role:readonly
+
+redis:
+  image:
+    repository: redis
+    tag: 5.0.3
+    pullPolicy: Always
+  containerPort: 6379
+  servicePort: 6379
