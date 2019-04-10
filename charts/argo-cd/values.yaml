@@ -3,7 +3,7 @@ applicationController:
   servicePort: 8082
   image:
     repository: argoproj/argocd
-    tag: v0.12.0
+    tag: v0.12.1
     pullPolicy: Always
 
 server:
@@ -14,11 +14,11 @@ server:
   serviceMetricsPort: 8082
   image:
     repository: argoproj/argocd
-    tag: v0.12.0
+    tag: v0.12.1
     pullPolicy: Always
   uiInitImage:
     repository: argoproj/argocd-ui
-    tag: v0.12.0
+    tag: v0.12.1
     pullPolicy: Always
   extraArgs: []
     
@@ -27,7 +27,7 @@ repoServer:
   servicePort: 8081
   image:
     repository: argoproj/argocd
-    tag: v0.12.0
+    tag: v0.12.1
     pullPolicy: Always
 
 dexServer:
@@ -41,7 +41,7 @@ dexServer:
     pullPolicy: Always
   initImage:
     repository: argoproj/argocd
-    tag: v0.12.0
+    tag: v0.12.1
     pullPolicy: Always
 
 # terminate tls at ArgoCD level
