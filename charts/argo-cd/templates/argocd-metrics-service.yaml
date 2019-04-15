@@ -7,14 +7,13 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
-    app.kubernetes.io/component: server
+    app.kubernetes.io/component: application-controller
   name: argocd-metrics
 spec:
   ports:
-  - name: http
+  - name: metrics
     protocol: TCP
-    port: {{ .Values.server.serviceMetricsPort }}
-    targetPort: {{ .Values.server.containerMetricsPort }}
+    port: {{ .Values.applicationController.servicePort }}
+    targetPort: {{ .Values.applicationController.containerPort }}
   selector:
-    app: {{ include "argo-cd.name" . }}-server
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-server
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller
