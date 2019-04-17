@@ -1,3 +1,4 @@
+{{- if .Values.ui.enabled -}}
 {{- if .Values.ui.ingress.enabled -}}
 {{- $serviceName := printf "%s-%s" .Release.Name .Values.ui.name -}}
 {{- $servicePort := .Values.ui.servicePort -}}
@@ -27,4 +28,5 @@ spec:
   tls:
 {{ toYaml .Values.ui.ingress.tls | indent 4 }}
   {{- end -}}
+{{- end -}}
 {{- end -}}
