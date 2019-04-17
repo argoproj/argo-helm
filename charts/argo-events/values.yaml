@@ -1,27 +1,31 @@
+# docker registry
 registry: argoproj
+
+# The image pull policy
 imagePullPolicy: Always
 
-# Version of the Sensor CRD
-crd:
-  version: v1beta1
-  jobServiceAccount: default
+# ServiceAccount to use for running controller.
+serviceAccount: argo-events-sa
 
-# If set to true then chart set controller instance id to release name
-useReleaseAsInstanceID: true
-instanceID: 1
+instanceID: argo-events
 
-# controller
-controller:
+
+
+# set `singleNamespace` to false to have the controllers 
+# listen on all namespaces.  Otherwise the controllers will listen
+# on the namespace provided
+namespace: argo-events
+singleNamespace: true
+
+# sensor controller
+sensorController:
   name: sensor-controller
   image: sensor-controller
-  tag: latest
+  tag: v0.8.1
   replicaCount: 1
-  serviceAccount: argo-events
 
-# signal microservices
-signals:
-  serviceAccount: argo-signals
-  # this controls what the resource signal pod can listen to
-  listenRoles:
-    apiGroups: ["argoproj.io", ""]
-    resources: ["sensors", "workflows", "pods"]
+gatewayController:
+  name: gateway-controller
+  image: gateway-controller
+  tag: v0.8.1
+  replicaCount: 1

@@ -15,6 +15,10 @@ init:
 controller:
   # podAnnotations is an optional map of annotations to be applied to the controller Pods
   podAnnotations: {}
+  metricsConfig:
+    enabled: false
+    path: /metrics
+    port: 8080
   serviceAccount: argo
   name: workflow-controller
   workflowNamespaces:
@@ -41,7 +45,10 @@ ui:
   serviceAccount: argo-ui
   # Annotations to be applied to the UI Service
   serviceAnnotations: {}
-  
+  # Source ranges to allow access to service from. Only applies to
+  # service type `LoadBalancer`
+  loadBalancerSourceRanges: []
+
   ## Ingress configuration.
   ## ref: https://kubernetes.io/docs/user-guide/ingress/
   ##

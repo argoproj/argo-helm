@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-repo-server
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-repo-server
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+    app.kubernetes.io/component: repo-server
+spec:
+  ports:
+  - port: {{ .Values.repoServer.servicePort }}
+    targetPort: {{ .Values.repoServer.servicePort }}
+  selector:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-repo-server

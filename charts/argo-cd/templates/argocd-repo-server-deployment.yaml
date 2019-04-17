@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-repo-server
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-repo-server
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+    app.kubernetes.io/component: repo-server
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "argo-cd.name" . }}-repo-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "argo-cd.name" . }}-repo-server
+        helm.sh/chart: {{ include "argo-cd.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+        app.kubernetes.io/component: repo-server
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: argocd-repo-server
+        image: {{ .Values.repoServer.image.repository }}:{{ .Values.repoServer.image.tag }}
+        imagePullPolicy: {{ .Values.repoServer.image.pullPolicy}}
+        command: [argocd-repo-server]
+        ports:
+        - containerPort: {{ .Values.repoServer.containerPort }}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.repoServer.containerPort }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
