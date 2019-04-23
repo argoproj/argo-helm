@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
     app.kubernetes.io/component: server
+  {{- if .Values.server.serviceAnnotations }}
   annotations:
 {{ toYaml .Values.server.serviceAnnotations | indent 4}}{{- end }}
 spec:
