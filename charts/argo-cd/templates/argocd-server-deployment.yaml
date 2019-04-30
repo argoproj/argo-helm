@@ -46,6 +46,9 @@ spec:
         volumeMounts:
         - mountPath: /shared
           name: static-files
+        {{- if .Values.server.volumeMounts }}
+        {{ toYaml .Values.server.volumeMounts | nindent 8 | trim }}
+        {{- end }}
         ports:
         - containerPort: {{ .Values.server.containerPort }}
         readinessProbe:
@@ -57,3 +60,6 @@ spec:
       volumes:
       - emptyDir: {}
         name: static-files
+      {{- if .Values.server.volumes }}
+      {{ toYaml .Values.server.volumes | nindent 6 | trim }}
+      {{- end }}
