@@ -40,4 +40,12 @@ spec:
             port: {{ .Values.applicationController.containerPort }}
           initialDelaySeconds: 5
           periodSeconds: 10
+        volumeMounts:
+        {{- if .Values.applicationController.volumeMounts }}
+        {{ toYaml .Values.applicationController.volumeMounts | nindent 8 | trim }}
+        {{- end }}
       serviceAccountName: argocd-application-controller
+      volumes:
+      {{- if .Values.applicationController.volumes }}
+      {{ toYaml .Values.applicationController.volumes | nindent 6 | trim }}
+      {{- end }}

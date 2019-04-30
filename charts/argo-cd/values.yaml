@@ -5,6 +5,8 @@ applicationController:
     repository: argoproj/argocd
     tag: v0.12.1
     pullPolicy: Always
+  volumeMounts: []
+  volumes: []
 
 server:
   containerPort: 8080
@@ -20,7 +22,9 @@ server:
     tag: v0.12.1
     pullPolicy: Always
   extraArgs: []
-    
+  volumeMounts: []
+  volumes: []
+
 repoServer:
   containerPort: 8081
   servicePort: 8081
@@ -28,6 +32,8 @@ repoServer:
     repository: argoproj/argocd
     tag: v0.12.1
     pullPolicy: Always
+  volumeMounts: []
+  volumes: []
 
 dexServer:
   containerPortHttp: 5556
@@ -42,6 +48,8 @@ dexServer:
     repository: argoproj/argocd
     tag: v0.12.1
     pullPolicy: Always
+  volumeMounts: []
+  volumes: []
 
 # terminate tls at ArgoCD level
 ingress:
