@@ -36,3 +36,11 @@ spec:
             port: {{ .Values.repoServer.containerPort }}
           initialDelaySeconds: 5
           periodSeconds: 10
+        volumeMounts:
+        {{- if .Values.repoServer.volumeMounts }}
+        {{ toYaml .Values.repoServer.volumeMounts | nindent 8 | trim }}
+        {{- end }}
+      volumes:
+      {{- if .Values.repoServer.volumes }}
+      {{ toYaml .Values.repoServer.volumes | nindent 6 | trim }}
+      {{- end }}

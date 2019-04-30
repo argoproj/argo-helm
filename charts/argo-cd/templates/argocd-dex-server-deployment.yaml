@@ -43,6 +43,12 @@ spec:
         volumeMounts:
         - mountPath: /shared
           name: static-files
+        {{- if .Values.dexServer.volumeMounts }}
+        {{ toYaml .Values.dexServer.volumeMounts | nindent 8 | trim }}
+        {{- end }}
       volumes:
       - emptyDir: {}
         name: static-files
+      {{- if .Values.dexServer.volumes }}
+      {{ toYaml .Values.dexServer.volumes | nindent 6 | trim }}
+      {{- end }}
