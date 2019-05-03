@@ -5,3 +5,13 @@ kind: ServiceAccount
 metadata:
   name: argo-events-sa
   namespace: {{ .Release.Namespace }}
+{{- if .Values.additionalSaNamespaces }}
+{{- range $namespace := .Values.additionalSaNamespaces }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argo-events-sa
+  namespace: {{ $namespace }}
+{{- end }}
+{{- end }}
