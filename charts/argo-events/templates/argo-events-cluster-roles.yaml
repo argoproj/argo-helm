@@ -10,6 +10,13 @@ subjects:
   - kind: ServiceAccount
     name: argo-events-sa
     namespace: {{ .Release.Namespace }}
+  {{- if .Values.additionalSaNamespaces }}
+  {{- range $namespace := .Values.additionalSaNamespaces }}
+  - kind: ServiceAccount
+    name: argo-events-sa
+    namespace: {{ $namespace }}
+  {{- end }}
+  {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
