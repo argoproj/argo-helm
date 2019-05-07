@@ -62,9 +62,9 @@ ingress:
   hosts:
     - argocd.example.com
 
-# Standard Argo CD installation with cluster-admin access. 
-# Set this true if you plan to use Argo CD to deploy applications in the same cluster that 
-#     Argo CD runs in (i.e. kubernetes.svc.default). 
+# Standard Argo CD installation with cluster-admin access.
+# Set this true if you plan to use Argo CD to deploy applications in the same cluster that
+#     Argo CD runs in (i.e. kubernetes.svc.default).
 # Will still be able to deploy to external clusters with inputted credentials.
 
 clusterAdminAccess:
@@ -119,9 +119,18 @@ config:
   # provider webhook secret. The payload URL configured in the git provider should use the
   # /api/webhook endpoint of your Argo CD instance (e.g. https://argocd.example.com/api/webhook)
   webhook:
-    githubSecret: 
+    githubSecret:
     gitlabSecret:
     bitbucketSecret:
+  configManagementPlugins:
+    # - name: pluginName
+    #   init:                          # Optional command to initialize application source directory
+    #     command: ["sample command"]
+    #     args: ["sample args"]
+    #   generate:                      # Command to generate manifests YAML
+    #     command: ["sample command"]
+    #     args: ["sample args"]
+
 rbac:
 #   # An RBAC policy .csv file containing additional policy and role definitions.
 #   # See https://github.com/argoproj/argo-cd/blob/master/docs/rbac.md on how to write RBAC policies.
