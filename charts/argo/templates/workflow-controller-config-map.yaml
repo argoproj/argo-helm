@@ -17,6 +17,9 @@ data:
     {{- end }}
     artifactRepository:
       {{- if or .Values.minio.install .Values.useDefaultArtifactRepo }}
+      {{- if .Values.artifactRepository.archiveLogs }}
+      archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
+      {{- end }}
       s3:
         {{- if .Values.useStaticCredentials }}
         accessKeySecret:
