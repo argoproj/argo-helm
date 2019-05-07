@@ -122,6 +122,14 @@ config:
     githubSecret:
     gitlabSecret:
     bitbucketSecret:
+  # resourceCustomizations can be used to create custom health checks for resources
+  # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/health.md#way-1-define-a-custom-health-check-in-argocd-cm-configmap
+  resourceCustomizations:
+  #   certmanager.k8s.io/Certificate:
+  #     health.lua: |
+  #       hs = {}
+  #       ...
+  #       return hs
   configManagementPlugins:
     # - name: pluginName
     #   init:                          # Optional command to initialize application source directory

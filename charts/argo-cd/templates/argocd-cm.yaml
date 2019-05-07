@@ -28,6 +28,10 @@ data:
   oidc.config: |
 {{ toYaml .Values.config.oidcConfig | indent 4 }}
 {{- end }}
+{{- if .Values.config.resourceCustomizations }}
+  resource.customizations: |
+{{ toYaml .Values.config.resourceCustomizations | indent 4 }}
+{{- end }}
 {{- if .Values.config.configManagementPlugins }}
   configManagementPlugins: |
 {{ toYaml .Values.config.configManagementPlugins | indent 4 }}
