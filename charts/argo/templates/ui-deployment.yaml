@@ -22,6 +22,10 @@ spec:
         - name: ui
           image: "{{ .Values.images.namespace }}/{{ .Values.images.ui }}:{{ .Values.images.tag }}"
           env:
+          {{- if .Values.ui.forceNamespaceIsolation }}
+          - name: FORCE_NAMESPACE_ISOLATION
+            value: "true"
+          {{- end }}
           - name: IN_CLUSTER
             value: "true"
           - name: ARGO_NAMESPACE
