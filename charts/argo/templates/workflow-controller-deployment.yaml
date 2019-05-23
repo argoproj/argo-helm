@@ -21,6 +21,7 @@ spec:
       containers:
         - name: controller
           image: "{{ .Values.images.namespace }}/{{ .Values.images.controller }}:{{ .Values.images.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
           command: [ "workflow-controller" ]
           args:
           - "--configmap"
