@@ -3,7 +3,7 @@ images:
   controller: workflow-controller
   ui: argoui
   executor: argoexec
-  tag: v2.2.1
+  tag: v2.3.0
 
 crdVersion: v1alpha1
 
@@ -21,6 +21,13 @@ controller:
     enabled: false
     path: /metrics
     port: 8080
+  telemetryConfig:
+    enabled: false
+    path: /telemetry
+    port: 8081
+  serviceMonitor:
+    enabled: false
+    additionalLabels: {}
   serviceAccount: argo
   name: workflow-controller
   workflowNamespaces:
@@ -36,6 +43,14 @@ controller:
   logging:
     level: info
     globallevel: "0"
+  serviceType: ClusterIP
+  metricsServicePort: 8080
+  telemetryServicePort: 8081
+  # Annotations to be applied to the controller Service
+  serviceAnnotations: {}
+  # Source ranges to allow access to service from. Only applies to
+  # service type `LoadBalancer`
+  loadBalancerSourceRanges: []
 
 ui:
   enabled: true

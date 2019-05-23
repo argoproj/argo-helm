@@ -36,3 +36,6 @@ data:
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:
 {{ toYaml .Values.controller.metricsConfig | indent 6}}{{- end }}
+    {{- if .Values.controller.telemetryConfig.enabled }}
+    telemetryConfig:
+{{ toYaml .Values.controller.telemetryConfig | indent 6}}{{- end }}
