@@ -16,6 +16,7 @@ spec:
       containers:
         - name: ci
           image: "{{ .Values.imageNamespace }}/{{ .Values.ciImage }}:{{ .Values.imageTag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           env:
           - name: IN_CLUSTER
             value: "true"
