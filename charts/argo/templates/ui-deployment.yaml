@@ -21,6 +21,7 @@ spec:
       containers:
         - name: ui
           image: "{{ .Values.images.namespace }}/{{ .Values.images.ui }}:{{ .Values.images.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
           env:
           {{- if .Values.ui.forceNamespaceIsolation }}
           - name: FORCE_NAMESPACE_ISOLATION
