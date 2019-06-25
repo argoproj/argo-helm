@@ -19,6 +19,9 @@ spec:
     app: {{ .Release.Name }}-{{ .Values.ui.name }}
   sessionAffinity: None
   type: {{ .Values.ui.serviceType }}
+  {{- if and (eq .Values.ui.serviceType "LoadBalancer") .Values.ui.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.ui.loadBalancerIP | quote }}
+  {{- end }}
   {{- if and (eq .Values.ui.serviceType "LoadBalancer") .Values.ui.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
 {{ toYaml .Values.ui.loadBalancerSourceRanges | indent 4 }}{{- end }}
