@@ -51,6 +51,9 @@ ui:
   serviceAccount: argo-ui
   # Annotations to be applied to the UI Service
   serviceAnnotations: {}
+  # Static IP address to assign to loadBalancer
+  # service type `LoadBalancer`
+  loadBalancerIP: "123"
   # Source ranges to allow access to service from. Only applies to
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
