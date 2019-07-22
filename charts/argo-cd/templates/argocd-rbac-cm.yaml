@@ -16,3 +16,6 @@ data:
   policy.csv:
 {{- toYaml .Values.rbac.policyCsv | indent 4 }}
 {{- end }}
+{{- if .Values.rbac.scopes }}
+  scopes: {{ .Values.rbac.scopes }}
+{{- end }}
