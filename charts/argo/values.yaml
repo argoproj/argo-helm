@@ -16,6 +16,9 @@ init:
 createAggregateRoles: true
 
 controller:
+  image:
+    # Overrides .images.tag if defined.
+    tag: ""
   # podAnnotations is an optional map of annotations to be applied to the controller Pods
   podAnnotations: {}
   metricsConfig:
@@ -54,10 +57,18 @@ controller:
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
 
+executor:
+  image:
+    # Overrides .images.tag if defined.
+    tag: ""
+
 ui:
   enabled: true
   # only show workflows where UI installed
   forceNamespaceIsolation: false
+  image:
+    # Overrides .images.tag if defined.
+    tag: ""
   # optional map of annotations to be applied to the ui Pods
   podAnnotations: {}
   name: ui
