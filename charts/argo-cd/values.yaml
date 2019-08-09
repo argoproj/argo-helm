@@ -3,7 +3,7 @@ applicationController:
   servicePort: 8082
   image:
     repository: argoproj/argocd
-    tag: v0.12.3
+    tag: v1.1.2
     pullPolicy: Always
   volumeMounts: []
   volumes: []
@@ -15,11 +15,11 @@ server:
   serviceAnnotations: {}
   image:
     repository: argoproj/argocd
-    tag: v0.12.3
+    tag: v1.1.2
     pullPolicy: Always
   uiInitImage:
     repository: argoproj/argocd-ui
-    tag: v0.12.3
+    tag: v.1.1.2
     pullPolicy: Always
   extraArgs: []
   volumeMounts: []
@@ -30,7 +30,7 @@ repoServer:
   servicePort: 8081
   image:
     repository: argoproj/argocd
-    tag: v0.12.3
+    tag: v1.1.2
     pullPolicy: Always
   volumeMounts: []
   volumes: []
@@ -46,7 +46,7 @@ dexServer:
     pullPolicy: Always
   initImage:
     repository: argoproj/argocd
-    tag: v0.12.3
+    tag: v1.1.2
     pullPolicy: Always
   volumeMounts: []
   volumes: []
