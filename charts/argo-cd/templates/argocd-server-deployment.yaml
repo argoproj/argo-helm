@@ -22,6 +22,10 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
         app.kubernetes.io/component: server
+      annotations:
+        {{- range $key, $value := .Values.server.annotations }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
       serviceAccountName: argocd-server
       initContainers:

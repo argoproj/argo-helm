@@ -3,7 +3,8 @@ images:
   controller: workflow-controller
   ui: argoui
   executor: argoexec
-  tag: v2.2.1
+  pullPolicy: Always
+  tag: v2.3.0
 
 crdVersion: v1alpha1
 
@@ -12,17 +13,30 @@ init:
   # being deployed to.  In RBAC clusters, that will almost certainly fail.  See the NOTES: section of the readme for more info.
   serviceAccount: ""
 
+createAggregateRoles: true
+
 controller:
+  image:
+    # Overrides .images.tag if defined.
+    tag: ""
   # podAnnotations is an optional map of annotations to be applied to the controller Pods
   podAnnotations: {}
   metricsConfig:
     enabled: false
     path: /metrics
     port: 8080
+  telemetryConfig:
+    enabled: false
+    path: /telemetry
+    port: 8081
+  serviceMonitor:
+    enabled: false
+    additionalLabels: {}
   serviceAccount: argo
   name: workflow-controller
   workflowNamespaces:
     - default
+  containerRuntimeExecutor: docker
   instanceID:
     # `instanceID.enabled` configures the controller to filter workflow submissions
     # to only those which have a matching instanceID attribute.
@@ -34,9 +48,27 @@ controller:
   logging:
     level: info
     globallevel: "0"
+  serviceType: ClusterIP
+  metricsServicePort: 8080
+  telemetryServicePort: 8081
+  # Annotations to be applied to the controller Service
+  serviceAnnotations: {}
+  # Source ranges to allow access to service from. Only applies to
+  # service type `LoadBalancer`
+  loadBalancerSourceRanges: []
+
+executor:
+  image:
+    # Overrides .images.tag if defined.
+    tag: ""
 
 ui:
   enabled: true
+  # only show workflows where UI installed
+  forceNamespaceIsolation: false
+  image:
+    # Overrides .images.tag if defined.
+    tag: ""
   # optional map of annotations to be applied to the ui Pods
   podAnnotations: {}
   name: ui
@@ -45,6 +77,9 @@ ui:
   serviceAccount: argo-ui
   # Annotations to be applied to the UI Service
   serviceAnnotations: {}
+  # Static IP address to assign to loadBalancer
+  # service type `LoadBalancer`
+  loadBalancerIP: ""
   # Source ranges to allow access to service from. Only applies to
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
@@ -79,6 +114,8 @@ ui:
 useDefaultArtifactRepo: false
 useStaticCredentials: true
 artifactRepository:
+  # archiveLogs will archive the main container logs as an artifact
+  archiveLogs: false
   s3:
     # Note the `key` attribute is not the actual secret, it's the PATH to
     # the contents in the associated secret, as defined by the `name` attribute.

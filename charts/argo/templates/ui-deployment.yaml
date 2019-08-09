@@ -20,8 +20,13 @@ spec:
       serviceAccountName: {{ .Values.ui.serviceAccount | quote }}
       containers:
         - name: ui
-          image: "{{ .Values.images.namespace }}/{{ .Values.images.ui }}:{{ .Values.images.tag }}"
+          image: "{{ .Values.images.namespace }}/{{ .Values.images.ui }}:{{ default .Values.images.tag .Values.ui.image.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
           env:
+          {{- if .Values.ui.forceNamespaceIsolation }}
+          - name: FORCE_NAMESPACE_ISOLATION
+            value: "true"
+          {{- end }}
           - name: IN_CLUSTER
             value: "true"
           - name: ARGO_NAMESPACE

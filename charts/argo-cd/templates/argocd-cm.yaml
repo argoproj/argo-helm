@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-cm
-  labels: 
+  labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -27,4 +27,12 @@ data:
 {{- if .Values.config.oidcConfig }}
   oidc.config: |
 {{ toYaml .Values.config.oidcConfig | indent 4 }}
+{{- end }}
+{{- if .Values.config.resourceCustomizations }}
+  resource.customizations: |
+{{ toYaml .Values.config.resourceCustomizations | indent 4 }}
+{{- end }}
+{{- if .Values.config.configManagementPlugins }}
+  configManagementPlugins: |
+{{ toYaml .Values.config.configManagementPlugins | indent 4 }}
 {{- end }}

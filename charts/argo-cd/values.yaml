@@ -24,6 +24,7 @@ server:
   extraArgs: []
   volumeMounts: []
   volumes: []
+  annotations: {}
 
 repoServer:
   containerPort: 8081
@@ -62,9 +63,9 @@ ingress:
   hosts:
     - argocd.example.com
 
-# Standard Argo CD installation with cluster-admin access. 
-# Set this true if you plan to use Argo CD to deploy applications in the same cluster that 
-#     Argo CD runs in (i.e. kubernetes.svc.default). 
+# Standard Argo CD installation with cluster-admin access.
+# Set this true if you plan to use Argo CD to deploy applications in the same cluster that
+#     Argo CD runs in (i.e. kubernetes.svc.default).
 # Will still be able to deploy to external clusters with inputted credentials.
 
 clusterAdminAccess:
@@ -96,7 +97,7 @@ config:
     #   # url: https://argo-cd-demo.argoproj.io
     #
     #   # A dex connector configuration. See documentation on how to configure SSO:
-    #   # https://github.com/argoproj/argo-cd/blob/master/docs/sso.md#2-configure-argocd-for-sso
+    #   # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/sso.md#2-configure-argo-cd-for-sso
     # connectors:
     #   # GitHub example
     #   - type: github
@@ -119,12 +120,29 @@ config:
   # provider webhook secret. The payload URL configured in the git provider should use the
   # /api/webhook endpoint of your Argo CD instance (e.g. https://argocd.example.com/api/webhook)
   webhook:
-    githubSecret: 
+    githubSecret:
     gitlabSecret:
     bitbucketSecret:
+  # resourceCustomizations can be used to create custom health checks for resources
+  # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/health.md#way-1-define-a-custom-health-check-in-argocd-cm-configmap
+  resourceCustomizations:
+  #   certmanager.k8s.io/Certificate:
+  #     health.lua: |
+  #       hs = {}
+  #       ...
+  #       return hs
+  configManagementPlugins:
+    # - name: pluginName
+    #   init:                          # Optional command to initialize application source directory
+    #     command: ["sample command"]
+    #     args: ["sample args"]
+    #   generate:                      # Command to generate manifests YAML
+    #     command: ["sample command"]
+    #     args: ["sample args"]
+
 rbac:
 #   # An RBAC policy .csv file containing additional policy and role definitions.
-#   # See https://github.com/argoproj/argo-cd/blob/master/docs/rbac.md on how to write RBAC policies.
+#   # See https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md on how to write RBAC policies.
 #   policy.csv: |
 #     # Give all members of "my-org:team-alpha" the ability to sync apps in "my-project"
 #     p, my-org:team-alpha, applications, sync, my-project/*, allow
@@ -140,6 +158,8 @@ rbac:
   #   g, your-github-org:your-team, role:org-admin
   # The default role Argo CD will fall back to, when authorizing API requests
   policyDefault: #role:readonly
+  # Scopes controls which OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
+  scopes: #[groups]
 
 redis:
   image:

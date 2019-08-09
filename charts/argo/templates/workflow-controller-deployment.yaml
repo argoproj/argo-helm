@@ -20,13 +20,14 @@ spec:
       serviceAccountName: {{ .Values.controller.serviceAccount | quote }}
       containers:
         - name: controller
-          image: "{{ .Values.images.namespace }}/{{ .Values.images.controller }}:{{ .Values.images.tag }}"
+          image: "{{ .Values.images.namespace }}/{{ .Values.images.controller }}:{{ default .Values.images.tag .Values.controller.image.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
           command: [ "workflow-controller" ]
           args:
           - "--configmap"
           - "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"
           - "--executor-image"
-          - "{{ .Values.images.namespace }}/{{ .Values.images.executor }}:{{ .Values.images.tag }}"
+          - "{{ .Values.images.namespace }}/{{ .Values.images.executor }}:{{ default .Values.images.tag .Values.executor.image.tag }}"
           - "--loglevel"
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"
