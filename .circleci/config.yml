@@ -1,0 +1,30 @@
+version: 2.1
+
+orbs:
+  helm-tools: paperspace/helm-tools@0.0.5
+
+
+_workspace_root: &workspace_root .
+_chart_name: &chart_name argo-helm
+
+
+workflows:
+  version: 2.1
+  pipeline:
+    jobs:
+    - helm-tools/package_and_publish:
+        context: helm-deploy
+        chart_name: *chart_name
+        chart_version: ${CIRCLE_TAG}
+        chart_path: charts
+        workspace_root: *workspace_root
+        chart_registry_url: ${CHART_REGISTRY_URL}
+        chart_registry_username: ${CHART_REGISTRY_USERNAME}
+        chart_registry_password: ${CHART_REGISTRY_PASSWORD}
+        requires:
+        - tag
+        filters:
+          tags:
+            only: /.*/
+          branches:
+            ignore: /.*/
