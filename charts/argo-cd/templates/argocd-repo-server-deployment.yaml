@@ -31,6 +31,11 @@ spec:
         command: [argocd-repo-server]
         ports:
         - containerPort: {{ .Values.repoServer.containerPort }}
+        livenessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          tcpSocket:
+            port: {{ .Values.repoServer.containerPort }}
         readinessProbe:
           tcpSocket:
             port: {{ .Values.repoServer.containerPort }}

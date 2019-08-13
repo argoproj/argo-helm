@@ -55,6 +55,12 @@ spec:
         {{- end }}
         ports:
         - containerPort: {{ .Values.server.containerPort }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.server.containerPort }}
+          initialDelaySeconds: 3
+          periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /healthz
