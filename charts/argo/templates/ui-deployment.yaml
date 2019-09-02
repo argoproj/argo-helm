@@ -13,6 +13,9 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Values.ui.name}}
         release: {{ .Release.Name }}
+        {{- if .Values.ui.podLabels }}
+        {{- toYaml .Values.ui.podLabels | nindent 8 }}
+        {{- end }}
       {{- if .Values.ui.podAnnotations }}
       annotations:
 {{ toYaml .Values.ui.podAnnotations | indent 8}}{{- end }}
