@@ -52,7 +52,9 @@ controller:
     globallevel: "0"
   serviceType: ClusterIP
   metricsServicePort: 8080
+  metricsServicePortName: metrics
   telemetryServicePort: 8081
+  telemetryServicePortName: telemetry
   # Annotations to be applied to the controller Service
   serviceAnnotations: {}
   # Optional labels to add to the controller Service
@@ -81,6 +83,7 @@ ui:
   name: ui
   serviceType: ClusterIP
   servicePort: 80
+  # servicePortName: http
   serviceAccount: argo-ui
   # Annotations to be applied to the UI Service
   serviceAnnotations: {}

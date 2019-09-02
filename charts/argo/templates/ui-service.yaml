@@ -16,6 +16,9 @@ metadata:
 spec:
   ports:
   - port: {{ .Values.ui.servicePort }}
+    {{- if .Values.ui.servicePortName }}
+    name: {{ .Values.ui.servicePortName }}
+    {{- end }}
     protocol: TCP
     targetPort: 8001
   selector:
