@@ -25,6 +25,12 @@ spec:
         - name: ui
           image: "{{ .Values.images.namespace }}/{{ .Values.images.ui }}:{{ default .Values.images.tag .Values.ui.image.tag }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
+          {{- if .Values.ui.podPortName }}
+          ports:
+          - name: {{ .Values.ui.podPortName }}
+            containerPort: 8001
+            protocol: TCP
+          {{- end }}        
           env:
           {{- if .Values.ui.forceNamespaceIsolation }}
           - name: FORCE_NAMESPACE_ISOLATION
