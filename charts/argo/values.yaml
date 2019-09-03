@@ -64,6 +64,11 @@ controller:
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
   resources: {}
+  replicas: 1
+  pdb:
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 1
 
 executor:
   image:
@@ -97,6 +102,11 @@ ui:
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
   resources: {}
+  replicas: 1
+  pdb:
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 1
 
   ## Ingress configuration.
   ## ref: https://kubernetes.io/docs/user-guide/ingress/
