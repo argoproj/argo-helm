@@ -3,23 +3,20 @@ applicationController:
   servicePort: 8082
   image:
     repository: argoproj/argocd
-    tag: v1.1.2
+    tag: v1.2.0
     pullPolicy: Always
   volumeMounts: []
   volumes: []
 
 server:
   containerPort: 8080
+  metricsPort: 8083
   servicePortHttp: 80
   servicePortHttps: 443
   serviceAnnotations: {}
   image:
     repository: argoproj/argocd
-    tag: v1.1.2
-    pullPolicy: Always
-  uiInitImage:
-    repository: argoproj/argocd-ui
-    tag: v1.1.2
+    tag: v1.2.0
     pullPolicy: Always
   extraArgs: []
   volumeMounts: []
@@ -31,7 +28,7 @@ repoServer:
   servicePort: 8081
   image:
     repository: argoproj/argocd
-    tag: v1.1.2
+    tag: v1.2.0
     pullPolicy: Always
   volumeMounts: []
   volumes: []
@@ -47,7 +44,7 @@ dexServer:
     pullPolicy: Always
   initImage:
     repository: argoproj/argocd
-    tag: v1.1.2
+    tag: v1.2.0
     pullPolicy: Always
   volumeMounts: []
   volumes: []
