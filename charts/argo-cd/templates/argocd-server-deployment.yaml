@@ -22,16 +22,12 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
         app.kubernetes.io/component: server
+      annotations:
+        {{- range $key, $value := .Values.server.annotations }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
       serviceAccountName: argocd-server
-      initContainers:
-      - name: ui
-        image: {{ .Values.server.uiInitImage.repository }}:{{ .Values.server.uiInitImage.tag }}
-        imagePullPolicy: {{ .Values.server.uiInitImage.pullPolicy }}
-        command: [cp, -r, /app, /shared]
-        volumeMounts:
-        - mountPath: /shared
-          name: static-files
       containers:
       - name: argocd-server
         image: {{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}
@@ -44,13 +40,18 @@ spec:
         - {{. | quote }}
         {{- end }}
         volumeMounts:
-        - mountPath: /shared
-          name: static-files
         {{- if .Values.server.volumeMounts }}
         {{ toYaml .Values.server.volumeMounts | nindent 8 | trim }}
         {{- end }}
         ports:
         - containerPort: {{ .Values.server.containerPort }}
+        - containerPort: {{ .Values.server.metricsPort }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.server.containerPort }}
+          initialDelaySeconds: 3
+          periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /healthz

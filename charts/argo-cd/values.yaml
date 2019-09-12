@@ -3,35 +3,38 @@ applicationController:
   servicePort: 8082
   image:
     repository: argoproj/argocd
-    tag: v0.12.3
+    tag: v1.2.0
     pullPolicy: Always
   volumeMounts: []
   volumes: []
 
 server:
   containerPort: 8080
+  metricsPort: 8083
   servicePortHttp: 80
   servicePortHttps: 443
   serviceAnnotations: {}
   image:
     repository: argoproj/argocd
-    tag: v0.12.3
+    tag: v1.2.0
     pullPolicy: Always
   serviceType: ClusterIP
-  uiInitImage:
-    repository: argoproj/argocd-ui
-    tag: v0.12.3
-    pullPolicy: Always
   extraArgs: []
   volumeMounts: []
+  # - name: ssh-known-hosts
+  #   mountPath: /app/config/ssh
   volumes: []
+  # - name: ssh-known-hosts
+  #   configMap:
+  #     name: argocd-ssh-known-hosts-cm
+  annotations: {}
 
 repoServer:
   containerPort: 8081
   servicePort: 8081
   image:
     repository: argoproj/argocd
-    tag: v0.12.3
+    tag: v1.2.0
     pullPolicy: Always
   volumeMounts: []
   volumes: []
@@ -47,7 +50,7 @@ dexServer:
     pullPolicy: Always
   initImage:
     repository: argoproj/argocd
-    tag: v0.12.3
+    tag: v1.2.0
     pullPolicy: Always
   volumeMounts: []
   volumes: []
@@ -55,23 +58,18 @@ dexServer:
 # terminate tls at ArgoCD level
 ingress:
   enabled: false
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
   path: /
   hosts:
     - argocd.example.com
-
-# Standard Argo CD installation with cluster-admin access.
-# Set this true if you plan to use Argo CD to deploy applications in the same cluster that
-#     Argo CD runs in (i.e. kubernetes.svc.default).
-# Will still be able to deploy to external clusters with inputted credentials.
-
 clusterAdminAccess:
   enabled: true
-
 config:
+  createSecret: true
   helmRepositories:
     # - name: privateRepo
     #   url: http://chartmuseum.privatecloud.com
@@ -97,7 +95,7 @@ config:
     #   # url: https://argo-cd-demo.argoproj.io
     #
     #   # A dex connector configuration. See documentation on how to configure SSO:
-    #   # https://github.com/argoproj/argo-cd/blob/master/docs/sso.md#2-configure-argocd-for-sso
+    #   # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/sso.md#2-configure-argo-cd-for-sso
     # connectors:
     #   # GitHub example
     #   - type: github
@@ -123,8 +121,6 @@ config:
     githubSecret:
     gitlabSecret:
     bitbucketSecret:
-  # resourceCustomizations can be used to create custom health checks for resources
-  # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/health.md#way-1-define-a-custom-health-check-in-argocd-cm-configmap
   resourceCustomizations:
   #   certmanager.k8s.io/Certificate:
   #     health.lua: |
@@ -141,13 +137,13 @@ config:
     #     args: ["sample args"]
 
 rbac:
-#   # An RBAC policy .csv file containing additional policy and role definitions.
-#   # See https://github.com/argoproj/argo-cd/blob/master/docs/rbac.md on how to write RBAC policies.
-#   policy.csv: |
-#     # Give all members of "my-org:team-alpha" the ability to sync apps in "my-project"
-#     p, my-org:team-alpha, applications, sync, my-project/*, allow
-#     # Make all members of "my-org:team-beta" admins
-#     g, my-org:team-beta, role:admin
+  #   # An RBAC policy .csv file containing additional policy and role definitions.
+  #   # See https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md on how to write RBAC policies.
+  #   policy.csv: |
+  #     # Give all members of "my-org:team-alpha" the ability to sync apps in "my-project"
+  #     p, my-org:team-alpha, applications, sync, my-project/*, allow
+  #     # Make all members of "my-org:team-beta" admins
+  #     g, my-org:team-beta, role:admin
   policyCsv: #|
   #   p, role:org-admin, applications, *, */*, allow
   #   p, role:org-admin, clusters, get, *, allow
@@ -156,8 +152,8 @@ rbac:
   #   p, role:org-admin, repositories, update, *, allow
   #   p, role:org-admin, repositories, delete, *, allow
   #   g, your-github-org:your-team, role:org-admin
-  # The default role Argo CD will fall back to, when authorizing API requests
   policyDefault: #role:readonly
+  scopes: #[groups]
 
 redis:
   image:

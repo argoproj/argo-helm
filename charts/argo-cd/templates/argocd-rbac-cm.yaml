@@ -7,7 +7,7 @@ metadata:
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+    app.kubernetes.io/part-of: argocd
 data:
 {{- if .Values.rbac.policyDefault }}
   policy.default: {{ .Values.rbac.policyDefault }}
@@ -15,4 +15,7 @@ data:
 {{- if .Values.rbac.policyCsv }}
   policy.csv:
 {{- toYaml .Values.rbac.policyCsv | indent 4 }}
+{{- end }}
+{{- if .Values.rbac.scopes }}
+  scopes: {{ .Values.rbac.scopes }}
 {{- end }}
