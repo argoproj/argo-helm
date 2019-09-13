@@ -17,7 +17,16 @@ metadata:
 {{- end }}
 spec:
   rules:
-  {{- range .Values.ingress.hosts }}
+  {{- with .Values.config.url }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+          - path: {{ $ingressPath }}
+            backend:
+              serviceName: argocd-server
+              servicePort: {{ $servicePortHttps }}
+  {{- end }}
+  {{- range .Values.ingress.additionalHosts }}
     - host: {{ . | quote }}
       http:
         paths:
