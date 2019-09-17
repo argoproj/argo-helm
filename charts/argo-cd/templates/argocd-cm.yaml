@@ -24,6 +24,9 @@ data:
 {{- if .Values.config.url }}
   url: {{ .Values.config.url }}
 {{- end }}
+{{- if .Values.config.instanceLabelKey }}
+  application.instanceLabelKey: {{ .Values.config.instanceLabelKey }}
+{{- end }}
 {{- if .Values.config.oidcConfig }}
   oidc.config: |
 {{ toYaml .Values.config.oidcConfig | indent 4 }}
