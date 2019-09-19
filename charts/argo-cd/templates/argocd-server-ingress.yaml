@@ -1,6 +1,6 @@
 {{- if .Values.ingress.enabled -}}
-{{- $ingressPath := .Values.ingress.path -}}
-{{- $servicePortHttps := .Values.server.servicePortHttps -}}
+{{- $host := regexReplaceAll "^https?://([^/]+)(/.*)?$" .Values.config.url "${1}" }}
+{{- $path := default "/" (regexReplaceAll "^https?://([^/]+)(/.*)?$" .Values.config.url "${2}") }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -17,22 +17,13 @@ metadata:
 {{- end }}
 spec:
   rules:
-  {{- with .Values.config.url }}
+  {{- range prepend .Values.ingress.additionalHosts $host }}
     - host: {{ . | quote }}
       http:
         paths:
-          - path: {{ $ingressPath }}
+          - path: {{ $path | quote }}
             backend:
               serviceName: argocd-server
-              servicePort: {{ $servicePortHttps }}
-  {{- end }}
-  {{- range .Values.ingress.additionalHosts }}
-    - host: {{ . | quote }}
-      http:
-        paths:
-          - path: {{ $ingressPath }}
-            backend:
-              serviceName: argocd-server
-              servicePort: {{ $servicePortHttps }}
+              servicePort: https
   {{- end }}
 {{- end }}
