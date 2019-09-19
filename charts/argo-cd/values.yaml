@@ -65,8 +65,16 @@ ingress:
     # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
   path: /
   additionalHosts: []
+
+certificate:
+  enabled: false
+  issuer:
+    kind: # ClusterIssuer
+    name: # letsencrypt
+
 clusterAdminAccess:
   enabled: true
+
 config:
   createSecret: true
   helmRepositories:
