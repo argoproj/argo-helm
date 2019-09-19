@@ -42,10 +42,20 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
         volumeMounts:
+        - mountPath: /app/config/ssh
+          name: ssh-known-hosts
+        - mountPath: /app/config/tls
+          name: tls-certs
         {{- if .Values.repoServer.volumeMounts }}
         {{ toYaml .Values.repoServer.volumeMounts | nindent 8 | trim }}
         {{- end }}
       volumes:
+      - configMap:
+          name: argocd-ssh-known-hosts-cm
+        name: ssh-known-hosts
+      - configMap:
+          name: argocd-tls-certs-cm
+        name: tls-certs
       {{- if .Values.repoServer.volumes }}
       {{ toYaml .Values.repoServer.volumes | nindent 6 | trim }}
       {{- end }}
