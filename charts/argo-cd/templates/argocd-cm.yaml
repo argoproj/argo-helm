@@ -9,6 +9,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
 data:
+{{- if .Values.config.enableAnonymousAccess }}
+  users.anonymous.enabled: {{ .Values.config.enableAnonymousAccess }}
+{{- end }}
 {{- if .Values.config.helmRepositories }}
   helm.repositories: |
 {{ toYaml .Values.config.helmRepositories | indent 4 }}
