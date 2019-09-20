@@ -1,3 +1,3 @@
-# Argo CI Helm Chart
+# Argo CI Chart
 
 This is a **community maintained** chart.

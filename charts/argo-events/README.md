@@ -1,4 +1,4 @@
-# Argo-Events Helm Chart
+# Argo-Events Chart
 
 This is a **community maintained** chart. It installs the [argo-events](https://github.com/argoproj/argo-events) application. This application comes packaged with:
 - Sensor Custom Resource Definition

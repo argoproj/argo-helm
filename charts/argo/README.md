@@ -1,4 +1,4 @@
-## Argo workflows
+## Argo Workflows Chart
 
 This is a **community maintained** chart. It is used to set up argo and it's needed dependencies through one command. This is used in conjunction with [helm](https://github.com/kubernetes/helm).
 

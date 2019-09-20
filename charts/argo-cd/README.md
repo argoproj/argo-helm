@@ -1,4 +1,4 @@
-# Argo CD
+# Argo CD Chart
 
 This is a **community maintained** chart. This chart installs [argo-cd](https://argoproj.github.io/argo-cd/), a declarative, GitOps continuous delivery tool for Kubernetes.
 
