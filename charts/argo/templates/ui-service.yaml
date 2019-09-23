@@ -7,12 +7,18 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- if .Values.ui.serviceLabels }}
+    {{- toYaml .Values.ui.serviceLabels | nindent 4 }}
+    {{- end }}
   {{- if .Values.ui.serviceAnnotations }}
   annotations:
 {{ toYaml .Values.ui.serviceAnnotations | indent 4}}{{- end }}
 spec:
   ports:
   - port: {{ .Values.ui.servicePort }}
+    {{- if .Values.ui.servicePortName }}
+    name: {{ .Values.ui.servicePortName }}
+    {{- end }}
     protocol: TCP
     targetPort: 8001
   selector:

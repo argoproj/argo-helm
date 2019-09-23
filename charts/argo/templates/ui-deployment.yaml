@@ -8,6 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  replicas: {{ .Values.ui.replicas }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}-{{ .Values.ui.name}}
@@ -17,6 +18,9 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Values.ui.name}}
         release: {{ .Release.Name }}
+        {{- if .Values.ui.podLabels }}
+        {{- toYaml .Values.ui.podLabels | nindent 8 }}
+        {{- end }}
       {{- if .Values.ui.podAnnotations }}
       annotations:
 {{ toYaml .Values.ui.podAnnotations | indent 8}}{{- end }}
@@ -26,6 +30,12 @@ spec:
         - name: ui
           image: "{{ .Values.images.namespace }}/{{ .Values.images.ui }}:{{ default .Values.images.tag .Values.ui.image.tag }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
+          {{- if .Values.ui.podPortName }}
+          ports:
+          - name: {{ .Values.ui.podPortName }}
+            containerPort: 8001
+            protocol: TCP
+          {{- end }}        
           env:
           {{- if .Values.ui.forceNamespaceIsolation }}
           - name: FORCE_NAMESPACE_ISOLATION

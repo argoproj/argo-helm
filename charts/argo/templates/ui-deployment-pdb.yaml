@@ -1,0 +1,25 @@
+{{- if .Values.ui.enabled -}}
+{{- if .Values.ui.pdb.enabled -}}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.ui.name}}
+  labels:
+    app: {{ .Release.Name }}-{{ .Values.ui.name}}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ui.pdb.minAvailable }}
+  minAvailable: {{ .Values.ui.pdb.minAvailable }}
+  {{- else if .Values.ui.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.ui.pdb.maxUnavailable }}
+  {{- else }}
+  minAvailable: 0
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.ui.name}}
+      release: {{ .Release.Name }}
+{{- end -}}
+{{- end -}}
