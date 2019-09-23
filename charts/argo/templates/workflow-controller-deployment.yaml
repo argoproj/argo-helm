@@ -8,6 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  replicas: {{ .Values.controller.replicas }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}-{{ .Values.controller.name}}
@@ -17,6 +18,9 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Values.controller.name}}
         release: {{ .Release.Name }}
+        {{- if .Values.controller.podLabels }}
+        {{ toYaml .Values.controller.podLabels | nindent 8}}
+        {{- end }}
       {{- if .Values.controller.podAnnotations }}
       annotations:
 {{ toYaml .Values.controller.podAnnotations | indent 8}}{{- end }}

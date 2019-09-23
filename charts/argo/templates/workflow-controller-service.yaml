@@ -8,19 +8,22 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- if .Values.controller.serviceLabels }}
+    {{ toYaml .Values.controller.serviceLabels | nindent 4}}
+    {{- end }}
   {{- if .Values.controller.serviceAnnotations }}
   annotations:
 {{ toYaml .Values.controller.serviceAnnotations | indent 4}}{{- end }}
 spec:
   ports:
   {{- if .Values.controller.metricsConfig.enabled }}
-  - name: metrics
+  - name: {{ .Values.controller.metricsServicePortName }}
     port: {{ .Values.controller.metricsServicePort }}
     protocol: TCP
     targetPort: {{ .Values.controller.metricsConfig.port }}
   {{- end }}
   {{- if .Values.controller.telemetryConfig.enabled }}
-  - name: telemetry
+  - name: {{ .Values.controller.telemetryServicePortName }}
     port: {{ .Values.controller.telemetryServicePort }}
     protocol: TCP
     targetPort: {{ .Values.controller.telemetryConfig.port }}
