@@ -1,5 +1,6 @@
-## Argo Chart
-This chart is used to set up argo and it's needed dependencies through one command. This is used in conjunction with [helm](https://github.com/kubernetes/helm).
+## Argo Workflows Chart
+
+This is a **community maintained** chart. It is used to set up argo and it's needed dependencies through one command. This is used in conjunction with [helm](https://github.com/kubernetes/helm).
 
 If you want your deployment of this helm chart to most closely match the [argo CLI](https://github.com/argoproj/argo), you should deploy it in the `kube-system` namespace.
 
@@ -24,4 +25,3 @@ Fields to note:
 * `controller.workflowNamespaces`: This is a list of namespaces where workflows will be ran
 * `minio.install`: If this is true, we'll install [minio](https://github.com/kubernetes/charts/tree/master/stable/minio) and build out the artifactRepository section in workflow controller config map.
 * `artifactRepository.s3.accessKeySecret` and `artifactRepository.s3.secretKeySecret` These by default link to minio default credentials stored in the secret deployed by the minio chart.
-

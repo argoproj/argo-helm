@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-{{ .Values.controller.name}}
@@ -9,6 +9,10 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.controller.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.controller.name}}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
