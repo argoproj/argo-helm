@@ -65,6 +65,11 @@ ingress:
     # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
   path: /
   additionalHosts: []
+  tls:
+    # Secrets must be manually created in the namespace.
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
 
 certificate:
   enabled: false

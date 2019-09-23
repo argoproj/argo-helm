@@ -5,7 +5,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: argocd-server
-  labels: 
+  labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -26,4 +26,8 @@ spec:
               serviceName: argocd-server
               servicePort: https
   {{- end }}
+  {{- if .Values.ingress.tls }}
+  tls:
+{{ toYaml .Values.ingress.tls | indent 4 }}
+  {{- end -}}
 {{- end }}
