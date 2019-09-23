@@ -8,6 +8,7 @@ metadata:
   name: applications.argoproj.io
   annotations:
     "helm.sh/hook": crd-install
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   group: argoproj.io
   names:
