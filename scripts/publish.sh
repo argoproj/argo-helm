@@ -8,10 +8,9 @@ rm -rf $SRCROOT/output && git clone -b gh-pages git@github.com:argoproj/argo-hel
 for dir in $SRCROOT/charts/*;
 do
  echo "Processing $dir"
- version=$(cat $dir/Chart.yaml | grep version: | awk '{print $2}')
- tar -cvzf $SRCROOT/output/$(basename $dir)-$version.tgz -C $dir .
- cd $SRCROOT/output && helm repo index .
+ helm package $dir
 done
+cd $SRCROOT/output && helm repo index .
 
 cd $SRCROOT/output && git status
 
