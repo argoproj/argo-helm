@@ -48,3 +48,7 @@ spec:
                 fieldPath: metadata.namespace
           resources:
             {{- toYaml .Values.controller.resources | nindent 12 }}
+          {{- if .Values.controller.metricsConfig.enabled }}
+          ports:
+          - containerPort: 8080
+          {{- end }}
