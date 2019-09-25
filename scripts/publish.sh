@@ -5,7 +5,8 @@ GIT_PUSH=${GIT_PUSH:-true}
 
 rm -rf $SRCROOT/output && git clone -b gh-pages git@github.com:argoproj/argo-helm.git $SRCROOT/output
 
-for dir in $SRCROOT/charts/*;
+cd $SRCROOT/charts
+for dir in *;
 do
  echo "Processing $dir"
  helm package $dir
