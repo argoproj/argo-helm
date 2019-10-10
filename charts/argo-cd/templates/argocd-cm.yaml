@@ -38,6 +38,10 @@ data:
   resource.customizations: |
 {{ toYaml .Values.config.resourceCustomizations | indent 4 }}
 {{- end }}
+{{- if .Values.config.resourceExclusions }}
+  resource.exclusions: |
+{{ toYaml .Values.config.resourceExclusions | indent 4 }}
+{{- end }}
 {{- if .Values.config.configManagementPlugins }}
   configManagementPlugins: |
 {{ toYaml .Values.config.configManagementPlugins | indent 4 }}

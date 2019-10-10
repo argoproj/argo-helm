@@ -83,6 +83,13 @@ clusterAdminAccess:
 config:
   createSecret: true
   enableAnonymousAccess: false
+  resourceExclusions:
+    # - apiGroups:
+    #   - "*"
+    #   kinds:
+    #   - "*"
+    #   clusters:
+    #   - https://192.168.0.20
   helmRepositories:
     # - name: privateRepo
     #   url: http://chartmuseum.privatecloud.com
