@@ -3,7 +3,7 @@ applicationController:
   servicePort: 8082
   image:
     repository: argoproj/argocd
-    tag: v1.2.1
+    tag: v1.2.3
     pullPolicy: Always
   volumeMounts: []
   volumes: []
@@ -16,7 +16,7 @@ server:
   serviceAnnotations: {}
   image:
     repository: argoproj/argocd
-    tag: v1.2.1
+    tag: v1.2.3
     pullPolicy: Always
   serviceType: ClusterIP
   extraArgs: []
@@ -34,7 +34,7 @@ repoServer:
   servicePort: 8081
   image:
     repository: argoproj/argocd
-    tag: v1.2.1
+    tag: v1.2.3
     pullPolicy: Always
   volumeMounts: []
   volumes: []
@@ -46,11 +46,11 @@ dexServer:
   servicePortGrpc: 5557
   image:
     repository: quay.io/dexidp/dex
-    tag: v2.14.0
+    tag: v2.19.0
     pullPolicy: Always
   initImage:
     repository: argoproj/argocd
-    tag: v1.2.1
+    tag: v1.2.3
     pullPolicy: Always
   volumeMounts: []
   volumes: []
