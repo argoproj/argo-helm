@@ -1,0 +1,16 @@
+{{- if .Values.server.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  labels:
+    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-rbac-cm
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+    app.kubernetes.io/component: {{ .Values.server.name }}
+data:
+{{- toYaml .Values.server.rbacConfig | nindent 4 }}
+{{- end }}

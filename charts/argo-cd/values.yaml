@@ -1,184 +1,528 @@
-applicationController:
-  containerPort: 8082
-  servicePort: 8082
-  image:
-    repository: argoproj/argocd
-    tag: v1.2.3
-    pullPolicy: Always
-  volumeMounts: []
-  volumes: []
+## ArgoCD configuration
+## Ref: https://github.com/argoproj/argo-cd
+##
+nameOverride: argocd
 
-server:
-  containerPort: 8080
-  metricsPort: 8083
-  servicePortHttp: 80
-  servicePortHttps: 443
-  serviceAnnotations: {}
+global:
   image:
     repository: argoproj/argocd
     tag: v1.2.3
-    pullPolicy: Always
-  serviceType: ClusterIP
+    imagePullPolicy: IfNotPresent
+
+## Controller
+controller:
+  enabled: true
+  name: application-controller
+
+  image: {}
+  #  repository: argoproj/argocd
+  #  tag: v1.2.1
+  #  imagePullPolicy: IfNotPresent
+
+  ## Argo controller commandline flags
+  args:
+    statusProcessors: "20"
+    operationProcessors: "10"
+
+  ## Argo controller log level
+  logLevel: info
+
+  ## Additional command line arguments to pass to argocd-controller
   extraArgs: []
-  volumeMounts: []
-  # - name: ssh-known-hosts
-  #   mountPath: /app/config/ssh
-  volumes: []
-  # - name: ssh-known-hosts
-  #   configMap:
-  #     name: argocd-ssh-known-hosts-cm
-  annotations: {}
 
-repoServer:
-  containerPort: 8081
-  servicePort: 8081
-  image:
-    repository: argoproj/argocd
-    tag: v1.2.3
-    pullPolicy: Always
+  ## Annotations to be added to controller pods
+  ##
+  podAnnotations: {}
+
+  ## Labels to be added to controller pods
+  ##
+  podLabels: {}
+
+  ## Configures the controller port
+  containerPort: 8082
+
+  ## Readiness and liveness probes for default backend
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  ##
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Additional volumeMounts to the controller main container.
   volumeMounts: []
+
+  ## Additional volumes to the controller pod.
   volumes: []
 
-dexServer:
-  containerPortHttp: 5556
-  containerPortGrpc: 5557
-  servicePortHttp: 5556
-  servicePortGrpc: 5557
+  ## Controller service configuration
+  service:
+    annotations: {}
+    labels: {}
+    port: 8082
+
+  ## Node selectors and tolerations for server scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  nodeSelector: {}
+  tolerations: {}
+  affinity: {}
+
+  priorityClassName: ""
+
+  resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 250m
+  #    memory: 256Mi
+
+  serviceAccount:
+    create: true
+    name: argocd-application-controller
+
+  ## Server metrics controller configuration
+  metrics:
+    enabled: false
+    service:
+      annotations: {}
+      labels: {}
+      servicePort: 8082
+    serviceMonitor:
+      enabled: false
+    #   selector:
+    #     prometheus: kube-prometheus
+    #   namespace: monitoring
+    #   additionalLabels: {}
+
+## Dex
+dex:
+  enabled: true
+  name: dex-server
+
   image:
     repository: quay.io/dexidp/dex
-    tag: v2.19.0
-    pullPolicy: Always
-  initImage:
-    repository: argoproj/argocd
-    tag: v1.2.3
-    pullPolicy: Always
-  volumeMounts: []
-  volumes: []
+    tag: v2.14.0
+    imagePullPolicy: IfNotPresent
+  initImage: {}
 
-# terminate tls at ArgoCD level
-ingress:
-  enabled: false
-  annotations:
-    {}
-    # kubernetes.io/ingress.class: nginx
-    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-  path: /
-  additionalHosts: []
-  tls:
-    # Secrets must be manually created in the namespace.
-    # - secretName: chart-example-tls
-    #   hosts:
-    #     - chart-example.local
+  serviceAccount:
+    create: true
+    name: argocd-dex-server
 
-certificate:
-  enabled: false
-  issuer:
-    kind: # ClusterIssuer
-    name: # letsencrypt
+  ## Additional volumeMounts to the controller main container.
+  volumeMounts:
+    - name: static-files
+      mountPath: /shared
 
-clusterAdminAccess:
-  enabled: true
+  ## Additional volumes to the controller pod.
+  volumes:
+    - name: static-files
+      emptyDir: {}
 
-config:
-  createSecret: true
-  enableAnonymousAccess: false
-  resourceExclusions:
-    # - apiGroups:
-    #   - "*"
-    #   kinds:
-    #   - "*"
-    #   clusters:
-    #   - https://192.168.0.20
-  helmRepositories:
-    # - name: privateRepo
-    #   url: http://chartmuseum.privatecloud.com
-    #   usernameSecret:
-    #     name: private-chartmuseum
-    #     key: username
-    #   passwordSecret:
-    #     name: private-chartmuseum
-    #     key: password
-    # - name: incubator
-    #   url: https://kubernetes-charts-incubator.storage.googleapis.com/
-  repositories:
-    # - url: git@gitlab.com:usersprivategroup/users-gitops-config.git
-    #   sshPrivateKeySecret:
-    #     key: privateKey
-    #     name: argocd-dev-key
-    # - url: git@gitlab.com:accountingprivategroup/accounting-gitops-config.git
-    #   sshPrivateKeySecret:
-    #     key: privateKey
-    #     name: argocd-dev-key
-  dexConfig:
-    #   # Argo CD's externally facing base URL. Required for configuring SSO
-    #   # url: https://argo-cd-demo.argoproj.io
-    #
-    #   # A dex connector configuration. See documentation on how to configure SSO:
-    #   # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/sso.md#2-configure-argo-cd-for-sso
-    # connectors:
-    #   # GitHub example
-    #   - type: github
-    #     id: github
-    #     name: GitHub
-    #     config:
-    #       clientID: aabbccddeeff00112233
-    #       clientSecret: $dex.github.clientSecret
-    #       orgs:
-    #       - name: your-github-org
-    #         teams:
-  url: # https://argocd.example.com/
-  oidcConfig:
-    # name: Okta
-    # issuer: https://dev-123456.oktapreview.com
-    # clientID: aaaabbbbccccddddeee
-    # clientSecret: $oidc.okta.clientSecret
-  # The following keys hold the shared secret for authenticating GitHub/GitLab/BitBucket webhook
-  # events. To enable webhooks, configure one or more of the following keys with the shared git
-  # provider webhook secret. The payload URL configured in the git provider should use the
-  # /api/webhook endpoint of your Argo CD instance (e.g. https://argocd.example.com/api/webhook)
-  webhook:
-    githubSecret:
-    gitlabSecret:
-    bitbucketSecret:
-  resourceCustomizations:
-  #   certmanager.k8s.io/Certificate:
-  #     health.lua: |
-  #       hs = {}
-  #       ...
-  #       return hs
-  configManagementPlugins:
-    # - name: pluginName
-    #   init:                          # Optional command to initialize application source directory
-    #     command: ["sample command"]
-    #     args: ["sample args"]
-    #   generate:                      # Command to generate manifests YAML
-    #     command: ["sample command"]
-    #     args: ["sample args"]
+  ## Dex deployment container ports
+  containerPortHttp: 5556
+  servicePortHttp: 5556
+  containerPortGrpc: 5557
+  servicePortGrpc: 5557
 
-rbac:
-  #   # An RBAC policy .csv file containing additional policy and role definitions.
-  #   # See https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md on how to write RBAC policies.
-  #   policy.csv: |
-  #     # Give all members of "my-org:team-alpha" the ability to sync apps in "my-project"
-  #     p, my-org:team-alpha, applications, sync, my-project/*, allow
-  #     # Make all members of "my-org:team-beta" admins
-  #     g, my-org:team-beta, role:admin
-  policyCsv: #|
-  #   p, role:org-admin, applications, *, */*, allow
-  #   p, role:org-admin, clusters, get, *, allow
-  #   p, role:org-admin, repositories, get, *, allow
-  #   p, role:org-admin, repositories, create, *, allow
-  #   p, role:org-admin, repositories, update, *, allow
-  #   p, role:org-admin, repositories, delete, *, allow
-  #   g, your-github-org:your-team, role:org-admin
-  policyDefault: #role:readonly
-  scopes: #[groups]
+  ## Node selectors and tolerations for server scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  nodeSelector: {}
+  tolerations: {}
+  affinity: {}
 
+  priorityClassName: ""
+
+  resources: {}
+  #  limits:
+  #    cpu: 50m
+  #    memory: 64Mi
+  #  requests:
+  #    cpu: 10m
+  #    memory: 32Mi
+
+## Redis
 redis:
+  enabled: true
+  name: redis
+
   image:
     repository: redis
     tag: 5.0.3
-    pullPolicy: Always
+    imagePullPolicy: IfNotPresent
+
   containerPort: 6379
   servicePort: 6379
+
+  ## Node selectors and tolerations for server scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  nodeSelector: {}
+  tolerations: {}
+  affinity: {}
+
+  priorityClassName: ""
+
+  resources: {}
+  #  limits:
+  #    cpu: 200m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 64Mi
+
+## Server
+server:
+  enabled: true
+  name: server
+
+  image: {}
+  #  repository: argoproj/argocd
+  #  tag: v1.2.1
+  #  imagePullPolicy: IfNotPresent
+
+  ## Additional command line arguments to pass to argocd-server
+  # extraArgs: []
+  #   - insecure
+  extraArgs: []
+
+  ## Argo server log level
+  logLevel: info
+
+  ## Enable Admin ClusterRole resources
+  clusterAdminAccess:
+    enabled: true
+
+  ## Annotations to be added to controller pods
+  ##
+  podAnnotations: {}
+
+  ## Labels to be added to controller pods
+  ##
+  podLabels: {}
+
+  ## Configures the server port
+  containerPort: 8080
+
+  ## Readiness and liveness probes for default backend
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  ##
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Additional volumeMounts to the server main container.
+  volumeMounts: []
+
+  ## Additional volumes to the controller pod.
+  volumes: []
+
+  ## Node selectors and tolerations for server scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  nodeSelector: {}
+  tolerations: {}
+  affinity: {}
+
+  priorityClassName: ""
+
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 50m
+  #    memory: 64Mi
+
+  ## Certificate configuration
+  certificate:
+    enabled: false
+    domain: argocd.example.com
+    issuer: {}
+    additionalHosts: []
+
+  ## Server service configuration
+  service:
+    annotations: {}
+    labels: {}
+    type: ClusterIP
+    servicePortHttp: 80
+    servicePortHttps: 443
+
+  ## Server metrics service configuration
+  metrics:
+    enabled: false
+    service:
+      annotations: {}
+      labels: {}
+      servicePort: 8083
+    serviceMonitor:
+      enabled: false
+    #   selector:
+    #     prometheus: kube-prometheus
+    #   namespace: monitoring
+    #   additionalLabels: {}
+
+  serviceAccount:
+    create: true
+    name: argocd-server
+
+  ingress:
+    enabled: false
+    annotations: {}
+    labels: {}
+
+    ## Argo Ingress.
+    ## Hostnames must be provided if Ingress is enabled.
+    ## Secrets must be manually created in the namespace
+    ##
+    hosts: []
+      # - argocd.example.com
+    paths:
+    - /
+    tls: []
+      # - secretName: argocd-example-tls
+      #   hosts:
+      #     - argocd.example.com
+
+  ## ArgoCD config
+  ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+  config:
+    # Argo CD's externally facing base URL (optional). Required when configuring SSO
+    url: https://argocd.example.com
+    # Argo CD instance label key
+    application.instanceLabelKey: argocd.argoproj.io/instance
+
+  ## ArgoCD rbac config
+  ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
+  rbacConfig:
+    # policy.csv is an file containing user-defined RBAC policies and role definitions (optional).
+    # Policy rules are in the form:
+    #   p, subject, resource, action, object, effect
+    # Role definitions and bindings are in the form:
+    #   g, subject, inherited-subject
+    # See https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md for additional information.
+    policy.csv: |
+      # Grant all members of the group 'my-org:team-alpha; the ability to sync apps in 'my-project'
+      p, my-org:team-alpha, applications, sync, my-project/*, allow
+      # Grant all members of 'my-org:team-beta' admins
+      g, my-org:team-beta, role:admin
+    # policy.default is the name of the default role which Argo CD will falls back to, when
+    # authorizing API requests (optional). If omitted or empty, users may be still be able to login,
+    # but will see no apps, projects, etc...
+    policy.default: role:readonly
+
+    # scopes controls which OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
+    # If omitted, defaults to: '[groups]'. The scope value can be a string, or a list of strings.
+    scopes: '[cognito:groups, email]'
+
+  ## Not well tested and not well supported on release v1.0.0.
+  ## Applications
+  ## reference: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
+  additionalApplications: []
+  # - name: guestbook
+  #   namespace: argocd
+  #   additionalLabels: {}
+  #   additionalAnnotations: {}
+  #   project: guestbook
+  #   source:
+  #     repoURL: https://github.com/argoproj/argocd-example-apps.git
+  #     targetRevision: HEAD
+  #     path: guestbook
+  #     directory:
+  #       recurse: true
+  #  destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: guestbook
+  #   syncPolicy:
+  #     automated:
+  #       prune: false
+  #      selfHeal: false
+
+  ## Projects
+  ## reference: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
+  additionalProjects: []
+  # - name: guestbook
+  #   namespace: argocd
+  #   additionalLabels: {}
+  #   additionalAnnotations: {}
+  #   description: Example Project
+  #   sourceRepos:
+  #   - '*'
+  #   destinations:
+  #   - namespace: guestbook
+  #     server: https://kubernetes.default.svc
+  #   clusterResourceWhitelist: []
+  #   namespaceResourceBlacklist:
+  #   - group: ''
+  #     kind: ResourceQuota
+  #   - group: ''
+  #     kind: LimitRange
+  #   - group: ''
+  #     kind: NetworkPolicy
+  #     orphanedResources: {}
+  #     roles: []
+  #   orphanedResources: {}
+  #   roles: []
+
+## Repo Server
+repoServer:
+  enabled: true
+  name: repo-server
+
+  image: {}
+  #  repository: argoproj/argocd
+  #  tag: v1.2.1
+  #  imagePullPolicy: IfNotPresent
+
+  ## Additional command line arguments to pass to argocd-repo-server
+  ##
+  extraArgs: []
+
+  ## Argo repoServer log level
+  logLevel: info
+
+  ## Annotations to be added to repo server pods
+  ##
+  podAnnotations: {}
+
+  ## Labels to be added to repo server pods
+  ##
+  podLabels: {}
+
+  ## Configures the repo server port
+  containerPort: 8081
+
+  ## Readiness and liveness probes for default backend
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  ##
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Additional volumeMounts to the repo server main container.
+  volumeMounts: []
+
+  ## Additional volumes to the repo server pod.
+  volumes: []
+
+  ## Node selectors and tolerations for server scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  nodeSelector: {}
+  tolerations: {}
+  affinity: {}
+
+  priorityClassName: ""
+
+  resources: {}
+  #  limits:
+  #    cpu: 50m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 10m
+  #    memory: 64Mi
+
+  ## Repo server service configuration
+  service:
+    annotations: {}
+    labels: {}
+    port: 8081
+
+  ## Repo server metrics service configuration
+  metrics:
+    enabled: false
+    service:
+      annotations: {}
+      labels: {}
+      servicePort: 8084
+    serviceMonitor:
+      enabled: false
+    #   selector:
+    #     prometheus: kube-prometheus
+    #   namespace: monitoring
+    #   additionalLabels: {}
+
+## Argo Configs
+configs:
+  knownHosts:
+    data:
+      ssh_known_hosts: |
+        bitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==
+        github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+        gitlab.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFSMqzJeV9rUzU4kWitGjeR4PWSa29SPqJ1fVkhtj3Hw9xjLVXVYrU9QlYWrOLXBpQ6KWjbjTDTdDkoohFzgbEY=
+        gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
+        gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
+        ssh.dev.azure.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7Hr1oTWqNqOlzGJOfGJ4NakVyIzf1rXYd4d7wo6jBlkLvCA4odBlL0mDUyZ0/QUfTTqeu+tm22gOsv+VrVTMk6vwRU75gY/y9ut5Mb3bR5BV58dKXyq9A9UeB5Cakehn5Zgm6x1mKoVyf+FFn26iYqXJRgzIZZcZ5V6hrE0Qg39kZm4az48o0AUbf6Sp4SLdvnuMa2sVNwHBboS7EJkm57XQPVU3/QpyNLHbWDdzwtrlS+ez30S3AdYhLKEOxAG8weOnyrtLJAUen9mTkol8oII1edf7mWWbWVf0nBmly21+nZcmCTISQBtdcyPaEno7fFQMDD26/s0lfKob4Kw8H
+        vs-ssh.visualstudio.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7Hr1oTWqNqOlzGJOfGJ4NakVyIzf1rXYd4d7wo6jBlkLvCA4odBlL0mDUyZ0/QUfTTqeu+tm22gOsv+VrVTMk6vwRU75gY/y9ut5Mb3bR5BV58dKXyq9A9UeB5Cakehn5Zgm6x1mKoVyf+FFn26iYqXJRgzIZZcZ5V6hrE0Qg39kZm4az48o0AUbf6Sp4SLdvnuMa2sVNwHBboS7EJkm57XQPVU3/QpyNLHbWDdzwtrlS+ez30S3AdYhLKEOxAG8weOnyrtLJAUen9mTkol8oII1edf7mWWbWVf0nBmly21+nZcmCTISQBtdcyPaEno7fFQMDD26/s0lfKob4Kw8H
+  tlsCerts:
+    data:
+      argocd.example.com: |
+        -----BEGIN CERTIFICATE-----
+        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
+        XWyb96wrUlv+E8I=
+        -----END CERTIFICATE-----
+  secret:
+    createSecret: true
+    githubSecret: ""
+    gitlabSecret: ""
+    bitbucketSecret: ""

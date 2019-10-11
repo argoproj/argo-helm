@@ -26,7 +26,7 @@ Minimally:
 
 ```
 helm install charts/argo-cd --namespace argocd -n argo-cd
-kubectl port-forward svc/argocd-server -n argocd 8080:443
+kubectl port-forward service/argo-cd-argocd-server -n argocd 8080:443
 ```
 
 In a new terminal:
@@ -40,6 +40,8 @@ kubectl -n argocd patch secret argocd-secret \
     "admin.passwordMtime": "'$(date +%FT%T%Z)'"
   }}'
 argocd login localhost:8080 --username admin --password 'Password1!'
+
+# WARNING: server certificate had error: x509: certificate signed by unknown authority. Proceed insecurely (y/n)? y
 ```
 
 Create and sync app:

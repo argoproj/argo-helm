@@ -1,0 +1,15 @@
+{{- if and .Values.server.enabled }}
+apiVersion: v1
+{{- toYaml .Values.configs.tlsCerts | nindent 0 }}
+kind: ConfigMap
+metadata:
+  labels:
+    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-tls-certs-cm
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+    app.kubernetes.io/component: {{ .Values.server.name }}
+  name: argocd-tls-certs-cm
+{{- end }}
