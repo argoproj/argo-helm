@@ -10,7 +10,6 @@ metadata:
 {{- end }}
   name: {{ template "argo-cd.controller.fullname" . }}
   labels:
-    release: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -23,6 +22,6 @@ spec:
     port: {{ .Values.controller.service.port }}
     targetPort: {{ .Values.controller.containerPort }}
   selector:
-    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
 {{- end }}

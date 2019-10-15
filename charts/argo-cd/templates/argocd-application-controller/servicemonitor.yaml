@@ -27,7 +27,6 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      release: {{ .Release.Name }}
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-metrics
       app.kubernetes.io/component: {{ .Values.controller.name }}
 {{- end }}

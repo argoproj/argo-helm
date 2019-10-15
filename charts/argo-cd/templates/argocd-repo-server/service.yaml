@@ -23,6 +23,6 @@ spec:
     port: {{ .Values.repoServer.service.port }}
     targetPort: repo-server
   selector:
-    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.repoServer.name }}
 {{- end }}

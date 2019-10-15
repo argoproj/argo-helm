@@ -4,7 +4,6 @@ kind: Deployment
 metadata:
   name: {{ template "argo-cd.controller.fullname" . }}
   labels:
-    release: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -15,7 +14,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller
-      release: {{ .Release.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   revisionHistoryLimit: 5
   replicas: 1
   template:
@@ -27,7 +26,6 @@ spec:
       {{- end }}
       {{- end }}
       labels:
-        release: {{ .Release.Name }}
         app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
         helm.sh/chart: {{ include "argo-cd.chart" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}

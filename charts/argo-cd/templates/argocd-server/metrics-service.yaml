@@ -9,7 +9,6 @@ metadata:
   {{- end }}
 {{- end }}
   labels:
-    release: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}-metrics
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -27,6 +26,6 @@ spec:
     port: {{ .Values.server.metrics.service.servicePort }}
     targetPort: metrics
   selector:
-    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
 {{- end }}

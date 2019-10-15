@@ -4,7 +4,6 @@ kind: ConfigMap
 metadata:
   name: argocd-cm
   labels:
-    release: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-cm
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
