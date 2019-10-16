@@ -1,4 +1,3 @@
-{{- if .Values.controller.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -18,4 +17,3 @@ subjects:
 - kind: ServiceAccount
   name: {{ template "argo-cd.controllerServiceAccountName" . }}
   namespace: {{ .Release.Namespace }}
-{{- end }}

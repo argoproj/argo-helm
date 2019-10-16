@@ -50,7 +50,6 @@ $ helm install --name my-release argo/argo-cd
 | controller.args.operationProcessors | define the controller `--operation-processors` | `"10"` |
 | controller.args.statusProcessors | define the controller `--status-processors` | `"20"` |
 | controller.containerPort | Controller listening port. | `8082` |
-| controller.enabled | Enable ArgoCD Controller | `true` |
 | controller.extraArgs | Additional arguments for the controller. | `[]` |
 | controller.image.repository | Repository to use for the controller | `global.image.repository` |
 | controller.image.imagePullPolicy | Image pull policy for the controller | `global.image.imagePullPolicy` |

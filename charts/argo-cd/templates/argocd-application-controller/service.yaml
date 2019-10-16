@@ -1,4 +1,3 @@
-{{- if .Values.controller.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -24,4 +23,3 @@ spec:
   selector:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
-{{- end }}
