@@ -138,7 +138,6 @@ $ helm install --name my-release argo/argo-cd
 | server.clusterAdminAccess.enabled | Enable RBAC for cluster admin access | `true` |
 | server.config | URL for Argo CD | `{}` |
 | server.containerPort | Server container port. | `8080` |
-| server.enabled | Enable Argo CD Server | `true` |
 | server.extraArgs | Additional arguments for the server | `[]` |
 | server.image.repository | Repository to use for the server | `global.image.repository` |
 | server.image.imagePullPolicy | Image pull policy for the server | `global.image.imagePullPolicy` |

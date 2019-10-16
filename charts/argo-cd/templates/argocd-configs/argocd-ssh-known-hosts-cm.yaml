@@ -1,4 +1,3 @@
-{{- if and .Values.server.enabled }}
 apiVersion: v1
 {{- toYaml .Values.configs.knownHosts | nindent 0 }}
 kind: ConfigMap
@@ -11,4 +10,3 @@ metadata:
     app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
     app.kubernetes.io/component: {{ .Values.server.name }}
   name: argocd-ssh-known-hosts-cm
-{{- end }}
