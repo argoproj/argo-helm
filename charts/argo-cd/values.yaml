@@ -103,6 +103,11 @@ controller:
     #   namespace: monitoring
     #   additionalLabels: {}
 
+  ## Enable Admin ClusterRole resources.
+  ## Enable if you would like to grant rights to ArgoCD to deploy to the local kuberentes cluster.
+  clusterAdminAccess:
+    enabled: true
+
 ## Dex
 dex:
   enabled: true
@@ -197,10 +202,6 @@ server:
 
   ## Argo server log level
   logLevel: info
-
-  ## Enable Admin ClusterRole resources
-  clusterAdminAccess:
-    enabled: true
 
   ## Annotations to be added to controller pods
   ##

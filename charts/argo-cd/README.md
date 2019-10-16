@@ -49,6 +49,7 @@ $ helm install --name my-release argo/argo-cd
 | controller.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
 | controller.args.operationProcessors | define the controller `--operation-processors` | `"10"` |
 | controller.args.statusProcessors | define the controller `--status-processors` | `"20"` |
+| controller.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | controller.containerPort | Controller listening port. | `8082` |
 | controller.extraArgs | Additional arguments for the controller. | `[]` |
 | controller.image.repository | Repository to use for the controller | `global.image.repository` |
@@ -135,7 +136,6 @@ $ helm install --name my-release argo/argo-cd
 | server.certificate.domain | Certificate manager domain | `"argocd.example.com"` |
 | server.certificate.enabled | Enables a certificate manager certificate. | `false` |
 | server.certificate.issuer | Certificate manager issuer | `{}` |
-| server.clusterAdminAccess.enabled | Enable RBAC for cluster admin access | `true` |
 | server.config | URL for Argo CD | `{}` |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server | `[]` |
