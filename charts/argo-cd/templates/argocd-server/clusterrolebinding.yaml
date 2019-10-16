@@ -18,3 +18,4 @@ subjects:
 - kind: ServiceAccount
   name: {{ template "argo-cd.serverServiceAccountName" . }}
   namespace: {{ .Release.Namespace }}
+{{- end -}}
