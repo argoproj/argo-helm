@@ -45,12 +45,16 @@ spec:
         - /shared/app
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
+        {{- if .Values.dex.enabled }}
         - --dex-server
         - http://{{ template "argo-cd.dex.fullname" . }}:{{ .Values.dex.servicePortHttp }}
+        {{- end }}
         - --loglevel
         - {{ .Values.server.logLevel }}
+        {{- if .Values.redis.enabled }}
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
+        {{- end }}
         {{- range $key, $value := .Values.server.extraArgs }}
           {{- if $value }}
         - --{{ $key }}={{ $value }}

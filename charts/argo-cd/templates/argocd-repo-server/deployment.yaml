@@ -41,8 +41,10 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
         command:
         - argocd-repo-server
+        {{- if .Values.redis.enabled }}
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
+        {{- end }}
         - --loglevel
         - {{ .Values.repoServer.logLevel }}
         {{- range $key, $value := .Values.repoServer.extraArgs }}

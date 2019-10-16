@@ -46,8 +46,10 @@ spec:
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
         - --loglevel
         - {{ .Values.controller.logLevel }}
+        {{- if .Values.redis.enabled }}
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
+        {{- end }}
         {{- range $key, $value := .Values.controller.extraArgs }}
           {{- if $value }}
         - --{{ $key }}={{ $value }}
