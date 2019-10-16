@@ -92,7 +92,6 @@ $ helm install --name my-release argo/argo-cd
 |-----|------|---------|-------------|
 | repoServer.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
 | repoServer.containerPort | Repo server port | `8081` |
-| repoServer.enabled | Create repo server resources | `true` |
 | repoServer.extraArgs | Additional arguments for the repo server | `[]` |
 | repoServer.image.repository | Repository to use for the repo server | `global.image.repository` |
 | repoServer.image.imagePullPolicy | Image pull policy for the repo server | `global.image.imagePullPolicy` |
