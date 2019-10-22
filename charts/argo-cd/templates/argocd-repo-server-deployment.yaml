@@ -59,3 +59,11 @@ spec:
       {{- if .Values.repoServer.volumes }}
       {{ toYaml .Values.repoServer.volumes | nindent 6 | trim }}
       {{- end }}
+      {{- if .Values.repoServer.initContainers }}
+      initContainers:
+      {{ toYaml .Values.repoServer.initContainers | nindent 6 | trim }}
+      {{- end }}
+      {{- if .Values.repoServer.imagePullSecrets }}
+      imagePullSecrets:
+      {{ toYaml .Values.repoServer.imagePullSecrets | nindent 6 | trim }}
+      {{- end }}
