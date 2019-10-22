@@ -27,6 +27,18 @@ server:
   # - name: ssh-known-hosts
   #   configMap:
   #     name: argocd-ssh-known-hosts-cm
+  # - name: custom-tools
+  #   emptyDir: {}
+  initContainers: []
+  # - name: download-tools
+  #   image: alpine:3.8
+  #   command: [sh, -c]
+  #   args:
+  #   - wget -qO- https://storage.googleapis.com/kubernetes-helm/helm-v2.12.3-linux-amd64.tar.gz | tar -xvzf - &&
+  #     mv linux-amd64/helm /custom-tools/
+  #   volumeMounts:
+  #   - mountPath: /custom-tools
+  #     name: custom-tools
   annotations: {}
 
 repoServer:

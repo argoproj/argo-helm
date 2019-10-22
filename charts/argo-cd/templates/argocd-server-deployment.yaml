@@ -74,3 +74,7 @@ spec:
       {{- if .Values.server.volumes }}
       {{ toYaml .Values.server.volumes | nindent 6 | trim }}
       {{- end }}
+      {{- if .Values.server.initContainers }}
+      initContainers:
+      {{ toYaml .Values.server.initContainers | nindent 6 | trim }}
+      {{- end }}
