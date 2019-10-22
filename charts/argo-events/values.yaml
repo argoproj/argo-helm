@@ -4,6 +4,9 @@ registry: argoproj
 # The image pull policy
 imagePullPolicy: Always
 
+# If set to false, skip installing the CRDs. Requires user to have them installed prior to helm chart installation.
+installCRD: true
+
 # ServiceAccount to use for running controller.
 serviceAccount: argo-events-sa
 # Create service accounts in additional namespaces specified
@@ -13,7 +16,7 @@ additionalSaNamespaces: []
 
 instanceID: argo-events
 
-# set `singleNamespace` to false to have the controllers 
+# set `singleNamespace` to false to have the controllers
 # listen on all namespaces.  Otherwise the controllers will listen
 # on the namespace provided
 namespace: argo-events
@@ -23,11 +26,11 @@ singleNamespace: true
 sensorController:
   name: sensor-controller
   image: sensor-controller
-  tag: v0.9.2
+  tag: v0.9.3
   replicaCount: 1
 
 gatewayController:
   name: gateway-controller
   image: gateway-controller
-  tag: v0.9.2
+  tag: v0.9.3
   replicaCount: 1
