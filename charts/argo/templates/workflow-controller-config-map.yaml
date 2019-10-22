@@ -43,3 +43,6 @@ data:
     {{- if .Values.controller.telemetryConfig.enabled }}
     telemetryConfig:
 {{ toYaml .Values.controller.telemetryConfig | indent 6}}{{- end }}
+    {{- if .Values.controller.persistence }}
+    persistence:
+{{ toYaml .Values.controller.persistence | indent 6 }}{{- end }}
