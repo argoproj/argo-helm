@@ -78,3 +78,7 @@ spec:
       initContainers:
       {{ toYaml .Values.server.initContainers | nindent 6 | trim }}
       {{- end }}
+      {{- if .Values.server.initContainers }}
+      imagePullSecrets:
+      {{ toYaml .Values.server.imagePullSecrets | nindent 6 | trim }}
+      {{- end }}
