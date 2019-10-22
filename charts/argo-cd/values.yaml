@@ -27,8 +27,19 @@ server:
   # - name: ssh-known-hosts
   #   configMap:
   #     name: argocd-ssh-known-hosts-cm
-  # - name: custom-tools
-  #   emptyDir: {}
+  annotations: {}
+
+repoServer:
+  containerPort: 8081
+  servicePort: 8081
+  image:
+    repository: argoproj/argocd
+    tag: v1.2.3
+    pullPolicy: Always
+  volumeMounts: []
+  volumes: []
+  #   - name: custom-tools
+  #     emptyDir: {}
   initContainers: []
   # - name: download-tools
   #   image: alpine:3.8
@@ -41,17 +52,6 @@ server:
   #     name: custom-tools
   imagePullSecrets: []
   # - name: docker-auth-secret
-  annotations: {}
-
-repoServer:
-  containerPort: 8081
-  servicePort: 8081
-  image:
-    repository: argoproj/argocd
-    tag: v1.2.3
-    pullPolicy: Always
-  volumeMounts: []
-  volumes: []
 
 dexServer:
   containerPortHttp: 5556
