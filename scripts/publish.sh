@@ -1,16 +1,17 @@
 #!/bin/bash
+set -eux
 
 SRCROOT="$(cd "$(dirname "$0")/.." && pwd)"
 GIT_PUSH=${GIT_PUSH:-true}
 
 rm -rf $SRCROOT/output && git clone -b gh-pages git@github.com:argoproj/argo-helm.git $SRCROOT/output
 
-cd $SRCROOT/charts
-for dir in *;
+for dir in $(find $SRCROOT/charts -mindepth 1 -maxdepth 1 -type d);
 do
  echo "Processing $dir"
  helm package $dir
 done
+cp $SRCROOT/*.tgz output/
 cd $SRCROOT/output && helm repo index .
 
 cd $SRCROOT/output && git status
