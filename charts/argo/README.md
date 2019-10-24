@@ -8,7 +8,7 @@ If you want your deployment of this helm chart to most closely match the [argo C
 This chart uses an install hook to configure the CRD definition.  Installation of CRDs is a somewhat privileged process in itself and in RBAC enabled clusters the `default` service account for namespaces does not typically have the ability to do create these.
 
 A few options are:
-- Setup the CRD yourself manually and use the `--no-hooks` options of `helm install`
+- Setup the CRD yourself manually and use `--set installCRD=false` when installing the helm chart. Find the CRDs in the [argo codebase](https://raw.githubusercontent.com/argoproj/argo/master/manifests/base/crds/workflow-crd.yaml)
 - Manually create a ServiceAccount in the Namespace which your release will be deployed w/ appropriate bindings to perform this action and set the `init.serviceAccount` attribute
 - Augment the `default` ServiceAccount permissions in the Namespace in which your Release is deployed to have the appropriate permissions
 

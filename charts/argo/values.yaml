@@ -4,9 +4,10 @@ images:
   ui: argoui
   executor: argoexec
   pullPolicy: Always
-  tag: v2.3.0
+  tag: v2.4.2
 
 crdVersion: v1alpha1
+installCRD: true
 
 init:
   # By default the installation will not set an explicit one, which will mean it uses `default` for the namespace the chart is
@@ -28,6 +29,24 @@ controller:
     enabled: false
     path: /metrics
     port: 8080
+    persistence: {}
+    #  connectionPool:
+    #    maxIdleConns: 100
+    #    maxOpenConns: 0
+    #  # save the entire workflow into etcd and DB
+    #  nodeStatusOffLoad: false
+    #  postgresql:
+    #    host: localhost
+    #    port: 5432
+    #    database: postgres
+    #    tableName: argo_workflows
+    #    # the database secrets must be in the same namespace of the controller
+    #    userNameSecret:
+    #      name: argo-postgres-config
+    #      key: username
+    #    passwordSecret:
+    #      name: argo-postgres-config
+    #      key: password
   telemetryConfig:
     enabled: false
     path: /telemetry
