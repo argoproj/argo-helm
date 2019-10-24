@@ -8,12 +8,12 @@ roleRef:
   name: argo-events-role
 subjects:
   - kind: ServiceAccount
-    name: argo-events-sa
+    name: {{ .Values.serviceAccount }}
     namespace: {{ .Release.Namespace }}
   {{- if .Values.additionalSaNamespaces }}
   {{- range $namespace := .Values.additionalSaNamespaces }}
   - kind: ServiceAccount
-    name: argo-events-sa
+    name: {{ .Values.serviceAccount }}
     namespace: {{ $namespace }}
   {{- end }}
   {{- end }}

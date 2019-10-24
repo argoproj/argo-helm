@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: argo-events-sa
+  name: {{ .Values.serviceAccount }}
   namespace: {{ .Release.Namespace }}
 {{- if .Values.additionalSaNamespaces }}
 {{- range $namespace := .Values.additionalSaNamespaces }}
@@ -11,7 +11,7 @@ metadata:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: argo-events-sa
+  name: {{ .Values.serviceAccount }}
   namespace: {{ $namespace }}
 {{- end }}
 {{- end }}
