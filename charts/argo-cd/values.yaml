@@ -3,7 +3,7 @@ applicationController:
   servicePort: 8082
   image:
     repository: argoproj/argocd
-    tag: v1.2.3
+    tag: v1.2.4
     pullPolicy: Always
   volumeMounts: []
   volumes: []
@@ -16,7 +16,7 @@ server:
   serviceAnnotations: {}
   image:
     repository: argoproj/argocd
-    tag: v1.2.3
+    tag: v1.2.4
     pullPolicy: Always
   serviceType: ClusterIP
   extraArgs: []
@@ -34,7 +34,7 @@ repoServer:
   servicePort: 8081
   image:
     repository: argoproj/argocd
-    tag: v1.2.3
+    tag: v1.2.4
     pullPolicy: Always
   volumeMounts: []
   volumes: []
@@ -64,7 +64,7 @@ dexServer:
     pullPolicy: Always
   initImage:
     repository: argoproj/argocd
-    tag: v1.2.3
+    tag: v1.2.4
     pullPolicy: Always
   volumeMounts: []
   volumes: []
