@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: argocd
+data:
+{{- if .Values.config.enableAnonymousAccess }}
+  users.anonymous.enabled: "{{ .Values.config.enableAnonymousAccess }}"
+{{- end }}
+{{- if .Values.config.helmRepositories }}
+  helm.repositories: |
+{{ toYaml .Values.config.helmRepositories | indent 4 }}
+{{- end }}
+{{- if .Values.config.repositories }}
+  repositories: |
+{{ toYaml .Values.config.repositories | indent 4 }}
+{{- end }}
+{{- if .Values.config.dexConfig }}
+  dex.config: |
+{{ toYaml .Values.config.dexConfig | indent 4 }}
+{{- end }}
+{{- if .Values.config.url }}
+  url: {{ .Values.config.url }}
+{{- end }}
+{{- if .Values.config.instanceLabelKey }}
+  application.instanceLabelKey: {{ .Values.config.instanceLabelKey }}
+{{- end }}
+{{- if .Values.config.oidcConfig }}
+  oidc.config: |
+{{ toYaml .Values.config.oidcConfig | indent 4 }}
+{{- end }}
+{{- if .Values.config.resourceCustomizations }}
+  resource.customizations: |
+{{ toYaml .Values.config.resourceCustomizations | indent 4 }}
+{{- end }}
+{{- if .Values.config.resourceExclusions }}
+  resource.exclusions: |
+{{ toYaml .Values.config.resourceExclusions | indent 4 }}
+{{- end }}
+{{- if .Values.config.configManagementPlugins }}
+  configManagementPlugins: |
+{{ toYaml .Values.config.configManagementPlugins | indent 4 }}
+{{ -if .Values.config.statusbadge.enabled }}
+  statusbadge.enabled: "true"
+{{ - end }}
+{{- end }}
