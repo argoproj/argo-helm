@@ -2,8 +2,5 @@ version: 2.1
 orbs:
   helm: banzaicloud/helm@0.0.5
 jobs:
-  build:
-    steps:
-      - checkout
-      - helm/lint-chart:
-         charts-dir: charts
+  - helm/lint-chart:
+     charts-dir: charts
