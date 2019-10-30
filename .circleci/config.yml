@@ -5,5 +5,4 @@ jobs:
       - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
     steps:
       - checkout
-      - run: helm repo add argo https://argoproj.github.io/argo-helm
       - run: ct lint --config .circleci/chart-testing.yaml
