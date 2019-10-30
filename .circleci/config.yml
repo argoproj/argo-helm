@@ -1,17 +1,9 @@
 version: 2.1
 orbs:
-  helm: circleci/helm@0.2.0
+  helm: banzaicloud/helm@0.0.5
 jobs:
   build:
-    docker:
-      - image: debian:stretch
     steps:
-      - install-helm-client
-      # circleci local execute
-      # - run: apt-get update
-      # - run: apt-get install -y git
-      # - run: apt-get install -y helm
       - checkout
-      - run: helm lint charts/argo
-      - run: helm lint charts/argo-cd
-      - run: helm lint charts/argo-events
+      - helm/lint-chart:
+         charts-dir: charts
