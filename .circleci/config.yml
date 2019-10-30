@@ -1,13 +1,17 @@
 version: 2
+orbs:
+  helm: circleci/helm@0.2.0
 jobs:
   build:
     docker:
       - image: debian:stretch
     steps:
+      - install-helm-client
+      # circleci local execute
+      # - run: apt-get update
+      # - run: apt-get install -y git
+      # - run: apt-get install -y helm
       - checkout
-      - run:
-          name: Greeting
-          command: echo Hello, world.
-      - run:
-          name: Print the Current Time
-          command: date
+      - run: helm lint charts/argo
+      - run: helm lint charts/argo-cd
+      - run: helm lint charts/argo-events
