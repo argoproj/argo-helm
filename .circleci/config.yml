@@ -1,8 +1,10 @@
-version: 2.1
-orbs:
-  helm: banzaicloud/helm@0.0.5
-workflows:
-  helm-chart-lint:
-    jobs:
-      - helm/lint-chart:
-          charts-dir: charts
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
+    steps:
+      - checkout
+      - run:
+          name: lint
+          command: ct lint --config .circleci/chart-testing.yaml
