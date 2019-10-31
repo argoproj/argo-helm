@@ -17,7 +17,9 @@ jobs:
       - run: git config --global user.name "Circle CI Build"
       - run: sh ./scripts/publish.sh
       - run: |
-          [ "$CIRCLE_BRANCH" = "master" ] && git push origin gh-pages
+          if [ "$CIRCLE_BRANCH" = "master" ]; then
+           git push origin gh-pages
+          fi
 workflows:
   version: 2
   workflow:
