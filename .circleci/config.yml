@@ -11,6 +11,7 @@ jobs:
       - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
     steps:
       - checkout
+      - run: helm init --client-only
       - run:
           command: sh ./scripts/publish.sh
           environment:
