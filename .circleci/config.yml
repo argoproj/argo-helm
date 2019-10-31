@@ -27,7 +27,7 @@ jobs:
           else 
             echo 'export GIT_PUSH=false' >> $BASH_ENV 
           fi
-      - run: bash ./scripts/publish.sh
+      - run: . ./scripts/publish.sh
 workflows:
   version: 2
   workflow:
