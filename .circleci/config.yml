@@ -23,11 +23,11 @@ jobs:
       - run: |
           set -x
           if [ "$CIRCLE_BRANCH" = "fix" ]; then
-            echo 'export GIT_PUSH=true' >> $BASH_ENV 
+            export GIT_PUSH=true
           else 
-            echo 'export GIT_PUSH=false' >> $BASH_ENV 
+            export GIT_PUSH=false
           fi
-      - run: /bin/bash ./scripts/publish.sh
+          sh ./scripts/publish.sh
 workflows:
   version: 2
   workflow:
