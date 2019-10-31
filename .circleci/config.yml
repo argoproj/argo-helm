@@ -21,10 +21,13 @@ jobs:
       - run: helm init --client-only
       # Only actually publish charts on master.
       - run: |
+          set -x
           if [ "$CIRCLE_BRANCH" = "master" ]; then
-           echo 'export GIT_PUSH=true' >> $BASH_ENV 
+            export GIT_PUSH=true
+          else 
+            export GIT_PUSH=false
           fi
-      - run: sh ./scripts/publish.sh
+          sh ./scripts/publish.sh
 workflows:
   version: 2
   workflow:
