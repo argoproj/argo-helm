@@ -12,10 +12,9 @@ jobs:
     steps:
       - checkout
       - run: helm init --client-only
-      - run:
-          command: sh ./scripts/publish.sh
-          environment:
-            - GIT_PUSH: "true"
+      - run: sh ./scripts/publish.sh
+      - run: |
+          [ "$CIRCLE_BRANCH" = "master" ] && git push origin gh-pages
 workflows:
   version: 2
   workflow:
@@ -24,7 +23,3 @@ workflows:
       - publish:
           requires:
             - lint
-          filters:
-            branches:
-              only:
-                - circleci
