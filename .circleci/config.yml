@@ -12,8 +12,11 @@ jobs:
     steps:
       - checkout
       - run: pwd
-      - run: ls
-      - run: GIT_PUSH=true ./scripts/publish.sh
+      - run: ls scripts
+      - run:
+          command: ./scripts/publish.sh
+          environment:
+            - GIT_PUSH: "true"
 workflows:
   version: 2
   workflow:
@@ -22,7 +25,7 @@ workflows:
       - publish:
           requires:
             - lint
-          filters: 
+          filters:
             branches:
-              only:  
+              only:
                 - circleci
