@@ -10,6 +10,7 @@ jobs:
     docker:
       - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
     steps:
+      - add_ssh_keys
       - checkout
       - run: helm init --client-only
       - run: git config --global user.email "nobody@circleci.com"
