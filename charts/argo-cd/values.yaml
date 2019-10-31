@@ -70,7 +70,6 @@ dexServer:
   volumes: []
 
 # terminate tls at ArgoCD level
-# Consider using 'route.enabled: true' if you want to access Argo CD from inside OpenShift
 ingress:
   enabled: false
   annotations:
@@ -87,12 +86,14 @@ ingress:
     #     - chart-example.local
 
 # Create a OpenShift Route with SSL passthrough for UI and CLI
-# Consider setting 'hostname' e.g. https://argocd.apps-crc.testing/ using your Default Ingress Controller Domain
+# Consider setting 'hostname' e.g. 'argocd.apps-crc.testing' using your Default Ingress Controller Domain.
 # Find your domain with: kubectl describe --namespace=openshift-ingress-operator ingresscontroller/default | grep Domain:
 # If 'hostname' is an empty string "" OpenShift will create a hostname for you.
 route:
   enabled: false
   hostname: ""
+  annotations:
+    {}
 
 certificate:
   enabled: false

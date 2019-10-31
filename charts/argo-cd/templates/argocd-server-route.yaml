@@ -9,8 +9,12 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+{{- with .Values.route.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
 spec:
-  host: {{ .Values.route.hostname | default "" | quote }}
+  host: {{ .Values.route.hostname | quote }}
   subdomain: ''
   to:
     kind: Service
