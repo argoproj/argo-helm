@@ -6,8 +6,17 @@ jobs:
     steps:
       - checkout
       - run: ct lint --config .circleci/chart-testing.yaml
+  publish:
+    docker:
+      - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
+    steps:
+      - checkout
+      - run: false
 workflows:
   version: 2
   workflow:
     jobs:
     - lint
+    - publish:
+        requires:
+        - lint
