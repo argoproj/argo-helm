@@ -22,7 +22,7 @@ jobs:
       # Only actually publish charts on master.
       - run: |
           set -x
-          if [ "$CIRCLE_BRANCH" = "fix" ]; then
+          if [ "$CIRCLE_BRANCH" = "master" ]; then
             export GIT_PUSH=true
           else 
             export GIT_PUSH=false
