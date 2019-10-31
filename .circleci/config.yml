@@ -6,20 +6,25 @@ jobs:
     steps:
       - checkout
       - run: ct lint --config .circleci/chart-testing.yaml
+  # Technically this only needs to be run on master, but it's good to have it run on every PR
+  # so that it is regularly tested.
   publish:
     docker:
+      # We just need an image with `helm` on it. Handily we know of one already.
       - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
     steps:
+      # install the additional keys needed to push to Github. Alex Collins owns these keys.
       - add_ssh_keys
       - checkout
       - run: helm init --client-only
       - run: git config --global user.email "nobody@circleci.com"
       - run: git config --global user.name "Circle CI Build"
-      - run: sh ./scripts/publish.sh
+      # Only actually publish charts on master.
       - run: |
           if [ "$CIRCLE_BRANCH" = "circleci" ]; then
-           git push origin gh-pages
+           echo 'export GIT_PUSH=true' >> $BASH_ENV 
           fi
+      - run: sh ./scripts/publish.sh
 workflows:
   version: 2
   workflow:
