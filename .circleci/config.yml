@@ -11,8 +11,7 @@ jobs:
       - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
     steps:
       - checkout
-      - run: pwd
-      - run: ls scripts
+      - run: stat ./scripts/publish.sh
       - run:
           command: ./scripts/publish.sh
           environment:
