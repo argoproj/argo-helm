@@ -12,6 +12,8 @@ jobs:
     steps:
       - checkout
       - run: helm init --client-only
+      - run: git config --global user.email "nobody@circleci.com"
+      - run: git config --global user.name "Circle CI Build"
       - run: sh ./scripts/publish.sh
       - run: |
           [ "$CIRCLE_BRANCH" = "master" ] && git push origin gh-pages
