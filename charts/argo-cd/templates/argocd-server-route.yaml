@@ -1,0 +1,25 @@
+{{- if .Values.route.enabled -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: argocd-server
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+spec:
+  host: {{ .Values.route.hostname | default "" | quote }}
+  subdomain: ''
+  to:
+    kind: Service
+    name: argocd-server
+    weight: 100
+  port:
+    targetPort: https
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: None
+  wildcardPolicy: None
+{{- end }}
