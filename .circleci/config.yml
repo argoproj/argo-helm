@@ -20,3 +20,7 @@ workflows:
       - publish:
           requires:
             - lint
+          filters: 
+            branches:
+              only:  
+                - master
