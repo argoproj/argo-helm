@@ -11,12 +11,12 @@ jobs:
       - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
     steps:
       - checkout
-      - run: false
+      - run: exit 1
 workflows:
   version: 2
   workflow:
     jobs:
-    - lint
-    - publish:
-        requires:
-        - lint
+      - lint
+      - publish:
+          requires:
+            - lint
