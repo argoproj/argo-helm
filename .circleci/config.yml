@@ -15,13 +15,13 @@ jobs:
     steps:
       # install the additional keys needed to push to Github. Alex Collins owns these keys.
       - add_ssh_keys
-      - checkout
-      - run: helm init --client-only
       - run: git config --global user.email "nobody@circleci.com"
       - run: git config --global user.name "Circle CI Build"
+      - checkout
+      - run: helm init --client-only
       # Only actually publish charts on master.
       - run: |
-          if [ "$CIRCLE_BRANCH" = "circleci" ]; then
+          if [ "$CIRCLE_BRANCH" = "master" ]; then
            echo 'export GIT_PUSH=true' >> $BASH_ENV 
           fi
       - run: sh ./scripts/publish.sh
