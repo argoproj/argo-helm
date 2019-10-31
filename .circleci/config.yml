@@ -11,9 +11,8 @@ jobs:
       - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
     steps:
       - checkout
-      - run: stat ./scripts/publish.sh
       - run:
-          command: ./scripts/publish.sh
+          command: sh ./scripts/publish.sh
           environment:
             - GIT_PUSH: "true"
 workflows:
