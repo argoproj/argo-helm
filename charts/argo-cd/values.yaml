@@ -98,8 +98,8 @@ route:
 certificate:
   enabled: false
   issuer:
-    kind: # ClusterIssuer
-    name: # letsencrypt
+    kind:  # ClusterIssuer
+    name:  # letsencrypt
 
 clusterAdminAccess:
   enabled: true
@@ -151,7 +151,7 @@ config:
     #       orgs:
     #       - name: your-github-org
     #         teams:
-  url: # https://argocd.example.com/
+  url:  # https://argocd.example.com/
   oidcConfig:
     # name: Okta
     # issuer: https://dev-123456.oktapreview.com
@@ -188,7 +188,7 @@ rbac:
   #     p, my-org:team-alpha, applications, sync, my-project/*, allow
   #     # Make all members of "my-org:team-beta" admins
   #     g, my-org:team-beta, role:admin
-  policyCsv: # |
+  policyCsv:  # |
   #   p, role:org-admin, applications, *, */*, allow
   #   p, role:org-admin, clusters, get, *, allow
   #   p, role:org-admin, repositories, get, *, allow
@@ -196,8 +196,8 @@ rbac:
   #   p, role:org-admin, repositories, update, *, allow
   #   p, role:org-admin, repositories, delete, *, allow
   #   g, your-github-org:your-team, role:org-admin
-  policyDefault: # role:readonly
-  scopes: # [groups]
+  policyDefault:  # role:readonly
+  scopes:  # [groups]
 
 redis:
   image:
