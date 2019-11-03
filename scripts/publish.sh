@@ -2,7 +2,7 @@
 set -eux
 
 SRCROOT="$(cd "$(dirname "$0")/.." && pwd)"
-GIT_PUSH=${GIT_PUSH:-true}
+GIT_PUSH=${GIT_PUSH:-false}
 
 rm -rf $SRCROOT/output && git clone -b gh-pages git@github.com:argoproj/argo-helm.git $SRCROOT/output
 

@@ -53,7 +53,7 @@ argocd app sync guestbook
 
 ## Publishing Changes
 
-To push changes use following script:
+Changes are automatically publish whenever a commit is merged to master. The CI job (see `.circleci/config.yaml`) runs this:
 
 ```
 GIT_PUSH=true ./scripts/publish.sh
