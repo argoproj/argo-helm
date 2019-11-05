@@ -11,7 +11,7 @@ metadata:
     helm.sh/chart: {{ include "argo-cd.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
+    app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.server.name }}
 {{- toYaml .Values.server.metrics.serviceMonitor.selector | nindent 4 }}
     {{- if .Values.server.metrics.serviceMonitor.additionalLabels }}
