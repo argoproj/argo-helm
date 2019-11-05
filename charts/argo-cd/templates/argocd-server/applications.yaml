@@ -1,0 +1,42 @@
+{{- if .Values.server.additionalApplications }}
+apiVersion: v1
+kind: List
+items:
+{{- range .Values.server.additionalApplications }}
+  - apiVersion: argoproj.io/v1alpha1
+    kind: Application
+    metadata:
+      {{- if .additionalAnnotations }}
+      annotations:
+      {{- range $key, $value := .additionalAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
+      {{- if .additionalLabels }}
+      labels:
+{{- toYaml .additionalLabels | nindent 8 }}
+      {{- end }}
+      name: {{ .name }}
+      {{- if .namespace }}
+      namespace: {{ .namespace }}
+      {{- end }}
+      {{- if .finalizers }}
+      finalizers:
+{{- toYaml .finalizers | nindent 8 }}
+      {{- end }}
+    spec:
+      project: {{ tpl .project $ }}
+      source:
+{{- toYaml .source | nindent 8 }}
+      destination:
+{{- toYaml .destination | nindent 8 }}
+      {{- if .syncPolicy }}
+      syncPolicy:
+{{- toYaml .syncPolicy | nindent 8 }}
+      {{- end }}
+      {{- if .ignoreDifferences }}
+      ignoreDifferences:
+{{- toYaml .ignoreDifferences | nindent 8 }}
+      {{- end }}
+{{- end }}
+{{- end }}
