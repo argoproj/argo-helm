@@ -9,5 +9,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: {{ include "argo-cd.name" . }}
     app.kubernetes.io/component: {{ .Values.server.name }}
+{{- if .Values.server.rbacConfig }}
 data:
 {{- toYaml .Values.server.rbacConfig | nindent 4 }}
+{{- end }}
