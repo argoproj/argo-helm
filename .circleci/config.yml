@@ -5,7 +5,7 @@ jobs:
       - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
     steps:
       - checkout
-      - run: ct lint --config .circleci/chart-testing.yaml
+      - run: ct lint --config .circleci/chart-testing.yaml --lint-conf .circleci/lintconf.yaml
   # Technically this only needs to be run on master, but it's good to have it run on every PR
   # so that it is regularly tested.
   publish:
