@@ -147,6 +147,8 @@ $ helm install --name my-release argo/argo-cd
 | server.ingress.hosts | List of ingress hosts | `[]` |
 | server.ingress.labels | Additional ingress labels. | `{}` |
 | server.ingress.tls | Ingress TLS configuration. | `[]` |
+| server.route.enabled | Enable a OpenShift route for the server | `false` |
+| server.route.hostname | Hostname of OpenShift route | `""` |
 | server.livenessProbe.failureThreshold | int | `3` |
 | server.livenessProbe.initialDelaySeconds | int | `10` |
 | server.livenessProbe.periodSeconds | int | `10` |
