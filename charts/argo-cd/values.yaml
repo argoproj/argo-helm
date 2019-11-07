@@ -478,6 +478,21 @@ repoServer:
     #   namespace: monitoring
     #   additionalLabels: {}
 
+  serviceAccount:
+    create: true
+    name: argocd-repo-server
+    
+  ## Repo server rbac rules
+  #rbac:   
+  #- apiGroups:
+  #  - argoproj.io
+  #  resources:
+  #  - applications
+  #  verbs:
+  #  - get
+  #  - list
+  #  - watch
+  
 ## Argo Configs
 configs:
   knownHosts:
