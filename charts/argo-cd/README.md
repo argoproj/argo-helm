@@ -83,7 +83,7 @@ $ helm install --name my-release argo/argo-cd
 | controller.service.port | Controller service port. | `8082` |
 | controller.serviceAccount.create | Create a service account for the controller | `true` |
 | controller.serviceAccount.name | Service account name. | `"argocd-application-controller"` |
-| controller.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `{}` |
+| controller.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `[]` |
 | controller.volumeMounts | Controller volume mounts | `[]` |
 | controller.volumes | Controller volumes | `[]` |
 
@@ -123,7 +123,7 @@ $ helm install --name my-release argo/argo-cd
 | repoServer.service.annotations | Repo server service annotations. | `{}` |
 | repoServer.service.labels | Repo server service labels. | `{}` |
 | repoServer.service.port | Repo server service port. | `8081` |
-| repoServer.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `{}` |
+| repoServer.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `[]` |
 | repoServer.volumeMounts | Repo server volume mounts | `[]` |
 | repoServer.volumes | Repo server volumes | `[]` |
 
@@ -180,7 +180,7 @@ $ helm install --name my-release argo/argo-cd
 | server.service.type | Server service type | `"ClusterIP"` |
 | server.serviceAccount.create | Create server service account | `true` |
 | server.serviceAccount.name | Server service account name | `"argocd-server"` |
-| server.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `{}` |
+| server.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `[]` |
 | server.volumeMounts | Server volume mounts | `[]` |
 | server.volumes | Server volumes | `[]` |
 
@@ -206,7 +206,7 @@ $ helm install --name my-release argo/argo-cd
 | dex.serviceAccount.name | Dex service account name | `"argocd-dex-server"` |
 | dex.servicePortGrpc | Server GRPC port | `5557` |
 | dex.servicePortHttp | Server HTTP port | `5556` |
-| dex.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `{}` |
+| dex.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `[]` |
 | dex.volumeMounts | Dex volume mounts | `"/shared"` |
 | dex.volumes | Dex volumes | `{}` |
 
@@ -225,4 +225,4 @@ $ helm install --name my-release argo/argo-cd
 | redis.priorityClassName | Priority class for redis | `""` |
 | redis.resources | Resource limits and requests for redis | `{}` |
 | redis.servicePort | Redis service port | `6379` |
-| redis.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `{}` |
+| redis.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `[]` |
