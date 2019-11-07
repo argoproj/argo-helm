@@ -93,7 +93,7 @@ Create the name of the ArgoCD server service account to use
 {{- end -}}
 
 {{/*
-Create the name of the controller service account to use
+Create the name of the repo-server service account to use
 */}}
 {{- define "argo-cd.repoServerServiceAccountName" -}}
 {{- if .Values.repoServer.serviceAccount.create -}}
