@@ -304,6 +304,14 @@ server:
       #   hosts:
       #     - argocd.example.com
 
+  # Create a OpenShift Route with SSL passthrough for UI and CLI
+  # Consider setting 'hostname' e.g. https://argocd.apps-crc.testing/ using your Default Ingress Controller Domain
+  # Find your domain with: kubectl describe --namespace=openshift-ingress-operator ingresscontroller/default | grep Domain:
+  # If 'hostname' is an empty string "" OpenShift will create a hostname for you.
+  route:
+    enabled: false
+    hostname: ""
+
   ## ArgoCD config
   ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
   config:
