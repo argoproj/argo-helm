@@ -216,7 +216,7 @@ $ helm install --name my-release argo/argo-cd
 |-----|------|---------|-------------|
 | redis.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
 | redis.containerPort | Redis container port | `6379` |
-| redis.enabled | Enable redis | `false` |
+| redis.enabled | Enable redis | `true` |
 | redis.image.imagePullPolicy | Redis imagePullPolicy | `"IfNotPresent"` |
 | redis.image.repository | Redis repository | `"redis"` |
 | redis.image.tag | Redis tag | `"5.0.3"` |
