@@ -1,6 +1,6 @@
 In order to access the server UI you have the following options:
 
-1. kubectl port-forward service/argo-cd-argocd-server -n argocd 8080:443
+1. kubectl port-forward service/{{include "argo-cd.fullname" . }}-server -n {{ .Release.Namespace }} 8080:443
 
     and then open the browser on http://localhost:8080 and accept the certificate
 
@@ -12,4 +12,4 @@ In order to access the server UI you have the following options:
 After reaching the UI the first time you can login with username: admin and the password will be the
 name of the server pod. You can get the pod name by running:
 
-kubectl get pods -n argocd -l app.kubernetes.io/name={{ include "argo-cd.name" . }}-server -o name | cut -d'/' -f 2
+kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/name={{ include "argo-cd.name" . }}-server -o name | cut -d'/' -f 2
