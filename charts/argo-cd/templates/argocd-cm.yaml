@@ -45,7 +45,5 @@ data:
 {{- if .Values.config.configManagementPlugins }}
   configManagementPlugins: |
 {{ toYaml .Values.config.configManagementPlugins | indent 4 }}
-{{ -if .Values.config.statusbadge.enabled }}
-  statusbadge.enabled: "true"
-{{ - end }}
+  statusbadge.enabled: "{{ .Values.config.statusbadge.enabled }}"
 {{- end }}
