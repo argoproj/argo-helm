@@ -1,3 +1,4 @@
+{{- if .Values.installCRDs }}
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
@@ -434,6 +435,15 @@ spec:
                 - kind
                 type: object
               type: array
+            orphanedResources:
+              description: OrphanedResources specifies if controller should monitor
+                orphaned resources of apps in this project
+              properties:
+                warn:
+                  description: Warn indicates if warning condition should be created
+                    for apps which have orphaned resources
+                  type: boolean
+              type: object
             roles:
               description: Roles are user defined RBAC roles associated with this
                 project
@@ -477,10 +487,50 @@ spec:
                 type: object
               type: array
             sourceRepos:
-              description: SourceRepos contains list of git repository URLs which
-                can be used for deployment
+              description: SourceRepos contains list of repository URLs which can
+                be used for deployment
               items:
                 type: string
+              type: array
+            syncWindows:
+              description: SyncWindows controls when syncs can be run for apps in
+                this project
+              items:
+                properties:
+                  applications:
+                    description: Applications contains a list of applications that
+                      the window will apply to
+                    items:
+                      type: string
+                    type: array
+                  clusters:
+                    description: Clusters contains a list of clusters that the window
+                      will apply to
+                    items:
+                      type: string
+                    type: array
+                  duration:
+                    description: Duration is the amount of time the sync window will
+                      be open
+                    type: string
+                  kind:
+                    description: Kind defines if the window allows or blocks syncs
+                    type: string
+                  manualSync:
+                    description: ManualSync enables manual syncs when they would otherwise
+                      be blocked
+                    type: boolean
+                  namespaces:
+                    description: Namespaces contains a list of namespaces that the
+                      window will apply to
+                    items:
+                      type: string
+                    type: array
+                  schedule:
+                    description: Schedule is the time the window will begin, specified
+                      in cron format
+                    type: string
+                type: object
               type: array
           type: object
       required:
@@ -491,3 +541,4 @@ spec:
   - name: v1alpha1
     served: true
     storage: true
+{{- end }}
