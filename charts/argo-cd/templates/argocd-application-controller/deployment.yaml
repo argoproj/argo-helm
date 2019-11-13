@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "argo-cd.controller.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: {{ .Values.controller.name }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  revisionHistoryLimit: 5
+  replicas: 1
+  template:
+    metadata:
+      {{- if .Values.controller.podAnnotations }}
+      annotations:
+      {{- range $key, $value := .Values.controller.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
+      labels:
+        app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
+        helm.sh/chart: {{ include "argo-cd.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/part-of: argocd
+        app.kubernetes.io/component: {{ .Values.controller.name }}
+        {{- if .Values.controller.podLabels }}
+{{- toYaml .Values.controller.podLabels | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+      - command:
+        - argocd-application-controller
+        - --status-processors
+        - {{ .Values.controller.args.statusProcessors | quote }}
+        - --operation-processors
+        - {{ .Values.controller.args.operationProcessors | quote }}
+        - --repo-server
+        - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
+        - --loglevel
+        - {{ .Values.controller.logLevel }}
+        {{- if .Values.redis.enabled }}
+        - --redis
+        - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
+        {{- end }}
+        {{- range $key, $value := .Values.controller.extraArgs }}
+          {{- if $value }}
+        - --{{ $key }}={{ $value }}
+          {{- else }}
+        - --{{ $key }}
+          {{- end }}
+        {{- end }}
+        image: {{ default .Values.global.image.repository .Values.controller.image.repository }}:{{ default .Values.global.image.tag .Values.controller.image.tag }}
+        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
+        name: {{ .Values.controller.name }}
+        ports:
+        - name: controller
+          containerPort: {{ .Values.controller.containerPort }}
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.controller.containerPort }}
+          initialDelaySeconds: {{ .Values.controller.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.controller.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.controller.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.controller.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.controller.livenessProbe.failureThreshold }}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.controller.containerPort }}
+          initialDelaySeconds: {{ .Values.controller.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.controller.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.controller.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.controller.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
+{{- if .Values.controller.volumeMounts }}
+        volumeMounts:
+{{- toYaml .Values.controller.volumeMounts | nindent 10}}
+{{- end }}
+        resources:
+{{- toYaml .Values.controller.resources | nindent 10 }}
+    {{- if .Values.controller.nodeSelector }}
+      nodeSelector:
+{{- toYaml .Values.controller.nodeSelector | nindent 8 }}
+    {{- end }}
+    {{- if .Values.controller.tolerations }}
+      tolerations:
+{{- toYaml .Values.controller.tolerations | nindent 8 }}
+    {{- end }}
+    {{- if .Values.controller.affinity }}
+      affinity:
+{{- toYaml .Values.controller.affinity | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "argo-cd.controllerServiceAccountName" . }}
+{{- if .Values.controller.volumes }}
+      volumes:
+{{- toYaml .Values.controller.volumes | nindent 8 }}
+{{- end }}

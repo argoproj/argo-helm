@@ -1,0 +1,31 @@
+{{- if .Values.server.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  {{- if .Values.server.metrics.service.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.server.metrics.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}-metrics
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: {{ .Values.server.name }}
+{{- if .Values.server.metrics.service.labels }}
+{{- toYaml .Values.server.metrics.service.labels | nindent 4 }}
+{{- end }}
+  name: {{ template "argo-cd.server.fullname" . }}-metrics
+spec:
+  ports:
+  - name: metrics
+    protocol: TCP
+    port: {{ .Values.server.metrics.service.servicePort }}
+    targetPort: metrics
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
+{{- end }}

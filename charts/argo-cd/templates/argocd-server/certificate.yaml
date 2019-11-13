@@ -1,0 +1,24 @@
+{{- if .Values.server.certificate.enabled -}}
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: {{ template "argo-cd.server.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: {{ .Values.server.name }}
+spec:
+  commonName: {{ .Values.server.certificate.domain | quote }}
+  dnsNames:
+    - {{ .Values.server.certificate.domain | quote }}
+  {{- range .Values.ingress.additionalHosts }}
+    - {{ . | quote }}
+  {{- end }}
+  issuerRef:
+    kind: {{ .Values.certificate.issuer.kind | quote }}
+    name: {{ .Values.certificate.issuer.name | quote }}
+  secretName: argocd-secret
+{{- end }}

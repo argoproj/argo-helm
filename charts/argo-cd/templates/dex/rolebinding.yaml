@@ -1,0 +1,21 @@
+{{- if .Values.dex.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "argo-cd.dex.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.dex.name }}
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: {{ .Values.dex.name }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ template "argo-cd.dex.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ template "argo-cd.dexServiceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
