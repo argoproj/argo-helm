@@ -532,3 +532,9 @@ configs:
     githubSecret: ""
     gitlabSecret: ""
     bitbucketSecret: ""
+#   argocdServerTlsConfig:
+#     key:
+#     cert:
+    #Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
+    #`htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
+#   argocdServerAdminPassword:  
