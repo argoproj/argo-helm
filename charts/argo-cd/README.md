@@ -51,7 +51,7 @@ $ helm install --name my-release argo/argo-cd
 | controller.args.statusProcessors | define the controller `--status-processors` | `"20"` |
 | controller.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | controller.containerPort | Controller listening port. | `8082` |
-| controller.extraArgs | Additional arguments for the controller. | `[]` |
+| controller.extraArgs | Additional arguments for the controller. A list of key:value pairs | `[]` |
 | controller.image.repository | Repository to use for the controller | `global.image.repository` |
 | controller.image.imagePullPolicy | Image pull policy for the controller | `global.image.imagePullPolicy` |
 | controller.image.tag | Tag to use for the controller | `global.image.tag` |
@@ -93,7 +93,7 @@ $ helm install --name my-release argo/argo-cd
 |-----|------|---------|-------------|
 | repoServer.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
 | repoServer.containerPort | Repo server port | `8081` |
-| repoServer.extraArgs | Additional arguments for the repo server | `[]` |
+| repoServer.extraArgs | Additional arguments for the repo server. A  list of key:value pairs. | `[]` |
 | repoServer.image.repository | Repository to use for the repo server | `global.image.repository` |
 | repoServer.image.imagePullPolicy | Image pull policy for the repo server | `global.image.imagePullPolicy` |
 | repoServer.image.tag | Tag to use for the repo server | `global.image.tag` |
@@ -138,7 +138,7 @@ $ helm install --name my-release argo/argo-cd
 | server.certificate.issuer | Certificate manager issuer | `{}` |
 | server.config | URL for Argo CD | `{}` |
 | server.containerPort | Server container port. | `8080` |
-| server.extraArgs | Additional arguments for the server | `[]` |
+| server.extraArgs | Additional arguments for the server. A list of key:value pairs. | `[]` |
 | server.image.repository | Repository to use for the server | `global.image.repository` |
 | server.image.imagePullPolicy | Image pull policy for the server | `global.image.imagePullPolicy` |
 | server.image.tag | Tag to use for the repo server | `global.image.tag` |
@@ -216,7 +216,7 @@ $ helm install --name my-release argo/argo-cd
 |-----|------|---------|-------------|
 | redis.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
 | redis.containerPort | Redis container port | `6379` |
-| redis.enabled | Enable redis | `false` |
+| redis.enabled | Enable redis | `true` |
 | redis.image.imagePullPolicy | Redis imagePullPolicy | `"IfNotPresent"` |
 | redis.image.repository | Redis repository | `"redis"` |
 | redis.image.tag | Redis tag | `"5.0.3"` |
