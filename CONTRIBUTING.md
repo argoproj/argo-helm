@@ -19,7 +19,7 @@ Clean-up:
 
 ```
 helm delete argo-cd --purge
-kubectl delete crd -l app.kubernetes.io/part-of=argo-cd
+kubectl delete crd -l app.kubernetes.io/part-of=argocd
 ```
 
 Minimally:
