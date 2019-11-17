@@ -27,6 +27,7 @@ controller:
   logLevel: info
 
   ## Additional command line arguments to pass to argocd-controller
+  ## - key: value
   extraArgs: []
 
   ## Annotations to be added to controller pods
@@ -158,7 +159,7 @@ dex:
 
 ## Redis
 redis:
-  enabled: false
+  enabled: true
   name: redis
 
   image:
@@ -196,8 +197,9 @@ server:
   #  imagePullPolicy: IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
+  ## - key: value
   # extraArgs: []
-  #   - insecure
+  #   - insecure: true
   extraArgs: []
 
   ## Argo server log level
@@ -402,7 +404,7 @@ repoServer:
   #  imagePullPolicy: IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
-  ##
+  ## - key: value
   extraArgs: []
 
   ## Argo repoServer log level
