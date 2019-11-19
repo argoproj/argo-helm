@@ -105,6 +105,7 @@ spec:
       affinity:
 {{- toYaml .Values.repoServer.affinity | nindent 8 }}
     {{- end }}
+      serviceAccountName: {{ template "argo-cd.repoServerServiceAccountName" . }}
       volumes:
       {{- if .Values.repoServer.volumes }}
 {{- toYaml .Values.repoServer.volumes | nindent 8}}
