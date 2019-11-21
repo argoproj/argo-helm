@@ -2,8 +2,6 @@ Argo CD Chart
 ======
 A Helm chart for ArgoCD, a declarative, GitOps continuous delivery tool for Kubernetes.
 
-Current chart version is `1.0.4`
-
 Source code can be found [here](https://argoproj.github.io/argo-cd/)
 
 ## Additional Information
