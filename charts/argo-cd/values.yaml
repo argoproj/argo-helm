@@ -515,6 +515,25 @@ repoServer:
     #   namespace: monitoring
     #   additionalLabels: {}
 
+  ## Repo server service account
+  ## If create is set to true, make sure to uncomment the name and update the rbac section below
+  serviceAccount:
+    create: false
+  #  name: argocd-repo-server
+    ## Annotations applied to created service account
+    annotations: {}
+
+  ## Repo server rbac rules
+ # rbac:
+ #   - apiGroups:
+ #     - argoproj.io
+ #     resources:
+ #     - applications
+ #     verbs:
+ #     - get
+ #     - list
+ #     - watch
+
 ## Argo Configs
 configs:
   knownHosts:
