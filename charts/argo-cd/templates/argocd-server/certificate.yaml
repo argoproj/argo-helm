@@ -1,4 +1,5 @@
 {{- if .Values.server.certificate.enabled -}}
+{{- $commonName := regexReplaceAll "^https?://([^/]+)(/.*)?$" .Values.server.config.url "${1}" }}
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
@@ -11,14 +12,14 @@ metadata:
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.server.name }}
 spec:
-  commonName: {{ .Values.server.certificate.domain | quote }}
+  commonName: {{ $commonName | quote }}
   dnsNames:
-    - {{ .Values.server.certificate.domain | quote }}
-  {{- range .Values.ingress.additionalHosts }}
-    - {{ . | quote }}
+    - {{ $commonName | quote }}
+  {{- range $dnsName := .Values.server.ingress.additionalHosts }}
+    - {{ $dnsName | quote }}
   {{- end }}
   issuerRef:
-    kind: {{ .Values.certificate.issuer.kind | quote }}
-    name: {{ .Values.certificate.issuer.name | quote }}
-  secretName: argocd-secret
+    kind: {{ .Values.server.certificate.issuer.kind | quote }}
+    name: {{ .Values.server.certificate.issuer.name | quote }}
+  secretName: "argocd-secret"
 {{- end }}

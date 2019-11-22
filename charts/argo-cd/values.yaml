@@ -268,9 +268,9 @@ server:
   ## Certificate configuration
   certificate:
     enabled: false
-    domain: argocd.example.com
     issuer: {}
-    additionalHosts: []
+    #  kind: ClusterIssuer
+    #  name: letsencrypt
 
   ## Server service configuration
   service:
@@ -304,14 +304,11 @@ server:
     labels: {}
 
     ## Argo Ingress.
-    ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
     ##
-    hosts:
+    additionalHosts:
       []
       # - argocd.example.com
-    paths:
-      - /
     tls:
       []
       # - secretName: argocd-example-tls
@@ -319,12 +316,8 @@ server:
       #     - argocd.example.com
 
   # Create a OpenShift Route with SSL passthrough for UI and CLI
-  # Consider setting 'hostname' e.g. https://argocd.apps-crc.testing/ using your Default Ingress Controller Domain
-  # Find your domain with: kubectl describe --namespace=openshift-ingress-operator ingresscontroller/default | grep Domain:
-  # If 'hostname' is an empty string "" OpenShift will create a hostname for you.
   route:
     enabled: false
-    hostname: ""
 
   ## ArgoCD config
   ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml

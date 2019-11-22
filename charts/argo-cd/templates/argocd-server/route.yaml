@@ -1,4 +1,5 @@
 {{- if .Values.server.route.enabled -}}
+{{- $host := regexReplaceAll "^https?://([^/]+)(/.*)?$" .Values.server.config.url "${1}" }}
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -15,16 +16,16 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
-  host: {{ .Values.server.route.hostname | quote }}
+  host: {{ $host | quote }}
   subdomain: ''
   to:
-    kind: Service
-    name: {{ template "argo-cd.server.fullname" . }}
+    kind: "Service"
+    name: {{ include "argo-cd.server.fullname" . | quote }}
     weight: 100
   port:
-    targetPort: https
+    targetPort: "https"
   tls:
-    termination: passthrough
-    insecureEdgeTerminationPolicy: None
-  wildcardPolicy: None
+    termination: "passthrough"
+    insecureEdgeTerminationPolicy: "None"
+  wildcardPolicy: "None"
 {{- end }}
