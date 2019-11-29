@@ -19,7 +19,7 @@ Clean-up:
 
 ```
 helm delete argo-cd --purge
-kubectl delete crd -l app.kubernetes.io/part-of=argo-cd
+kubectl delete crd -l app.kubernetes.io/part-of=argocd
 ```
 
 Minimally:
@@ -32,7 +32,7 @@ kubectl port-forward service/argo-cd-argocd-server -n argocd 8080:443
 In a new terminal:
 
 ```
-argocd version
+argocd version --server localhost:8080 --insecure
 # reset password to 'Password1!'
 kubectl -n argocd patch secret argocd-secret \
   -p '{"stringData": {

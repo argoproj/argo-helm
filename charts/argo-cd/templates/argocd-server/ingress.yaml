@@ -1,6 +1,6 @@
 {{- if .Values.server.ingress.enabled -}}
 {{- $serviceName := include "argo-cd.server.fullname" . -}}
-{{- $servicePort := .Values.server.name -}}
+{{- $servicePort := .Values.server.service.servicePortHttp -}}
 {{- $paths := .Values.server.ingress.paths -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
