@@ -56,7 +56,7 @@ spec:
         {{- end }}
         volumeMounts:
         {{- if .Values.repoServer.volumeMounts }}
-{{- toYaml .Values.repoServer.volumeMounts | nindent 10}}
+{{- toYaml .Values.repoServer.volumeMounts | nindent 8}}
         {{- end }}
         {{- if .Values.configs.knownHosts }}
         - mountPath: /app/config/ssh
@@ -108,7 +108,7 @@ spec:
       serviceAccountName: {{ template "argo-cd.repoServerServiceAccountName" . }}
       volumes:
       {{- if .Values.repoServer.volumes }}
-{{- toYaml .Values.repoServer.volumes | nindent 8}}
+{{- toYaml .Values.repoServer.volumes | nindent 6}}
       {{- end }}
       {{- if .Values.configs.knownHosts }}
       - configMap:
@@ -119,4 +119,8 @@ spec:
       - configMap:
           name: argocd-tls-certs-cm
         name: tls-certs
+      {{- end }}
+      {{- if .Values.repoServer.initContainers }}
+      initContainers:
+{{- toYaml .Values.repoServer.initContainers | nindent 6 }}
       {{- end }}
