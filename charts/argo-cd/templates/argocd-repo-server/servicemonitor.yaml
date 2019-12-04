@@ -33,3 +33,4 @@ spec:
       app.kubernetes.io/name: {{ template "argo-cd.repoServer.fullname" . }}-metrics
       app.kubernetes.io/component: {{ .Values.repoServer.name }}
 {{- end }}
+

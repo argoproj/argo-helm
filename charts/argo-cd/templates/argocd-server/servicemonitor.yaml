@@ -33,3 +33,4 @@ spec:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}-metrics
       app.kubernetes.io/component: {{ .Values.server.name }}
 {{- end }}
+
