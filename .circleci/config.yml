@@ -6,6 +6,21 @@ jobs:
     steps:
       - checkout
       - run: ct lint --config .circleci/chart-testing.yaml --lint-conf .circleci/lintconf.yaml
+  test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run: | # Required to drop files from repo into test image
+          docker create -v /app/test --name test_sources alpine:3.4 /bin/true
+          docker cp charts test_sources:/app/test
+          docker run --name terratest --volumes-from test_sources seanson/terratest-helm-tester:latest
+          docker cp terratest:/app/out ./test_results
+      - store_artifacts:
+          path: ./test_results
+      - store_test_results:
+          path: ./test_results
+
   # Technically this only needs to be run on master, but it's good to have it run on every PR
   # so that it is regularly tested.
   publish:
@@ -24,7 +39,7 @@ jobs:
           set -x
           if [ "$CIRCLE_BRANCH" = "master" ]; then
             export GIT_PUSH=true
-          else 
+          else
             export GIT_PUSH=false
           fi
           sh ./scripts/publish.sh
@@ -33,6 +48,7 @@ workflows:
   workflow:
     jobs:
       - lint
+      - test
       - publish:
           requires:
             - lint
