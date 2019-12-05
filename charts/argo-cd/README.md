@@ -50,6 +50,7 @@ $ helm install --name my-release argo/argo-cd
 | controller.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | controller.containerPort | Controller listening port. | `8082` |
 | controller.extraArgs | Additional arguments for the controller. A list of key:value pairs | `[]` |
+| controller.env | Environment variables for the controller. | `[]` |
 | controller.image.repository | Repository to use for the controller | `global.image.repository` |
 | controller.image.imagePullPolicy | Image pull policy for the controller | `global.image.imagePullPolicy` |
 | controller.image.tag | Tag to use for the controller | `global.image.tag` |
@@ -92,6 +93,7 @@ $ helm install --name my-release argo/argo-cd
 | repoServer.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
 | repoServer.containerPort | Repo server port | `8081` |
 | repoServer.extraArgs | Additional arguments for the repo server. A  list of key:value pairs. | `[]` |
+| repoServer.env | Environment variables for the repo server. | `[]` |
 | repoServer.image.repository | Repository to use for the repo server | `global.image.repository` |
 | repoServer.image.imagePullPolicy | Image pull policy for the repo server | `global.image.imagePullPolicy` |
 | repoServer.image.tag | Tag to use for the repo server | `global.image.tag` |
@@ -137,6 +139,7 @@ $ helm install --name my-release argo/argo-cd
 | server.config | URL for Argo CD | `{}` |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of key:value pairs. | `[]` |
+| server.env | Environment variables for the server. | `[]` |
 | server.image.repository | Repository to use for the server | `global.image.repository` |
 | server.image.imagePullPolicy | Image pull policy for the server | `global.image.imagePullPolicy` |
 | server.image.tag | Tag to use for the repo server | `global.image.tag` |
@@ -197,6 +200,7 @@ $ helm install --name my-release argo/argo-cd
 | dex.initImage.imagePullPolicy | Argo CD init image imagePullPolicy | `global.image.imagePullPolicy` |
 | dex.initImage.tag | Argo CD init image tag | `global.image.tag` |
 | dex.name | Dex name | `"dex-server"` |
+| dex.env | Environment variables for the Dex server. | `[]` |
 | dex.nodeSelector | Dex node selector https://kubernetes.io/docs/user-guide/node-selection/ | `{}` |
 | dex.priorityClassName | Priority class for dex | `""` |
 | dex.resources | Resource limits and requests for dex | `{}` |
@@ -219,6 +223,7 @@ $ helm install --name my-release argo/argo-cd
 | redis.image.repository | Redis repository | `"redis"` |
 | redis.image.tag | Redis tag | `"5.0.3"` |
 | redis.name | Redis name | `"redis"` |
+| redis.env | Environment variables for the Redis server. | `[]` |
 | redis.nodeSelector | Redis node selector https://kubernetes.io/docs/user-guide/node-selection/ | `{}` |
 | redis.priorityClassName | Priority class for redis | `""` |
 | redis.resources | Resource limits and requests for redis | `{}` |

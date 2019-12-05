@@ -43,6 +43,10 @@ spec:
         command:
         - /shared/argocd-util
         - rundex
+        {{- if .Values.dex.env }}
+        env:
+{{- toYaml .Values.dex.env | nindent 8 }}
+        {{- end }}
         ports:
         - name: http
           containerPort: {{ .Values.dex.containerPortHttp }}
