@@ -612,3 +612,18 @@ configs:
     bitbucketServerSecret: ""
     bitbucketUUÌD: ""
     gogsSecret: ""
+
+# Argo TLS Data.
+  argocdServerTlsConfig: {}
+    # key:
+    # crt: |
+    #   -----BEGIN CERTIFICATE-----
+    #   <cert data>
+    #   -----END CERTIFICATE-----
+    #   -----BEGIN CERTIFICATE-----
+    #   <ca cert data>
+    #   -----END CERTIFICATE-----
+
+  # Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
+  # `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
+  # argocdServerAdminPassword:
