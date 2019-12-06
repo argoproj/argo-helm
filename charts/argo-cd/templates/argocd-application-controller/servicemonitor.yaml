@@ -13,7 +13,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.controller.name }}
+    {{- if .Values.controller.metrics.serviceMonitor.selector }}
 {{- toYaml .Values.controller.metrics.serviceMonitor.selector | nindent 4 }}
+    {{- end }}
     {{- if .Values.controller.metrics.serviceMonitor.additionalLabels }}
 {{- toYaml .Values.controller.metrics.serviceMonitor.additionalLabels | nindent 4 }}
     {{- end }}
@@ -30,3 +32,4 @@ spec:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-metrics
       app.kubernetes.io/component: {{ .Values.controller.name }}
 {{- end }}
+

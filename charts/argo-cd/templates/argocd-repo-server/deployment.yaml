@@ -54,6 +54,10 @@ spec:
         - --{{ $key }}
           {{- end }}
         {{- end }}
+        {{- if .Values.repoServer.env }}
+        env:
+{{- toYaml .Values.repoServer.env | nindent 8 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.repoServer.volumeMounts }}
 {{- toYaml .Values.repoServer.volumeMounts | nindent 8}}

@@ -34,6 +34,10 @@ controller:
   ## key: value
   extraArgs: []
 
+  ## Environment variables to pass to argocd-controller
+  ##
+  env: []
+
   ## Annotations to be added to controller pods
   ##
   podAnnotations: {}
@@ -127,6 +131,10 @@ dex:
     tag:
     imagePullPolicy:
 
+  ## Environment variables to pass to the Dex server
+  ##
+  env: []
+
   serviceAccount:
     create: true
     name: argocd-dex-server
@@ -177,6 +185,10 @@ redis:
   containerPort: 6379
   servicePort: 6379
 
+  ## Environment variables to pass to the Redis server
+  ##
+  env: []
+
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
@@ -211,6 +223,10 @@ server:
   # extraArgs: []
   #   insecure: true
   extraArgs: []
+
+  ## Environment variables to pass to argocd-server
+  ##
+  env: []
 
   ## Argo server log level
   logLevel: info
@@ -442,6 +458,10 @@ repoServer:
   ## key: value
   extraArgs: []
 
+  ## Environment variables to pass to argocd-repo-server
+  ##
+  env: []
+
   ## Argo repoServer log level
   logLevel: info
 
@@ -627,6 +647,25 @@ configs:
     # -----END RSA PRIVATE KEY-----
   secret:
     createSecret: true
+
+    # Webhook Configs
     githubSecret: ""
     gitlabSecret: ""
-    bitbucketSecret: ""
+    bitbucketServerSecret: ""
+    bitbucketUUÌD: ""
+    gogsSecret: ""
+
+# Argo TLS Data.
+  argocdServerTlsConfig: {}
+    # key:
+    # crt: |
+    #   -----BEGIN CERTIFICATE-----
+    #   <cert data>
+    #   -----END CERTIFICATE-----
+    #   -----BEGIN CERTIFICATE-----
+    #   <ca cert data>
+    #   -----END CERTIFICATE-----
+
+  # Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
+  # `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
+  # argocdServerAdminPassword:
