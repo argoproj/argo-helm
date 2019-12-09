@@ -13,7 +13,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.controller.name }}
+    {{- if .Values.controller.metrics.rules.selector }}
 {{- toYaml .Values.controller.metrics.rules.selector | nindent 4 }}
+    {{- end }}
     {{- if .Values.controller.metrics.rules.additionalLabels }}
 {{- toYaml .Values.controller.metrics.rules.additionalLabels | nindent 4 }}
     {{- end }}
