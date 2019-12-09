@@ -1,0 +1,27 @@
+{{- if and .Values.controller.metrics.enabled .Values.controller.metrics.rules.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ template "argo-cd.controller.fullname" . }}
+  {{- if .Values.controller.metrics.rules.namespace }}
+  namespace: {{ .Values.controller.metrics.rules.namespace }}
+  {{- end }}
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: {{ .Values.controller.name }}
+    {{- if .Values.controller.metrics.rules.selector }}
+{{- toYaml .Values.controller.metrics.rules.selector | nindent 4 }}
+    {{- end }}
+    {{- if .Values.controller.metrics.rules.additionalLabels }}
+{{- toYaml .Values.controller.metrics.rules.additionalLabels | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+  - name: argocd
+    rules:
+{{- toYaml .Values.controller.metrics.rules.spec | nindent 4 }}
+{{- end }}
