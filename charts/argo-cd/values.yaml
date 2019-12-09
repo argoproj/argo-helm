@@ -10,7 +10,7 @@ installCRDs: true
 global:
   image:
     repository: argoproj/argocd
-    tag: v1.3.0
+    tag: v1.3.4
     imagePullPolicy: IfNotPresent
 
 ## Controller
@@ -19,7 +19,7 @@ controller:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.3.0
+    tag: # v1.3.4
     imagePullPolicy: # IfNotPresent
 
   ## Argo controller commandline flags
@@ -246,7 +246,7 @@ server:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.3.0
+    tag: # v1.3.4
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
@@ -482,7 +482,7 @@ repoServer:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.3.0
+    tag: # v1.3.4
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
@@ -570,20 +570,20 @@ repoServer:
   ## If create is set to true, make sure to uncomment the name and update the rbac section below
   serviceAccount:
     create: false
-  #  name: argocd-repo-server
+    #  name: argocd-repo-server
     ## Annotations applied to created service account
     annotations: {}
 
   ## Repo server rbac rules
- # rbac:
- #   - apiGroups:
- #     - argoproj.io
- #     resources:
- #     - applications
- #     verbs:
- #     - get
- #     - list
- #     - watch
+  # rbac:
+  #   - apiGroups:
+  #     - argoproj.io
+  #     resources:
+  #     - applications
+  #     verbs:
+  #     - get
+  #     - list
+  #     - watch
 
   ## Use init containers to configure custom tooling
   ## https://argoproj.github.io/argo-cd/operator-manual/custom_tools/
@@ -687,7 +687,8 @@ configs:
     gogsSecret: ""
 
   # Argo TLS Data.
-    argocdServerTlsConfig: {}
+    argocdServerTlsConfig:
+      {}
       # key:
       # crt: |
       #   -----BEGIN CERTIFICATE-----
