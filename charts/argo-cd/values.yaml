@@ -34,6 +34,10 @@ controller:
   ## key: value
   extraArgs: []
 
+  ## Environment variables to pass to argocd-controller
+  ##
+  env: []
+
   ## Annotations to be added to controller pods
   ##
   podAnnotations: {}
@@ -158,6 +162,10 @@ dex:
     tag:
     imagePullPolicy:
 
+  ## Environment variables to pass to the Dex server
+  ##
+  env: []
+
   serviceAccount:
     create: true
     name: argocd-dex-server
@@ -208,6 +216,10 @@ redis:
   containerPort: 6379
   servicePort: 6379
 
+  ## Environment variables to pass to the Redis server
+  ##
+  env: []
+
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
@@ -242,6 +254,10 @@ server:
   # extraArgs: []
   #   insecure: true
   extraArgs: []
+
+  ## Environment variables to pass to argocd-server
+  ##
+  env: []
 
   ## Argo server log level
   logLevel: info
@@ -473,6 +489,10 @@ repoServer:
   ## key: value
   extraArgs: []
 
+  ## Environment variables to pass to argocd-repo-server
+  ##
+  env: []
+
   ## Argo repoServer log level
   logLevel: info
 
@@ -564,6 +584,28 @@ repoServer:
  #     - get
  #     - list
  #     - watch
+
+  ## Use init containers to configure custom tooling
+  ## https://argoproj.github.io/argo-cd/operator-manual/custom_tools/
+  ## When using the volumes & volumeMounts section bellow, please comment out those above.
+ #  volumes:
+ #  - name: custom-tools
+ #    emptyDir: {}
+ #
+ #  initContainers:
+ #  - name: download-tools
+ #    image: alpine:3.8
+ #    command: [sh, -c]
+ #    args:
+ #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+ #        mv linux-amd64/helm /custom-tools/
+ #    volumeMounts:
+ #      - mountPath: /custom-tools
+ #        name: custom-tools
+ #  volumeMounts:
+ #  - mountPath: /usr/local/bin/helm
+ #    name: custom-tools
+ #    subPath: helm
 
 ## Argo Configs
 configs:

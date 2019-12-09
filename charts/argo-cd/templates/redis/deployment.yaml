@@ -34,9 +34,14 @@ spec:
         - "no"
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
         imagePullPolicy: {{ .Values.redis.image.imagePullPolicy}}
+        {{- if .Values.redis.env }}
+        env:
+{{- toYaml .Values.redis.env | nindent 8 }}
+        {{- end }}
         ports:
         - containerPort: {{ .Values.redis.containerPort }}
 {{- if .Values.redis.volumeMounts }}
+
         volumeMounts:
 {{- toYaml .Values.redis.volumeMounts | nindent 10 }}
 {{- end }}
