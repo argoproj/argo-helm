@@ -12,6 +12,10 @@ global:
     repository: argoproj/argocd
     tag: v1.3.4
     imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsUser: 999
+    runAsGroup: 999
+    fsGroup: 999
 
 ## Controller
 controller:

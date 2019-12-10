@@ -35,6 +35,7 @@ spec:
 {{- toYaml .Values.controller.podLabels | nindent 8 }}
         {{- end }}
     spec:
+      securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
       containers:
       - command:
         - argocd-application-controller
