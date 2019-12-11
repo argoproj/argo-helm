@@ -25,6 +25,7 @@ spec:
         app.kubernetes.io/component: {{ .Values.redis.name }}
     spec:
       automountServiceAccountToken: false
+      securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
       containers:
       - name: {{ template "argo-cd.redis.fullname" . }}
         args:
