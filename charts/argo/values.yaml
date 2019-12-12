@@ -4,7 +4,7 @@ images:
   ui: argoui
   executor: argoexec
   pullPolicy: Always
-  tag: v2.4.2
+  tag: v2.4.3
 
 crdVersion: v1alpha1
 installCRD: true
@@ -12,7 +12,7 @@ installCRD: true
 init:
   # By default the installation will not set an explicit one, which will mean it uses `default` for the namespace the chart is
   # being deployed to.  In RBAC clusters, that will almost certainly fail.  See the NOTES: section of the readme for more info.
-  serviceAccount: ""
+  serviceAccount: "argo"
 
 createAggregateRoles: true
 
@@ -54,10 +54,12 @@ controller:
   serviceMonitor:
     enabled: false
     additionalLabels: {}
-  serviceAccount: argo
+  serviceAccount: "argo"
   name: workflow-controller
   workflowNamespaces:
     - default
+    - core
+    - argo
   containerRuntimeExecutor: docker
   instanceID:
     # `instanceID.enabled` configures the controller to filter workflow submissions
@@ -132,19 +134,16 @@ ui:
   ##
   ingress:
     enabled: false
-
     ## Annotations to be added to the web ingress.
     ##
     # annotations:
     #   kubernetes.io/ingress.class: nginx
     #   kubernetes.io/tls-acme: "true"
-
     ## Hostnames.
     ## Must be provided if Ingress is enabled.
     ##
     # hosts:
     #   - argo.domain.com
-
     ## TLS configuration.
     ## Secrets must be manually created in the namespace.
     ##
