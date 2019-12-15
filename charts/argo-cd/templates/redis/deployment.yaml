@@ -25,7 +25,7 @@ spec:
         app.kubernetes.io/component: {{ .Values.redis.name }}
     spec:
       automountServiceAccountToken: false
-      {{- if .Values.global.securityContext.enabled }}
+      {{- if .Values.global.securityContext }}
       securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
       {{- end }}
       containers:
