@@ -32,6 +32,7 @@ $ helm install --name my-release argo/argo-cd
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
 | global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.3.6"` |
+| global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) | 
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
 | configs.secret.bitbucketSecret | BitBucket incoming webhook secret | `""` |
