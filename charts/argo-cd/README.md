@@ -31,7 +31,8 @@ $ helm install --name my-release argo/argo-cd
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.2.3"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.3.6"` |
+| global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) | 
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
 | configs.secret.bitbucketSecret | BitBucket incoming webhook secret | `""` |
@@ -136,7 +137,7 @@ $ helm install --name my-release argo/argo-cd
 | server.certificate.domain | Certificate manager domain | `"argocd.example.com"` |
 | server.certificate.enabled | Enables a certificate manager certificate. | `false` |
 | server.certificate.issuer | Certificate manager issuer | `{}` |
-| server.config | URL for Argo CD | `{}` |
+| server.config | [General Argo CD configuration](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#repositories) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of key:value pairs. | `[]` |
 | server.env | Environment variables for the server. | `[]` |
@@ -167,7 +168,7 @@ $ helm install --name my-release argo/argo-cd
 | server.podAnnotations | Annotations for the repo server pods | `{}` |
 | server.podLabels | Labels for the repo server pods | `{}` |
 | server.priorityClassName | Priority class for the repo server | `""` |
-| server.rbacConfig | Argo CD RBAC policy https://argoproj.github.io/argo-cd/operator-manual/rbac/ | `See [values.yaml](values.yaml)` |
+| server.rbacConfig | [Argo CD RBAC policy](https://argoproj.github.io/argo-cd/operator-manual/rbac/) | `{}` |
 | server.readinessProbe.failureThreshold | int | `3` |
 | server.readinessProbe.initialDelaySeconds | int | `10` |
 | server.readinessProbe.periodSeconds | int | `10` |
