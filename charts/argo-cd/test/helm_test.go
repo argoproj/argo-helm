@@ -384,3 +384,63 @@ func TestArgoCDSecurityContext(t *testing.T) {
 		})
 	}
 }
+
+// https://github.com/argoproj/argo-helm/pull/95
+func TestArgoCDExtraArgs(t *testing.T) {
+	t.Parallel()
+	helmChartPath, err := filepath.Abs("../")
+	releaseName := "argo-cd"
+	require.NoError(t, err)
+
+	tests := []struct {
+		Name           string
+		DeploymentYAML []string
+		SetValues      map[string]string
+		SetStrValues   map[string]string
+	}{
+		{
+			Name:           "Given an extraArgs and an application controller deployment",
+			DeploymentYAML: []string{"templates/argocd-application-controller/deployment.yaml"},
+			SetValues: map[string]string{
+				"controller.extraArgs.foo": "bar",
+			},
+		},
+		{
+			Name:           "Given an extraArgs and a reposerver deployment",
+			DeploymentYAML: []string{"templates/argocd-repo-server/deployment.yaml"},
+			SetValues: map[string]string{
+				"repoServer.extraArgs.foo": "bar",
+			},
+		},
+		{
+			Name:           "Given an extraArgs and a server deployment",
+			DeploymentYAML: []string{"templates/argocd-server/deployment.yaml"},
+			SetValues: map[string]string{
+				"server.extraArgs.foo": "bar",
+			},
+		},
+		{
+			Name:           "Given a global securityContext and a redis deployment",
+			DeploymentYAML: []string{"templates/redis/deployment.yaml"},
+			SetValues: map[string]string{
+				"redis.extraArgs.foo": "bar",
+			},
+		},
+	}
+
+	var deployment appsv1.Deployment
+
+	for _, test := range tests {
+		options := &helm.Options{
+			SetValues:      test.SetValues,
+			KubectlOptions: k8s.NewKubectlOptions("", "", "default"),
+		}
+		Convey(test.Name, t, func() {
+			output := helm.RenderTemplate(t, options, helmChartPath, releaseName, test.DeploymentYAML)
+			helm.UnmarshalK8SYaml(t, output, &deployment)
+			deploymentContainers := deployment.Spec.Template.Spec.Containers
+
+			So(deploymentContainers[0].Command[len(deploymentContainers[0].Command)-1], ShouldEqual, "--foo=bar")
+		})
+	}
+}
