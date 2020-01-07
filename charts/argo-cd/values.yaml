@@ -36,7 +36,7 @@ controller:
 
   ## Additional command line arguments to pass to argocd-controller
   ## key: value
-  extraArgs: []
+  extraArgs: {}
 
   ## Environment variables to pass to argocd-controller
   ##
@@ -49,6 +49,12 @@ controller:
   ## Labels to be added to controller pods
   ##
   podLabels: {}
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
 
   ## Configures the controller port
   containerPort: 8082
@@ -199,6 +205,13 @@ dex:
 
   priorityClassName: ""
 
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+
+
   resources: {}
   #  limits:
   #    cpu: 50m
@@ -233,6 +246,13 @@ redis:
 
   priorityClassName: ""
 
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+
+
   resources: {}
   #  limits:
   #    cpu: 200m
@@ -255,9 +275,8 @@ server:
 
   ## Additional command line arguments to pass to argocd-server
   ## key: value
-  # extraArgs: []
+  extraArgs: {}
   #   insecure: true
-  extraArgs: []
 
   ## Environment variables to pass to argocd-server
   ##
@@ -307,6 +326,12 @@ server:
   affinity: {}
 
   priorityClassName: ""
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
 
   resources: {}
   #  limits:
@@ -491,7 +516,7 @@ repoServer:
 
   ## Additional command line arguments to pass to argocd-repo-server
   ## key: value
-  extraArgs: []
+  extraArgs: {}
 
   ## Environment variables to pass to argocd-repo-server
   ##
@@ -541,6 +566,12 @@ repoServer:
   affinity: {}
 
   priorityClassName: ""
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
 
   resources: {}
   #  limits:
