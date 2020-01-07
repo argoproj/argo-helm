@@ -50,6 +50,12 @@ controller:
   ##
   podLabels: {}
 
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+
   ## Configures the controller port
   containerPort: 8082
 
@@ -199,6 +205,13 @@ dex:
 
   priorityClassName: ""
 
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+
+
   resources: {}
   #  limits:
   #    cpu: 50m
@@ -232,6 +245,13 @@ redis:
   affinity: {}
 
   priorityClassName: ""
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+
 
   resources: {}
   #  limits:
@@ -306,6 +326,12 @@ server:
   affinity: {}
 
   priorityClassName: ""
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
 
   resources: {}
   #  limits:
@@ -540,6 +566,12 @@ repoServer:
   affinity: {}
 
   priorityClassName: ""
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
 
   resources: {}
   #  limits:
