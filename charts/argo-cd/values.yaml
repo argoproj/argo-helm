@@ -689,6 +689,12 @@ configs:
     bitbucketUUÌD: ""
     gogsSecret: ""
 
+    # Custom secrets. Useful for injecting SSO secrets into environment variables.
+    # Ref: https://argoproj.github.io/argo-cd/operator-manual/sso/
+    # Note that all values must be non-empty.
+    extra: {}
+      # LDAP_PASSWORD: "mypassword"
+
   # Argo TLS Data.
     argocdServerTlsConfig:
       {}
