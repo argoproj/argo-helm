@@ -50,6 +50,12 @@ controller:
   ##
   podLabels: {}
 
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+
   ## Configures the controller port
   containerPort: 8082
 
@@ -199,6 +205,13 @@ dex:
 
   priorityClassName: ""
 
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+
+
   resources: {}
   #  limits:
   #    cpu: 50m
@@ -232,6 +245,13 @@ redis:
   affinity: {}
 
   priorityClassName: ""
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+
 
   resources: {}
   #  limits:
@@ -306,6 +326,12 @@ server:
   affinity: {}
 
   priorityClassName: ""
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
 
   resources: {}
   #  limits:
@@ -541,6 +567,12 @@ repoServer:
 
   priorityClassName: ""
 
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+
   resources: {}
   #  limits:
   #    cpu: 50m
@@ -688,6 +720,12 @@ configs:
     bitbucketServerSecret: ""
     bitbucketUUÌD: ""
     gogsSecret: ""
+
+    # Custom secrets. Useful for injecting SSO secrets into environment variables.
+    # Ref: https://argoproj.github.io/argo-cd/operator-manual/sso/
+    # Note that all values must be non-empty.
+    extra: {}
+      # LDAP_PASSWORD: "mypassword"
 
   # Argo TLS Data.
     argocdServerTlsConfig:
