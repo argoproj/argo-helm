@@ -36,7 +36,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.3.6"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.4.0"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) | 
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | installCRDs | bool | `true` | Install CRDs if you are using Helm2. |
