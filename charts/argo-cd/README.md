@@ -26,7 +26,7 @@ $ helm install --name my-release argo/argo-cd
 
 ### Helm v3 Compatability
 
-Requires chart version 1.5.1 or newer.
+Requires chart version 1.6.5 or newer.
 
 Helm v3 has removed the `install-crds` hook so CRDs are now populated by files in the [crds](./crds) directory. Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings about nonexistant webhooks.
 
