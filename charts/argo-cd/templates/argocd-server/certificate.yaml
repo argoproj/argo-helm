@@ -1,5 +1,7 @@
 {{- if .Values.server.certificate.enabled -}}
-{{- if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha2" }}
+{{- if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha3" }}
+apiVersion: cert-manager.io/v1alpha3
+{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha2" }}
 apiVersion: cert-manager.io/v1alpha2
 {{- else }}
 apiVersion: certmanager.k8s.io/v1alpha1
