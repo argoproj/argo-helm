@@ -14,11 +14,11 @@ spec:
   commonName: {{ .Values.server.certificate.domain | quote }}
   dnsNames:
     - {{ .Values.server.certificate.domain | quote }}
-  {{- range .Values.ingress.additionalHosts }}
+  {{- range .Values.server.certificate.additionalHosts }}
     - {{ . | quote }}
   {{- end }}
   issuerRef:
-    kind: {{ .Values.certificate.issuer.kind | quote }}
-    name: {{ .Values.certificate.issuer.name | quote }}
+    kind: {{ .Values.server.certificate.issuer.kind | quote }}
+    name: {{ .Values.server.certificate.issuer.name | quote }}
   secretName: argocd-secret
 {{- end }}

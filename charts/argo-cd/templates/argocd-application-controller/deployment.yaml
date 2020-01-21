@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,6 +10,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.controller.name }}
+    app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.controller.image.tag | quote }}
 spec:
   selector:
     matchLabels:
@@ -31,10 +33,14 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/part-of: argocd
         app.kubernetes.io/component: {{ .Values.controller.name }}
+        app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.controller.image.tag | quote }}
         {{- if .Values.controller.podLabels }}
 {{- toYaml .Values.controller.podLabels | nindent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.global.securityContext }}
+      securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
+      {{- end }}
       containers:
       - command:
         - argocd-application-controller
@@ -60,6 +66,13 @@ spec:
         image: {{ default .Values.global.image.repository .Values.controller.image.repository }}:{{ default .Values.global.image.tag .Values.controller.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
         name: {{ .Values.controller.name }}
+        {{- if .Values.controller.containerSecurityContext }}
+        securityContext: {{- toYaml .Values.controller.containerSecurityContext | nindent 10 }}
+        {{- end }}      
+        {{- if .Values.controller.env }}
+        env:
+{{- toYaml .Values.controller.env | nindent 8 }}
+        {{- end }}
         ports:
         - name: controller
           containerPort: {{ .Values.controller.containerPort }}

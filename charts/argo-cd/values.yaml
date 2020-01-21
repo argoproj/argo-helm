@@ -2,21 +2,29 @@
 ## Ref: https://github.com/argoproj/argo-cd
 ##
 nameOverride: argocd
+fullnameOverride: ""
+
+# Optional CRD installation for those without Helm hooks
+installCRDs: true
 
 global:
   image:
     repository: argoproj/argocd
-    tag: v1.2.4
+    tag: v1.3.6
     imagePullPolicy: IfNotPresent
+  securityContext: {}
+  #  runAsUser: 999
+  #  runAsGroup: 999
+  #  fsGroup: 999
 
 ## Controller
 controller:
   name: application-controller
 
-  image: {}
-  #  repository: argoproj/argocd
-  #  tag: v1.2.1
-  #  imagePullPolicy: IfNotPresent
+  image:
+    repository: # argoproj/argocd
+    tag: # v1.3.6
+    imagePullPolicy: # IfNotPresent
 
   ## Argo controller commandline flags
   args:
@@ -27,7 +35,12 @@ controller:
   logLevel: info
 
   ## Additional command line arguments to pass to argocd-controller
-  extraArgs: []
+  ## key: value
+  extraArgs: {}
+
+  ## Environment variables to pass to argocd-controller
+  ##
+  env: []
 
   ## Annotations to be added to controller pods
   ##
@@ -36,6 +49,12 @@ controller:
   ## Labels to be added to controller pods
   ##
   podLabels: {}
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
 
   ## Configures the controller port
   containerPort: 8082
@@ -72,7 +91,7 @@ controller:
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
   nodeSelector: {}
-  tolerations: {}
+  tolerations: []
   affinity: {}
 
   priorityClassName: ""
@@ -102,6 +121,37 @@ controller:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
     #   additionalLabels: {}
+    rules:
+      enabled: false
+      spec: []
+      # - alert: ArgoAppMissing
+      #   expr: |
+      #     absent(argocd_app_info)
+      #   for: 15m
+      #   labels:
+      #     severity: critical
+      #   annotations:
+      #     summary: "[ArgoCD] No reported applications"
+      #     description: >
+      #       ArgoCD has not reported any applications data for the past 15 minutes which
+      #       means that it must be down or not functioning properly.  This needs to be
+      #       resolved for this cloud to continue to maintain state.
+      # - alert: ArgoAppNotSynced
+      #   expr: |
+      #     argocd_app_sync_status{sync_status!="Synced"} == 1
+      #   for: 12h
+      #   labels:
+      #     severity: warning
+      #   annotations:
+      #     summary: "[{{`{{$labels.name}}`}}] Application not synchronized"
+      #     description: >
+      #       The application [{{`{{$labels.name}}`}} has not been synchronized for over
+      #       12 hours which means that the state of this cloud has drifted away from the
+      #       state inside Git.
+    #   selector:
+    #     prometheus: kube-prometheus
+    #   namespace: monitoring
+    #   additionalLabels: {}
 
   ## Enable Admin ClusterRole resources.
   ## Enable if you would like to grant rights to ArgoCD to deploy to the local kuberentes cluster.
@@ -117,7 +167,14 @@ dex:
     repository: quay.io/dexidp/dex
     tag: v2.14.0
     imagePullPolicy: IfNotPresent
-  initImage: {}
+  initImage:
+    repository:
+    tag:
+    imagePullPolicy:
+
+  ## Environment variables to pass to the Dex server
+  ##
+  env: []
 
   serviceAccount:
     create: true
@@ -143,10 +200,17 @@ dex:
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
   nodeSelector: {}
-  tolerations: {}
+  tolerations: []
   affinity: {}
 
   priorityClassName: ""
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+
 
   resources: {}
   #  limits:
@@ -158,7 +222,7 @@ dex:
 
 ## Redis
 redis:
-  enabled: false
+  enabled: true
   name: redis
 
   image:
@@ -169,14 +233,25 @@ redis:
   containerPort: 6379
   servicePort: 6379
 
+  ## Environment variables to pass to the Redis server
+  ##
+  env: []
+
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
   nodeSelector: {}
-  tolerations: {}
+  tolerations: []
   affinity: {}
 
   priorityClassName: ""
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+
 
   resources: {}
   #  limits:
@@ -186,19 +261,26 @@ redis:
   #    cpu: 100m
   #    memory: 64Mi
 
+  volumeMounts: []
+  volumes: []
+
 ## Server
 server:
   name: server
 
-  image: {}
-  #  repository: argoproj/argocd
-  #  tag: v1.2.1
-  #  imagePullPolicy: IfNotPresent
+  image:
+    repository: # argoproj/argocd
+    tag: # v1.3.6
+    imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
-  # extraArgs: []
-  #   - insecure
-  extraArgs: []
+  ## key: value
+  extraArgs: {}
+  #   insecure: true
+
+  ## Environment variables to pass to argocd-server
+  ##
+  env: []
 
   ## Argo server log level
   logLevel: info
@@ -240,10 +322,16 @@ server:
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
   nodeSelector: {}
-  tolerations: {}
+  tolerations: []
   affinity: {}
 
   priorityClassName: ""
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
 
   resources: {}
   #  limits:
@@ -295,14 +383,24 @@ server:
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
     ##
-    hosts: []
+    hosts:
+      []
       # - argocd.example.com
     paths:
-    - /
-    tls: []
+      - /
+    tls:
+      []
       # - secretName: argocd-example-tls
       #   hosts:
       #     - argocd.example.com
+
+  # Create a OpenShift Route with SSL passthrough for UI and CLI
+  # Consider setting 'hostname' e.g. https://argocd.apps-crc.testing/ using your Default Ingress Controller Domain
+  # Find your domain with: kubectl describe --namespace=openshift-ingress-operator ingresscontroller/default | grep Domain:
+  # If 'hostname' is an empty string "" OpenShift will create a hostname for you.
+  route:
+    enabled: false
+    hostname: ""
 
   ## ArgoCD config
   ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
@@ -311,10 +409,34 @@ server:
     url: https://argocd.example.com
     # Argo CD instance label key
     application.instanceLabelKey: argocd.argoproj.io/instance
+    # repositories: |
+    #   - url: git@github.com:group/repo.git
+    #     sshPrivateKeySecret:
+    #       name: secret-name
+    #       key: sshPrivateKey
+    #   - type: helm
+    #     url: https://kubernetes-charts.storage.googleapis.com
+    #     name: stable
+    #   - type: helm
+    #     url: https://argoproj.github.io/argo-helm
+    #     name: argo
+    # oidc.config: |
+    #   name: AzureAD
+    #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
+    #   clientID: CLIENT_ID
+    #   clientSecret: $oidc.azuread.clientSecret
+    #   requestedIDTokenClaims:
+    #     groups:
+    #       essential: true
+    #   requestedScopes:
+    #     - openid
+    #     - profile
+    #     - email
 
   ## ArgoCD rbac config
   ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
-  rbacConfig: {}
+  rbacConfig:
+    {}
     # policy.csv is an file containing user-defined RBAC policies and role definitions (optional).
     # Policy rules are in the form:
     #   p, subject, resource, action, object, effect
@@ -330,7 +452,6 @@ server:
     # authorizing API requests (optional). If omitted or empty, users may be still be able to login,
     # but will see no apps, projects, etc...
     # policy.default: role:readonly
-
     # scopes controls which OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
     # If omitted, defaults to: '[groups]'. The scope value can be a string, or a list of strings.
     # scopes: '[cognito:groups, email]'
@@ -388,14 +509,18 @@ server:
 repoServer:
   name: repo-server
 
-  image: {}
-  #  repository: argoproj/argocd
-  #  tag: v1.2.1
-  #  imagePullPolicy: IfNotPresent
+  image:
+    repository: # argoproj/argocd
+    tag: # v1.3.6
+    imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
+  ## key: value
+  extraArgs: {}
+
+  ## Environment variables to pass to argocd-repo-server
   ##
-  extraArgs: []
+  env: []
 
   ## Argo repoServer log level
   logLevel: info
@@ -437,10 +562,16 @@ repoServer:
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
   nodeSelector: {}
-  tolerations: {}
+  tolerations: []
   affinity: {}
 
   priorityClassName: ""
+
+  ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
 
   resources: {}
   #  limits:
@@ -470,6 +601,47 @@ repoServer:
     #   namespace: monitoring
     #   additionalLabels: {}
 
+  ## Repo server service account
+  ## If create is set to true, make sure to uncomment the name and update the rbac section below
+  serviceAccount:
+    create: false
+    #  name: argocd-repo-server
+    ## Annotations applied to created service account
+    annotations: {}
+
+  ## Repo server rbac rules
+  # rbac:
+  #   - apiGroups:
+  #     - argoproj.io
+  #     resources:
+  #     - applications
+  #     verbs:
+  #     - get
+  #     - list
+  #     - watch
+
+  ## Use init containers to configure custom tooling
+  ## https://argoproj.github.io/argo-cd/operator-manual/custom_tools/
+  ## When using the volumes & volumeMounts section bellow, please comment out those above.
+ #  volumes:
+ #  - name: custom-tools
+ #    emptyDir: {}
+ #
+ #  initContainers:
+ #  - name: download-tools
+ #    image: alpine:3.8
+ #    command: [sh, -c]
+ #    args:
+ #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+ #        mv linux-amd64/helm /custom-tools/
+ #    volumeMounts:
+ #      - mountPath: /custom-tools
+ #        name: custom-tools
+ #  volumeMounts:
+ #  - mountPath: /usr/local/bin/helm
+ #    name: custom-tools
+ #    subPath: helm
+
 ## Argo Configs
 configs:
   knownHosts:
@@ -482,7 +654,8 @@ configs:
         gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
         ssh.dev.azure.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7Hr1oTWqNqOlzGJOfGJ4NakVyIzf1rXYd4d7wo6jBlkLvCA4odBlL0mDUyZ0/QUfTTqeu+tm22gOsv+VrVTMk6vwRU75gY/y9ut5Mb3bR5BV58dKXyq9A9UeB5Cakehn5Zgm6x1mKoVyf+FFn26iYqXJRgzIZZcZ5V6hrE0Qg39kZm4az48o0AUbf6Sp4SLdvnuMa2sVNwHBboS7EJkm57XQPVU3/QpyNLHbWDdzwtrlS+ez30S3AdYhLKEOxAG8weOnyrtLJAUen9mTkol8oII1edf7mWWbWVf0nBmly21+nZcmCTISQBtdcyPaEno7fFQMDD26/s0lfKob4Kw8H
         vs-ssh.visualstudio.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7Hr1oTWqNqOlzGJOfGJ4NakVyIzf1rXYd4d7wo6jBlkLvCA4odBlL0mDUyZ0/QUfTTqeu+tm22gOsv+VrVTMk6vwRU75gY/y9ut5Mb3bR5BV58dKXyq9A9UeB5Cakehn5Zgm6x1mKoVyf+FFn26iYqXJRgzIZZcZ5V6hrE0Qg39kZm4az48o0AUbf6Sp4SLdvnuMa2sVNwHBboS7EJkm57XQPVU3/QpyNLHbWDdzwtrlS+ez30S3AdYhLKEOxAG8weOnyrtLJAUen9mTkol8oII1edf7mWWbWVf0nBmly21+nZcmCTISQBtdcyPaEno7fFQMDD26/s0lfKob4Kw8H
-  tlsCerts: {}
+  tlsCerts:
+    {}
     # data:
     #   argocd.example.com: |
     #     -----BEGIN CERTIFICATE-----
@@ -519,13 +692,53 @@ configs:
     #     +LB9LGh4OAp68ImTjqf6ioGKG0RBSznwME+r4nXtT1S/qLR6ASWUS4ViWRhbRlNK
     #     XWyb96wrUlv+E8I=
     #     -----END CERTIFICATE-----
+  # Creates a secret with optional repository credentials
+  repositoryCredentials:
+    {}
+    # sample-ssh-key: |
+    # -----BEGIN RSA PRIVATE KEY-----
+    # MIICXAIBAAKBgQCcmiVJXGUvL8zqWmRRETbCKgFadtjJ9WDQpSwiZzMiktpYBo0N
+    # z0cThzGQfWqvdiJYEy72MrKCaSYssV3eHP5zTffk4VBDktNfdl1kgkOpqnh7tQO4
+    # nBONRLzcK6KEbKUsmiTbW8Jb4UFYDhyyyveby7y3vYePmaRQIrlEenVfKwIDAQAB
+    # AoGAbbg+WZjnt9jYzHWKhZX29LDzg8ty9oT6URT4yB3gIOAdJMFqQHuyg8cb/e0x
+    # O0AcrfK623oHwgEj4vpeFwnfaBdtM5GfH9zaj6pnXV7VZc3oBHrBnHUgFT3NEYUe
+    # tt6rtatIguBH61Aj/pyij9sOfF0xDj0s1nwFTbdHtZR/31kCQQDIwcVTqhKkDNW6
+    # cvdz+Wt3v9x1wNg+VhZhyA/pKILz3+qtn3GogLrQqhpVi+Y7tdvEv9FvgKaCjUp8
+    # 6Lfp6dDFAkEAx7HpQbXFdrtcveOi9kosKRDX1PT4zdhB08jAXGlV8jr0jkrZazVM
+    # hV5rVCuu35Vh6x1fiyGwwiVsqhgWE+KPLwJAWrDemasM/LsnmjDxhJy6ZcBwsWlK
+    # xu5Q8h9UwLmiXtVayNBsofh1bGpLtzWZ7oN7ImidDkgJ8JQvgDoJS0xrGQJBALPJ
+    # FkMFnrjtqGqBVkc8shNqyZY90v6oM2OzupO4dht2PpUZCDPAMZtlTWXjSjabbCPc
+    # NxexBk1UmkdtFftjHxsCQGjG+nhRYH92MsmrbvZyFzgxg9SIOu6xel7D3Dq9l5Le
+    # XG+bpHPF4SiCpAxthP5WNa17zuvk+CDsMZgZNuhYNMo=
+    # -----END RSA PRIVATE KEY-----
   secret:
     createSecret: true
+
+    # Webhook Configs
     githubSecret: ""
     gitlabSecret: ""
-    bitbucketSecret: ""
-#   argocdServerTlsConfig:
-#     key: 
-#     cert: 
-#   argocdServerAdminPassword: 
-      
+    bitbucketServerSecret: ""
+    bitbucketUUÌD: ""
+    gogsSecret: ""
+
+    # Custom secrets. Useful for injecting SSO secrets into environment variables.
+    # Ref: https://argoproj.github.io/argo-cd/operator-manual/sso/
+    # Note that all values must be non-empty.
+    extra: {}
+      # LDAP_PASSWORD: "mypassword"
+
+  # Argo TLS Data.
+    argocdServerTlsConfig:
+      {}
+      # key:
+      # crt: |
+      #   -----BEGIN CERTIFICATE-----
+      #   <cert data>
+      #   -----END CERTIFICATE-----
+      #   -----BEGIN CERTIFICATE-----
+      #   <ca cert data>
+      #   -----END CERTIFICATE-----
+
+    # Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
+    # `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
+    # argocdServerAdminPassword:
