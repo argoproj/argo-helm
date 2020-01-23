@@ -16,7 +16,6 @@ metadata:
 {{- end }}
 spec:
   host: {{ .Values.server.route.hostname | quote }}
-  subdomain: ''
   to:
     kind: Service
     name: {{ template "argo-cd.server.fullname" . }}
