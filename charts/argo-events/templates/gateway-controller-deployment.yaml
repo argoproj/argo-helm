@@ -25,9 +25,9 @@ spec:
           image: "{{ .Values.registry }}/{{ .Values.gatewayController.image }}:{{ .Values.gatewayController.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           env:
-            - name: GATEWAY_NAMESPACE
+            - name: NAMESPACE
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-            - name: GATEWAY_CONTROLLER_CONFIG_MAP
+            - name: CONTROLLER_CONFIG_MAP
               value: {{ .Release.Name }}-{{ .Values.gatewayController.name }}-configmap
