@@ -9,10 +9,26 @@ installCRD: true
 
 # ServiceAccount to use for running controller.
 serviceAccount: argo-events-sa
+
 # Create service accounts in additional namespaces specified
 # The SA will always be created in the release namespaces
 additionalSaNamespaces: []
   # - argo-prod
+additionalServiceAccountRules:
+- apiGroups:
+    - apiextensions.k8s.io
+    - apiextensions.k8s.io/v1beta1
+  verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  resources:
+    - customresourcedefinitions
 
 instanceID: argo-events
 
@@ -26,11 +42,11 @@ singleNamespace: true
 sensorController:
   name: sensor-controller
   image: sensor-controller
-  tag: v0.11
+  tag: v0.12
   replicaCount: 1
 
 gatewayController:
   name: gateway-controller
   image: gateway-controller
-  tag: v0.11
+  tag: v0.12
   replicaCount: 1
