@@ -10,7 +10,7 @@ installCRDs: true
 global:
   image:
     repository: argoproj/argocd
-    tag: v1.4.0
+    tag: v1.4.1
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -23,7 +23,7 @@ controller:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.3.6
+    tag: # v1.4.1
     imagePullPolicy: # IfNotPresent
 
   ## Argo controller commandline flags
@@ -270,7 +270,7 @@ server:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.3.6
+    tag: # v1.4.1
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
@@ -511,7 +511,7 @@ repoServer:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.3.6
+    tag: # v1.4.1
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
@@ -742,3 +742,5 @@ configs:
     # Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
     # `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
     # argocdServerAdminPassword:
+    # Password modification time defaults to current time if not set
+    # argocdServerAdminPasswordMtime: "2006-01-02T15:04:05Z"
