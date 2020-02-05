@@ -129,6 +129,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | repoServer.readinessProbe.periodSeconds | int | `10` |
 | repoServer.readinessProbe.successThreshold | int | `1` |
 | repoServer.readinessProbe.timeoutSeconds | int | `1` |
+| repoServer.replicas | The number of repo server pods to run | `1` |
 | repoServer.resources | Resource limits and requests for the repo server pods. | `{}` |
 | repoServer.service.annotations | Repo server service annotations. | `{}` |
 | repoServer.service.labels | Repo server service labels. | `{}` |
@@ -183,6 +184,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.readinessProbe.periodSeconds | int | `10` |
 | server.readinessProbe.successThreshold | int | `1` |
 | server.readinessProbe.timeoutSeconds | int | `1` |
+| server.replicas | The number of server pods to run | `1` |
 | server.resources | Resource limits and requests for the server | `{}` |
 | server.service.annotations | Server service annotations | `{}` |
 | server.service.labels | Server service labels | `{}` |
