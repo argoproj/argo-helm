@@ -7,7 +7,7 @@ images:
   tag: v2.4.3
 
 crdVersion: v1alpha1
-installCRD: false
+installCRD: true
 
 init:
   # By default the installation will not set an explicit one, which will mean it uses `default` for the namespace the chart is
@@ -175,9 +175,7 @@ artifactRepository:
 # NOTE: These are setting attributes for the `minio` optional dependency
 minio:
   # If set to true then chart installs minio and generate according artifactRepository section in workflow controller config map
-  install: true
+  install: false
   defaultBucket:
-    enabled: false
+    enabled: true
     name: argo-artifacts
-  persistence:
-    size: 1Gi
