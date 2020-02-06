@@ -1,0 +1,53 @@
+argo-cd:
+  installCRDs: false
+  controller:
+    extraArgs:
+      sentinel=argocd-redis-ha-announce-0:
+      sentinel=argocd-redis-ha-announce-1:
+      sentinel=argocd-redis-ha-announce-2:
+  repoServer:
+    replicas: 2
+    extraArgs:
+      sentinel=argocd-redis-ha-announce-0:
+      sentinel=argocd-redis-ha-announce-1:
+      sentinel=argocd-redis-ha-announce-2:
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: argocd-repo-server
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+          weight: 100
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: argocd-repo-server
+          topologyKey: kubernetes.io/hostname
+  server:
+    replicas: 2
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: argocd-server
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+          weight: 100
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: argocd-server
+          topologyKey: kubernetes.io/hostname
+  redis:
+    enabled: false
+redis-ha:
+  replicas: 3
+  persistentVolume:
+    enabled: false
+  redis:
+    masterGroupName: argocd
+    config:
+      save: "\"\""
