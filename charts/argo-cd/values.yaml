@@ -10,7 +10,7 @@ installCRDs: true
 global:
   image:
     repository: argoproj/argocd
-    tag: v1.4.1
+    tag: v1.4.2
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -23,7 +23,7 @@ controller:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.4.1
+    tag: # v1.4.2
     imagePullPolicy: # IfNotPresent
 
   ## Argo controller commandline flags
@@ -268,9 +268,11 @@ redis:
 server:
   name: server
 
+  replicas: 1
+
   image:
     repository: # argoproj/argocd
-    tag: # v1.4.1
+    tag: # v1.4.2
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
@@ -509,9 +511,11 @@ server:
 repoServer:
   name: repo-server
 
+  replicas: 1
+
   image:
     repository: # argoproj/argocd
-    tag: # v1.4.1
+    tag: # v1.4.2
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
