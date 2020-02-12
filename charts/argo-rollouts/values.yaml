@@ -1,0 +1,14 @@
+installCRDs: true
+
+clusterInstall: true
+
+controller:
+  name: argo-rollouts
+  component: rollouts-controller
+  image:
+    repository: argoproj/argo-rollouts
+    tag: v0.7.0
+    pullPolicy: IfNotPresent
+
+serviceAccount:
+  name: argo-rollouts
