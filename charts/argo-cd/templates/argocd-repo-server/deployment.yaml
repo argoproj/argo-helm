@@ -16,7 +16,9 @@ spec:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.repoServer.name }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   revisionHistoryLimit: 5
+  {{- if (ne .Values.repoServer.autoscaling.enabled true) }}
   replicas: {{ .Values.repoServer.replicas }}
+  {{- end }}
   template:
     metadata:
       {{- if .Values.repoServer.podAnnotations }}
@@ -61,7 +63,7 @@ spec:
         {{- end }}
         {{- if .Values.repoServer.containerSecurityContext }}
         securityContext: {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
-        {{- end }}           
+        {{- end }}
         {{- if .Values.repoServer.env }}
         env:
 {{- toYaml .Values.repoServer.env | nindent 8 }}
