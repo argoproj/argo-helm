@@ -88,6 +88,12 @@ controller:
     enabled: false
     # minAvailable: 1
     # maxUnavailable: 1
+  ## Node selectors and tolerations for server scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 executor:
   image:
@@ -128,6 +134,12 @@ ui:
     enabled: false
     # minAvailable: 1
     # maxUnavailable: 1
+  ## Node selectors and tolerations for server scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
   ## Ingress configuration.
   ## ref: https://kubernetes.io/docs/user-guide/ingress/

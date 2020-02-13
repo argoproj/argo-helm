@@ -35,7 +35,7 @@ spec:
           - name: {{ .Values.ui.podPortName }}
             containerPort: 8001
             protocol: TCP
-          {{- end }}        
+          {{- end }}
           env:
           {{- if .Values.ui.forceNamespaceIsolation }}
           - name: FORCE_NAMESPACE_ISOLATION
@@ -52,4 +52,17 @@ spec:
             value: {{ .Values.ui.baseHref }}
           resources:
             {{- toYaml .Values.ui.resources | nindent 12 }}
+      {{- with .Values.ui.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
 {{- end -}}
