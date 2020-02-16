@@ -17,7 +17,7 @@ metadata:
     app.kubernetes.io/component: {{ .Values.controller.name }}
 spec:
   ports:
-  - name: {{ .Values.controller.name }}
+  - name: {{ .Values.controller.service.portName }}
     port: {{ .Values.controller.service.port }}
     targetPort: {{ .Values.controller.containerPort }}
   selector:

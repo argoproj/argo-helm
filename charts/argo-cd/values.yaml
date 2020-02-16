@@ -86,6 +86,7 @@ controller:
     annotations: {}
     labels: {}
     port: 8082
+    portName: https-controller
 
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
@@ -507,6 +508,11 @@ server:
   #   orphanedResources: {}
   #   roles: []
 
+  ## Enable Admin ClusterRole resources.
+  ## Enable if you would like to grant rights to ArgoCD to deploy to the local kuberentes cluster.
+  clusterAdminAccess:
+    enabled: true
+
 ## Repo Server
 repoServer:
   name: repo-server
@@ -590,6 +596,7 @@ repoServer:
     annotations: {}
     labels: {}
     port: 8081
+    portName: https-repo-server
 
   ## Repo server metrics service configuration
   metrics:
