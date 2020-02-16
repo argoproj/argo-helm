@@ -147,6 +147,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.certificate.domain | Certificate manager domain | `"argocd.example.com"` |
 | server.certificate.enabled | Enables a certificate manager certificate. | `false` |
 | server.certificate.issuer | Certificate manager issuer | `{}` |
+| server.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | server.config | [General Argo CD configuration](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#repositories) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of key:value pairs. | `[]` |
