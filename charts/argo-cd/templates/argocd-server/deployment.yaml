@@ -76,7 +76,7 @@ spec:
         {{- end }}
         volumeMounts:
         {{- if .Values.server.volumeMounts }}
-{{- toYaml .Values.server.volumeMounts | nindent 10}}
+{{- toYaml .Values.server.volumeMounts | nindent 8}}
         {{- end }}
         {{- if .Values.configs.knownHosts }}
         - mountPath: /app/config/ssh
