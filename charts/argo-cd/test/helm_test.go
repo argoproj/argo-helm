@@ -444,3 +444,79 @@ func TestArgoCDExtraArgs(t *testing.T) {
 		})
 	}
 }
+
+// https://github.com/argoproj/argo-helm/issues/238
+func TestArgoCDVolumeMounts(t *testing.T) {
+	t.Parallel()
+	helmChartPath, err := filepath.Abs("../")
+	releaseName := "argo-cd"
+	require.NoError(t, err)
+	// server:
+	//   volumeMounts:
+	//   - mountPath: /test
+	// 	   name: test
+	tests := []struct {
+		Name           string
+		DeploymentYAML []string
+		SetValues      map[string]string
+		SetStrValues   map[string]string
+	}{
+		{
+			Name:           "Given volumeMount and an application controller deployment",
+			DeploymentYAML: []string{"templates/argocd-application-controller/deployment.yaml"},
+			SetValues: map[string]string{
+				"controller.volumeMounts[0].mountPath": "/test",
+				"controller.volumeMounts[0].name":      "test",
+			},
+		},
+		{
+			Name:           "Given volumeMount and a reposerver deployment",
+			DeploymentYAML: []string{"templates/argocd-repo-server/deployment.yaml"},
+			SetValues: map[string]string{
+				"repoServer.volumeMounts[0].mountPath": "/test",
+				"repoServer.volumeMounts[0].name":      "test",
+			},
+		},
+		{
+			Name:           "Given volumeMount and a server deployment",
+			DeploymentYAML: []string{"templates/argocd-server/deployment.yaml"},
+			SetValues: map[string]string{
+				"server.volumeMounts[0].mountPath": "/test",
+				"server.volumeMounts[0].name":      "test",
+			},
+		},
+		{
+			Name:           "Given volumeMount and a dex deployment",
+			DeploymentYAML: []string{"templates/argocd-server/deployment.yaml"},
+			SetValues: map[string]string{
+				"server.volumeMounts[1].mountPath": "/test",
+				"server.volumeMounts[1].name":      "test",
+			},
+		},
+		{
+			Name:           "Given a volumeMount and a redis deployment",
+			DeploymentYAML: []string{"templates/redis/deployment.yaml"},
+			SetValues: map[string]string{
+				"redis.volumeMounts[0].mountPath": "/test",
+				"redis.volumeMounts[0].name":      "test",
+			},
+		},
+	}
+
+	var deployment appsv1.Deployment
+
+	for _, test := range tests {
+		options := &helm.Options{
+			SetValues:      test.SetValues,
+			KubectlOptions: k8s.NewKubectlOptions("", "", "default"),
+		}
+		Convey(test.Name, t, func() {
+			output := helm.RenderTemplate(t, options, helmChartPath, releaseName, test.DeploymentYAML)
+			helm.UnmarshalK8SYaml(t, output, &deployment)
+			deploymentContainers := deployment.Spec.Template.Spec.Containers
+			So(len(deploymentContainers[0].VolumeMounts), ShouldBeGreaterThanOrEqualTo, 1)
+			So(deploymentContainers[0].VolumeMounts[0].MountPath, ShouldEqual, "/test")
+			So(deploymentContainers[0].VolumeMounts[0].Name, ShouldEqual, "test")
+		})
+	}
+}
