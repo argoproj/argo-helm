@@ -58,8 +58,13 @@ spec:
         {{- end }}
         - --loglevel
         - {{ .Values.repoServer.logLevel }}
+<<<<<<< HEAD
         {{- with .Values.repoServer.extraArgs }}
         {{- . | toYaml | nindent 8 }}
+=======
+        {{- with .Values.controller.extraArgs }}
+        {{  . | toYaml | nindent 8 }}
+>>>>>>> feat: extraArgs allows same flag multiple times
         {{- end }}
         {{- if .Values.repoServer.containerSecurityContext }}
         securityContext: {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
