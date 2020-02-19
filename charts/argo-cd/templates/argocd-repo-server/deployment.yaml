@@ -54,8 +54,8 @@ spec:
         {{- end }}
         - --loglevel
         - {{ .Values.repoServer.logLevel }}
-        {{- with .Values.controller.extraArgs }}
-        {{  . | toYaml | nindent 8 }}
+        {{- with .Values.repoServer.extraArgs }}
+        {{- . | toYaml | nindent 8 }}
         {{- end }}
         {{- if .Values.repoServer.containerSecurityContext }}
         securityContext: {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}

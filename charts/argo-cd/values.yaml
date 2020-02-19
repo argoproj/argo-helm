@@ -284,9 +284,13 @@ server:
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
-  ## --argument=value
+  ## - --argument=value
+  ## or
+  ## - --argument
+  ## - value
   extraArgs: []
-  # - --insecure=true
+  # - --insecure
+  # - "true"
 
   ## Environment variables to pass to argocd-server
   ##
