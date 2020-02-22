@@ -136,9 +136,8 @@ func TestArgoCDControllerServiceMonitors(t *testing.T) {
 		},
 	}
 
-	var servicemonitor monitoringv1.ServiceMonitor
-
 	for _, test := range tests {
+		var servicemonitor monitoringv1.ServiceMonitor
 		options := &helm.Options{
 			SetValues:      test.SetValues,
 			KubectlOptions: k8s.NewKubectlOptions("", "", "default"),
@@ -191,9 +190,8 @@ func TestArgoCDEnvironmentConfig(t *testing.T) {
 		},
 	}
 
-	var deployment appsv1.Deployment
-
 	for _, test := range tests {
+		var deployment appsv1.Deployment
 		options := &helm.Options{
 			SetValues:      test.SetValues,
 			KubectlOptions: k8s.NewKubectlOptions("", "", "default"),
@@ -242,9 +240,8 @@ func TestArgoCDRepoServerCustomTools(t *testing.T) {
 		},
 	}
 
-	var deployment appsv1.Deployment
-
 	for _, test := range tests {
+		var deployment appsv1.Deployment
 		options := &helm.Options{
 			SetValues:      test.SetValues,
 			KubectlOptions: k8s.NewKubectlOptions("", "", "default"),
@@ -301,9 +298,8 @@ func TestArgoCDControllerPrometheusRules(t *testing.T) {
 		},
 	}
 
-	var servicemonitor monitoringv1.PrometheusRule
-
 	for _, test := range tests {
+		var servicemonitor monitoringv1.PrometheusRule
 		options := &helm.Options{
 			SetValues:      test.SetValues,
 			KubectlOptions: k8s.NewKubectlOptions("", "", "default"),
@@ -367,11 +363,18 @@ func TestArgoCDSecurityContext(t *testing.T) {
 				"global.securityContext.runAsUser": "999",
 			},
 		},
+		{
+			Name:           "Given a global securityContext and a dex deployment",
+			DeploymentYAML: []string{"templates/dex/deployment.yaml"},
+			SetValues: map[string]string{
+				"global.securityContext.runAsUser": "999",
+			},
+		},
 	}
 
-	var deployment appsv1.Deployment
-
 	for _, test := range tests {
+		var deployment appsv1.Deployment
+
 		options := &helm.Options{
 			SetValues:      test.SetValues,
 			KubectlOptions: k8s.NewKubectlOptions("", "", "default"),
