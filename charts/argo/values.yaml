@@ -2,6 +2,7 @@ images:
   namespace: argoproj
   controller: workflow-controller
   ui: argoui
+  server: argocli
   executor: argoexec
   pullPolicy: Always
   tag: v2.5.2
@@ -107,7 +108,7 @@ ui:
   forceNamespaceIsolation: false
   image:
     # Overrides .images.tag if defined.
-    tag: ""
+    tag: "v2.4.2"
   # optional map of annotations to be applied to the ui Pods
   podAnnotations: {}
   # Optional labels to add to the UI pods
