@@ -26,29 +26,29 @@ controller:
   podAnnotations: {}
   # Optional labels to add to the controller pods
   podLabels: {}
-  # podPortName: http
+  podPortName: ""
   metricsConfig:
     enabled: false
     path: /metrics
     port: 8080
-    persistence: {}
-    #  connectionPool:
-    #    maxIdleConns: 100
-    #    maxOpenConns: 0
-    #  # save the entire workflow into etcd and DB
-    #  nodeStatusOffLoad: false
-    #  postgresql:
-    #    host: localhost
-    #    port: 5432
-    #    database: postgres
-    #    tableName: argo_workflows
-    #    # the database secrets must be in the same namespace of the controller
-    #    userNameSecret:
-    #      name: argo-postgres-config
-    #      key: username
-    #    passwordSecret:
-    #      name: argo-postgres-config
-    #      key: password
+  persistence: {}
+  #  connectionPool:
+  #    maxIdleConns: 100
+  #    maxOpenConns: 0
+  #  # save the entire workflow into etcd and DB
+  #  nodeStatusOffLoad: false
+  #  postgresql:
+  #    host: localhost
+  #    port: 5432
+  #    database: postgres
+  #    tableName: argo_workflows
+  #    # the database secrets must be in the same namespace of the controller
+  #    userNameSecret:
+  #      name: argo-postgres-config
+  #      key: username
+  #    passwordSecret:
+  #      name: argo-postgres-config
+  #      key: password
   telemetryConfig:
     enabled: false
     path: /telemetry
@@ -107,19 +107,34 @@ server:
   name: server
   image:
     tag: ""
+  replicas: 1
+  resources: {}
   args: {}
   # Use this to pass additional server args.
   # Examples:
   # auth-mode: hybrid
   # basehref: ui
 
-  # podAnnotations is an optional map of annotations to be applied to the server Pods
   podAnnotations: {}
-
-  # Optional labels to add to the server pods
   podLabels: {}
-  # podPortName: http
-
+  nodeSelector: {}
+  tolerations: {}
+  affinity: {}
+  podPortName: ""
+  pdb:
+    enabled: false
+    minAvailable: 1
+    maxUnavailable: 1
+  service:
+    enabled: true
+    type: ClusterIP
+    port:
+      number: 80
+      name: http
+    annotations: {}
+    labels: {}
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
   metricsConfig:
     enabled: false
     path: /metrics
@@ -132,7 +147,7 @@ server:
   serviceMonitor:
     enabled: false
     additionalLabels: {}
-  serviceAccount: argo
+  serviceAccount: argo-server
   workflowNamespaces:
     - default
   containerRuntimeExecutor: docker
@@ -184,7 +199,8 @@ ui:
   name: ui
   serviceType: ClusterIP
   servicePort: 80
-  # servicePortName: http
+  servicePortName: ""
+  podPortName: ""
   serviceAccount: argo-ui
   # Annotations to be applied to the UI Service
   serviceAnnotations: {}

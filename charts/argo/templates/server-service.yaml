@@ -1,0 +1,36 @@
+{{- if .Values.server.enabled }}
+{{- if .Values.server.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.server.name }}
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- if .Values.server.service.labels }}
+    {{- toYaml .Values.server.service.labels | nindent 4 }}
+    {{- end }}
+  {{- if .Values.server.service.annotations }}
+  annotations:
+{{ toYaml .Values.server.service.annotations | indent 4}}{{- end }}
+spec:
+  ports:
+  - port: {{ .Values.server.service.port.number }}
+    {{- if .Values.server.service.port.name }}
+    name: {{ .Values.server.service.port.name }}
+    {{- end }}
+    protocol: TCP
+    targetPort: 2754
+  selector:
+    app: {{ .Release.Name }}-{{ .Values.server.name }}
+  sessionAffinity: None
+  type: {{ .Values.server.service.type }}
+  {{- if and (eq .Values.server.service.type "LoadBalancer") .Values.server.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.server.loadBalancerIP | quote }}
+  {{- end }}
+  {{- if and (eq .Values.server.service.type "LoadBalancer") .Values.server.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+{{ toYaml .Values.server.service.loadBalancerSourceRanges | indent 4 }}{{- end }}
+{{- end }}
+{{- end }}

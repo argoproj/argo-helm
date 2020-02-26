@@ -1,6 +1,6 @@
 1. Get Argo UI external IP/domain by running:
 
-kubectl --namespace {{ .Release.Namespace }} get services -o wide | grep {{ .Release.Name }}-{{ .Values.uiName }}
+kubectl --namespace {{ .Release.Namespace }} get services -o wide | grep {{ .Release.Name }}-{{ .Values.ui.name }}
 
 2. Submit the hello-world workflow by running:
 
