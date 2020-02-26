@@ -42,7 +42,7 @@ spec:
             {{- toYaml .Values.server.resources | nindent 12 }}
           {{- if .Values.server.metricsConfig.enabled }}
           ports:
-          - containerPort: 8080
+          - containerPort: 2754
           {{- end }}
       {{- with .Values.server.nodeSelector }}
       nodeSelector:
