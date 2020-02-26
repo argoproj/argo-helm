@@ -15,6 +15,10 @@ A few options are:
 ## Usage Notes:
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster.  If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of it's configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.
 
+## Argo v2.5.x Upgrade
+
+In Argo versions v2.5.0 and beyone, the UI has been deprecated and replaced by the argo server. In future versions of this chart, `ui.enabled` will be defaulted to `false` and it may be removed entirely. We suggest migrating in order to utilize the new functionality.
+
 ## Values
 
 The `values.yaml` contains items used to tweak a deployment of this chart.
