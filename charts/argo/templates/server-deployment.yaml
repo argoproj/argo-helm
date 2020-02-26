@@ -42,7 +42,7 @@ spec:
           resources:
             {{- toYaml .Values.server.resources | nindent 12 }}
           ports:
-          - containerPort: 2754
+          - containerPort: 2746
             protocol: TCP
       {{- with .Values.server.nodeSelector }}
       nodeSelector:

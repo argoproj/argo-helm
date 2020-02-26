@@ -21,7 +21,7 @@ spec:
     name: {{ .Values.server.service.port.name }}
     {{- end }}
     protocol: TCP
-    targetPort: 2754
+    targetPort: 2746
   selector:
     app: {{ .Release.Name }}-{{ .Values.server.name }}
   sessionAffinity: None
