@@ -35,15 +35,15 @@ spec:
             - "server"
             - "--configmap"
             - "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"
+            - "--loglevel={{.Values.server.logging.level }}"
             {{- range $name, $value := .Values.server.args }}
             - --{{ $name }}={{ $value }}
             {{- end }}
           resources:
             {{- toYaml .Values.server.resources | nindent 12 }}
-          {{- if .Values.server.metricsConfig.enabled }}
           ports:
           - containerPort: 2754
-          {{- end }}
+            protocol: TCP
       {{- with .Values.server.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
