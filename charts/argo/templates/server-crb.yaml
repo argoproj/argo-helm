@@ -1,0 +1,25 @@
+{{- if .Values.server.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.server.name}}-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Release.Name }}-{{ .Values.server.name}}-cluster-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.server.serviceAccount }}
+    namespace: {{ .Release.Namespace }}
+{{- if .Values.server.workflowNamespaces }}
+{{- $uiServiceAccount := .Values.server.serviceAccount }}
+{{- $namespace := .Release.Namespace }}
+{{- range $key := .Values.server.workflowNamespaces }}
+  {{- if not (eq $key $namespace) }}
+  - kind: ServiceAccount
+    name: {{ $uiServiceAccount }}
+    namespace: {{ $key }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -102,6 +102,45 @@ executor:
     # Overrides .images.tag if defined.
     tag: ""
 
+server:
+  enabled: true
+  name: server
+  image:
+    tag: ""
+  # podAnnotations is an optional map of annotations to be applied to the server Pods
+  podAnnotations: {}
+  # Optional labels to add to the server pods
+  podLabels: {}
+  # podPortName: http
+  metricsConfig:
+    enabled: false
+    path: /metrics
+    port: 8080
+    persistence: {}
+  telemetryConfig:
+    enabled: false
+    path: /telemetry
+    port: 8081
+  serviceMonitor:
+    enabled: false
+    additionalLabels: {}
+  serviceAccount: argo
+  name: workflow-controller
+  workflowNamespaces:
+    - default
+  containerRuntimeExecutor: docker
+  instanceID:
+    # `instanceID.enabled` configures the controller to filter workflow submissions
+    # to only those which have a matching instanceID attribute.
+    enabled: false
+    # NOTE: If `instanceID.enabled` is set to `true` then either `instanceID.userReleaseName`
+    # or `instanceID.explicitID` must be defined.
+    # useReleaseName: true
+    # explicitID: unique-argo-controller-identifier
+  logging:
+    level: info
+    globallevel: "0"
+
 ui:
   enabled: true
   # only show workflows where UI installed
