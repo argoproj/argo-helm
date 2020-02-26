@@ -31,22 +31,8 @@ spec:
         - name: server
           image: "{{ .Values.images.namespace }}/{{ .Values.images.server }}:{{ default .Values.images.tag .Values.server.image.tag }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
-          command: [ "workflow-controller" ]
           args:
-          - "--configmap"
-          - "{{ .Release.Name }}-{{ .Values.server.name}}-configmap"
-          - "--executor-image"
-          - "{{ .Values.images.namespace }}/{{ .Values.images.executor }}:{{ default .Values.images.tag .Values.executor.image.tag }}"
-          - "--loglevel"
-          - "{{ .Values.server.logging.level }}"
-          - "--gloglevel"
-          - "{{ .Values.server.logging.globallevel }}"
-          env:
-          - name: ARGO_NAMESPACE
-            valueFrom:
-              fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
+          - "server"
           resources:
             {{- toYaml .Values.server.resources | nindent 12 }}
           {{- if .Values.server.metricsConfig.enabled }}
