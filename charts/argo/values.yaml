@@ -107,11 +107,19 @@ server:
   name: server
   image:
     tag: ""
+  args: {}
+  # Use this to pass additional server args.
+  # Examples:
+  # auth-mode: hybrid
+  # basehref: ui
+
   # podAnnotations is an optional map of annotations to be applied to the server Pods
   podAnnotations: {}
+
   # Optional labels to add to the server pods
   podLabels: {}
   # podPortName: http
+
   metricsConfig:
     enabled: false
     path: /metrics
@@ -139,6 +147,28 @@ server:
   logging:
     level: info
     globallevel: "0"
+  ingress:
+    enabled: false
+
+    ## Annotations to be added to the web ingress.
+    ##
+    # annotations:
+    #   kubernetes.io/ingress.class: nginx
+    #   kubernetes.io/tls-acme: "true"
+
+    ## Hostnames.
+    ## Must be provided if Ingress is enabled.
+    ##
+    # hosts:
+    #   - argo.domain.com
+
+    ## TLS configuration.
+    ## Secrets must be manually created in the namespace.
+    ##
+    # tls:
+    #   - secretName: argo-ui-tls
+    #     hosts:
+    #       - argo.domain.com
 
 ui:
   enabled: true

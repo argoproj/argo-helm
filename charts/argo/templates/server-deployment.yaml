@@ -32,9 +32,12 @@ spec:
           image: "{{ .Values.images.namespace }}/{{ .Values.images.server }}:{{ default .Values.images.tag .Values.server.image.tag }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           args:
-          - "server"
-          - "--configmap"
-          - "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"
+            - "server"
+            - "--configmap"
+            - "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"
+            {{- range $name, $value := .Values.server.args }}
+            - --{{ $name }}={{ $value }}
+            {{- end }}
           resources:
             {{- toYaml .Values.server.resources | nindent 12 }}
           {{- if .Values.server.metricsConfig.enabled }}
