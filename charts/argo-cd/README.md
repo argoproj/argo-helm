@@ -36,7 +36,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.4.1"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.4.2"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) | 
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | installCRDs | bool | `true` | Install CRDs if you are using Helm2. |
@@ -101,6 +101,11 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | repoServer.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
+| repoServer.autoscaling.enabled | Enable Horizontal Pod Autoscaler (HPA) for the repo server | `false` |
+| repoServer.autoscaling.minReplicas | Minimum number of replicas for the repo server HPA | `1` |
+| repoServer.autoscaling.maxReplicas | Maximum number of replicas for the repo server HPA | `5` |
+| repoServer.autoscaling.targetCPUUtilizationPercentage | Average CPU utilization percentage for the repo server HPA | `50` |
+| repoServer.autoscaling.targetMemoryUtilizationPercentage | Average memory utilization percentage for the repo server HPA | `50` |
 | repoServer.containerPort | Repo server port | `8081` |
 | repoServer.extraArgs | Additional arguments for the repo server. A  list of key:value pairs. | `[]` |
 | repoServer.env | Environment variables for the repo server. | `[]` |
@@ -129,6 +134,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | repoServer.readinessProbe.periodSeconds | int | `10` |
 | repoServer.readinessProbe.successThreshold | int | `1` |
 | repoServer.readinessProbe.timeoutSeconds | int | `1` |
+| repoServer.replicas | The number of repo server pods to run | `1` |
 | repoServer.resources | Resource limits and requests for the repo server pods. | `{}` |
 | repoServer.service.annotations | Repo server service annotations. | `{}` |
 | repoServer.service.labels | Repo server service labels. | `{}` |
@@ -142,10 +148,16 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | server.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
+| server.autoscaling.enabled | Enable Horizontal Pod Autoscaler (HPA) for the server | `false` |
+| server.autoscaling.minReplicas | Minimum number of replicas for the server HPA | `1` |
+| server.autoscaling.maxReplicas | Maximum number of replicas for the server HPA | `5` |
+| server.autoscaling.targetCPUUtilizationPercentage | Average CPU utilization percentage for the server HPA | `50` |
+| server.autoscaling.targetMemoryUtilizationPercentage | Average memory utilization percentage for the server HPA | `50` |
 | server.certificate.additionalHosts | Certificate manager additional hosts | `[]` |
 | server.certificate.domain | Certificate manager domain | `"argocd.example.com"` |
 | server.certificate.enabled | Enables a certificate manager certificate. | `false` |
 | server.certificate.issuer | Certificate manager issuer | `{}` |
+| server.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | server.config | [General Argo CD configuration](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#repositories) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of key:value pairs. | `[]` |
@@ -183,6 +195,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.readinessProbe.periodSeconds | int | `10` |
 | server.readinessProbe.successThreshold | int | `1` |
 | server.readinessProbe.timeoutSeconds | int | `1` |
+| server.replicas | The number of server pods to run | `1` |
 | server.resources | Resource limits and requests for the server | `{}` |
 | server.service.annotations | Server service annotations | `{}` |
 | server.service.labels | Server service labels | `{}` |

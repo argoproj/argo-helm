@@ -16,7 +16,9 @@ spec:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   revisionHistoryLimit: 5
-  replicas: 1
+  {{- if (ne .Values.server.autoscaling.enabled true) }}
+  replicas: {{ .Values.server.replicas }}
+  {{- end }}
   template:
     metadata:
       {{- if .Values.server.podAnnotations }}
@@ -33,8 +35,8 @@ spec:
         app.kubernetes.io/part-of: argocd
         app.kubernetes.io/component: {{ .Values.server.name }}
         app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.server.image.tag | quote }}
-        {{- if .Values.controller.podLabels }}
-{{- toYaml .Values.controller.podLabels | nindent 8 }}
+        {{- if .Values.server.podLabels }}
+{{- toYaml .Values.server.podLabels | nindent 8 }}
         {{- end }}
     spec:
       {{- if .Values.global.securityContext }}
@@ -69,14 +71,14 @@ spec:
         {{- end }}
         {{- if .Values.server.containerSecurityContext }}
         securityContext: {{- toYaml .Values.server.containerSecurityContext | nindent 10 }}
-        {{- end }}          
+        {{- end }}
         {{- if .Values.server.env }}
         env:
 {{- toYaml .Values.server.env | nindent 8 }}
         {{- end }}
         volumeMounts:
         {{- if .Values.server.volumeMounts }}
-{{- toYaml .Values.server.volumeMounts | nindent 10}}
+{{- toYaml .Values.server.volumeMounts | nindent 8}}
         {{- end }}
         {{- if .Values.configs.knownHosts }}
         - mountPath: /app/config/ssh
