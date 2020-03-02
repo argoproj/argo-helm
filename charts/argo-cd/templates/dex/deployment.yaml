@@ -18,6 +18,12 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      {{- if .Values.dex.podAnnotations }}
+      annotations:
+      {{- range $key, $value := .Values.dex.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
       labels:
         app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.dex.name }}
         helm.sh/chart: {{ include "argo-cd.chart" . }}
@@ -26,6 +32,9 @@ spec:
         app.kubernetes.io/part-of: argocd
         app.kubernetes.io/component: {{ .Values.dex.name }}
         app.kubernetes.io/version: {{ .Values.dex.image.tag }}
+        {{- if .Values.dex.podLabels }}
+{{- toYaml .Values.dex.podLabels | nindent 8 }}
+        {{- end }}
     spec:
       {{- if .Values.global.securityContext }}
       securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}

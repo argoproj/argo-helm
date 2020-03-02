@@ -177,6 +177,14 @@ dex:
   ##
   env: []
 
+  ## Annotations to be added to the Dex server pods
+  ##
+  podAnnotations: {}
+
+  ## Labels to be added to the Dex server pods
+  ##
+  podLabels: {}
+
   serviceAccount:
     create: true
     name: argocd-dex-server
@@ -237,6 +245,14 @@ redis:
   ## Environment variables to pass to the Redis server
   ##
   env: []
+
+  ## Annotations to be added to the Redis server pods
+  ##
+  podAnnotations: {}
+
+  ## Labels to be added to the Redis server pods
+  ##
+  podLabels: {}
 
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/

@@ -17,6 +17,12 @@ spec:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.redis.name }}
   template:
     metadata:
+      {{- if .Values.redis.podAnnotations }}
+      annotations:
+      {{- range $key, $value := .Values.redis.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
       labels:
         app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.redis.name }}
         helm.sh/chart: {{ include "argo-cd.chart" . }}
@@ -24,7 +30,10 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/part-of: argocd
         app.kubernetes.io/component: {{ .Values.redis.name }}
-        app.kubernetes.io/version: {{ .Values.redis.image.tag }}        
+        app.kubernetes.io/version: {{ .Values.redis.image.tag }}
+        {{- if .Values.redis.podLabels }}
+{{- toYaml .Values.redis.podLabels | nindent 8 }}
+        {{- end }}
     spec:
       automountServiceAccountToken: false
       {{- if .Values.global.securityContext }}
