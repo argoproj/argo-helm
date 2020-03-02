@@ -46,3 +46,6 @@ data:
     {{- if .Values.controller.persistence }}
     persistence:
 {{ toYaml .Values.controller.persistence | indent 6 }}{{- end }}
+    {{- if .Values.controller.executor }}
+    executor:
+{{ toYaml .Values.controller.executor | indent 6}}{{- end }}
