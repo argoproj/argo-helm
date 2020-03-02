@@ -22,6 +22,7 @@ Fields to note:
 * `controller.instanceID.enabled`: If set to true, the Argo Controller will **ONLY** monitor Workflow submissions with a `--instanceid`  attribute
 * `controller.instanceID.useReleaseName`: If set to true then chart set controller instance id to release name
 * `controller.instanceID.explicitID`: Allows customization of an instance id for the workflow controller to monitor
+* `controller.executor`: Configures the init and wait container of the Argo executors
 * `controller.workflowNamespaces`: This is a list of namespaces where workflows will be ran
 * `minio.install`: If this is true, we'll install [minio](https://github.com/kubernetes/charts/tree/master/stable/minio) and build out the artifactRepository section in workflow controller config map.
 * `artifactRepository.s3.accessKeySecret` and `artifactRepository.s3.secretKeySecret` These by default link to minio default credentials stored in the secret deployed by the minio chart.
