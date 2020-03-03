@@ -18,16 +18,16 @@ spec:
   minReplicas: {{ .Values.repoServer.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.repoServer.autoscaling.maxReplicas }}
   metrics:
-{{- with .Values.repoServer.autoscaling.targetCPUUtilizationPercentage }}
-    - type: Resource
-      resource:
-        name: cpu
-        targetAverageUtilization: {{ . }}
-{{- end }}
 {{- with .Values.repoServer.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
+        targetAverageUtilization: {{ . }}
+{{- end }}
+{{- with .Values.repoServer.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
         targetAverageUtilization: {{ . }}
 {{- end }}
 {{- end }}
