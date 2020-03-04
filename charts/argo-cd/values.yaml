@@ -271,6 +271,13 @@ server:
 
   replicas: 1
 
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 50
+    targetMemoryUtilizationPercentage: 50
+
   image:
     repository: # argoproj/argocd
     tag: # v1.4.2
@@ -518,6 +525,13 @@ repoServer:
   name: repo-server
 
   replicas: 1
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 50
+    targetMemoryUtilizationPercentage: 50
 
   image:
     repository: # argoproj/argocd
