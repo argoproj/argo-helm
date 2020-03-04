@@ -132,7 +132,7 @@ spec:
       serviceAccountName: {{ template "argo-cd.serverServiceAccountName" . }}
       volumes:
       {{- if .Values.server.volumes }}
-{{- toYaml .Values.server.volumes | nindent 8}}
+{{- toYaml .Values.server.volumes | nindent 6}}
       {{- end }}
       - emptyDir: {}
         name: static-files
