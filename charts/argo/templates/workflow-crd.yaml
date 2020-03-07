@@ -7,12 +7,22 @@ metadata:
     helm.sh/hook: crd-install
     helm.sh/hook-delete-policy: before-hook-creation
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.phase
+    description: Status of the workflow
+    name: Status
+    type: string
+  - JSONPath: .status.startedAt
+    description: When the workflow was started
+    format: date-time
+    name: Age
+    type: date
   group: argoproj.io
-  version: v1alpha1
-  scope: Namespaced
   names:
     kind: Workflow
     plural: workflows
     shortNames:
     - wf
+  scope: Namespaced
+  version: v1alpha1
 {{- end }}
