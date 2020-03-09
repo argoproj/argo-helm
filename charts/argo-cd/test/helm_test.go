@@ -506,9 +506,9 @@ func TestArgoCDVolumeMounts(t *testing.T) {
 		},
 	}
 
-	var deployment appsv1.Deployment
-
 	for _, test := range tests {
+		var deployment appsv1.Deployment
+
 		options := &helm.Options{
 			SetValues:      test.SetValues,
 			KubectlOptions: k8s.NewKubectlOptions("", "", "default"),
@@ -589,9 +589,9 @@ func TestArgoCDVolumes(t *testing.T) {
 		},
 	}
 
-	var deployment appsv1.Deployment
-
 	for _, test := range tests {
+		var deployment appsv1.Deployment
+
 		options := &helm.Options{
 			SetValues:      test.SetValues,
 			KubectlOptions: k8s.NewKubectlOptions("", "", "default"),
@@ -602,6 +602,77 @@ func TestArgoCDVolumes(t *testing.T) {
 
 			So(len(deployment.Spec.Template.Spec.Volumes), ShouldBeGreaterThanOrEqualTo, 1)
 			So(deployment.Spec.Template.Spec.Volumes[0].Name, ShouldEqual, "test")
+		})
+	}
+}
+
+// https://github.com/argoproj/argo-helm/issues/238
+func TestArgoCDLabelAnnotations(t *testing.T) {
+	t.Parallel()
+	helmChartPath, err := filepath.Abs("../")
+	releaseName := "argo-cd"
+	require.NoError(t, err)
+	tests := []struct {
+		Name           string
+		DeploymentYAML []string
+		SetValues      map[string]string
+		SetStrValues   map[string]string
+	}{
+		{
+			Name:           "Given volumeMount and an application controller deployment",
+			DeploymentYAML: []string{"templates/argocd-application-controller/deployment.yaml"},
+			SetValues: map[string]string{
+				"controller.podLabels.testLabel":          "testLabel",
+				"controller.podAnnotation.testAnnotation": "testAnnotate",
+			},
+		},
+		{
+			Name:           "Given volumeMount and a reposerver deployment",
+			DeploymentYAML: []string{"templates/argocd-repo-server/deployment.yaml"},
+			SetValues: map[string]string{
+				"repoServer.podLabels.testLabel":          "testLabel",
+				"repoServer.podAnnotation.testAnnotation": "testAnnotate",
+			},
+		},
+		{
+			Name:           "Given volumeMount and a server deployment",
+			DeploymentYAML: []string{"templates/argocd-server/deployment.yaml"},
+			SetValues: map[string]string{
+				"server.podLabels.testLabel":          "testLabel",
+				"server.podAnnotation.testAnnotation": "testAnnotate",
+			},
+		},
+		{
+			Name:           "Given volumeMount and a dex deployment",
+			DeploymentYAML: []string{"templates/dex/deployment.yaml"},
+			SetValues: map[string]string{
+				"dex.podLabels.testLabel":          "testLabel",
+				"dex.podAnnotation.testAnnotation": "testAnnotate",
+			},
+		},
+		{
+			Name:           "Given a volumeMount and a redis deployment",
+			DeploymentYAML: []string{"templates/redis/deployment.yaml"},
+			SetValues: map[string]string{
+				"redis.podLabels.testLabel":          "testLabel",
+				"redis.podAnnotation.testAnnotation": "testAnnotate",
+			},
+		},
+	}
+
+	for _, test := range tests {
+		var deployment appsv1.Deployment
+
+		options := &helm.Options{
+			SetValues:      test.SetValues,
+			KubectlOptions: k8s.NewKubectlOptions("", "", "default"),
+		}
+		Convey(test.Name, t, func() {
+			output := helm.RenderTemplate(t, options, helmChartPath, releaseName, test.DeploymentYAML)
+			helm.UnmarshalK8SYaml(t, output, &deployment)
+
+			So(deployment.Spec.Template.ObjectMeta.Labels["testLabel"], ShouldEqual, "testLabel")
+			// So(deploymentContainers[0].VolumeMounts[0].Name, ShouldEqual, "test")
 		})
 	}
 }
