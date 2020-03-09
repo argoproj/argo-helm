@@ -39,6 +39,10 @@ spec:
 {{- toYaml .Values.server.podLabels | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- if .Values.global.securityContext }}
       securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
       {{- end }}
@@ -132,7 +136,7 @@ spec:
       serviceAccountName: {{ template "argo-cd.serverServiceAccountName" . }}
       volumes:
       {{- if .Values.server.volumes }}
-{{- toYaml .Values.server.volumes | nindent 8}}
+{{- toYaml .Values.server.volumes | nindent 6}}
       {{- end }}
       - emptyDir: {}
         name: static-files

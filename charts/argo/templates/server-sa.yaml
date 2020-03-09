@@ -1,0 +1,6 @@
+{{- if .Values.server.enabled -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.server.serviceAccount }}
+{{- end -}}

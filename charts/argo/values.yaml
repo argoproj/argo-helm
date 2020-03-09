@@ -1,10 +1,10 @@
 images:
   namespace: argoproj
   controller: workflow-controller
-  ui: argoui
+  server: argocli
   executor: argoexec
   pullPolicy: Always
-  tag: v2.4.3
+  tag: v2.6.1
 
 crdVersion: v1alpha1
 installCRD: true
@@ -100,7 +100,7 @@ executor:
     # Overrides .images.tag if defined.
     tag: ""
 
-ui:
+server:
   enabled: true
   # only show workflows where UI installed
   forceNamespaceIsolation: false
@@ -111,11 +111,11 @@ ui:
   podAnnotations: {}
   # Optional labels to add to the UI pods
   podLabels: {}
-  name: ui
+  name: server
   serviceType: ClusterIP
-  servicePort: 80
+  servicePort: 2746
   # servicePortName: http
-  serviceAccount: argo-ui
+  serviceAccount: argo-server
   # Annotations to be applied to the UI Service
   serviceAnnotations: {}
   # Optional labels to add to the UI Service
