@@ -38,6 +38,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
 | global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.4.2"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) | 
+| global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` | 
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | installCRDs | bool | `true` | Install CRDs if you are using Helm2. |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
@@ -225,6 +226,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | dex.name | Dex name | `"dex-server"` |
 | dex.env | Environment variables for the Dex server. | `[]` |
 | dex.nodeSelector | Dex node selector https://kubernetes.io/docs/user-guide/node-selection/ | `{}` |
+| dex.podAnnotations | Annotations for the Dex server pods | `{}` |
+| dex.podLabels | Labels for the Dex server pods | `{}` |
 | dex.priorityClassName | Priority class for dex | `""` |
 | dex.resources | Resource limits and requests for dex | `{}` |
 | dex.serviceAccount.create | Create dex service account | `true` |
@@ -248,6 +251,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | redis.name | Redis name | `"redis"` |
 | redis.env | Environment variables for the Redis server. | `[]` |
 | redis.nodeSelector | Redis node selector https://kubernetes.io/docs/user-guide/node-selection/ | `{}` |
+| redis.podAnnotations | Annotations for the Redis server pods | `{}` |
+| redis.podLabels | Labels for the Redis server pods | `{}` |
 | redis.priorityClassName | Priority class for redis | `""` |
 | redis.resources | Resource limits and requests for redis | `{}` |
 | redis.servicePort | Redis service port | `6379` |

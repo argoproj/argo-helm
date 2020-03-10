@@ -1,0 +1,78 @@
+
+{{- if .Values.server.enabled -}}apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.server.name}}
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.server.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.server.name}}
+      release: {{ .Release.Name }}
+      app: {{ .Release.Name }}-{{ .Values.server.name}}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-{{ .Values.server.name}}
+        release: {{ .Release.Name }}
+        {{- if .Values.server.podLabels }}
+        {{- toYaml .Values.server.podLabels | nindent 8 }}
+        {{- end }}
+      {{- if .Values.server.podAnnotations }}
+      annotations:
+{{ toYaml .Values.server.podAnnotations | indent 8}}{{- end }}
+    spec:
+      serviceAccountName: {{ .Values.server.serviceAccount | quote }}
+      containers:
+        - name: argo-server
+          args:
+          - server
+          image: "{{ .Values.images.namespace }}/{{ .Values.images.server }}:{{ default .Values.images.tag .Values.server.image.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          {{- if .Values.server.podPortName }}
+          ports:
+          - name: {{ .Values.server.podPortName }}
+            ports:
+            containerPort: 2746
+            readinessProbe:
+              httpGet:
+                path: /
+                port: 2746
+                scheme: HTTP
+              initialDelaySeconds: 10
+              periodSeconds: 20
+          {{- end }}
+          env:
+          {{- if .Values.server.forceNamespaceIsolation }}
+          - name: FORCE_NAMESPACE_ISOLATION
+            value: "true"
+          {{- end }}
+          - name: IN_CLUSTER
+            value: "true"
+          - name: ARGO_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: BASE_HREF
+            value: /
+          resources:
+            {{- toYaml .Values.server.resources | nindent 12 }}
+      {{- with .Values.server.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+{{- end -}}
