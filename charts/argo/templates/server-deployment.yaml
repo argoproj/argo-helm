@@ -59,7 +59,7 @@ spec:
                 apiVersion: v1
                 fieldPath: metadata.namespace
           - name: BASE_HREF
-            value: /
+            value: {{ .Values.server.baseHref | quote }}
           resources:
             {{- toYaml .Values.server.resources | nindent 12 }}
       {{- with .Values.server.nodeSelector }}
