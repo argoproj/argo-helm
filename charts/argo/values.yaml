@@ -16,6 +16,10 @@ init:
 
 createAggregateRoles: true
 
+# Install argo components into a single namespace. Apply Roles and RoleBindings instead of the Cluster equivalents,
+# and start argo-cli with the --namespaced flag.
+namespaced: false
+
 controller:
   image:
     # Overrides .images.tag if defined.

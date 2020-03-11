@@ -1,5 +1,5 @@
-
-{{- if .Values.server.enabled -}}apiVersion: apps/v1
+{{- if .Values.server.enabled -}}
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-{{ .Values.server.name}}
@@ -13,7 +13,6 @@ spec:
     matchLabels:
       app: {{ .Release.Name }}-{{ .Values.server.name}}
       release: {{ .Release.Name }}
-      app: {{ .Release.Name }}-{{ .Values.server.name}}
   template:
     metadata:
       labels:
@@ -31,21 +30,23 @@ spec:
         - name: argo-server
           args:
           - server
+          {{- if .Values.namespaced }}
+          - "--namespaced"
+          {{- end }}
           image: "{{ .Values.images.namespace }}/{{ .Values.images.server }}:{{ default .Values.images.tag .Values.server.image.tag }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           {{- if .Values.server.podPortName }}
           ports:
           - name: {{ .Values.server.podPortName }}
-            ports:
             containerPort: 2746
-            readinessProbe:
-              httpGet:
-                path: /
-                port: 2746
-                scheme: HTTP
-              initialDelaySeconds: 10
-              periodSeconds: 20
           {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 2746
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 20
           env:
           {{- if .Values.server.forceNamespaceIsolation }}
           - name: FORCE_NAMESPACE_ISOLATION
