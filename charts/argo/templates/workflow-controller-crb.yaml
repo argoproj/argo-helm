@@ -1,5 +1,5 @@
 apiVersion: rbac.authorization.k8s.io/v1
-{{- if .Values.namespaced }}
+{{- if .Values.singleNamespace }}
 kind: RoleBinding
 {{ else }}
 kind: ClusterRoleBinding
@@ -8,7 +8,7 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.controller.name}}-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  {{- if .Values.namespaced }}
+  {{- if .Values.singleNamespace }}
   kind: Role
   {{ else }}
   kind: ClusterRole

@@ -30,7 +30,7 @@ spec:
         - name: argo-server
           args:
           - server
-          {{- if .Values.namespaced }}
+          {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}
           image: "{{ .Values.images.namespace }}/{{ .Values.images.server }}:{{ default .Values.images.tag .Values.server.image.tag }}"

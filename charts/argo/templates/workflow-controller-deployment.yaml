@@ -40,7 +40,7 @@ spec:
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"
           - "{{ .Values.controller.logging.globallevel }}"
-          {{- if .Values.namespaced }}
+          {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}
           env:
