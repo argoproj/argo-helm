@@ -108,7 +108,9 @@ server:
   enabled: true
   # only show workflows where UI installed
   forceNamespaceIsolation: false
-  # UI BASE_HREF env variable
+  # only updates base url of resources on client side,
+  # it's expected that a proxy server rewrites the request URL and gets rid of this prefix
+  # https://github.com/argoproj/argo/issues/716#issuecomment-433213190
   baseHref: /
   image:
     # Overrides .images.tag if defined.
