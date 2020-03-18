@@ -1,4 +1,4 @@
-{{- if .Values.redis.enabled }}
+{{- if and .Values.redis.enabled (not .Values.redis.ha.enabled) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

@@ -257,3 +257,5 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | redis.resources | Resource limits and requests for redis | `{}` |
 | redis.servicePort | Redis service port | `6379` |
 | redis.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `[]` |
+| redis.ha | Configures Redis HA subchart https://github.com/helm/charts/tree/master/stable/redis-ha | | |
+| redis.ha.enabled | Enables the Redis HA subchart and disabled the custom Redis single node deployment| `false` |
