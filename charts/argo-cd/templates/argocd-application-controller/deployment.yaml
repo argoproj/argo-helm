@@ -56,7 +56,7 @@ spec:
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
         - --loglevel
         - {{ .Values.controller.logLevel }}
-        {{- if .Values.redis.enabled }}
+        {{- if and .Values.redis.enabled .Values.redis.ha.enabled .Values.redis.ha.haproxy.enabled }}
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
         {{- end }}
