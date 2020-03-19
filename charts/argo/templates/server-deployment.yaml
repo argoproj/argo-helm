@@ -48,17 +48,10 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 20
           env:
-          {{- if .Values.server.forceNamespaceIsolation }}
-          - name: FORCE_NAMESPACE_ISOLATION
-            value: "true"
-          {{- end }}
           - name: IN_CLUSTER
             value: "true"
           - name: ARGO_NAMESPACE
-            valueFrom:
-              fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
+            value: {{ .Release.Namespace | quote }}
           - name: BASE_HREF
             value: {{ .Values.server.baseHref | quote }}
           resources:
