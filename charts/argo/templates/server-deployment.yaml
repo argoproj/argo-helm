@@ -31,6 +31,9 @@ spec:
         - name: argo-server
           args:
           - server
+          {{- if .Values.server.extraArgs }}
+          {{- toYaml .Values.server.extraArgs | nindent 10 }}
+          {{- end }}
           image: "{{ .Values.images.namespace }}/{{ .Values.images.server }}:{{ default .Values.images.tag .Values.server.image.tag }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           {{- if .Values.server.podPortName }}
