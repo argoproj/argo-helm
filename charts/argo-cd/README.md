@@ -11,6 +11,27 @@ The default installation is intended to be similar to the provided ArgoCD [relea
 
 This chart currently installs the non-HA version of ArgoCD.
 
+## Upgrading
+
+### 1.8.7 to 2.0.0
+
+`controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are not arrays of strings intead of a map
+
+What was
+```
+controller:
+  extraArgs:
+    insecure: ""
+```
+
+is now
+
+```
+controller:
+  extraArgs:
+  - --insecure
+```
+
 ## Prerequisites
 
 - Kubernetes 1.7+
@@ -60,7 +81,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.args.statusProcessors | define the controller `--status-processors` | `"20"` |
 | controller.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | controller.containerPort | Controller listening port. | `8082` |
-| controller.extraArgs | Additional arguments for the controller. A list of key:value pairs | `[]` |
+| controller.extraArgs | Additional arguments for the controller. A list of flags | `[]` |
 | controller.env | Environment variables for the controller. | `[]` |
 | controller.image.repository | Repository to use for the controller | `global.image.repository` |
 | controller.image.imagePullPolicy | Image pull policy for the controller | `global.image.imagePullPolicy` |
@@ -108,7 +129,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | repoServer.autoscaling.targetCPUUtilizationPercentage | Average CPU utilization percentage for the repo server HPA | `50` |
 | repoServer.autoscaling.targetMemoryUtilizationPercentage | Average memory utilization percentage for the repo server HPA | `50` |
 | repoServer.containerPort | Repo server port | `8081` |
-| repoServer.extraArgs | Additional arguments for the repo server. A  list of key:value pairs. | `[]` |
+| repoServer.extraArgs | Additional arguments for the repo server. A  list of flags. | `[]` |
 | repoServer.env | Environment variables for the repo server. | `[]` |
 | repoServer.image.repository | Repository to use for the repo server | `global.image.repository` |
 | repoServer.image.imagePullPolicy | Image pull policy for the repo server | `global.image.imagePullPolicy` |
@@ -161,7 +182,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | server.config | [General Argo CD configuration](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#repositories) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
-| server.extraArgs | Additional arguments for the server. A list of key:value pairs. | `[]` |
+| server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
 | server.env | Environment variables for the server. | `[]` |
 | server.image.repository | Repository to use for the server | `global.image.repository` |
 | server.image.imagePullPolicy | Image pull policy for the server | `global.image.imagePullPolicy` |

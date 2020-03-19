@@ -58,12 +58,8 @@ spec:
         {{- end }}
         - --loglevel
         - {{ .Values.repoServer.logLevel }}
-        {{- range $key, $value := .Values.repoServer.extraArgs }}
-          {{- if $value }}
-        - --{{ $key }}={{ $value }}
-          {{- else }}
-        - --{{ $key }}
-          {{- end }}
+        {{- with .Values.repoServer.extraArgs }}
+        {{- . | toYaml | nindent 8 }}
         {{- end }}
         {{- if .Values.repoServer.containerSecurityContext }}
         securityContext: {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
