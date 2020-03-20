@@ -99,6 +99,10 @@ spec:
 {{- toYaml .Values.dex.affinity | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
+{{- with .Values.global.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 6 }}
+{{- end }}
 {{- if .Values.dex.volumes }}
       volumes:
 {{- toYaml .Values.dex.volumes | nindent 8}}

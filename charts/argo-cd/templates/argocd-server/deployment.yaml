@@ -130,6 +130,10 @@ spec:
 {{- toYaml .Values.server.affinity | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ template "argo-cd.serverServiceAccountName" . }}
+{{- with .Values.global.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 6 }}
+{{- end }}
       volumes:
       {{- if .Values.server.volumes }}
 {{- toYaml .Values.server.volumes | nindent 6}}
