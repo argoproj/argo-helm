@@ -19,7 +19,7 @@ This chart currently installs the non-HA version of ArgoCD.
 
 What was
 ```
-controller:
+server:
   extraArgs:
     insecure: ""
 ```
@@ -27,7 +27,7 @@ controller:
 is now
 
 ```
-controller:
+server:
   extraArgs:
   - --insecure
 ```
