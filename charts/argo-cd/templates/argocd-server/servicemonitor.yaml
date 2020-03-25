@@ -4,7 +4,7 @@ kind: ServiceMonitor
 metadata:
   name: {{ template "argo-cd.server.fullname" . }}
   {{- if .Values.server.metrics.serviceMonitor.namespace }}
-  namespace: {{ .Values.controller.metrics.serviceMonitor.namespace }}
+  namespace: {{ .Values.server.metrics.serviceMonitor.namespace }}
   {{- end }}
   labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
