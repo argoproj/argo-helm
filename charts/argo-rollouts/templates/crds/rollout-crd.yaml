@@ -2,6 +2,8 @@
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.5
   name: rollouts.argoproj.io
 spec:
   additionalPrinterColumns:
@@ -96,6 +98,36 @@ spec:
                     autoPromotionSeconds:
                       format: int32
                       type: integer
+                    prePromotionAnalysis:
+                      properties:
+                        args:
+                          items:
+                            properties:
+                              name:
+                                type: string
+                              value:
+                                type: string
+                              valueFrom:
+                                properties:
+                                  podTemplateHashValue:
+                                    type: string
+                                type: object
+                            required:
+                            - name
+                            type: object
+                          type: array
+                        templateName:
+                          type: string
+                        templates:
+                          items:
+                            properties:
+                              templateName:
+                                type: string
+                            required:
+                            - templateName
+                            type: object
+                          type: array
+                      type: object
                     previewReplicaCount:
                       format: int32
                       type: integer
@@ -135,19 +167,28 @@ spec:
                           type: integer
                         templateName:
                           type: string
-                      required:
-                      - templateName
+                        templates:
+                          items:
+                            properties:
+                              templateName:
+                                type: string
+                            required:
+                            - templateName
+                            type: object
+                          type: array
                       type: object
                     canaryService:
                       type: string
                     maxSurge:
                       anyOf:
-                      - type: string
                       - type: integer
+                      - type: string
+                      x-kubernetes-int-or-string: true
                     maxUnavailable:
                       anyOf:
-                      - type: string
                       - type: integer
+                      - type: string
+                      x-kubernetes-int-or-string: true
                     stableService:
                       type: string
                     steps:
@@ -173,8 +214,15 @@ spec:
                                 type: array
                               templateName:
                                 type: string
-                            required:
-                            - templateName
+                              templates:
+                                items:
+                                  properties:
+                                    templateName:
+                                      type: string
+                                  required:
+                                  - templateName
+                                  type: object
+                                type: array
                             type: object
                           experiment:
                             properties:
@@ -263,8 +311,10 @@ spec:
                           pause:
                             properties:
                               duration:
-                                format: int32
-                                type: integer
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                x-kubernetes-int-or-string: true
                             type: object
                           setWeight:
                             format: int32
@@ -289,6 +339,19 @@ spec:
                               type: object
                           required:
                           - virtualService
+                          type: object
+                        nginx:
+                          properties:
+                            additionalIngressAnnotations:
+                              additionalProperties:
+                                type: string
+                              type: object
+                            annotationPrefix:
+                              type: string
+                            stableIngress:
+                              type: string
+                          required:
+                          - stableIngress
                           type: object
                       type: object
                   type: object
@@ -611,7 +674,11 @@ spec:
                                         containerName:
                                           type: string
                                         divisor:
-                                          type: string
+                                          anyOf:
+                                          - type: integer
+                                          - type: string
+                                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                          x-kubernetes-int-or-string: true
                                         resource:
                                           type: string
                                       required:
@@ -689,8 +756,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                       scheme:
                                         type: string
                                     required:
@@ -702,8 +770,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                     required:
                                     - port
                                     type: object
@@ -737,8 +806,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                       scheme:
                                         type: string
                                     required:
@@ -750,8 +820,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                     required:
                                     - port
                                     type: object
@@ -789,8 +860,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                   scheme:
                                     type: string
                                 required:
@@ -811,8 +883,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                 required:
                                 - port
                                 type: object
@@ -873,8 +946,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                   scheme:
                                     type: string
                                 required:
@@ -895,8 +969,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                 required:
                                 - port
                                 type: object
@@ -905,6 +980,23 @@ spec:
                                 type: integer
                             type: object
                           resources:
+                            properties:
+                              limits:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
+                              requests:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
                             type: object
                           securityContext:
                             properties:
@@ -988,8 +1080,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                   scheme:
                                     type: string
                                 required:
@@ -1010,8 +1103,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                 required:
                                 - port
                                 type: object
@@ -1136,7 +1230,11 @@ spec:
                                         containerName:
                                           type: string
                                         divisor:
-                                          type: string
+                                          anyOf:
+                                          - type: integer
+                                          - type: string
+                                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                          x-kubernetes-int-or-string: true
                                         resource:
                                           type: string
                                       required:
@@ -1214,8 +1312,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                       scheme:
                                         type: string
                                     required:
@@ -1227,8 +1326,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                     required:
                                     - port
                                     type: object
@@ -1262,8 +1362,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                       scheme:
                                         type: string
                                     required:
@@ -1275,8 +1376,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                     required:
                                     - port
                                     type: object
@@ -1314,8 +1416,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                   scheme:
                                     type: string
                                 required:
@@ -1336,8 +1439,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                 required:
                                 - port
                                 type: object
@@ -1398,8 +1502,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                   scheme:
                                     type: string
                                 required:
@@ -1420,8 +1525,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                 required:
                                 - port
                                 type: object
@@ -1430,6 +1536,23 @@ spec:
                                 type: integer
                             type: object
                           resources:
+                            properties:
+                              limits:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
+                              requests:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
                             type: object
                           securityContext:
                             properties:
@@ -1513,8 +1636,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                   scheme:
                                     type: string
                                 required:
@@ -1535,8 +1659,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                 required:
                                 - port
                                 type: object
@@ -1665,7 +1790,11 @@ spec:
                                         containerName:
                                           type: string
                                         divisor:
-                                          type: string
+                                          anyOf:
+                                          - type: integer
+                                          - type: string
+                                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                          x-kubernetes-int-or-string: true
                                         resource:
                                           type: string
                                       required:
@@ -1743,8 +1872,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                       scheme:
                                         type: string
                                     required:
@@ -1756,8 +1886,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                     required:
                                     - port
                                     type: object
@@ -1791,8 +1922,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                       scheme:
                                         type: string
                                     required:
@@ -1804,8 +1936,9 @@ spec:
                                         type: string
                                       port:
                                         anyOf:
-                                        - type: string
                                         - type: integer
+                                        - type: string
+                                        x-kubernetes-int-or-string: true
                                     required:
                                     - port
                                     type: object
@@ -1843,8 +1976,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                   scheme:
                                     type: string
                                 required:
@@ -1865,8 +1999,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                 required:
                                 - port
                                 type: object
@@ -1927,8 +2062,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                   scheme:
                                     type: string
                                 required:
@@ -1949,8 +2085,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                 required:
                                 - port
                                 type: object
@@ -1959,6 +2096,23 @@ spec:
                                 type: integer
                             type: object
                           resources:
+                            properties:
+                              limits:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
+                              requests:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
                             type: object
                           securityContext:
                             properties:
@@ -2042,8 +2196,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                   scheme:
                                     type: string
                                 required:
@@ -2064,8 +2219,9 @@ spec:
                                     type: string
                                   port:
                                     anyOf:
-                                    - type: string
                                     - type: integer
+                                    - type: string
+                                    x-kubernetes-int-or-string: true
                                 required:
                                 - port
                                 type: object
@@ -2129,7 +2285,11 @@ spec:
                       type: object
                     overhead:
                       additionalProperties:
-                        type: string
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
                       type: object
                     preemptionPolicy:
                       type: string
@@ -2380,7 +2540,11 @@ spec:
                               medium:
                                 type: string
                               sizeLimit:
-                                type: string
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
                             type: object
                           fc:
                             properties:
@@ -2706,6 +2870,8 @@ spec:
               properties:
                 activeSelector:
                   type: string
+                prePromotionAnalysisRun:
+                  type: string
                 previewSelector:
                   type: string
                 previousActiveSelector:
@@ -2787,6 +2953,8 @@ spec:
               format: int32
               type: integer
             selector:
+              type: string
+            stableRS:
               type: string
             updatedReplicas:
               format: int32
