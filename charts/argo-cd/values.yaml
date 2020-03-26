@@ -36,8 +36,8 @@ controller:
   logLevel: info
 
   ## Additional command line arguments to pass to argocd-controller
-  ## key: value
-  extraArgs: {}
+  ##
+  extraArgs: []
 
   ## Environment variables to pass to argocd-controller
   ##
@@ -301,9 +301,9 @@ server:
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
-  ## key: value
-  extraArgs: {}
-  #   insecure: true
+  ##
+  extraArgs: []
+  #  - --insecure
 
   ## Environment variables to pass to argocd-server
   ##
@@ -556,8 +556,8 @@ repoServer:
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
-  ## key: value
-  extraArgs: {}
+  ##
+  extraArgs: []
 
   ## Environment variables to pass to argocd-repo-server
   ##
