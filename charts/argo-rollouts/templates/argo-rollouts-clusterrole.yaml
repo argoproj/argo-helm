@@ -30,6 +30,14 @@ rules:
   - watch
   - patch
 - apiGroups:
+    - ""
+  resources:
+    - secrets
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
   - argoproj.io
   resources:
   - rollouts
@@ -72,6 +80,16 @@ rules:
   - update
   - patch
   - delete
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - patch
 - apiGroups:
   - ""
   resources:
