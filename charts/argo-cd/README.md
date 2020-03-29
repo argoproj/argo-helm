@@ -263,8 +263,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 
 When Redis is completely disabled from the chart (`redis.enabled=false`) and
 an external Redis instance wants to be used or
-when Redis HA subcart is enabled (`redis.enabled=true and redis.ha.enabled=true`)
-but HA proxy is disabled `redis.ha.haproxy.enabled=false` Redis flags need to be specified
+when Redis HA subcart is enabled (`redis.enabled=true and redis-ha.enabled=true`)
+but HA proxy is disabled `redis-ha.haproxy.enabled=false` Redis flags need to be specified
 through `xxx.extraArgs`
 
 | Key | Default | Description |
@@ -284,12 +284,12 @@ through `xxx.extraArgs`
 | redis.resources | Resource limits and requests for redis | `{}` |
 | redis.servicePort | Redis service port | `6379` |
 | redis.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `[]` |
-| redis.ha | Configures Redis HA subchart https://github.com/helm/charts/tree/master/stable/redis-ha | | |
-| redis.ha.enabled | Enables the Redis HA subchart and disabled the custom Redis single node deployment| `false` |
-| redis.ha.exporter.enabled | If `true`, the prometheus exporter sidecar is enabled | `true` |
-| redis.ha.persistentVolume.enabled | Configures persistency on Redis nodes | `false`
-| redis.ha.redis.masterGroupName | Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated | `argocd`
-| redis.ha.redis.config | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) | `` |
-| redis.ha.redis.config.save | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled | `""` |
-| redis.ha.haproxy.enabled | Enabled HAProxy LoadBalancing/Proxy | `true` |
-| redis.ha.haproxy.metrics.enabled | HAProxy enable prometheus metric scraping	 | `true` |
+| redis-ha | Configures Redis HA subchart https://github.com/helm/charts/tree/master/stable/redis-ha | | |
+| redis-ha.enabled | Enables the Redis HA subchart and disables the custom Redis single node deployment| `false` |
+| redis-ha.exporter.enabled | If `true`, the prometheus exporter sidecar is enabled | `true` |
+| redis-ha.persistentVolume.enabled | Configures persistency on Redis nodes | `false`
+| redis-ha.redis.masterGroupName | Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated | `argocd`
+| redis-ha.redis.config | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) | `` |
+| redis-ha.redis.config.save | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled | `""` |
+| redis-ha.haproxy.enabled | Enabled HAProxy LoadBalancing/Proxy | `true` |
+| redis-ha.haproxy.metrics.enabled | HAProxy enable prometheus metric scraping	 | `true` |

@@ -282,23 +282,23 @@ redis:
   volumeMounts: []
   volumes: []
 
-  # This key configures Redis-HA subchart and when enabled (redis.ha.enabled=true)
-  # the custom redis deployment is omitted
-  ha:
+# This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
+# the custom redis deployment is omitted
+redis-ha:
+  enabled: false
+  # Check the redis-ha chart for more properties
+  exporter:
+    enabled: true
+  persistentVolume:
     enabled: false
-    # Check the redis-ha chart for more properties
-    exporter:
+  redis:
+    masterGroupName: argocd
+    config:
+      save: "\"\""
+  haproxy:
+    enabled: true
+    metrics:
       enabled: true
-    persistentVolume:
-      enabled: false
-    redis:
-      masterGroupName: argocd
-      config:
-        save: "\"\""
-    haproxy:
-      enabled: true
-      metrics:
-        enabled: true
 
 ## Server
 server:

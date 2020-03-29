@@ -42,8 +42,11 @@ Create dex name and version as used by the chart label.
 Create redis name and version as used by the chart label.
 */}}
 {{- define "argo-cd.redis.fullname" -}}
-{{- if and .Values.redis.ha.enabled .Values.redis.ha.haproxy.enabled -}}
-{{- printf "%s-redis-ha-haproxy" .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{ $redisHa := (index .Values "redis-ha") }}
+{{- if and $redisHa.enabled -}}
+    {{- if $redisHa.haproxy.enabled -}}
+        {{- printf "%s-redis-ha-haproxy" .Release.Name | trunc 63 | trimSuffix "-" -}}
+    {{- end -}}
 {{- else -}}
 {{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.redis.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
