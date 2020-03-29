@@ -60,12 +60,8 @@ spec:
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
         {{- end }}
-        {{- range $key, $value := .Values.controller.extraArgs }}
-          {{- if $value }}
-        - --{{ $key }}={{ $value }}
-          {{- else }}
-        - --{{ $key }}
-          {{- end }}
+        {{- with .Values.controller.extraArgs }}
+        {{- . | toYaml | nindent 8 }}
         {{- end }}
         image: {{ default .Values.global.image.repository .Values.controller.image.repository }}:{{ default .Values.global.image.tag .Values.controller.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
@@ -117,6 +113,10 @@ spec:
 {{- toYaml .Values.controller.affinity | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ template "argo-cd.controllerServiceAccountName" . }}
+{{- with .Values.global.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 6 }}
+{{- end }}
 {{- if .Values.controller.volumes }}
       volumes:
 {{- toYaml .Values.controller.volumes | nindent 8 }}
