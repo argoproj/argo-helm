@@ -1,3 +1,4 @@
+{{- if .Values.installRbac }}
 # All argo-events services are bound to the "argo-events" service account.
 # In RBAC enabled setups, this SA is bound to specific roles.
 apiVersion: v1
@@ -14,5 +15,6 @@ kind: ServiceAccount
 metadata:
   name: {{ $sa }}
   namespace: {{ $namespace }}
+{{- end }}
 {{- end }}
 {{- end }}

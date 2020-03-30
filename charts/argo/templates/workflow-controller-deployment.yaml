@@ -21,8 +21,9 @@ spec:
         {{- if .Values.controller.podLabels }}
         {{ toYaml .Values.controller.podLabels | nindent 8}}
         {{- end }}
-      {{- if .Values.controller.podAnnotations }}
       annotations:
+        checksum/config-controller: {{ include (print $.Template.BasePath "/workflow-controller-config-map.yaml") . | sha256sum }}
+      {{- if .Values.controller.podAnnotations }}
 {{ toYaml .Values.controller.podAnnotations | indent 8}}{{- end }}
     spec:
       serviceAccountName: {{ .Values.controller.serviceAccount | quote }}
@@ -48,9 +49,16 @@ spec:
                 fieldPath: metadata.namespace
           resources:
             {{- toYaml .Values.controller.resources | nindent 12 }}
-          {{- if .Values.controller.metricsConfig.enabled }}
+          {{- if or .Values.controller.metricsConfig.enabled .Values.controller.telemetryConfig.enabled }}
           ports:
-          - containerPort: 8080
+          {{- if .Values.controller.metricsConfig.enabled }}
+          - containerPort: {{ .Values.controller.metricsConfig.port }}
+            name: metrics
+          {{- end }}
+          {{- if .Values.controller.telemetryConfig.enabled }}
+          - containerPort: {{ .Values.controller.telemetryConfig.port }}
+            name: telemetry
+          {{- end }}
           {{- end }}
       {{- with .Values.controller.nodeSelector }}
       nodeSelector:
