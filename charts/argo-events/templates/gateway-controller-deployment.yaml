@@ -18,6 +18,12 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Values.gatewayController.name }}
         release: {{ .Release.Name }}
+        {{- if .Values.gatewayController.podLabels -}}
+        {{ toYaml .Values.gatewayController.podLabels | nindent 8}}
+        {{- end }}
+      {{- if .Values.gatewayController.podAnnotations }}
+      annotations: {{- toYaml .Values.gatewayController.podAnnotations | nindent 8 }}
+      {{- end }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount }}
       containers:
@@ -31,3 +37,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONTROLLER_CONFIG_MAP
               value: {{ .Release.Name }}-{{ .Values.gatewayController.name }}-configmap
+          resources: {{- toYaml .Values.gatewayController.resources | nindent 12 }}
+      nodeSelector: {{- toYaml .Values.gatewayController.nodeSelector | nindent 8 }}
+      tolerations: {{- toYaml .Values.gatewayController.tolerations | nindent 8 }}
+      affinity: {{- toYaml .Values.gatewayController.affinity | nindent 8 }}

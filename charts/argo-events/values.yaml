@@ -44,9 +44,33 @@ sensorController:
   image: sensor-controller
   tag: v0.14.0
   replicaCount: 1
+  # Optional labels to add to the controller pods
+  podLabels: {}
+  # Annotations to add to the controller pods
+  podAnnotations: {}
+  # Resources to request for the controller's container
+  resources: {}
+  # Optional constraints on controller's pod scheduling
+  # See https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  # and https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/.
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 gatewayController:
   name: gateway-controller
   image: gateway-controller
   tag: v0.14.0
   replicaCount: 1
+  # Optional labels to add to the controller pods
+  podLabels: {}
+  # Annotations to add to the controller pods
+  podAnnotations: {}
+  # Resources to request for the controller's container
+  resources: {}
+  # Optional constraints on controller's pod scheduling
+  # See https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  # and https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/.
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

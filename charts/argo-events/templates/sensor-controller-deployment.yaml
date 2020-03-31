@@ -18,6 +18,12 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Values.sensorController.name }}
         release: {{ .Release.Name }}
+        {{- if .Values.sensorController.podLabels -}}
+        {{ toYaml .Values.sensorController.podLabels | nindent 8}}
+        {{- end }}
+      {{- if .Values.sensorController.podAnnotations }}
+      annotations: {{- toYaml .Values.sensorController.podAnnotations | nindent 8 }}
+      {{- end }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount }}
       containers:
@@ -31,3 +37,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONTROLLER_CONFIG_MAP
               value: {{ .Release.Name }}-{{ .Values.sensorController.name }}-configmap
+          resources: {{- toYaml .Values.sensorController.resources | nindent 12 }}
+      nodeSelector: {{- toYaml .Values.sensorController.nodeSelector | nindent 8 }}
+      tolerations: {{- toYaml .Values.sensorController.tolerations | nindent 8 }}
+      affinity: {{- toYaml .Values.sensorController.affinity | nindent 8 }}
