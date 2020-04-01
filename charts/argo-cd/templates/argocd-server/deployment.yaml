@@ -66,12 +66,8 @@ spec:
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
         {{- end }}
-        {{- range $key, $value := .Values.server.extraArgs }}
-          {{- if $value }}
-        - --{{ $key }}={{ $value }}
-          {{- else }}
-        - --{{ $key }}
-          {{- end }}
+        {{- with .Values.server.extraArgs }}
+        {{- . | toYaml | nindent 8 }}
         {{- end }}
         {{- if .Values.server.containerSecurityContext }}
         securityContext: {{- toYaml .Values.server.containerSecurityContext | nindent 10 }}
@@ -134,6 +130,10 @@ spec:
 {{- toYaml .Values.server.affinity | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ template "argo-cd.serverServiceAccountName" . }}
+{{- with .Values.global.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 6 }}
+{{- end }}
       volumes:
       {{- if .Values.server.volumes }}
 {{- toYaml .Values.server.volumes | nindent 6}}
