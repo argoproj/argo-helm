@@ -39,6 +39,9 @@ spec:
 {{- toYaml .Values.repoServer.podLabels | nindent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.repoServer.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
