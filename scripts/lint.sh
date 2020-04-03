@@ -5,7 +5,7 @@ SRCROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 for dir in $(find $SRCROOT/charts -mindepth 1 -maxdepth 1 -type d);
 do
-    sudo rm -rf $dir/charts
+    rm -rf $dir/charts
     name=$(basename $dir)
     echo "Running Helm linting for $name"
     docker run \
