@@ -17,6 +17,10 @@ global:
   #  runAsGroup: 999
   #  fsGroup: 999
   imagePullSecrets: []
+  hostAliases: []
+  # - ip: 10.20.30.40
+  #   hostnames:
+  #   - git.myhostname
 
 ## Controller
 controller:
@@ -36,8 +40,8 @@ controller:
   logLevel: info
 
   ## Additional command line arguments to pass to argocd-controller
-  ## key: value
-  extraArgs: {}
+  ##
+  extraArgs: []
 
   ## Environment variables to pass to argocd-controller
   ##
@@ -301,9 +305,9 @@ server:
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
-  ## key: value
-  extraArgs: {}
-  #   insecure: true
+  ##
+  extraArgs: []
+  #  - --insecure
 
   ## Environment variables to pass to argocd-server
   ##
@@ -556,8 +560,8 @@ repoServer:
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
-  ## key: value
-  extraArgs: {}
+  ##
+  extraArgs: []
 
   ## Environment variables to pass to argocd-repo-server
   ##
@@ -760,7 +764,7 @@ configs:
     githubSecret: ""
     gitlabSecret: ""
     bitbucketServerSecret: ""
-    bitbucketUUÌD: ""
+    bitbucketUUID: ""
     gogsSecret: ""
 
     # Custom secrets. Useful for injecting SSO secrets into environment variables.
