@@ -30,6 +30,9 @@ spec:
         - name: argo-server
           args:
           - server
+          {{- if .Values.server.extraArgs }}
+          {{- toYaml .Values.server.extraArgs | nindent 10 }}
+          {{- end }}
           {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}
