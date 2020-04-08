@@ -30,8 +30,8 @@ spec:
       containers:
         - name: argo-server
           args:
-          - --configmap={{ .Release.Name }}-{{ .Values.controller.name }}-configmap
           - server
+          - --configmap={{ .Release.Name }}-{{ .Values.controller.name }}-configmap
           {{- if .Values.server.extraArgs }}
           {{- toYaml .Values.server.extraArgs | nindent 10 }}
           {{- end }}
