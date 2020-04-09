@@ -58,8 +58,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
 | global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.5.1"` |
-| global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) | 
-| global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` | 
+| global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
+| global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | installCRDs | bool | `true` | Install CRDs if you are using Helm2. |
@@ -224,6 +224,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.service.labels | Server service labels | `{}` |
 | server.service.servicePortHttp | Server service http port | `80` |
 | server.service.servicePortHttps | Server service https port | `443` |
+| server.service.loadBalancerSourceRanges | Source IP ranges to allow access to service from. | `[]` |
 | server.service.type | Server service type | `"ClusterIP"` |
 | server.serviceAccount.create | Create server service account | `true` |
 | server.serviceAccount.name | Server service account name | `"argocd-server"` |
