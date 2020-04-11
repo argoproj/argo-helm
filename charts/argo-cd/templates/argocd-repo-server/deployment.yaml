@@ -1,3 +1,4 @@
+{{- $redisHa := (index .Values "redis-ha") -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -52,7 +53,7 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
         command:
         - argocd-repo-server
-        {{- if .Values.redis.enabled }}
+        {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
         {{- end }}
