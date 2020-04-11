@@ -13,7 +13,7 @@ This chart currently installs the non-HA version of ArgoCD.
 
 ## Upgrading
 
-### 1.8.7 to 2.0.0
+### 1.8.7 to 2.x.x
 
 `controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are not arrays of strings intead of a map
 
@@ -58,8 +58,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
 | global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.5.1"` |
-| global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) | 
-| global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` | 
+| global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
+| global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | installCRDs | bool | `true` | Install CRDs if you are using Helm2. |
@@ -75,8 +75,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 
 ## ArgoCD Controller
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
+| Key | Default | Description |
+|-----|---------|-------------|
 | controller.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
 | controller.args.operationProcessors | define the controller `--operation-processors` | `"10"` |
 | controller.args.statusProcessors | define the controller `--status-processors` | `"20"` |
@@ -121,8 +121,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 
 ## Argo Repo Server
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
+| Key | Default | Description |
+|-----|---------|-------------|
 | repoServer.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
 | repoServer.autoscaling.enabled | Enable Horizontal Pod Autoscaler (HPA) for the repo server | `false` |
 | repoServer.autoscaling.minReplicas | Minimum number of replicas for the repo server HPA | `1` |
@@ -168,8 +168,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 
 ## Argo Server
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
+| Key | Default | Description |
+|-----|---------|-------------|
 | server.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
 | server.autoscaling.enabled | Enable Horizontal Pod Autoscaler (HPA) for the server | `false` |
 | server.autoscaling.minReplicas | Minimum number of replicas for the server HPA | `1` |
@@ -224,6 +224,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.service.labels | Server service labels | `{}` |
 | server.service.servicePortHttp | Server service http port | `80` |
 | server.service.servicePortHttps | Server service https port | `443` |
+| server.service.loadBalancerSourceRanges | Source IP ranges to allow access to service from. | `[]` |
 | server.service.type | Server service type | `"ClusterIP"` |
 | server.serviceAccount.create | Create server service account | `true` |
 | server.serviceAccount.name | Server service account name | `"argocd-server"` |
@@ -233,8 +234,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 
 ## Dex
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
+| Key | Default | Description |
+|-----|---------|-------------|
 | dex.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
 | dex.containerPortGrpc | GRPC container port | `5557` |
 | dex.containerPortHttp | HTTP container port | `5556` |
@@ -262,8 +263,14 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 
 ## Redis
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
+When Redis is completely disabled from the chart (`redis.enabled=false`) and
+an external Redis instance wants to be used or
+when Redis HA subcart is enabled (`redis.enabled=true and redis-ha.enabled=true`)
+but HA proxy is disabled `redis-ha.haproxy.enabled=false` Redis flags need to be specified
+through `xxx.extraArgs`
+
+| Key | Default | Description |
+|-----|---------|-------------|
 | redis.affinity | Assign custom affinity rules to the deployment https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ | `{}` |
 | redis.containerPort | Redis container port | `6379` |
 | redis.enabled | Enable redis | `true` |
@@ -279,3 +286,12 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | redis.resources | Resource limits and requests for redis | `{}` |
 | redis.servicePort | Redis service port | `6379` |
 | redis.tolerations | Tolerations for use with node taints https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ | `[]` |
+| redis-ha | Configures Redis HA subchart https://github.com/helm/charts/tree/master/stable/redis-ha | | |
+| redis-ha.enabled | Enables the Redis HA subchart and disables the custom Redis single node deployment| `false` |
+| redis-ha.exporter.enabled | If `true`, the prometheus exporter sidecar is enabled | `true` |
+| redis-ha.persistentVolume.enabled | Configures persistency on Redis nodes | `false`
+| redis-ha.redis.masterGroupName | Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated | `argocd`
+| redis-ha.redis.config | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) | `` |
+| redis-ha.redis.config.save | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled | `""` |
+| redis-ha.haproxy.enabled | Enabled HAProxy LoadBalancing/Proxy | `true` |
+| redis-ha.haproxy.metrics.enabled | HAProxy enable prometheus metric scraping	 | `true` |
