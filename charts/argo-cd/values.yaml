@@ -10,13 +10,17 @@ installCRDs: true
 global:
   image:
     repository: argoproj/argocd
-    tag: v1.4.2
+    tag: v1.5.1
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
   #  runAsGroup: 999
   #  fsGroup: 999
   imagePullSecrets: []
+  hostAliases: []
+  # - ip: 10.20.30.40
+  #   hostnames:
+  #   - git.myhostname
 
 ## Controller
 controller:
@@ -24,7 +28,7 @@ controller:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.4.2
+    tag: # v1.5.1
     imagePullPolicy: # IfNotPresent
 
   ## Argo controller commandline flags
@@ -282,6 +286,24 @@ redis:
   volumeMounts: []
   volumes: []
 
+# This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
+# the custom redis deployment is omitted
+redis-ha:
+  enabled: false
+  # Check the redis-ha chart for more properties
+  exporter:
+    enabled: true
+  persistentVolume:
+    enabled: false
+  redis:
+    masterGroupName: argocd
+    config:
+      save: "\"\""
+  haproxy:
+    enabled: true
+    metrics:
+      enabled: true
+
 ## Server
 server:
   name: server
@@ -297,7 +319,7 @@ server:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.4.2
+    tag: # v1.5.1
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
@@ -382,6 +404,7 @@ server:
     type: ClusterIP
     servicePortHttp: 80
     servicePortHttps: 443
+    loadBalancerSourceRanges: []
 
   ## Server metrics service configuration
   metrics:
@@ -552,7 +575,7 @@ repoServer:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.4.2
+    tag: # v1.5.1
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
@@ -760,7 +783,7 @@ configs:
     githubSecret: ""
     gitlabSecret: ""
     bitbucketServerSecret: ""
-    bitbucketUUÌD: ""
+    bitbucketUUID: ""
     gogsSecret: ""
 
     # Custom secrets. Useful for injecting SSO secrets into environment variables.
