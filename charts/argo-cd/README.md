@@ -64,6 +64,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | installCRDs | bool | `true` | Install CRDs if you are using Helm2. |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
+| configs.secret.annotations | Annotations for argocd-secret | `{}` |
 | configs.secret.argocdServerAdminPassword | Admin password | `null` |
 | configs.secret.argocdServerAdminPasswordMtime | Admin password modification time | `date "2006-01-02T15:04:05Z" now` if configs.secret.argocdServerAdminPassword is set |
 | configs.secret.bitbucketSecret | BitBucket incoming webhook secret | `""` |
