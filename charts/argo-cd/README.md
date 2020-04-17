@@ -47,7 +47,7 @@ $ helm install --name my-release argo/argo-cd
 
 ### Helm v3 Compatability
 
-Requires chart version 1.5.1 or newer.
+Requires chart version 1.5.2 or newer.
 
 Helm v3 has removed the `install-crds` hook so CRDs are now populated by files in the [crds](./crds) directory. Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings about nonexistant webhooks.
 
@@ -57,13 +57,14 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.5.1"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.5.2"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | installCRDs | bool | `true` | Install CRDs if you are using Helm2. |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
+| configs.secret.annotations | Annotations for argocd-secret | `{}` |
 | configs.secret.argocdServerAdminPassword | Admin password | `null` |
 | configs.secret.argocdServerAdminPasswordMtime | Admin password modification time | `date "2006-01-02T15:04:05Z" now` if configs.secret.argocdServerAdminPassword is set |
 | configs.secret.bitbucketSecret | BitBucket incoming webhook secret | `""` |
