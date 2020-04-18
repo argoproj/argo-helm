@@ -6,9 +6,9 @@ items:
   - apiVersion: argoproj.io/v1alpha1
     kind: AppProject
     metadata:
-      {{- if .additionalProjects }}
+      {{- if .additionalAnnotations }}
       annotations:
-      {{- range $key, $value := .additionalProjects }}
+      {{- range $key, $value := .additionalAnnotations }}
         {{ $key }}: {{ $value | quote }}
       {{- end }}
       {{- end }}
