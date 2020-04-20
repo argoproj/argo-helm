@@ -1,4 +1,5 @@
-{{- if .Values.redis.enabled }}
+{{- $redisHa := (index .Values "redis-ha") -}}
+{{- if and .Values.redis.enabled (not $redisHa.enabled) -}}
 apiVersion: v1
 kind: Service
 metadata:
