@@ -67,17 +67,16 @@ spec:
         {{- if .Values.repoServer.containerSecurityContext }}
         securityContext: {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
         {{- end }}
-{{- if .Values.openshift.enabled }}
+{{- if or (.Values.repoServer.env) (.Values.openshift.enabled) }}
         env:
-        - name: USER_NAME
-          value: argocd
 {{- if .Values.repoServer.env }}
 {{- toYaml .Values.repoServer.env | nindent 8 }}
 {{- end }}
-        {{- else if .Values.repoServer.env }}
-        env:
-{{- toYaml .Values.repoServer.env | nindent 8 }}
-        {{- end }}
+{{- if .Values.openshift.enabled }}
+        - name: USER_NAME
+          value: argocd
+{{- end }}
+{{- end }}
         volumeMounts:
         {{- if .Values.repoServer.volumeMounts }}
 {{- toYaml .Values.repoServer.volumeMounts | nindent 8}}
