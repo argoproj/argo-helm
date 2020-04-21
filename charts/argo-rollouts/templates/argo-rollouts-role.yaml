@@ -72,6 +72,16 @@ rules:
   - patch
   - delete
 - apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - patch
+- apiGroups:
   - ""
   resources:
   - events
@@ -80,8 +90,17 @@ rules:
   - update
   - patch
 - apiGroups:
-    - ""
+  - ""
   resources:
-    - secrets
+  - secrets
   verbs:
-    - get
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - list
+  - delete

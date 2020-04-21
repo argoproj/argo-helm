@@ -61,6 +61,9 @@ spec:
             replicas:
               format: int32
               type: integer
+            restartAt:
+              format: date-time
+              type: string
             revisionHistoryLimit:
               format: int32
               type: integer
@@ -93,11 +96,54 @@ spec:
                   properties:
                     activeService:
                       type: string
+                    antiAffinity:
+                      properties:
+                        preferredDuringSchedulingIgnoredDuringExecution:
+                          properties:
+                            weight:
+                              format: int32
+                              type: integer
+                          required:
+                          - weight
+                          type: object
+                        requiredDuringSchedulingIgnoredDuringExecution:
+                          type: object
+                      type: object
                     autoPromotionEnabled:
                       type: boolean
                     autoPromotionSeconds:
                       format: int32
                       type: integer
+                    postPromotionAnalysis:
+                      properties:
+                        args:
+                          items:
+                            properties:
+                              name:
+                                type: string
+                              value:
+                                type: string
+                              valueFrom:
+                                properties:
+                                  podTemplateHashValue:
+                                    type: string
+                                type: object
+                            required:
+                            - name
+                            type: object
+                          type: array
+                        templateName:
+                          type: string
+                        templates:
+                          items:
+                            properties:
+                              templateName:
+                                type: string
+                            required:
+                            - templateName
+                            type: object
+                          type: array
+                      type: object
                     prePromotionAnalysis:
                       properties:
                         args:
@@ -176,6 +222,19 @@ spec:
                             - templateName
                             type: object
                           type: array
+                      type: object
+                    antiAffinity:
+                      properties:
+                        preferredDuringSchedulingIgnoredDuringExecution:
+                          properties:
+                            weight:
+                              format: int32
+                              type: integer
+                          required:
+                          - weight
+                          type: object
+                        requiredDuringSchedulingIgnoredDuringExecution:
+                          type: object
                       type: object
                     canaryService:
                       type: string
@@ -323,6 +382,19 @@ spec:
                       type: array
                     trafficRouting:
                       properties:
+                        alb:
+                          properties:
+                            annotationPrefix:
+                              type: string
+                            ingress:
+                              type: string
+                            servicePort:
+                              format: int32
+                              type: integer
+                          required:
+                          - ingress
+                          - servicePort
+                          type: object
                         istio:
                           properties:
                             virtualService:
@@ -2870,6 +2942,8 @@ spec:
               properties:
                 activeSelector:
                   type: string
+                postPromotionAnalysisRun:
+                  type: string
                 prePromotionAnalysisRun:
                   type: string
                 previewSelector:
@@ -2952,6 +3026,9 @@ spec:
             replicas:
               format: int32
               type: integer
+            restartedAt:
+              format: date-time
+              type: string
             selector:
               type: string
             stableRS:
