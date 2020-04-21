@@ -2,7 +2,11 @@
 {{- $serviceName := include "argo-cd.server.fullname" . -}}
 {{- $servicePort := .Values.server.service.servicePortHttp -}}
 {{- $paths := .Values.server.ingress.paths -}}
+{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1
+{{ else }}
 apiVersion: extensions/v1beta1
+{{ end -}}
 kind: Ingress
 metadata:
 {{- if .Values.server.ingress.annotations }}
