@@ -24,7 +24,7 @@ spec:
     - host: {{ . }}
       http:
         paths:
-          {{- if $.Values.server.ingress.paths -}}
+          {{- if $.Values.server.ingress.paths }}
           {{- range $.Values.server.ingress.paths }}
           - backend:
               serviceName: {{ .serviceName }}
