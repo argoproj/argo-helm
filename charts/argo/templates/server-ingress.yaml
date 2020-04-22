@@ -27,10 +27,12 @@ spec:
           - backend:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
+          {{- if $.Values.server.ingress.paths -}}
           {{- range $.Values.server.ingress.paths }}
           - backend:
               serviceName: {{ .serviceName }}
               servicePort: {{ .servicePort }}
+          {{- end -}}
           {{- end -}}
     {{- end -}}
   {{- if .Values.server.ingress.tls }}
