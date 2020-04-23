@@ -36,7 +36,11 @@ spec:
           - "--configmap"
           - "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"
           - "--executor-image"
+          {{- if .Values.executor.image.tag }}
+          - "{{ .Values.executor.image.name }}:{{ .Values.executor.image.tag }}"
+          {{- else }}
           - "{{ .Values.images.namespace }}/{{ .Values.images.executor }}:{{ default .Values.images.tag .Values.executor.image.tag }}"
+          {{- end }}
           - "--loglevel"
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"
