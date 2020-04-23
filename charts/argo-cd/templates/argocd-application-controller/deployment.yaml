@@ -1,4 +1,4 @@
-
+{{- $redisHa := (index .Values "redis-ha") -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -56,7 +56,7 @@ spec:
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
         - --loglevel
         - {{ .Values.controller.logLevel }}
-        {{- if .Values.redis.enabled }}
+        {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
         {{- end }}

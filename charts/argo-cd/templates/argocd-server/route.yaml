@@ -23,7 +23,9 @@ spec:
   port:
     targetPort: https
   tls:
-    termination: passthrough
-    insecureEdgeTerminationPolicy: None
+    termination: {{ .Values.server.route.termination_type | default "passthrough" }}
+    insecureEdgeTerminationPolicy: {{ .Values.server.route.termination_policy | default "None" }} 
   wildcardPolicy: None
+status:
+  ingress: []
 {{- end }}
