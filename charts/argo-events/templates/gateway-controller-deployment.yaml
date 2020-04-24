@@ -31,3 +31,17 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONTROLLER_CONFIG_MAP
               value: {{ .Release.Name }}-{{ .Values.gatewayController.name }}-configmap
+          resources:
+{{ toYaml .Values.gatewayController.resources | indent 12 }}
+    {{- with .Values.gatewatController.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.gatewayController.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.gatewayController.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

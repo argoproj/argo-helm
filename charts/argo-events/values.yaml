@@ -44,9 +44,19 @@ sensorController:
   image: sensor-controller
   tag: v0.14.0
   replicaCount: 1
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 
 gatewayController:
   name: gateway-controller
   image: gateway-controller
   tag: v0.14.0
   replicaCount: 1
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
