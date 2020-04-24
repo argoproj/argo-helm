@@ -33,7 +33,7 @@ spec:
               value: {{ .Release.Name }}-{{ .Values.gatewayController.name }}-configmap
           resources:
 {{ toYaml .Values.gatewayController.resources | indent 12 }}
-    {{- with .Values.gatewatController.nodeSelector }}
+    {{- with .Values.gatewayController.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
     {{- end }}
