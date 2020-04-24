@@ -31,3 +31,17 @@ spec:
                   fieldPath: metadata.namespace
             - name: SENSOR_CONFIG_MAP
               value: {{ .Release.Name }}-{{ .Values.sensorController.name }}-configmap
+          resources:
+{{ toYaml .Values.sensorController.resources | indent 12 }}
+    {{- with .Values.sensorController.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.sensorController.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.sensorController.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
