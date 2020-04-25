@@ -53,6 +53,9 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
         command:
         - argocd-repo-server
+        {{- if .Values.openshift.enabled }}
+        - uid_entrypoint.sh
+        {{- end }}
         {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
@@ -65,10 +68,16 @@ spec:
         {{- if .Values.repoServer.containerSecurityContext }}
         securityContext: {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
         {{- end }}
-        {{- if .Values.repoServer.env }}
+{{- if or (.Values.repoServer.env) (.Values.openshift.enabled) }}
         env:
+{{- if .Values.repoServer.env }}
 {{- toYaml .Values.repoServer.env | nindent 8 }}
-        {{- end }}
+{{- end }}
+{{- if .Values.openshift.enabled }}
+        - name: USER_NAME
+          value: argocd
+{{- end }}
+{{- end }}
         volumeMounts:
         {{- if .Values.repoServer.volumeMounts }}
 {{- toYaml .Values.repoServer.volumeMounts | nindent 8}}
