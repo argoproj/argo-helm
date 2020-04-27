@@ -15,6 +15,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.server.name }}
+{{- if .Values.server.service.labels }}
+{{- toYaml .Values.server.service.labels | nindent 4 }}
+{{- end }}
 spec:
   type: {{ .Values.server.service.type }}
   ports:
@@ -29,3 +32,12 @@ spec:
   selector:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
+{{- if eq .Values.server.service.type "LoadBalancer" }}
+{{- if .Values.server.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.server.service.loadBalancerIP | quote }}
+{{- end }}
+{{- if .Values.server.service.loadBalancerSourceRanges }}
+  loadBalancerSourceranges:
+{{ toYaml .Values.server.service.loadBalancerSourceRanges | indent 4 }}
+{{- end }}
+{{- end -}}

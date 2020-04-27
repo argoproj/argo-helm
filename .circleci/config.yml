@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   lint:
     docker:
-      - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
+      - image: gcr.io/kubernetes-charts-ci/test-image:v3.1.0
     steps:
       - checkout
       - run: ct lint --config .circleci/chart-testing.yaml --lint-conf .circleci/lintconf.yaml
@@ -11,7 +11,7 @@ jobs:
   publish:
     docker:
       # We just need an image with `helm` on it. Handily we know of one already.
-      - image: gcr.io/kubernetes-charts-ci/test-image:v3.0.1
+      - image: gcr.io/kubernetes-charts-ci/test-image:v3.1.0
     steps:
       # install the additional keys needed to push to Github. Alex Collins owns these keys.
       - add_ssh_keys
