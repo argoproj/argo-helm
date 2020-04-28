@@ -36,6 +36,9 @@ data:
         {{- if .Values.artifactRepository.s3.keyPrefix }}
         keyPrefix: {{ .Values.artifactRepository.s3.keyPrefix }}
         {{- end }}
+        {{- if .Values.artifactRepository.s3.region }}
+        region: {{ .Values.artifactRepository.s3.region }}
+        {{- end }}
       {{- end}}
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:
