@@ -20,7 +20,7 @@ This chart currently installs the non-HA version of ArgoCD.
 
 What was
 ```yaml
-controller:
+server:
   extraArgs:
     insecure: ""
 ```
