@@ -19,9 +19,8 @@ This chart currently installs the non-HA version of ArgoCD.
 `controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are not arrays of strings intead of a map
 
 What was
-
 ```yaml
-controller:
+server:
   extraArgs:
     insecure: ""
 ```
@@ -29,7 +28,7 @@ controller:
 is now
 
 ```yaml
-controller:
+server:
   extraArgs:
   - --insecure
 ```
@@ -79,6 +78,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | configs.secret.gitlabSecret | GitLab incoming webhook secret | `""` |
 | configs.tlsCerts.data."argocd.example.com" | TLS certificate | See [values.yaml](values.yaml) |
 | configs.secret.extra | add additional secrets to be added to argocd-secret | `{}` |
+| openshift.enabled | enables using arbitrary uid for argo repo server | `false` |
 
 ## ArgoCD Controller
 
