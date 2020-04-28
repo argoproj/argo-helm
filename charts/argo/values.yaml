@@ -51,6 +51,10 @@ controller:
     #    passwordSecret:
     #      name: argo-postgres-config
     #      key: password
+  workflowDefaults: {}  # Only valid for 2.7+
+  #  spec:
+  #    ttlStrategy:
+  #      secondsAfterCompletion: 84600
   telemetryConfig:
     enabled: false
     path: /telemetry

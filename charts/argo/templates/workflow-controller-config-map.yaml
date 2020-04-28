@@ -54,3 +54,6 @@ data:
     {{- if .Values.controller.persistence }}
     persistence:
 {{ toYaml .Values.controller.persistence | indent 6 }}{{- end }}
+    {{- if .Values.controller.workflowDefaults }}
+    workflowDefaults:
+{{ toYaml .Values.controller.workflowDefaults | indent 6 }}{{- end }}
