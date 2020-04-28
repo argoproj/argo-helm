@@ -19,9 +19,8 @@ This chart currently installs the non-HA version of ArgoCD.
 `controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are not arrays of strings intead of a map
 
 What was
-
 ```yaml
-controller:
+server:
   extraArgs:
     insecure: ""
 ```
@@ -29,7 +28,7 @@ controller:
 is now
 
 ```yaml
-controller:
+server:
   extraArgs:
   - --insecure
 ```
