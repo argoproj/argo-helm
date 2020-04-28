@@ -10,7 +10,7 @@ installCRDs: true
 global:
   image:
     repository: argoproj/argocd
-    tag: v1.4.2
+    tag: v1.5.2
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -28,7 +28,7 @@ controller:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.4.2
+    tag: # v1.5.2
     imagePullPolicy: # IfNotPresent
 
   ## Argo controller commandline flags
@@ -171,7 +171,7 @@ dex:
 
   image:
     repository: quay.io/dexidp/dex
-    tag: v2.14.0
+    tag: v2.22.0
     imagePullPolicy: IfNotPresent
   initImage:
     repository:
@@ -286,6 +286,24 @@ redis:
   volumeMounts: []
   volumes: []
 
+# This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
+# the custom redis deployment is omitted
+redis-ha:
+  enabled: false
+  # Check the redis-ha chart for more properties
+  exporter:
+    enabled: true
+  persistentVolume:
+    enabled: false
+  redis:
+    masterGroupName: argocd
+    config:
+      save: "\"\""
+  haproxy:
+    enabled: true
+    metrics:
+      enabled: true
+
 ## Server
 server:
   name: server
@@ -301,7 +319,7 @@ server:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.4.2
+    tag: # v1.5.2
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
@@ -386,6 +404,8 @@ server:
     type: ClusterIP
     servicePortHttp: 80
     servicePortHttps: 443
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
 
   ## Server metrics service configuration
   metrics:
@@ -541,6 +561,16 @@ server:
   clusterAdminAccess:
     enabled: true
 
+  ## Enable BackendConfig custom resource for Google Kubernetes Engine
+  GKEbackendConfig:
+    enabled: false
+    spec: {}
+  #  spec:
+  #    iap:
+  #      enabled: true
+  #      oauthclientCredentials:
+  #        secretName: argocd-secret
+
 ## Repo Server
 repoServer:
   name: repo-server
@@ -558,7 +588,7 @@ repoServer:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.4.2
+    tag: # v1.5.2
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
@@ -761,6 +791,9 @@ configs:
     # -----END RSA PRIVATE KEY-----
   secret:
     createSecret: true
+    ## Annotations to be added to argocd-secret
+    ##
+    annotations: {}
 
     # Webhook Configs
     githubSecret: ""
@@ -792,3 +825,6 @@ configs:
     # argocdServerAdminPassword:
     # Password modification time defaults to current time if not set
     # argocdServerAdminPasswordMtime: "2006-01-02T15:04:05Z"
+
+openshift:
+  enabled: false
