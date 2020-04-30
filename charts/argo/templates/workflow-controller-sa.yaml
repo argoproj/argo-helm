@@ -3,4 +3,4 @@ kind: ServiceAccount
 metadata:
   name: {{ .Values.controller.serviceAccount }}
   annotations:
-{{ toYaml .Values.controller.serviceAccountAnnotation | indent 4 }}
+{{ toYaml .Values.controller.serviceAccountAnnotations | indent 4 }}

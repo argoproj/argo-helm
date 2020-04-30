@@ -55,7 +55,10 @@ spec:
           - name: IN_CLUSTER
             value: "true"
           - name: ARGO_NAMESPACE
-            value: {{ .Release.Namespace | quote }}
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
           - name: BASE_HREF
             value: {{ .Values.server.baseHref | quote }}
           resources:
