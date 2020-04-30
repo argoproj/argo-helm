@@ -31,3 +31,5 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONTROLLER_CONFIG_MAP
               value: {{ .Release.Name }}-{{ .Values.sensorController.name }}-configmap
+          resources:
+            {{- toYaml .Values.sensorController.resources | nindent 12 }}

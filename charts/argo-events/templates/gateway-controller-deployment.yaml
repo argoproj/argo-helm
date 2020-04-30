@@ -31,3 +31,5 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONTROLLER_CONFIG_MAP
               value: {{ .Release.Name }}-{{ .Values.gatewayController.name }}-configmap
+          resources:
+            {{- toYaml .Values.gatewayController.resources | nindent 12 }}

@@ -35,7 +35,6 @@ instanceID: argo-events
 # set `singleNamespace` to false to have the controllers
 # listen on all namespaces.  Otherwise the controllers will listen
 # on the namespace provided
-namespace: argo-events
 singleNamespace: true
 
 # sensor controller
@@ -44,9 +43,11 @@ sensorController:
   image: sensor-controller
   tag: v0.14.0
   replicaCount: 1
+  resources: {}
 
 gatewayController:
   name: gateway-controller
   image: gateway-controller
   tag: v0.14.0
   replicaCount: 1
+  resources: {}
