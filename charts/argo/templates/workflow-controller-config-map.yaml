@@ -38,6 +38,7 @@ data:
         {{- end }}
         {{- if .Values.artifactRepository.s3.region }}
         region: {{ .Values.artifactRepository.s3.region }}
+        {{- end }}
         {{- if .Values.artifactRepository.s3.roleARN }}
         roleARN: {{ .Values.artifactRepository.s3.roleARN }}
         {{- end }}
