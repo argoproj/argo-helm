@@ -2,11 +2,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
 {{- if .Values.singleNamespace }}
 kind: Role
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.server.name }}-role
 {{ else }}
 kind: ClusterRole
-{{- end }}
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name}}-cluster-role
+  name: {{ .Release.Name }}-{{ .Values.server.name }}-cluster-role
+{{- end }}
 rules:
 - apiGroups:
   - ""

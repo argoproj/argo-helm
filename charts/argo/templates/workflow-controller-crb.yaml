@@ -5,15 +5,16 @@ kind: RoleBinding
 kind: ClusterRoleBinding
 {{- end }}
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name}}-binding
+  name: {{ .Release.Name }}-{{ .Values.controller.name }}-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   {{- if .Values.singleNamespace }}
   kind: Role
+  name: {{ .Release.Name }}-{{ .Values.controller.name }}-role
   {{ else }}
   kind: ClusterRole
+  name: {{ .Release.Name }}-{{ .Values.controller.name }}-cluster-role
   {{- end }}
-  name: {{ .Release.Name }}-{{ .Values.controller.name}}-cluster-role
 subjects:
   - kind: ServiceAccount
     name: {{ .Values.controller.serviceAccount }}
