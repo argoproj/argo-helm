@@ -19,9 +19,8 @@ This chart currently installs the non-HA version of ArgoCD.
 `controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are not arrays of strings intead of a map
 
 What was
-
 ```yaml
-controller:
+server:
   extraArgs:
     insecure: ""
 ```
@@ -29,7 +28,7 @@ controller:
 is now
 
 ```yaml
-controller:
+server:
   extraArgs:
   - --insecure
 ```
@@ -79,6 +78,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | configs.secret.gitlabSecret | GitLab incoming webhook secret | `""` |
 | configs.tlsCerts.data."argocd.example.com" | TLS certificate | See [values.yaml](values.yaml) |
 | configs.secret.extra | add additional secrets to be added to argocd-secret | `{}` |
+| openshift.enabled | enables using arbitrary uid for argo repo server | `false` |
 
 ## ArgoCD Controller
 
@@ -183,6 +183,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.autoscaling.maxReplicas | Maximum number of replicas for the server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `5` |
 | server.autoscaling.targetCPUUtilizationPercentage | Average CPU utilization percentage for the server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `50` |
 | server.autoscaling.targetMemoryUtilizationPercentage | Average memory utilization percentage for the server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `50` |
+| server.GKEbackendConfig.enabled | Enable BackendConfig custom resource for Google Kubernetes Engine. | `false` |
+| server.GKEbackendConfig.spec | [BackendConfigSpec](https://cloud.google.com/kubernetes-engine/docs/concepts/backendconfig#backendconfigspec_v1beta1_cloudgooglecom) | `{}` |
 | server.certificate.additionalHosts | Certificate manager additional hosts | `[]` |
 | server.certificate.domain | Certificate manager domain | `"argocd.example.com"` |
 | server.certificate.enabled | Enables a certificate manager certificate. | `false` |

@@ -561,6 +561,16 @@ server:
   clusterAdminAccess:
     enabled: true
 
+  ## Enable BackendConfig custom resource for Google Kubernetes Engine
+  GKEbackendConfig:
+    enabled: false
+    spec: {}
+  #  spec:
+  #    iap:
+  #      enabled: true
+  #      oauthclientCredentials:
+  #        secretName: argocd-secret
+
 ## Repo Server
 repoServer:
   name: repo-server
