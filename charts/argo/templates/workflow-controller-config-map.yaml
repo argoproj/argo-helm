@@ -39,6 +39,12 @@ data:
         {{- if .Values.artifactRepository.s3.region }}
         region: {{ .Values.artifactRepository.s3.region }}
         {{- end }}
+        {{- if .Values.artifactRepository.s3.roleARN }}
+        roleARN: {{ .Values.artifactRepository.s3.roleARN }}
+        {{- end }}
+        {{- if .Values.artifactRepository.s3.useSDKCreds }}
+        useSDKCreds: {{ .Values.artifactRepository.s3.useSDKCreds }}
+        {{- end }}
       {{- end}}
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:
@@ -49,3 +55,6 @@ data:
     {{- if .Values.controller.persistence }}
     persistence:
 {{ toYaml .Values.controller.persistence | indent 6 }}{{- end }}
+    {{- if .Values.controller.workflowDefaults }}
+    workflowDefaults:
+{{ toYaml .Values.controller.workflowDefaults | indent 6 }}{{- end }}
