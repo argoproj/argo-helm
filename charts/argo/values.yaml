@@ -4,7 +4,7 @@ images:
   server: argocli
   executor: argoexec
   pullPolicy: Always
-  tag: v2.6.1
+  tag: v2.7.6
 
 crdVersion: v1alpha1
 installCRD: true
@@ -47,6 +47,10 @@ controller:
     #    passwordSecret:
     #      name: argo-postgres-config
     #      key: password
+  workflowDefaults: {}  # Only valid for 2.7+
+  #  spec:
+  #    ttlStrategy:
+  #      secondsAfterCompletion: 84600
   telemetryConfig:
     enabled: false
     path: /telemetry
@@ -164,6 +168,11 @@ server:
     # hosts:
     #   - argo.domain.com
 
+    ## Additional Paths for each host
+    # paths:
+    #   - serviceName: "ssl-redirect"
+    #     servicePort: "use-annotation"
+
     ## TLS configuration.
     ## Secrets must be manually created in the namespace.
     ##
@@ -191,6 +200,8 @@ artifactRepository:
     # bucket:
     # endpoint:
     # region:
+    # roleARN:
+    # useSDKCreds: true
 
 # NOTE: These are setting attributes for the `minio` optional dependency
 minio:

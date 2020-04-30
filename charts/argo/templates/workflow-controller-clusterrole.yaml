@@ -78,4 +78,22 @@ rules:
   verbs:
   - get
   - list
+{{- if .Values.controller.persistence }}
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  resourceNames:
+  {{- if .Values.controller.persistence.postgresql }}
+  - {{ .Values.controller.persistence.postgresql.userNameSecret.name }}
+  - {{ .Values.controller.persistence.postgresql.passwordSecret.name }}
+  {{- end}}
+  {{- if .Values.controller.persistence.mysql }}
+  - {{ .Values.controller.persistence.mysql.userNameSecret.name }}
+  - {{ .Values.controller.persistence.mysql.passwordSecret.name }}
+  {{- end}}
+  verbs:
+  - get
+{{- end}}
+
 
