@@ -40,6 +40,9 @@ spec:
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"
           - "{{ .Values.controller.logging.globallevel }}"
+          {{- if .Values.singleNamespace }}
+          - "--namespaced"
+          {{- end }}
           env:
           - name: ARGO_NAMESPACE
             valueFrom:
