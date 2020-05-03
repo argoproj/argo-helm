@@ -24,6 +24,13 @@ spec:
     - host: {{ . }}
       http:
         paths:
+          {{- if $.Values.server.ingress.paths }}
+          {{- range $.Values.server.ingress.paths }}
+          - backend:
+              serviceName: {{ .serviceName }}
+              servicePort: {{ .servicePort }}
+          {{- end }}
+          {{- end }}
           - backend:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
