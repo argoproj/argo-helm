@@ -19,9 +19,8 @@ This chart currently installs the non-HA version of ArgoCD.
 `controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are not arrays of strings intead of a map
 
 What was
-
 ```yaml
-controller:
+server:
   extraArgs:
     insecure: ""
 ```
@@ -29,7 +28,7 @@ controller:
 is now
 
 ```yaml
-controller:
+server:
   extraArgs:
   - --insecure
 ```
@@ -63,7 +62,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.5.2"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.5.3"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
@@ -71,7 +70,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | installCRDs | Install CRDs if you are using Helm2. | `true` |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
 | configs.secret.annotations | Annotations for argocd-secret | `{}` |
-| configs.secret.argocdServerAdminPassword | Admin password | `null` |
+| configs.secret.argocdServerAdminPassword | Bcrypt hashed admin password | `null` |
 | configs.secret.argocdServerAdminPasswordMtime | Admin password modification time | `date "2006-01-02T15:04:05Z" now` if configs.secret.argocdServerAdminPassword is set |
 | configs.secret.bitbucketSecret | BitBucket incoming webhook secret | `""` |
 | configs.secret.createSecret | Create the argocd-secret. | `true` |
@@ -79,6 +78,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | configs.secret.gitlabSecret | GitLab incoming webhook secret | `""` |
 | configs.tlsCerts.data."argocd.example.com" | TLS certificate | See [values.yaml](values.yaml) |
 | configs.secret.extra | add additional secrets to be added to argocd-secret | `{}` |
+| openshift.enabled | enables using arbitrary uid for argo repo server | `false` |
 
 ## ArgoCD Controller
 
@@ -183,6 +183,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.autoscaling.maxReplicas | Maximum number of replicas for the server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `5` |
 | server.autoscaling.targetCPUUtilizationPercentage | Average CPU utilization percentage for the server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `50` |
 | server.autoscaling.targetMemoryUtilizationPercentage | Average memory utilization percentage for the server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `50` |
+| server.GKEbackendConfig.enabled | Enable BackendConfig custom resource for Google Kubernetes Engine. | `false` |
+| server.GKEbackendConfig.spec | [BackendConfigSpec](https://cloud.google.com/kubernetes-engine/docs/concepts/backendconfig#backendconfigspec_v1beta1_cloudgooglecom) | `{}` |
 | server.certificate.additionalHosts | Certificate manager additional hosts | `[]` |
 | server.certificate.domain | Certificate manager domain | `"argocd.example.com"` |
 | server.certificate.enabled | Enables a certificate manager certificate. | `false` |
@@ -231,6 +233,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.service.labels | Server service labels | `{}` |
 | server.service.servicePortHttp | Server service http port | `80` |
 | server.service.servicePortHttps | Server service https port | `443` |
+| server.service.servicePortHttpName | Server service http port name, can be used to route traffic via istio | `http` |
+| server.service.servicePortHttpsName | Server service https port name, can be used to route traffic via istio | `https` |
 | server.service.loadBalancerSourceRanges | Source IP ranges to allow access to service from. | `[]` |
 | server.service.type | Server service type | `"ClusterIP"` |
 | server.serviceAccount.create | Create server service account | `true` |

@@ -10,7 +10,7 @@ installCRDs: true
 global:
   image:
     repository: argoproj/argocd
-    tag: v1.5.2
+    tag: v1.5.4
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -28,7 +28,7 @@ controller:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.5.2
+    tag: # v1.5.4
     imagePullPolicy: # IfNotPresent
 
   ## Argo controller commandline flags
@@ -319,7 +319,7 @@ server:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.5.2
+    tag: # v1.5.4
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
@@ -404,6 +404,8 @@ server:
     type: ClusterIP
     servicePortHttp: 80
     servicePortHttps: 443
+    servicePortHttpName: http
+    servicePortHttpsName: https
     loadBalancerIP: ""
     loadBalancerSourceRanges: []
 
@@ -553,6 +555,11 @@ server:
   #     kind: NetworkPolicy
   #     orphanedResources: {}
   #     roles: []
+  #   namespaceResourceWhitelist:
+  #   - group: 'apps'
+  #     kind: Deployment
+  #   - group: 'apps'
+  #     kind: StatefulSet
   #   orphanedResources: {}
   #   roles: []
 
@@ -560,6 +567,16 @@ server:
   ## Enable if you would like to grant rights to ArgoCD to deploy to the local kuberentes cluster.
   clusterAdminAccess:
     enabled: true
+
+  ## Enable BackendConfig custom resource for Google Kubernetes Engine
+  GKEbackendConfig:
+    enabled: false
+    spec: {}
+  #  spec:
+  #    iap:
+  #      enabled: true
+  #      oauthclientCredentials:
+  #        secretName: argocd-secret
 
 ## Repo Server
 repoServer:
@@ -576,7 +593,7 @@ repoServer:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.5.2
+    tag: # v1.5.4
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server

@@ -34,6 +34,10 @@ items:
       namespaceResourceBlacklist:
 {{- toYaml .namespaceResourceBlacklist | nindent 8 }}
       {{- end }}
+      {{- if .namespaceResourceWhitelist }}
+      namespaceResourceWhitelist:
+{{- toYaml .namespaceResourceWhitelist | nindent 8 }}
+      {{- end }}
       {{- if .orphanedResources }}
       orphanedResources:
 {{- toYaml .orphanedResources | nindent 8 }}

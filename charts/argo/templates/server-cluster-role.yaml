@@ -1,8 +1,14 @@
 {{- if .Values.server.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
+{{- if .Values.singleNamespace }}
+kind: Role
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.server.name }}-role
+{{ else }}
 kind: ClusterRole
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name}}-cluster-role
+  name: {{ .Release.Name }}-{{ .Values.server.name }}-cluster-role
+{{- end }}
 rules:
 - apiGroups:
   - ""
@@ -28,12 +34,24 @@ rules:
   - get
   - list
   - watch
+  - delete
+{{- if .Values.controller.persistence }}
 - apiGroups:
   - ""
   resources:
   - secrets
+  resourceNames:
+  {{- if .Values.controller.persistence.postgresql }}
+  - {{ .Values.controller.persistence.postgresql.userNameSecret.name }}
+  - {{ .Values.controller.persistence.postgresql.passwordSecret.name }}
+  {{- end}}
+  {{- if .Values.controller.persistence.mysql }}
+  - {{ .Values.controller.persistence.mysql.userNameSecret.name }}
+  - {{ .Values.controller.persistence.mysql.passwordSecret.name }}
+  {{- end}}
   verbs:
   - get
+{{- end}}
 - apiGroups:
   - argoproj.io
   resources:

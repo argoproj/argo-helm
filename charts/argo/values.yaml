@@ -4,7 +4,7 @@ images:
   server: argocli
   executor: argoexec
   pullPolicy: Always
-  tag: v2.6.1
+  tag: v2.7.6
 
 crdVersion: v1alpha1
 installCRD: true
@@ -15,6 +15,10 @@ init:
   serviceAccount: ""
 
 createAggregateRoles: true
+
+# Restrict Argo to only deploy into a single namespace by apply Roles and RoleBindings instead of the Cluster equivalents,
+# and start argo-cli with the --namespaced flag. Use it in clusters with strict access policy.
+singleNamespace: false
 
 controller:
   image:
@@ -47,6 +51,10 @@ controller:
     #    passwordSecret:
     #      name: argo-postgres-config
     #      key: password
+  workflowDefaults: {}  # Only valid for 2.7+
+  #  spec:
+  #    ttlStrategy:
+  #      secondsAfterCompletion: 84600
   telemetryConfig:
     enabled: false
     path: /telemetry
@@ -55,6 +63,8 @@ controller:
     enabled: false
     additionalLabels: {}
   serviceAccount: argo
+  # Service account annotations
+  serviceAccountAnnotations: {}
   name: workflow-controller
   workflowNamespaces:
     - default
@@ -95,15 +105,15 @@ controller:
   tolerations: []
   affinity: {}
 
+# executor controls how the init and wait container should be customized
 executor:
   image:
     # Overrides .images.tag if defined.
     tag: ""
+  resources: {}
 
 server:
   enabled: true
-  # only show workflows where UI installed
-  forceNamespaceIsolation: false
   # only updates base url of resources on client side,
   # it's expected that a proxy server rewrites the request URL and gets rid of this prefix
   # https://github.com/argoproj/argo/issues/716#issuecomment-433213190
@@ -120,6 +130,8 @@ server:
   servicePort: 2746
   # servicePortName: http
   serviceAccount: argo-server
+  # Service account annotations
+  serviceAccountAnnotations: {}
   # Annotations to be applied to the UI Service
   serviceAnnotations: {}
   # Optional labels to add to the UI Service
@@ -164,6 +176,11 @@ server:
     # hosts:
     #   - argo.domain.com
 
+    ## Additional Paths for each host
+    # paths:
+    #   - serviceName: "ssl-redirect"
+    #     servicePort: "use-annotation"
+
     ## TLS configuration.
     ## Secrets must be manually created in the namespace.
     ##
@@ -191,6 +208,8 @@ artifactRepository:
     # bucket:
     # endpoint:
     # region:
+    # roleARN:
+    # useSDKCreds: true
 
 # NOTE: These are setting attributes for the `minio` optional dependency
 minio:
