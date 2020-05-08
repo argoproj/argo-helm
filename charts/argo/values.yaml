@@ -34,23 +34,23 @@ controller:
     path: /metrics
     port: 8080
   persistence: {}
-    # connectionPool:
-    #   maxIdleConns: 100
-    #   maxOpenConns: 0
-    # # save the entire workflow into etcd and DB
-    # nodeStatusOffLoad: false
-    # postgresql:
-    #   host: localhost
-    #   port: 5432
-    #   database: postgres
-    #   tableName: argo_workflows
-    #   # the database secrets must be in the same namespace of the controller
-    #   userNameSecret:
-    #     name: argo-postgres-config
-    #     key: username
-    #   passwordSecret:
-    #     name: argo-postgres-config
-    #     key: password
+  # connectionPool:
+  #   maxIdleConns: 100
+  #   maxOpenConns: 0
+  # # save the entire workflow into etcd and DB
+  # nodeStatusOffLoad: false
+  # postgresql:
+  #   host: localhost
+  #   port: 5432
+  #   database: postgres
+  #   tableName: argo_workflows
+  #   # the database secrets must be in the same namespace of the controller
+  #   userNameSecret:
+  #     name: argo-postgres-config
+  #     key: username
+  #   passwordSecret:
+  #     name: argo-postgres-config
+  #     key: password
   workflowDefaults: {}  # Only valid for 2.7+
   #  spec:
   #    ttlStrategy:
