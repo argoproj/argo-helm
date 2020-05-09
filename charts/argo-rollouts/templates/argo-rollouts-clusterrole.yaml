@@ -106,4 +106,10 @@ rules:
   - watch
   - get
   - update
+- apiGroups:
+  - snalysisruns
+  resources:
+  - "*/finalizers"
+  verbs:
+  - "*
 {{- end }}
