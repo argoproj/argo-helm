@@ -16,7 +16,7 @@ This chart currently installs the non-HA version of ArgoCD.
 
 ### 1.8.7 to 2.x.x
 
-`controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are not arrays of strings intead of a map
+`controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are now arrays of strings intead of a map
 
 What was
 ```yaml
