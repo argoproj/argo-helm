@@ -52,7 +52,7 @@ data:
         {{- end }}
       gcs:
         bucket: {{ .Values.artifactRepository.gcs.bucket | default .Values.minio.defaultBucket.name }}
-        key: {{ .Values.artifactRepository.gcs.bucket }}
+        key: {{ .Values.artifactRepository.gcs.key }}
       {{- end}}
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:
