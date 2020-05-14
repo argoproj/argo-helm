@@ -432,6 +432,9 @@ server:
     annotations: {}
     labels: {}
 
+    # Override service port when using SSL passthrough ingress
+    # servicePort: 443
+
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
