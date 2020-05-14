@@ -199,6 +199,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.image.tag | Tag to use for the server | `global.image.tag` |
 | server.ingress.annotations | Additional ingress annotations | `{}` |
 | server.ingress.enabled | Enable an ingress resource for the server | `false` |
+| server.ingress.servicePort | Override servicePort used in ingress. Assign 443 when SSL passthrough is used | `` |
 | server.ingress.hosts | List of ingress hosts | `[]` |
 | server.ingress.labels | Additional ingress labels. | `{}` |
 | server.ingress.tls | Ingress TLS configuration. | `[]` |
