@@ -8,13 +8,8 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.controller.name }}-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  {{- if .Values.singleNamespace }}
-  kind: Role
-  name: {{ .Release.Name }}-{{ .Values.controller.name }}-role
-  {{ else }}
   kind: ClusterRole
   name: {{ .Release.Name }}-{{ .Values.controller.name }}-cluster-role
-  {{- end }}
 subjects:
   - kind: ServiceAccount
     name: {{ .Values.controller.serviceAccount }}
