@@ -18,5 +18,5 @@ subjects:
   name: {{ .Values.server.serviceAccount }}
   {{- if not .Values.singleNamespace }}
   namespace: {{ .Release.Namespace }}
-  {{- else }}
+  {{- end }}
 {{- end -}}
