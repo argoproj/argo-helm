@@ -5,7 +5,7 @@ kind: RoleBinding
 kind: ClusterRoleBinding
 {{- end }}
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name }}-binding
+  name: {{ .Release.Name }}-{{ .Values.controller.name }}-role-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -31,7 +31,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name }}-cluster-template-binding
+  name: {{ .Release.Name }}-{{ .Values.controller.name }}-cluster-template-crb
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
