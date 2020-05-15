@@ -16,9 +16,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ .Values.server.serviceAccount }}
-  {{- if not .Values.singleNamespace }}
   namespace: {{ .Release.Namespace }}
-  {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

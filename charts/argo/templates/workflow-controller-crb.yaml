@@ -13,9 +13,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ .Values.controller.serviceAccount }}
-    {{- if not .Values.singleNamespace }}
     namespace: {{ .Release.Namespace }}
-    {{- end }}
 {{- if .Values.controller.workflowNamespaces }}
 {{- $uiServiceAccount := .Values.controller.serviceAccount }}
 {{- $namespace := .Release.Namespace }}
