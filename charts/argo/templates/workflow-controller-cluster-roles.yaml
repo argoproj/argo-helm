@@ -97,3 +97,18 @@ rules:
   verbs:
   - get
 {{- end}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.controller.name }}-cluster-template-cluster-role
+rules:
+- apiGroups:
+  - argoproj.io
+  resources:
+  - clusterworkflowtemplates
+  - clusterworkflowtemplates/finalizers
+  verbs:
+  - get
+  - list
+  - watch
