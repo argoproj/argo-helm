@@ -190,6 +190,9 @@ server:
     #   - secretName: argo-ui-tls
     #     hosts:
     #       - argo.domain.com
+  clusterWorkflowTemplates:
+    # Give the server permissions to edit ClusterWorkflowTemplates.
+    enableEditing: true
 
 # Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false
