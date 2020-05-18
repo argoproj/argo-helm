@@ -42,8 +42,8 @@ data:
         bucket: {{ .Values.artifactRepository.s3.bucket | default .Values.minio.defaultBucket.name }}
         endpoint: {{ .Values.artifactRepository.s3.endpoint | default (printf "%s-%s" .Release.Name "minio:9000") }}
         insecure: {{ .Values.artifactRepository.s3.insecure }}
-        {{- if .Values.artifactRepository.s3.keyPrefix }}
-        keyPrefix: {{ .Values.artifactRepository.s3.keyPrefix }}
+        {{- if .Values.artifactRepository.s3.keyFormat }}
+        keyFormat: {{ .Values.artifactRepository.s3.keyFormat }}
         {{- end }}
         {{- if .Values.artifactRepository.s3.region }}
         region: {{ .Values.artifactRepository.s3.region }}
