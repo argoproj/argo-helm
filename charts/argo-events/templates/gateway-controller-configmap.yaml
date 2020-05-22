@@ -9,11 +9,11 @@ metadata:
 data:
   config: |
 {{- if .Values.instanceID.enabled }}
-  {{- if .Values.instanceID.useReleaseName }}
+{{- if .Values.instanceID.useReleaseName }}
     instanceID: {{ .Release.Name }}
-  {{- else }}
+{{- else }}
     instanceID: {{ .Values.instanceID.explicitID }}
-  {{- end }}
+{{- end }}
 {{- end }}
 {{- if .Values.singleNamespace }}
     namespace: {{ .Values.namespace }}
