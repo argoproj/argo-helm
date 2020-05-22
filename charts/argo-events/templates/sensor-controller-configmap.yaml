@@ -8,7 +8,13 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   config: |
-    instanceID: {{ .Values.instanceID }}
+{{- if .Values.instanceID.enabled }}
+  {{- if .Values.instanceID.useReleaseName }}
+    instanceID: {{ .Release.Name }}
+  {{- else }}
+    instanceID: {{ .Values.instanceID.explicitID }}
+  {{- end }}
+{{- end }}
 {{- if .Values.singleNamespace }}
     namespace: {{ .Values.namespace }}
 {{- end }}

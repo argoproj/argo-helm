@@ -31,3 +31,9 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONTROLLER_CONFIG_MAP
               value: {{ .Release.Name }}-{{ .Values.gatewayController.name }}-configmap
+            - name: GATEWAY_CLIENT_IMAGE
+              value: {{ .Values.registry }}/{{ .Values.gatewayController.gatewayClientImage }}:{{ .Values.gatewayController.gatewayClientTag }}
+            - name: GATEWAY_IMAGE_REGISTRY
+              value: docker.io
+            - name: GATEWAY_IMAGE_VERSION
+              value: {{ .Values.gatewayController.gatewayServerTag }}
