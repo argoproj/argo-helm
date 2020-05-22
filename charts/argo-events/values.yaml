@@ -30,14 +30,14 @@ additionalServiceAccountRules:
   resources:
     - customresourcedefinitions
 
+# `instanceID.enabled` configures the controllers to filter the requests
+# to only those which have a matching instanceID attribute.
+# NOTE: If `instanceID.enabled` is set to `true` then either `instanceID.userReleaseName`
+# or `instanceID.explicitID` must be defined.
 instanceID:
-  # `instanceID.enabled` configures the controllers to filter the requests
-  # to only those which have a matching instanceID attribute.
   enabled: false
-  # NOTE: If `instanceID.enabled` is set to `true` then either `instanceID.userReleaseName`
-  # or `instanceID.explicitID` must be defined.
-  useReleaseName: false
-  explicitID: unique-argo-events-controller-identifier
+  #useReleaseName: false
+  #explicitID: unique-argo-events-controller-identifier
 
 # set `singleNamespace` to false to have the controllers
 # listen on all namespaces.  Otherwise the controllers will listen
