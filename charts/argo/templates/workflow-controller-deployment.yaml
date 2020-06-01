@@ -43,6 +43,14 @@ spec:
           {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}
+          {{- if .Values.controller.scaling.workflowWorkers }}
+          - "--workflow-workers"
+          - "{{ .Values.controller.scaling.workflowWorkers }}"
+          {{- end }}
+          {{- if .Values.controller.scaling.podWorkers }}
+          - "--pod-workers"
+          - "{{ .Values.controller.scaling.podWorkers }}"
+          {{- end }}
           env:
           - name: ARGO_NAMESPACE
             valueFrom:
