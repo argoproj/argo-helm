@@ -202,6 +202,12 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.ingress.hosts | List of ingress hosts | `[]` |
 | server.ingress.labels | Additional ingress labels. | `{}` |
 | server.ingress.tls | Ingress TLS configuration. | `[]` |
+| server.ingress.https | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` | `false` |
+| server.ingressGrpc.annotations | Additional ingress annotations for dedicated [gRPC-ingress] | `{}` |
+| server.ingressGrpc.enabled | Enable an ingress resource for the server for dedicated [gRPC-ingress] | `false` |
+| server.ingressGrpc.hosts | List of ingress hosts for dedicated [gRPC-ingress] | `[]` |
+| server.ingressGrpc.labels | Additional ingress labels for dedicated [gRPC-ingress] | `{}` |
+| server.ingressGrpc.tls | Ingress TLS configuration for dedicated [gRPC-ingress] | `[]` |
 | server.route.enabled | Enable a OpenShift route for the server | `false` |
 | server.route.hostname | Hostname of OpenShift route | `""` |
 | server.livenessProbe.failureThreshold | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `3` |
@@ -306,3 +312,5 @@ through `xxx.extraArgs`
 | redis-ha.redis.config.save | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled | `""` |
 | redis-ha.haproxy.enabled | Enabled HAProxy LoadBalancing/Proxy | `true` |
 | redis-ha.haproxy.metrics.enabled | HAProxy enable prometheus metric scraping | `true` |
+
+[gRPC-ingress]: https://argoproj.github.io/argo-cd/operator-manual/ingress/
