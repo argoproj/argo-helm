@@ -15,7 +15,7 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}
-  name: {{ template "argo-cd.server.fullname" . }}
+  name: {{ template "argo-cd.server.fullname" . }}-grpc
   labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
     helm.sh/chart: {{ include "argo-cd.chart" . }}
