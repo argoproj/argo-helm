@@ -43,13 +43,13 @@ spec:
           {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}
-          {{- if .Values.controller.scaling.workflowWorkers }}
+          {{- with .Values.controller.workflowWorkers }}
           - "--workflow-workers"
-          - "{{ .Values.controller.scaling.workflowWorkers }}"
+          - {{ . | quote }}
           {{- end }}
-          {{- if .Values.controller.scaling.podWorkers }}
+          {{- if .Values.controller.podWorkers }}
           - "--pod-workers"
-          - "{{ .Values.controller.scaling.podWorkers }}"
+          - {{ . | quote }}
           {{- end }}
           env:
           - name: ARGO_NAMESPACE
