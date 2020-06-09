@@ -34,7 +34,6 @@ controller:
     path: /metrics
     port: 8080
   persistence:
-    archive: false
   # connectionPool:
   #   maxIdleConns: 100
   #   maxOpenConns: 0
@@ -52,6 +51,8 @@ controller:
   #   passwordSecret:
   #     name: argo-postgres-config
   #     key: password
+  # # show archived workflows in argo-server after workflow pods are deleted, requires postgresql
+  # archive: true
   workflowDefaults: {}  # Only valid for 2.7+
   #  spec:
   #    ttlStrategy:
