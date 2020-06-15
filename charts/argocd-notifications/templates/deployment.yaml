@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "argocd-notifications.labels" . | nindent 4 }}
 spec:
+  strategy:
+    {{- .Values.updateStrategy | toYaml | nindent 4 }}
   selector:
     matchLabels:
       {{- include "argocd-notifications.selectorLabels" . | nindent 6 }}
@@ -13,8 +15,6 @@ spec:
       labels:
         {{- include "argocd-notifications.selectorLabels" . | nindent 8 }}
     spec:
-      strategy:
-        type: Recreate
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

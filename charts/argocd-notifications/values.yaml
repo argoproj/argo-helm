@@ -16,6 +16,9 @@ nameOverride: "argocd-notifications"
 
 nodeSelector: {}
 
+updateStrategy:
+  type: Recreate
+
 secret:
   # Whether helm chart creates controller secret
   create: true
