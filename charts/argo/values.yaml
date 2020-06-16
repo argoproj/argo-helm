@@ -39,6 +39,8 @@ controller:
   #   maxOpenConns: 0
   # # save the entire workflow into etcd and DB
   # nodeStatusOffLoad: false
+  # # enable archiving of old workflows
+  # archive: false
   # postgresql:
   #   host: localhost
   #   port: 5432
@@ -55,6 +57,8 @@ controller:
   #  spec:
   #    ttlStrategy:
   #      secondsAfterCompletion: 84600
+  # workflowWorkers: 32
+  # podWorkers: 32
   telemetryConfig:
     enabled: false
     path: /telemetry
@@ -190,6 +194,9 @@ server:
     #   - secretName: argo-ui-tls
     #     hosts:
     #       - argo.domain.com
+  clusterWorkflowTemplates:
+    # Give the server permissions to edit ClusterWorkflowTemplates.
+    enableEditing: true
 
 # Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false
