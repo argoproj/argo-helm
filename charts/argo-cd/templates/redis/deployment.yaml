@@ -84,5 +84,8 @@ spec:
 {{- if .Values.redis.volumes }}
       volumes:
 {{- toYaml .Values.redis.volumes | nindent 8}}
+{{- if .Values.redis.priorityClassName }}
+      priorityClassName: {{ .Values.redis.priorityClassName }}
+{{- end }}
 {{- end }}
 {{- end }}
