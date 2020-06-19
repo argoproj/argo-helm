@@ -41,8 +41,11 @@ secret:
       signingSecret:
 
     grafana:
+      # For more information: https://argoproj-labs.github.io/argocd-notifications/services/grafana/
+
+      # Specifies whether Grafana notifier should be configured
       enabled: false
-      # https://grafana.example.com/api
+      # Grafana api endpoint; for example: https://grafana.example.com/api
       apiUrl:
       # Grafana api key
       apiKey:
