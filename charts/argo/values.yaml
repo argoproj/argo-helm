@@ -4,7 +4,7 @@ images:
   server: argocli
   executor: argoexec
   pullPolicy: Always
-  tag: v2.9.0
+  tag: v2.9.0-rc2
 
 crdVersion: v1alpha1
 installCRD: true
@@ -203,22 +203,22 @@ server:
     # Give the server permissions to edit ClusterWorkflowTemplates.
     enableEditing: true
   sso:
-    # SSO configuration when SSO is specified as a server auth mode.
-    # All the values are requied. SSO is activated by adding --auth-mode=sso
-    # to the server command line.
-    #
-    # The root URL of the OIDC identity provider.
-    issuer: https://accounts.google.com
-    # Name of a secret and a key in it to retrieve the app OIDC client ID from.
-    clientId:
-      name: argo-server-sso
-      key: client-id
-    # Name of a secret and a key in it to retrieve the app OIDC client secret from.
-    clientSecret:
-      name: argo-server-sso
-      key: client-secret
-    # The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
-    redirectUrl: https://argo/oauth2/callback
+    ## SSO configuration when SSO is specified as a server auth mode.
+    ## All the values are requied. SSO is activated by adding --auth-mode=sso
+    ## to the server command line.
+    # 
+    ## The root URL of the OIDC identity provider.
+    # issuer: https://accounts.google.com
+    ## Name of a secret and a key in it to retrieve the app OIDC client ID from.
+    # clientId:
+    #   name: argo-server-sso
+    #   key: client-id
+    ## Name of a secret and a key in it to retrieve the app OIDC client secret from.
+    # clientSecret:
+    #   name: argo-server-sso
+    #   key: client-secret
+    ## The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
+    # redirectUrl: https://argo/oauth2/callback
 
 # Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false
