@@ -158,3 +158,37 @@ triggers:
   #   template: my-custom-template
   #
   # For more information: https://argoproj-labs.github.io/argocd-notifications/triggers_and_templates/
+
+bots:
+  slack:
+    updateStrategy:
+      type: Recreate
+
+    image:
+      repository: argoprojlabs/argocd-notifications
+      tag: v0.7.0
+      pullPolicy: IfNotPresent
+
+    imagePullSecrets: []
+
+    service:
+      type: LoadBalancer
+
+    serviceAccount:
+      # Specifies whether a service account should be created
+      create: true
+
+      # The name of the service account to use.
+      # If not set and create is true, a name is generated using the fullname template
+      name: argocd-notifications-bot
+
+    resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+    affinity: {}
+    tolerations: []
+    nodeSelector: {}
