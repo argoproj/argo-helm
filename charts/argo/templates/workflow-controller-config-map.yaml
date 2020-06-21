@@ -68,6 +68,5 @@ data:
     workflowDefaults:
 {{ toYaml .Values.controller.workflowDefaults | indent 6 }}{{- end }}
     {{- with .Values.server.sso }}
-    server:
-      sso: {{- toYaml . | nindent 8 }}
+    sso: {{- toYaml . | nindent 6 }}
     {{- end }}
