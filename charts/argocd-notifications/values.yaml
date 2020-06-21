@@ -160,6 +160,7 @@ triggers:
   # For more information: https://argoproj-labs.github.io/argocd-notifications/triggers_and_templates/
 
 bots:
+  # For more information: https://argoproj-labs.github.io/argocd-notifications/recipients/bot/
   slack:
     updateStrategy:
       type: Recreate
@@ -189,6 +190,9 @@ bots:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
+
     affinity: {}
+
     tolerations: []
+
     nodeSelector: {}
