@@ -38,6 +38,8 @@ spec:
         volumeMounts:
         - name: tmp
           mountPath: /tmp
+        resources:
+{{- toYaml .Values.controller.resources | nindent 10 }}
       volumes:
       - name: tmp
         emptyDir: {}
