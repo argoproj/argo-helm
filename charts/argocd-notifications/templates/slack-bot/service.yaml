@@ -1,3 +1,4 @@
+{{ if .Values.bots.slack.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -11,3 +12,4 @@ spec:
   selector:
     {{- include "argocd-notifications.bots.slack.selectorLabels" . | nindent 4 }}
   type: {{ .Values.bots.slack.service.type }}
+{{ end }}

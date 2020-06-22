@@ -1,3 +1,4 @@
+{{ if .Values.bots.slack.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -9,3 +10,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ include "argocd-notifications.bots.slack.serviceAccountName" . }}
+{{ end }}

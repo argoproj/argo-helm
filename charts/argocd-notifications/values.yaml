@@ -162,6 +162,9 @@ triggers:
 bots:
   # For more information: https://argoproj-labs.github.io/argocd-notifications/recipients/bot/
   slack:
+    # You have to set secret.notifiers.slack.signingSecret
+    enabled: false
+
     updateStrategy:
       type: Recreate
 
