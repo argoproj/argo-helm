@@ -63,6 +63,14 @@ spec:
             value: {{ .Values.server.baseHref | quote }}
           resources:
             {{- toYaml .Values.server.resources | nindent 12 }}
+          {{- with .Values.server.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12}}
+          {{- end }}
+      {{- with .Values.server.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8}}
+      {{- end }}
       {{- with .Values.server.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
