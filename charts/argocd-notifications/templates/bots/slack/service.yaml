@@ -1,0 +1,15 @@
+{{ if .Values.bots.slack.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "argocd-notifications.name" . }}-bot
+spec:
+  ports:
+  - name: server
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    {{- include "argocd-notifications.bots.slack.selectorLabels" . | nindent 4 }}
+  type: {{ .Values.bots.slack.service.type }}
+{{ end }}
