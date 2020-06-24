@@ -44,10 +44,30 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
+Common slack bot labels
+*/}}
+{{- define "argocd-notifications.bots.slack.labels" -}}
+helm.sh/chart: {{ include "argocd-notifications.chart" . }}
+{{ include "argocd-notifications.bots.slack.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{/*
 Selector labels
 */}}
 {{- define "argocd-notifications.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "argocd-notifications.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{/*
+Selector slack bot labels
+*/}}
+{{- define "argocd-notifications.bots.slack.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "argocd-notifications.name" . }}-bot
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
@@ -59,5 +79,16 @@ Create the name of the service account to use
     {{ default (include "argocd-notifications.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the bot service account to use
+*/}}
+{{- define "argocd-notifications.bots.slack.serviceAccountName" -}}
+{{- if .Values.bots.slack.serviceAccount.create -}}
+    {{ default (include "argocd-notifications.fullname" .) .Values.bots.slack.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.bots.slack.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
