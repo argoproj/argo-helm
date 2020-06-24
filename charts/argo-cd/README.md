@@ -120,6 +120,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.service.annotations | Controller service annotations. | `{}` |
 | controller.service.labels | Controller service labels. | `{}` |
 | controller.service.port | Controller service port. | `8082` |
+| controler.serviceAccount.annotations | Controller service account annotations | `{}` |
 | controller.serviceAccount.create | Create a service account for the controller | `true` |
 | controller.serviceAccount.name | Service account name. | `"argocd-application-controller"` |
 | controller.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
@@ -169,6 +170,9 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | repoServer.service.annotations | Repo server service annotations. | `{}` |
 | repoServer.service.labels | Repo server service labels. | `{}` |
 | repoServer.service.port | Repo server service port. | `8081` |
+| repoServer.serviceAccount.annotations | Repo server service account annotations | `{}` |
+| repoServer.serviceAccount.create | Create repo server service account | `false` |
+| repoServer.serviceAccount.name | Repo server service account name | `"argocd-repo-server"` |
 | repoServer.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
 | repoServer.volumeMounts | Repo server volume mounts | `[]` |
 | repoServer.volumes | Repo server volumes | `[]` |
@@ -237,6 +241,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.service.servicePortHttpsName | Server service https port name, can be used to route traffic via istio | `https` |
 | server.service.loadBalancerSourceRanges | Source IP ranges to allow access to service from. | `[]` |
 | server.service.type | Server service type | `"ClusterIP"` |
+| server.serviceAccount.annotations | Server service account annotations | `{}` |
 | server.serviceAccount.create | Create server service account | `true` |
 | server.serviceAccount.name | Server service account name | `"argocd-server"` |
 | server.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
