@@ -113,6 +113,8 @@ controller:
   serviceAccount:
     create: true
     name: argocd-application-controller
+    ## Annotations applied to created service account
+    annotations: {}
 
   ## Server metrics controller configuration
   metrics:
@@ -426,6 +428,8 @@ server:
   serviceAccount:
     create: true
     name: argocd-server
+    ## Annotations applied to created service account
+    annotations: {}
 
   ingress:
     enabled: false
