@@ -25,8 +25,8 @@ data:
       env: {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- end }}
+    {{- if or .Values.minio.install .Values.useDefaultArtifactRepo }}
     artifactRepository:
-      {{- if or .Values.minio.install .Values.useDefaultArtifactRepo }}
       {{- if .Values.artifactRepository.archiveLogs }}
       archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
       {{- end }}
@@ -54,7 +54,7 @@ data:
         {{- if .Values.artifactRepository.s3.useSDKCreds }}
         useSDKCreds: {{ .Values.artifactRepository.s3.useSDKCreds }}
         {{- end }}
-      {{- end}}
+    {{- end}}
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:
 {{ toYaml .Values.controller.metricsConfig | indent 6}}{{- end }}
@@ -67,3 +67,6 @@ data:
     {{- if .Values.controller.workflowDefaults }}
     workflowDefaults:
 {{ toYaml .Values.controller.workflowDefaults | indent 6 }}{{- end }}
+    {{- with .Values.server.sso }}
+    sso: {{- toYaml . | nindent 6 }}
+    {{- end }}
