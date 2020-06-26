@@ -62,7 +62,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.5.3"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.6.1"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
@@ -292,7 +292,7 @@ through `xxx.extraArgs`
 | redis.enabled | Enable redis | `true` |
 | redis.image.imagePullPolicy | Redis imagePullPolicy | `"IfNotPresent"` |
 | redis.image.repository | Redis repository | `"redis"` |
-| redis.image.tag | Redis tag | `"5.0.3"` |
+| redis.image.tag | Redis tag | `"5.0.8"` |
 | redis.name | Redis name | `"redis"` |
 | redis.env | Environment variables for the Redis server. | `[]` |
 | redis.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
@@ -311,3 +311,4 @@ through `xxx.extraArgs`
 | redis-ha.redis.config.save | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled | `""` |
 | redis-ha.haproxy.enabled | Enabled HAProxy LoadBalancing/Proxy | `true` |
 | redis-ha.haproxy.metrics.enabled | HAProxy enable prometheus metric scraping | `true` |
+| redis-ha.image.tag | Redis tag | `"5.0.8-alpine"` |
