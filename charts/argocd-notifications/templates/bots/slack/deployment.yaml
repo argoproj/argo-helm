@@ -20,7 +20,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "argocd-notifications.serviceAccountName" . }}-bot
+      serviceAccountName: {{ include "argocd-notifications.bots.slack.serviceAccountName" . }}
       containers:
         - name: {{ include "argocd-notifications.name" . }}-bot
           image: "{{ .Values.bots.slack.image.repository }}:{{ .Values.bots.slack.image.tag }}"
