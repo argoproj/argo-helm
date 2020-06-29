@@ -89,6 +89,10 @@ spec:
         - mountPath: /app/config/tls
           name: tls-certs
         {{- end }}
+        {{- if .Values.server.casbinConfig }}
+        - mountPath: /etc/assets
+          name: argocd-casbin-cm
+        {{- end }}
         ports:
         - name: {{ .Values.server.name }}
           containerPort: {{ .Values.server.containerPort }}
@@ -150,4 +154,9 @@ spec:
       - configMap:
           name: argocd-tls-certs-cm
         name: tls-certs
+      {{- end }}
+      {{- if .Values.server.casbinConfig }}
+      - configMap:
+          name: argocd-casbin-cm
+        name: argocd-casbin-cm
       {{- end }}

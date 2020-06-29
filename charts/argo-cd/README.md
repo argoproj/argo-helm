@@ -222,6 +222,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.podLabels | Labels for the server pods | `{}` |
 | server.priorityClassName | Priority class for the server | `""` |
 | server.rbacConfig | [Argo CD RBAC policy](https://argoproj.github.io/argo-cd/operator-manual/rbac/) | `{}` |
+| server.casbinConfig | [Casbin Configuration](https://casbin.org/) | [Default Casbin Configuration](https://github.com/argoproj/argo-cd/blob/master/assets/model.conf) |
 | server.readinessProbe.failureThreshold | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `3` |
 | server.readinessProbe.initialDelaySeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `10` |
 | server.readinessProbe.periodSeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `10` |

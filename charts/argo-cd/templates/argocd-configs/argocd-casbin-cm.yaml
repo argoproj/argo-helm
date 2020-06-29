@@ -1,0 +1,15 @@
+{{- if .Values.server.casbinConfig }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-casbin-cm
+  labels:
+    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-casbin-cm
+    helm.sh/chart: {{ include "argo-cd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: {{ .Values.server.name }}
+data:
+{{- toYaml .Values.server.casbinConfig | nindent 4 }}
+{{- end }}
