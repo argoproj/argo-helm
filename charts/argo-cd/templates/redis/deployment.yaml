@@ -81,6 +81,7 @@ spec:
       affinity:
 {{- toYaml .Values.redis.affinity | nindent 8 }}
     {{- end }}
+      serviceAccountName: {{ template "argo-cd.redisServiceAccountName" . }}
 {{- if .Values.redis.volumes }}
       volumes:
 {{- toYaml .Values.redis.volumes | nindent 8}}

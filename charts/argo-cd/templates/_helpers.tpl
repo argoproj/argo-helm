@@ -53,6 +53,17 @@ Create redis name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create the name of the redis service account to use
+*/}}
+{{- define "argo-cd.redisServiceAccountName" -}}
+{{- if .Values.redis.serviceAccount.create -}}
+    {{ default (include "argo-cd.fullname" .) .Values.redis.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.redis.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create argocd server name and version as used by the chart label.
 */}}
 {{- define "argo-cd.server.fullname" -}}
