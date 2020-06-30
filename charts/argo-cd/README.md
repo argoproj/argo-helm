@@ -161,6 +161,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | repoServer.name | Repo server name | `"repo-server"` |
 | repoServer.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | repoServer.podAnnotations | Annotations for the repo server pods | `{}` |
+| repoServer.pspEnabled | Create PodSecurityPolicy resources | `false` |
 | repoServer.podLabels | Labels for the repo server pods | `{}` |
 | repoServer.priorityClassName | Priority class for the repo server | `""` |
 | repoServer.readinessProbe.failureThreshold | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `3` |
@@ -234,6 +235,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | server.podAnnotations | Annotations for the server pods | `{}` |
 | server.podLabels | Labels for the server pods | `{}` |
+| server.pspEnabled | Create PodSecurityPolicy resources | `false` |
 | server.priorityClassName | Priority class for the server | `""` |
 | server.rbacConfigAnnotations | RBAC configmap annotations | `{}` |
 | server.rbacConfig | [Argo CD RBAC policy](https://argoproj.github.io/argo-cd/operator-manual/rbac/) | `{}` |
@@ -277,6 +279,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | dex.env | Environment variables for the Dex server. | `[]` |
 | dex.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | dex.podAnnotations | Annotations for the Dex server pods | `{}` |
+| dex.pspEnabled | Create PodSecurityPolicy resources | `false` |
 | dex.podLabels | Labels for the Dex server pods | `{}` |
 | dex.priorityClassName | Priority class for dex | `""` |
 | dex.resources | Resource limits and requests for dex | `{}` |
@@ -308,6 +311,9 @@ through `xxx.extraArgs`
 | redis.env | Environment variables for the Redis server. | `[]` |
 | redis.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | redis.podAnnotations | Annotations for the Redis server pods | `{}` |
+| redis.serviceAccount.create | Create redis service account | `true` |
+| redis.serviceAccount.name | Redis service account name | `"argocd-redis-server"` |
+| redis.pspEnabled | Create PodSecurityPolicy resources | `false` |
 | redis.podLabels | Labels for the Redis server pods | `{}` |
 | redis.priorityClassName | Priority class for redis | `""` |
 | redis.resources | Resource limits and requests for redis | `{}` |

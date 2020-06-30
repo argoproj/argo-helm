@@ -197,6 +197,9 @@ dex:
     create: true
     name: argocd-dex-server
 
+  ## Enable the creation of PodSecurityPolicy resources
+  pspEnabled: false
+
   ## Additional volumeMounts to the controller main container.
   volumeMounts:
     - name: static-files
@@ -261,6 +264,13 @@ redis:
   ## Labels to be added to the Redis server pods
   ##
   podLabels: {}
+
+  serviceAccount:
+    create: true
+    name: argocd-redis-server
+
+  ## Enable the creation of PodSecurityPolicy resources
+  pspEnabled: false
 
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
@@ -433,6 +443,9 @@ server:
     name: argocd-server
     ## Annotations applied to created service account
     annotations: {}
+
+  ## Enable the creation of PodSecurityPolicy resources
+  pspEnabled: false
 
   ingress:
     enabled: false
@@ -727,6 +740,9 @@ repoServer:
     #  name: argocd-repo-server
     ## Annotations applied to created service account
     annotations: {}
+
+  ## Enable the creation of PodSecurityPolicy resources
+  pspEnabled: false
 
   ## Repo server rbac rules
   # rbac:
