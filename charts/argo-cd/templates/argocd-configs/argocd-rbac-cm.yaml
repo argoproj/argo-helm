@@ -9,6 +9,12 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.server.name }}
+  {{- if .Values.server.rbacConfigAnnotations }}
+  annotations:
+  {{- range $key, $value := .Values.server.rbacConfigAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
 {{- if .Values.server.rbacConfig }}
 data:
 {{- toYaml .Values.server.rbacConfig | nindent 4 }}
