@@ -92,3 +92,10 @@ Create the name of the bot service account to use
     {{ default "default" .Values.bots.slack.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create the name of the secret to use
+*/}}
+{{- define "argocd-notifications.secretName" -}}
+{{- printf "%s-secret" (include "argocd-notifications.name" .) -}}
+{{- end -}}
