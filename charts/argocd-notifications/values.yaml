@@ -69,6 +69,24 @@ secret:
       #     username: username
       #     password: mypassword
 
+    email:
+      # For more information: https://argoproj-labs.github.io/argocd-notifications/services/overview/
+
+      # Specifies whether email notifier should be configured
+      enabled: false
+      # SMTP endpoint
+      host:
+      # SMTP port
+      port:
+      # enable/disable check on TLS certificate
+      insecure_skip_verify:
+      # SMTP username
+      username:
+      # SMTP password
+      password:
+      # email address in from field
+      from:
+
 resources: {}
   # limits:
   #   cpu: 100m
