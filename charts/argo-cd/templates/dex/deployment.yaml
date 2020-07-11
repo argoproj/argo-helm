@@ -103,4 +103,7 @@ spec:
       volumes:
 {{- toYaml .Values.dex.volumes | nindent 8}}
 {{- end }}
+{{- if .Values.dex.priorityClassName }}
+      priorityClassName: {{ .Values.dex.priorityClassName }}
+{{- end }}
 {{- end }}
