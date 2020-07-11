@@ -152,3 +152,6 @@ spec:
       initContainers:
 {{- toYaml .Values.repoServer.initContainers | nindent 6 }}
       {{- end }}
+{{- if .Values.repoServer.priorityClassName }}
+      priorityClassName: {{ .Values.repoServer.priorityClassName }}
+{{- end }}

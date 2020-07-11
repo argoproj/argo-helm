@@ -87,7 +87,7 @@ Create the name of the bot service account to use
 */}}
 {{- define "argocd-notifications.bots.slack.serviceAccountName" -}}
 {{- if .Values.bots.slack.serviceAccount.create -}}
-    {{ default (include "argocd-notifications.fullname" .) .Values.bots.slack.serviceAccount.name }}
+    {{ default (printf "%s-bot" (include "argocd-notifications.fullname" .)) .Values.bots.slack.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.bots.slack.serviceAccount.name }}
 {{- end -}}
