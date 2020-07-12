@@ -5,6 +5,12 @@ clusterInstall: true
 controller:
   name: argo-rollouts
   component: rollouts-controller
+  ## Node selectors and tolerations for server scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
   image:
     repository: argoproj/argo-rollouts
     tag: v0.8.0
