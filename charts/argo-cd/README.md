@@ -68,6 +68,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | installCRDs | Install CRDs if you are using Helm2. | `true` |
+| configs.knownHostsAnnotations | Known Hosts configmap annotations | `{}` |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
 | configs.secret.annotations | Annotations for argocd-secret | `{}` |
 | configs.secret.argocdServerAdminPassword | Bcrypt hashed admin password | `null` |
@@ -76,6 +77,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | configs.secret.createSecret | Create the argocd-secret. | `true` |
 | configs.secret.githubSecret | GitHub incoming webhook secret | `""` |
 | configs.secret.gitlabSecret | GitLab incoming webhook secret | `""` |
+| configs.tlsCertsAnnotations | TLS certificate configmap annotations | `{}` |
 | configs.tlsCerts.data."argocd.example.com" | TLS certificate | See [values.yaml](values.yaml) |
 | configs.secret.extra | add additional secrets to be added to argocd-secret | `{}` |
 | openshift.enabled | enables using arbitrary uid for argo repo server | `false` |
@@ -194,6 +196,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.certificate.enabled | Enables a certificate manager certificate. | `false` |
 | server.certificate.issuer | Certificate manager issuer | `{}` |
 | server.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
+| server.configAnnotations | ArgoCD configuration configmap annotations | `{}` |
 | server.config | [General Argo CD configuration](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#repositories) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
@@ -231,6 +234,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.podAnnotations | Annotations for the server pods | `{}` |
 | server.podLabels | Labels for the server pods | `{}` |
 | server.priorityClassName | Priority class for the server | `""` |
+| server.rbacConfigAnnotations | RBAC configmap annotations | `{}` |
 | server.rbacConfig | [Argo CD RBAC policy](https://argoproj.github.io/argo-cd/operator-manual/rbac/) | `{}` |
 | server.readinessProbe.failureThreshold | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `3` |
 | server.readinessProbe.initialDelaySeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `10` |

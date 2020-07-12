@@ -11,4 +11,10 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.server.name }}
+  {{- if .Values.configs.tlsCertsAnnotations }}
+  annotations:
+  {{- range $key, $value := .Values.configs.tlsCertsAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
   name: argocd-tls-certs-cm

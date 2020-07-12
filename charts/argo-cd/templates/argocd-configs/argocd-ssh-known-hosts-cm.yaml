@@ -9,4 +9,10 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.server.name }}
+  {{- if .Values.configs.knownHostsAnnotations }}
+  annotations:
+  {{- range $key, $value := .Values.configs.knownHostsAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
   name: argocd-ssh-known-hosts-cm
