@@ -88,6 +88,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 |-----|---------|-------------|
 | controller.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
 | controller.args.operationProcessors | define the controller `--operation-processors` | `"10"` |
+| controller.args.appResyncPeriod | define the controller `--app-resync` | `"180"` |
 | controller.args.statusProcessors | define the controller `--status-processors` | `"20"` |
 | controller.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | controller.containerPort | Controller listening port. | `8082` |
