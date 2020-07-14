@@ -272,6 +272,12 @@ redis:
   priorityClassName: ""
 
   ## Labels to set container specific security contexts
+  containerSecurityContext: {}
+    # capabilities:
+    #   drop:
+    #     - all
+    
+  ## Redis Pod specific security context
   securityContext:
     runAsUser: 1000
     fsGroup: 1000
