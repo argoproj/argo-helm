@@ -272,10 +272,10 @@ redis:
   priorityClassName: ""
 
   ## Labels to set container specific security contexts
-  containerSecurityContext: {}
-    # capabilities:
-    #   drop:
-    #     - all
+  securityContext:
+    runAsUser: 1000
+    fsGroup: 1000
+    runAsNonRoot: true
 
 
   resources: {}

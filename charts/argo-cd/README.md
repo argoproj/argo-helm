@@ -311,6 +311,7 @@ through `xxx.extraArgs`
 | redis.podLabels | Labels for the Redis server pods | `{}` |
 | redis.priorityClassName | Priority class for redis | `""` |
 | redis.resources | Resource limits and requests for redis | `{}` |
+| redis.securityContext | Redis Pod Security Context | See [values.yaml](values.yaml) |
 | redis.servicePort | Redis service port | `6379` |
 | redis.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
 | redis-ha | Configures [Redis HA subchart](https://github.com/helm/charts/tree/master/stable/redis-ha) The properties below have been changed from the subchart defaults | |
