@@ -27,6 +27,7 @@ spec:
     spec:
       {{- if .Values.server.priorityClassName }}
       priorityClassName: {{ .Values.server.priorityClassName | quote }}
+      {{- end }}
       serviceAccountName: {{ .Values.server.serviceAccount | quote }}
       containers:
         - name: argo-server

@@ -27,6 +27,7 @@ spec:
     spec:
       {{- if .Values.controller.priorityClassName }}
       priorityClassName: {{ .Values.controller.priorityClassName | quote }}
+      {{- end }}
       serviceAccountName: {{ .Values.controller.serviceAccount | quote }}
       containers:
         - name: controller
