@@ -44,9 +44,12 @@ sensorController:
   image: sensor-controller
   tag: v0.16.0
   replicaCount: 1
+  sensorImage: sensor
 
 gatewayController:
   name: gateway-controller
   image: gateway-controller
   tag: v0.16.0
   replicaCount: 1
+  clientImage: gateway-client
+  serverImage: gateway-server

@@ -31,3 +31,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONTROLLER_CONFIG_MAP
               value: {{ .Release.Name }}-{{ .Values.gatewayController.name }}-configmap
+            - name: GATEWAY_CLIENT_IMAGE
+              value: {{ .Values.registry }}/{{ .Values.gatewayController.clientImage }}:{{ .Values.gatewayController.tag }}
+            - name: GATEWAY_SERVER_IMAGE
+              value: {{ .Values.registry }}/{{ .Values.gatewayController.serverImage }}:{{ .Values.gatewayController.tag }}
