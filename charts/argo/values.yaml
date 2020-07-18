@@ -28,6 +28,8 @@ controller:
   podAnnotations: {}
   # Optional labels to add to the controller pods
   podLabels: {}
+  # SecurityContext to set on the controller pods
+  podSecurityContext: {}
   # podPortName: http
   metricsConfig:
     enabled: false
@@ -117,6 +119,8 @@ executor:
   resources: {}
   # Adds environment variables for the executor.
   env: {}
+  # sets security context for the executor container
+  securityContext: {}
 
 server:
   enabled: true
@@ -131,6 +135,8 @@ server:
   podAnnotations: {}
   # Optional labels to add to the UI pods
   podLabels: {}
+  # SecurityContext to set on the server pods
+  podSecurityContext: {}
   name: server
   serviceType: ClusterIP
   servicePort: 2746
