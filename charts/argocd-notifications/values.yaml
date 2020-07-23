@@ -87,6 +87,18 @@ secret:
       # email address in from field
       from:
 
+logLevel: info
+
+metrics:
+  enabled: false
+  port: 9001
+  serviceMonitor:
+    enabled: false
+    additionalLabels: {}
+    # namespace: monitoring
+    # interval: 30s
+    # scrapeTimeout: 10s
+
 resources: {}
   # limits:
   #   cpu: 100m
@@ -194,6 +206,7 @@ bots:
     imagePullSecrets: []
 
     service:
+      annotations: {}
       type: LoadBalancer
 
     serviceAccount:
