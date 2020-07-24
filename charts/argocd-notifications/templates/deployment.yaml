@@ -29,6 +29,16 @@ spec:
           command:
             - /app/argocd-notifications
             - controller
+            - --loglevel={{ .Values.logLevel }}
+            {{- if .Values.metrics.enabled }}
+            - --metrics-port={{ .Values.metrics.port }}
+            {{- end }}
+          ports:
+          {{- if .Values.metrics.enabled }}
+          - containerPort: {{ .Values.metrics.port }}
+            name: metrics
+            protocol: TCP
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

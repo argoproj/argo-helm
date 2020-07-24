@@ -1,0 +1,15 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "argocd-notifications.name" . }}-metrics
+  labels:
+    {{- include "argocd-notifications.metrics.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "argocd-notifications.selectorLabels" . | nindent 4 }}
+  ports:
+  - name: metrics
+    port: {{ .Values.metrics.port }}
+    targetPort: {{ .Values.metrics.port }}
+{{- end }}

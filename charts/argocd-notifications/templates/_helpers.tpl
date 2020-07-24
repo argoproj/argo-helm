@@ -44,6 +44,19 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
+Common metrics labels
+*/}}
+{{- define "argocd-notifications.metrics.labels" -}}
+helm.sh/chart: {{ include "argocd-notifications.chart" . }}
+{{ include "argocd-notifications.metrics.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+
+{{/*
 Common slack bot labels
 */}}
 {{- define "argocd-notifications.bots.slack.labels" -}}
@@ -60,6 +73,14 @@ Selector labels
 */}}
 {{- define "argocd-notifications.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "argocd-notifications.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{/*
+Selector metrics labels
+*/}}
+{{- define "argocd-notifications.metrics.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "argocd-notifications.name" . }}-metrics
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
