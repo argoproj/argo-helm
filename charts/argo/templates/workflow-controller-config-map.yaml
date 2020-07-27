@@ -8,6 +8,9 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   config: |
+    {{- if .Values.controller.executor.enabled }}
+    executor:
+{{ toYaml .Values.controller.executor | indent 6}}{{- end -}}
     {{- if .Values.controller.instanceID.enabled }}
     {{- if .Values.controller.instanceID.useReleaseName }}
     instanceID: {{ .Release.Name }}
