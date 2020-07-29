@@ -16,6 +16,12 @@ data:
     {{- end }}
     {{- end }}
     containerRuntimeExecutor: {{ .Values.controller.containerRuntimeExecutor }}
+    {{- if .Values.executor.env }}
+    executor:
+      {{- with .Values.executor.env }}
+      env: {{- toYaml . | nindent 6 }}
+      {{- end }}
+    {{- end }}
     artifactRepository:
       {{- if or .Values.minio.install .Values.useDefaultArtifactRepo }}
       {{- if .Values.artifactRepository.archiveLogs }}
