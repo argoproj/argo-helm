@@ -8,9 +8,6 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   config: |
-    {{- if .Values.controller.executor.enabled }}
-    executor:
-{{ toYaml .Values.controller.executor | indent 6}}{{- end -}}
     {{- if .Values.controller.instanceID.enabled }}
     {{- if .Values.controller.instanceID.useReleaseName }}
     instanceID: {{ .Release.Name }}
@@ -19,6 +16,12 @@ data:
     {{- end }}
     {{- end }}
     containerRuntimeExecutor: {{ .Values.controller.containerRuntimeExecutor }}
+    {{- if .Values.executor.env }}
+    executor:
+      {{- with .Values.executor.env }}
+      env: {{- toYaml . | nindent 6 }}
+      {{- end }}
+    {{- end }}
     artifactRepository:
       {{- if or .Values.minio.install .Values.useDefaultArtifactRepo }}
       {{- if .Values.artifactRepository.archiveLogs }}
