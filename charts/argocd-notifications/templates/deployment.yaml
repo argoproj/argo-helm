@@ -33,6 +33,9 @@ spec:
             {{- if .Values.metrics.enabled }}
             - --metrics-port={{ .Values.metrics.port }}
             {{- end }}
+            {{- range .Values.extraArgs }}
+            - {{ . | squote }}
+            {{- end }}
           ports:
           {{- if .Values.metrics.enabled }}
           - containerPort: {{ .Values.metrics.port }}
