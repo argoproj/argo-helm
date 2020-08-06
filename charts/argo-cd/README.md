@@ -62,12 +62,13 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.5.3"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.6.1"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | installCRDs | Install CRDs if you are using Helm2. | `true` |
+| configs.knownHostsAnnotations | Known Hosts configmap annotations | `{}` |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
 | configs.secret.annotations | Annotations for argocd-secret | `{}` |
 | configs.secret.argocdServerAdminPassword | Bcrypt hashed admin password | `null` |
@@ -76,6 +77,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | configs.secret.createSecret | Create the argocd-secret. | `true` |
 | configs.secret.githubSecret | GitHub incoming webhook secret | `""` |
 | configs.secret.gitlabSecret | GitLab incoming webhook secret | `""` |
+| configs.tlsCertsAnnotations | TLS certificate configmap annotations | `{}` |
 | configs.tlsCerts.data."argocd.example.com" | TLS certificate | See [values.yaml](values.yaml) |
 | configs.secret.extra | add additional secrets to be added to argocd-secret | `{}` |
 | openshift.enabled | enables using arbitrary uid for argo repo server | `false` |
@@ -86,6 +88,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 |-----|---------|-------------|
 | controller.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
 | controller.args.operationProcessors | define the controller `--operation-processors` | `"10"` |
+| controller.args.appResyncPeriod | define the controller `--app-resync` | `"180"` |
 | controller.args.statusProcessors | define the controller `--status-processors` | `"20"` |
 | controller.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | controller.containerPort | Controller listening port. | `8082` |
@@ -120,6 +123,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.service.annotations | Controller service annotations. | `{}` |
 | controller.service.labels | Controller service labels. | `{}` |
 | controller.service.port | Controller service port. | `8082` |
+| controler.serviceAccount.annotations | Controller service account annotations | `{}` |
 | controller.serviceAccount.create | Create a service account for the controller | `true` |
 | controller.serviceAccount.name | Service account name. | `"argocd-application-controller"` |
 | controller.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
@@ -169,6 +173,9 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | repoServer.service.annotations | Repo server service annotations. | `{}` |
 | repoServer.service.labels | Repo server service labels. | `{}` |
 | repoServer.service.port | Repo server service port. | `8081` |
+| repoServer.serviceAccount.annotations | Repo server service account annotations | `{}` |
+| repoServer.serviceAccount.create | Create repo server service account | `false` |
+| repoServer.serviceAccount.name | Repo server service account name | `"argocd-repo-server"` |
 | repoServer.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
 | repoServer.volumeMounts | Repo server volume mounts | `[]` |
 | repoServer.volumes | Repo server volumes | `[]` |
@@ -190,6 +197,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.certificate.enabled | Enables a certificate manager certificate. | `false` |
 | server.certificate.issuer | Certificate manager issuer | `{}` |
 | server.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
+| server.configAnnotations | ArgoCD configuration configmap annotations | `{}` |
 | server.config | [General Argo CD configuration](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#repositories) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
@@ -202,6 +210,12 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.ingress.hosts | List of ingress hosts | `[]` |
 | server.ingress.labels | Additional ingress labels. | `{}` |
 | server.ingress.tls | Ingress TLS configuration. | `[]` |
+| server.ingress.https | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` | `false` |
+| server.ingressGrpc.annotations | Additional ingress annotations for dedicated [gRPC-ingress] | `{}` |
+| server.ingressGrpc.enabled | Enable an ingress resource for the server for dedicated [gRPC-ingress] | `false` |
+| server.ingressGrpc.hosts | List of ingress hosts for dedicated [gRPC-ingress] | `[]` |
+| server.ingressGrpc.labels | Additional ingress labels for dedicated [gRPC-ingress] | `{}` |
+| server.ingressGrpc.tls | Ingress TLS configuration for dedicated [gRPC-ingress] | `[]` |
 | server.route.enabled | Enable a OpenShift route for the server | `false` |
 | server.route.hostname | Hostname of OpenShift route | `""` |
 | server.livenessProbe.failureThreshold | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `3` |
@@ -221,6 +235,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.podAnnotations | Annotations for the server pods | `{}` |
 | server.podLabels | Labels for the server pods | `{}` |
 | server.priorityClassName | Priority class for the server | `""` |
+| server.rbacConfigAnnotations | RBAC configmap annotations | `{}` |
 | server.rbacConfig | [Argo CD RBAC policy](https://argoproj.github.io/argo-cd/operator-manual/rbac/) | `{}` |
 | server.readinessProbe.failureThreshold | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `3` |
 | server.readinessProbe.initialDelaySeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `10` |
@@ -237,6 +252,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.service.servicePortHttpsName | Server service https port name, can be used to route traffic via istio | `https` |
 | server.service.loadBalancerSourceRanges | Source IP ranges to allow access to service from. | `[]` |
 | server.service.type | Server service type | `"ClusterIP"` |
+| server.serviceAccount.annotations | Server service account annotations | `{}` |
 | server.serviceAccount.create | Create server service account | `true` |
 | server.serviceAccount.name | Server service account name | `"argocd-server"` |
 | server.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
@@ -287,7 +303,7 @@ through `xxx.extraArgs`
 | redis.enabled | Enable redis | `true` |
 | redis.image.imagePullPolicy | Redis imagePullPolicy | `"IfNotPresent"` |
 | redis.image.repository | Redis repository | `"redis"` |
-| redis.image.tag | Redis tag | `"5.0.3"` |
+| redis.image.tag | Redis tag | `"5.0.8"` |
 | redis.name | Redis name | `"redis"` |
 | redis.env | Environment variables for the Redis server. | `[]` |
 | redis.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
@@ -295,6 +311,7 @@ through `xxx.extraArgs`
 | redis.podLabels | Labels for the Redis server pods | `{}` |
 | redis.priorityClassName | Priority class for redis | `""` |
 | redis.resources | Resource limits and requests for redis | `{}` |
+| redis.securityContext | Redis Pod Security Context | See [values.yaml](values.yaml) |
 | redis.servicePort | Redis service port | `6379` |
 | redis.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
 | redis-ha | Configures [Redis HA subchart](https://github.com/helm/charts/tree/master/stable/redis-ha) The properties below have been changed from the subchart defaults | |
@@ -306,3 +323,6 @@ through `xxx.extraArgs`
 | redis-ha.redis.config.save | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled | `""` |
 | redis-ha.haproxy.enabled | Enabled HAProxy LoadBalancing/Proxy | `true` |
 | redis-ha.haproxy.metrics.enabled | HAProxy enable prometheus metric scraping | `true` |
+| redis-ha.image.tag | Redis tag | `"5.0.8-alpine"` |
+
+[gRPC-ingress]: https://argoproj.github.io/argo-cd/operator-manual/ingress/

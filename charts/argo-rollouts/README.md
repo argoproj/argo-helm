@@ -35,6 +35,10 @@ $ helm install --name my-release argo/argo-rollouts
 | controller.image.repository | string | `"argoproj/argo-rollouts"` |  |
 | controller.image.tag | string | `"v0.8.0"` |  |
 | controller.name | string | `"argo-rollouts"` |  |
+| controller.resources | Resource limits and requests for the controller pods. | `{}` |
+| controller.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
+| controller.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
+| controller.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | imagePullSecrets | list | `[]` |  |
 | installCRDs | bool | `true` |  |
 | podAnnotations | object | `{}` |  |

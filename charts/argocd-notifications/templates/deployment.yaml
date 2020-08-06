@@ -22,13 +22,26 @@ spec:
       serviceAccountName: {{ include "argocd-notifications.serviceAccountName" . }}
       containers:
         - name: {{ include "argocd-notifications.name" . }}-controller
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag}}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           command:
             - /app/argocd-notifications
             - controller
+            - --loglevel={{ .Values.logLevel }}
+            {{- if .Values.metrics.enabled }}
+            - --metrics-port={{ .Values.metrics.port }}
+            {{- end }}
+            {{- range .Values.extraArgs }}
+            - {{ . | squote }}
+            {{- end }}
+          ports:
+          {{- if .Values.metrics.enabled }}
+          - containerPort: {{ .Values.metrics.port }}
+            name: metrics
+            protocol: TCP
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

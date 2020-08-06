@@ -1,7 +1,7 @@
-{{- if .Values.server.ingress.enabled -}}
+{{- if .Values.server.ingressGrpc.enabled -}}
 {{- $serviceName := include "argo-cd.server.fullname" . -}}
-{{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingress.https -}}
-{{- $paths := .Values.server.ingress.paths -}}
+{{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingressGrpc.https -}}
+{{- $paths := .Values.server.ingressGrpc.paths -}}
 {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
 apiVersion: networking.k8s.io/v1beta1
 {{ else }}
@@ -9,13 +9,13 @@ apiVersion: extensions/v1beta1
 {{ end -}}
 kind: Ingress
 metadata:
-{{- if .Values.server.ingress.annotations }}
+{{- if .Values.server.ingressGrpc.annotations }}
   annotations:
-  {{- range $key, $value := .Values.server.ingress.annotations }}
+  {{- range $key, $value := .Values.server.ingressGrpc.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}
-  name: {{ template "argo-cd.server.fullname" . }}
+  name: {{ template "argo-cd.server.fullname" . }}-grpc
   labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
     helm.sh/chart: {{ include "argo-cd.chart" . }}
@@ -23,13 +23,13 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.server.name }}
-{{- if .Values.server.ingress.labels }}
-{{- toYaml .Values.server.ingress.labels | nindent 4 }}
+{{- if .Values.server.ingressGrpc.labels }}
+{{- toYaml .Values.server.ingressGrpc.labels | nindent 4 }}
 {{- end }}
 spec:
   rules:
-  {{- if .Values.server.ingress.hosts }}
-  {{- range $host := .Values.server.ingress.hosts }}
+  {{- if .Values.server.ingressGrpc.hosts }}
+  {{- range $host := .Values.server.ingressGrpc.hosts }}
     - host: {{ $host }}
       http:
         paths:
@@ -50,8 +50,8 @@ spec:
               servicePort: {{ $servicePort }}
   {{- end -}}
   {{- end -}}
-  {{- if .Values.server.ingress.tls }}
+  {{- if .Values.server.ingressGrpc.tls }}
   tls:
-{{- toYaml .Values.server.ingress.tls | nindent 4 }}
+{{- toYaml .Values.server.ingressGrpc.tls | nindent 4 }}
   {{- end -}}
 {{- end -}}
