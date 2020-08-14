@@ -454,6 +454,12 @@ server:
       # - argocd.example.com
     paths:
       - /
+    extraPaths:
+      []
+      # - path: /*
+      #   backend:
+      #     serviceName: ssl-redirect
+      #     servicePort: use-annotation
     tls:
       []
       # - secretName: argocd-example-tls
@@ -476,6 +482,12 @@ server:
       # - argocd.example.com
     paths:
       - /
+    extraPaths:
+      []
+      # - path: /*
+      #   backend:
+      #     serviceName: ssl-redirect
+      #     servicePort: use-annotation
     tls:
       []
       # - secretName: argocd-example-tls

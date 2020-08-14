@@ -33,6 +33,7 @@ spec:
     - host: {{ $host }}
       http:
         paths:
+  {{- toYaml .Values.server.ingressGrpc.extraPaths | nindent 10 }}
   {{- range $p := $paths }}
           - path: {{ $p }}
             backend:
@@ -43,6 +44,7 @@ spec:
   {{- else }}
     - http:
         paths:
+  {{- toYaml .Values.server.ingressGrpc.extraPaths | nindent 10 }}
   {{- range $p := $paths }}
           - path: {{ $p }}
             backend:
