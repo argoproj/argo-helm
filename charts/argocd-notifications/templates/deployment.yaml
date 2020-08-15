@@ -12,6 +12,12 @@ spec:
       {{- include "argocd-notifications.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      {{- if .Values.podAnnotations }}
+      annotations:
+      {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
       labels:
         {{- include "argocd-notifications.selectorLabels" . | nindent 8 }}
     spec:
