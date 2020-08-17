@@ -32,6 +32,10 @@ spec:
       containers:
       - command:
         - "/bin/rollouts-controller"
+        args:
+        {{- range .Values.controller.args }}
+        - {{ . }}
+        {{- end }}
         image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         name: {{ .Values.controller.name }}
