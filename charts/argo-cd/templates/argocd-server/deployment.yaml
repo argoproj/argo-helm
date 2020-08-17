@@ -151,3 +151,6 @@ spec:
           name: argocd-tls-certs-cm
         name: tls-certs
       {{- end }}
+{{- if .Values.server.priorityClassName }}
+      priorityClassName: {{ .Values.server.priorityClassName }}
+{{- end }}

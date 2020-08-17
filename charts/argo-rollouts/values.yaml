@@ -6,10 +6,25 @@ controller:
   name: argo-rollouts
   component: rollouts-controller
   args: []
+  ## Node selectors and tolerations for server scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
   image:
     repository: argoproj/argo-rollouts
-    tag: v0.8.0
+    tag: v0.8.3
     pullPolicy: IfNotPresent
+
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 50m
+  #    memory: 64Mi
+
 
 serviceAccount:
   name: argo-rollouts
