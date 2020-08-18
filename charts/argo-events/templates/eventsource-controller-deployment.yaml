@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.sensorController.name }}
+  name: {{ .Release.Name }}-{{ .Values.eventsourceController.name }}
   labels:
-    app: {{ .Release.Name }}-{{ .Values.sensorController.name }}
+    app: {{ .Release.Name }}-{{ .Values.eventsourceController.name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.sensorController.replicaCount }}
+  replicas: {{ .Values.eventsourceController.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ .Values.sensorController.name }}
+      app: {{ .Release.Name }}-{{ .Values.eventsourceController.name }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-{{ .Values.sensorController.name }}
+        app: {{ .Release.Name }}-{{ .Values.eventsourceController.name }}
         release: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount }}
       containers:
-        - name: {{ .Values.sensorController.name }}
-          image: "{{ .Values.registry }}/{{ .Values.sensorController.image }}:{{ .Values.sensorController.tag }}"
+        - name: {{ .Values.eventsourceController.name }}
+          image: "{{ .Values.registry }}/{{ .Values.eventsourceController.image }}:{{ .Values.eventsourceController.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           {{- if .Values.singleNamespace }}
           args:
@@ -33,5 +33,5 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-            - name: SENSOR_IMAGE
-              value: "{{ .Values.registry }}/{{ .Values.sensorController.sensorImage }}:{{ .Values.sensorController.tag }}"
+            - name: EVENTSOURCE_IMAGE
+              value: "{{ .Values.registry }}/{{ .Values.eventsourceController.eventsourceImage }}:{{ .Values.eventsourceController.tag }}"

@@ -41,8 +41,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       automountServiceAccountToken: false
-      {{- if .Values.global.securityContext }}
-      securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
+      {{- if .Values.redis.securityContext }}
+      securityContext: {{- toYaml .Values.redis.securityContext | nindent 8 }}
       {{- end }}
       containers:
       - name: {{ template "argo-cd.redis.fullname" . }}
