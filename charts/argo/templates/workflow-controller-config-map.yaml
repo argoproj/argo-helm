@@ -30,6 +30,10 @@ data:
       {{- if .Values.artifactRepository.archiveLogs }}
       archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
       {{- end }}
+      {{- if .Values.artifactRepository.gcs }}
+      gcs:
+{{ toYaml .Values.artifactRepository.gcs | indent 8}}
+      {{- else }}
       s3:
         {{- if .Values.useStaticCredentials }}
         accessKeySecret:
@@ -54,6 +58,7 @@ data:
         {{- if .Values.artifactRepository.s3.useSDKCreds }}
         useSDKCreds: {{ .Values.artifactRepository.s3.useSDKCreds }}
         {{- end }}
+      {{- end }}
     {{- end}}
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:

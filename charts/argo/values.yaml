@@ -240,6 +240,21 @@ artifactRepository:
     # region:
     # roleARN:
     # useSDKCreds: true
+  # gcs:
+    # bucket: <project>-argo
+    # keyFormat: "{{workflow.namespace}}/{{workflow.name}}/"
+    # serviceAccountKeySecret is a secret selector.
+    # It references the k8s secret named 'my-gcs-credentials'.
+    # This secret is expected to have have the key 'serviceAccountKey',
+    # containing the base64 encoded credentials
+    # to the bucket.
+    #
+    # If it's running on GKE and Workload Identity is used,
+    # serviceAccountKeySecret is not needed.
+    # serviceAccountKeySecret:
+      # name: my-gcs-credentials
+      # key: serviceAccountKey
+
 
 # NOTE: These are setting attributes for the `minio` optional dependency
 minio:
