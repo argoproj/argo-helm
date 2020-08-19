@@ -31,7 +31,7 @@ data:
       archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
       {{- end }}
       {{- if .Values.artifactRepository.gcs }}
-      gcp:
+      gcs:
 {{ toYaml .Values.artifactRepository.gcs | indent 8}}
       {{- else }}
       s3:
