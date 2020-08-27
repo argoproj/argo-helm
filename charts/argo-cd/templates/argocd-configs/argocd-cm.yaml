@@ -9,5 +9,11 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.server.name }}
+  {{- if .Values.server.configAnnotations }}
+  annotations:
+  {{- range $key, $value := .Values.server.configAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
 data:
 {{- toYaml .Values.server.config | nindent 4 }}
