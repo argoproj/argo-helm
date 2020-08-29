@@ -604,6 +604,13 @@ server:
   #     kind: StatefulSet
   #   orphanedResources: {}
   #   roles: []
+  #   syncWindows:
+  #   - kind: allow
+  #     schedule: '10 1 * * *'
+  #     duration: 1h
+  #     applications:
+  #     - '*-prod'
+  #     manualSync: true
 
   ## Enable Admin ClusterRole resources.
   ## Enable if you would like to grant rights to ArgoCD to deploy to the local Kubernetes cluster.
