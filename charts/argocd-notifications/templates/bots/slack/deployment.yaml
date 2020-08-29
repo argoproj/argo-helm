@@ -30,6 +30,9 @@ spec:
           command:
             - /app/argocd-notifications
             - bot
+          ports:
+          - containerPort: 8080
+            name: http
       {{- with .Values.bots.slack.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
