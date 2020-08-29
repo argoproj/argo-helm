@@ -6,6 +6,10 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: {{ .Release.Name }}-metrics
     app.kubernetes.io/part-of: {{ .Release.Name }}
+  annotations:
+  {{- range $key, $value := .Values.serviceAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
 spec:
   ports:
   - name: metrics
