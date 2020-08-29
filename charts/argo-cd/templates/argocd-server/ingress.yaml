@@ -2,6 +2,7 @@
 {{- $serviceName := include "argo-cd.server.fullname" . -}}
 {{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingress.https -}}
 {{- $paths := .Values.server.ingress.paths -}}
+{{- $extraPaths := .Values.server.ingress.extraPaths -}}
 {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
 apiVersion: networking.k8s.io/v1beta1
 {{ else }}
@@ -33,6 +34,7 @@ spec:
     - host: {{ $host }}
       http:
         paths:
+  {{- toYaml $extraPaths | nindent 10 }}
   {{- range $p := $paths }}
           - path: {{ $p }}
             backend:
@@ -43,6 +45,7 @@ spec:
   {{- else }}
     - http:
         paths:
+  {{- toYaml $extraPaths | nindent 10 }}
   {{- range $p := $paths }}
           - path: {{ $p }}
             backend:
