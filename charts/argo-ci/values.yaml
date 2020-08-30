@@ -2,6 +2,9 @@ imageNamespace: argoproj
 ciImage: argoci
 imageTag: v1.0.0-alpha2
 imagePullPolicy: Always
+# Secrets with credentials to pull images from a private registry
+imagePullSecrets: []
+# - name: argo-pull-secret
 workflowNamespace: default
 
 argo:
