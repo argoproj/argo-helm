@@ -4,6 +4,9 @@ images:
   server: argocli
   executor: argoexec
   pullPolicy: Always
+  # Secrets with credentials to pull images from a private registry
+  pullSecrets: []
+  # - name: argo-pull-secret
   tag: v2.7.6
 
 crdVersion: v1alpha1
