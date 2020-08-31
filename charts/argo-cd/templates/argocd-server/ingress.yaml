@@ -34,7 +34,9 @@ spec:
     - host: {{ $host }}
       http:
         paths:
+  {{- if $extraPaths }}
   {{- toYaml $extraPaths | nindent 10 }}
+  {{- end }}
   {{- range $p := $paths }}
           - path: {{ $p }}
             backend:
@@ -45,7 +47,9 @@ spec:
   {{- else }}
     - http:
         paths:
+  {{- if $extraPaths }}
   {{- toYaml $extraPaths | nindent 10 }}
+  {{- end }}
   {{- range $p := $paths }}
           - path: {{ $p }}
             backend:
