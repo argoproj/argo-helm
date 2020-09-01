@@ -10,7 +10,7 @@ installCRDs: true
 global:
   image:
     repository: argoproj/argocd
-    tag: v1.6.1
+    tag: v1.6.2
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -28,7 +28,7 @@ controller:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.6.1
+    tag: # v1.6.2
     imagePullPolicy: # IfNotPresent
 
   ## Argo controller commandline flags
@@ -454,6 +454,12 @@ server:
       # - argocd.example.com
     paths:
       - /
+    extraPaths:
+      []
+      # - path: /*
+      #   backend:
+      #     serviceName: ssl-redirect
+      #     servicePort: use-annotation
     tls:
       []
       # - secretName: argocd-example-tls
@@ -476,6 +482,12 @@ server:
       # - argocd.example.com
     paths:
       - /
+    extraPaths:
+      []
+      # - path: /*
+      #   backend:
+      #     serviceName: ssl-redirect
+      #     servicePort: use-annotation
     tls:
       []
       # - secretName: argocd-example-tls
@@ -604,6 +616,13 @@ server:
   #     kind: StatefulSet
   #   orphanedResources: {}
   #   roles: []
+  #   syncWindows:
+  #   - kind: allow
+  #     schedule: '10 1 * * *'
+  #     duration: 1h
+  #     applications:
+  #     - '*-prod'
+  #     manualSync: true
 
   ## Enable Admin ClusterRole resources.
   ## Enable if you would like to grant rights to ArgoCD to deploy to the local Kubernetes cluster.

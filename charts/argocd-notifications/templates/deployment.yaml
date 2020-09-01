@@ -12,6 +12,12 @@ spec:
       {{- include "argocd-notifications.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      {{- if .Values.podAnnotations }}
+      annotations:
+      {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
       labels:
         {{- include "argocd-notifications.selectorLabels" . | nindent 8 }}
     spec:
@@ -29,6 +35,19 @@ spec:
           command:
             - /app/argocd-notifications
             - controller
+            - --loglevel={{ .Values.logLevel }}
+            {{- if .Values.metrics.enabled }}
+            - --metrics-port={{ .Values.metrics.port }}
+            {{- end }}
+            {{- range .Values.extraArgs }}
+            - {{ . | squote }}
+            {{- end }}
+          ports:
+          {{- if .Values.metrics.enabled }}
+          - containerPort: {{ .Values.metrics.port }}
+            name: metrics
+            protocol: TCP
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
