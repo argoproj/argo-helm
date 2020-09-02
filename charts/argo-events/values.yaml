@@ -4,6 +4,10 @@ registry: argoproj
 # The image pull policy
 imagePullPolicy: Always
 
+# Secrets with credentials to pull images from a private registry
+imagePullSecrets: []
+# - name: argo-pull-secret
+
 # If set to false, skip installing the CRDs. Requires user to have them installed prior to helm chart installation.
 installCRD: true
 
@@ -42,11 +46,21 @@ singleNamespace: true
 sensorController:
   name: sensor-controller
   image: sensor-controller
-  tag: v0.14.0
+  tag: v0.17.0
   replicaCount: 1
+  sensorImage: sensor
 
-gatewayController:
-  name: gateway-controller
-  image: gateway-controller
-  tag: v0.14.0
+eventsourceController:
+  name: eventsource-controller
+  image: eventsource-controller
+  tag: v0.17.0
   replicaCount: 1
+  eventsourceImage: eventsource
+
+eventbusController:
+  name: eventbus-controller
+  image: eventbus-controller
+  tag: v0.17.0
+  replicaCount: 1
+  natsStreamingImage: nats-streaming:0.17.0
+  natsMetricsExporterImage: synadia/prometheus-nats-exporter:0.6.2

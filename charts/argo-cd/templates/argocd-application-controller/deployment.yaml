@@ -52,6 +52,8 @@ spec:
         - {{ .Values.controller.args.statusProcessors | quote }}
         - --operation-processors
         - {{ .Values.controller.args.operationProcessors | quote }}
+        - --app-resync
+        - {{ .Values.controller.args.appResyncPeriod | quote }}
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
         - --loglevel
@@ -120,4 +122,7 @@ spec:
 {{- if .Values.controller.volumes }}
       volumes:
 {{- toYaml .Values.controller.volumes | nindent 8 }}
+{{- end }}
+{{- if .Values.controller.priorityClassName }}
+      priorityClassName: {{ .Values.controller.priorityClassName }}
 {{- end }}
