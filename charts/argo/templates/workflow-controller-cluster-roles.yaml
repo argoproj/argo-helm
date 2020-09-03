@@ -73,6 +73,7 @@ rules:
   - events
   verbs:
   - create
+  - patch
 - apiGroups:
   - ""
   resources:
@@ -80,6 +81,14 @@ rules:
   verbs:
   - get
   - list
+- apiGroups:
+  - "policy"
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - create
+  - get
+  - delete
 {{- if .Values.controller.persistence }}
 - apiGroups:
   - ""

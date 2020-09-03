@@ -39,7 +39,19 @@ spec:
         - name: tmp
           mountPath: /tmp
         resources:
-{{- toYaml .Values.controller.resources | nindent 10 }}
+          {{- toYaml .Values.controller.resources | nindent 10 }}
+      {{- if .Values.controller.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.controller.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.controller.tolerations }}
+      tolerations:
+        {{- toYaml .Values.controller.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.controller.affinity }}
+      affinity:
+        {{- toYaml .Values.controller.affinity | nindent 8 }}
+      {{- end }}
       volumes:
       - name: tmp
         emptyDir: {}

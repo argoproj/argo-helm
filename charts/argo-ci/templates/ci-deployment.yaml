@@ -33,3 +33,7 @@ spec:
           ports:
           - containerPort: 8001
           - containerPort: 8002
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
