@@ -26,6 +26,10 @@ spec:
 {{ toYaml .Values.server.podAnnotations | indent 8}}{{- end }}
     spec:
       serviceAccountName: {{ .Values.server.serviceAccount | quote }}
+      {{- if .Values.server.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.server.podSecurityContext | nindent 8 }}
+      {{- end }}
       containers:
         - name: argo-server
           args:
@@ -67,6 +71,10 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12}}
           {{- end }}
+      {{- with .Values.images.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.server.volumes }}
       volumes:
         {{- toYaml . | nindent 8}}

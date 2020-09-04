@@ -35,3 +35,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: EVENTSOURCE_IMAGE
               value: "{{ .Values.registry }}/{{ .Values.eventsourceController.eventsourceImage }}:{{ .Values.eventsourceController.tag }}"
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
