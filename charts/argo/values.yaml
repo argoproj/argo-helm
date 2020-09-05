@@ -28,7 +28,7 @@ workflow:
   serviceAccount:
     create: false  # Specifies whether a service account should be created
     annotations: {}
-    name: "default"  # Service account which is used to run workflows
+    name: "argo-workflow"  # Service account which is used to run workflows
   rbac:
     create: false  # adds Role and RoleBinding for the above specified service account to be able to run workflows
 
