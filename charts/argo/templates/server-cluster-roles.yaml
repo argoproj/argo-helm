@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name }}
+  name: {{ include "serverfullnamenooverride" . }}
 rules:
 - apiGroups:
   - ""
@@ -64,7 +64,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name }}-cluster-template
+  name: {{ include "serverfullnamenooverride" . }}-cluster-template
 rules:
 - apiGroups:
   - argoproj.io

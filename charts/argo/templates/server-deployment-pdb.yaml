@@ -3,9 +3,9 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name}}
+  name: {{ include "serverfullname" . }}
   labels:
-    app: {{ .Release.Name }}-{{ .Values.server.name}}
+    app: {{ include "serverfullname" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -19,7 +19,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ .Values.server.name}}
+      app: {{ include "serverfullname" . }}
       release: {{ .Release.Name }}
 {{- end -}}
 {{- end -}}

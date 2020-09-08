@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name }}
+  name: {{ include "serverfullname" . }}
   labels:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
@@ -21,7 +21,7 @@ spec:
     {{- end }}
     targetPort: 2746
   selector:
-    app: {{ .Release.Name }}-{{ .Values.server.name }}
+    app: {{ include "serverfullname" . }}
   sessionAffinity: None
   type: {{ .Values.server.serviceType }}
   {{- if and (eq .Values.server.serviceType "LoadBalancer") .Values.server.loadBalancerIP }}

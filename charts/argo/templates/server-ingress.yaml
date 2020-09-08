@@ -9,7 +9,7 @@ apiVersion: extensions/v1beta1
 {{ end -}}
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name }}
+  name: {{ include "serverfullname" . }}
   labels:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
@@ -27,12 +27,12 @@ spec:
           {{- if $.Values.server.ingress.paths }}
           {{- range $.Values.server.ingress.paths }}
           - backend:
-              serviceName: {{ .serviceName }}
+              serviceName: {{ include "serverfullname" . }}
               servicePort: {{ .servicePort }}
           {{- end }}
           {{- end }}
           - backend:
-              serviceName: {{ $serviceName }}
+              serviceName: {{ include "serverfullname" . }}
               servicePort: {{ $servicePort }}
     {{- end -}}
   {{- if .Values.server.ingress.tls }}

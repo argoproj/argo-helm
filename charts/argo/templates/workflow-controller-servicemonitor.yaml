@@ -2,9 +2,9 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name }}
+  name: {{ include "controllerfullname" . }}
   labels:
-    app: {{ .Release.Name }}-{{ .Values.controller.name}}
+    app: {{ include "controllerfullname" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -28,6 +28,6 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ .Values.controller.name}}
+      app: {{ include "controllerfullname" . }}
       release: {{ .Release.Name }}
 {{- end }}

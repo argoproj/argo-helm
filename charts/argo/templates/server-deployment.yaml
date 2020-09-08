@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name}}
+  name: {{ include "serverfullname" . }}
   labels:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
@@ -11,12 +11,12 @@ spec:
   replicas: {{ .Values.server.replicas }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ .Values.server.name}}
+      app: {{ include "serverfullname" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-{{ .Values.server.name}}
+        app: {{ include "serverfullname" . }}
         release: {{ .Release.Name }}
         {{- if .Values.server.podLabels }}
         {{- toYaml .Values.server.podLabels | nindent 8 }}
@@ -34,14 +34,14 @@ spec:
         - name: argo-server
           args:
           - server
-          - --configmap={{ .Release.Name }}-{{ .Values.controller.name }}-configmap
+          - --configmap={{ include "controllerfullname" . }}-configmap
           {{- if .Values.server.extraArgs }}
           {{- toYaml .Values.server.extraArgs | nindent 10 }}
           {{- end }}
           {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}
-          image: "{{ .Values.images.namespace }}/{{ .Values.images.server }}:{{ default .Values.images.tag .Values.server.image.tag }}"
+          image: {{ .Values.images.namespace }}/{{ .Values.images.server }}:{{ default .Values.images.tag .Values.server.image.tag }}
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           {{- if .Values.server.podPortName }}
           ports:
@@ -91,5 +91,4 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-
 {{- end -}}

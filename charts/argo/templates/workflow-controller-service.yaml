@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name }}
+  name: {{ include "controllerfullname" . }}
   labels:
-    app: {{ .Release.Name }}-{{ .Values.controller.name}}
+    app: {{ include "controllerfullname" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -29,7 +29,7 @@ spec:
     targetPort: {{ .Values.controller.telemetryConfig.port }}
   {{- end }}
   selector:
-    app: {{ .Release.Name }}-{{ .Values.controller.name }}
+    app: {{ include "controllerfullname" . }}
   sessionAffinity: None
   type: {{ .Values.controller.serviceType }}
   {{- if and (eq .Values.controller.serviceType "LoadBalancer") .Values.controller.loadBalancerSourceRanges }}

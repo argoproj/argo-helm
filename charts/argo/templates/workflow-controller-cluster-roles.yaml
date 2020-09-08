@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name }}
+  name: {{ include "controllerfullnamenooverride" . }}
 rules:
 - apiGroups:
   - ""
@@ -110,7 +110,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name }}-cluster-template
+  name: {{ include "controllerfullnamenooverride" . }}-cluster-template
 rules:
 - apiGroups:
   - argoproj.io

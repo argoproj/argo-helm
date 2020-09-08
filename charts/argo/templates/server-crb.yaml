@@ -3,11 +3,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 {{- if .Values.singleNamespace }}
 kind: RoleBinding
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name}}
+  name: {{ include "serverfullname" . }}
 {{ else }}
 kind: ClusterRoleBinding
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name}}
+  name: {{ include "serverfullnamenooverride" . }}
 {{- end }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -21,11 +21,11 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name}}-cluster-template
+  name: {{ include "serverfullnamenooverride" . }}-cluster-template
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ .Release.Name }}-{{ .Values.server.name}}-cluster-template
+  name: {{ include "serverfullnamenooverride" . }}-cluster-template
 subjects:
 - kind: ServiceAccount
   name: {{ .Values.server.serviceAccount }}
