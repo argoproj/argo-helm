@@ -5,7 +5,7 @@ metadata:
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-delete-policy: before-hook-creation
-  name: argo-aggregate-to-view
+  name: {{ include "fullnamenooverride" . }}-aggregate-to-view
   labels:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
@@ -31,7 +31,7 @@ metadata:
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-delete-policy: before-hook-creation
-  name: argo-aggregate-to-edit
+  name: {{ include "fullnamenooverride" . }}-aggregate-to-edit
   labels:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
 rules:
@@ -62,7 +62,7 @@ metadata:
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-delete-policy: before-hook-creation
-  name: argo-aggregate-to-admin
+  name: {{ include "fullnamenooverride" . }}-aggregate-to-admin
   labels:
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
