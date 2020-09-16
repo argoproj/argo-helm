@@ -78,3 +78,6 @@ data:
     {{- with .Values.server.sso }}
     sso: {{- toYaml . | nindent 6 }}
     {{- end }}
+    {{- with .Values.controller.workflowRestrictions }}
+    workflowRestrictions: {{- toYaml . | nindent 6 }}
+    {{- end }}
