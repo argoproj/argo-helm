@@ -82,6 +82,10 @@ spec:
         {{- if .Values.repoServer.volumeMounts }}
 {{- toYaml .Values.repoServer.volumeMounts | nindent 8}}
         {{- end }}
+        {{- if .Values.openshift.enabled }}
+        - mountPath: /app/config/gpg/keys
+          name: gpg-keyring
+        {{- end }}
         {{- if .Values.configs.knownHosts }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
@@ -137,6 +141,10 @@ spec:
       volumes:
       {{- if .Values.repoServer.volumes }}
 {{- toYaml .Values.repoServer.volumes | nindent 6}}
+      {{- end }}
+      {{- if .Values.openshift.enabled }}
+      - emptyDir: {}
+        name: gpg-keyring
       {{- end }}
       {{- if .Values.configs.knownHosts }}
       - configMap:
