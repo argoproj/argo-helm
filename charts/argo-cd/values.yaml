@@ -172,6 +172,14 @@ dex:
   enabled: true
   name: dex-server
 
+  metrics:
+    enabled: false
+    service:
+      annotations: {}
+      labels: {}
+    serviceMonitor:
+      enabled: false
+
   image:
     repository: quay.io/dexidp/dex
     tag: v2.22.0
@@ -212,6 +220,8 @@ dex:
   servicePortHttp: 5556
   containerPortGrpc: 5557
   servicePortGrpc: 5557
+  containerPortMetrics: 5558
+  servicePortMetrics: 5558
 
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/

@@ -80,6 +80,11 @@ spec:
         - name: grpc
           containerPort: {{ .Values.dex.containerPortGrpc }}
           protocol: TCP
+        {{- if .Values.dex.metrics.enabled }}
+        - name: metrics
+          containerPort: {{ .Values.dex.containerPortMetrics }}
+          protocol: TCP
+        {{- end }}
 {{- if .Values.dex.volumeMounts }}
         volumeMounts:
 {{- toYaml .Values.dex.volumeMounts | nindent 10 }}
