@@ -19,8 +19,15 @@ spec:
   group: argoproj.io
   names:
     kind: Workflow
+    listKind: WorkflowList
     plural: workflows
     shortNames:
     - wf
+    singular: workflow
   scope: Namespaced
+  subresources: {}
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true

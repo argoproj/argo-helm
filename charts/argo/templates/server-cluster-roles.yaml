@@ -30,11 +30,18 @@ rules:
   - list
   - watch
   - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - watch
 {{- if .Values.controller.persistence }}
 - apiGroups:
   - ""
   resources:
   - secrets
+  - serviceaccounts
   resourceNames:
   {{- if .Values.controller.persistence.postgresql }}
   - {{ .Values.controller.persistence.postgresql.userNameSecret.name }}
@@ -51,8 +58,11 @@ rules:
   - argoproj.io
   resources:
   - workflows
+  - workfloweventbindings
   - workflowtemplates
   - cronworkflows
+  - cronworkflows/finalizers
+  - clusterworkflowtemplates
   verbs:
   - create
   - get
