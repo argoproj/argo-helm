@@ -273,6 +273,11 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | dex.initImage.repository | Argo CD init image repository. | `global.image.repository` |
 | dex.initImage.imagePullPolicy | Argo CD init image imagePullPolicy | `global.image.imagePullPolicy` |
 | dex.initImage.tag | Argo CD init image tag | `global.image.tag` |
+| dex.metrics.enabled | Deploy metrics service | `false` |
+| dex.metrics.service.annotations | Metrics service annotations | `{}` |
+| dex.metrics.service.labels | Metrics service labels | `{}` |
+| dex.metrics.serviceMonitor.enabled | Enable a prometheus ServiceMonitor. | `false` |
+| dex.metrics.serviceMonitor.selector | Prometheus ServiceMonitor selector. | `{}` |
 | dex.name | Dex name | `"dex-server"` |
 | dex.env | Environment variables for the Dex server. | `[]` |
 | dex.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |

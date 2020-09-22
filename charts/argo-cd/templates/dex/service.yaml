@@ -20,6 +20,12 @@ spec:
     protocol: TCP
     port: {{ .Values.dex.servicePortGrpc }}
     targetPort: grpc
+{{- if .Values.dex.metrics.enabled }}
+  - name: metrics
+    protocol: TCP
+    port: {{ .Values.dex.servicePortMetrics }}
+    targetPort: metrics
+{{- end }}
   selector:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.dex.name }}
     app.kubernetes.io/instance: {{ .Release.Name }}
