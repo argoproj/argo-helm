@@ -36,6 +36,8 @@ controller:
   image:
     # Overrides .images.tag if defined.
     tag: ""
+  # namespace is a label selector filter to limit the controller's watch to a specific namespace
+  # namespace:
   # podAnnotations is an optional map of annotations to be applied to the controller Pods
   podAnnotations: {}
   # Optional labels to add to the controller pods
