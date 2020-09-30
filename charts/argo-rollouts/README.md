@@ -44,3 +44,4 @@ $ helm install --name my-release argo/argo-rollouts
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | serviceAccount.name | string | `"argo-rollouts"` |  |
+| serviceAnnotations | object | `{}` | |
