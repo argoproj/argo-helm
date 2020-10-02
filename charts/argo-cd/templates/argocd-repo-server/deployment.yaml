@@ -60,6 +60,8 @@ spec:
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
         {{- end }}
+        - --logformat
+        - {{ .Values.repoServer.logFormat }}
         - --loglevel
         - {{ .Values.repoServer.logLevel }}
         {{- with .Values.repoServer.extraArgs }}
