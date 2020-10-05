@@ -56,6 +56,8 @@ spec:
         - {{ .Values.controller.args.appResyncPeriod | quote }}
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
+        - --logformat
+        - {{ .Values.controller.logFormat }}
         - --loglevel
         - {{ .Values.controller.logLevel }}
         {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}

@@ -61,6 +61,8 @@ spec:
         - --dex-server
         - http://{{ template "argo-cd.dex.fullname" . }}:{{ .Values.dex.servicePortHttp }}
         {{- end }}
+        - --logformat
+        - {{ .Values.server.logFormat }}
         - --loglevel
         - {{ .Values.server.logLevel }}
         {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
