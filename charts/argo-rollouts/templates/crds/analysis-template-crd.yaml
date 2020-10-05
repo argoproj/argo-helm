@@ -78,6 +78,15 @@ spec:
                       job:
                         properties:
                           metadata:
+                            properties:
+                              annotations:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                              labels:
+                                additionalProperties:
+                                  type: string
+                                type: object
                             type: object
                           spec:
                             properties:
@@ -121,6 +130,15 @@ spec:
                               template:
                                 properties:
                                   metadata:
+                                    properties:
+                                      annotations:
+                                        additionalProperties:
+                                          type: string
+                                        type: object
+                                      labels:
+                                        additionalProperties:
+                                          type: string
+                                        type: object
                                     type: object
                                   spec:
                                     properties:
@@ -742,23 +760,6 @@ spec:
                                                   type: integer
                                               type: object
                                             resources:
-                                              properties:
-                                                limits:
-                                                  additionalProperties:
-                                                    anyOf:
-                                                    - type: integer
-                                                    - type: string
-                                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                                    x-kubernetes-int-or-string: true
-                                                  type: object
-                                                requests:
-                                                  additionalProperties:
-                                                    anyOf:
-                                                    - type: integer
-                                                    - type: string
-                                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                                    x-kubernetes-int-or-string: true
-                                                  type: object
                                               type: object
                                             securityContext:
                                               properties:
@@ -1298,23 +1299,6 @@ spec:
                                                   type: integer
                                               type: object
                                             resources:
-                                              properties:
-                                                limits:
-                                                  additionalProperties:
-                                                    anyOf:
-                                                    - type: integer
-                                                    - type: string
-                                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                                    x-kubernetes-int-or-string: true
-                                                  type: object
-                                                requests:
-                                                  additionalProperties:
-                                                    anyOf:
-                                                    - type: integer
-                                                    - type: string
-                                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                                    x-kubernetes-int-or-string: true
-                                                  type: object
                                               type: object
                                             securityContext:
                                               properties:
@@ -1858,23 +1842,6 @@ spec:
                                                   type: integer
                                               type: object
                                             resources:
-                                              properties:
-                                                limits:
-                                                  additionalProperties:
-                                                    anyOf:
-                                                    - type: integer
-                                                    - type: string
-                                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                                    x-kubernetes-int-or-string: true
-                                                  type: object
-                                                requests:
-                                                  additionalProperties:
-                                                    anyOf:
-                                                    - type: integer
-                                                    - type: string
-                                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                                    x-kubernetes-int-or-string: true
-                                                  type: object
                                               type: object
                                             securityContext:
                                               properties:
@@ -2734,6 +2701,8 @@ spec:
                               - value
                               type: object
                             type: array
+                          insecure:
+                            type: boolean
                           jsonPath:
                             type: string
                           timeoutSeconds:
@@ -2741,7 +2710,6 @@ spec:
                           url:
                             type: string
                         required:
-                        - jsonPath
                         - url
                         type: object
                     type: object
