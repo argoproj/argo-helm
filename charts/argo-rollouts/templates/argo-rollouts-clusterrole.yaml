@@ -50,6 +50,12 @@ rules:
 - apiGroups:
   - argoproj.io
   resources:
+  - rollouts/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argoproj.io
+  resources:
   - analysisruns
   - experiments
   verbs:
@@ -63,7 +69,15 @@ rules:
 - apiGroups:
   - argoproj.io
   resources:
+  - analysisruns/finalizers
+  - experiments/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argoproj.io
+  resources:
   - analysistemplates
+  - clusteranalysistemplates
   verbs:
   - get
   - list
@@ -106,11 +120,22 @@ rules:
   - watch
   - get
   - update
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
   - list
-  - delete
+- apiGroups:
+  - split.smi-spec.io
+  resources:
+  - trafficsplits
+  verbs:
+  - create
+  - watch
+  - get
+  - update
+  - patch
+- apiGroups:
+    - ""
+  resources:
+    - pods
+  verbs:
+    - list
+    - delete
 {{- end }}

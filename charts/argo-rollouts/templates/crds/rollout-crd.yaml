@@ -132,15 +132,17 @@ spec:
                             - name
                             type: object
                           type: array
+                        clusterScope:
+                          type: boolean
                         templateName:
                           type: string
                         templates:
                           items:
                             properties:
+                              clusterScope:
+                                type: boolean
                               templateName:
                                 type: string
-                            required:
-                            - templateName
                             type: object
                           type: array
                       type: object
@@ -162,15 +164,17 @@ spec:
                             - name
                             type: object
                           type: array
+                        clusterScope:
+                          type: boolean
                         templateName:
                           type: string
                         templates:
                           items:
                             properties:
+                              clusterScope:
+                                type: boolean
                               templateName:
                                 type: string
-                            required:
-                            - templateName
                             type: object
                           type: array
                       type: object
@@ -208,6 +212,8 @@ spec:
                             - name
                             type: object
                           type: array
+                        clusterScope:
+                          type: boolean
                         startingStep:
                           format: int32
                           type: integer
@@ -216,10 +222,10 @@ spec:
                         templates:
                           items:
                             properties:
+                              clusterScope:
+                                type: boolean
                               templateName:
                                 type: string
-                            required:
-                            - templateName
                             type: object
                           type: array
                       type: object
@@ -271,15 +277,17 @@ spec:
                                   - name
                                   type: object
                                 type: array
+                              clusterScope:
+                                type: boolean
                               templateName:
                                 type: string
                               templates:
                                 items:
                                   properties:
+                                    clusterScope:
+                                      type: boolean
                                     templateName:
                                       type: string
-                                  required:
-                                  - templateName
                                   type: object
                                 type: array
                             type: object
@@ -304,6 +312,8 @@ spec:
                                         - name
                                         type: object
                                       type: array
+                                    clusterScope:
+                                      type: boolean
                                     name:
                                       type: string
                                     templateName:
@@ -388,6 +398,8 @@ spec:
                               type: string
                             ingress:
                               type: string
+                            rootService:
+                              type: string
                             servicePort:
                               format: int32
                               type: integer
@@ -425,12 +437,28 @@ spec:
                           required:
                           - stableIngress
                           type: object
+                        smi:
+                          properties:
+                            rootService:
+                              type: string
+                            trafficSplitName:
+                              type: string
+                          type: object
                       type: object
                   type: object
               type: object
             template:
               properties:
                 metadata:
+                  properties:
+                    annotations:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    labels:
+                      additionalProperties:
+                        type: string
+                      type: object
                   type: object
                 spec:
                   properties:
@@ -1052,23 +1080,6 @@ spec:
                                 type: integer
                             type: object
                           resources:
-                            properties:
-                              limits:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
-                              requests:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
                             type: object
                           securityContext:
                             properties:
@@ -1608,23 +1619,6 @@ spec:
                                 type: integer
                             type: object
                           resources:
-                            properties:
-                              limits:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
-                              requests:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
                             type: object
                           securityContext:
                             properties:
@@ -2168,23 +2162,6 @@ spec:
                                 type: integer
                             type: object
                           resources:
-                            properties:
-                              limits:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
-                              requests:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
                             type: object
                           securityContext:
                             properties:
@@ -2935,6 +2912,9 @@ spec:
               type: integer
             abort:
               type: boolean
+            abortedAt:
+              format: date-time
+              type: string
             availableReplicas:
               format: int32
               type: integer
@@ -2944,8 +2924,32 @@ spec:
                   type: string
                 postPromotionAnalysisRun:
                   type: string
+                postPromotionAnalysisRunStatus:
+                  properties:
+                    message:
+                      type: string
+                    name:
+                      type: string
+                    status:
+                      type: string
+                  required:
+                  - name
+                  - status
+                  type: object
                 prePromotionAnalysisRun:
                   type: string
+                prePromotionAnalysisRunStatus:
+                  properties:
+                    message:
+                      type: string
+                    name:
+                      type: string
+                    status:
+                      type: string
+                  required:
+                  - name
+                  - status
+                  type: object
                 previewSelector:
                   type: string
                 previousActiveSelector:
@@ -2960,10 +2964,34 @@ spec:
               properties:
                 currentBackgroundAnalysisRun:
                   type: string
+                currentBackgroundAnalysisRunStatus:
+                  properties:
+                    message:
+                      type: string
+                    name:
+                      type: string
+                    status:
+                      type: string
+                  required:
+                  - name
+                  - status
+                  type: object
                 currentExperiment:
                   type: string
                 currentStepAnalysisRun:
                   type: string
+                currentStepAnalysisRunStatus:
+                  properties:
+                    message:
+                      type: string
+                    name:
+                      type: string
+                    status:
+                      type: string
+                  required:
+                  - name
+                  - status
+                  type: object
                 stableRS:
                   type: string
               type: object
