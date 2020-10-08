@@ -26,6 +26,10 @@ spec:
 {{ toYaml .Values.controller.podAnnotations | indent 8}}{{- end }}
     spec:
       serviceAccountName: {{ .Values.controller.serviceAccount | quote }}
+      {{- if .Values.controller.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.controller.podSecurityContext | nindent 8 }}
+      {{- end }}
       containers:
         - name: controller
           image: "{{ .Values.images.namespace }}/{{ .Values.images.controller }}:{{ default .Values.images.tag .Values.controller.image.tag }}"
@@ -63,6 +67,10 @@ spec:
           ports:
           - containerPort: 8080
           {{- end }}
+      {{- with .Values.images.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.controller.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

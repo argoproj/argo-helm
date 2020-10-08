@@ -62,7 +62,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.6.1"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.7.6"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
@@ -273,6 +273,11 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | dex.initImage.repository | Argo CD init image repository. | `global.image.repository` |
 | dex.initImage.imagePullPolicy | Argo CD init image imagePullPolicy | `global.image.imagePullPolicy` |
 | dex.initImage.tag | Argo CD init image tag | `global.image.tag` |
+| dex.metrics.enabled | Deploy metrics service | `false` |
+| dex.metrics.service.annotations | Metrics service annotations | `{}` |
+| dex.metrics.service.labels | Metrics service labels | `{}` |
+| dex.metrics.serviceMonitor.enabled | Enable a prometheus ServiceMonitor. | `false` |
+| dex.metrics.serviceMonitor.selector | Prometheus ServiceMonitor selector. | `{}` |
 | dex.name | Dex name | `"dex-server"` |
 | dex.env | Environment variables for the Dex server. | `[]` |
 | dex.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |

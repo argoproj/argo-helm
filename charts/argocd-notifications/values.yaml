@@ -101,6 +101,8 @@ metrics:
     # interval: 30s
     # scrapeTimeout: 10s
 
+podAnnotations: {}
+
 resources: {}
   # limits:
   #   cpu: 100m
@@ -209,6 +211,7 @@ bots:
 
     service:
       annotations: {}
+      port: 80
       type: LoadBalancer
 
     serviceAccount:

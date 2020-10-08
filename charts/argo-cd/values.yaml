@@ -10,7 +10,7 @@ installCRDs: true
 global:
   image:
     repository: argoproj/argocd
-    tag: v1.6.2
+    tag: v1.7.6
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -28,7 +28,7 @@ controller:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.6.2
+    tag: # v1.7.6
     imagePullPolicy: # IfNotPresent
 
   ## Argo controller commandline flags
@@ -37,6 +37,8 @@ controller:
     operationProcessors: "10"
     appResyncPeriod: "180"
 
+  ## Argo controller log format: text|json
+  logFormat: text
   ## Argo controller log level
   logLevel: info
 
@@ -172,6 +174,14 @@ dex:
   enabled: true
   name: dex-server
 
+  metrics:
+    enabled: false
+    service:
+      annotations: {}
+      labels: {}
+    serviceMonitor:
+      enabled: false
+
   image:
     repository: quay.io/dexidp/dex
     tag: v2.22.0
@@ -212,6 +222,8 @@ dex:
   servicePortHttp: 5556
   containerPortGrpc: 5557
   servicePortGrpc: 5557
+  containerPortMetrics: 5558
+  servicePortMetrics: 5558
 
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
@@ -330,7 +342,7 @@ server:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.6.1
+    tag: # v1.7.6
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
@@ -342,6 +354,8 @@ server:
   ##
   env: []
 
+  ## Argo server log format: text|json
+  logFormat: text
   ## Argo server log level
   logLevel: info
 
@@ -454,6 +468,12 @@ server:
       # - argocd.example.com
     paths:
       - /
+    extraPaths:
+      []
+      # - path: /*
+      #   backend:
+      #     serviceName: ssl-redirect
+      #     servicePort: use-annotation
     tls:
       []
       # - secretName: argocd-example-tls
@@ -476,6 +496,12 @@ server:
       # - argocd.example.com
     paths:
       - /
+    extraPaths:
+      []
+      # - path: /*
+      #   backend:
+      #     serviceName: ssl-redirect
+      #     servicePort: use-annotation
     tls:
       []
       # - secretName: argocd-example-tls
@@ -604,6 +630,13 @@ server:
   #     kind: StatefulSet
   #   orphanedResources: {}
   #   roles: []
+  #   syncWindows:
+  #   - kind: allow
+  #     schedule: '10 1 * * *'
+  #     duration: 1h
+  #     applications:
+  #     - '*-prod'
+  #     manualSync: true
 
   ## Enable Admin ClusterRole resources.
   ## Enable if you would like to grant rights to ArgoCD to deploy to the local Kubernetes cluster.
@@ -635,7 +668,7 @@ repoServer:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.6.1
+    tag: # v1.7.6
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
@@ -646,6 +679,8 @@ repoServer:
   ##
   env: []
 
+  ## Argo repoServer log format: text|json
+  logFormat: text
   ## Argo repoServer log level
   logLevel: info
 
