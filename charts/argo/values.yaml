@@ -125,6 +125,10 @@ controller:
     kubernetes.io/os: linux
   tolerations: []
   affinity: {}
+  # Leverage a PriorityClass to ensure your pods survive resource shortages
+  # ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
+  # PriorityClass: system-cluster-critical
+  priorityClassName: ""
 
 # executor controls how the init and wait container should be customized
 executor:
@@ -185,6 +189,10 @@ server:
     kubernetes.io/os: linux
   tolerations: []
   affinity: {}
+  # Leverage a PriorityClass to ensure your pods survive resource shortages
+  # ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
+  # PriorityClass: system-cluster-critical
+  priorityClassName: ""
 
   # Extra arguments to provide to the Argo server binary.
   extraArgs: []
