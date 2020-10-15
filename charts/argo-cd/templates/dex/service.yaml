@@ -16,7 +16,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.dex.name }}
-spec:
+{{- if .Values.dex.metrics.service.labels }}
+{{- toYaml .Values.dex.metrics.service.labels | nindent 4 }}
+{{- end }}spec:
   ports:
   - name: http
     protocol: TCP
