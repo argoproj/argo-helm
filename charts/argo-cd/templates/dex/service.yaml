@@ -18,7 +18,8 @@ metadata:
     app.kubernetes.io/component: {{ .Values.dex.name }}
 {{- if .Values.dex.metrics.service.labels }}
 {{- toYaml .Values.dex.metrics.service.labels | nindent 4 }}
-{{- end }}spec:
+{{- end }}
+spec:
   ports:
   - name: http
     protocol: TCP
