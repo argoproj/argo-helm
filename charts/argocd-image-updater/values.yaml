@@ -1,0 +1,78 @@
+replicaCount: 1
+image:
+  repository: argoprojlabs/argocd-image-updater
+  pullPolicy: Always
+  tag: v0.7.0
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# Extra command args not defined in config.argocd: https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags
+# All of the argocd- prefixed flags are set in config.argocd
+extraArgs:
+  # - --disable-kubernetes
+  # - --dry-run
+  # - --health-port 8080
+  # - --interval 2m
+  # - --kubeconfig ~/.kube/config
+  # - --match-application-name staging-*
+  # - --max-concurrency 5
+  # - --once
+  # - --registries-conf-path /app/config/registries.conf
+
+config:
+  # Config values described here: https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags
+  argocd:
+    grpcWeb: true
+    serverAddress: ""
+    insecure: false
+    plaintext: false
+  logLevel: "info"
+  # https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/#configuring-a-custom-container-registry
+  registries: []
+    # - name: Docker Hub
+    #   api_url: https://registry-1.docker.io
+    #   ping: yes
+    #   credentials: secret:foo/bar#creds
+    #   defaultns: library
+    # - name: Google Container Registry
+    #   api_url: https://gcr.io
+    #   prefix: gcr.io
+    #   ping: no
+    #   credentials: pullsecret:foo/bar
+    # - name: RedHat Quay
+    #   api_url: https://quay.io
+    #   ping: no
+    #   prefix: quay.io
+    #   credentials: env:REGISTRY_SECRET
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

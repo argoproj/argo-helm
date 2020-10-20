@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "argocd-image-updater.fullname" . }}
+  labels:
+    {{- include "argocd-image-updater.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "argocd-image-updater.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        {{- include "argocd-image-updater.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "argocd-image-updater.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          command: 
+            - /usr/local/bin/argocd-image-updater
+            - run
+            {{- with .Values.extraArgs }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          env:
+          - name: ARGOCD_GRPC_WEB
+            value: {{ .Values.config.argocd.grpcWeb | quote }}
+          - name: ARGOCD_SERVER
+            value: {{ .Values.config.argocd.serverAddress }}
+          - name: ARGOCD_INSECURE
+            value: {{ .Values.config.argocd.insecure | quote }}
+          - name: ARGOCD_PLAINTEXT
+            value: {{ .Values.config.argocd.plaintext | quote }}
+          - name: ARGOCD_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: argocd.token
+                name: argocd-image-updater-secret
+                optional: true
+          - name: IMAGE_UPDATER_LOGLEVEL
+            value: {{ .Values.config.logLevel }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 30
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+          - mountPath: /app/config
+            name: registries-conf
+      volumes:
+      - configMap:
+          items:
+          - key: registries.conf
+            path: registries.conf
+          name: argocd-image-updater-config
+        name: registries-conf
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
