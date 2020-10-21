@@ -1,0 +1,28 @@
+{{- if .Values.controller.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: {{ .Release.Name }}-metrics
+    app.kubernetes.io/part-of: {{ .Release.Name }}
+    {{- if .Values.controller.metrics.serviceMonitor.additionalLabels }}
+{{ toYaml .Values.controller.metrics.serviceMonitor.additionalLabels | indent 4 }}
+    {{- end }}
+  {{- if .Values.controller.metrics.serviceMonitor.additionalAnnotations }}
+  annotations:
+{{ toYaml .Values.controller.metrics.serviceMonitor.additionalAnnotations | indent 4 }}
+  {{- end }}
+spec:
+  endpoints:
+  - port: metrics
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: {{ .Release.Name }}-metrics
+      app.kubernetes.io/part-of: {{ .Release.Name }}
+{{- end }}

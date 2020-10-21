@@ -24,6 +24,12 @@ controller:
   #    cpu: 50m
   #    memory: 64Mi
 
+  metrics:
+    serviceMonitor:
+      enabled: false
+      additionalLabels: {}
+      additionalAnnotations: {}
+
 
 serviceAccount:
   name: argo-rollouts
