@@ -8,6 +8,17 @@ metadata:
   annotations:
     helm.sh/hook: crd-install
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.sync.status
+    name: Sync Status
+    type: string
+  - JSONPath: .status.health.status
+    name: Health Status
+    type: string
+  - JSONPath: .status.sync.revision
+    name: Revision
+    priority: 10
+    type: string
   group: argoproj.io
   names:
     kind: Application
@@ -18,6 +29,7 @@ spec:
     - apps
     singular: application
   scope: Namespaced
+  subresources: {}
   validation:
     openAPIV3Schema:
       description: Application is a definition of Application resource.
@@ -208,6 +220,9 @@ spec:
                         values:
                           description: Values is Helm values, typically defined as a block
                           type: string
+                        version:
+                          description: Version is the Helm version to use for templating with
+                          type: string
                       type: object
                     ksonnet:
                       description: Ksonnet holds ksonnet specific options
@@ -296,7 +311,7 @@ spec:
                   description: SyncStrategy describes how to perform the sync
                   properties:
                     apply:
-                      description: Apply wil perform a `kubectl apply` to perform the sync.
+                      description: Apply will perform a `kubectl apply` to perform the sync.
                       properties:
                         force:
                           description: Force indicates whether or not to supply the --force flag to `kubectl apply`. The --force flag deletes and re-create the resource, when PATCH encounters conflict and has retried for 5 times.
@@ -466,6 +481,9 @@ spec:
                     values:
                       description: Values is Helm values, typically defined as a block
                       type: string
+                    version:
+                      description: Version is the Helm version to use for templating with
+                      type: string
                   type: object
                 ksonnet:
                   description: Ksonnet holds ksonnet specific options
@@ -551,6 +569,9 @@ spec:
                 automated:
                   description: Automated will keep an application synced to the target revision
                   properties:
+                    allowEmpty:
+                      description: 'AllowEmpty allows apps have zero live resources (default: false)'
+                      type: boolean
                     prune:
                       description: 'Prune will prune resources automatically as part of automated sync (default: false)'
                       type: boolean
@@ -737,6 +758,9 @@ spec:
                           values:
                             description: Values is Helm values, typically defined as a block
                             type: string
+                          version:
+                            description: Version is the Helm version to use for templating with
+                            type: string
                         type: object
                       ksonnet:
                         description: Ksonnet holds ksonnet specific options
@@ -823,7 +847,7 @@ spec:
                 type: object
               type: array
             observedAt:
-              description: ObservedAt indicates when the application state was updated without querying latest git state
+              description: 'ObservedAt indicates when the application state was updated without querying latest git state Deprecated: controller no longer updates ObservedAt field'
               format: date-time
               type: string
             operationState:
@@ -1014,6 +1038,9 @@ spec:
                                 values:
                                   description: Values is Helm values, typically defined as a block
                                   type: string
+                                version:
+                                  description: Version is the Helm version to use for templating with
+                                  type: string
                               type: object
                             ksonnet:
                               description: Ksonnet holds ksonnet specific options
@@ -1102,7 +1129,7 @@ spec:
                           description: SyncStrategy describes how to perform the sync
                           properties:
                             apply:
-                              description: Apply wil perform a `kubectl apply` to perform the sync.
+                              description: Apply will perform a `kubectl apply` to perform the sync.
                               properties:
                                 force:
                                   description: Force indicates whether or not to supply the --force flag to `kubectl apply`. The --force flag deletes and re-create the resource, when PATCH encounters conflict and has retried for 5 times.
@@ -1268,6 +1295,9 @@ spec:
                               type: array
                             values:
                               description: Values is Helm values, typically defined as a block
+                              type: string
+                            version:
+                              description: Version is the Helm version to use for templating with
                               type: string
                           type: object
                         ksonnet:
@@ -1520,6 +1550,9 @@ spec:
                               type: array
                             values:
                               description: Values is Helm values, typically defined as a block
+                              type: string
+                            version:
+                              description: Version is the Helm version to use for templating with
                               type: string
                           type: object
                         ksonnet:
