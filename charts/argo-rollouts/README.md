@@ -39,6 +39,7 @@ $ helm install --name my-release argo/argo-rollouts
 | controller.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
 | controller.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
 | controller.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
+| controller.metrics.serviceMonitor.enabled | bool | `false` |  |
 | imagePullSecrets | list | `[]` |  |
 | installCRDs | bool | `true` |  |
 | podAnnotations | object | `{}` |  |
