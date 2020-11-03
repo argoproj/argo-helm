@@ -157,6 +157,7 @@ server:
   # SecurityContext to set on the server pods
   podSecurityContext: {}
   name: server
+  readinessProbeScheme: HTTP
   serviceType: ClusterIP
   servicePort: 2746
   # servicePortName: http
