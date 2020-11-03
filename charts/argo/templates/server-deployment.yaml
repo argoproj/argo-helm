@@ -52,7 +52,7 @@ spec:
             httpGet:
               path: /
               port: 2746
-              scheme: HTTP
+              scheme: {{ .Values.server.readinessProbeScheme }}
             initialDelaySeconds: 10
             periodSeconds: 20
           env:
