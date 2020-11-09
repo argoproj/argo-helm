@@ -32,6 +32,7 @@ rules:
   resources:
   - persistentvolumeclaims
   verbs:
+  - get
   - create
   - delete
 - apiGroups:
@@ -56,6 +57,19 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - clusterworkflowtemplates
+  - clusterworkflowtemplates/finalizers
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
 - apiGroups:
   - argoproj.io
   resources:
