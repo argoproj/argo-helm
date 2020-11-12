@@ -10,7 +10,7 @@ do
     echo "Running Helm linting for $name"
     docker run \
         -v "$SRCROOT:/workdir" \
-        gcr.io/kubernetes-charts-ci/test-image:v3.1.0 \
+        gcr.io/kubernetes-charts-ci/test-image:v3.3.0 \
         ct \
         lint \
         --config .circleci/chart-testing.yaml \
