@@ -67,16 +67,20 @@ spec:
             value: {{ .Values.server.baseHref | quote }}
           resources:
             {{- toYaml .Values.server.resources | nindent 12 }}
-          {{- with .Values.server.volumeMounts }}
           volumeMounts:
+          - name: tmp
+            mountPath: /tmp
+          {{- with .Values.server.volumeMounts }}
             {{- toYaml . | nindent 12}}
           {{- end }}
       {{- with .Values.images.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.volumes }}
       volumes:
+      - name: tmp
+        emptyDir: {}
+      {{- with .Values.server.volumes }}
         {{- toYaml . | nindent 8}}
       {{- end }}
       {{- with .Values.server.nodeSelector }}
@@ -94,5 +98,4 @@ spec:
       {{- if .Values.server.priorityClassName }}
       priorityClassName: {{ .Values.server.priorityClassName }}
       {{- end }}
-
 {{- end -}}
