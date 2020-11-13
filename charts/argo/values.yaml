@@ -164,6 +164,9 @@ server:
   serviceType: ClusterIP
   servicePort: 2746
   # servicePortName: http
+  rbac:
+    # When present, restricts secrets the server can read to a given list.
+    secretWhitelist: []
   serviceAccount: argo-server
   # Whether to create the service account with the name specified in
   # server.serviceAccount and bind it to the server role.
