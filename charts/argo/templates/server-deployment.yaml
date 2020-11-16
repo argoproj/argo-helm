@@ -71,7 +71,7 @@ spec:
           - name: tmp
             mountPath: /tmp
           {{- with .Values.server.volumeMounts }}
-            {{- toYaml . | nindent 12}}
+            {{- toYaml . | nindent 10}}
           {{- end }}
       {{- with .Values.images.pullSecrets }}
       imagePullSecrets:
@@ -81,7 +81,7 @@ spec:
       - name: tmp
         emptyDir: {}
       {{- with .Values.server.volumes }}
-        {{- toYaml . | nindent 8}}
+        {{- toYaml . | nindent 6}}
       {{- end }}
       {{- with .Values.server.nodeSelector }}
       nodeSelector:
