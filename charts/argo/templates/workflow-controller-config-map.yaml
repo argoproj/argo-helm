@@ -81,3 +81,6 @@ data:
     {{- with .Values.controller.workflowRestrictions }}
     workflowRestrictions: {{- toYaml . | nindent 6 }}
     {{- end }}
+    {{- with .Values.controller.links }}
+    links: {{- toYaml . | nindent 6 }}
+    {{- end }}
