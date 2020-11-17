@@ -16,7 +16,9 @@ data:
     {{- end }}
     {{- end }}
     containerRuntimeExecutor: {{ .Values.controller.containerRuntimeExecutor }}
+    {{- if .Values.controller.parallelism }}
     parallelism: {{ .Values.controller.parallelism }}
+    {{- end }}
     {{- if or .Values.executor.resources .Values.executor.env .Values.executor.securityContext}}
     executor:
       {{- with .Values.executor.resources }}
