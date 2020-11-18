@@ -7,7 +7,7 @@ images:
   # Secrets with credentials to pull images from a private registry
   pullSecrets: []
   # - name: argo-pull-secret
-  tag: v2.11.3
+  tag: v2.11.7
 
 crdVersion: v1alpha1
 installCRD: true
@@ -36,6 +36,8 @@ controller:
   image:
     # Overrides .images.tag if defined.
     tag: ""
+  # parallelism dictates how many workflows can be running at the same time
+  parallelism:
   # podAnnotations is an optional map of annotations to be applied to the controller Pods
   podAnnotations: {}
   # Optional labels to add to the controller pods
@@ -129,6 +131,8 @@ controller:
   # ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   # PriorityClass: system-cluster-critical
   priorityClassName: ""
+  # https://argoproj.github.io/argo/links/
+  links: []
 
 # executor controls how the init and wait container should be customized
 executor:
