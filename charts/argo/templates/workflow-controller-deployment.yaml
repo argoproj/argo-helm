@@ -51,7 +51,7 @@ spec:
           - "--workflow-workers"
           - {{ . | quote }}
           {{- end }}
-          {{- if .Values.controller.podWorkers }}
+          {{- with .Values.controller.podWorkers }}
           - "--pod-workers"
           - {{ . | quote }}
           {{- end }}
