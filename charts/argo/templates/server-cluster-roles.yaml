@@ -16,12 +16,6 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - secrets
-  verbs:
-  - get
-- apiGroups:
-  - ""
-  resources:
   - pods
   - pods/exec
   - pods/log
@@ -33,6 +27,21 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - serviceaccounts
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+{{- with .Values.server.rbac.secretWhitelist }}
+  resourceNames: {{- toYaml . | nindent 4 }}
+{{- end }}
+- apiGroups:
+  - ""
+  resources:
   - events
   verbs:
   - watch
@@ -41,15 +50,14 @@ rules:
   - ""
   resources:
   - secrets
-  - serviceaccounts
   resourceNames:
-  {{- if .Values.controller.persistence.postgresql }}
-  - {{ .Values.controller.persistence.postgresql.userNameSecret.name }}
-  - {{ .Values.controller.persistence.postgresql.passwordSecret.name }}
+  {{- with .Values.controller.persistence.postgresql }}
+  - {{ .userNameSecret.name }}
+  - {{ .passwordSecret.name }}
   {{- end}}
-  {{- if .Values.controller.persistence.mysql }}
-  - {{ .Values.controller.persistence.mysql.userNameSecret.name }}
-  - {{ .Values.controller.persistence.mysql.passwordSecret.name }}
+  {{- with .Values.controller.persistence.mysql }}
+  - {{ .userNameSecret.name }}
+  - {{ .passwordSecret.name }}
   {{- end}}
   verbs:
   - get
