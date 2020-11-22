@@ -9,6 +9,42 @@ metadata:
     app.kubernetes.io/part-of: {{ .Release.Name }}
 rules:
 - apiGroups:
+  - argoproj.io
+  resources:
+  - rollouts
+  - rollouts/status
+  - rollouts/finalizers
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - analysisruns
+  - analysisruns/finalizers
+  - experiments
+  - experiments/finalizers
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - argoproj.io
+  resources:
+  - analysistemplates
+  - clusteranalysistemplates
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - apps
   resources:
   - replicasets
@@ -30,58 +66,39 @@ rules:
   - watch
   - patch
 - apiGroups:
-    - ""
+  - ""
   resources:
-    - secrets
-  verbs:
-    - get
-    - list
-    - watch
-- apiGroups:
-  - argoproj.io
-  resources:
-  - rollouts
+  - secrets
   verbs:
   - get
   - list
   - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - list
+  - delete
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
   - update
   - patch
 - apiGroups:
-  - argoproj.io
+  - extensions
   resources:
-  - rollouts/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argoproj.io
-  resources:
-  - analysisruns
-  - experiments
+  - ingresses
   verbs:
   - create
   - get
   - list
   - watch
-  - update
   - patch
-  - delete
-- apiGroups:
-  - argoproj.io
-  resources:
-  - analysisruns/finalizers
-  - experiments/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argoproj.io
-  resources:
-  - analysistemplates
-  - clusteranalysistemplates
-  verbs:
-  - get
-  - list
-  - watch
 - apiGroups:
   - batch
   resources:
@@ -94,24 +111,6 @@ rules:
   - update
   - patch
   - delete
-- apiGroups:
-  - extensions
-  resources:
-  - ingresses
-  verbs:
-  - create
-  - get
-  - list
-  - watch
-  - patch
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - update
-  - patch
 - apiGroups:
   - networking.istio.io
   resources:
@@ -131,17 +130,4 @@ rules:
   - get
   - update
   - patch
-- apiGroups:
-    - ""
-  resources:
-    - pods
-  verbs:
-    - list
-    - delete
-- apiGroups:
-  - "*"
-  resources:
-  - "*/finalizers"
-  verbs:
-  - "*"
 {{- end }}

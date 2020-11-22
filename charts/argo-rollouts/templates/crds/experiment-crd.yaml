@@ -44,6 +44,13 @@ spec:
                           type: string
                         valueFrom:
                           properties:
+                            fieldRef:
+                              properties:
+                                fieldPath:
+                                  type: string
+                              required:
+                              - fieldPath
+                              type: object
                             secretKeyRef:
                               properties:
                                 key:
@@ -2031,6 +2038,8 @@ spec:
                               fsGroup:
                                 format: int64
                                 type: integer
+                              fsGroupChangePolicy:
+                                type: string
                               runAsGroup:
                                 format: int64
                                 type: integer

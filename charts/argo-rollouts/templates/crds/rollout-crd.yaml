@@ -39,6 +39,7 @@ spec:
       labelSelectorPath: .status.selector
       specReplicasPath: .spec.replicas
       statusReplicasPath: .status.HPAReplicas
+    status: {}
   validation:
     openAPIV3Schema:
       properties:
@@ -125,6 +126,13 @@ spec:
                                 type: string
                               valueFrom:
                                 properties:
+                                  fieldRef:
+                                    properties:
+                                      fieldPath:
+                                        type: string
+                                    required:
+                                    - fieldPath
+                                    type: object
                                   podTemplateHashValue:
                                     type: string
                                 type: object
@@ -157,6 +165,13 @@ spec:
                                 type: string
                               valueFrom:
                                 properties:
+                                  fieldRef:
+                                    properties:
+                                      fieldPath:
+                                        type: string
+                                    required:
+                                    - fieldPath
+                                    type: object
                                   podTemplateHashValue:
                                     type: string
                                 type: object
@@ -205,6 +220,13 @@ spec:
                                 type: string
                               valueFrom:
                                 properties:
+                                  fieldRef:
+                                    properties:
+                                      fieldPath:
+                                        type: string
+                                    required:
+                                    - fieldPath
+                                    type: object
                                   podTemplateHashValue:
                                     type: string
                                 type: object
@@ -242,6 +264,17 @@ spec:
                         requiredDuringSchedulingIgnoredDuringExecution:
                           type: object
                       type: object
+                    canaryMetadata:
+                      properties:
+                        annotations:
+                          additionalProperties:
+                            type: string
+                          type: object
+                        labels:
+                          additionalProperties:
+                            type: string
+                          type: object
+                      type: object
                     canaryService:
                       type: string
                     maxSurge:
@@ -254,6 +287,17 @@ spec:
                       - type: integer
                       - type: string
                       x-kubernetes-int-or-string: true
+                    stableMetadata:
+                      properties:
+                        annotations:
+                          additionalProperties:
+                            type: string
+                          type: object
+                        labels:
+                          additionalProperties:
+                            type: string
+                          type: object
+                      type: object
                     stableService:
                       type: string
                     steps:
@@ -270,6 +314,13 @@ spec:
                                       type: string
                                     valueFrom:
                                       properties:
+                                        fieldRef:
+                                          properties:
+                                            fieldPath:
+                                              type: string
+                                          required:
+                                          - fieldPath
+                                          type: object
                                         podTemplateHashValue:
                                           type: string
                                       type: object
@@ -305,6 +356,13 @@ spec:
                                             type: string
                                           valueFrom:
                                             properties:
+                                              fieldRef:
+                                                properties:
+                                                  fieldPath:
+                                                    type: string
+                                                required:
+                                                - fieldPath
+                                                type: object
                                               podTemplateHashValue:
                                                 type: string
                                             type: object
@@ -384,6 +442,17 @@ spec:
                                 - type: integer
                                 - type: string
                                 x-kubernetes-int-or-string: true
+                            type: object
+                          setCanaryScale:
+                            properties:
+                              matchTrafficWeight:
+                                type: boolean
+                              replicas:
+                                format: int32
+                                type: integer
+                              weight:
+                                format: int32
+                                type: integer
                             type: object
                           setWeight:
                             format: int32
@@ -2367,6 +2436,8 @@ spec:
                         fsGroup:
                           format: int64
                           type: integer
+                        fsGroupChangePolicy:
+                          type: string
                         runAsGroup:
                           format: int64
                           type: integer
@@ -2992,8 +3063,6 @@ spec:
                   - name
                   - status
                   type: object
-                stableRS:
-                  type: string
               type: object
             collisionCount:
               format: int32
@@ -3048,6 +3117,8 @@ spec:
                 - startTime
                 type: object
               type: array
+            promoteFull:
+              type: boolean
             readyReplicas:
               format: int32
               type: integer
