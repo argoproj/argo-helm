@@ -42,6 +42,7 @@ $ helm install --name my-release argo/argo-rollouts
 | controller.metrics.serviceMonitor.enabled | bool | `false` |  |
 | imagePullSecrets | list | `[]` |  |
 | installCRDs | bool | `true` |  |
+| CRD.version | API version for CustomResourceDefinition to use. | string | `"apiextensions.k8s.io/v1beta1"` |   |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | serviceAccount.name | string | `"argo-rollouts"` |  |
