@@ -119,6 +119,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.readinessProbe.periodSeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `10` |
 | controller.readinessProbe.successThreshold | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `1` |
 | controller.readinessProbe.timeoutSeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `1` |
+| controller.replicas | The number of controller pods to run | `1` |\
 | controller.resources | Resource limits and requests for the controller pods. | `{}` |
 | controller.service.annotations | Controller service annotations. | `{}` |
 | controller.service.labels | Controller service labels. | `{}` |

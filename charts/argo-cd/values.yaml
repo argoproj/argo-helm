@@ -31,6 +31,10 @@ controller:
     tag: # v1.7.6
     imagePullPolicy: # IfNotPresent
 
+  # If changing the number of replicas you must pass the number as ARGOCD_CONTROLLER_REPLICAS as an environment variable
+  replicas: 1
+
+
   ## Argo controller commandline flags
   args:
     statusProcessors: "20"
@@ -49,6 +53,9 @@ controller:
   ## Environment variables to pass to argocd-controller
   ##
   env: []
+   # - name: "ARGOCD_CONTROLLER_REPLICAS"
+   #   value: ""
+
 
   ## Annotations to be added to controller pods
   ##
