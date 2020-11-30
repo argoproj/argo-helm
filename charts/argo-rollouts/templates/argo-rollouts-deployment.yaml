@@ -2,12 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}
-  {{- if .Values.podAnnotations }}
-  annotations:
-  {{- range $key, $value := .Values.podAnnotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-  {{- end }}
   labels:
     app.kubernetes.io/component: {{ .Values.controller.component }}
     app.kubernetes.io/name: {{ .Release.Name }}
@@ -21,6 +15,12 @@ spec:
       app.kubernetes.io/name: {{ .Release.Name }}
   template:
     metadata:
+      {{- if .Values.podAnnotations }}
+      annotations:
+      {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
       labels:
         app.kubernetes.io/name: {{ .Release.Name }}
     spec:
