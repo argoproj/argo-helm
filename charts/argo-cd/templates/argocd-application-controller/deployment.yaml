@@ -17,7 +17,7 @@ spec:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller
       app.kubernetes.io/instance: {{ .Release.Name }}
   revisionHistoryLimit: 5
-  replicas: 1
+  replicas: {{ .Values.controller.replicas }}
   template:
     metadata:
       {{- if .Values.controller.podAnnotations }}
