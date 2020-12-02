@@ -201,6 +201,12 @@ server:
   # PriorityClass: system-cluster-critical
   priorityClassName: ""
 
+  # Run the argo server in "secure" mode. Configure this value instead of
+  # "--secure" in extraArgs. See the following documentation for more details
+  # on secure mode:
+  # https://argoproj.github.io/argo/tls/#encrypted
+  secure: false
+
   # Extra arguments to provide to the Argo server binary.
   extraArgs: []
 
