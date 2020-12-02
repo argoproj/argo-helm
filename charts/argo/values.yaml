@@ -29,6 +29,7 @@ workflow:
     create: false  # Specifies whether a service account should be created
     annotations: {}
     name: "argo-workflow"  # Service account which is used to run workflows
+    imagePullSecrets: []  # Secrets with credentials to pull images from a private registry
   rbac:
     create: false  # adds Role and RoleBinding for the above specified service account to be able to run workflows
 
