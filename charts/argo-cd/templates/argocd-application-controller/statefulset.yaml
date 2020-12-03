@@ -1,6 +1,6 @@
 {{- $redisHa := (index .Values "redis-ha") -}}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ template "argo-cd.controller.fullname" . }}
   labels:
@@ -16,6 +16,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller
       app.kubernetes.io/instance: {{ .Release.Name }}
+  serviceName: {{ template "argo-cd.controller.fullname" . }}
   revisionHistoryLimit: 5
   replicas: {{ .Values.controller.replicas }}
   template:
