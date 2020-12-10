@@ -48,6 +48,7 @@ sensorController:
   image: sensor-controller
   tag: v1.0.0
   replicaCount: 1
+  debugLogging: false
   sensorImage: sensor
 
 eventsourceController:
@@ -55,6 +56,7 @@ eventsourceController:
   image: eventsource-controller
   tag: v1.0.0
   replicaCount: 1
+  debugLogging: false
   eventsourceImage: eventsource
 
 eventbusController:
@@ -62,5 +64,6 @@ eventbusController:
   image: eventbus-controller
   tag: v1.0.0
   replicaCount: 1
+  debugLogging: false
   natsStreamingImage: nats-streaming:0.17.0
   natsMetricsExporterImage: synadia/prometheus-nats-exporter:0.6.2

@@ -29,6 +29,8 @@ spec:
             - --namespaced
           {{- end }}
           env:
+            - name: DEBUG_LOG
+              value: {{ .Values.eventbusController.debugLogging }}
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
