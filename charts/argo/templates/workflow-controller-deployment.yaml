@@ -61,7 +61,7 @@ spec:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.namespace
-          {{- with .Values.controller.env }}
+          {{- with .Values.controller.extraEnv }}
             {{ toYaml . | nindent 10 }}
           {{- end }}
           resources:
