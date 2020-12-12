@@ -115,6 +115,9 @@ controller:
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
   resources: {}
+  # The list of environment variable definitions to be added to the controller
+  # manages container verbatim.
+  extraEnv: []
   replicas: 1
   pdb:
     enabled: false
