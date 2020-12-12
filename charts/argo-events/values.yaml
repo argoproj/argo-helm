@@ -46,21 +46,21 @@ singleNamespace: true
 sensorController:
   name: sensor-controller
   image: sensor-controller
-  tag: v1.0.0
+  tag: v1.1.0
   replicaCount: 1
   sensorImage: sensor
 
 eventsourceController:
   name: eventsource-controller
   image: eventsource-controller
-  tag: v1.0.0
+  tag: v1.1.0
   replicaCount: 1
   eventsourceImage: eventsource
 
 eventbusController:
   name: eventbus-controller
   image: eventbus-controller
-  tag: v1.0.0
+  tag: v1.1.0
   replicaCount: 1
   natsStreamingImage: nats-streaming:0.17.0
   natsMetricsExporterImage: synadia/prometheus-nats-exporter:0.6.2

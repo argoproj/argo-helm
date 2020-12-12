@@ -37,6 +37,21 @@ spec:
               value: {{ .Values.eventbusController.natsStreamingImage }}
             - name: NATS_METRICS_EXPORTER_IMAGE
               value: {{ .Values.eventbusController.natsMetricsExporterImage }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 9731
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
