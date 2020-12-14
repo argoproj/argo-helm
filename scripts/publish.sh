@@ -8,6 +8,7 @@ rm -rf $SRCROOT/output && git clone -b gh-pages git@github.com:argoproj/argo-hel
 
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo add argoproj https://argoproj.github.io/argo-helm
+helm repo add dandydeveloper https://dandydeveloper.github.io/charts
 
 for dir in $(find $SRCROOT/charts -mindepth 1 -maxdepth 1 -type d);
 do
