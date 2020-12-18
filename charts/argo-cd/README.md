@@ -6,7 +6,7 @@ Source code can be found [here](https://argoproj.github.io/argo-cd/)
 
 ## Additional Information
 
-This is a **community maintained** chart. This chart installs [argo-cd](https://argoproj.github.io/argo-cd/), a declarative, GitOps continuous delivery tool for Kubernetes.
+This is a **community-maintained** chart. This chart installs [argo-cd](https://argoproj.github.io/argo-cd/), a declarative, GitOps continuous delivery tool for Kubernetes.
 
 The default installation is intended to be similar to the provided ArgoCD [releases](https://github.com/argoproj/argo-cd/releases).
 
@@ -20,7 +20,7 @@ The application controller is now available as a `StatefulSet` when the `control
 
 ### 1.8.7 to 2.x.x
 
-`controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are now arrays of strings intead of a map
+`controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are now arrays of strings instead of a map
 
 What was
 ```yaml
@@ -58,7 +58,7 @@ NAME: my-release
 
 Requires chart version 1.5.2 or newer.
 
-Helm v3 has removed the `install-crds` hook so CRDs are now populated by files in the [crds](./crds) directory. Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings about nonexistant webhooks.
+Helm v3 has removed the `install-crds` hook so CRDs are now populated by files in the [crds](./crds) directory. Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings about nonexistent webhooks.
 
 ## Chart Values
 
@@ -303,7 +303,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 
 When Redis is completely disabled from the chart (`redis.enabled=false`) and
 an external Redis instance wants to be used or
-when Redis HA subcart is enabled (`redis.enabled=true and redis-ha.enabled=true`)
+when Redis HA subchart is enabled (`redis.enabled=true and redis-ha.enabled=true`)
 but HA proxy is disabled `redis-ha.haproxy.enabled=false` Redis flags need to be specified
 through `xxx.extraArgs`
 
