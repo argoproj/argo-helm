@@ -30,6 +30,7 @@ rules:
   - serviceaccounts
   verbs:
   - get
+  - list
 - apiGroups:
   - ""
   resources:
@@ -45,6 +46,22 @@ rules:
   - events
   verbs:
   - watch
+{{- if .Values.server.sso }}
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  resourceNames:
+  - sso
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+{{- end }}
 {{- if .Values.controller.persistence }}
 - apiGroups:
   - ""
@@ -54,14 +71,14 @@ rules:
   {{- with .Values.controller.persistence.postgresql }}
   - {{ .userNameSecret.name }}
   - {{ .passwordSecret.name }}
-  {{- end}}
+  {{- end }}
   {{- with .Values.controller.persistence.mysql }}
   - {{ .userNameSecret.name }}
   - {{ .passwordSecret.name }}
-  {{- end}}
+  {{- end }}
   verbs:
   - get
-{{- end}}
+{{- end }}
 - apiGroups:
   - argoproj.io
   resources:
