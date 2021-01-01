@@ -34,6 +34,9 @@ controller:
   # If changing the number of replicas you must pass the number as ARGOCD_CONTROLLER_REPLICAS as an environment variable
   replicas: 1
 
+  # Deploy the application as a StatefulSet instead of a Deployment, this is required for HA capability.
+  # This is a feature flag that will become the default in chart version 3.x
+  enableStatefulSet: false
 
   ## Argo controller commandline flags
   args:
@@ -52,10 +55,10 @@ controller:
 
   ## Environment variables to pass to argocd-controller
   ##
-  env: []
-   # - name: "ARGOCD_CONTROLLER_REPLICAS"
-   #   value: ""
-
+  env:
+    []
+    # - name: "ARGOCD_CONTROLLER_REPLICAS"
+    #   value: ""
 
   ## Annotations to be added to controller pods
   ##
@@ -66,7 +69,8 @@ controller:
   podLabels: {}
 
   ## Labels to set container specific security contexts
-  containerSecurityContext: {}
+  containerSecurityContext:
+    {}
     # capabilities:
     #   drop:
     #     - all
@@ -242,11 +246,11 @@ dex:
   priorityClassName: ""
 
   ## Labels to set container specific security contexts
-  containerSecurityContext: {}
+  containerSecurityContext:
+    {}
     # capabilities:
     #   drop:
     #     - all
-
 
   resources: {}
   #  limits:
@@ -291,7 +295,8 @@ redis:
   priorityClassName: ""
 
   ## Labels to set container specific security contexts
-  containerSecurityContext: {}
+  containerSecurityContext:
+    {}
     # capabilities:
     #   drop:
     #     - all
@@ -326,7 +331,7 @@ redis-ha:
   redis:
     masterGroupName: argocd
     config:
-      save: "\"\""
+      save: '""'
   haproxy:
     enabled: true
     metrics:
@@ -412,7 +417,8 @@ server:
   priorityClassName: ""
 
   ## Labels to set container specific security contexts
-  containerSecurityContext: {}
+  containerSecurityContext:
+    {}
     # capabilities:
     #   drop:
     #     - all
@@ -762,7 +768,8 @@ repoServer:
   priorityClassName: ""
 
   ## Labels to set container specific security contexts
-  containerSecurityContext: {}
+  containerSecurityContext:
+    {}
     # capabilities:
     #   drop:
     #     - all
@@ -818,24 +825,24 @@ repoServer:
   ## Use init containers to configure custom tooling
   ## https://argoproj.github.io/argo-cd/operator-manual/custom_tools/
   ## When using the volumes & volumeMounts section bellow, please comment out those above.
- #  volumes:
- #  - name: custom-tools
- #    emptyDir: {}
- #
- #  initContainers:
- #  - name: download-tools
- #    image: alpine:3.8
- #    command: [sh, -c]
- #    args:
- #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
- #        mv linux-amd64/helm /custom-tools/
- #    volumeMounts:
- #      - mountPath: /custom-tools
- #        name: custom-tools
- #  volumeMounts:
- #  - mountPath: /usr/local/bin/helm
- #    name: custom-tools
- #    subPath: helm
+  #  volumes:
+  #  - name: custom-tools
+  #    emptyDir: {}
+  #
+  #  initContainers:
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+  #        mv linux-amd64/helm /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+  #  volumeMounts:
+  #  - mountPath: /usr/local/bin/helm
+  #    name: custom-tools
+  #    subPath: helm
 
 ## Argo Configs
 configs:
@@ -924,10 +931,11 @@ configs:
     # Custom secrets. Useful for injecting SSO secrets into environment variables.
     # Ref: https://argoproj.github.io/argo-cd/operator-manual/sso/
     # Note that all values must be non-empty.
-    extra: {}
+    extra:
+      {}
       # LDAP_PASSWORD: "mypassword"
 
-  # Argo TLS Data.
+    # Argo TLS Data.
     argocdServerTlsConfig:
       {}
       # key:
