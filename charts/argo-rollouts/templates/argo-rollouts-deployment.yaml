@@ -30,14 +30,13 @@ spec:
       {{- end }}
       serviceAccountName: {{ .Values.serviceAccount.name }}
       containers:
-      - command:
-        - "/bin/rollouts-controller"
         image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
+        {{- if not .Values.clusterInstall }}
+        args:
+        - --namespaced
+        {{- end }}
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         name: {{ .Values.controller.name }}
-        volumeMounts:
-        - name: tmp
-          mountPath: /tmp
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
       {{- if .Values.controller.nodeSelector }}
@@ -52,8 +51,5 @@ spec:
       affinity:
         {{- toYaml .Values.controller.affinity | nindent 8 }}
       {{- end }}
-      volumes:
-      - name: tmp
-        emptyDir: {}
   strategy:
     type: Recreate
