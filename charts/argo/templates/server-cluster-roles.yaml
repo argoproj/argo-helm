@@ -24,12 +24,26 @@ rules:
   - list
   - watch
   - delete
+{{- if .Values.server.sso }}
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  resourceNames:
+  - sso
+  verbs:
+  - get
+  - update
+{{- end}}
+{{- if .Values.server.rbac }}
 - apiGroups:
   - ""
   resources:
   - serviceaccounts
   verbs:
   - get
+  - list
+{{- end }}
 - apiGroups:
   - ""
   resources:
