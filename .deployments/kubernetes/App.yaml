@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: argo-helm
+    server: https://kubernetes.dehklfault.svc
+
+  project: default
+  source:
+    helm:
+      valueFiles:
+        - values.yaml
+    path: charts/argo
+    repoURL: https://github.com/AppDirect/argo-helm.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}

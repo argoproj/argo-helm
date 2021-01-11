@@ -1,0 +1,16 @@
+notification:
+  slack_channel: wg-secret-management-dev
+release:
+  workflow:
+    path: github.com/AppDirect/cd-workflows//bluegreen-release.yaml?ref=master
+  triggers:
+    - filter: ^v\d+\.\d+\.\d+-appdirect-[0-9a-f]+$
+      parameters:
+        - name: deploy-only-test-repos
+          value: |
+            [
+              "manifests-crashburn.infra.use1"
+            ]
+        - name: deploy-only-repos
+          value: |
+            []
