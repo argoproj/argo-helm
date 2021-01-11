@@ -1,16 +1,14 @@
 notification:
-  slack_channel: wg-secret-management-dev
+  slack_channel: team-need4speed-auto
 release:
   workflow:
     path: github.com/AppDirect/cd-workflows//bluegreen-release.yaml?ref=master
   triggers:
-    - filter: ^v\d+\.\d+\.\d+-appdirect-[0-9a-f]+$
+    - filter: ^v\d+\.\d+\.\d+$
       parameters:
         - name: deploy-only-test-repos
           value: |
-            [
-              "manifests-crashburn.infra.use1"
-            ]
+            []
         - name: deploy-only-repos
           value: |
             []
