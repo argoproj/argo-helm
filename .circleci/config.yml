@@ -2,9 +2,10 @@ version: 2.1
 jobs:
   lint:
     docker:
-      - image: quay.io/helmpack/chart-testing:v3.3.1
+      - image: gcr.io/kubernetes-charts-ci/test-image:v3.1.0
     steps:
       - checkout
+      - run: helm init --client-only
       - run: helm repo add minio https://helm.min.io/
       - run: ct lint --config .circleci/chart-testing.yaml --lint-conf .circleci/lintconf.yaml
   # Technically this only needs to be run on master, but it's good to have it run on every PR
