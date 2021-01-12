@@ -20,6 +20,7 @@ jobs:
       - run: git config --global user.name "Circle CI Build"
       - checkout
       - run: helm repo add stable https://charts.helm.sh/stable
+      - run: helm repo add minio https://helm.min.io/
       # Only actually publish charts on master.
       - run: |
           set -x
