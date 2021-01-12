@@ -21,16 +21,16 @@ createAggregateRoles: true
 
 # Restrict Argo to only deploy into a single namespace by apply Roles and RoleBindings instead of the Cluster equivalents,
 # and start argo-cli with the --namespaced flag. Use it in clusters with strict access policy.
-singleNamespace: false
+singleNamespace: true
 
 workflow:
-  namespace: ""  # Specify namespace if workflows run in another namespace than argo. This controls where the service account and RBAC resources will be created.
+  namespace: "argo-ci"  # Specify namespace if workflows run in another namespace than argo. This controls where the service account and RBAC resources will be created.
   serviceAccount:
-    create: false  # Specifies whether a service account should be created
+    create: true  # Specifies whether a service account should be created
     annotations: {}
     name: "argo-workflow"  # Service account which is used to run workflows
   rbac:
-    create: false  # adds Role and RoleBinding for the above specified service account to be able to run workflows
+    create: true  # adds Role and RoleBinding for the above specified service account to be able to run workflows
 
 controller:
   image:
