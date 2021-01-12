@@ -41,7 +41,7 @@ rules:
   verbs:
   - create
 {{- end}}
-{{- if .Values.server.rbac }}
+{{- if .Values.server.sso.rbac }}
 - apiGroups:
   - ""
   resources:
@@ -56,8 +56,10 @@ rules:
   - secrets
   verbs:
   - get
-{{- with .Values.server.rbac.secretWhitelist }}
+{{- if .Values.server.sso.rbac }}
+  {{- with .Values.server.sso.rbac.secretWhitelist }}
   resourceNames: {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
 - apiGroups:
   - ""
