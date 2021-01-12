@@ -1,5 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
+{{- if .Values.singleNamespace }}
+kind: Role
+{{- else }}
 kind: ClusterRole
+{{- end }}
 metadata:
   name: {{ .Release.Name }}-{{ .Values.controller.name }}
 rules:
@@ -127,7 +131,11 @@ rules:
   - delete
 ---
 apiVersion: rbac.authorization.k8s.io/v1
+{{- if .Values.singleNamespace }}
+kind: Role
+{{- else }}
 kind: ClusterRole
+{{- end }}
 metadata:
   name: {{ .Release.Name }}-{{ .Values.controller.name }}-cluster-template
 rules:
