@@ -1,9 +1,9 @@
 {{- if .Values.installCRDs }}
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.2.5
+    controller-gen.kubebuilder.io/version: v0.4.0
   name: clusteranalysistemplates.argoproj.io
 spec:
   group: argoproj.io
@@ -35,6 +35,13 @@ spec:
                     type: string
                   valueFrom:
                     properties:
+                      fieldRef:
+                        properties:
+                          fieldPath:
+                            type: string
+                        required:
+                        - fieldPath
+                        type: object
                       secretKeyRef:
                         properties:
                           key:
@@ -75,6 +82,15 @@ spec:
                     type: string
                   provider:
                     properties:
+                      datadog:
+                        properties:
+                          interval:
+                            type: string
+                          query:
+                            type: string
+                        required:
+                        - query
+                        type: object
                       job:
                         properties:
                           metadata:
@@ -2047,6 +2063,8 @@ spec:
                                           fsGroup:
                                             format: int64
                                             type: integer
+                                          fsGroupChangePolicy:
+                                            type: string
                                           runAsGroup:
                                             format: int64
                                             type: integer
@@ -2672,6 +2690,15 @@ spec:
                         - scopes
                         - storageAccountName
                         - threshold
+                        type: object
+                      newRelic:
+                        properties:
+                          profile:
+                            type: string
+                          query:
+                            type: string
+                        required:
+                        - query
                         type: object
                       prometheus:
                         properties:
