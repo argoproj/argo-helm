@@ -30,7 +30,7 @@ spec:
       {{- end }}
       serviceAccountName: {{ .Values.serviceAccount.name }}
       containers:
-        image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
+      - image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
         {{- if not .Values.clusterInstall }}
         args:
         - --namespaced
