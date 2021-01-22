@@ -6,7 +6,6 @@ GIT_PUSH=${GIT_PUSH:-false}
 
 rm -rf $SRCROOT/output && git clone -b gh-pages git@github.com:argoproj/argo-helm.git $SRCROOT/output
 
-helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo add argoproj https://argoproj.github.io/argo-helm
 
 for dir in $(find $SRCROOT/charts -mindepth 1 -maxdepth 1 -type d);
