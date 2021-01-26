@@ -21,6 +21,7 @@ jobs:
       - checkout
       - run: helm repo add stable https://charts.helm.sh/stable
       - run: helm repo add minio https://helm.min.io/
+      - run: helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
       # Only actually publish charts on master.
       - run: |
           set -x
