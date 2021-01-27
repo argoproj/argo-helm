@@ -14,3 +14,8 @@ maintainers:
   - name: alexmt
   - name: jessesuen
   - name: seanson
+dependencies:
+- name: redis-ha
+  version: 4.10.1
+  repository: https://dandydeveloper.github.io/charts/
+  condition: redis-ha.enabled
