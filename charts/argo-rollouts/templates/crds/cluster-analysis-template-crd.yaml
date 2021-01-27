@@ -4,17 +4,17 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.0
-  name: analysistemplates.argoproj.io
+  name: clusteranalysistemplates.argoproj.io
 spec:
   group: argoproj.io
   names:
-    kind: AnalysisTemplate
-    listKind: AnalysisTemplateList
-    plural: analysistemplates
+    kind: ClusterAnalysisTemplate
+    listKind: ClusterAnalysisTemplateList
+    plural: clusteranalysistemplates
     shortNames:
-    - at
-    singular: analysistemplate
-  scope: Namespaced
+    - cat
+    singular: clusteranalysistemplate
+  scope: Cluster
   validation:
     openAPIV3Schema:
       properties:

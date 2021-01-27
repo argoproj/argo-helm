@@ -1,6 +1,6 @@
 {{- $redisHa := (index .Values "redis-ha") -}}
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ .Values.controller.enableStatefulSet | ternary "StatefulSet" "Deployment" }}
 metadata:
   name: {{ template "argo-cd.controller.fullname" . }}
   labels:
@@ -16,8 +16,11 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller
       app.kubernetes.io/instance: {{ .Release.Name }}
+  {{- if  .Values.controller.enableStatefulSet }}
+  serviceName: {{ template "argo-cd.controller.fullname" . }}
+  {{- end }}
   revisionHistoryLimit: 5
-  replicas: 1
+  replicas: {{ .Values.controller.replicas }}
   template:
     metadata:
       {{- if .Values.controller.podAnnotations }}
@@ -56,6 +59,8 @@ spec:
         - {{ .Values.controller.args.appResyncPeriod | quote }}
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
+        - --logformat
+        - {{ .Values.controller.logFormat }}
         - --loglevel
         - {{ .Values.controller.logLevel }}
         {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}

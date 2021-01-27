@@ -2,23 +2,26 @@ version: 2.1
 jobs:
   lint:
     docker:
-      - image: gcr.io/kubernetes-charts-ci/test-image:v3.1.0
+      - image: quay.io/helmpack/chart-testing:v3.3.1
     steps:
       - checkout
+      - run: helm repo add stable https://charts.helm.sh/stable
       - run: ct lint --config .circleci/chart-testing.yaml --lint-conf .circleci/lintconf.yaml
   # Technically this only needs to be run on master, but it's good to have it run on every PR
   # so that it is regularly tested.
   publish:
     docker:
       # We just need an image with `helm` on it. Handily we know of one already.
-      - image: gcr.io/kubernetes-charts-ci/test-image:v3.1.0
+      - image: quay.io/helmpack/chart-testing:v3.3.1
     steps:
       # install the additional keys needed to push to Github. Alex Collins owns these keys.
       - add_ssh_keys
       - run: git config --global user.email "nobody@circleci.com"
       - run: git config --global user.name "Circle CI Build"
       - checkout
-      - run: helm init --client-only
+      - run: helm repo add stable https://charts.helm.sh/stable
+      - run: helm repo add minio https://helm.min.io/
+      - run: helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
       # Only actually publish charts on master.
       - run: |
           set -x

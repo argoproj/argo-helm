@@ -2,12 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}
-  {{- if .Values.podAnnotations }}
-  annotations:
-  {{- range $key, $value := .Values.podAnnotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-  {{- end }}
   labels:
     app.kubernetes.io/component: {{ .Values.controller.component }}
     app.kubernetes.io/name: {{ .Release.Name }}
@@ -21,6 +15,12 @@ spec:
       app.kubernetes.io/name: {{ .Release.Name }}
   template:
     metadata:
+      {{- if .Values.podAnnotations }}
+      annotations:
+      {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
       labels:
         app.kubernetes.io/name: {{ .Release.Name }}
     spec:
@@ -36,12 +36,12 @@ spec:
         {{- range .Values.controller.args }}
         - {{ . }}
         {{- end }}
+        {{- if not .Values.clusterInstall }}
+        - --namespaced
+        {{- end }}
         image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         name: {{ .Values.controller.name }}
-        volumeMounts:
-        - name: tmp
-          mountPath: /tmp
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
       {{- if .Values.controller.nodeSelector }}
@@ -56,8 +56,5 @@ spec:
       affinity:
         {{- toYaml .Values.controller.affinity | nindent 8 }}
       {{- end }}
-      volumes:
-      - name: tmp
-        emptyDir: {}
   strategy:
     type: Recreate

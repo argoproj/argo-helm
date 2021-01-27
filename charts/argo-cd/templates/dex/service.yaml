@@ -3,6 +3,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "argo-cd.dex.fullname" . }}
+{{- if .Values.dex.metrics.service.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.dex.metrics.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
   labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.dex.name }}
     helm.sh/chart: {{ include "argo-cd.chart" . }}
@@ -10,6 +16,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.dex.name }}
+{{- if .Values.dex.metrics.service.labels }}
+{{- toYaml .Values.dex.metrics.service.labels | nindent 4 }}
+{{- end }}
 spec:
   ports:
   - name: http
@@ -20,6 +29,12 @@ spec:
     protocol: TCP
     port: {{ .Values.dex.servicePortGrpc }}
     targetPort: grpc
+{{- if .Values.dex.metrics.enabled }}
+  - name: metrics
+    protocol: TCP
+    port: {{ .Values.dex.servicePortMetrics }}
+    targetPort: metrics
+{{- end }}
   selector:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.dex.name }}
     app.kubernetes.io/instance: {{ .Release.Name }}

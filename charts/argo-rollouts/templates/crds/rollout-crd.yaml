@@ -1,8 +1,9 @@
-apiVersion: apiextensions.k8s.io/v1beta1
+{{- if .Values.installCRDs }}
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.2.5
+    controller-gen.kubebuilder.io/version: v0.4.0
   name: rollouts.argoproj.io
 spec:
   additionalPrinterColumns:
@@ -36,6 +37,7 @@ spec:
       labelSelectorPath: .status.selector
       specReplicasPath: .spec.replicas
       statusReplicasPath: .status.HPAReplicas
+    status: {}
   validation:
     openAPIV3Schema:
       properties:
@@ -122,6 +124,13 @@ spec:
                                 type: string
                               valueFrom:
                                 properties:
+                                  fieldRef:
+                                    properties:
+                                      fieldPath:
+                                        type: string
+                                    required:
+                                    - fieldPath
+                                    type: object
                                   podTemplateHashValue:
                                     type: string
                                 type: object
@@ -154,6 +163,13 @@ spec:
                                 type: string
                               valueFrom:
                                 properties:
+                                  fieldRef:
+                                    properties:
+                                      fieldPath:
+                                        type: string
+                                    required:
+                                    - fieldPath
+                                    type: object
                                   podTemplateHashValue:
                                     type: string
                                 type: object
@@ -202,6 +218,13 @@ spec:
                                 type: string
                               valueFrom:
                                 properties:
+                                  fieldRef:
+                                    properties:
+                                      fieldPath:
+                                        type: string
+                                    required:
+                                    - fieldPath
+                                    type: object
                                   podTemplateHashValue:
                                     type: string
                                 type: object
@@ -239,6 +262,17 @@ spec:
                         requiredDuringSchedulingIgnoredDuringExecution:
                           type: object
                       type: object
+                    canaryMetadata:
+                      properties:
+                        annotations:
+                          additionalProperties:
+                            type: string
+                          type: object
+                        labels:
+                          additionalProperties:
+                            type: string
+                          type: object
+                      type: object
                     canaryService:
                       type: string
                     maxSurge:
@@ -251,6 +285,17 @@ spec:
                       - type: integer
                       - type: string
                       x-kubernetes-int-or-string: true
+                    stableMetadata:
+                      properties:
+                        annotations:
+                          additionalProperties:
+                            type: string
+                          type: object
+                        labels:
+                          additionalProperties:
+                            type: string
+                          type: object
+                      type: object
                     stableService:
                       type: string
                     steps:
@@ -267,6 +312,13 @@ spec:
                                       type: string
                                     valueFrom:
                                       properties:
+                                        fieldRef:
+                                          properties:
+                                            fieldPath:
+                                              type: string
+                                          required:
+                                          - fieldPath
+                                          type: object
                                         podTemplateHashValue:
                                           type: string
                                       type: object
@@ -302,6 +354,13 @@ spec:
                                             type: string
                                           valueFrom:
                                             properties:
+                                              fieldRef:
+                                                properties:
+                                                  fieldPath:
+                                                    type: string
+                                                required:
+                                                - fieldPath
+                                                type: object
                                               podTemplateHashValue:
                                                 type: string
                                             type: object
@@ -313,6 +372,8 @@ spec:
                                       type: boolean
                                     name:
                                       type: string
+                                    requiredForCompletion:
+                                      type: boolean
                                     templateName:
                                       type: string
                                   required:
@@ -2375,6 +2436,8 @@ spec:
                         fsGroup:
                           format: int64
                           type: integer
+                        fsGroupChangePolicy:
+                          type: string
                         runAsGroup:
                           format: int64
                           type: integer
@@ -3056,6 +3119,8 @@ spec:
                 - startTime
                 type: object
               type: array
+            promoteFull:
+              type: boolean
             readyReplicas:
               format: int32
               type: integer
