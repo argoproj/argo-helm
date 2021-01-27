@@ -14,7 +14,7 @@ controller:
   affinity: {}
   image:
     repository: argoproj/argo-rollouts
-    tag: v0.8.3
+    tag: v0.10.2
     pullPolicy: IfNotPresent
 
   resources: {}
@@ -25,16 +25,28 @@ controller:
   #    cpu: 50m
   #    memory: 64Mi
 
+  metrics:
+    serviceMonitor:
+      enabled: false
+      additionalLabels: {}
+      additionalAnnotations: {}
+
 
 serviceAccount:
   name: argo-rollouts
 
-## Annotations to be added to the Redis server pods
+## Annotations to be added to the Rollout pods
 ##
 podAnnotations: {}
 
-## Labels to be added to the Redis server pods
+## Annotations to be added to the Rollout service
+##
+serviceAnnotations: {}
+
+## Labels to be added to the Rollout pods
 ##
 podLabels: {}
 
+# Secrets with credentials to pull images from a private registry
 imagePullSecrets: []
+# - name: argo-pull-secret

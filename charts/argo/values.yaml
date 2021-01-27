@@ -4,7 +4,10 @@ images:
   server: argocli
   executor: argoexec
   pullPolicy: Always
-  tag: v2.7.6
+  # Secrets with credentials to pull images from a private registry
+  pullSecrets: []
+  # - name: argo-pull-secret
+  tag: v2.12.5
 
 crdVersion: v1alpha1
 installCRD: true
@@ -20,14 +23,27 @@ createAggregateRoles: true
 # and start argo-cli with the --namespaced flag. Use it in clusters with strict access policy.
 singleNamespace: false
 
+workflow:
+  namespace: ""  # Specify namespace if workflows run in another namespace than argo. This controls where the service account and RBAC resources will be created.
+  serviceAccount:
+    create: false  # Specifies whether a service account should be created
+    annotations: {}
+    name: "argo-workflow"  # Service account which is used to run workflows
+  rbac:
+    create: false  # adds Role and RoleBinding for the above specified service account to be able to run workflows
+
 controller:
   image:
     # Overrides .images.tag if defined.
     tag: ""
+  # parallelism dictates how many workflows can be running at the same time
+  parallelism:
   # podAnnotations is an optional map of annotations to be applied to the controller Pods
   podAnnotations: {}
   # Optional labels to add to the controller pods
   podLabels: {}
+  # SecurityContext to set on the controller pods
+  podSecurityContext: {}
   # podPortName: http
   metricsConfig:
     enabled: false
@@ -59,6 +75,8 @@ controller:
   #      secondsAfterCompletion: 84600
   # workflowWorkers: 32
   # podWorkers: 32
+  workflowRestrictions: {}  # Only valid for 2.9+
+  #  templateReferencing: Strict|Secure
   telemetryConfig:
     enabled: false
     path: /telemetry
@@ -97,6 +115,9 @@ controller:
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
   resources: {}
+  # The list of environment variable definitions to be added to the controller
+  # manages container verbatim.
+  extraEnv: []
   replicas: 1
   pdb:
     enabled: false
@@ -105,9 +126,16 @@ controller:
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    kubernetes.io/os: linux
   tolerations: []
   affinity: {}
+  # Leverage a PriorityClass to ensure your pods survive resource shortages
+  # ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
+  # PriorityClass: system-cluster-critical
+  priorityClassName: ""
+  # https://argoproj.github.io/argo/links/
+  links: []
 
 # executor controls how the init and wait container should be customized
 executor:
@@ -117,6 +145,8 @@ executor:
   resources: {}
   # Adds environment variables for the executor.
   env: {}
+  # sets security context for the executor container
+  securityContext: {}
 
 server:
   enabled: true
@@ -131,11 +161,16 @@ server:
   podAnnotations: {}
   # Optional labels to add to the UI pods
   podLabels: {}
+  # SecurityContext to set on the server pods
+  podSecurityContext: {}
   name: server
   serviceType: ClusterIP
   servicePort: 2746
   # servicePortName: http
   serviceAccount: argo-server
+  # Whether to create the service account with the name specified in
+  # server.serviceAccount and bind it to the server role.
+  createServiceAccount: true
   # Service account annotations
   serviceAccountAnnotations: {}
   # Annotations to be applied to the UI Service
@@ -157,9 +192,20 @@ server:
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    kubernetes.io/os: linux
   tolerations: []
   affinity: {}
+  # Leverage a PriorityClass to ensure your pods survive resource shortages
+  # ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
+  # PriorityClass: system-cluster-critical
+  priorityClassName: ""
+
+  # Run the argo server in "secure" mode. Configure this value instead of
+  # "--secure" in extraArgs. See the following documentation for more details
+  # on secure mode:
+  # https://argoproj.github.io/argo/tls/#encrypted
+  secure: false
 
   # Extra arguments to provide to the Argo server binary.
   extraArgs: []
@@ -218,6 +264,18 @@ server:
     #   key: client-secret
     ## The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
     # redirectUrl: https://argo/oauth2/callback
+    # rbac:
+    #   enabled: true
+    ## When present, restricts secrets the server can read to a given list.
+    ## You can use it to restrict the server to only be able to access the
+    ## service account token secrets that are associated with service accounts
+    ## used for authorization.
+    #   secretWhitelist: []
+    ## Scopes requested from the SSO ID provider.  The 'groups' scope requests
+    ## group membership information, which is usually used for authorization
+    ## decisions.
+    # scopes:
+    # - groups
 
 # Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false
@@ -240,6 +298,21 @@ artifactRepository:
     # region:
     # roleARN:
     # useSDKCreds: true
+  # gcs:
+    # bucket: <project>-argo
+    # keyFormat: "{{workflow.namespace}}/{{workflow.name}}/"
+    # serviceAccountKeySecret is a secret selector.
+    # It references the k8s secret named 'my-gcs-credentials'.
+    # This secret is expected to have have the key 'serviceAccountKey',
+    # containing the base64 encoded credentials
+    # to the bucket.
+    #
+    # If it's running on GKE and Workload Identity is used,
+    # serviceAccountKeySecret is not needed.
+    # serviceAccountKeySecret:
+      # name: my-gcs-credentials
+      # key: serviceAccountKey
+
 
 # NOTE: These are setting attributes for the `minio` optional dependency
 minio:

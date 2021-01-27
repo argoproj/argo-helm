@@ -16,7 +16,10 @@ data:
     {{- end }}
     {{- end }}
     containerRuntimeExecutor: {{ .Values.controller.containerRuntimeExecutor }}
-    {{- if or .Values.executor.resources .Values.executor.env }}
+    {{- if .Values.controller.parallelism }}
+    parallelism: {{ .Values.controller.parallelism }}
+    {{- end }}
+    {{- if or .Values.executor.resources .Values.executor.env .Values.executor.securityContext}}
     executor:
       {{- with .Values.executor.resources }}
       resources: {{- toYaml . | nindent 8 }}
@@ -24,12 +27,19 @@ data:
       {{- with .Values.executor.env }}
       env: {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.executor.securityContext }}
+      securityContext: {{- toYaml . | nindent 8 }}
+      {{- end }}
     {{- end }}
     {{- if or .Values.minio.install .Values.useDefaultArtifactRepo }}
     artifactRepository:
       {{- if .Values.artifactRepository.archiveLogs }}
       archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
       {{- end }}
+      {{- if .Values.artifactRepository.gcs }}
+      gcs:
+{{ toYaml .Values.artifactRepository.gcs | indent 8}}
+      {{- else }}
       s3:
         {{- if .Values.useStaticCredentials }}
         accessKeySecret:
@@ -54,6 +64,7 @@ data:
         {{- if .Values.artifactRepository.s3.useSDKCreds }}
         useSDKCreds: {{ .Values.artifactRepository.s3.useSDKCreds }}
         {{- end }}
+      {{- end }}
     {{- end}}
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:
@@ -69,4 +80,10 @@ data:
 {{ toYaml .Values.controller.workflowDefaults | indent 6 }}{{- end }}
     {{- with .Values.server.sso }}
     sso: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.controller.workflowRestrictions }}
+    workflowRestrictions: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.controller.links }}
+    links: {{- toYaml . | nindent 6 }}
     {{- end }}

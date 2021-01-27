@@ -11,7 +11,13 @@ spec:
   scope: Cluster
   names:
     kind: ClusterWorkflowTemplate
+    listKind: ClusterWorkflowTemplateList
     plural: clusterworkflowtemplates
     shortNames:
     - clusterwftmpl
     - cwft
+    singular: clusterworkflowtemplate
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true

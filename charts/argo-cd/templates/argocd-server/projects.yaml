@@ -46,5 +46,9 @@ items:
       roles:
 {{- toYaml .roles | nindent 8 }}
       {{- end }}
+      {{- if .syncWindows }}
+      syncWindows:
+{{- toYaml .syncWindows | nindent 8 }}
+      {{- end }}
 {{- end }}
 {{- end }}

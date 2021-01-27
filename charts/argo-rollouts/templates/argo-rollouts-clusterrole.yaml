@@ -9,38 +9,11 @@ metadata:
     app.kubernetes.io/part-of: {{ .Release.Name }}
 rules:
 - apiGroups:
-  - apps
-  resources:
-  - replicasets
-  verbs:
-  - create
-  - get
-  - list
-  - watch
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - services
-  verbs:
-  - get
-  - list
-  - watch
-  - patch
-- apiGroups:
-    - ""
-  resources:
-    - secrets
-  verbs:
-    - get
-    - list
-    - watch
-- apiGroups:
   - argoproj.io
   resources:
   - rollouts
+  - rollouts/status
+  - rollouts/finalizers
   verbs:
   - get
   - list
@@ -51,7 +24,9 @@ rules:
   - argoproj.io
   resources:
   - analysisruns
+  - analysisruns/finalizers
   - experiments
+  - experiments/finalizers
   verbs:
   - create
   - get
@@ -69,6 +44,77 @@ rules:
   - get
   - list
   - watch
+# replicaset access needed for managing ReplicaSets
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+# services patch needed to update selector of canary/stable/active/preview services
+- apiGroups:
+  - ""
+  resources:
+  - analysistemplates
+  - clusteranalysistemplates
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+# secret read access to run analysis templates which reference secrets
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+# pod list/update needed for updating ephemeral data
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - list
+  - update
+# pods eviction needed for restart
+- apiGroups:
+  - ""
+  resources:
+  - pods/eviction
+  verbs:
+  - create
+# event write needed for emitting events
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - update
+  - patch
+# ingress patch needed for managing ingress annotations, create needed for nginx canary
+- apiGroups:
+  - networking.k8s.io
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - patch
+# job access needed for analysis template job metrics
 - apiGroups:
   - batch
   resources:
@@ -81,24 +127,7 @@ rules:
   - update
   - patch
   - delete
-- apiGroups:
-  - extensions
-  resources:
-  - ingresses
-  verbs:
-  - create
-  - get
-  - list
-  - watch
-  - patch
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - update
-  - patch
+# virtualservice access needed for using the Istio provider
 - apiGroups:
   - networking.istio.io
   resources:
@@ -107,11 +136,16 @@ rules:
   - watch
   - get
   - update
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
   - list
-  - delete
+# trafficsplit access needed for using the SMI provider
+- apiGroups:
+  - split.smi-spec.io
+  resources:
+  - trafficsplits
+  verbs:
+  - create
+  - watch
+  - get
+  - update
+  - patch
 {{- end }}
