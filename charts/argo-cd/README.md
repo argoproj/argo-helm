@@ -20,7 +20,7 @@ The application controller is now available as a `StatefulSet` when the `control
 
 ### 1.8.7 to 2.x.x
 
-`controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are now arrays of strings intead of a map
+`controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are now arrays of strings instead of a map
 
 What was
 ```yaml
