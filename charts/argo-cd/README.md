@@ -129,7 +129,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.service.annotations | Controller service annotations. | `{}` |
 | controller.service.labels | Controller service labels. | `{}` |
 | controller.service.port | Controller service port. | `8082` |
-| controler.serviceAccount.annotations | Controller service account annotations | `{}` |
+| controller.serviceAccount.annotations | Controller service account annotations | `{}` |
 | controller.serviceAccount.create | Create a service account for the controller | `true` |
 | controller.serviceAccount.name | Service account name. | `"argocd-application-controller"` |
 | controller.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
