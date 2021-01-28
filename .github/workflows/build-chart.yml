@@ -1,0 +1,44 @@
+name: Helm
+on:
+  push:
+  pull_request:
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    container: quay.io/helmpack/chart-testing:v3.3.1
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+      - run: helm repo add stable https://charts.helm.sh/stable
+      - run: ct lint --config .circleci/chart-testing.yaml --lint-conf .circleci/lintconf.yaml
+  # Technically this only needs to be run on master, but it's good to have it run on every PR
+  # so that it is regularly tested.
+  publish:
+    needs: lint
+    runs-on: ubuntu-latest
+    # We just need an image with `helm` on it. Handily we know of one already.
+    container: quay.io/helmpack/chart-testing:v3.3.1
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+      - uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+          path: output
+      # Only actually publish charts on master.
+      - name: Publish
+        run: |
+          set -x
+          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config --global user.name "$GITHUB_ACTOR"
+          helm repo add stable https://charts.helm.sh/stable
+          helm repo add minio https://helm.min.io/
+          helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
+          if [ "${GITHUB_REF#refs/heads/}" = "master" ]; then
+            export GIT_PUSH=true
+          else
+            export GIT_PUSH=false
+          fi
+          sh ./scripts/publish.sh
