@@ -54,7 +54,7 @@ NAME: my-release
 ...
 ```
 
-### Helm v3 Compatability
+### Helm v3 Compatibility
 
 Requires chart version 1.5.2 or newer.
 
