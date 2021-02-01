@@ -50,22 +50,18 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 3
       {{- with .Values.securityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
+      securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-{{- if .Values.eventbusController.nodeSelector }}
-      nodeSelector:
-{{ toYaml .Values.eventbusController.nodeSelector | indent 8 }}
-{{- end }}
-{{- if .Values.eventbusController.tolerations }}
-      tolerations:
-{{ toYaml .Values.eventbusController.tolerations | indent 8 }}
-{{- end }}
-{{- if .Values.eventbusController.affinity }}
-      affinity:
-{{ toYaml .Values.eventbusController.affinity | indent 8 }}
-{{- end }}
+      {{- if .Values.eventbusController.nodeSelector }}
+      nodeSelector: {{ toYaml .Values.eventbusController.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.eventbusController.tolerations }}
+      tolerations: {{ toYaml .Values.eventbusController.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.eventbusController.affinity }}
+      affinity: {{ toYaml .Values.eventbusController.affinity | nindent 8 }}
+      {{- end }}
