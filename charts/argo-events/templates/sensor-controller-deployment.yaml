@@ -35,7 +35,35 @@ spec:
                   fieldPath: metadata.namespace
             - name: SENSOR_IMAGE
               value: "{{ .Values.registry }}/{{ .Values.sensorController.sensorImage }}:{{ .Values.sensorController.tag }}"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
+      {{- with .Values.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- if .Values.sensorController.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.sensorController.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.sensorController.tolerations }}
+      tolerations:
+{{ toYaml .Values.sensorController.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.sensorController.affinity }}
+      affinity:
+{{ toYaml .Values.sensorController.affinity | indent 8 }}
+{{- end }}
