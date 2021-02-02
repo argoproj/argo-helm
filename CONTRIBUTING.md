@@ -1,6 +1,6 @@
 # Contributing
 
-Argo Helm is a collection of **community maintained** charts. Therefore we rely on you to test your changes sufficiently.
+Argo Helm is a collection of **community-maintained** charts. Therefore we rely on you to test your changes sufficiently.
 
 ## Testing Argo Workflows Changes
 

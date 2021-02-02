@@ -6,7 +6,7 @@ Source code can be found [here](https://argoproj.github.io/argo-cd/)
 
 ## Additional Information
 
-This is a **community maintained** chart. This chart installs [argo-cd](https://argoproj.github.io/argo-cd/), a declarative, GitOps continuous delivery tool for Kubernetes.
+This is a **community-maintained** chart. This chart installs [argo-cd](https://argoproj.github.io/argo-cd/), a declarative, GitOps continuous delivery tool for Kubernetes.
 
 The default installation is intended to be similar to the provided ArgoCD [releases](https://github.com/argoproj/argo-cd/releases).
 
@@ -307,7 +307,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 
 When Redis is completely disabled from the chart (`redis.enabled=false`) and
 an external Redis instance wants to be used or
-when Redis HA subcart is enabled (`redis.enabled=true and redis-ha.enabled=true`)
+when Redis HA subchart is enabled (`redis.enabled=true and redis-ha.enabled=true`)
 but HA proxy is disabled `redis-ha.haproxy.enabled=false` Redis flags need to be specified
 through `xxx.extraArgs`
 
