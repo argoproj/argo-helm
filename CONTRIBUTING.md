@@ -76,7 +76,7 @@ Please ensure chart version changes adhere to semantic versioning standards:
 
 ## Testing Charts
 
-As part of the Continous Intergration system we run Helm's [Chart Testing](https://github.com/helm/chart-testing) tool.
+As part of the Continuous Integration system we run Helm's [Chart Testing](https://github.com/helm/chart-testing) tool.
 
 The checks for this tool are stricter than the standard Helm requirements, where fields normally considered optional like `maintainer` are required in the standard spec and must be valid GitHub usernames.
 

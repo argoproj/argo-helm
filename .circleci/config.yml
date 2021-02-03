@@ -14,7 +14,7 @@ jobs:
       # We just need an image with `helm` on it. Handily we know of one already.
       - image: quay.io/helmpack/chart-testing:v3.3.1
     steps:
-      # install the additional keys needed to push to Github. Alex Collins owns these keys.
+      # install the additional keys needed to push to GitHub. Alex Collins owns these keys.
       - add_ssh_keys
       - run: git config --global user.email "nobody@circleci.com"
       - run: git config --global user.name "Circle CI Build"
