@@ -10,7 +10,7 @@ installCRDs: true
 global:
   image:
     repository: argoproj/argocd
-    tag: v1.7.6
+    tag: v1.8.4
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -28,7 +28,7 @@ controller:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.7.6
+    tag: # v1.7.11
     imagePullPolicy: # IfNotPresent
 
   # If changing the number of replicas you must pass the number as ARGOCD_CONTROLLER_REPLICAS as an environment variable
@@ -160,7 +160,7 @@ controller:
       #       resolved for this cloud to continue to maintain state.
       # - alert: ArgoAppNotSynced
       #   expr: |
-      #     argocd_app_sync_status{sync_status!="Synced"} == 1
+      #     argocd_app_info{sync_status!="Synced"} == 1
       #   for: 12h
       #   labels:
       #     severity: warning
@@ -195,7 +195,7 @@ dex:
 
   image:
     repository: quay.io/dexidp/dex
-    tag: v2.22.0
+    tag: v2.26.0
     imagePullPolicy: IfNotPresent
   initImage:
     repository:
@@ -267,7 +267,7 @@ redis:
 
   image:
     repository: redis
-    tag: 5.0.8
+    tag: 5.0.10-alpine
     imagePullPolicy: IfNotPresent
 
   containerPort: 6379
@@ -354,7 +354,7 @@ server:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.7.6
+    tag: # v1.7.11
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
@@ -365,6 +365,10 @@ server:
   ## Environment variables to pass to argocd-server
   ##
   env: []
+
+  ## Specify postStart and preStop lifecycle hooks for your argo-cd-server container
+  ##
+  lifecycle: {}
 
   ## Argo server log format: text|json
   logFormat: text
@@ -591,6 +595,10 @@ server:
   ## Annotations to be added to ArgoCD rbac ConfigMap
   rbacConfigAnnotations: {}
 
+  # Boolean determining whether or not to create the configmap. If false, it is expected tthe configmap will be created
+  # by something else. ArgoCD will not work if there is no configMap created with the name above.
+  rbacConfigCreate: true
+
   ## Not well tested and not well supported on release v1.0.0.
   ## Applications
   ## reference: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
@@ -706,7 +714,7 @@ repoServer:
 
   image:
     repository: # argoproj/argocd
-    tag: # v1.7.6
+    tag: # v1.7.11
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
