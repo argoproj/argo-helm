@@ -595,13 +595,9 @@ server:
   ## Annotations to be added to ArgoCD rbac ConfigMap
   rbacConfigAnnotations: {}
 
-  # Name of the configmap used for the RBAC config. Must be set to `argocd-rbac-cm` as the values are hardcoded in
-  # ArgoCD. See https://github.com/argoproj/argo-cd/blob/master/common/common.go
-  rbacConfigMapName: "argocd-rbac-cm"
-
   # Boolean determining whether or not to create the configmap. If false, it is expected tthe configmap will be created
   # by something else. ArgoCD will not work if there is no configMap created with the name above.
-  rbacConfigMapEnabled: true
+  rbacConfigCreate: true
 
   ## Not well tested and not well supported on release v1.0.0.
   ## Applications

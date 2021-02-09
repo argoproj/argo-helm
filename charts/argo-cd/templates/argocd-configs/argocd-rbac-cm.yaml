@@ -1,8 +1,8 @@
-{{-  if .Values.server.rbacConfigMapEnabled }}
+{{-  if .Values.server.rbacConfigCreate }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.server.rbacConfigMapName }}
+  name: argocd-rbac-cm
   labels:
     app.kubernetes.io/name: {{ include "argo-cd.name" . }}-rbac-cm
     helm.sh/chart: {{ include "argo-cd.chart" . }}
