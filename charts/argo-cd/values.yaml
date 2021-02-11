@@ -10,7 +10,7 @@ installCRDs: true
 global:
   image:
     repository: argoproj/argocd
-    tag: v1.7.11
+    tag: v1.8.4
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -594,6 +594,10 @@ server:
 
   ## Annotations to be added to ArgoCD rbac ConfigMap
   rbacConfigAnnotations: {}
+
+  # Boolean determining whether or not to create the configmap. If false, it is expected tthe configmap will be created
+  # by something else. ArgoCD will not work if there is no configMap created with the name above.
+  rbacConfigCreate: true
 
   ## Not well tested and not well supported on release v1.0.0.
   ## Applications
