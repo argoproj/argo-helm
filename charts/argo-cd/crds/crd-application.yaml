@@ -137,6 +137,8 @@ spec:
                       directory:
                         description: Directory holds path/directory specific options
                         properties:
+                          exclude:
+                            type: string
                           jsonnet:
                             description: ApplicationSourceJsonnet holds jsonnet specific options
                             properties:
@@ -254,6 +256,11 @@ spec:
                       kustomize:
                         description: Kustomize holds kustomize specific options
                         properties:
+                          commonAnnotations:
+                            additionalProperties:
+                              type: string
+                            description: CommonAnnotations adds additional kustomize commonAnnotations
+                            type: object
                           commonLabels:
                             additionalProperties:
                               type: string
@@ -398,6 +405,8 @@ spec:
                   directory:
                     description: Directory holds path/directory specific options
                     properties:
+                      exclude:
+                        type: string
                       jsonnet:
                         description: ApplicationSourceJsonnet holds jsonnet specific options
                         properties:
@@ -515,6 +524,11 @@ spec:
                   kustomize:
                     description: Kustomize holds kustomize specific options
                     properties:
+                      commonAnnotations:
+                        additionalProperties:
+                          type: string
+                        description: CommonAnnotations adds additional kustomize commonAnnotations
+                        type: object
                       commonLabels:
                         additionalProperties:
                           type: string
@@ -675,6 +689,8 @@ spec:
                         directory:
                           description: Directory holds path/directory specific options
                           properties:
+                            exclude:
+                              type: string
                             jsonnet:
                               description: ApplicationSourceJsonnet holds jsonnet specific options
                               properties:
@@ -792,6 +808,11 @@ spec:
                         kustomize:
                           description: Kustomize holds kustomize specific options
                           properties:
+                            commonAnnotations:
+                              additionalProperties:
+                                type: string
+                              description: CommonAnnotations adds additional kustomize commonAnnotations
+                              type: object
                             commonLabels:
                               additionalProperties:
                                 type: string
@@ -955,6 +976,8 @@ spec:
                               directory:
                                 description: Directory holds path/directory specific options
                                 properties:
+                                  exclude:
+                                    type: string
                                   jsonnet:
                                     description: ApplicationSourceJsonnet holds jsonnet specific options
                                     properties:
@@ -1072,6 +1095,11 @@ spec:
                               kustomize:
                                 description: Kustomize holds kustomize specific options
                                 properties:
+                                  commonAnnotations:
+                                    additionalProperties:
+                                      type: string
+                                    description: CommonAnnotations adds additional kustomize commonAnnotations
+                                    type: object
                                   commonLabels:
                                     additionalProperties:
                                       type: string
@@ -1213,6 +1241,8 @@ spec:
                           directory:
                             description: Directory holds path/directory specific options
                             properties:
+                              exclude:
+                                type: string
                               jsonnet:
                                 description: ApplicationSourceJsonnet holds jsonnet specific options
                                 properties:
@@ -1330,6 +1360,11 @@ spec:
                           kustomize:
                             description: Kustomize holds kustomize specific options
                             properties:
+                              commonAnnotations:
+                                additionalProperties:
+                                  type: string
+                                description: CommonAnnotations adds additional kustomize commonAnnotations
+                                type: object
                               commonLabels:
                                 additionalProperties:
                                   type: string
@@ -1468,6 +1503,8 @@ spec:
                           directory:
                             description: Directory holds path/directory specific options
                             properties:
+                              exclude:
+                                type: string
                               jsonnet:
                                 description: ApplicationSourceJsonnet holds jsonnet specific options
                                 properties:
@@ -1585,6 +1622,11 @@ spec:
                           kustomize:
                             description: Kustomize holds kustomize specific options
                             properties:
+                              commonAnnotations:
+                                additionalProperties:
+                                  type: string
+                                description: CommonAnnotations adds additional kustomize commonAnnotations
+                                type: object
                               commonLabels:
                                 additionalProperties:
                                   type: string
