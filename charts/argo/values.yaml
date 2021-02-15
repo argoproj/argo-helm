@@ -7,7 +7,7 @@ images:
   # Secrets with credentials to pull images from a private registry
   pullSecrets: []
   # - name: argo-pull-secret
-  tag: v2.12.3
+  tag: v2.12.5
 
 crdVersion: v1alpha1
 installCRD: true
@@ -226,6 +226,11 @@ server:
     #   kubernetes.io/ingress.class: nginx
     #   kubernetes.io/tls-acme: "true"
 
+    ## Labels to be added to the web ingress.
+    ##
+    # labels:
+    #   use-cloudflare-solver: "true"
+
     ## Hostnames.
     ## Must be provided if Ingress is enabled.
     ##
@@ -249,7 +254,7 @@ server:
     enableEditing: true
   sso:
     ## SSO configuration when SSO is specified as a server auth mode.
-    ## All the values are requied. SSO is activated by adding --auth-mode=sso
+    ## All the values are required. SSO is activated by adding --auth-mode=sso
     ## to the server command line.
     #
     ## The root URL of the OIDC identity provider.

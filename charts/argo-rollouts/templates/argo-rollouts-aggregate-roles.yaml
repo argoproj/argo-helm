@@ -13,8 +13,10 @@ rules:
   - argoproj.io
   resources:
   - rollouts
+  - rollouts/scale
   - experiments
   - analysistemplates
+  - clusteranalysistemplates
   - analysisruns
   verbs:
   - get
@@ -36,8 +38,11 @@ rules:
   - argoproj.io
   resources:
   - rollouts
+  - rollouts/scale
+  - rollouts/status
   - experiments
   - analysistemplates
+  - clusteranalysistemplates
   - analysisruns
   verbs:
   - create
@@ -64,8 +69,11 @@ rules:
   - argoproj.io
   resources:
   - rollouts
+  - rollouts/scale
+  - rollouts/status
   - experiments
   - analysistemplates
+  - clusteranalysistemplates
   - analysisruns
   verbs:
   - create
