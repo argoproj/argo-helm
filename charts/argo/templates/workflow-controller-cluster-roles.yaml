@@ -1,5 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
+{{- if .Values.singleNamespace }}
+kind: Role
+{{- else }}
 kind: ClusterRole
+{{- end }}
 metadata:
   name: {{ .Release.Name }}-{{ .Values.controller.name }}
 rules:
@@ -106,9 +110,32 @@ rules:
   verbs:
   - get
 {{- end}}
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  resourceNames:
+  - workflow-controller
+  - workflow-controller-lease
+  verbs:
+  - get
+  - watch
+  - update
+  - patch
+  - delete
 ---
 apiVersion: rbac.authorization.k8s.io/v1
+{{- if .Values.singleNamespace }}
+kind: Role
+{{- else }}
 kind: ClusterRole
+{{- end }}
 metadata:
   name: {{ .Release.Name }}-{{ .Values.controller.name }}-cluster-template
 rules:

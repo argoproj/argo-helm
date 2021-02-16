@@ -8,7 +8,11 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.controller.name }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
+  {{- if .Values.singleNamespace }}
+  kind: Role
+  {{ else }}
   kind: ClusterRole
+  {{- end }}
   name: {{ .Release.Name }}-{{ .Values.controller.name }}
 subjects:
   - kind: ServiceAccount
@@ -27,12 +31,20 @@ subjects:
 {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
+{{- if .Values.singleNamespace }}
+kind: RoleBinding
+{{ else }}
 kind: ClusterRoleBinding
+{{- end }}
 metadata:
   name: {{ .Release.Name }}-{{ .Values.controller.name }}-cluster-template
 roleRef:
   apiGroup: rbac.authorization.k8s.io
+  {{- if .Values.singleNamespace }}
+  kind: Role
+  {{ else }}
   kind: ClusterRole
+  {{- end }}
   name: {{ .Release.Name }}-{{ .Values.controller.name }}-cluster-template
 subjects:
   - kind: ServiceAccount
