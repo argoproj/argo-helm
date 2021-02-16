@@ -66,7 +66,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.7.6"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.8.4"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
@@ -258,6 +258,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.service.servicePortHttpName | Server service http port name, can be used to route traffic via istio | `http` |
 | server.service.servicePortHttpsName | Server service https port name, can be used to route traffic via istio | `https` |
 | server.service.loadBalancerSourceRanges | Source IP ranges to allow access to service from. | `[]` |
+| server.service.externalIPs | Server service external IPs. | `[]` |
 | server.service.type | Server service type | `"ClusterIP"` |
 | server.serviceAccount.annotations | Server service account annotations | `{}` |
 | server.serviceAccount.create | Create server service account | `true` |
