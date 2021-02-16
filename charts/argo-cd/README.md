@@ -258,6 +258,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.service.servicePortHttpName | Server service http port name, can be used to route traffic via istio | `http` |
 | server.service.servicePortHttpsName | Server service https port name, can be used to route traffic via istio | `https` |
 | server.service.loadBalancerSourceRanges | Source IP ranges to allow access to service from. | `[]` |
+| server.service.externalIPs | Server service external IPs. | `[]` |
 | server.service.type | Server service type | `"ClusterIP"` |
 | server.serviceAccount.annotations | Server service account annotations | `{}` |
 | server.serviceAccount.create | Create server service account | `true` |
