@@ -28,8 +28,9 @@ spec:
           resources:
             {{- toYaml .Values.bots.slack.resources | nindent 12 }}
           command:
-            - /app/argocd-notifications
+            - /app/argocd-notifications-backend
             - bot
+          workingDir: /app
           ports:
           - containerPort: 8080
             name: http

@@ -5,12 +5,18 @@ metadata:
   labels:
     {{- include "argocd-notifications.labels" . | nindent 4 }}
 data:
-  config.yaml: |
-    context:
-      argocdUrl: {{ .Values.argocdUrl | quote }}
-    subscriptions:
-      {{- toYaml .Values.subscriptions | nindent 6 }}
-    templates:
-      {{- toYaml .Values.templates | nindent 6 }}
-    triggers:
-      {{- toYaml .Values.triggers | nindent 6 }}
+  context: |
+    argocdUrl: {{ .Values.argocdUrl | quote }}
+  {{- with .Values.notifiers }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- with .Values.subscriptions }}
+  subscriptions: |
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.templates }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- with .Values.triggers }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}

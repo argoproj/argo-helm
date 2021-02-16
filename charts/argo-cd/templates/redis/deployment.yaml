@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/component: {{ .Values.redis.name }}
-    app.kubernetes.io/version: {{ .Values.redis.image.tag }}    
+    app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
 spec:
   selector:
     matchLabels:
@@ -31,7 +31,7 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/part-of: argocd
         app.kubernetes.io/component: {{ .Values.redis.name }}
-        app.kubernetes.io/version: {{ .Values.redis.image.tag }}
+        app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
         {{- if .Values.redis.podLabels }}
 {{- toYaml .Values.redis.podLabels | nindent 8 }}
         {{- end }}
