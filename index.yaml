@@ -3,7 +3,28 @@ entries:
   argo:
   - apiVersion: v2
     appVersion: v2.12.5
-    created: "2021-02-16T18:39:55.346925488Z"
+    created: "2021-02-16T23:06:48.047114519Z"
+    dependencies:
+    - condition: minio.install
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.9
+    description: A Helm chart for Argo Workflows
+    digest: 4f6a71ae281602f692ea4269326d642e73c9a00068a4fe9652d5f0efe6d3969d
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo/master/docs/assets/argo.png
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: benjaminws
+    name: argo
+    urls:
+    - argo-0.16.1.tgz
+    version: 0.16.1
+  - apiVersion: v2
+    appVersion: v2.12.5
+    created: "2021-02-16T23:06:48.044364321Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -24,7 +45,7 @@ entries:
     version: 0.16.0
   - apiVersion: v2
     appVersion: v2.12.5
-    created: "2021-02-16T18:39:55.343628924Z"
+    created: "2021-02-16T23:06:48.04110191Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -45,7 +66,7 @@ entries:
     version: 0.15.4
   - apiVersion: v2
     appVersion: v2.12.5
-    created: "2021-02-16T18:39:55.340937237Z"
+    created: "2021-02-16T23:06:48.038443574Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -66,7 +87,7 @@ entries:
     version: 0.15.3
   - apiVersion: v2
     appVersion: v2.12.3
-    created: "2021-02-16T18:39:55.338305028Z"
+    created: "2021-02-16T23:06:48.035750792Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -87,7 +108,7 @@ entries:
     version: 0.15.2
   - apiVersion: v2
     appVersion: v2.12.3
-    created: "2021-02-16T18:39:55.335596059Z"
+    created: "2021-02-16T23:06:48.033080016Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -108,7 +129,7 @@ entries:
     version: 0.15.1
   - apiVersion: v2
     appVersion: v2.12.3
-    created: "2021-02-16T18:39:55.332267632Z"
+    created: "2021-02-16T23:06:48.030398341Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -129,7 +150,7 @@ entries:
     version: 0.15.0
   - apiVersion: v2
     appVersion: v2.11.7
-    created: "2021-02-16T18:39:55.329402874Z"
+    created: "2021-02-16T23:06:48.027099638Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -150,7 +171,7 @@ entries:
     version: 0.14.0
   - apiVersion: v1
     appVersion: v2.11.7
-    created: "2021-02-16T18:39:55.306740668Z"
+    created: "2021-02-16T23:06:48.005695935Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -171,7 +192,7 @@ entries:
     version: 0.13.11
   - apiVersion: v1
     appVersion: v2.11.7
-    created: "2021-02-16T18:39:55.304209731Z"
+    created: "2021-02-16T23:06:48.003180141Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -192,7 +213,7 @@ entries:
     version: 0.13.10
   - apiVersion: v1
     appVersion: v2.11.7
-    created: "2021-02-16T18:39:55.326913663Z"
+    created: "2021-02-16T23:06:48.024584883Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -213,7 +234,7 @@ entries:
     version: 0.13.8
   - apiVersion: v1
     appVersion: v2.11.7
-    created: "2021-02-16T18:39:55.32441059Z"
+    created: "2021-02-16T23:06:48.022050478Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -234,7 +255,7 @@ entries:
     version: 0.13.7
   - apiVersion: v1
     appVersion: v2.11.7
-    created: "2021-02-16T18:39:55.320683708Z"
+    created: "2021-02-16T23:06:48.019580975Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -255,7 +276,7 @@ entries:
     version: 0.13.6
   - apiVersion: v1
     appVersion: v2.11.7
-    created: "2021-02-16T18:39:55.317817737Z"
+    created: "2021-02-16T23:06:48.016453463Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -276,7 +297,7 @@ entries:
     version: 0.13.5
   - apiVersion: v1
     appVersion: v2.11.7
-    created: "2021-02-16T18:39:55.315256702Z"
+    created: "2021-02-16T23:06:48.013971507Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -297,7 +318,7 @@ entries:
     version: 0.13.4
   - apiVersion: v1
     appVersion: v2.11.7
-    created: "2021-02-16T18:39:55.312506831Z"
+    created: "2021-02-16T23:06:48.011522892Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -318,7 +339,7 @@ entries:
     version: 0.13.3
   - apiVersion: v1
     appVersion: v2.11.3
-    created: "2021-02-16T18:39:55.309927825Z"
+    created: "2021-02-16T23:06:48.00900383Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -339,7 +360,7 @@ entries:
     version: 0.13.2
   - apiVersion: v1
     appVersion: v2.11.3
-    created: "2021-02-16T18:39:55.301776752Z"
+    created: "2021-02-16T23:06:48.000647838Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -360,7 +381,7 @@ entries:
     version: 0.13.1
   - apiVersion: v1
     appVersion: v2.11.3
-    created: "2021-02-16T18:39:55.299307618Z"
+    created: "2021-02-16T23:06:47.998079778Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -381,7 +402,7 @@ entries:
     version: 0.13.0
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.296254801Z"
+    created: "2021-02-16T23:06:47.99557206Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -402,7 +423,7 @@ entries:
     version: 0.12.2
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.293845178Z"
+    created: "2021-02-16T23:06:47.992323795Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -423,7 +444,7 @@ entries:
     version: 0.12.1
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.291440121Z"
+    created: "2021-02-16T23:06:47.989850804Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -444,7 +465,7 @@ entries:
     version: 0.12.0
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.289030371Z"
+    created: "2021-02-16T23:06:47.987380968Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -465,7 +486,7 @@ entries:
     version: 0.11.0
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.286500074Z"
+    created: "2021-02-16T23:06:47.984895802Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -486,7 +507,7 @@ entries:
     version: 0.10.2
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.283328438Z"
+    created: "2021-02-16T23:06:47.981411486Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -507,7 +528,7 @@ entries:
     version: 0.10.1
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.280696603Z"
+    created: "2021-02-16T23:06:47.973527266Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -528,7 +549,7 @@ entries:
     version: 0.10.0
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.440405777Z"
+    created: "2021-02-16T23:06:48.128575898Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -549,7 +570,7 @@ entries:
     version: 0.9.10
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.462049482Z"
+    created: "2021-02-16T23:06:48.148260134Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -570,7 +591,7 @@ entries:
     version: 0.9.9
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.458895824Z"
+    created: "2021-02-16T23:06:48.145930482Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -591,7 +612,7 @@ entries:
     version: 0.9.8
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.45543287Z"
+    created: "2021-02-16T23:06:48.143017469Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -612,7 +633,7 @@ entries:
     version: 0.9.7
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.45286519Z"
+    created: "2021-02-16T23:06:48.140727662Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -633,7 +654,7 @@ entries:
     version: 0.9.6
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.450552166Z"
+    created: "2021-02-16T23:06:48.138460484Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -654,7 +675,7 @@ entries:
     version: 0.9.5
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.448163087Z"
+    created: "2021-02-16T23:06:48.136134342Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -675,7 +696,7 @@ entries:
     version: 0.9.4
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.445142831Z"
+    created: "2021-02-16T23:06:48.133834559Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -696,7 +717,7 @@ entries:
     version: 0.9.3
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.442814768Z"
+    created: "2021-02-16T23:06:48.131136426Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -717,7 +738,7 @@ entries:
     version: 0.9.2
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.438002581Z"
+    created: "2021-02-16T23:06:48.126238809Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -738,7 +759,7 @@ entries:
     version: 0.9.1
   - apiVersion: v1
     appVersion: v2.8.0
-    created: "2021-02-16T18:39:55.435664186Z"
+    created: "2021-02-16T23:06:48.123973497Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -759,7 +780,7 @@ entries:
     version: 0.9.0
   - apiVersion: v1
     appVersion: v2.7.6
-    created: "2021-02-16T18:39:55.432003062Z"
+    created: "2021-02-16T23:06:48.121668543Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -780,7 +801,7 @@ entries:
     version: 0.8.6
   - apiVersion: v1
     appVersion: v2.7.6
-    created: "2021-02-16T18:39:55.428245476Z"
+    created: "2021-02-16T23:06:48.119250568Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -801,7 +822,7 @@ entries:
     version: 0.8.5
   - apiVersion: v1
     appVersion: v2.7.6
-    created: "2021-02-16T18:39:55.424543865Z"
+    created: "2021-02-16T23:06:48.116606037Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -822,7 +843,7 @@ entries:
     version: 0.8.4
   - apiVersion: v1
     appVersion: v2.7.6
-    created: "2021-02-16T18:39:55.420860608Z"
+    created: "2021-02-16T23:06:48.114355705Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -843,7 +864,7 @@ entries:
     version: 0.8.3
   - apiVersion: v1
     appVersion: v2.7.6
-    created: "2021-02-16T18:39:55.417177266Z"
+    created: "2021-02-16T23:06:48.112049411Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -864,7 +885,7 @@ entries:
     version: 0.8.2
   - apiVersion: v1
     appVersion: v2.7.6
-    created: "2021-02-16T18:39:55.410634093Z"
+    created: "2021-02-16T23:06:48.109817082Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -885,7 +906,7 @@ entries:
     version: 0.8.1
   - apiVersion: v1
     appVersion: v2.7.6
-    created: "2021-02-16T18:39:55.406895074Z"
+    created: "2021-02-16T23:06:48.10752699Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -906,7 +927,7 @@ entries:
     version: 0.8.0
   - apiVersion: v1
     appVersion: v2.6.1
-    created: "2021-02-16T18:39:55.403190149Z"
+    created: "2021-02-16T23:06:48.104660124Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -927,7 +948,7 @@ entries:
     version: 0.7.6
   - apiVersion: v1
     appVersion: v2.6.1
-    created: "2021-02-16T18:39:55.399439239Z"
+    created: "2021-02-16T23:06:48.102459388Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -948,7 +969,7 @@ entries:
     version: 0.7.5
   - apiVersion: v1
     appVersion: v2.6.1
-    created: "2021-02-16T18:39:55.395742071Z"
+    created: "2021-02-16T23:06:48.100238869Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -969,7 +990,7 @@ entries:
     version: 0.7.4
   - apiVersion: v1
     appVersion: v2.6.1
-    created: "2021-02-16T18:39:55.392193625Z"
+    created: "2021-02-16T23:06:48.097964666Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -990,7 +1011,7 @@ entries:
     version: 0.7.3
   - apiVersion: v1
     appVersion: v2.6.1
-    created: "2021-02-16T18:39:55.389974516Z"
+    created: "2021-02-16T23:06:48.095641123Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1011,7 +1032,7 @@ entries:
     version: 0.7.2
   - apiVersion: v1
     appVersion: v2.6.1
-    created: "2021-02-16T18:39:55.38769555Z"
+    created: "2021-02-16T23:06:48.092506293Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1032,7 +1053,7 @@ entries:
     version: 0.7.1
   - apiVersion: v1
     appVersion: v2.6.1
-    created: "2021-02-16T18:39:55.38528807Z"
+    created: "2021-02-16T23:06:48.090217862Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1053,7 +1074,7 @@ entries:
     version: 0.7.0
   - apiVersion: v1
     appVersion: v2.4.3
-    created: "2021-02-16T18:39:55.383095308Z"
+    created: "2021-02-16T23:06:48.088012089Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1074,7 +1095,7 @@ entries:
     version: 0.6.8
   - apiVersion: v1
     appVersion: v2.4.3
-    created: "2021-02-16T18:39:55.380214985Z"
+    created: "2021-02-16T23:06:48.085779423Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1095,7 +1116,7 @@ entries:
     version: 0.6.7
   - apiVersion: v1
     appVersion: v2.4.3
-    created: "2021-02-16T18:39:55.37806911Z"
+    created: "2021-02-16T23:06:48.083600061Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1116,7 +1137,7 @@ entries:
     version: 0.6.6
   - apiVersion: v1
     appVersion: v2.4.3
-    created: "2021-02-16T18:39:55.375957524Z"
+    created: "2021-02-16T23:06:48.079711216Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1137,7 +1158,7 @@ entries:
     version: 0.6.5
   - apiVersion: v1
     appVersion: v2.4.3
-    created: "2021-02-16T18:39:55.374170083Z"
+    created: "2021-02-16T23:06:48.076724658Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1158,7 +1179,7 @@ entries:
     version: 0.6.4
   - apiVersion: v1
     appVersion: v2.4.2
-    created: "2021-02-16T18:39:55.372347699Z"
+    created: "2021-02-16T23:06:48.073734899Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1179,7 +1200,7 @@ entries:
     version: 0.6.3
   - apiVersion: v1
     appVersion: v2.4.2
-    created: "2021-02-16T18:39:55.370520501Z"
+    created: "2021-02-16T23:06:48.070749974Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1194,7 +1215,7 @@ entries:
     version: 0.6.2
   - apiVersion: v1
     appVersion: v2.4.2
-    created: "2021-02-16T18:39:55.368037032Z"
+    created: "2021-02-16T23:06:48.068820954Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1209,7 +1230,7 @@ entries:
     version: 0.6.1
   - apiVersion: v1
     appVersion: v2.3.0
-    created: "2021-02-16T18:39:55.366248453Z"
+    created: "2021-02-16T23:06:48.067031499Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1224,7 +1245,7 @@ entries:
     version: 0.5.4
   - apiVersion: v1
     appVersion: v2.3.0
-    created: "2021-02-16T18:39:55.36401584Z"
+    created: "2021-02-16T23:06:48.064157317Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1239,7 +1260,7 @@ entries:
     version: 0.5.3
   - apiVersion: v1
     appVersion: v2.3.0
-    created: "2021-02-16T18:39:55.361866798Z"
+    created: "2021-02-16T23:06:48.061976221Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1253,7 +1274,7 @@ entries:
     version: 0.5.2
   - apiVersion: v1
     appVersion: v2.3.0
-    created: "2021-02-16T18:39:55.359758054Z"
+    created: "2021-02-16T23:06:48.059878082Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1267,7 +1288,7 @@ entries:
     version: 0.5.1
   - apiVersion: v1
     appVersion: v2.3.0
-    created: "2021-02-16T18:39:55.357015025Z"
+    created: "2021-02-16T23:06:48.057753804Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1281,7 +1302,7 @@ entries:
     version: 0.5.0
   - apiVersion: v1
     appVersion: v2.2.1
-    created: "2021-02-16T18:39:55.354919877Z"
+    created: "2021-02-16T23:06:48.05568135Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1294,7 +1315,7 @@ entries:
     - argo-0.4.0.tgz
     version: 0.4.0
   - apiVersion: v1
-    created: "2021-02-16T18:39:55.352748075Z"
+    created: "2021-02-16T23:06:48.052929042Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1307,7 +1328,7 @@ entries:
     - argo-0.3.1.tgz
     version: 0.3.1
   - apiVersion: v1
-    created: "2021-02-16T18:39:55.350862351Z"
+    created: "2021-02-16T23:06:48.051035038Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1320,7 +1341,7 @@ entries:
     - argo-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v1
-    created: "2021-02-16T18:39:55.348966673Z"
+    created: "2021-02-16T23:06:48.049090522Z"
     dependencies:
     - condition: minio.install
       name: minio
@@ -1333,7 +1354,7 @@ entries:
     - argo-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
-    created: "2021-02-16T18:39:55.278188032Z"
+    created: "2021-02-16T23:06:47.970992285Z"
     dependencies:
     - condition: installMinio
       name: minio
@@ -1346,7 +1367,7 @@ entries:
     - argo-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
-    created: "2021-02-16T18:39:55.276847813Z"
+    created: "2021-02-16T23:06:47.969603355Z"
     dependencies:
     - condition: installMinio
       name: minio
@@ -1361,7 +1382,33 @@ entries:
   argo-cd:
   - apiVersion: v1
     appVersion: 1.8.4
-    created: "2021-02-16T18:39:55.746017745Z"
+    created: "2021-02-16T23:06:48.442422144Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.10.1
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: c16552c6f23f584ac1e6ffe6d48d6229373190f0315f303d8a55e1693e928bf2
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo/master/docs/assets/argo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - argo-cd-2.14.3.tgz
+    version: 2.14.3
+  - apiVersion: v1
+    appVersion: 1.8.4
+    created: "2021-02-16T23:06:48.437345147Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1387,7 +1434,7 @@ entries:
     version: 2.14.2
   - apiVersion: v1
     appVersion: 1.8.4
-    created: "2021-02-16T18:39:55.740511161Z"
+    created: "2021-02-16T23:06:48.43270906Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1413,7 +1460,7 @@ entries:
     version: 2.14.1
   - apiVersion: v1
     appVersion: 1.8.4
-    created: "2021-02-16T18:39:55.734742668Z"
+    created: "2021-02-16T23:06:48.427318857Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1439,7 +1486,7 @@ entries:
     version: 2.14.0
   - apiVersion: v1
     appVersion: 1.7.11
-    created: "2021-02-16T18:39:55.729183484Z"
+    created: "2021-02-16T23:06:48.422692062Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1465,7 +1512,7 @@ entries:
     version: 2.13.0
   - apiVersion: v1
     appVersion: 1.7.11
-    created: "2021-02-16T18:39:55.723757979Z"
+    created: "2021-02-16T23:06:48.417553943Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1491,7 +1538,7 @@ entries:
     version: 2.12.0
   - apiVersion: v1
     appVersion: 1.7.11
-    created: "2021-02-16T18:39:55.717468808Z"
+    created: "2021-02-16T23:06:48.412814227Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1517,7 +1564,7 @@ entries:
     version: 2.11.7
   - apiVersion: v1
     appVersion: 1.7.11
-    created: "2021-02-16T18:39:55.710995691Z"
+    created: "2021-02-16T23:06:48.40817291Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1543,7 +1590,7 @@ entries:
     version: 2.11.6
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.705027005Z"
+    created: "2021-02-16T23:06:48.40061886Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1569,7 +1616,7 @@ entries:
     version: 2.11.5
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.700882636Z"
+    created: "2021-02-16T23:06:48.393732725Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1595,7 +1642,7 @@ entries:
     version: 2.11.4
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.696253098Z"
+    created: "2021-02-16T23:06:48.387036882Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1621,7 +1668,7 @@ entries:
     version: 2.11.3
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.692139748Z"
+    created: "2021-02-16T23:06:48.382826045Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1647,7 +1694,7 @@ entries:
     version: 2.11.2
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.687491634Z"
+    created: "2021-02-16T23:06:48.376686056Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1673,7 +1720,7 @@ entries:
     version: 2.11.1
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.683285016Z"
+    created: "2021-02-16T23:06:48.37129204Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1699,7 +1746,7 @@ entries:
     version: 2.11.0
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.679099776Z"
+    created: "2021-02-16T23:06:48.36704585Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1725,7 +1772,7 @@ entries:
     version: 2.10.0
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.9725482Z"
+    created: "2021-02-16T23:06:48.668775308Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1751,7 +1798,7 @@ entries:
     version: 2.9.5
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.96838163Z"
+    created: "2021-02-16T23:06:48.663601122Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1777,7 +1824,7 @@ entries:
     version: 2.9.4
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.964161238Z"
+    created: "2021-02-16T23:06:48.65935319Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1803,7 +1850,7 @@ entries:
     version: 2.9.3
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.959143471Z"
+    created: "2021-02-16T23:06:48.654347949Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1829,7 +1876,7 @@ entries:
     version: 2.9.2
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.954471048Z"
+    created: "2021-02-16T23:06:48.650121506Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1855,7 +1902,7 @@ entries:
     version: 2.9.1
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.949096028Z"
+    created: "2021-02-16T23:06:48.645920972Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1881,7 +1928,7 @@ entries:
     version: 2.9.0
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.944841277Z"
+    created: "2021-02-16T23:06:48.641064538Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1907,7 +1954,7 @@ entries:
     version: 2.8.0
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.940620546Z"
+    created: "2021-02-16T23:06:48.636893367Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1933,7 +1980,7 @@ entries:
     version: 2.7.6
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.935170421Z"
+    created: "2021-02-16T23:06:48.632777682Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1959,7 +2006,7 @@ entries:
     version: 2.7.5
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.928673876Z"
+    created: "2021-02-16T23:06:48.627941564Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -1985,7 +2032,7 @@ entries:
     version: 2.7.4
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.922143292Z"
+    created: "2021-02-16T23:06:48.622548693Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2011,7 +2058,7 @@ entries:
     version: 2.7.3
   - apiVersion: v1
     appVersion: 1.7.6
-    created: "2021-02-16T18:39:55.915024567Z"
+    created: "2021-02-16T23:06:48.615569558Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2037,7 +2084,7 @@ entries:
     version: 2.7.2
   - apiVersion: v1
     appVersion: 1.7.5
-    created: "2021-02-16T18:39:55.910626045Z"
+    created: "2021-02-16T23:06:48.611451213Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2063,7 +2110,7 @@ entries:
     version: 2.7.1
   - apiVersion: v1
     appVersion: 1.7.4
-    created: "2021-02-16T18:39:55.905575085Z"
+    created: "2021-02-16T23:06:48.607359792Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2089,7 +2136,7 @@ entries:
     version: 2.7.0
   - apiVersion: v1
     appVersion: 1.6.2
-    created: "2021-02-16T18:39:55.901459631Z"
+    created: "2021-02-16T23:06:48.600698178Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2115,7 +2162,7 @@ entries:
     version: 2.6.3
   - apiVersion: v1
     appVersion: 1.6.2
-    created: "2021-02-16T18:39:55.897324825Z"
+    created: "2021-02-16T23:06:48.593949581Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2141,7 +2188,7 @@ entries:
     version: 2.6.2
   - apiVersion: v1
     appVersion: 1.6.2
-    created: "2021-02-16T18:39:55.892538425Z"
+    created: "2021-02-16T23:06:48.587238968Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2167,7 +2214,7 @@ entries:
     version: 2.6.1
   - apiVersion: v1
     appVersion: 1.6.2
-    created: "2021-02-16T18:39:55.888362096Z"
+    created: "2021-02-16T23:06:48.5814476Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2193,7 +2240,7 @@ entries:
     version: 2.6.0
   - apiVersion: v1
     appVersion: 1.6.1
-    created: "2021-02-16T18:39:55.884150144Z"
+    created: "2021-02-16T23:06:48.577377933Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2219,7 +2266,7 @@ entries:
     version: 2.5.4
   - apiVersion: v1
     appVersion: 1.6.1
-    created: "2021-02-16T18:39:55.879229409Z"
+    created: "2021-02-16T23:06:48.57231966Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2245,7 +2292,7 @@ entries:
     version: 2.5.3
   - apiVersion: v1
     appVersion: 1.6.1
-    created: "2021-02-16T18:39:55.875006245Z"
+    created: "2021-02-16T23:06:48.56821478Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2271,7 +2318,7 @@ entries:
     version: 2.5.2
   - apiVersion: v1
     appVersion: 1.6.1
-    created: "2021-02-16T18:39:55.869286382Z"
+    created: "2021-02-16T23:06:48.564062672Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2297,7 +2344,7 @@ entries:
     version: 2.5.1
   - apiVersion: v1
     appVersion: 1.6.1
-    created: "2021-02-16T18:39:55.864642673Z"
+    created: "2021-02-16T23:06:48.559373794Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2323,7 +2370,7 @@ entries:
     version: 2.5.0
   - apiVersion: v1
     appVersion: 1.6.1
-    created: "2021-02-16T18:39:55.859830933Z"
+    created: "2021-02-16T23:06:48.555277224Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2349,7 +2396,7 @@ entries:
     version: 2.4.0
   - apiVersion: v1
     appVersion: 1.5.4
-    created: "2021-02-16T18:39:55.854823067Z"
+    created: "2021-02-16T23:06:48.551302136Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2375,7 +2422,7 @@ entries:
     version: 2.3.7
   - apiVersion: v1
     appVersion: 1.5.4
-    created: "2021-02-16T18:39:55.850830773Z"
+    created: "2021-02-16T23:06:48.546615368Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2401,7 +2448,7 @@ entries:
     version: 2.3.6
   - apiVersion: v1
     appVersion: 1.5.4
-    created: "2021-02-16T18:39:55.846762047Z"
+    created: "2021-02-16T23:06:48.542649225Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2427,7 +2474,7 @@ entries:
     version: 2.3.5
   - apiVersion: v1
     appVersion: 1.5.4
-    created: "2021-02-16T18:39:55.841964045Z"
+    created: "2021-02-16T23:06:48.53871167Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2453,7 +2500,7 @@ entries:
     version: 2.3.4
   - apiVersion: v1
     appVersion: 1.5.4
-    created: "2021-02-16T18:39:55.837946011Z"
+    created: "2021-02-16T23:06:48.533935157Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2479,7 +2526,7 @@ entries:
     version: 2.3.3
   - apiVersion: v1
     appVersion: 1.5.4
-    created: "2021-02-16T18:39:55.833577677Z"
+    created: "2021-02-16T23:06:48.529964904Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2505,7 +2552,7 @@ entries:
     version: 2.3.2
   - apiVersion: v1
     appVersion: 1.5.4
-    created: "2021-02-16T18:39:55.829350482Z"
+    created: "2021-02-16T23:06:48.52538484Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2531,7 +2578,7 @@ entries:
     version: 2.3.1
   - apiVersion: v1
     appVersion: 1.5.4
-    created: "2021-02-16T18:39:55.825144411Z"
+    created: "2021-02-16T23:06:48.521414191Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2557,7 +2604,7 @@ entries:
     version: 2.3.0
   - apiVersion: v1
     appVersion: 1.5.4
-    created: "2021-02-16T18:39:55.785451191Z"
+    created: "2021-02-16T23:06:48.480163524Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2583,7 +2630,7 @@ entries:
     version: 2.2.16
   - apiVersion: v1
     appVersion: 1.5.4
-    created: "2021-02-16T18:39:55.7814509Z"
+    created: "2021-02-16T23:06:48.475456245Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2609,7 +2656,7 @@ entries:
     version: 2.2.15
   - apiVersion: v1
     appVersion: 1.5.3
-    created: "2021-02-16T18:39:55.777456328Z"
+    created: "2021-02-16T23:06:48.471508878Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2635,7 +2682,7 @@ entries:
     version: 2.2.14
   - apiVersion: v1
     appVersion: 1.5.2
-    created: "2021-02-16T18:39:55.772773379Z"
+    created: "2021-02-16T23:06:48.467585453Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2661,7 +2708,7 @@ entries:
     version: 2.2.13
   - apiVersion: v1
     appVersion: 1.5.2
-    created: "2021-02-16T18:39:55.768231833Z"
+    created: "2021-02-16T23:06:48.462993571Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2687,7 +2734,7 @@ entries:
     version: 2.2.12
   - apiVersion: v1
     appVersion: 1.5.2
-    created: "2021-02-16T18:39:55.764243895Z"
+    created: "2021-02-16T23:06:48.459051903Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2713,7 +2760,7 @@ entries:
     version: 2.2.11
   - apiVersion: v1
     appVersion: 1.5.2
-    created: "2021-02-16T18:39:55.75963152Z"
+    created: "2021-02-16T23:06:48.455074966Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2739,7 +2786,7 @@ entries:
     version: 2.2.10
   - apiVersion: v1
     appVersion: 1.5.2
-    created: "2021-02-16T18:39:55.819575692Z"
+    created: "2021-02-16T23:06:48.517484748Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2765,7 +2812,7 @@ entries:
     version: 2.2.9
   - apiVersion: v1
     appVersion: 1.5.2
-    created: "2021-02-16T18:39:55.814993343Z"
+    created: "2021-02-16T23:06:48.51303944Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2791,7 +2838,7 @@ entries:
     version: 2.2.8
   - apiVersion: v1
     appVersion: 1.5.2
-    created: "2021-02-16T18:39:55.810825569Z"
+    created: "2021-02-16T23:06:48.509079301Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2817,7 +2864,7 @@ entries:
     version: 2.2.7
   - apiVersion: v1
     appVersion: 1.5.2
-    created: "2021-02-16T18:39:55.806341791Z"
+    created: "2021-02-16T23:06:48.505169451Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2843,7 +2890,7 @@ entries:
     version: 2.2.6
   - apiVersion: v1
     appVersion: 1.5.2
-    created: "2021-02-16T18:39:55.80240605Z"
+    created: "2021-02-16T23:06:48.499626138Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2869,7 +2916,7 @@ entries:
     version: 2.2.5
   - apiVersion: v1
     appVersion: 1.5.1
-    created: "2021-02-16T18:39:55.798500696Z"
+    created: "2021-02-16T23:06:48.493140524Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2895,7 +2942,7 @@ entries:
     version: 2.2.4
   - apiVersion: v1
     appVersion: 1.5.1
-    created: "2021-02-16T18:39:55.793920086Z"
+    created: "2021-02-16T23:06:48.488953685Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2921,7 +2968,7 @@ entries:
     version: 2.2.3
   - apiVersion: v1
     appVersion: 1.5.1
-    created: "2021-02-16T18:39:55.789994392Z"
+    created: "2021-02-16T23:06:48.484092673Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2947,7 +2994,7 @@ entries:
     version: 2.2.2
   - apiVersion: v1
     appVersion: 1.5.1
-    created: "2021-02-16T18:39:55.75476003Z"
+    created: "2021-02-16T23:06:48.450402676Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2973,7 +3020,7 @@ entries:
     version: 2.2.1
   - apiVersion: v1
     appVersion: 1.5.1
-    created: "2021-02-16T18:39:55.749995725Z"
+    created: "2021-02-16T23:06:48.446431696Z"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -2999,7 +3046,7 @@ entries:
     version: 2.2.0
   - apiVersion: v1
     appVersion: 1.5.1
-    created: "2021-02-16T18:39:55.673774066Z"
+    created: "2021-02-16T23:06:48.36224983Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: a16d3d417b68da7cc2ff48107ea97cf4df5ffdfe0c43288ca537084573a3aa1d
@@ -3020,7 +3067,7 @@ entries:
     version: 2.1.2
   - apiVersion: v1
     appVersion: 1.5.1
-    created: "2021-02-16T18:39:55.671224444Z"
+    created: "2021-02-16T23:06:48.359791562Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 4151d1b1a32dd06975d870582fe9e52433f039eda6521539005752135b5f82ff
@@ -3041,7 +3088,7 @@ entries:
     version: 2.1.1
   - apiVersion: v1
     appVersion: 1.5.1
-    created: "2021-02-16T18:39:55.668747067Z"
+    created: "2021-02-16T23:06:48.357310481Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: ce3ba0717476b354de9101b2e1072f04c4d9b68164aa9afa59f5cc3e6704b29c
@@ -3062,7 +3109,7 @@ entries:
     version: 2.1.0
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.665411081Z"
+    created: "2021-02-16T23:06:48.353999212Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 65951aeda2f721bcc8a34463348eed95a70798bceeedefd85e6c9e1a87885a8b
@@ -3083,7 +3130,7 @@ entries:
     version: 2.0.3
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.661386746Z"
+    created: "2021-02-16T23:06:48.349948334Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 3ad170d5e36539918549e6e759f846124b85a89f3c5ddf90a21a4b2ec8af7b10
@@ -3104,7 +3151,7 @@ entries:
     version: 2.0.2
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.658093577Z"
+    created: "2021-02-16T23:06:48.346682269Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 421622a1189c8fcc514835d40dbc1f75b56f003812c3e5632173ece16249c76f
@@ -3125,7 +3172,7 @@ entries:
     version: 2.0.1
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.653865042Z"
+    created: "2021-02-16T23:06:48.343096091Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: e84a0269283858b11c193023ae63aaa453ec962fa6c799f6222b1c94713abca3
@@ -3146,7 +3193,7 @@ entries:
     version: 2.0.0
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.650465899Z"
+    created: "2021-02-16T23:06:48.339159433Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: cd56a9c1895d03ebff393309b1a22e969ed2a532e97ccebdbfb1a904f61c21ba
@@ -3167,7 +3214,7 @@ entries:
     version: 1.8.7
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.645858489Z"
+    created: "2021-02-16T23:06:48.335862105Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 311de21213bce9d71814bd720cce4ee11becbaac2a0869149629ded11761ce80
@@ -3188,7 +3235,7 @@ entries:
     version: 1.8.6
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.640245454Z"
+    created: "2021-02-16T23:06:48.332579346Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: f87ed22d11b3bb683f22cbaced699b650017093efa8c3d204279a08f066a3ee8
@@ -3209,7 +3256,7 @@ entries:
     version: 1.8.5
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.636335073Z"
+    created: "2021-02-16T23:06:48.328711787Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 094942732eb1b9133f7eb392bf3c66d22eb3d3187b81914ead53d8d88b6ce30c
@@ -3230,7 +3277,7 @@ entries:
     version: 1.8.4
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.632591205Z"
+    created: "2021-02-16T23:06:48.325437361Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 67db99b14d295fb21641406e8f3f9b00025f8135b21c058e433f8b4a0b1fe87a
@@ -3251,7 +3298,7 @@ entries:
     version: 1.8.3
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.628452205Z"
+    created: "2021-02-16T23:06:48.322136275Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 4b0b53a45b69d5f58756bd71c4a31df98ba9a21e57b1026daf33c5add549cb98
@@ -3272,7 +3319,7 @@ entries:
     version: 1.8.2
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.624907784Z"
+    created: "2021-02-16T23:06:48.318219505Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 1f77fa4d834f1781b0ad2dfbe6f6681ff92f76f511ade39949ba8578a24d017f
@@ -3293,7 +3340,7 @@ entries:
     version: 1.8.1
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.619439536Z"
+    created: "2021-02-16T23:06:48.314977741Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 444efdea7c1ce3d973be3186ea93425efa428ffd531b406fb3e1d151c2c047f6
@@ -3314,7 +3361,7 @@ entries:
     version: 1.8.0
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.614927735Z"
+    created: "2021-02-16T23:06:48.311660291Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: c23e297a21365389627943583dba12de62c7b4292458c38c167441a59d5b7685
@@ -3335,7 +3382,7 @@ entries:
     version: 1.7.6
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.611134803Z"
+    created: "2021-02-16T23:06:48.307805778Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 48c2eb5734c9519cbe7e00ca1599fa63553df9ce40beb1e1b840fd967f5e3e1d
@@ -3356,7 +3403,7 @@ entries:
     version: 1.7.5
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.608037555Z"
+    created: "2021-02-16T23:06:48.304441968Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 22f37fffb3f6434ebff564307c44deaaaf9fbfc49e23cc21a288a96db24258c2
@@ -3377,7 +3424,7 @@ entries:
     version: 1.7.4
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.604496677Z"
+    created: "2021-02-16T23:06:48.301033353Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 64c7c3fdd7f29e1f2735c5b1e2d72633b3f1ea79d4c8edac2aa9502cf5153402
@@ -3398,7 +3445,7 @@ entries:
     version: 1.7.3
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.601389475Z"
+    created: "2021-02-16T23:06:48.295461016Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: ea4308f0d803a11eefd60c3a23c064dd07e0e5e64e334da6a9c1030e400e8a6f
@@ -3419,7 +3466,7 @@ entries:
     version: 1.7.2
   - apiVersion: v1
     appVersion: 1.4.2
-    created: "2021-02-16T18:39:55.598316113Z"
+    created: "2021-02-16T23:06:48.290271279Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 82182049b38b64292a394079b5608bc2e9067406ba669dd43f003fe34db59c5d
@@ -3440,7 +3487,7 @@ entries:
     version: 1.7.1
   - apiVersion: v1
     appVersion: 1.4.1
-    created: "2021-02-16T18:39:55.594456384Z"
+    created: "2021-02-16T23:06:48.28510647Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: a862838c81ed93363f25e0c51c008a4333f775de8da70f3023e68917b9d8a774
@@ -3461,7 +3508,7 @@ entries:
     version: 1.7.0
   - apiVersion: v1
     appVersion: 1.4.1
-    created: "2021-02-16T18:39:55.59134834Z"
+    created: "2021-02-16T23:06:48.280801194Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 54f77cc17b87adf18f9d2c01e01904ba4fb9e78810426b52ee999ffa5f8415e0
@@ -3482,7 +3529,7 @@ entries:
     version: 1.6.6
   - apiVersion: v1
     appVersion: 1.4.1
-    created: "2021-02-16T18:39:55.588224818Z"
+    created: "2021-02-16T23:06:48.27752797Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: cdbbafd0a0121aad415ddb2c7d413eace4a5d853e874d26ce6dba1525c2ef396
@@ -3503,7 +3550,7 @@ entries:
     version: 1.6.5
   - apiVersion: v1
     appVersion: 1.4.0
-    created: "2021-02-16T18:39:55.584602083Z"
+    created: "2021-02-16T23:06:48.274326342Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: e63f8566851ada157ec0903f314f8c8acab50e500f08c6b261305692e1219716
@@ -3524,7 +3571,7 @@ entries:
     version: 1.6.4
   - apiVersion: v1
     appVersion: 1.3.6
-    created: "2021-02-16T18:39:55.581472162Z"
+    created: "2021-02-16T23:06:48.269338887Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 89680ef0ed2fcfac4230e60b1f0c6d39fb91d9feed22d0a56f8366dbef23e5c6
@@ -3545,7 +3592,7 @@ entries:
     version: 1.6.3
   - apiVersion: v1
     appVersion: 1.3.6
-    created: "2021-02-16T18:39:55.578311769Z"
+    created: "2021-02-16T23:06:48.266158046Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 1b617958564ad3dfd4eb6ee205213486b1ac8d797e16390fb8516c2a7271ec5b
@@ -3566,7 +3613,7 @@ entries:
     version: 1.6.2
   - apiVersion: v1
     appVersion: 1.3.6
-    created: "2021-02-16T18:39:55.574521741Z"
+    created: "2021-02-16T23:06:48.262991611Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 777ef495bed5a8e0da64dfe2e1012f5f2316ae3df8eae1806f9f4d6c102ab610
@@ -3587,7 +3634,7 @@ entries:
     version: 1.6.1
   - apiVersion: v1
     appVersion: 1.3.6
-    created: "2021-02-16T18:39:55.571245818Z"
+    created: "2021-02-16T23:06:48.25894402Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 2f5362d820f26e3d206bf918f278266ce98308fb447815e2164425125d77a914
@@ -3608,7 +3655,7 @@ entries:
     version: 1.6.0
   - apiVersion: v1
     appVersion: 1.3.6
-    created: "2021-02-16T18:39:55.568077616Z"
+    created: "2021-02-16T23:06:48.255795911Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 3a104799040c238dcfce399d555f4134f9b460d263680eb28ebd531185fcce65
@@ -3629,7 +3676,7 @@ entries:
     version: 1.5.3
   - apiVersion: v1
     appVersion: 1.3.6
-    created: "2021-02-16T18:39:55.564510442Z"
+    created: "2021-02-16T23:06:48.252636356Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 7be6747d7837ab8572f4dbb6511d2b945abe412fa25e227fa68583ceba3ae78a
@@ -3650,7 +3697,7 @@ entries:
     version: 1.5.2
   - apiVersion: v1
     appVersion: 1.3.6
-    created: "2021-02-16T18:39:55.561122528Z"
+    created: "2021-02-16T23:06:48.248698179Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 0fba201afbc3d6a43723b268af76ebb0aecf6ce75c9f5187ba049f2a7349fd0a
@@ -3671,7 +3718,7 @@ entries:
     version: 1.5.1
   - apiVersion: v1
     appVersion: 1.3.6
-    created: "2021-02-16T18:39:55.557436714Z"
+    created: "2021-02-16T23:06:48.245538606Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 2d476ff974f7ae85235012c906767200a6b1e0e9497ffd64e98b85b14c7cd44d
@@ -3692,7 +3739,7 @@ entries:
     version: 1.5.0
   - apiVersion: v1
     appVersion: 1.3.6
-    created: "2021-02-16T18:39:55.55473978Z"
+    created: "2021-02-16T23:06:48.243009646Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 0ea5eefff0661eb82a813d934d2f285732ca001f2287de84681a11b4a6c04368
@@ -3713,7 +3760,7 @@ entries:
     version: 1.4.8
   - apiVersion: v1
     appVersion: 1.3.6
-    created: "2021-02-16T18:39:55.551542572Z"
+    created: "2021-02-16T23:06:48.239899066Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 997026b7b875debd78292809f155b3d6ecf56385ab0fffc996efdc3da5ed0449
@@ -3734,7 +3781,7 @@ entries:
     version: 1.4.7
   - apiVersion: v1
     appVersion: 1.3.4
-    created: "2021-02-16T18:39:55.548932502Z"
+    created: "2021-02-16T23:06:48.235540558Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: be86c028969b15ecc65ba4508a17c32d393a53d0464593787e201136e79988f6
@@ -3755,7 +3802,7 @@ entries:
     version: 1.4.6
   - apiVersion: v1
     appVersion: 1.3.4
-    created: "2021-02-16T18:39:55.545985285Z"
+    created: "2021-02-16T23:06:48.231334226Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 74865ed53bded67b66a6b390b9901c8918d59409356078aaf3bb6ecbabfd1448
@@ -3776,7 +3823,7 @@ entries:
     version: 1.4.5
   - apiVersion: v1
     appVersion: 1.3.4
-    created: "2021-02-16T18:39:55.543218711Z"
+    created: "2021-02-16T23:06:48.227117763Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 51109393de03375860c70a7c9da3dce9396722cb1bd90db86f72024d78e4b2b5
@@ -3797,7 +3844,7 @@ entries:
     version: 1.4.4
   - apiVersion: v1
     appVersion: 1.3.0
-    created: "2021-02-16T18:39:55.538689603Z"
+    created: "2021-02-16T23:06:48.222681267Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: beab0460176f1fa8b9f7a08b8c2e0cc36ffd80bb7152748c63d46ed966c23c01
@@ -3818,7 +3865,7 @@ entries:
     version: 1.4.3
   - apiVersion: v1
     appVersion: 1.3.0
-    created: "2021-02-16T18:39:55.534543931Z"
+    created: "2021-02-16T23:06:48.220123328Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: dc834e304c358c4cb6e3fdaa1ff116cdb5d79c554a0f33972da106da4ecdd235
@@ -3839,7 +3886,7 @@ entries:
     version: 1.4.2
   - apiVersion: v1
     appVersion: 1.3.0
-    created: "2021-02-16T18:39:55.5303956Z"
+    created: "2021-02-16T23:06:48.217633085Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: f1ceee8ac173d13f2e73408079fa9a195417b5bfcea9dd7d7a50421d8940b22d
@@ -3860,7 +3907,7 @@ entries:
     version: 1.4.1
   - apiVersion: v1
     appVersion: 1.3.0
-    created: "2021-02-16T18:39:55.526323255Z"
+    created: "2021-02-16T23:06:48.215143886Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 7dbcd716279fe07a5264cb2e23d6dca33304f88d1ab29802c066c61e5e947c54
@@ -3881,7 +3928,7 @@ entries:
     version: 1.4.0
   - apiVersion: v1
     appVersion: 1.3.0
-    created: "2021-02-16T18:39:55.52159478Z"
+    created: "2021-02-16T23:06:48.211555898Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: a426bcaafe535ded19d401ec37ff148f48de6f8ddbde916413a9c625fbd1375c
@@ -3902,7 +3949,7 @@ entries:
     version: 1.3.1
   - apiVersion: v1
     appVersion: 1.3.0
-    created: "2021-02-16T18:39:55.517574231Z"
+    created: "2021-02-16T23:06:48.208768755Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: e41fe04298d24be4755e4ab1923b26da98f2895d6f0dbafaef108e30f1db2b79
@@ -3923,7 +3970,7 @@ entries:
     version: 1.3.0
   - apiVersion: v1
     appVersion: 1.3.0
-    created: "2021-02-16T18:39:55.513551782Z"
+    created: "2021-02-16T23:06:48.206307614Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: ac208a7f7296b922a4297b5a3de85ad421f24605eba4a094d6ef411946ea08cb
@@ -3944,7 +3991,7 @@ entries:
     version: 1.2.4
   - apiVersion: v1
     appVersion: 1.3.0
-    created: "2021-02-16T18:39:55.510993717Z"
+    created: "2021-02-16T23:06:48.202324129Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 5da1e863b7523db20616e89bb1127166fe276c46ebf995c157debdd03185280e
@@ -3965,7 +4012,7 @@ entries:
     version: 1.2.2
   - apiVersion: v1
     appVersion: 1.3.0
-    created: "2021-02-16T18:39:55.508022603Z"
+    created: "2021-02-16T23:06:48.198423321Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 9b90f173edf2186005af8cd94ffe3427d19864f19c82cd45e8617911a0c145e8
@@ -3986,7 +4033,7 @@ entries:
     version: 1.2.1
   - apiVersion: v1
     appVersion: 1.3.0
-    created: "2021-02-16T18:39:55.505647685Z"
+    created: "2021-02-16T23:06:48.193693291Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 01fc4fcccbd0b79542e78bc3c32e12229e0bd43d7073a6b15bc687626bce8119
@@ -4007,7 +4054,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: 1.2.4
-    created: "2021-02-16T18:39:55.503292246Z"
+    created: "2021-02-16T23:06:48.191314991Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 11bd9f586e3d0abcac08bc0e1df1b1c91440a647ae190e965a7251c60db235a7
@@ -4028,7 +4075,7 @@ entries:
     version: 1.0.9
   - apiVersion: v1
     appVersion: 1.2.4
-    created: "2021-02-16T18:39:55.500957183Z"
+    created: "2021-02-16T23:06:48.189001786Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: e37475775d12ac18135df70c0b5780a8ffd0cb14c7dbf5dcb6b45953933a3642
@@ -4049,7 +4096,7 @@ entries:
     version: 1.0.8
   - apiVersion: v1
     appVersion: 1.2.4
-    created: "2021-02-16T18:39:55.49803443Z"
+    created: "2021-02-16T23:06:48.186656862Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 6e00a23259ef2afe26b0d52e523932e1b22af40fbc2da27dd5fa527491f84463
@@ -4070,7 +4117,7 @@ entries:
     version: 1.0.6
   - apiVersion: v1
     appVersion: 1.2.4
-    created: "2021-02-16T18:39:55.495756942Z"
+    created: "2021-02-16T23:06:48.183611237Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 059be983c5d2f7d160c4b1e72096bcb781d7a8ede39bfdbdb818b9c15949b837
@@ -4091,7 +4138,7 @@ entries:
     version: 1.0.5
   - apiVersion: v1
     appVersion: 1.2.4
-    created: "2021-02-16T18:39:55.493494576Z"
+    created: "2021-02-16T23:06:48.181340682Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 84aa6f85a4842318f0c6e02cf574bfef7c2f14e642e771fdc108582d60e417bb
@@ -4112,7 +4159,7 @@ entries:
     version: 1.0.4
   - apiVersion: v1
     appVersion: 1.2.4
-    created: "2021-02-16T18:39:55.491240617Z"
+    created: "2021-02-16T23:06:48.179104603Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 6732892362f1cfddc61a2d19909d4b11360ca9adaf7d327a010609b1e4e14b6d
@@ -4133,7 +4180,7 @@ entries:
     version: 1.0.3
   - apiVersion: v1
     appVersion: 1.2.4
-    created: "2021-02-16T18:39:55.488485159Z"
+    created: "2021-02-16T23:06:48.176791578Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: ecc655f85082265487202cb6af602fc0734ec4697e2200d490e2b39604f1768d
@@ -4154,7 +4201,7 @@ entries:
     version: 1.0.2
   - apiVersion: v1
     appVersion: 1.2.4
-    created: "2021-02-16T18:39:55.48630015Z"
+    created: "2021-02-16T23:06:48.173193776Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 1dad486f54334ce08812c805fe562abef492f782dbd6359d86f2c177526a4530
@@ -4175,7 +4222,7 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: 1.2.4
-    created: "2021-02-16T18:39:55.484080822Z"
+    created: "2021-02-16T23:06:48.16984309Z"
     description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
     digest: 0d4a4a0811b1ba7d60f64f6d45bc6055c484c70ab8a1ac2b06755cbdf5b5b02f
@@ -4196,7 +4243,7 @@ entries:
     version: 1.0.0
   - apiVersion: v1
     appVersion: 1.2.4
-    created: "2021-02-16T18:39:55.481843517Z"
+    created: "2021-02-16T23:06:48.167597732Z"
     description: A Helm chart for Argo-CD
     digest: 4b974606bdba0e68ee2f9a311578bbecb1b4b462e602c50d75fbd3c7908c32e6
     icon: https://raw.githubusercontent.com/argoproj/argo/master/argo.png
@@ -4206,7 +4253,7 @@ entries:
     version: 0.7.2
   - apiVersion: v1
     appVersion: 1.2.3
-    created: "2021-02-16T18:39:55.479740567Z"
+    created: "2021-02-16T23:06:48.166039324Z"
     description: A Helm chart for Argo-CD
     digest: f1fb9caffcdd01ac0055743499434d443808b15c694bde3dcab430c088ca5615
     icon: https://raw.githubusercontent.com/argoproj/argo/master/argo.png
@@ -4216,7 +4263,7 @@ entries:
     version: 0.7.1
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2021-02-16T18:39:55.478217736Z"
+    created: "2021-02-16T23:06:48.164115797Z"
     description: A Helm chart for Argo-CD
     digest: e2e956e1d2053b806ba9d102119c3b03013d7778ac7579e8e6614fc5a030fceb
     icon: https://raw.githubusercontent.com/argoproj/argo/master/argo.png
@@ -4226,7 +4273,7 @@ entries:
     version: 0.5.4
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2021-02-16T18:39:55.476682378Z"
+    created: "2021-02-16T23:06:48.162509127Z"
     description: A Helm chart for Argo-CD
     digest: 49c874957049f98a3fa77fd895d6da18c2f2d5c51caee1c09ff5e96673243783
     icon: https://raw.githubusercontent.com/argoproj/argo/master/argo.png
@@ -4236,7 +4283,7 @@ entries:
     version: 0.5.3
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2021-02-16T18:39:55.474833086Z"
+    created: "2021-02-16T23:06:48.160638353Z"
     description: A Helm chart for Argo-CD
     digest: 12d8316627b4d08f15935d354f6b4625948dff49d8ec5169da49f7619a4dfe87
     name: argo-cd
@@ -4245,7 +4292,7 @@ entries:
     version: 0.5.2
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2021-02-16T18:39:55.472938233Z"
+    created: "2021-02-16T23:06:48.158834867Z"
     description: A Helm chart for Argo-CD
     digest: 4caed17f90804a112e543b366f1c45f9ce1fced32481f7f15fadbd3518049411
     name: argo-cd
@@ -4254,7 +4301,7 @@ entries:
     version: 0.5.1
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2021-02-16T18:39:55.470314646Z"
+    created: "2021-02-16T23:06:48.156993979Z"
     description: A Helm chart for Argo-CD
     digest: 3381c2d34820a7469f3a46e7272d4c62c0ef40462632bfc8a566e734cb091a5b
     name: argo-cd
@@ -4263,7 +4310,7 @@ entries:
     version: 0.5.0
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2021-02-16T18:39:55.468416478Z"
+    created: "2021-02-16T23:06:48.155165574Z"
     description: A Helm chart for Argo-CD
     digest: 9f0f856a8d23d9e0c8366fd5211e4970c8c83778a22e3422f080f4eeca962087
     name: argo-cd
@@ -4272,7 +4319,7 @@ entries:
     version: 0.4.0
   - apiVersion: v1
     appVersion: 1.1.2
-    created: "2021-02-16T18:39:55.466643399Z"
+    created: "2021-02-16T23:06:48.152801194Z"
     description: A Helm chart for Argo-CD
     digest: 66620c15bb8847eb36ac3f28bbceebf357f6166e3dc2111aaa5d9ccf8b50230b
     name: argo-cd
@@ -4281,7 +4328,7 @@ entries:
     version: 0.3.0
   - apiVersion: v1
     appVersion: 0.12.3
-    created: "2021-02-16T18:39:55.465066036Z"
+    created: "2021-02-16T23:06:48.151282339Z"
     description: A Helm chart for Argo-CD
     digest: 9de8900515d9b508d0f6a56b32adb2f4bda369145404406d8d7fca1c8a297eab
     name: argo-cd
@@ -4290,7 +4337,7 @@ entries:
     version: 0.2.2
   - apiVersion: v1
     appVersion: 0.12.1
-    created: "2021-02-16T18:39:55.463989011Z"
+    created: "2021-02-16T23:06:48.150181105Z"
     description: A Helm chart for Argo-CD
     digest: 0671a32e6dfb997c18a4f9c661d992aae79e100b374d05ecce19a93c06252d16
     name: argo-cd
@@ -4299,7 +4346,7 @@ entries:
     version: 0.2.1
   - apiVersion: v1
     appVersion: "0.11"
-    created: "2021-02-16T18:39:55.462986623Z"
+    created: "2021-02-16T23:06:48.149165474Z"
     description: A Helm chart for Argo-CD
     digest: 227cc7113081bf8289fb218ee92db43687fe0aa2e5a60a518bed905e05a9d139
     name: argo-cd
@@ -4309,13 +4356,13 @@ entries:
   argo-ci:
   - apiVersion: v1
     appVersion: v1.0.0-alpha2
-    created: "2021-02-16T18:39:55.989457679Z"
+    created: "2021-02-16T23:06:48.695377873Z"
     dependencies:
     - name: argo
       repository: https://argoproj.github.io/argo-helm
       version: 0.2.1
     description: A Helm chart for Argo-CI
-    digest: 840a131b78146f8cc16a292b3f27ec80afccfc365a791b6c8cc66fb697cacb61
+    digest: 6198fcb884c1c80cd6bd096e4a31628ddf5fdb58bd4ae7ae8e2e2c0800429eca
     home: https://github.com/argoproj/argo-helm
     icon: https://raw.githubusercontent.com/argoproj/argo/master/docs/assets/argo.png
     maintainers:
@@ -4328,7 +4375,7 @@ entries:
     version: 0.1.7
   - apiVersion: v1
     appVersion: v1.0.0-alpha2
-    created: "2021-02-16T18:39:55.987594784Z"
+    created: "2021-02-16T23:06:48.692378574Z"
     dependencies:
     - name: argo
       repository: https://argoproj.github.io/argo-helm
@@ -4347,7 +4394,7 @@ entries:
     version: 0.1.6
   - apiVersion: v1
     appVersion: v1.0.0-alpha2
-    created: "2021-02-16T18:39:55.984965927Z"
+    created: "2021-02-16T23:06:48.689428298Z"
     dependencies:
     - name: argo
       repository: https://argoproj.github.io/argo-helm
@@ -4365,7 +4412,7 @@ entries:
     - argo-ci-0.1.5.tgz
     version: 0.1.5
   - apiVersion: v1
-    created: "2021-02-16T18:39:55.983026818Z"
+    created: "2021-02-16T23:06:48.685244083Z"
     dependencies:
     - name: argo
       repository: https://argoproj.github.io/argo-helm
@@ -4378,7 +4425,7 @@ entries:
     - argo-ci-0.1.4.tgz
     version: 0.1.4
   - apiVersion: v1
-    created: "2021-02-16T18:39:55.98106123Z"
+    created: "2021-02-16T23:06:48.681610789Z"
     dependencies:
     - name: argo
       repository: https://argoproj.github.io/argo-helm
@@ -4391,7 +4438,7 @@ entries:
     - argo-ci-0.1.3.tgz
     version: 0.1.3
   - apiVersion: v1
-    created: "2021-02-16T18:39:55.979142438Z"
+    created: "2021-02-16T23:06:48.678193941Z"
     dependencies:
     - name: argo
       repository: https://argoproj.github.io/argo-helm
@@ -4403,7 +4450,7 @@ entries:
     - argo-ci-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v1
-    created: "2021-02-16T18:39:55.976594316Z"
+    created: "2021-02-16T23:06:48.673631546Z"
     dependencies:
     - name: argo
       repository: https://argoproj.github.io/argo-helm
@@ -4415,7 +4462,7 @@ entries:
     - argo-ci-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
-    created: "2021-02-16T18:39:55.974901617Z"
+    created: "2021-02-16T23:06:48.670723842Z"
     dependencies:
     - name: argo
       repository: https://argoproj.github.io/argo-helm
@@ -4429,9 +4476,9 @@ entries:
   argo-events:
   - apiVersion: v1
     appVersion: 1.0.0
-    created: "2021-02-16T18:39:55.996588806Z"
+    created: "2021-02-16T23:06:48.706644964Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
-    digest: 528fff0930c7d1ab0ee31f2261d47cc39fc82d793368aa17bb6b2d36d909a0b8
+    digest: 7c081e1f4ddd02dca610fac3cc9c098d3b8ac3c7a9623530fa797a018cce716d
     home: https://github.com/argoproj/argo-helm
     icon: https://raw.githubusercontent.com/argoproj/argo/master/docs/assets/argo.png
     keywords:
@@ -4450,7 +4497,7 @@ entries:
     version: 1.0.0
   - apiVersion: v1
     appVersion: 0.17.0
-    created: "2021-02-16T18:39:55.991438943Z"
+    created: "2021-02-16T23:06:48.698438258Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: 9190e5ad1d93eadc2acb00c7fc5d9fd460a31741320aaa10a40a6e39e7027322
     home: https://github.com/argoproj/argo-helm
@@ -4471,7 +4518,7 @@ entries:
     version: 0.17.1
   - apiVersion: v1
     appVersion: 0.17.0
-    created: "2021-02-16T18:39:55.990877511Z"
+    created: "2021-02-16T23:06:48.697617784Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: da6b729a1172656a326ad173ddc3c7a43b69472064287bc72b29a428c4f273ec
     home: https://github.com/argoproj/argo-helm
@@ -4492,7 +4539,7 @@ entries:
     version: 0.17.0
   - apiVersion: v1
     appVersion: 0.14.0
-    created: "2021-02-16T18:39:55.990395907Z"
+    created: "2021-02-16T23:06:48.696823937Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: f39a01eedc7984b8abdb609f726f4fbb12b0081842df797e49ad3926d63d3069
     home: https://github.com/argoproj/argo-helm
@@ -4511,7 +4558,7 @@ entries:
     version: 0.14.0
   - apiVersion: v1
     appVersion: 0.13.0
-    created: "2021-02-16T18:39:55.989940342Z"
+    created: "2021-02-16T23:06:48.696120373Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: f880927a357d16759dd930dc43081d7bb0b0666e42ce52900c638feb8e06bd64
     home: https://github.com/argoproj/argo-helm
@@ -4530,7 +4577,7 @@ entries:
     version: 0.13.0
   - apiVersion: v1
     appVersion: "0.12"
-    created: "2021-02-16T18:39:55.996064179Z"
+    created: "2021-02-16T23:06:48.706104807Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: 847ff29ec0eeb3fd7a184570ca2f0582becd0f051fe872b28759ccb58eacff65
     home: https://github.com/argoproj/argo-helm
@@ -4550,7 +4597,7 @@ entries:
     version: 0.7.0
   - apiVersion: v1
     appVersion: "0.11"
-    created: "2021-02-16T18:39:55.995604739Z"
+    created: "2021-02-16T23:06:48.705447971Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: 9762593be37279498a88e3196803cd2a6792a26c255199c65624dbb1ee3f272e
     home: https://github.com/argoproj/argo-helm
@@ -4570,7 +4617,7 @@ entries:
     version: 0.6.1
   - apiVersion: v1
     appVersion: "0.11"
-    created: "2021-02-16T18:39:55.995229136Z"
+    created: "2021-02-16T23:06:48.704422009Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: 3c16fba54e0a3b6d4b532d49e69ed5f23f9f2428499e434ce4f603f24f62091b
     home: https://github.com/argoproj/argo-helm
@@ -4590,7 +4637,7 @@ entries:
     version: 0.6.0
   - apiVersion: v1
     appVersion: "0.1"
-    created: "2021-02-16T18:39:55.994843159Z"
+    created: "2021-02-16T23:06:48.703818316Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: 57a6703b12713981f2462ba1f9781173f127dae4652b629a01c31b9bc2b6cf9d
     home: https://github.com/argoproj/argo-helm
@@ -4610,7 +4657,7 @@ entries:
     version: 0.5.2
   - apiVersion: v1
     appVersion: "0.1"
-    created: "2021-02-16T18:39:55.994471Z"
+    created: "2021-02-16T23:06:48.703235711Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: d6411aa708da25416378507271613a3fa0a39b8b9c0d5b5db6b03bb1854b57ff
     icon: https://raw.githubusercontent.com/argoproj/argo/master/argo.png
@@ -4629,7 +4676,7 @@ entries:
     version: 0.5.1
   - apiVersion: v1
     appVersion: "0.1"
-    created: "2021-02-16T18:39:55.994098614Z"
+    created: "2021-02-16T23:06:48.702674124Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: e96466acf9ac5d17278a9c5b5376fdd1f9bab6c9daefae352b7674b22ce0901a
     icon: https://raw.githubusercontent.com/argoproj/argo/master/argo.png
@@ -4648,7 +4695,7 @@ entries:
     version: 0.5.0
   - apiVersion: v1
     appVersion: 0.9.2
-    created: "2021-02-16T18:39:55.993732621Z"
+    created: "2021-02-16T23:06:48.702067362Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: 52b99b6579ab33fc324302a1f91cea7cbda04e4a2aa1e525dc25f8f7d52ae58f
     icon: https://raw.githubusercontent.com/argoproj/argo/master/argo.png
@@ -4667,7 +4714,7 @@ entries:
     version: 0.4.3
   - apiVersion: v1
     appVersion: 0.9.2
-    created: "2021-02-16T18:39:55.993363446Z"
+    created: "2021-02-16T23:06:48.701514438Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: 2e3410ff50b557fb549eaf6823bcd903aecac652a2a4c39479e3623b9036db9e
     keywords:
@@ -4685,7 +4732,7 @@ entries:
     version: 0.4.2
   - apiVersion: v1
     appVersion: 0.8.1
-    created: "2021-02-16T18:39:55.992867811Z"
+    created: "2021-02-16T23:06:48.700756587Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: 96382417d1ed6e5b555145d2cdf9f34e8ab6ec4be1e1f87d3bdaa29d0151c2ae
     keywords:
@@ -4703,7 +4750,7 @@ entries:
     version: 0.4.0
   - apiVersion: v1
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:55.992414312Z"
+    created: "2021-02-16T23:06:48.699998006Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: c8556f19ded17919959d632a27a6b04b33b533b2b4eb1227e6d728c86c4137c1
     keywords:
@@ -4721,7 +4768,7 @@ entries:
     version: 0.3.0
   - apiVersion: v1
     appVersion: 0.1.0
-    created: "2021-02-16T18:39:55.991962962Z"
+    created: "2021-02-16T23:06:48.69928618Z"
     description: A Helm chart to install Argo-Events in k8s Cluster
     digest: dd2390a7ec47ad584787d01ff3ce34f868fa1f4acf996dd3dd1eb920abb2fc62
     keywords:
@@ -4740,7 +4787,7 @@ entries:
     version: 0.2.0
   argo-lite:
   - apiVersion: v1
-    created: "2021-02-16T18:39:55.996865604Z"
+    created: "2021-02-16T23:06:48.706921908Z"
     description: Lighweight workflow engine for Kubernetes
     digest: b83cb7173bcd4259723fd592b3438fc31dbc0a9cac44178b6f522bc75f1591f2
     icon: https://raw.githubusercontent.com/argoproj/argo/master/saas/axops/src/ui/src/assets/favicon/favicon-32x32.png
@@ -4754,9 +4801,9 @@ entries:
   argo-rollouts:
   - apiVersion: v1
     appVersion: 0.10.2
-    created: "2021-02-16T18:39:56.038974326Z"
+    created: "2021-02-16T23:06:48.741353034Z"
     description: A Helm chart for Argo Rollouts
-    digest: a023f44a9657d3a01acc12b93c81334e7a98e67f2c80a5e2ba76c12e3d2bcae0
+    digest: 4a288375c886e734c407c75a8072b26043f309e48ed15e83ec3569ba726208f3
     home: https://github.com/argoproj/argo-helm
     icon: https://raw.githubusercontent.com/argoproj/argo/master/argo.png
     maintainers:
@@ -4769,7 +4816,7 @@ entries:
     version: 0.4.2
   - apiVersion: v1
     appVersion: 0.10.2
-    created: "2021-02-16T18:39:56.036951226Z"
+    created: "2021-02-16T23:06:48.738652137Z"
     description: A Helm chart for Argo Rollouts
     digest: 7a5478d350c19cde88dd090446807905b30b67ac06a589957c3d67dbc13fc5d0
     home: https://github.com/argoproj/argo-helm
@@ -4784,7 +4831,7 @@ entries:
     version: 0.4.1
   - apiVersion: v1
     appVersion: 0.10.2
-    created: "2021-02-16T18:39:56.033788923Z"
+    created: "2021-02-16T23:06:48.736742823Z"
     description: A Helm chart for Argo Rollouts
     digest: 7874644c7bd9fa66b56716f88b99a869e407bb5c5685a88886f3b4b5e3f9f2ac
     home: https://github.com/argoproj/argo-helm
@@ -4799,7 +4846,7 @@ entries:
     version: 0.4.0
   - apiVersion: v1
     appVersion: 0.9.1
-    created: "2021-02-16T18:39:56.009368923Z"
+    created: "2021-02-16T23:06:48.718551683Z"
     description: A Helm chart for Argo Rollouts
     digest: 838b0cf5bcadfb35892f67418458387529fedf6df21d59dd34f795914612bb6d
     home: https://github.com/argoproj/argo-helm
@@ -4814,7 +4861,7 @@ entries:
     version: 0.3.10
   - apiVersion: v1
     appVersion: 0.9.1
-    created: "2021-02-16T18:39:56.03165977Z"
+    created: "2021-02-16T23:06:48.734064173Z"
     description: A Helm chart for Argo Rollouts
     digest: 80bf1cfd2c28b4461363f38487b1a76fd73a431ab2bdcb45de9ccdd4c0c7c1bf
     home: https://github.com/argoproj/argo-helm
@@ -4829,7 +4876,7 @@ entries:
     version: 0.3.9
   - apiVersion: v1
     appVersion: 0.9.1
-    created: "2021-02-16T18:39:56.028253337Z"
+    created: "2021-02-16T23:06:48.732034829Z"
     description: A Helm chart for Argo Rollouts
     digest: ff1d52f542412ce78f121215008862a51c5774093317f2a1c5bcacaa2375cd70
     home: https://github.com/argoproj/argo-helm
@@ -4844,7 +4891,7 @@ entries:
     version: 0.3.8
   - apiVersion: v1
     appVersion: 0.9.1
-    created: "2021-02-16T18:39:56.02546625Z"
+    created: "2021-02-16T23:06:48.729456881Z"
     description: A Helm chart for Argo Rollouts
     digest: 12dbf4cac9ca15acdd9bbe039a328934fb933afc108f051daaf28ed40ac99377
     home: https://github.com/argoproj/argo-helm
@@ -4859,7 +4906,7 @@ entries:
     version: 0.3.7
   - apiVersion: v1
     appVersion: 0.8.3
-    created: "2021-02-16T18:39:56.022032968Z"
+    created: "2021-02-16T23:06:48.727679452Z"
     description: A Helm chart for Argo Rollouts
     digest: 3bd5e2318959a0579053ff64b167e8f1fb4c5ba706eccbf28320de7c758094bf
     home: https://github.com/argoproj/argo-helm
@@ -4874,7 +4921,7 @@ entries:
     version: 0.3.6
   - apiVersion: v1
     appVersion: 0.8.3
-    created: "2021-02-16T18:39:56.019752616Z"
+    created: "2021-02-16T23:06:48.725628488Z"
     description: A Helm chart for Argo Rollouts
     digest: 3ab888174854ee6d21b148f4208c4cf0157ef20306770784a2371a82c9486f6b
     home: https://github.com/argoproj/argo-helm
@@ -4889,7 +4936,7 @@ entries:
     version: 0.3.5
   - apiVersion: v1
     appVersion: 0.8.3
-    created: "2021-02-16T18:39:56.015383133Z"
+    created: "2021-02-16T23:06:48.724120725Z"
     description: A Helm chart for Argo Rollouts
     digest: 65d87cdc303b5ae3b03b13a43a580d17e7ee23bb5cfb19ab4e7a802927d72fa5
     home: https://github.com/argoproj/argo-helm
@@ -4904,7 +4951,7 @@ entries:
     version: 0.3.4
   - apiVersion: v1
     appVersion: 0.8.0
-    created: "2021-02-16T18:39:56.013446377Z"
+    created: "2021-02-16T23:06:48.722128326Z"
     description: A Helm chart for Argo Rollouts
     digest: ab15931e704798d35d935ee60334455b0828ad4bd7f48de4784834ca33895906
     home: https://github.com/argoproj/argo-helm
@@ -4919,7 +4966,7 @@ entries:
     version: 0.3.3
   - apiVersion: v1
     appVersion: 0.8.0
-    created: "2021-02-16T18:39:56.01124884Z"
+    created: "2021-02-16T23:06:48.720587454Z"
     description: A Helm chart for Argo Rollouts
     digest: f6fe65bae9fda3edbfb54e35c88980971107ec8f0ffd21e223480a8dab77f359
     home: https://github.com/argoproj/argo-helm
@@ -4934,7 +4981,7 @@ entries:
     version: 0.3.2
   - apiVersion: v1
     appVersion: 0.8.0
-    created: "2021-02-16T18:39:56.006789535Z"
+    created: "2021-02-16T23:06:48.716484316Z"
     description: A Helm chart for Argo Rollouts
     digest: 897397ddda473729280cf606e87a770121631159a65706c84c0643b47335bbb8
     home: https://github.com/argoproj/argo-helm
@@ -4949,7 +4996,7 @@ entries:
     version: 0.3.1
   - apiVersion: v1
     appVersion: 0.8.0
-    created: "2021-02-16T18:39:56.00499971Z"
+    created: "2021-02-16T23:06:48.714264947Z"
     description: A Helm chart for Argo Rollouts
     digest: e28335bf5284c916519bada853b2592b4dfe5304d46a6dbc4a1f7575b3cc329d
     home: https://github.com/argoproj/argo-helm
@@ -4964,7 +5011,7 @@ entries:
     version: 0.3.0
   - apiVersion: v1
     appVersion: "0.7"
-    created: "2021-02-16T18:39:56.003466875Z"
+    created: "2021-02-16T23:06:48.712423392Z"
     description: A Helm chart for Argo Rollouts
     digest: 5baf26a73506f2bdd8b9e56553f12bc938da8bec40ad5b87aa6248780c1acbcc
     home: https://github.com/argoproj/argo-helm
@@ -4979,7 +5026,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "0.7"
-    created: "2021-02-16T18:39:56.001070057Z"
+    created: "2021-02-16T23:06:48.710380374Z"
     description: A Helm chart for Argo Rollouts
     digest: ca085f4976c4429cc2dbe2caa8210d7d68648d53a2e20d5509767ea7d008c80c
     home: https://github.com/argoproj/argo-helm
@@ -4994,7 +5041,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: "0.7"
-    created: "2021-02-16T18:39:55.998986426Z"
+    created: "2021-02-16T23:06:48.7082492Z"
     description: A Helm chart for Argo Rollouts
     digest: f723767f42fa092d858c0e4284355db575137e4ba6bb162445ca149754ab5f66
     home: https://github.com/argoproj/argo-helm
@@ -5010,9 +5057,9 @@ entries:
   argocd-notifications:
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2021-02-16T18:39:56.043551703Z"
+    created: "2021-02-16T23:06:48.745780152Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
-    digest: 0f79c4edb87e0c33672e2eb42f6ca8734eed1843adfde503e5c4c137b10f305a
+    digest: 421a7ded13d99888ad36e6d6594a5f6e32ecc8fbb885fe4fdd44957955701824
     home: https://github.com/argoproj/argo-helm
     icon: https://raw.githubusercontent.com/argoproj/argo/master/docs/assets/argo.png
     keywords:
@@ -5029,7 +5076,7 @@ entries:
     version: 1.0.14
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2021-02-16T18:39:56.042828624Z"
+    created: "2021-02-16T23:06:48.745072376Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: c68bb0ba0e0bfae4221adf89d301eea4daa93cb541d8a118c91b7d68628ad8c0
     home: https://github.com/argoproj/argo-helm
@@ -5048,7 +5095,7 @@ entries:
     version: 1.0.13
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2021-02-16T18:39:56.042067881Z"
+    created: "2021-02-16T23:06:48.744353876Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: 3b89e55e72d45b10501ca79bbd23e5002d28b28137a04726313f155aee35dcb4
     home: https://github.com/argoproj/argo-helm
@@ -5067,7 +5114,7 @@ entries:
     version: 1.0.12
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.041231276Z"
+    created: "2021-02-16T23:06:48.743643494Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: 3fc2adf35e88becf4a49079138fcb414c6a5c74a31ebe94482e0b2caf3bb905d
     home: https://github.com/argoproj/argo-helm
@@ -5086,7 +5133,7 @@ entries:
     version: 1.0.11
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.040509881Z"
+    created: "2021-02-16T23:06:48.74297476Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: 8f804f0a0664fcd38c1ba295afaa89d26a280a4bac360f87a38f0de0ba306e08
     home: https://github.com/argoproj/argo-helm
@@ -5104,7 +5151,7 @@ entries:
     version: 1.0.10
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.049138454Z"
+    created: "2021-02-16T23:06:48.75039075Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: b2f53b206ed1e09044e5ff69afbdb740360404643efe516b1b071a57baf0d070
     home: https://github.com/argoproj/argo-helm
@@ -5122,7 +5169,7 @@ entries:
     version: 1.0.9
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.048383155Z"
+    created: "2021-02-16T23:06:48.749696182Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: a929412cc003b01420898a74f161082df77934653d494a71f2dab43c6e3ec453
     home: https://github.com/argoproj/argo-helm
@@ -5140,7 +5187,7 @@ entries:
     version: 1.0.8
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.047616522Z"
+    created: "2021-02-16T23:06:48.749034677Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: 38829d06f8f9686b5b621b8e2663412d18cab2e24cc5ac333002e0ed245111be
     home: https://github.com/argoproj/argo-helm
@@ -5158,7 +5205,7 @@ entries:
     version: 1.0.7
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.046914302Z"
+    created: "2021-02-16T23:06:48.748412231Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: f4a37a39d91d03af30603d269cc3007bc3b980d1ce134de9f0015f12eafcadc9
     home: https://github.com/argoproj/argo-helm
@@ -5176,7 +5223,7 @@ entries:
     version: 1.0.6
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.04562567Z"
+    created: "2021-02-16T23:06:48.747841512Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: e032e90cc889277f5c91cfdafa424a049a073e441491c388fe585aedc7cab79a
     home: https://github.com/argoproj/argo-helm
@@ -5194,7 +5241,7 @@ entries:
     version: 1.0.5
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.045007683Z"
+    created: "2021-02-16T23:06:48.747248296Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: 741968dc4357f764eb608a61fd124f09d594e819ae52b8564d6178030526d849
     home: https://github.com/argoproj/argo-helm
@@ -5212,7 +5259,7 @@ entries:
     version: 1.0.4
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.044430616Z"
+    created: "2021-02-16T23:06:48.746672299Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: 5e9657972c300c5c406a03aadf9282fb63329de1d8fc3f66fb4e3cc5eb5d3c8c
     home: https://github.com/argoproj/argo-helm
@@ -5230,7 +5277,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.04398514Z"
+    created: "2021-02-16T23:06:48.746210283Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: 10f2aeb5a05082d0814e877612fffa48c551b7d91c80938a8c3079633bb44b06
     home: https://github.com/argoproj/argo-helm
@@ -5248,7 +5295,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.039816294Z"
+    created: "2021-02-16T23:06:48.742245891Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: ab49757f7216626db8f7bbee01066c16f7950026f6c2db6bbedd5e552095505c
     home: https://github.com/argoproj/argo-helm
@@ -5265,7 +5312,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2021-02-16T18:39:56.039401404Z"
+    created: "2021-02-16T23:06:48.741791978Z"
     description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
     digest: 3e65f683019a04ec6a47ab11795b68d5c431c33c99dc3bcd71b41afb8af77a27
     home: https://github.com/argoproj/argo-helm
@@ -5280,4 +5327,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-02-16T18:39:55.275435724Z"
+generated: "2021-02-16T23:06:47.968164768Z"
