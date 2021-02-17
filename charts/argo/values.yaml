@@ -7,7 +7,7 @@ images:
   # Secrets with credentials to pull images from a private registry
   pullSecrets: []
   # - name: argo-pull-secret
-  tag: v2.11.7
+  tag: v2.12.5
 
 crdVersion: v1alpha1
 installCRD: true
@@ -115,6 +115,9 @@ controller:
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
   resources: {}
+  # The list of environment variable definitions to be added to the controller
+  # manages container verbatim.
+  extraEnv: []
   replicas: 1
   pdb:
     enabled: false
@@ -164,9 +167,6 @@ server:
   serviceType: ClusterIP
   servicePort: 2746
   # servicePortName: http
-  rbac:
-    # When present, restricts secrets the server can read to a given list.
-    secretWhitelist: []
   serviceAccount: argo-server
   # Whether to create the service account with the name specified in
   # server.serviceAccount and bind it to the server role.
@@ -201,6 +201,12 @@ server:
   # PriorityClass: system-cluster-critical
   priorityClassName: ""
 
+  # Run the argo server in "secure" mode. Configure this value instead of
+  # "--secure" in extraArgs. See the following documentation for more details
+  # on secure mode:
+  # https://argoproj.github.io/argo/tls/#encrypted
+  secure: false
+
   # Extra arguments to provide to the Argo server binary.
   extraArgs: []
 
@@ -219,6 +225,11 @@ server:
     # annotations:
     #   kubernetes.io/ingress.class: nginx
     #   kubernetes.io/tls-acme: "true"
+
+    ## Labels to be added to the web ingress.
+    ##
+    # labels:
+    #   use-cloudflare-solver: "true"
 
     ## Hostnames.
     ## Must be provided if Ingress is enabled.
@@ -243,7 +254,7 @@ server:
     enableEditing: true
   sso:
     ## SSO configuration when SSO is specified as a server auth mode.
-    ## All the values are requied. SSO is activated by adding --auth-mode=sso
+    ## All the values are required. SSO is activated by adding --auth-mode=sso
     ## to the server command line.
     #
     ## The root URL of the OIDC identity provider.
@@ -258,6 +269,18 @@ server:
     #   key: client-secret
     ## The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
     # redirectUrl: https://argo/oauth2/callback
+    # rbac:
+    #   enabled: true
+    ## When present, restricts secrets the server can read to a given list.
+    ## You can use it to restrict the server to only be able to access the
+    ## service account token secrets that are associated with service accounts
+    ## used for authorization.
+    #   secretWhitelist: []
+    ## Scopes requested from the SSO ID provider.  The 'groups' scope requests
+    ## group membership information, which is usually used for authorization
+    ## decisions.
+    # scopes:
+    # - groups
 
 # Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false
