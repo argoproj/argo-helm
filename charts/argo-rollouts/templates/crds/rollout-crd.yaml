@@ -97,6 +97,17 @@ spec:
                 properties:
                   blueGreen:
                     properties:
+                      activeMetadata:
+                        properties:
+                          annotations:
+                            additionalProperties:
+                              type: string
+                            type: object
+                          labels:
+                            additionalProperties:
+                              type: string
+                            type: object
+                        type: object
                       activeService:
                         type: string
                       antiAffinity:
@@ -117,6 +128,11 @@ spec:
                       autoPromotionSeconds:
                         format: int32
                         type: integer
+                      maxUnavailable:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        x-kubernetes-int-or-string: true
                       postPromotionAnalysis:
                         properties:
                           args:
@@ -194,6 +210,17 @@ spec:
                                   type: string
                               type: object
                             type: array
+                        type: object
+                      previewMetadata:
+                        properties:
+                          annotations:
+                            additionalProperties:
+                              type: string
+                            type: object
+                          labels:
+                            additionalProperties:
+                              type: string
+                            type: object
                         type: object
                       previewReplicaCount:
                         format: int32
@@ -482,6 +509,19 @@ spec:
                             type: object
                           istio:
                             properties:
+                              destinationRule:
+                                properties:
+                                  canarySubsetName:
+                                    type: string
+                                  name:
+                                    type: string
+                                  stableSubsetName:
+                                    type: string
+                                required:
+                                - canarySubsetName
+                                - name
+                                - stableSubsetName
+                                type: object
                               virtualService:
                                 properties:
                                   name:
@@ -1194,6 +1234,15 @@ spec:
                                     user:
                                       type: string
                                   type: object
+                                seccompProfile:
+                                  properties:
+                                    localhostProfile:
+                                      type: string
+                                    type:
+                                      type: string
+                                  required:
+                                  - type
+                                  type: object
                                 windowsOptions:
                                   properties:
                                     gmsaCredentialSpec:
@@ -1732,6 +1781,15 @@ spec:
                                       type: string
                                     user:
                                       type: string
+                                  type: object
+                                seccompProfile:
+                                  properties:
+                                    localhostProfile:
+                                      type: string
+                                    type:
+                                      type: string
+                                  required:
+                                  - type
                                   type: object
                                 windowsOptions:
                                   properties:
@@ -2276,6 +2334,15 @@ spec:
                                     user:
                                       type: string
                                   type: object
+                                seccompProfile:
+                                  properties:
+                                    localhostProfile:
+                                      type: string
+                                    type:
+                                      type: string
+                                  required:
+                                  - type
+                                  type: object
                                 windowsOptions:
                                   properties:
                                     gmsaCredentialSpec:
@@ -2461,6 +2528,15 @@ spec:
                               user:
                                 type: string
                             type: object
+                          seccompProfile:
+                            properties:
+                              localhostProfile:
+                                type: string
+                              type:
+                                type: string
+                            required:
+                            - type
+                            type: object
                           supplementalGroups:
                             items:
                               format: int64
@@ -2492,6 +2568,8 @@ spec:
                         type: string
                       serviceAccountName:
                         type: string
+                      setHostnameAsFQDN:
+                        type: boolean
                       shareProcessNamespace:
                         type: boolean
                       subdomain:
@@ -2639,6 +2717,31 @@ spec:
                               required:
                               - volumeID
                               type: object
+                            configMap:
+                              properties:
+                                defaultMode:
+                                  format: int32
+                                  type: integer
+                                items:
+                                  items:
+                                    properties:
+                                      key:
+                                        type: string
+                                      mode:
+                                        format: int32
+                                        type: integer
+                                      path:
+                                        type: string
+                                    required:
+                                    - key
+                                    - path
+                                    type: object
+                                  type: array
+                                name:
+                                  type: string
+                                optional:
+                                  type: boolean
+                              type: object
                             csi:
                               properties:
                                 driver:
@@ -2659,6 +2762,44 @@ spec:
                               required:
                               - driver
                               type: object
+                            downwardAPI:
+                              properties:
+                                defaultMode:
+                                  format: int32
+                                  type: integer
+                                items:
+                                  items:
+                                    properties:
+                                      fieldRef:
+                                        properties:
+                                          apiVersion:
+                                            type: string
+                                          fieldPath:
+                                            type: string
+                                        required:
+                                        - fieldPath
+                                        type: object
+                                      mode:
+                                        format: int32
+                                        type: integer
+                                      path:
+                                        type: string
+                                      resourceFieldRef:
+                                        properties:
+                                          containerName:
+                                            type: string
+                                          divisor:
+                                            type: string
+                                          resource:
+                                            type: string
+                                        required:
+                                        - resource
+                                        type: object
+                                    required:
+                                    - path
+                                    type: object
+                                  type: array
+                              type: object
                             emptyDir:
                               properties:
                                 medium:
@@ -2669,6 +2810,85 @@ spec:
                                   - type: string
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
+                              type: object
+                            ephemeral:
+                              properties:
+                                readOnly:
+                                  type: boolean
+                                volumeClaimTemplate:
+                                  properties:
+                                    metadata:
+                                      type: object
+                                    spec:
+                                      properties:
+                                        accessModes:
+                                          items:
+                                            type: string
+                                          type: array
+                                        dataSource:
+                                          properties:
+                                            apiGroup:
+                                              type: string
+                                            kind:
+                                              type: string
+                                            name:
+                                              type: string
+                                          required:
+                                          - kind
+                                          - name
+                                          type: object
+                                        resources:
+                                          properties:
+                                            limits:
+                                              additionalProperties:
+                                                anyOf:
+                                                - type: integer
+                                                - type: string
+                                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                                x-kubernetes-int-or-string: true
+                                              type: object
+                                            requests:
+                                              additionalProperties:
+                                                anyOf:
+                                                - type: integer
+                                                - type: string
+                                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                                x-kubernetes-int-or-string: true
+                                              type: object
+                                          type: object
+                                        selector:
+                                          properties:
+                                            matchExpressions:
+                                              items:
+                                                properties:
+                                                  key:
+                                                    type: string
+                                                  operator:
+                                                    type: string
+                                                  values:
+                                                    items:
+                                                      type: string
+                                                    type: array
+                                                required:
+                                                - key
+                                                - operator
+                                                type: object
+                                              type: array
+                                            matchLabels:
+                                              additionalProperties:
+                                                type: string
+                                              type: object
+                                          type: object
+                                        storageClassName:
+                                          type: string
+                                        volumeMode:
+                                          type: string
+                                        volumeName:
+                                          type: string
+                                      type: object
+                                  required:
+                                  - spec
+                                  type: object
                               type: object
                             fc:
                               properties:
@@ -2847,6 +3067,85 @@ spec:
                                 sources:
                                   items:
                                     properties:
+                                      configMap:
+                                        properties:
+                                          items:
+                                            items:
+                                              properties:
+                                                key:
+                                                  type: string
+                                                mode:
+                                                  format: int32
+                                                  type: integer
+                                                path:
+                                                  type: string
+                                              required:
+                                              - key
+                                              - path
+                                              type: object
+                                            type: array
+                                          name:
+                                            type: string
+                                          optional:
+                                            type: boolean
+                                        type: object
+                                      downwardAPI:
+                                        properties:
+                                          items:
+                                            items:
+                                              properties:
+                                                fieldRef:
+                                                  properties:
+                                                    apiVersion:
+                                                      type: string
+                                                    fieldPath:
+                                                      type: string
+                                                  required:
+                                                  - fieldPath
+                                                  type: object
+                                                mode:
+                                                  format: int32
+                                                  type: integer
+                                                path:
+                                                  type: string
+                                                resourceFieldRef:
+                                                  properties:
+                                                    containerName:
+                                                      type: string
+                                                    divisor:
+                                                      type: string
+                                                    resource:
+                                                      type: string
+                                                  required:
+                                                  - resource
+                                                  type: object
+                                              required:
+                                              - path
+                                              type: object
+                                            type: array
+                                        type: object
+                                      secret:
+                                        properties:
+                                          items:
+                                            items:
+                                              properties:
+                                                key:
+                                                  type: string
+                                                mode:
+                                                  format: int32
+                                                  type: integer
+                                                path:
+                                                  type: string
+                                              required:
+                                              - key
+                                              - path
+                                              type: object
+                                            type: array
+                                          name:
+                                            type: string
+                                          optional:
+                                            type: boolean
+                                        type: object
                                       serviceAccountToken:
                                         properties:
                                           audience:
@@ -2938,6 +3237,31 @@ spec:
                               - gateway
                               - secretRef
                               - system
+                              type: object
+                            secret:
+                              properties:
+                                defaultMode:
+                                  format: int32
+                                  type: integer
+                                items:
+                                  items:
+                                    properties:
+                                      key:
+                                        type: string
+                                      mode:
+                                        format: int32
+                                        type: integer
+                                      path:
+                                        type: string
+                                    required:
+                                    - key
+                                    - path
+                                    type: object
+                                  type: array
+                                optional:
+                                  type: boolean
+                                secretName:
+                                  type: string
                               type: object
                             storageos:
                               properties:

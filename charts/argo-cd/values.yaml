@@ -217,6 +217,8 @@ dex:
   serviceAccount:
     create: true
     name: argocd-dex-server
+    ## Annotations applied to created service account
+    annotations: {}
 
   ## Additional volumeMounts to the controller main container.
   volumeMounts:
@@ -444,6 +446,9 @@ server:
     annotations: {}
     labels: {}
     type: ClusterIP
+    ## For node port default ports
+    nodePortHttp: 30080
+    nodePortHttps: 30443
     servicePortHttp: 80
     servicePortHttps: 443
     servicePortHttpName: http
@@ -549,7 +554,7 @@ server:
     #       name: secret-name
     #       key: sshPrivateKey
     #   - type: helm
-    #     url: https://kubernetes-charts.storage.googleapis.com
+    #     url: https://charts.helm.sh/stable
     #     name: stable
     #   - type: helm
     #     url: https://argoproj.github.io/argo-helm
