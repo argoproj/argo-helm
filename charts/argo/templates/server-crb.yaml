@@ -26,11 +26,7 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.server.name}}-cluster-template
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  {{- if .Values.singleNamespace }}
-  kind: Role
-  {{ else }}
   kind: ClusterRole
-  {{- end }}
   name: {{ .Release.Name }}-{{ .Values.server.name}}-cluster-template
 subjects:
 - kind: ServiceAccount
