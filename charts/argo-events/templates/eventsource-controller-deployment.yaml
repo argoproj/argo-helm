@@ -35,7 +35,31 @@ spec:
                   fieldPath: metadata.namespace
             - name: EVENTSOURCE_IMAGE
               value: "{{ .Values.registry }}/{{ .Values.eventsourceController.eventsourceImage }}:{{ .Values.eventsourceController.tag }}"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
+      {{- with .Values.securityContext }}
+      securityContext: {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.eventsourceController.nodeSelector }}
+      nodeSelector: {{ toYaml .Values.eventsourceController.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.eventsourceController.tolerations }}
+      tolerations: {{ toYaml .Values.eventsourceController.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.eventsourceController.affinity }}
+      affinity: {{ toYaml .Values.eventsourceController.affinity | nindent 8 }}
       {{- end }}

@@ -4,7 +4,7 @@ In order to access the server UI you have the following options:
 
     and then open the browser on http://localhost:8080 and accept the certificate
 
-2. enable ingress in the values file `service.ingress.enabled` and either
+2. enable ingress in the values file `server.ingress.enabled` and either
       - Add the annotation for ssl passthrough: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/ingress.md#option-1-ssl-passthrough
       - Add the `--insecure` flag to `server.extraArgs` in the values file and terminate SSL at your ingress: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/ingress.md#option-2-multiple-ingress-objects-and-hosts
 
