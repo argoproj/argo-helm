@@ -1,4 +1,4 @@
----
+# This is an auto-generated file. DO NOT EDIT
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -9,12 +9,32 @@ spec:
     kind: Sensor
     listKind: SensorList
     plural: sensors
-    singular: sensor
     shortNames:
-      - sn
+    - sn
+    singular: sensor
   scope: Namespaced
   versions:
-    - name: v1alpha1
-      served: true
-      storage: true
-
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          spec:
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          status:
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        required:
+        - metadata
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
