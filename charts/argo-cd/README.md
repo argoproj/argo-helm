@@ -14,6 +14,10 @@ This chart currently installs the non-HA version of ArgoCD.
 
 ## Upgrading
 
+### 2.14.7 and above
+
+The `matchLabels` key in the ArgoCD Appliaction Controller is no longer hard-coded. Note that labels are immutable so caution should be exercised when making changes to this resource.
+
 ### 2.10.x to 2.11.0
 
 The application controller is now available as a `StatefulSet` when the `controller.enableStatefulSet` flag is set to true. Depending on your Helm deployment this may be a downtime or breaking change if enabled when using HA and will become the default in 3.x.
