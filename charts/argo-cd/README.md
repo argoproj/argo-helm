@@ -333,7 +333,7 @@ through `xxx.extraArgs`
 | redis.securityContext | Redis Pod Security Context | See [values.yaml](values.yaml) |
 | redis.servicePort | Redis service port | `6379` |
 | redis.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
-| redis-ha | Configures [Redis HA subchart](https://github.com/helm/charts/tree/master/stable/redis-ha) The properties below have been changed from the subchart defaults | |
+| redis-ha | Configures [Redis HA subchart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha) The properties below have been changed from the subchart defaults | |
 | redis-ha.enabled | Enables the Redis HA subchart and disables the custom Redis single node deployment| `false` |
 | redis-ha.exporter.enabled | If `true`, the prometheus exporter sidecar is enabled | `true` |
 | redis-ha.persistentVolume.enabled | Configures persistency on Redis nodes | `false`
