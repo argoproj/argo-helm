@@ -1,4 +1,5 @@
 {{- $redisHa := (index .Values "redis-ha") -}}
+{{- $containerSecurityContext := .Values.repoServer.containerSecurityContext | default dict }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -82,7 +83,7 @@ spec:
         {{- if .Values.repoServer.volumeMounts }}
 {{- toYaml .Values.repoServer.volumeMounts | nindent 8}}
         {{- end }}
-        {{- if .Values.openshift.enabled }}
+        {{- if or .Values.openshift.enabled $containerSecurityContext.readOnlyRootFilesystem }}
         - mountPath: /app/config/gpg/keys
           name: gpg-keyring
         {{- end }}
@@ -93,6 +94,10 @@ spec:
         {{- if .Values.configs.tlsCerts }}
         - mountPath: /app/config/tls
           name: tls-certs
+        {{- end }}
+        {{- if $containerSecurityContext.readOnlyRootFilesystem }}
+        - mountPath: /tmp
+          name: tmp-dir
         {{- end }}
         ports:
         - name: repo-server
@@ -142,7 +147,7 @@ spec:
       {{- if .Values.repoServer.volumes }}
 {{- toYaml .Values.repoServer.volumes | nindent 6}}
       {{- end }}
-      {{- if .Values.openshift.enabled }}
+      {{- if or .Values.openshift.enabled $containerSecurityContext.readOnlyRootFilesystem }}
       - emptyDir: {}
         name: gpg-keyring
       {{- end }}
@@ -155,6 +160,10 @@ spec:
       - configMap:
           name: argocd-tls-certs-cm
         name: tls-certs
+      {{- end }}
+      {{- if $containerSecurityContext.readOnlyRootFilesystem }}
+      - emptyDir: {}
+        name: tmp-dir
       {{- end }}
       {{- if .Values.repoServer.initContainers }}
       initContainers:
