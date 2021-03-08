@@ -1,0 +1,18 @@
+## Reference: https://github.com/helm/chart-testing/blob/master/doc/ct_lint-and-install.md
+# Don't add the 'debug' attribute, otherwise the workflow won't work anymore
+remote: origin
+chart-dirs:
+  - charts
+chart-repos:
+  - argo=https://argoproj.github.io/argo-helm
+  - minio=https://helm.min.io/
+  - minio-operator=https://operator.min.io/
+  - dandydeveloper=https://dandydeveloper.github.io/charts/
+  - stable=https://charts.helm.sh/stable
+  - incubator=https://charts.helm.sh/incubator
+helm-extra-args: "--timeout 600s"  
+validate-chart-schema: false
+validate-maintainers: true
+validate-yaml: true
+exclude-deprecated: true
+excluded-charts: []

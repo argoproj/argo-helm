@@ -1,19 +1,17 @@
 #!/bin/bash
+# This script runs the chart-testing tool locally. It simulates the linting that is also done by the github action. Run this without any errors before pushing.
+# Reference: https://github.com/helm/chart-testing
 set -eux
 
 SRCROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
-for dir in $(find $SRCROOT/charts -mindepth 1 -maxdepth 1 -type d);
-do
-    rm -rf $dir/charts
-    name=$(basename $dir)
-    echo "Running Helm linting for $name"
-    docker run \
-        -v "$SRCROOT:/workdir" \
-        gcr.io/kubernetes-charts-ci/test-image:v3.1.0 \
-        ct \
-        lint \
-        --config .circleci/chart-testing.yaml \
-        --lint-conf .circleci/lintconf.yaml \
-        --charts "/workdir/charts/${name}"
-done
+echo -e "\n-- Linting all Helm Charts --\n"
+docker run \
+     -v "$SRCROOT:/workdir" \
+     --entrypoint /bin/sh \
+     quay.io/helmpack/chart-testing:v3.3.1 \
+     -c cd /workdir \ 
+     ct lint \
+     --config ct.yaml \
+     --lint-conf lintconf.yaml \
+     --debug
