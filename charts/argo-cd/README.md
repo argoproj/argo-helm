@@ -14,6 +14,10 @@ This chart currently installs the non-HA version of ArgoCD.
 
 ## Upgrading
 
+### 2.14.7 and above
+
+The `matchLabels` key in the ArgoCD Appliaction Controller is no longer hard-coded. Note that labels are immutable so caution should be exercised when making changes to this resource.
+
 ### 2.10.x to 2.11.0
 
 The application controller is now available as a `StatefulSet` when the `controller.enableStatefulSet` flag is set to true. Depending on your Helm deployment this may be a downtime or breaking change if enabled when using HA and will become the default in 3.x.
@@ -329,7 +333,7 @@ through `xxx.extraArgs`
 | redis.securityContext | Redis Pod Security Context | See [values.yaml](values.yaml) |
 | redis.servicePort | Redis service port | `6379` |
 | redis.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
-| redis-ha | Configures [Redis HA subchart](https://github.com/helm/charts/tree/master/stable/redis-ha) The properties below have been changed from the subchart defaults | |
+| redis-ha | Configures [Redis HA subchart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha) The properties below have been changed from the subchart defaults | |
 | redis-ha.enabled | Enables the Redis HA subchart and disables the custom Redis single node deployment| `false` |
 | redis-ha.exporter.enabled | If `true`, the prometheus exporter sidecar is enabled | `true` |
 | redis-ha.persistentVolume.enabled | Configures persistency on Redis nodes | `false`
