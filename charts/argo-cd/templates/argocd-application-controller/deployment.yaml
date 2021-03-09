@@ -57,6 +57,8 @@ spec:
         - {{ .Values.controller.args.operationProcessors | quote }}
         - --app-resync
         - {{ .Values.controller.args.appResyncPeriod | quote }}
+        - --self-heal-timeout-seconds
+        - {{ .Values.controller.args.selfHealTimeout | quote }}
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
         - --logformat
