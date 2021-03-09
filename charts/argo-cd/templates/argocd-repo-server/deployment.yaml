@@ -82,10 +82,8 @@ spec:
         {{- if .Values.repoServer.volumeMounts }}
 {{- toYaml .Values.repoServer.volumeMounts | nindent 8}}
         {{- end }}
-        {{- if .Values.openshift.enabled }}
         - mountPath: /app/config/gpg/keys
           name: gpg-keyring
-        {{- end }}
         {{- if .Values.configs.knownHosts }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
@@ -94,6 +92,8 @@ spec:
         - mountPath: /app/config/tls
           name: tls-certs
         {{- end }}
+        - mountPath: /tmp
+          name: tmp-dir
         ports:
         - name: repo-server
           containerPort: {{ .Values.repoServer.containerPort }}
@@ -142,10 +142,8 @@ spec:
       {{- if .Values.repoServer.volumes }}
 {{- toYaml .Values.repoServer.volumes | nindent 6}}
       {{- end }}
-      {{- if .Values.openshift.enabled }}
       - emptyDir: {}
         name: gpg-keyring
-      {{- end }}
       {{- if .Values.configs.knownHosts }}
       - configMap:
           name: argocd-ssh-known-hosts-cm
@@ -156,6 +154,8 @@ spec:
           name: argocd-tls-certs-cm
         name: tls-certs
       {{- end }}
+      - emptyDir: {}
+        name: tmp-dir
       {{- if .Values.repoServer.initContainers }}
       initContainers:
 {{- toYaml .Values.repoServer.initContainers | nindent 6 }}
