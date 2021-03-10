@@ -75,6 +75,7 @@ controller:
     # capabilities:
     #   drop:
     #     - all
+    # readOnlyRootFilesystem: true
 
   ## Configures the controller port
   containerPort: 8082
@@ -254,6 +255,7 @@ dex:
     # capabilities:
     #   drop:
     #     - all
+    # readOnlyRootFilesystem: true
 
   resources: {}
   #  limits:
@@ -303,6 +305,7 @@ redis:
     # capabilities:
     #   drop:
     #     - all
+    # readOnlyRootFilesystem: true
 
   ## Redis Pod specific security context
   securityContext:
@@ -426,6 +429,7 @@ server:
     # capabilities:
     #   drop:
     #     - all
+    # readOnlyRootFilesystem: true
 
   resources: {}
   #  limits:
@@ -786,6 +790,7 @@ repoServer:
     # capabilities:
     #   drop:
     #     - all
+    # readOnlyRootFilesystem: true
 
   resources: {}
   #  limits:
