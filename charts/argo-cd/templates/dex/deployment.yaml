@@ -86,10 +86,12 @@ spec:
           containerPort: {{ .Values.dex.containerPortMetrics }}
           protocol: TCP
         {{- end }}
-{{- if .Values.dex.volumeMounts }}
         volumeMounts:
-{{- toYaml .Values.dex.volumeMounts | nindent 10 }}
-{{- end }}
+        - mountPath: /tmp
+          name: tmp-dir
+        {{- if .Values.dex.volumeMounts }}
+        {{- toYaml .Values.dex.volumeMounts | nindent 8 }}
+        {{- end }}
         resources:
 {{- toYaml .Values.dex.resources | nindent 10 }}
     {{- if .Values.dex.nodeSelector }}
@@ -105,10 +107,12 @@ spec:
 {{- toYaml .Values.dex.affinity | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
-{{- if .Values.dex.volumes }}
       volumes:
-{{- toYaml .Values.dex.volumes | nindent 8}}
-{{- end }}
+      - emptyDir: {}
+        name: tmp-dir
+      {{- if .Values.dex.volumes }}
+      {{- toYaml .Values.dex.volumes | nindent 6 }}
+      {{- end }}
 {{- if .Values.dex.priorityClassName }}
       priorityClassName: {{ .Values.dex.priorityClassName }}
 {{- end }}
