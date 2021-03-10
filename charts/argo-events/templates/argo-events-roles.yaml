@@ -11,10 +11,10 @@ roleRef:
   name: argo-events-role
 subjects:
   - kind: ServiceAccount
-    name: {{ .Values.serviceAccount }}
+    name: {{ .Values.serviceAccount.name }}
     namespace: {{ .Release.Namespace }}
   {{- if .Values.additionalSaNamespaces }}
-  {{ $sa := .Values.serviceAccount }}
+  {{ $sa := .Values.serviceAccount.name }}
   {{- range $namespace := .Values.additionalSaNamespaces }}
   - kind: ServiceAccount
     name: {{ $sa }}

@@ -12,7 +12,10 @@ imagePullSecrets: []
 installCRD: true
 
 # ServiceAccount to use for running controller.
-serviceAccount: argo-events-sa
+serviceAccount:
+  name: argo-events-sa
+#  annotations:
+#    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
 
 # Create service accounts in additional namespaces specified
 # The SA will always be created in the release namespaces
