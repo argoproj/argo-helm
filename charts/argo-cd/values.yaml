@@ -131,6 +131,8 @@ controller:
     name: argocd-application-controller
     ## Annotations applied to created service account
     annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
   ## Server metrics controller configuration
   metrics:
@@ -221,6 +223,8 @@ dex:
     name: argocd-dex-server
     ## Annotations applied to created service account
     annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
   ## Additional volumeMounts to the controller main container.
   volumeMounts:
@@ -482,6 +486,8 @@ server:
     name: argocd-server
     ## Annotations applied to created service account
     annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
   ingress:
     enabled: false
@@ -828,6 +834,8 @@ repoServer:
     #  name: argocd-repo-server
     ## Annotations applied to created service account
     annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
   ## Repo server rbac rules
   # rbac:
