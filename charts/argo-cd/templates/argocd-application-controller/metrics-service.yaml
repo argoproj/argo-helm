@@ -9,12 +9,7 @@ metadata:
   {{- end }}
 {{- end }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-metrics
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.controller.name }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" "metrics") | nindent 4 }}
 {{- if .Values.controller.metrics.service.labels }}
 {{- toYaml .Values.controller.metrics.service.labels | nindent 4 }}
 {{- end }}
@@ -26,6 +21,5 @@ spec:
     port: {{ .Values.controller.metrics.service.servicePort }}
     targetPort: controller
   selector:
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 4 }}
 {{- end }}

@@ -228,23 +228,28 @@ spec:
             description: Status of the AppProject
             properties:
               jwtTokensByRole:
-                additionalProperties:
-                  description: List of JWTToken objects for a given role
-                  items:
-                    description: Holds the issuedAt and expiresAt values of the token
-                    properties:
-                      exp:
-                        description: The expiresAt value of a token
-                        type: string
-                      iat:
-                        description: The issuedAt value of a token
-                        type: string
-                      id:
-                        description: ID of the token
-                        type: string
-                    type: object
-                  type: array
                 description: JWT Tokens issued for each of the roles in the project
+                additionalProperties:
+                  properties:
+                    items: 
+                      description: List of JWT Tokens issued for the role
+                      items: 
+                        description: Holds the issuedAt and expiresAt values of the token
+                        properties:
+                          exp:
+                            description: The expiresAt value of a token
+                            format: int64
+                            type: integer
+                          iat:
+                            description: The issuedAt value of a token
+                            format: int64
+                            type: integer
+                          id:
+                            description: ID of the token
+                            type: string
+                        type: object
+                      type: array
+                  type: object
                 type: object
             type: object
         required:
