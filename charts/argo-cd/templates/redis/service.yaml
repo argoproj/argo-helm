@@ -11,5 +11,5 @@ spec:
   - port: {{ .Values.redis.servicePort }}
     targetPort: {{ .Values.redis.servicePort }}
   selector:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.redis.name }}
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.redis.name) | nindent 4 }}
 {{- end }}

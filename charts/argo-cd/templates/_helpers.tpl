@@ -133,7 +133,7 @@ Selector labels
 {{- define "argo-cd.selectorLabels" -}}
 {{- if .name -}}
 app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .name }}
-{{- end }}
+{{ end -}}
 app.kubernetes.io/instance: {{ .context.Release.Name }}
 {{- if .component }}
 app.kubernetes.io/component: {{ .component }}
