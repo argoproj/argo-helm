@@ -15,9 +15,9 @@ metadata:
   name: {{ template "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
-{{- if .Values.server.ingress.labels }}
-{{- toYaml .Values.server.ingress.labels | nindent 4 }}
-{{- end }}
+    {{- if .Values.server.ingress.labels }}
+    {{- toYaml .Values.server.ingress.labels | nindent 4 }}
+    {{- end }}
 spec:
   {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
   {{- with .Values.server.ingress.ingressClassName }}
@@ -26,14 +26,14 @@ spec:
   {{- end }}
   rules:
   {{- if .Values.server.ingress.hosts }}
-  {{- range $host := .Values.server.ingress.hosts }}
+    {{- range $host := .Values.server.ingress.hosts }}
     - host: {{ $host }}
       http:
         paths:
-  {{- if $extraPaths }}
-  {{- toYaml $extraPaths | nindent 10 }}
-  {{- end }}
-  {{- range $p := $paths }}
+          {{- if $extraPaths }}
+          {{- toYaml $extraPaths | nindent 10 }}
+          {{- end }}
+          {{- range $p := $paths }}
           - path: {{ $p }}
             {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
             pathType: Prefix
@@ -48,15 +48,15 @@ spec:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
               {{- end }}
-  {{- end -}}
-  {{- end -}}
+          {{- end -}}
+    {{- end -}}
   {{- else }}
     - http:
         paths:
-  {{- if $extraPaths }}
-  {{- toYaml $extraPaths | nindent 10 }}
-  {{- end }}
-  {{- range $p := $paths }}
+          {{- if $extraPaths }}
+          {{- toYaml $extraPaths | nindent 10 }}
+          {{- end }}
+          {{- range $p := $paths }}
           - path: {{ $p }}
             {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
             pathType: Prefix
@@ -71,10 +71,10 @@ spec:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
               {{- end }}
-  {{- end -}}
+          {{- end -}}
   {{- end -}}
   {{- if .Values.server.ingress.tls }}
   tls:
-{{- toYaml .Values.server.ingress.tls | nindent 4 }}
+    {{- toYaml .Values.server.ingress.tls | nindent 4 }}
   {{- end -}}
 {{- end -}}
