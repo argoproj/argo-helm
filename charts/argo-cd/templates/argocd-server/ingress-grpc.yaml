@@ -3,11 +3,7 @@
 {{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingressGrpc.https -}}
 {{- $paths := .Values.server.ingressGrpc.paths -}}
 {{- $extraPaths := .Values.server.ingressGrpc.extraPaths -}}
-{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
-apiVersion: networking.k8s.io/v1beta1
-{{ else }}
-apiVersion: extensions/v1beta1
-{{ end -}}
+apiVersion: {{ include "argo-cd.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
 {{- if .Values.server.ingressGrpc.annotations }}
@@ -23,6 +19,11 @@ metadata:
 {{- toYaml .Values.server.ingressGrpc.labels | nindent 4 }}
 {{- end }}
 spec:
+  {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+  {{- with .Values.server.ingress.ingressClassName }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  {{- end }}
   rules:
   {{- if .Values.server.ingressGrpc.hosts }}
   {{- range $host := .Values.server.ingressGrpc.hosts }}
@@ -34,9 +35,19 @@ spec:
   {{- end -}}
   {{- range $p := $paths }}
           - path: {{ $p }}
+            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            pathType: Prefix
+            {{- end }}
             backend:
+              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              service:
+                name: {{ $serviceName }}
+                port:
+                  number: {{ $servicePort }}
+              {{- else }}
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
+              {{- end }}
   {{- end -}}
   {{- end -}}
   {{- else }}
@@ -47,9 +58,19 @@ spec:
   {{- end -}}
   {{- range $p := $paths }}
           - path: {{ $p }}
+            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            pathType: Prefix
+            {{- end }}
             backend:
+              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              service:
+                name: {{ $serviceName }}
+                port:
+                  number: {{ $servicePort }}
+              {{- else }}
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
+              {{- end }}
   {{- end -}}
   {{- end -}}
   {{- if .Values.server.ingressGrpc.tls }}
