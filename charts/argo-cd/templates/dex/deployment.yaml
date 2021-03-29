@@ -44,8 +44,8 @@ spec:
         command:
         - cp
         - -n
-        - /usr/local/bin/argocd-util
-        - /shared
+        - /usr/local/bin/argocd
+        - /shared/argocd-dex
         volumeMounts:
         - mountPath: /shared
           name: static-files
@@ -54,7 +54,7 @@ spec:
         image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
         imagePullPolicy: {{ .Values.dex.image.imagePullPolicy }}
         command:
-        - /shared/argocd-util
+        - /shared/argocd-dex
         - rundex
         {{- if .Values.dex.containerSecurityContext }}
         securityContext: {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
