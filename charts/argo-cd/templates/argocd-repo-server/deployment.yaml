@@ -1,11 +1,15 @@
 {{- $redisHa := (index .Values "redis-ha") -}}
+{{- $imageDigest := default .Values.global.image.digest .Values.repoServer.image.digest -}}
+{{- $strippedDigest := include "argo-cd.stripDigest" $imageDigest -}}
+{{- $imageRepository := default .Values.global.image.repository .Values.repoServer.image.repository -}}
+{{- $imageTag := default .Values.global.image.tag .Values.repoServer.image.tag -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "argo-cd.repoServer.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.repoServer.image.tag | quote }}
+    app.kubernetes.io/version: {{ default $imageTag $strippedDigest | quote }}
 spec:
   selector:
     matchLabels:
@@ -24,7 +28,7 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.repoServer.image.tag | quote }}
+        app.kubernetes.io/version: {{ default $imageTag $strippedDigest | quote }}
         {{- if .Values.repoServer.podLabels }}
 {{- toYaml .Values.repoServer.podLabels | nindent 8 }}
         {{- end }}
@@ -38,7 +42,11 @@ spec:
       {{- end }}
       containers:
       - name: {{ .Values.repoServer.name }}
-        image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default .Values.global.image.tag .Values.repoServer.image.tag }}
+        {{- if $imageDigest }}
+        image: {{ $imageRepository }}@{{ $imageDigest }}
+        {{- else }}
+        image: {{ $imageRepository }}:{{ $imageTag }}
+        {{- end }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
         command:
         - uid_entrypoint.sh

@@ -1,4 +1,5 @@
 {{- $redisHa := (index .Values "redis-ha") -}}
+{{- $strippedDigest := include "argo-cd.stripDigest" .Values.redis.image.digest -}}
 {{- if and .Values.redis.enabled (not $redisHa.enabled) -}}
 apiVersion: apps/v1
 kind: Deployment
@@ -6,7 +7,7 @@ metadata:
   name: {{ template "argo-cd.redis.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
+    app.kubernetes.io/version: {{ default .Values.redis.image.tag $strippedDigest | quote }}
 spec:
   selector:
     matchLabels:
@@ -21,7 +22,7 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
+        app.kubernetes.io/version: {{ default .Values.redis.image.tag $strippedDigest | quote }}
         {{- if .Values.redis.podLabels }}
 {{- toYaml .Values.redis.podLabels | nindent 8 }}
         {{- end }}
@@ -44,7 +45,11 @@ spec:
         {{- with .Values.redis.extraArgs }}
         {{- . | toYaml | nindent 8 }}
         {{- end }}
+        {{- if .Values.redis.image.digest }}
+        image: {{ .Values.redis.image.repository }}@{{ .Values.redis.image.digest }}
+        {{- else }}
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
+        {{- end }}
         imagePullPolicy: {{ .Values.redis.image.imagePullPolicy}}
         {{- if .Values.redis.containerSecurityContext }}
         securityContext: {{- toYaml .Values.redis.containerSecurityContext | nindent 10 }}

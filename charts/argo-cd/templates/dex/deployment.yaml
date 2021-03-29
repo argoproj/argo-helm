@@ -1,11 +1,15 @@
 {{- if .Values.dex.enabled }}
+{{- $strippedDigest := include "argo-cd.stripDigest" .Values.dex.image.digest -}}
+{{- $initImageDigest := default .Values.global.image.digest .Values.dex.initImage.digest -}}
+{{- $initImageRepository := default .Values.global.image.repository .Values.dex.initImage.repository -}}
+{{- $initImageTag := default .Values.global.image.tag .Values.dex.initImage.tag -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "argo-cd.dex.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ .Values.dex.image.tag | quote }}
+    app.kubernetes.io/version: {{ default .Values.dex.image.tag $strippedDigest | quote }}
 spec:
   selector:
     matchLabels:
@@ -20,7 +24,7 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ .Values.dex.image.tag | quote }}
+        app.kubernetes.io/version: {{ default .Values.dex.image.tag $strippedDigest | quote }}
         {{- if .Values.dex.podLabels }}
 {{- toYaml .Values.dex.podLabels | nindent 8 }}
         {{- end }}
@@ -34,7 +38,11 @@ spec:
       {{- end }}
       initContainers:
       - name: copyutil
-        image: {{ default .Values.global.image.repository .Values.dex.initImage.repository }}:{{ default .Values.global.image.tag .Values.dex.initImage.tag }}
+        {{- if $initImageDigest }}
+        image: {{ $initImageRepository }}@{{ $initImageDigest }}
+        {{- else }}
+        image: {{ $initImageRepository }}:{{ $initImageTag }}
+        {{- end }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.initImage.imagePullPolicy }}
         resources:
 {{- toYaml .Values.dex.resources | nindent 10 }}
@@ -51,7 +59,11 @@ spec:
           name: static-files
       containers:
       - name: {{ .Values.dex.name }}
+        {{- if .Values.dex.image.digest }}
+        image: {{ .Values.dex.image.repository }}@{{ .Values.dex.image.digest }}
+        {{- else }}
         image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
+        {{- end }}
         imagePullPolicy: {{ .Values.dex.image.imagePullPolicy }}
         command:
         - /shared/argocd-dex

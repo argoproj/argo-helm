@@ -12,6 +12,7 @@ global:
   image:
     repository: quay.io/argoproj/argocd
     tag: v2.0.3
+    digest: # sha256:a2888d810d0741fe009b4ee4f4e7e76750be8e8732b05fe3f954e0ae319f7a61
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -30,6 +31,7 @@ controller:
   image:
     repository: # defaults to global.image.repository
     tag: # defaults to global.image.tag
+    digest:
     imagePullPolicy: # IfNotPresent
 
   # If changing the number of replicas you must pass the number as ARGOCD_CONTROLLER_REPLICAS as an environment variable
@@ -218,10 +220,12 @@ dex:
   image:
     repository: quay.io/dexidp/dex
     tag: v2.26.0
+    digest:
     imagePullPolicy: IfNotPresent
   initImage:
     repository:
     tag:
+    digest:
     imagePullPolicy:
 
   ## Environment variables to pass to the Dex server
@@ -302,6 +306,7 @@ redis:
   image:
     repository: redis
     tag: 6.2.2-alpine
+    digest:
     imagePullPolicy: IfNotPresent
 
   ## Additional command line arguments to pass to redis-server
@@ -404,6 +409,7 @@ server:
   image:
     repository: # defaults to global.image.repository
     tag: # defaults to global.image.tag
+    digest:
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
@@ -784,6 +790,7 @@ repoServer:
   image:
     repository: # defaults to global.image.repository
     tag: # defaults to global.image.tag
+    digest:
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server

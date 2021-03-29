@@ -177,3 +177,17 @@ Merge Argo Configuration with Preset Configuration
 {{- toYaml (mergeOverwrite (default dict (fromYaml (include "argo-cd.config.presets" $))) .Values.server.config) }}
   {{- end -}}
 {{- end -}}
+
+{{/*
+Return a label-conform value of the image digest
+Ref: https://docs.docker.com/registry/spec/api/#content-digests
+*/}}
+{{- define "argo-cd.stripDigest" -}}
+{{- $imageDigest := "" -}}
+{{- if . -}}
+{{- $imageDigest = . -}}
+{{ end -}}
+{{- $algorithm := (split ":" $imageDigest)._0 -}}
+{{- $hex := (split ":" $imageDigest)._1 | trunc 12 -}}
+{{- printf "%s-%s" $algorithm $hex | trimSuffix "-" -}}
+{{- end -}}
