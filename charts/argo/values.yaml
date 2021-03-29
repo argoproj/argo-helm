@@ -219,7 +219,6 @@ server:
   ##
   ingress:
     enabled: false
-
     ## Annotations to be added to the web ingress.
     ##
     # annotations:
@@ -234,13 +233,16 @@ server:
     ## Hostnames.
     ## Must be provided if Ingress is enabled.
     ##
-    # hosts:
-    #   - argo.domain.com
-
+    hosts: []
+      # - argocd.example.com
+    paths:
+      - /
     ## Additional Paths for each host
-    # paths:
-    #   - serviceName: "ssl-redirect"
-    #     servicePort: "use-annotation"
+    extraPaths: []
+      # - path: /*
+      #   backend:
+      #     serviceName: ssl-redirect
+      #     servicePort: use-annotation
 
     ## TLS configuration.
     ## Secrets must be manually created in the namespace.

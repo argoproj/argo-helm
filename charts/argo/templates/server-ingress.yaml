@@ -2,6 +2,8 @@
 {{- if .Values.server.ingress.enabled -}}
 {{- $serviceName := printf "%s-%s" .Release.Name .Values.server.name -}}
 {{- $servicePort := .Values.server.servicePort -}}
+{{- $paths := .Values.server.ingress.paths -}}
+{{- $extraPaths := .Values.server.ingress.extraPaths -}}
 {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
 apiVersion: networking.k8s.io/v1beta1
 {{ else }}
@@ -23,24 +25,37 @@ metadata:
     {{- end }}
 spec:
   rules:
-    {{- range .Values.server.ingress.hosts }}
-    - host: {{ . }}
+  {{- if .Values.server.ingress.hosts }}
+  {{- range $host := .Values.server.ingress.hosts }}
+    - host: {{ $host }}
       http:
         paths:
-          {{- if $.Values.server.ingress.paths }}
-          {{- range $.Values.server.ingress.paths }}
-          - backend:
-              serviceName: {{ .serviceName }}
-              servicePort: {{ .servicePort }}
-          {{- end }}
-          {{- end }}
-          - backend:
+  {{- if $extraPaths }}
+  {{- toYaml $extraPaths | nindent 10 }}
+  {{- end }}
+  {{- range $p := $paths }}
+          - path: {{ $p }}
+            backend:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
-    {{- end -}}
+  {{- end -}}
+  {{- end -}}
+  {{- else }}
+    - http:
+        paths:
+  {{- if $extraPaths }}
+  {{- toYaml $extraPaths | nindent 10 }}
+  {{- end }}
+  {{- range $p := $paths }}
+          - path: {{ $p }}
+            backend:
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+  {{- end -}}
+  {{- end -}}
   {{- if .Values.server.ingress.tls }}
   tls:
-{{ toYaml .Values.server.ingress.tls | indent 4 }}
+{{- toYaml .Values.server.ingress.tls | nindent 4 }}
   {{- end -}}
 {{- end -}}
 {{- end -}}
