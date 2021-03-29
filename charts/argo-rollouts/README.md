@@ -2,7 +2,7 @@ Argo Rollouts Chart
 =============
 A Helm chart for Argo Rollouts, progressive delivery for Kubernetes.
 
-Current chart version is `0.4.0`
+Current chart version is `0.5.0`
 
 Source code can be found [here](https://github.com/argoproj/argo-rollouts)
 
@@ -13,7 +13,7 @@ The default installation is intended to be similar to the provided Argo Rollouts
 
 ## Prerequisites
 
-- Kubernetes 1.7+
+- Kubernetes 1.17+
 
 
 ## Installing the Chart
