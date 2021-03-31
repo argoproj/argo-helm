@@ -9,12 +9,7 @@ metadata:
 {{- end }}
   name: {{ template "argo-cd.server.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.server.name }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 {{- if .Values.server.service.labels }}
 {{- toYaml .Values.server.service.labels | nindent 4 }}
 {{- end }}
@@ -36,8 +31,7 @@ spec:
     nodePort: {{ .Values.server.service.nodePortHttps }}
     {{- end }}
   selector:
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
 {{- if eq .Values.server.service.type "LoadBalancer" }}
 {{- if .Values.server.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.server.service.loadBalancerIP | quote }}

@@ -4,18 +4,12 @@ kind: Deployment
 metadata:
   name: {{ template "argo-cd.server.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.server.name }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.server.image.tag | quote }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}
   revisionHistoryLimit: 5
   {{- if (ne .Values.server.autoscaling.enabled true) }}
   replicas: {{ .Values.server.replicas }}
@@ -29,12 +23,7 @@ spec:
       {{- end }}
       {{- end }}
       labels:
-        app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-        helm.sh/chart: {{ include "argo-cd.chart" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/component: {{ .Values.server.name }}
+        {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 8 }}
         app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.server.image.tag | quote }}
         {{- if .Values.server.podLabels }}
 {{- toYaml .Values.server.podLabels | nindent 8 }}

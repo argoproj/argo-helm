@@ -7,12 +7,7 @@ metadata:
   namespace: {{ .Values.repoServer.metrics.serviceMonitor.namespace }}
   {{- end }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.repoServer.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.repoServer.name }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
     {{- if .Values.repoServer.metrics.serviceMonitor.selector }}
 {{- toYaml .Values.repoServer.metrics.serviceMonitor.selector | nindent 4 }}
     {{- end }}
@@ -29,8 +24,6 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/name: {{ template "argo-cd.repoServer.fullname" . }}-metrics
-      app.kubernetes.io/component: {{ .Values.repoServer.name }}
+      {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.repoServer.name "name" (printf "%s-metrics" .Values.repoServer.name)) | nindent 6 }}
 {{- end }}
 

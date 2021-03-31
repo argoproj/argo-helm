@@ -75,6 +75,8 @@ rules:
   - events
   verbs:
   - watch
+  - create
+  - patch
 {{- if .Values.controller.persistence }}
 - apiGroups:
   - ""

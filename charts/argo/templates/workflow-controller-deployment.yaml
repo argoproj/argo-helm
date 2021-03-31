@@ -55,6 +55,9 @@ spec:
           - "--pod-workers"
           - {{ . | quote }}
           {{- end }}
+          {{- if .Values.controller.extraArgs }}
+          {{- toYaml .Values.controller.extraArgs | nindent 10 }}
+          {{- end }}
           env:
           - name: ARGO_NAMESPACE
             valueFrom:
