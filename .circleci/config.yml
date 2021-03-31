@@ -22,6 +22,8 @@ jobs:
       - run: helm repo add stable https://charts.helm.sh/stable
       - run: helm repo add minio https://helm.min.io/
       - run: helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
+      - run: helm repo add minio-operator https://operator.min.io/
+      - run: helm repo add bedag https://bedag.github.io/helm-charts/  
       # Only actually publish charts on master.
       - run: |
           set -x
