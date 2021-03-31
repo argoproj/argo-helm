@@ -97,6 +97,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
 | controller.args.operationProcessors | define the controller `--operation-processors` | `"10"` |
 | controller.args.appResyncPeriod | define the controller `--app-resync` | `"180"` |
+| controller.args.selfHealTimeout | define the controller `--self-heal-timeout-seconds` | `"5"` |
 | controller.args.statusProcessors | define the controller `--status-processors` | `"20"` |
 | controller.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | controller.containerPort | Controller listening port. | `8082` |
@@ -134,6 +135,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.service.labels | Controller service labels. | `{}` |
 | controller.service.port | Controller service port. | `8082` |
 | controller.serviceAccount.annotations | Controller service account annotations | `{}` |
+| controller.serviceAccount.automountServiceAccountToken | Automount API credentials for the Service Account | `true` |
 | controller.serviceAccount.create | Create a service account for the controller | `true` |
 | controller.serviceAccount.name | Service account name. | `"argocd-application-controller"` |
 | controller.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
@@ -181,6 +183,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | repoServer.replicas | The number of repo server pods to run | `1` |
 | repoServer.resources | Resource limits and requests for the repo server pods. | `{}` |
 | repoServer.service.annotations | Repo server service annotations. | `{}` |
+| repoServer.service.automountServiceAccountToken | Automount API credentials for the Service Account | `true` |
 | repoServer.service.labels | Repo server service labels. | `{}` |
 | repoServer.service.port | Repo server service port. | `8081` |
 | repoServer.serviceAccount.annotations | Repo server service account annotations | `{}` |
@@ -267,6 +270,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.service.externalIPs | Server service external IPs. | `[]` |
 | server.service.type | Server service type | `"ClusterIP"` |
 | server.serviceAccount.annotations | Server service account annotations | `{}` |
+| server.serviceAccount.automountServiceAccountToken | Automount API credentials for the Service Account | `true` |
 | server.serviceAccount.create | Create server service account | `true` |
 | server.serviceAccount.name | Server service account name | `"argocd-server"` |
 | server.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
@@ -299,6 +303,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | dex.podLabels | Labels for the Dex server pods | `{}` |
 | dex.priorityClassName | Priority class for dex | `""` |
 | dex.resources | Resource limits and requests for dex | `{}` |
+| dex.serviceAccount.automountServiceAccountToken | Automount API credentials for the Service Account | `true` |
 | dex.serviceAccount.create | Create dex service account | `true` |
 | dex.serviceAccount.name | Dex service account name | `"argocd-dex-server"` |
 | dex.servicePortGrpc | Server GRPC port | `5557` |

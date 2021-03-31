@@ -7,12 +7,7 @@ metadata:
   namespace: {{ .Values.controller.metrics.rules.namespace }}
   {{- end }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.controller.name }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     {{- if .Values.controller.metrics.rules.selector }}
 {{- toYaml .Values.controller.metrics.rules.selector | nindent 4 }}
     {{- end }}
