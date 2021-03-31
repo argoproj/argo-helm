@@ -43,6 +43,7 @@ controller:
     statusProcessors: "20"
     operationProcessors: "10"
     appResyncPeriod: "180"
+    selfHealTimeout: "5"
 
   ## Argo controller log format: text|json
   logFormat: text
@@ -74,6 +75,7 @@ controller:
     # capabilities:
     #   drop:
     #     - all
+    # readOnlyRootFilesystem: true
 
   ## Configures the controller port
   containerPort: 8082
@@ -129,6 +131,8 @@ controller:
     name: argocd-application-controller
     ## Annotations applied to created service account
     annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
   ## Server metrics controller configuration
   metrics:
@@ -219,6 +223,8 @@ dex:
     name: argocd-dex-server
     ## Annotations applied to created service account
     annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
   ## Additional volumeMounts to the controller main container.
   volumeMounts:
@@ -253,6 +259,7 @@ dex:
     # capabilities:
     #   drop:
     #     - all
+    # readOnlyRootFilesystem: true
 
   resources: {}
   #  limits:
@@ -302,6 +309,7 @@ redis:
     # capabilities:
     #   drop:
     #     - all
+    # readOnlyRootFilesystem: true
 
   ## Redis Pod specific security context
   securityContext:
@@ -425,6 +433,7 @@ server:
     # capabilities:
     #   drop:
     #     - all
+    # readOnlyRootFilesystem: true
 
   resources: {}
   #  limits:
@@ -477,6 +486,8 @@ server:
     name: argocd-server
     ## Annotations applied to created service account
     annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
   ingress:
     enabled: false
@@ -543,6 +554,7 @@ server:
 
   ## ArgoCD config
   ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+  configEnabled: true
   config:
     # Argo CD's externally facing base URL (optional). Required when configuring SSO
     url: https://argocd.example.com
@@ -784,6 +796,7 @@ repoServer:
     # capabilities:
     #   drop:
     #     - all
+    # readOnlyRootFilesystem: true
 
   resources: {}
   #  limits:
@@ -821,6 +834,8 @@ repoServer:
     #  name: argocd-repo-server
     ## Annotations applied to created service account
     annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
   ## Repo server rbac rules
   # rbac:
