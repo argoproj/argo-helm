@@ -15,3 +15,12 @@ dependencies:
   version: 8.0.9
   repository: https://helm.min.io/
   condition: minio.install
+- name: minio-operator
+  version: 4.0.3
+  repository: https://operator.min.io/
+  condition: minio-operator.install
+- name: raw
+  version: 1.1.0
+  repository: https://bedag.github.io/helm-charts/
+  condition: raw.enabled
+
