@@ -87,14 +87,3 @@ The linting can be invoked manually with the following command:
 ```
 ./scripts/lint.sh
 ```
-
-## Publishing Changes
-
-Changes are automatically publish whenever a commit is merged to master. The CI job (see `.circleci/config.yaml`) runs this:
-
-```
-GIT_PUSH=true ./scripts/publish.sh
-```
-
-Script generates tar file for each chart in `charts` directory and push changes to `gh-pages` branch.
-Write access to https://github.com/argoproj/argo-helm.git is required to publish changes.
