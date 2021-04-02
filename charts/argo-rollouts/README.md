@@ -13,7 +13,7 @@ The default installation is intended to be similar to the provided Argo Rollouts
 
 ## Prerequisites
 
-- Kubernetes 1.17+
+- Kubernetes 1.7+
 
 
 ## Installing the Chart
@@ -42,6 +42,7 @@ $ helm install --name my-release argo/argo-rollouts
 | controller.metrics.serviceMonitor.enabled | bool | `false` |  |
 | imagePullSecrets | list | `[]` |  |
 | installCRDs | bool | `true` |  |
+| crdAnnotations | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | serviceAccount.name | string | `"argo-rollouts"` |  |
