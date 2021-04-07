@@ -14,6 +14,10 @@ This chart currently installs the non-HA version of ArgoCD.
 
 ## Upgrading
 
+### 3.0.0 and above
+
+Helm apiVersion switched to `v2`. Requires Helm `3.0.0` or above to install. [Read More](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/) on how to migrate your release from Helm 2 to Helm 3.
+
 ### 2.14.7 and above
 
 The `matchLabels` key in the ArgoCD Appliaction Controller is no longer hard-coded. Note that labels are immutable so caution should be exercised when making changes to this resource.
