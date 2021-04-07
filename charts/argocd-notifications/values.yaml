@@ -81,6 +81,10 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: argocd-notifications-controller
 
+cm:
+  # Whether helm chart creates controller config map
+  create: true
+
 subscriptions:
   # For more information: https://argocd-notifications.readthedocs.io/en/stable/subscriptions/
 
