@@ -20,8 +20,6 @@ spec:
   scope: Namespaced
   versions:
   - name: v1alpha1
-    served: true
-    storage: true
     schema:
       openAPIV3Schema:
         description: 'AppProject provides a logical grouping of applications, providing controls for: * where the apps may deploy to (cluster whitelist) * what may be deployed (repository whitelist, resource whitelist/blacklist) * who can access these applications (roles, OIDC group claims bindings) * and what they can do (RBAC policies) * automation access to these roles (JWT tokens)'
@@ -71,16 +69,16 @@ spec:
               destinations:
                 description: Destinations contains list of destinations available for deployment
                 items:
-                  description: ApplicationDestination contains deployment destination information
+                  description: ApplicationDestination holds information about the application's destination
                   properties:
                     name:
-                      description: Name of the destination cluster which can be used instead of server (url) field
+                      description: Name is an alternate way of specifying the target cluster by its symbolic name
                       type: string
                     namespace:
-                      description: Namespace overrides the environment namespace value in the ksonnet app.yaml
+                      description: Namespace specifies the target namespace for the application's resources. The namespace will only be set for namespace-scoped resources that have not set a value for .metadata.namespace
                       type: string
                     server:
-                      description: Server overrides the environment server value in the ksonnet app.yaml
+                      description: Server specifies the URL of the target cluster and must be set to the Kubernetes control plane API
                       type: string
                   type: object
                 type: array
@@ -116,7 +114,9 @@ spec:
                 description: OrphanedResources specifies if controller should monitor orphaned resources of apps in this project
                 properties:
                   ignore:
+                    description: Ignore contains a list of resources that are to be excluded from orphaned resources monitoring
                     items:
+                      description: OrphanedResourceKey is a reference to a resource to be ignored from
                       properties:
                         group:
                           type: string
@@ -173,7 +173,7 @@ spec:
                   type: object
                 type: array
               signatureKeys:
-                description: List of PGP key IDs that commits to be synced to must be signed with
+                description: SignatureKeys contains a list of PGP key IDs that commits in Git must be signed with in order to be allowed for sync
                 items:
                   description: SignatureKey is the specification of a key required to verify commit signatures with
                   properties:
@@ -225,34 +225,35 @@ spec:
                 type: array
             type: object
           status:
-            description: Status of the AppProject
+            description: AppProjectStatus contains status information for AppProject CRs
             properties:
               jwtTokensByRole:
-                description: JWT Tokens issued for each of the roles in the project
                 additionalProperties:
+                  description: JWTTokens represents a list of JWT tokens
                   properties:
-                    items: 
-                      description: List of JWT Tokens issued for the role
-                      items: 
-                        description: Holds the issuedAt and expiresAt values of the token
+                    items:
+                      items:
+                        description: JWTToken holds the issuedAt and expiresAt values of a token
                         properties:
                           exp:
-                            description: The expiresAt value of a token
                             format: int64
                             type: integer
                           iat:
-                            description: The issuedAt value of a token
                             format: int64
                             type: integer
                           id:
-                            description: ID of the token
                             type: string
+                        required:
+                        - iat
                         type: object
                       type: array
                   type: object
+                description: JWTTokensByRole contains a list of JWT tokens issued for a given role
                 type: object
             type: object
         required:
         - metadata
         - spec
         type: object
+    served: true
+    storage: true
