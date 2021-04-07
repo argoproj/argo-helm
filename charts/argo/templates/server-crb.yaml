@@ -19,6 +19,8 @@ subjects:
 - kind: ServiceAccount
   name: {{ .Values.server.serviceAccount }}
   namespace: {{ .Release.Namespace }}
+
+{{- if not .Values.singleNamespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -32,4 +34,5 @@ subjects:
 - kind: ServiceAccount
   name: {{ .Values.server.serviceAccount }}
   namespace: {{ .Release.Namespace }}
+{{- end }}
 {{- end -}}
