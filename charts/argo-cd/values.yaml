@@ -9,7 +9,7 @@ installCRDs: true
 
 global:
   image:
-    repository: argoproj/argocd
+    repository: quay.io/argoproj/argocd
     tag: v2.0.0
     imagePullPolicy: IfNotPresent
   securityContext: {}
@@ -27,8 +27,8 @@ controller:
   name: application-controller
 
   image:
-    repository: # argoproj/argocd
-    tag: # v1.7.11
+    repository: # defaults to global.image.repository
+    tag: # defaults to global.image.tag
     imagePullPolicy: # IfNotPresent
 
   # If changing the number of replicas you must pass the number as ARGOCD_CONTROLLER_REPLICAS as an environment variable
@@ -363,8 +363,8 @@ server:
     targetMemoryUtilizationPercentage: 50
 
   image:
-    repository: # argoproj/argocd
-    tag: # v1.7.11
+    repository: # defaults to global.image.repository
+    tag: # defaults to global.image.tag
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
@@ -731,8 +731,8 @@ repoServer:
     targetMemoryUtilizationPercentage: 50
 
   image:
-    repository: # argoproj/argocd
-    tag: # v1.7.11
+    repository: # defaults to global.image.repository
+    tag: # defaults to global.image.tag
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
