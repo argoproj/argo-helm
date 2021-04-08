@@ -331,7 +331,8 @@ through `xxx.extraArgs`
 | redis.enabled | Enable redis | `true` |
 | redis.image.imagePullPolicy | Redis imagePullPolicy | `"IfNotPresent"` |
 | redis.image.repository | Redis repository | `"redis"` |
-| redis.image.tag | Redis tag | `"5.0.8"` |
+| redis.image.tag | Redis tag | `"6.2.1-alpine"` |
+| redis.extraArgs | Additional arguments for the `redis-server`. A list of flags. | `[]` |
 | redis.name | Redis name | `"redis"` |
 | redis.env | Environment variables for the Redis server. | `[]` |
 | redis.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
@@ -351,6 +352,6 @@ through `xxx.extraArgs`
 | redis-ha.redis.config.save | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled | `""` |
 | redis-ha.haproxy.enabled | Enabled HAProxy LoadBalancing/Proxy | `true` |
 | redis-ha.haproxy.metrics.enabled | HAProxy enable prometheus metric scraping | `true` |
-| redis-ha.image.tag | Redis tag | `"5.0.8-alpine"` |
+| redis-ha.image.tag | Redis tag | `"6.2.1-alpine"` |
 
 [gRPC-ingress]: https://argoproj.github.io/argo-cd/operator-manual/ingress/

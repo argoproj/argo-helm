@@ -279,6 +279,12 @@ redis:
     tag: 6.2.1-alpine
     imagePullPolicy: IfNotPresent
 
+  ## Additional command line arguments to pass to redis-server
+  ##
+  extraArgs: []
+  # - --bind
+  # - "127.0.0.1"
+
   containerPort: 6379
   servicePort: 6379
 
