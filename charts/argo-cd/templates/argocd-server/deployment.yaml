@@ -66,7 +66,10 @@ spec:
         {{- end }}
         {{- if .Values.server.env }}
         env:
-{{- toYaml .Values.server.env | nindent 8 }}
+        {{- range $key, $value := .Values.server.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
         {{- end }}
         volumeMounts:
         {{- if .Values.server.volumeMounts }}
