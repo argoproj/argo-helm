@@ -38,7 +38,6 @@ Fields to note:
      registry: quay.io
      repository: argoproj/argocli
      tag: v3.0.1
-     pullPolicy: IfNotPresent
    ```
 
    this also makes it easier for automatic update tooling (eg. renovate bot) to detect and update images.
