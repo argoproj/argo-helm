@@ -46,6 +46,10 @@ Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
 | installCRDs | bool | `true` | Install Custom Resource Definition |
+| mountSSHKnownHostsVolume | bool | `true` | Mount the `argocd-ssh-known-hosts-cm` volume |
+| mountTLSCertsVolume | bool | `true` | Mount the `argocd-tls-certs-cm` volume |
+| mountGPGKeysVolume | bool | `false` | Mount the `argocd-gpg-keys-cm` volume |
+| mountGPGKeyringVolume | bool | `true` | Mount an emptyDir volume for `gpg-keyring` |
 | nameOverride | string | `""` | Provide a name in place of `argo-applicationset` |
 | nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
 | podAnnotations | object | `{}` | Annotations for the controller pods |
