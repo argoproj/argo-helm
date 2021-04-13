@@ -81,6 +81,8 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: argocd-notifications-controller
 
+  annotations: {}
+
 subscriptions:
   # For more information: https://argocd-notifications.readthedocs.io/en/stable/subscriptions/
 
@@ -354,6 +356,8 @@ bots:
       # The name of the service account to use.
       # If not set and create is true, a name is generated using the fullname template
       name: argocd-notifications-bot
+
+      annotations: {}
 
     resources: {}
     # limits:
