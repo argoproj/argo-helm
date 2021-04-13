@@ -2,7 +2,7 @@ Argo Rollouts Chart
 =============
 A Helm chart for Argo Rollouts, progressive delivery for Kubernetes.
 
-Current chart version is `0.4.0`
+Current chart version is `0.5.0`
 
 Source code can be found [here](https://github.com/argoproj/argo-rollouts)
 
@@ -42,6 +42,7 @@ $ helm install --name my-release argo/argo-rollouts
 | controller.metrics.serviceMonitor.enabled | bool | `false` |  |
 | imagePullSecrets | list | `[]` |  |
 | installCRDs | bool | `true` |  |
+| crdAnnotations | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | serviceAccount.name | string | `"argo-rollouts"` |  |
