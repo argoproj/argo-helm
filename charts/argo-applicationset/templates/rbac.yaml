@@ -6,73 +6,58 @@ metadata:
     {{- include "argo-applicationset.labels" . | nindent 4 }}
 rules:
   - apiGroups:
-      - argoproj.io
+    - argoproj.io
     resources:
-      - applications
-      - applicationsets
-      - applicationsets/finalizers
+    - applications
+    - appprojects
+    - applicationsets
+    - applicationsets/finalizers
     verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
   - apiGroups:
-      - argoproj.io
+    - argoproj.io
     resources:
-      - applicationsets/status
+    - applicationsets/status
     verbs:
-      - get
-      - patch
-      - update
+    - get
+    - patch
+    - update
   - apiGroups:
-      - ''
+    - ""
     resources:
-      - events
+    - events
     verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
   - apiGroups:
-      - ''
+    - ""
     resources:
-      - secrets
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-    - ''
-    resources:
+    - secrets
     - configmaps
     verbs:
     - get
     - list
     - watch
-    - create
-    - update
-    - patch
-    - delete
   - apiGroups:
-    - ''
+    - apps
+    - extensions
     resources:
-    - configmaps/status
+    - deployments
     verbs:
     - get
-    - update
-    - patch
-  - apiGroups:
-    - ''
-    resources:
-    - events
-    verbs:
-    - create
+    - list
+    - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
