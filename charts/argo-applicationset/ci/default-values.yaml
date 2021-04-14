@@ -71,8 +71,7 @@ tolerations: []
 
 affinity: {}
 
-# An empty argocd installation doesn't have any of those volumes
-mountSSHKnownHostsVolume: false
-mountTLSCertsVolume: false
+mountSSHKnownHostsVolume: true
+mountTLSCertsVolume: true
 mountGPGKeysVolume: false
 mountGPGKeyringVolume: true
