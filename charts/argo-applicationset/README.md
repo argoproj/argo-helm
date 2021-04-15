@@ -27,6 +27,17 @@ NAME: my-release
 
 Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings about nonexistent webhooks.
 
+### Testing
+
+Users can test the chart with [kind](https://kind.sigs.k8s.io/) and [ct](https://github.com/helm/chart-testing).
+
+```console
+kind create cluster
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+ct install --namespace argocd
+```
+
 ## Values
 
 | Key | Type | Default | Description |
