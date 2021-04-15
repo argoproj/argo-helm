@@ -38,10 +38,16 @@ spec:
           - path: {{ $p }}
             {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion }}
             pathType: Prefix
-            {{- end }}
+            backend:
+              service:
+                name: {{ $serviceName }}
+                port:
+                  number: {{ $servicePort }}
+            {{- else }}
             backend:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
+            {{- end }}
   {{- end -}}
   {{- end -}}
   {{- else }}
@@ -54,10 +60,16 @@ spec:
           - path: {{ $p }}
             {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion }}
             pathType: Prefix
-            {{- end }}
+            backend:
+              service:
+                name: {{ $serviceName }}
+                port:
+                  number: {{ $servicePort }}
+            {{- else }}
             backend:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
+            {{- end }}
   {{- end -}}
   {{- end -}}
   {{- if .Values.server.ingress.tls }}
