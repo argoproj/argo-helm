@@ -44,10 +44,21 @@ rules:
     - ""
     resources:
     - secrets
-    - configmaps
     verbs:
     - get
     - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - configmaps
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
     - watch
   - apiGroups:
     - apps
@@ -57,6 +68,18 @@ rules:
     verbs:
     - get
     - list
+    - watch
+  - apiGroups:
+    - coordination.k8s.io
+    resources:
+    - leases
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
     - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
