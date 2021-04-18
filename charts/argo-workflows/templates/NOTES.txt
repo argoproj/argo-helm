@@ -4,4 +4,4 @@ kubectl --namespace {{ .Release.Namespace }} get services -o wide | grep {{ .Rel
 
 2. Submit the hello-world workflow by running:
 
-argo submit https://raw.githubusercontent.com/argoproj/argo/master/examples/hello-world.yaml --watch
+argo submit https://raw.githubusercontent.com/argoproj/argo-workflows/master/examples/hello-world.yaml --watch

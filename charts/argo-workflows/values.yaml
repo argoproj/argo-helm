@@ -139,7 +139,7 @@ controller:
   # ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   # PriorityClass: system-cluster-critical
   priorityClassName: ""
-  # https://argoproj.github.io/argo/links/
+  # https://argoproj.github.io/argo-workflows/links/
   links: []
 
 # executor controls how the init and wait container should be customized
@@ -159,7 +159,7 @@ server:
   enabled: true
   # only updates base url of resources on client side,
   # it's expected that a proxy server rewrites the request URL and gets rid of this prefix
-  # https://github.com/argoproj/argo/issues/716#issuecomment-433213190
+  # https://github.com/argoproj/argo-workflows/issues/716#issuecomment-433213190
   baseHref: /
   image:
     registry: quay.io
