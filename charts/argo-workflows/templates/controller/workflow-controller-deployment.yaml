@@ -32,14 +32,14 @@ spec:
       {{- end }}
       containers:
         - name: controller
-          image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
+          image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           command: [ "workflow-controller" ]
           args:
           - "--configmap"
           - "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"
           - "--executor-image"
-          - "{{ .Values.executor.image.registry }}/{{ .Values.executor.image.repository }}:{{ .Values.executor.image.tag }}"
+          - "{{ .Values.executor.image.registry }}/{{ .Values.executor.image.repository }}:{{ .Values.executor.image.tag | default .Chart.AppVersion }}"
           - "--loglevel"
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"

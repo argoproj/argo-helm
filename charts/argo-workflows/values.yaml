@@ -29,7 +29,8 @@ controller:
   image:
     registry: quay.io
     repository: argoproj/workflow-controller
-    tag: v3.0.1
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
   # parallelism dictates how many workflows can be running at the same time
   parallelism:
   # podAnnotations is an optional map of annotations to be applied to the controller Pods
@@ -146,7 +147,8 @@ executor:
   image:
     registry: quay.io
     repository: argoproj/argoexec
-    tag: v3.0.1
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
   resources: {}
   # Adds environment variables for the executor.
   env: {}
@@ -162,7 +164,8 @@ server:
   image:
     registry: quay.io
     repository: argoproj/argocli
-    tag: v3.0.1
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
   # optional map of annotations to be applied to the ui Pods
   podAnnotations: {}
   # Optional labels to add to the UI pods
