@@ -76,23 +76,15 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.controller.resources | nindent 12 }}
-          {{- if .Values.controller.metricsConfig.enabled }}
           ports:
             - name: metrics
-              containerPort: {{- .Values.controller.metricsConfig.port }}
+              containerPort: {{ .Values.controller.metricsConfig.port }}
           livenessProbe:
             httpGet:
               port: metrics
-              path: {{- .Values.controller.metricsConfig.path }}
+              path: {{ .Values.controller.metricsConfig.path }}
             initialDelaySeconds: 30
             periodSeconds: 30
-          readinessProbe:
-            httpGet:
-              port: metrics
-              path: {{- .Values.controller.metricsConfig.path }}
-            initialDelaySeconds: 30
-            periodSeconds: 30
-          {{- end }}
       {{- with .Values.images.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
