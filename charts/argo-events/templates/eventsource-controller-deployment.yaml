@@ -19,7 +19,7 @@ spec:
         app: {{ .Release.Name }}-{{ .Values.eventsourceController.name }}
         release: {{ .Release.Name }}
       {{- with .Values.eventsourceController.podAnnotations }}
-      annotations: {{- . | toYaml | nindent 8 }}
+      annotations: {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount }}

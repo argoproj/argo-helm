@@ -19,7 +19,7 @@ spec:
         app: {{ .Release.Name }}-{{ .Values.eventbusController.name }}
         release: {{ .Release.Name }}
       {{- with .Values.eventbusController.podAnnotations }}
-      annotations: {{- . | toYaml | nindent 8 }}
+      annotations: {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount }}
