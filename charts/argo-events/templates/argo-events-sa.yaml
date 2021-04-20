@@ -9,6 +9,7 @@ metadata:
   annotations: {{ toYaml .Values.serviceAccountAnnotations | nindent 4 }}
   {{- end }}
 {{- if .Values.additionalSaNamespaces }}
+{{ $annotations := .Values.serviceAccountAnnotations }}
 {{ $sa := .Values.serviceAccount }}
 {{- range $namespace := .Values.additionalSaNamespaces }}
 ---
@@ -17,8 +18,8 @@ kind: ServiceAccount
 metadata:
   name: {{ $sa }}
   namespace: {{ $namespace }}
-  {{- if .Values.serviceAccountAnnotations }}
-  annotations: {{ toYaml .Values.serviceAccountAnnotations | nindent 4 }}
+  {{- if $annotations }}
+  annotations: {{ toYaml $annotations | nindent 4 }}
   {{- end }}
 {{- end }}
 {{- end }}
