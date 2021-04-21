@@ -227,12 +227,14 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.ingress.enabled | Enable an ingress resource for the server | `false` |
 | server.ingress.hosts | List of ingress hosts | `[]` |
 | server.ingress.labels | Additional ingress labels. | `{}` |
+| server.ingress.ingressClassName | Defines which ingress controller will implement the resource | `""` |
 | server.ingress.tls | Ingress TLS configuration. | `[]` |
 | server.ingress.https | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` | `false` |
 | server.ingressGrpc.annotations | Additional ingress annotations for dedicated [gRPC-ingress] | `{}` |
 | server.ingressGrpc.enabled | Enable an ingress resource for the server for dedicated [gRPC-ingress] | `false` |
 | server.ingressGrpc.hosts | List of ingress hosts for dedicated [gRPC-ingress] | `[]` |
 | server.ingressGrpc.labels | Additional ingress labels for dedicated [gRPC-ingress] | `{}` |
+| server.ingressGrpc.ingressClassName | Defines which ingress controller will implement the resource [gRPC-ingress] | `""` |
 | server.ingressGrpc.tls | Ingress TLS configuration for dedicated [gRPC-ingress] | `[]` |
 | server.route.enabled | Enable a OpenShift route for the server | `false` |
 | server.route.hostname | Hostname of OpenShift route | `""` |
