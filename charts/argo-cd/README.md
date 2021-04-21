@@ -14,6 +14,10 @@ This chart currently installs the non-HA version of ArgoCD.
 
 ## Upgrading
 
+### 3.0.0 and above
+
+Helm apiVersion switched to `v2`. Requires Helm `3.0.0` or above to install. [Read More](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/) on how to migrate your release from Helm 2 to Helm 3.
+
 ### 2.14.7 and above
 
 The `matchLabels` key in the ArgoCD Appliaction Controller is no longer hard-coded. Note that labels are immutable so caution should be exercised when making changes to this resource.
@@ -76,6 +80,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | installCRDs | Install CRDs if you are using Helm2. | `true` |
+| configs.clusterCredentials | Provide one or multiple [external cluster credentials](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters) | `[]` (See [values.yaml](values.yaml)) |
 | configs.knownHostsAnnotations | Known Hosts configmap annotations | `{}` |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
 | configs.secret.annotations | Annotations for argocd-secret | `{}` |
@@ -97,6 +102,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
 | controller.args.operationProcessors | define the controller `--operation-processors` | `"10"` |
 | controller.args.appResyncPeriod | define the controller `--app-resync` | `"180"` |
+| controller.args.selfHealTimeout | define the controller `--self-heal-timeout-seconds` | `"5"` |
 | controller.args.statusProcessors | define the controller `--status-processors` | `"20"` |
 | controller.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | controller.containerPort | Controller listening port. | `8082` |
@@ -134,6 +140,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.service.labels | Controller service labels. | `{}` |
 | controller.service.port | Controller service port. | `8082` |
 | controller.serviceAccount.annotations | Controller service account annotations | `{}` |
+| controller.serviceAccount.automountServiceAccountToken | Automount API credentials for the Service Account | `true` |
 | controller.serviceAccount.create | Create a service account for the controller | `true` |
 | controller.serviceAccount.name | Service account name. | `"argocd-application-controller"` |
 | controller.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
@@ -181,6 +188,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | repoServer.replicas | The number of repo server pods to run | `1` |
 | repoServer.resources | Resource limits and requests for the repo server pods. | `{}` |
 | repoServer.service.annotations | Repo server service annotations. | `{}` |
+| repoServer.service.automountServiceAccountToken | Automount API credentials for the Service Account | `true` |
 | repoServer.service.labels | Repo server service labels. | `{}` |
 | repoServer.service.port | Repo server service port. | `8081` |
 | repoServer.serviceAccount.annotations | Repo server service account annotations | `{}` |
@@ -267,6 +275,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.service.externalIPs | Server service external IPs. | `[]` |
 | server.service.type | Server service type | `"ClusterIP"` |
 | server.serviceAccount.annotations | Server service account annotations | `{}` |
+| server.serviceAccount.automountServiceAccountToken | Automount API credentials for the Service Account | `true` |
 | server.serviceAccount.create | Create server service account | `true` |
 | server.serviceAccount.name | Server service account name | `"argocd-server"` |
 | server.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
@@ -299,6 +308,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | dex.podLabels | Labels for the Dex server pods | `{}` |
 | dex.priorityClassName | Priority class for dex | `""` |
 | dex.resources | Resource limits and requests for dex | `{}` |
+| dex.serviceAccount.automountServiceAccountToken | Automount API credentials for the Service Account | `true` |
 | dex.serviceAccount.create | Create dex service account | `true` |
 | dex.serviceAccount.name | Dex service account name | `"argocd-dex-server"` |
 | dex.servicePortGrpc | Server GRPC port | `5557` |
@@ -333,7 +343,7 @@ through `xxx.extraArgs`
 | redis.securityContext | Redis Pod Security Context | See [values.yaml](values.yaml) |
 | redis.servicePort | Redis service port | `6379` |
 | redis.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
-| redis-ha | Configures [Redis HA subchart](https://github.com/helm/charts/tree/master/stable/redis-ha) The properties below have been changed from the subchart defaults | |
+| redis-ha | Configures [Redis HA subchart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha) The properties below have been changed from the subchart defaults | |
 | redis-ha.enabled | Enables the Redis HA subchart and disables the custom Redis single node deployment| `false` |
 | redis-ha.exporter.enabled | If `true`, the prometheus exporter sidecar is enabled | `true` |
 | redis-ha.persistentVolume.enabled | Configures persistency on Redis nodes | `false`

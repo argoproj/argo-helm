@@ -5,16 +5,11 @@ kind: Service
 metadata:
   name: {{ template "argo-cd.redis.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.redis.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.redis.name }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
 spec:
   ports:
   - port: {{ .Values.redis.servicePort }}
     targetPort: {{ .Values.redis.servicePort }}
   selector:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.redis.name }}
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.redis.name) | nindent 4 }}
 {{- end }}
