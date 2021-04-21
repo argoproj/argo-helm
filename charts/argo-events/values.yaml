@@ -48,6 +48,7 @@ sensorController:
   tag: v1.2.3
   replicaCount: 1
   sensorImage: sensor
+  podAnnotations: {}
   nodeSelector: {}
   tolerations: {}
   affinity: {}
@@ -58,6 +59,7 @@ eventsourceController:
   tag: v1.2.3
   replicaCount: 1
   eventsourceImage: eventsource
+  podAnnotations: {}
   nodeSelector: {}
   tolerations: {}
   affinity: {}
@@ -67,6 +69,7 @@ eventbusController:
   image: eventbus-controller
   tag: v1.2.3
   replicaCount: 1
+  podAnnotations: {}
   nodeSelector: {}
   tolerations: {}
   affinity: {}
