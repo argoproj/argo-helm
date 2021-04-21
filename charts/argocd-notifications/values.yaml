@@ -65,6 +65,13 @@ notifiers:
 
 podAnnotations: {}
 
+## Pod Security Context
+securityContext:
+  runAsNonRoot: true
+
+## Container Security Context
+containerSecurityContext: {}
+
 resources: {}
   # limits:
   #   cpu: 100m
