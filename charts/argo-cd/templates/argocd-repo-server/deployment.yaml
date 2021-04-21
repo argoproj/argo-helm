@@ -73,6 +73,11 @@ spec:
         {{- end }}
         - mountPath: /app/config/gpg/keys
           name: gpg-keyring
+        {{- if .Values.configs.styles }}
+        - mountPath: /shared/app/custom
+          subPath: "custom.styles.css"
+          name: custom-styles
+        {{- end }}
         {{- if .Values.configs.knownHosts }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
@@ -130,6 +135,11 @@ spec:
       volumes:
       {{- if .Values.repoServer.volumes }}
 {{- toYaml .Values.repoServer.volumes | nindent 6}}
+      {{- end }}
+      {{- if .Values.configs.styles }}
+      - configMap:
+          name: {{ template "argo-cd.repoServer.fullname" . }}-styles-cm
+        name: custom-styles
       {{- end }}
       - emptyDir: {}
         name: gpg-keyring
