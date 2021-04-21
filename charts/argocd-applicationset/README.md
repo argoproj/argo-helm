@@ -18,7 +18,7 @@ To install the chart with the release name `my-release`:
 $ helm repo add argo https://argoproj.github.io/argo-helm
 "argo" has been added to your repositories
 
-$ helm install --name my-release argo/argo-applicationset
+$ helm install --name my-release argo/argocd-applicationset
 NAME: my-release
 ...
 ```
@@ -61,7 +61,7 @@ ct install --namespace argocd
 | mountTLSCertsVolume | bool | `true` | Mount the `argocd-tls-certs-cm` volume |
 | mountGPGKeysVolume | bool | `false` | Mount the `argocd-gpg-keys-cm` volume |
 | mountGPGKeyringVolume | bool | `true` | Mount an emptyDir volume for `gpg-keyring` |
-| nameOverride | string | `""` | Provide a name in place of `argo-applicationset` |
+| nameOverride | string | `""` | Provide a name in place of `argocd-applicationset` |
 | nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
 | podAnnotations | object | `{}` | Annotations for the controller pods |
 | podSecurityContext | object | `{}` | Pod Security Context |
