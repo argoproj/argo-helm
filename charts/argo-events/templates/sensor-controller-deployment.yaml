@@ -18,6 +18,9 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Values.sensorController.name }}
         release: {{ .Release.Name }}
+      {{- with .Values.sensorController.podAnnotations }}
+      annotations: {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount }}
       containers:

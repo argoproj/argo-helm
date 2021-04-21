@@ -14,7 +14,7 @@ installCRD: true
 # ServiceAccount to use for running controller.
 serviceAccount: argo-events-sa
 
-# serviceAccountAnnotations can be used to enable GKE workload identity, or further other use-cases
+# serviceAccountAnnotations can be used to enable GKE workload identity, or other use-cases
 serviceAccountAnnotations: {}
 
 # Create service accounts in additional namespaces specified
@@ -51,6 +51,7 @@ sensorController:
   tag: v1.2.3
   replicaCount: 1
   sensorImage: sensor
+  podAnnotations: {}
   nodeSelector: {}
   tolerations: {}
   affinity: {}
@@ -61,6 +62,7 @@ eventsourceController:
   tag: v1.2.3
   replicaCount: 1
   eventsourceImage: eventsource
+  podAnnotations: {}
   nodeSelector: {}
   tolerations: {}
   affinity: {}
@@ -70,6 +72,7 @@ eventbusController:
   image: eventbus-controller
   tag: v1.2.3
   replicaCount: 1
+  podAnnotations: {}
   nodeSelector: {}
   tolerations: {}
   affinity: {}
