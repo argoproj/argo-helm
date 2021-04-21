@@ -43,7 +43,11 @@ spec:
               service:
                 name: {{ $serviceName }}
                 port:
+                  {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
               {{- else }}
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
@@ -66,7 +70,11 @@ spec:
               service:
                 name: {{ $serviceName }}
                 port:
+                  {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
               {{- else }}
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
