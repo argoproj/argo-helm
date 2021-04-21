@@ -1,3 +1,6 @@
+{{- $knownHosts := (lookup "v1" "ConfigMap" .Release.Namespace "argocd-ssh-known-hosts-cm") -}}
+{{- $tlsCerts := (lookup "v1" "ConfigMap" .Release.Namespace "argocd-tls-certs-cm") -}}
+{{- $gpgKeys:= (lookup "v1" "ConfigMap" .Release.Namespace "argocd-gpg-keys-cm") -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -50,15 +53,15 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            {{- if .Values.mountSSHKnownHostsVolume }}
+            {{- if and $knownHosts .Values.mountSSHKnownHostsVolume }}
             - mountPath: /app/config/ssh
               name: ssh-known-hosts
             {{- end }}
-            {{- if .Values.mountTLSCertsVolume }}
+            {{- if and $tlsCerts .Values.mountTLSCertsVolume }}
             - mountPath: /app/config/tls
               name: tls-certs
             {{- end }}
-            {{- if .Values.mountGPGKeysVolume }}
+            {{- if and $gpgKeys .Values.mountGPGKeysVolume }}
             - mountPath: /app/config/gpg/source
               name: gpg-keys
             {{- end }}
@@ -67,17 +70,17 @@ spec:
               name: gpg-keyring
             {{- end }}
       volumes:
-      {{- if .Values.mountSSHKnownHostsVolume }}
+      {{- if and $knownHosts .Values.mountSSHKnownHostsVolume }}
       - configMap:
           name: argocd-ssh-known-hosts-cm
         name: ssh-known-hosts
       {{- end }}
-      {{- if .Values.mountTLSCertsVolume }}
+      {{- if and $tlsCerts .Values.mountTLSCertsVolume }}
       - configMap:
           name: argocd-tls-certs-cm
         name: tls-certs
       {{- end }}
-      {{- if .Values.mountGPGKeysVolume }}
+      {{- if and $gpgKeys .Values.mountGPGKeysVolume }}
       - configMap:
           name: argocd-gpg-keys-cm
         name: gpg-keys
