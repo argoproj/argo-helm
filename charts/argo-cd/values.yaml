@@ -876,10 +876,11 @@ repoServer:
 configs:
   ## Custom CSS Styles
   ## Reference: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
-  #styles: | 
+  # styles: |
   #  .nav-bar {
   #    background: linear-gradient(to bottom, #999, #777, #333, #222, #111);
   #  }
+
   ## External Cluster Credentials
   ## reference:
   ## - https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters
@@ -1006,7 +1007,7 @@ configs:
 
     # Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
     # `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
-    # argocdServerAdminPassword:
+    # argocdServerAdminPassword: ""
     # Password modification time defaults to current time if not set
     # argocdServerAdminPasswordMtime: "2006-01-02T15:04:05Z"
 

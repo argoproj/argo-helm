@@ -167,6 +167,6 @@ Merge Argo Configuration with Preset Configuration
 */}}
 {{- define "argo-cd.config" -}}
   {{- if .Values.server.configEnabled -}}
-{{- toYaml (mergeOverwrite .Values.server.config (default dict (fromYaml (include "argo-cd.config.presets" $)))) }}
+{{- toYaml (mergeOverwrite (default dict (fromYaml (include "argo-cd.config.presets" $))) .Values.server.config) }}
   {{- end -}}
 {{- end -}}
