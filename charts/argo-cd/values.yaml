@@ -499,6 +499,7 @@ server:
     enabled: false
     annotations: {}
     labels: {}
+    ingressClassName: ""
 
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
@@ -527,6 +528,7 @@ server:
     enabled: false
     annotations: {}
     labels: {}
+    ingressClassName: ""
 
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
@@ -885,6 +887,7 @@ configs:
   clusterCredentials: []
     # - name: mycluster
     #   server: https://mycluster.com
+    #   labels: {}
     #   annotations: {}
     #   config:
     #     bearerToken: "<authentication token>"
@@ -893,6 +896,7 @@ configs:
     #       caData: "<base64 encoded certificate>"
     # - name: mycluster2
     #   server: https://mycluster2.com
+    #   labels: {}
     #   annotations: {}
     #   namespaces: namespace1,namespace2
     #   config:

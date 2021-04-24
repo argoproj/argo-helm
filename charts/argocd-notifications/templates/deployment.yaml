@@ -26,8 +26,9 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "argocd-notifications.serviceAccountName" . }}
-      securityContext:
-        runAsNonRoot: true
+      {{- if .Values.securityContext }}
+      securityContext: {{- toYaml .Values.securityContext | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ include "argocd-notifications.name" . }}-controller
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -50,6 +51,9 @@ spec:
           - containerPort: {{ .Values.metrics.port }}
             name: metrics
             protocol: TCP
+          {{- end }}
+          {{- if .Values.containerSecurityContext }}
+          securityContext: {{- toYaml .Values.containerSecurityContext | nindent 12 }}
           {{- end }}
           {{- with .Values.extraEnv }}
           env: {{ toYaml . | nindent 12 }}
