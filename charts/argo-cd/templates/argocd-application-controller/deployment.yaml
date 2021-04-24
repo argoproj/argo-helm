@@ -92,8 +92,10 @@ spec:
           timeoutSeconds: {{ .Values.controller.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.controller.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
-{{- if .Values.controller.volumeMounts }}
         volumeMounts:
+        - mountPath: /app/config/controller/tls
+          name: argocd-repo-server-tls
+{{- if .Values.controller.volumeMounts }}
 {{- toYaml .Values.controller.volumeMounts | nindent 10}}
 {{- end }}
         resources:
@@ -115,8 +117,19 @@ spec:
       hostAliases:
 {{ toYaml . | indent 6 }}
 {{- end }}
-{{- if .Values.controller.volumes }}
       volumes:
+      - name: argocd-repo-server-tls
+        secret:
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+          optional: true
+          secretName: argocd-repo-server-tls
+{{- if .Values.controller.volumes }}
 {{- toYaml .Values.controller.volumes | nindent 8 }}
 {{- end }}
 {{- if .Values.controller.priorityClassName }}
