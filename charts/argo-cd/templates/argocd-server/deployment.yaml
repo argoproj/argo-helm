@@ -43,6 +43,9 @@ spec:
         command:
         - argocd-server
         - --staticassets
+        {{- if .Values.server.insecure }}
+        - --insecure
+        {{- end }}
         - /shared/app
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
