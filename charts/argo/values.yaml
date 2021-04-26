@@ -136,7 +136,7 @@ controller:
   # ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   # PriorityClass: system-cluster-critical
   priorityClassName: ""
-  # https://argoproj.github.io/argo/links/
+  # https://argoproj.github.io/argo-workflows/links/
   links: []
 
 # executor controls how the init and wait container should be customized
@@ -206,7 +206,7 @@ server:
   # Run the argo server in "secure" mode. Configure this value instead of
   # "--secure" in extraArgs. See the following documentation for more details
   # on secure mode:
-  # https://argoproj.github.io/argo/tls/#encrypted
+  # https://argoproj.github.io/argo-workflows/tls/#encrypted
   secure: false
 
   # Extra arguments to provide to the Argo server binary.

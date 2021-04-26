@@ -7,7 +7,7 @@ fullnameOverride: ""
 
 image:
   repository: argoprojlabs/argocd-notifications
-  tag: v1.0.2
+  tag: v1.1.1
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -64,6 +64,13 @@ notifiers:
     token: $slack-token
 
 podAnnotations: {}
+
+## Pod Security Context
+securityContext:
+  runAsNonRoot: true
+
+## Container Security Context
+containerSecurityContext: {}
 
 resources: {}
   # limits:
@@ -341,7 +348,7 @@ bots:
 
     image:
       repository: argoprojlabs/argocd-notifications
-      tag: v1.0.1
+      tag: v1.1.1
       pullPolicy: IfNotPresent
 
     imagePullSecrets: []
