@@ -32,6 +32,8 @@ spec:
         - name: argo-server
           image: "{{ .Values.server.image.registry }}/{{ .Values.server.image.repository }}:{{ .Values.server.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.server.securityContext | nindent 12 }}
           args:
           - server
           - --configmap={{ .Release.Name }}-{{ .Values.controller.name }}-configmap

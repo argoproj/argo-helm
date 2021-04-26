@@ -172,6 +172,13 @@ server:
   podLabels: {}
   # SecurityContext to set on the server pods
   podSecurityContext: {}
+  securityContext:
+    readOnlyRootFilesystem: false
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
   name: server
   serviceType: ClusterIP
   servicePort: 2746
