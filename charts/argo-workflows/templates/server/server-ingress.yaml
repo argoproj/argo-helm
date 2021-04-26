@@ -1,19 +1,12 @@
 {{- if .Values.server.enabled -}}
 {{- if .Values.server.ingress.enabled -}}
-{{- $serviceName := printf "%s-%s" .Release.Name .Values.server.name -}}
+{{- $serviceName := include "argo-workflows.server.fullname" . -}}
 {{- $servicePort := .Values.server.servicePort -}}
-{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
-apiVersion: networking.k8s.io/v1beta1
-{{ else }}
-apiVersion: extensions/v1beta1
-{{ end -}}
-kind: Ingress
+apiVersion: {{ include "argo-workflows.ingress.apiVersion" . }}
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name }}
+  name: {{ template "argo-workflows.server.fullname" . }}
   labels:
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "argo-workflows.labels" $ | nindent 4 }}
     {{- range $key, $value := .Values.server.ingress.labels }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}

@@ -5,7 +5,7 @@ metadata:
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-delete-policy: before-hook-creation
-  name: argo-aggregate-to-view
+  name: argo-workflows-aggregate-to-view
   labels:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
@@ -33,7 +33,7 @@ metadata:
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-delete-policy: before-hook-creation
-  name: argo-aggregate-to-edit
+  name: argo-workflows-aggregate-to-edit
   labels:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
 rules:
@@ -66,7 +66,7 @@ metadata:
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-delete-policy: before-hook-creation
-  name: argo-aggregate-to-admin
+  name: argo-workflows-aggregate-to-admin
   labels:
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:

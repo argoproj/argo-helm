@@ -3,12 +3,9 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name}}
+  name: {{ template "argo-workflows.server.fullname" . }}
   labels:
-    app: {{ .Release.Name }}-{{ .Values.server.name}}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
   {{- if .Values.server.pdb.minAvailable }}
   minAvailable: {{ .Values.server.pdb.minAvailable }}
@@ -19,7 +16,6 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ .Values.server.name}}
-      release: {{ .Release.Name }}
+      {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}
 {{- end -}}
 {{- end -}}

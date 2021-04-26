@@ -2,22 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name}}
+  name: {{ template "argo-workflows.server.fullname" . }}
   labels:
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.server.image.tag | quote }}
 spec:
   replicas: {{ .Values.server.replicas }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ .Values.server.name}}
-      release: {{ .Release.Name }}
+      {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-{{ .Values.server.name}}
-        release: {{ .Release.Name }}
+        {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 8 }}
+        app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.server.image.tag | quote }}
         {{- if .Values.server.podLabels }}
         {{- toYaml .Values.server.podLabels | nindent 8 }}
         {{- end }}

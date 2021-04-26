@@ -2,12 +2,9 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name }}
+  name: {{ template "argo-workflows.controller.fullname" . }}
   labels:
-    app: {{ .Release.Name }}-{{ .Values.controller.name}}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     {{- if .Values.controller.serviceMonitor.additionalLabels }}
 {{ toYaml .Values.controller.serviceMonitor.additionalLabels | indent 4 }}
     {{- end }}
@@ -28,6 +25,5 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ .Values.controller.name}}
-      release: {{ .Release.Name }}
+      {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
 {{- end }}

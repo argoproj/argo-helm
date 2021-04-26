@@ -5,7 +5,9 @@ kind: Role
 kind: ClusterRole
 {{- end }}
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name }}
+  name: {{ template "argo-workflows.controller.fullname" . }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 rules:
 - apiGroups:
   - ""

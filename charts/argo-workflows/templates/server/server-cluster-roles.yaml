@@ -6,7 +6,9 @@ kind: Role
 kind: ClusterRole
 {{- end }}
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name }}
+  name: {{ template "argo-workflows.server.fullname" . }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 rules:
 - apiGroups:
   - ""
@@ -115,7 +117,9 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name }}-cluster-template
+  name: {{ template "argo-workflows.server.fullname" . }}-cluster-template
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 rules:
 - apiGroups:
   - argoproj.io

@@ -1,23 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name}}
+  name: {{ template "argo-workflows.controller.fullname" . }}
   labels:
-    app: {{ .Release.Name }}-{{ .Values.controller.name}}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | quote }}
 spec:
   replicas: {{ .Values.controller.replicas }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ .Values.controller.name}}
-      release: {{ .Release.Name }}
+      {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-{{ .Values.controller.name}}
-        release: {{ .Release.Name }}
+        {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
+        app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | quote }}
         {{- if .Values.controller.podLabels }}
         {{ toYaml .Values.controller.podLabels | nindent 8}}
         {{- end }}
@@ -25,7 +22,7 @@ spec:
       annotations:
 {{ toYaml .Values.controller.podAnnotations | indent 8}}{{- end }}
     spec:
-      serviceAccountName: {{ .Values.controller.serviceAccount | quote }}
+      serviceAccountName: {{ template "argo-workflows.controllerServiceAccountName" . }}
       {{- if .Values.controller.podSecurityContext }}
       securityContext:
         {{- toYaml .Values.controller.podSecurityContext | nindent 8 }}
@@ -37,7 +34,7 @@ spec:
           command: [ "workflow-controller" ]
           args:
           - "--configmap"
-          - "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"
+          - "{{ template "argo-workflows.controller.fullname" . }}-configmap"
           - "--executor-image"
           - "{{ .Values.executor.image.registry }}/{{ .Values.executor.image.repository }}:{{ .Values.executor.image.tag | default .Chart.AppVersion }}"
           - "--loglevel"

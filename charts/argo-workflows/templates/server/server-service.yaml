@@ -2,14 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.server.name }}
+  name: {{ template "argo-workflows.server.fullname" . }}
   labels:
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    {{- if .Values.server.serviceLabels }}
-    {{- toYaml .Values.server.serviceLabels | nindent 4 }}
-    {{- end }}
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.server.image.tag | quote }}
   {{- if .Values.server.serviceAnnotations }}
   annotations:
 {{ toYaml .Values.server.serviceAnnotations | indent 4}}{{- end }}
@@ -21,7 +17,7 @@ spec:
     {{- end }}
     targetPort: 2746
   selector:
-    app: {{ .Release.Name }}-{{ .Values.server.name }}
+    {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
   sessionAffinity: None
   type: {{ .Values.server.serviceType }}
   {{- if and (eq .Values.server.serviceType "LoadBalancer") .Values.server.loadBalancerIP }}
