@@ -18,6 +18,9 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Values.eventsourceController.name }}
         release: {{ .Release.Name }}
+        {{- with .Values.eventsourceController.podLabels }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
       {{- with .Values.eventsourceController.podAnnotations }}
       annotations: {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -50,6 +53,9 @@ spec:
               port: 8081
             initialDelaySeconds: 3
             periodSeconds: 3
+      {{- with .Values.eventsourceController.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
       {{- with .Values.securityContext }}
       securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}
