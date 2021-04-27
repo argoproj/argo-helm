@@ -44,7 +44,7 @@ spec:
           {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}
-          image: "{{ .Values.images.namespace }}/{{ .Values.images.server }}:{{ default .Values.images.tag .Values.server.image.tag }}"
+          image: "{{ default .Values.images.namespace .Values.server.image.namespace }}/{{ .Values.images.server }}:{{ default .Values.images.tag .Values.server.image.tag }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           {{- if .Values.server.podPortName }}
           ports:

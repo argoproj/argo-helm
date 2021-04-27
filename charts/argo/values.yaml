@@ -36,6 +36,8 @@ controller:
   image:
     # Overrides .images.tag if defined.
     tag: ""
+    # Overrides .images.namespace if defined.
+    namespace: ""
   # parallelism dictates how many workflows can be running at the same time
   parallelism:
   # podAnnotations is an optional map of annotations to be applied to the controller Pods
@@ -144,6 +146,8 @@ executor:
   image:
     # Overrides .images.tag if defined.
     tag: ""
+    # Overrides .images.namespace if defined.
+    namespace: ""    
   resources: {}
   # Adds environment variables for the executor.
   env: {}
@@ -159,6 +163,8 @@ server:
   image:
     # Overrides .images.tag if defined.
     tag: ""
+    # Overrides .images.namespace if defined.
+    namespace: ""    
   # optional map of annotations to be applied to the ui Pods
   podAnnotations: {}
   # Optional labels to add to the UI pods
