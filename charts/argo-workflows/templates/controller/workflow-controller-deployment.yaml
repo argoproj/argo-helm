@@ -99,6 +99,6 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.controller.priorityClassName }}
-      priorityClassName: {{ .Values.controller.priorityClassName }}
+      {{- with .Values.controller.priorityClassName }}
+      priorityClassName: {{ . }}
       {{- end }}
