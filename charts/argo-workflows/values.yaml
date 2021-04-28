@@ -235,36 +235,32 @@ server:
   ##
   ingress:
     enabled: false
+    annotations: {}
+    labels: {}
+    ingressClassName: ""
 
-    ## Annotations to be added to the web ingress.
+    ## Argo Workflows Server Ingress.
+    ## Hostnames must be provided if Ingress is enabled.
+    ## Secrets must be manually created in the namespace
     ##
-    # annotations:
-    #   kubernetes.io/ingress.class: nginx
-    #   kubernetes.io/tls-acme: "true"
+    hosts:
+      []
+      # - argocd.example.com
+    paths:
+      - /
+    extraPaths:
+      []
+      # - path: /*
+      #   backend:
+      #     serviceName: ssl-redirect
+      #     servicePort: use-annotation
+    tls:
+      []
+      # - secretName: argocd-example-tls
+      #   hosts:
+      #     - argocd.example.com
+    https: false
 
-    ## Labels to be added to the web ingress.
-    ##
-    # labels:
-    #   use-cloudflare-solver: "true"
-
-    ## Hostnames.
-    ## Must be provided if Ingress is enabled.
-    ##
-    # hosts:
-    #   - argo.domain.com
-
-    ## Additional Paths for each host
-    # paths:
-    #   - serviceName: "ssl-redirect"
-    #     servicePort: "use-annotation"
-
-    ## TLS configuration.
-    ## Secrets must be manually created in the namespace.
-    ##
-    # tls:
-    #   - secretName: argo-ui-tls
-    #     hosts:
-    #       - argo.domain.com
   clusterWorkflowTemplates:
     # Give the server permissions to edit ClusterWorkflowTemplates.
     enableEditing: true
