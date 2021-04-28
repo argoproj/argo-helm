@@ -9,9 +9,10 @@ metadata:
     {{- if .Values.controller.serviceLabels }}
     {{ toYaml .Values.controller.serviceLabels | nindent 4}}
     {{- end }}
-  {{- if .Values.controller.serviceAnnotations }}
+  {{- with .Values.controller.serviceAnnotations }}
   annotations:
-{{ toYaml .Values.controller.serviceAnnotations | indent 4}}{{- end }}
+    {{- toYaml . | nindent 4}}
+  {{- end }}
 spec:
   ports:
   {{- if .Values.controller.metricsConfig.enabled }}
