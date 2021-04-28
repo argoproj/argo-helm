@@ -94,3 +94,21 @@ Return the appropriate apiVersion for ingress
 {{- print "networking.k8s.io/v1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the appropriate service layout for ingress
+*/}}
+{{- define "argo-workflows.ingress.service" -}}
+{{- if semverCompare "<1.19-0" .kubeVersion -}}
+- backend:
+    serviceName: {{ .serviceName }}
+    servicePort: {{ .servicePort }}
+{{- else -}}
+- backend:
+    service:
+      name: {{ .serviceName }}
+      port: 
+        number: {{ .servicePort }}
+  pathType: ImplementationSpecific
+{{- end -}}
+{{- end -}}

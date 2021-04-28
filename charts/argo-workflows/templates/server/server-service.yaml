@@ -6,14 +6,15 @@ metadata:
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.server.image.tag | quote }}
-  {{- if .Values.server.serviceAnnotations }}
+  {{- with .Values.server.serviceAnnotations }}
   annotations:
-{{ toYaml .Values.server.serviceAnnotations | indent 4}}{{- end }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ports:
   - port: {{ .Values.server.servicePort }}
-    {{- if .Values.server.servicePortName }}
-    name: {{ .Values.server.servicePortName }}
+    {{- with .Values.server.servicePortName }}
+    name: {{ . }}
     {{- end }}
     targetPort: 2746
   selector:
@@ -25,5 +26,6 @@ spec:
   {{- end }}
   {{- if and (eq .Values.server.serviceType "LoadBalancer") .Values.server.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
-{{ toYaml .Values.server.loadBalancerSourceRanges | indent 4 }}{{- end }}
+    {{- toYaml .Values.server.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
 {{- end -}}

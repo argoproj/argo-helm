@@ -1,5 +1,4 @@
-{{- if .Values.server.enabled -}}
-{{- if .Values.server.pdb.enabled -}}
+{{- if and .Values.server.enabled .Values.server.pdb.enabled -}}
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
@@ -17,5 +16,4 @@ spec:
   selector:
     matchLabels:
       {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}
-{{- end -}}
 {{- end -}}

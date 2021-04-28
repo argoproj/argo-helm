@@ -16,17 +16,18 @@ spec:
       labels:
         {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 8 }}
         app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.server.image.tag | quote }}
-        {{- if .Values.server.podLabels }}
-        {{- toYaml .Values.server.podLabels | nindent 8 }}
+        {{- with .Values.server.podLabels }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- if .Values.server.podAnnotations }}
+      {{- with .Values.server.podAnnotations }}
       annotations:
-{{ toYaml .Values.server.podAnnotations | indent 8}}{{- end }}
+        {{- toYaml .Values.server.podAnnotations | nindent 8 }}
+      {{- end }}
     spec:
       serviceAccountName: {{ .Values.server.serviceAccount | quote }}
-      {{- if .Values.server.podSecurityContext }}
+      {{- with .Values.server.podSecurityContext }}
       securityContext:
-        {{- toYaml .Values.server.podSecurityContext | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
         - name: argo-server
@@ -37,8 +38,8 @@ spec:
           args:
           - server
           - --configmap={{ .Release.Name }}-{{ .Values.controller.name }}-configmap
-          {{- if .Values.server.extraArgs }}
-          {{- toYaml .Values.server.extraArgs | nindent 10 }}
+          {{- with .Values.server.extraArgs }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           - "--secure={{ .Values.server.secure }}"
           {{- if .Values.singleNamespace }}
@@ -98,7 +99,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.server.priorityClassName }}
-      priorityClassName: {{ .Values.server.priorityClassName }}
+      {{- with .Values.server.priorityClassName }}
+      priorityClassName: {{ . }}
       {{- end }}
 {{- end -}}

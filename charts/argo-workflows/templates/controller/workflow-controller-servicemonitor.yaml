@@ -5,19 +5,19 @@ metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-    {{- if .Values.controller.serviceMonitor.additionalLabels }}
-{{ toYaml .Values.controller.serviceMonitor.additionalLabels | indent 4 }}
+    {{- with .Values.controller.serviceMonitor.additionalLabels }}
+      {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
   endpoints:
-  {{- if .Values.controller.metricsConfig.enabled }}
+  {{- with .Values.controller.metricsConfig.enabled }}
     - port: metrics
-      path: {{ .Values.controller.metricsConfig.path }}
+      path: {{ . }}
       interval: 30s
   {{- end }}
-  {{- if .Values.controller.telemetryConfig.enabled }}
+  {{- with .Values.controller.telemetryConfig.enabled }}
     - port: telemetry
-      path: {{ .Values.controller.telemetryConfig.path }}
+      path: {{ . }}
       interval: 30s
   {{- end }}
   namespaceSelector:

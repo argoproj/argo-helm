@@ -24,9 +24,9 @@ spec:
       {{- end }}
     spec:
       serviceAccountName: {{ template "argo-workflows.controllerServiceAccountName" . }}
-      {{- if .Values.controller.podSecurityContext }}
+      {{- with .Values.controller.podSecurityContext }}
       securityContext:
-        {{- toYaml .Values.controller.podSecurityContext | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
         - name: controller

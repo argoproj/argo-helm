@@ -6,8 +6,8 @@ metadata:
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | quote }}
-    {{- if .Values.controller.serviceLabels }}
-    {{ toYaml .Values.controller.serviceLabels | nindent 4}}
+    {{- with .Values.controller.serviceLabels }}
+      {{ toYaml . | nindent 4 }}
     {{- end }}
   {{- with .Values.controller.serviceAnnotations }}
   annotations:
@@ -33,5 +33,6 @@ spec:
   type: {{ .Values.controller.serviceType }}
   {{- if and (eq .Values.controller.serviceType "LoadBalancer") .Values.controller.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
-{{ toYaml .Values.controller.loadBalancerSourceRanges | indent 4 }}{{- end }}
+    {{- toYaml .Values.controller.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
 {{- end -}}
