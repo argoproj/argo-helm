@@ -15,8 +15,8 @@ spec:
       labels:
         {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
         app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | quote }}
-        {{- if .Values.controller.podLabels }}
-        {{ toYaml .Values.controller.podLabels | nindent 8}}
+        {{- with.Values.controller.podLabels }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.controller.podAnnotations }}
       annotations:
