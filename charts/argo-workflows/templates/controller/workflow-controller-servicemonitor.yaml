@@ -1,0 +1,33 @@
+{{- if and (or .Values.controller.metricsConfig.enabled .Values.controller.telemetryConfig.enabled) .Values.controller.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.controller.name }}
+  labels:
+    app: {{ .Release.Name }}-{{ .Values.controller.name}}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- if .Values.controller.serviceMonitor.additionalLabels }}
+{{ toYaml .Values.controller.serviceMonitor.additionalLabels | indent 4 }}
+    {{- end }}
+spec:
+  endpoints:
+  {{- if .Values.controller.metricsConfig.enabled }}
+    - port: metrics
+      path: {{ .Values.controller.metricsConfig.path }}
+      interval: 30s
+  {{- end }}
+  {{- if .Values.controller.telemetryConfig.enabled }}
+    - port: telemetry
+      path: {{ .Values.controller.telemetryConfig.path }}
+      interval: 30s
+  {{- end }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.controller.name}}
+      release: {{ .Release.Name }}
+{{- end }}

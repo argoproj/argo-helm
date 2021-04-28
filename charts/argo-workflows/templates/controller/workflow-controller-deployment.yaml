@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.controller.name}}
+  labels:
+    app: {{ .Release.Name }}-{{ .Values.controller.name}}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.controller.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.controller.name}}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-{{ .Values.controller.name}}
+        release: {{ .Release.Name }}
+        {{- if .Values.controller.podLabels }}
+        {{ toYaml .Values.controller.podLabels | nindent 8}}
+        {{- end }}
+      {{- if .Values.controller.podAnnotations }}
+      annotations:
+{{ toYaml .Values.controller.podAnnotations | indent 8}}{{- end }}
+    spec:
+      serviceAccountName: {{ .Values.controller.serviceAccount | quote }}
+      {{- if .Values.controller.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.controller.podSecurityContext | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: controller
+          image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          command: [ "workflow-controller" ]
+          args:
+          - "--configmap"
+          - "{{ .Release.Name }}-{{ .Values.controller.name}}-configmap"
+          - "--executor-image"
+          - "{{ .Values.executor.image.registry }}/{{ .Values.executor.image.repository }}:{{ .Values.executor.image.tag }}"
+          - "--loglevel"
+          - "{{ .Values.controller.logging.level }}"
+          - "--gloglevel"
+          - "{{ .Values.controller.logging.globallevel }}"
+          {{- if .Values.singleNamespace }}
+          - "--namespaced"
+          {{- end }}
+          {{- with .Values.controller.workflowWorkers }}
+          - "--workflow-workers"
+          - {{ . | quote }}
+          {{- end }}
+          {{- with .Values.controller.podWorkers }}
+          - "--pod-workers"
+          - {{ . | quote }}
+          {{- end }}
+          {{- if .Values.controller.extraArgs }}
+          {{- toYaml .Values.controller.extraArgs | nindent 10 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.controller.securityContext | nindent 12 }}
+          env:
+            - name: ARGO_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: LEADER_ELECTION_IDENTITY
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+          {{- with .Values.controller.extraEnv }}
+            {{ toYaml . | nindent 10 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.controller.resources | nindent 12 }}
+          {{- if .Values.controller.metricsConfig.enabled }}
+          ports:
+            - name: metrics
+              containerPort: {{- .Values.controller.metricsConfig.port }}
+          livenessProbe:
+            httpGet:
+              port: metrics
+              path: {{- .Values.controller.metricsConfig.path }}
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              port: metrics
+              path: {{- .Values.controller.metricsConfig.path }}
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          {{- end }}
+      {{- with .Values.images.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.controller.priorityClassName }}
+      priorityClassName: {{ .Values.controller.priorityClassName }}
+      {{- end }}

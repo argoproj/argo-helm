@@ -1,0 +1,35 @@
+{{- if and .Values.server.enabled .Values.server.createServiceAccount -}}
+apiVersion: rbac.authorization.k8s.io/v1
+{{- if .Values.singleNamespace }}
+kind: RoleBinding
+{{ else }}
+kind: ClusterRoleBinding
+{{- end }}
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.server.name}}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  {{- if .Values.singleNamespace }}
+  kind: Role
+  {{ else }}
+  kind: ClusterRole
+  {{- end }}
+  name: {{ .Release.Name }}-{{ .Values.server.name}}
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.server.serviceAccount }}
+  namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.server.name}}-cluster-template
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Release.Name }}-{{ .Values.server.name}}-cluster-template
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.server.serviceAccount }}
+  namespace: {{ .Release.Namespace }}
+{{- end -}}
