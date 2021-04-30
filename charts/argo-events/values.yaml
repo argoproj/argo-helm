@@ -14,6 +14,9 @@ installCRD: true
 # ServiceAccount to use for running controller.
 serviceAccount: argo-events-sa
 
+# Add annotations to the service account for enabling GKE workload identity or any other use case
+serviceAccountAnnotations: {}
+
 # Create service accounts in additional namespaces specified
 # The SA will always be created in the release namespaces
 additionalSaNamespaces: []
