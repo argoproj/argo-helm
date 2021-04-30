@@ -18,7 +18,7 @@ To install the chart with the release name `my-release`:
 $ helm repo add argo https://argoproj.github.io/argo-helm
 "argo" has been added to your repositories
 
-$ helm install --name my-release argo/argo-applicationset
+$ helm install --name my-release argo/argocd-applicationset
 NAME: my-release
 ...
 ```
@@ -26,6 +26,17 @@ NAME: my-release
 ### Helm v3 Compatibility
 
 Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings about nonexistent webhooks.
+
+### Testing
+
+Users can test the chart with [kind](https://kind.sigs.k8s.io/) and [ct](https://github.com/helm/chart-testing).
+
+```console
+kind create cluster
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+ct install --namespace argocd
+```
 
 ## Values
 
@@ -46,7 +57,11 @@ Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
 | installCRDs | bool | `true` | Install Custom Resource Definition |
-| nameOverride | string | `""` | Provide a name in place of `argo-applicationset` |
+| mountSSHKnownHostsVolume | bool | `true` | Mount the `argocd-ssh-known-hosts-cm` volume |
+| mountTLSCertsVolume | bool | `true` | Mount the `argocd-tls-certs-cm` volume |
+| mountGPGKeysVolume | bool | `false` | Mount the `argocd-gpg-keys-cm` volume |
+| mountGPGKeyringVolume | bool | `true` | Mount an emptyDir volume for `gpg-keyring` |
+| nameOverride | string | `""` | Provide a name in place of `argocd-applicationset` |
 | nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
 | podAnnotations | object | `{}` | Annotations for the controller pods |
 | podSecurityContext | object | `{}` | Pod Security Context |

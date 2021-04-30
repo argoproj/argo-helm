@@ -30,9 +30,12 @@ controller:
       additionalLabels: {}
       additionalAnnotations: {}
 
-
 serviceAccount:
   name: argo-rollouts
+
+## Annotations to be added to all CRDs
+##
+crdAnnotations: {}
 
 ## Annotations to be added to the Rollout pods
 ##

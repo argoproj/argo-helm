@@ -9,8 +9,8 @@ installCRDs: true
 
 global:
   image:
-    repository: argoproj/argocd
-    tag: v1.8.4
+    repository: quay.io/argoproj/argocd
+    tag: v2.0.0
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -27,8 +27,8 @@ controller:
   name: application-controller
 
   image:
-    repository: # argoproj/argocd
-    tag: # v1.7.11
+    repository: # defaults to global.image.repository
+    tag: # defaults to global.image.tag
     imagePullPolicy: # IfNotPresent
 
   # If changing the number of replicas you must pass the number as ARGOCD_CONTROLLER_REPLICAS as an environment variable
@@ -276,8 +276,14 @@ redis:
 
   image:
     repository: redis
-    tag: 5.0.10-alpine
+    tag: 6.2.1-alpine
     imagePullPolicy: IfNotPresent
+
+  ## Additional command line arguments to pass to redis-server
+  ##
+  extraArgs: []
+  # - --bind
+  # - "0.0.0.0"
 
   containerPort: 6379
   servicePort: 6379
@@ -347,7 +353,7 @@ redis-ha:
     metrics:
       enabled: true
   image:
-    tag: 5.0.8-alpine
+    tag: 6.2.1-alpine
 
 ## Server
 server:
@@ -363,8 +369,8 @@ server:
     targetMemoryUtilizationPercentage: 50
 
   image:
-    repository: # argoproj/argocd
-    tag: # v1.7.11
+    repository: # defaults to global.image.repository
+    tag: # defaults to global.image.tag
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-server
@@ -493,6 +499,7 @@ server:
     enabled: false
     annotations: {}
     labels: {}
+    ingressClassName: ""
 
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
@@ -521,6 +528,7 @@ server:
     enabled: false
     annotations: {}
     labels: {}
+    ingressClassName: ""
 
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
@@ -731,8 +739,8 @@ repoServer:
     targetMemoryUtilizationPercentage: 50
 
   image:
-    repository: # argoproj/argocd
-    tag: # v1.7.11
+    repository: # defaults to global.image.repository
+    tag: # defaults to global.image.tag
     imagePullPolicy: # IfNotPresent
 
   ## Additional command line arguments to pass to argocd-repo-server
@@ -872,6 +880,31 @@ repoServer:
 
 ## Argo Configs
 configs:
+  ## External Cluster Credentials
+  ## reference:
+  ## - https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters
+  ## - https://argoproj.github.io/argo-cd/operator-manual/security/#external-cluster-credentials
+  clusterCredentials: []
+    # - name: mycluster
+    #   server: https://mycluster.com
+    #   labels: {}
+    #   annotations: {}
+    #   config:
+    #     bearerToken: "<authentication token>"
+    #     tlsClientConfig:
+    #       insecure: false
+    #       caData: "<base64 encoded certificate>"
+    # - name: mycluster2
+    #   server: https://mycluster2.com
+    #   labels: {}
+    #   annotations: {}
+    #   namespaces: namespace1,namespace2
+    #   config:
+    #     bearerToken: "<authentication token>"
+    #     tlsClientConfig:
+    #       insecure: false
+    #       caData: "<base64 encoded certificate>"
+
   knownHostsAnnotations: {}
   knownHosts:
     data:

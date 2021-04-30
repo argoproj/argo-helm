@@ -7,7 +7,7 @@ fullnameOverride: ""
 
 image:
   repository: argoprojlabs/argocd-notifications
-  tag: v1.0.2
+  tag: v1.1.1
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -65,6 +65,13 @@ notifiers:
 
 podAnnotations: {}
 
+## Pod Security Context
+securityContext:
+  runAsNonRoot: true
+
+## Container Security Context
+containerSecurityContext: {}
+
 resources: {}
   # limits:
   #   cpu: 100m
@@ -80,6 +87,10 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: argocd-notifications-controller
+
+cm:
+  # Whether helm chart creates controller config map
+  create: true
 
 subscriptions:
   # For more information: https://argocd-notifications.readthedocs.io/en/stable/subscriptions/
@@ -337,7 +348,7 @@ bots:
 
     image:
       repository: argoprojlabs/argocd-notifications
-      tag: v1.0.1
+      tag: v1.1.1
       pullPolicy: IfNotPresent
 
     imagePullSecrets: []

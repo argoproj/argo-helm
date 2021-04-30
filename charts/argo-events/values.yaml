@@ -51,8 +51,11 @@ sensorController:
   tag: v1.2.3
   replicaCount: 1
   sensorImage: sensor
+  podAnnotations: {}
   nodeSelector: {}
-  tolerations: {}
+  podLabels: {}
+  priorityClassName: ""
+  tolerations: []
   affinity: {}
 
 eventsourceController:
@@ -61,8 +64,11 @@ eventsourceController:
   tag: v1.2.3
   replicaCount: 1
   eventsourceImage: eventsource
+  podAnnotations: {}
   nodeSelector: {}
-  tolerations: {}
+  podLabels: {}
+  priorityClassName: ""
+  tolerations: []
   affinity: {}
 
 eventbusController:
@@ -70,8 +76,11 @@ eventbusController:
   image: eventbus-controller
   tag: v1.2.3
   replicaCount: 1
+  podAnnotations: {}
   nodeSelector: {}
-  tolerations: {}
+  podLabels: {}
+  priorityClassName: ""
+  tolerations: []
   affinity: {}
   natsStreamingImage: nats-streaming:0.17.0
   natsMetricsExporterImage: synadia/prometheus-nats-exporter:0.6.2

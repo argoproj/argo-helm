@@ -41,11 +41,14 @@ spec:
         - ""
         - --appendonly
         - "no"
+        {{- with .Values.redis.extraArgs }}
+        {{- . | toYaml | nindent 8 }}
+        {{- end }}
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
         imagePullPolicy: {{ .Values.redis.image.imagePullPolicy}}
         {{- if .Values.redis.containerSecurityContext }}
         securityContext: {{- toYaml .Values.redis.containerSecurityContext | nindent 10 }}
-        {{- end }}          
+        {{- end }}
         {{- if .Values.redis.env }}
         env:
 {{- toYaml .Values.redis.env | nindent 8 }}

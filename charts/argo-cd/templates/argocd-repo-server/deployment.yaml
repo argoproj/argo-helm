@@ -81,6 +81,8 @@ spec:
         - mountPath: /app/config/tls
           name: tls-certs
         {{- end }}
+        - mountPath: /app/config/reposerver/tls
+          name: argocd-repo-server-tls
         - mountPath: /tmp
           name: tmp-dir
         ports:
@@ -143,6 +145,17 @@ spec:
           name: argocd-tls-certs-cm
         name: tls-certs
       {{- end }}
+      - name: argocd-repo-server-tls
+        secret:
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+          optional: true
+          secretName: argocd-repo-server-tls
       - emptyDir: {}
         name: tmp-dir
       {{- if .Values.repoServer.initContainers }}
