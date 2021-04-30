@@ -19,7 +19,7 @@ metadata:
   name: {{ $sa }}
   namespace: {{ $namespace }}
   {{- if $annotations }}
-  annotations: {{ toYaml $annotations | nindent 4 }}
+  annotations: {{- toYaml $annotations | nindent 4 }}
   {{- end }}
 {{- end }}
 {{- end }}
