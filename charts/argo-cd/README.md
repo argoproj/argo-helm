@@ -12,6 +12,26 @@ The default installation is intended to be similar to the provided ArgoCD [relea
 
 This chart currently installs the non-HA version of ArgoCD.
 
+### Synchronizing Changes from Original Repository
+
+In the original [ArgoCD repository](https://github.com/argoproj/argo-cd/) an [`manifests/install.yaml`](https://github.com/argoproj/argo-cd/blob/master/manifests/install.yaml) is generated using `kustomize`. It's the basis for the installation as [described in the docs](https://argo-cd.readthedocs.io/en/stable/getting_started/#1-install-argo-cd).
+
+When installing ArgoCD using this helm chart the user should have a similar experience and configuration rolled out. Hence, it makes sense to try to achieve a similar output of rendered `.yaml` resources when calling `helm template` using the default settings in `values.yaml`.
+
+To update the templates and default settings in `values.yaml` it may come in handy to look up the diff of the `manifests/install.yaml` between two versions accordingly. This can either be done directly via github and look for `manifests/install.yaml`:
+
+https://github.com/argoproj/argo-cd/compare/v1.8.7...v2.0.0#files_bucket
+
+Or you clone the repository and do a local `git-diff`:
+
+```bash
+git clone https://github.com/argoproj/argo-cd.git
+cd argo-cd
+git diff v1.8.7 v2.0.0 -- manifests/install.yaml
+```
+
+Changes in the `CustomResourceDefinition` resources shall be fixed easily by copying 1:1 from the [`manifests/crds` folder](https://github.com/argoproj/argo-cd/tree/master/manifests/crds) into this [`charts/argo-cd/crds` folder](https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd/crds).
+
 ## Upgrading
 
 ### 3.0.0 and above
@@ -334,7 +354,8 @@ through `xxx.extraArgs`
 | redis.enabled | Enable redis | `true` |
 | redis.image.imagePullPolicy | Redis imagePullPolicy | `"IfNotPresent"` |
 | redis.image.repository | Redis repository | `"redis"` |
-| redis.image.tag | Redis tag | `"5.0.8"` |
+| redis.image.tag | Redis tag | `"6.2.1-alpine"` |
+| redis.extraArgs | Additional arguments for the `redis-server`. A list of flags. | `[]` |
 | redis.name | Redis name | `"redis"` |
 | redis.env | Environment variables for the Redis server. | `[]` |
 | redis.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
@@ -354,6 +375,6 @@ through `xxx.extraArgs`
 | redis-ha.redis.config.save | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled | `""` |
 | redis-ha.haproxy.enabled | Enabled HAProxy LoadBalancing/Proxy | `true` |
 | redis-ha.haproxy.metrics.enabled | HAProxy enable prometheus metric scraping | `true` |
-| redis-ha.image.tag | Redis tag | `"5.0.8-alpine"` |
+| redis-ha.image.tag | Redis tag | `"6.2.1-alpine"` |
 
 [gRPC-ingress]: https://argoproj.github.io/argo-cd/operator-manual/ingress/

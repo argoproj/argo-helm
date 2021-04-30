@@ -1,11 +1,12 @@
-apiVersion: v1
+apiVersion: v2
 description: A Helm chart for Argo-CI
 name: argo-ci
-version: 0.1.7
+version: 1.0.0
 icon: https://raw.githubusercontent.com/argoproj/argo/master/docs/assets/argo.png
 appVersion: v1.0.0-alpha2
 home: https://github.com/argoproj/argo-helm
-maintainers:
-  - name: alexec
-  - name: alexmt
-  - name: jessesuen
+deprecated: true
+dependencies:
+  - name: argo
+    version: "^0.16.0"
+    repository: https://argoproj.github.io/argo-helm
