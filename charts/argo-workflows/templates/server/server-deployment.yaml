@@ -24,7 +24,7 @@ spec:
         {{- toYaml .Values.server.podAnnotations | nindent 8 }}
       {{- end }}
     spec:
-      serviceAccountName: {{ .Values.server.serviceAccount | quote }}
+      serviceAccountName: {{ template "argo-workflows.serverServiceAccountName" . }}
       {{- with .Values.server.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}

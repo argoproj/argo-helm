@@ -64,10 +64,10 @@ app.kubernetes.io/component: {{ .component }}
 Create the name of the server service account to use
 */}}
 {{- define "argo-workflows.serverServiceAccountName" -}}
-{{- if .Values.server.createServiceAccount -}}
-    {{ default (include "argo-workflows.fullname" .) .Values.server.serviceAccount }}
+{{- if .Values.server.serviceAccount.create -}}
+    {{ default (include "argo-workflows.fullname" .) .Values.server.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.server.serviceAccount }}
+    {{ default "default" .Values.server.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
@@ -75,10 +75,10 @@ Create the name of the server service account to use
 Create the name of the controller service account to use
 */}}
 {{- define "argo-workflows.controllerServiceAccountName" -}}
-{{- if .Values.controller.createServiceAccount -}}
-    {{ default (include "argo-workflows.fullname" .) .Values.controller.serviceAccount }}
+{{- if .Values.controller.serviceAccount.create -}}
+    {{ default (include "argo-workflows.fullname" .) .Values.controller.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.controller.serviceAccount }}
+    {{ default "default" .Values.controller.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
@@ -107,7 +107,7 @@ Return the appropriate service layout for ingress
 - backend:
     service:
       name: {{ .serviceName }}
-      port: 
+      port:
         number: {{ .servicePort }}
   pathType: ImplementationSpecific
 {{- end -}}

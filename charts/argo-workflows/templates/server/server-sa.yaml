@@ -1,9 +1,9 @@
-{{- if and .Values.server.enabled .Values.server.createServiceAccount -}}
+{{- if and .Values.server.enabled .Values.server.serviceAccount.create -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ template "argo-workflows.serverServiceAccountName" . }}
-  {{- with .Values.server.serviceAccountAnnotations  }}
+  {{- with .Values.server.serviceAccount.annotations  }}
   annotations:
     {{- toYaml . | indent 4 }}
   {{- end }}

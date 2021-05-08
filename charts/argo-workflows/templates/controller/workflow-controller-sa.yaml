@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ template "argo-workflows.controllerServiceAccountName" . }}
-  {{ with .Values.controller.serviceAccountAnnotations }}
+  {{ with .Values.controller.serviceAccount.annotations }}
   annotations:
     {{- toYaml .| nindent 4 }}
   {{- end }}

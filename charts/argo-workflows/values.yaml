@@ -44,6 +44,8 @@ controller:
     enabled: false
     path: /metrics
     port: 9090
+    servicePort: 8080
+    servicePortName: metrics
   # the controller container's securityContext
   securityContext:
     readOnlyRootFilesystem: true
@@ -84,12 +86,16 @@ controller:
     enabled: false
     path: /telemetry
     port: 8081
+    servicePort: 8081
+    servicePortName: telemetry
   serviceMonitor:
     enabled: false
     additionalLabels: {}
-  serviceAccount: argo
-  # Service account annotations
-  serviceAccountAnnotations: {}
+  serviceAccount:
+    create: true
+    name: argo
+    # Annotations applied to created service account
+    annotations: {}
   name: workflow-controller
   workflowNamespaces:
     - default
@@ -106,10 +112,6 @@ controller:
     level: info
     globallevel: "0"
   serviceType: ClusterIP
-  metricsServicePort: 8080
-  metricsServicePortName: metrics
-  telemetryServicePort: 8081
-  telemetryServicePortName: telemetry
   # Annotations to be applied to the controller Service
   serviceAnnotations: {}
   # Optional labels to add to the controller Service
@@ -183,12 +185,10 @@ server:
   serviceType: ClusterIP
   servicePort: 2746
   # servicePortName: http
-  serviceAccount: argo-server
-  # Whether to create the service account with the name specified in
-  # server.serviceAccount and bind it to the server role.
-  createServiceAccount: true
-  # Service account annotations
-  serviceAccountAnnotations: {}
+  serviceAccount:
+    create: true
+    name: argo-server
+    annotations: {}
   # Annotations to be applied to the UI Service
   serviceAnnotations: {}
   # Optional labels to add to the UI Service

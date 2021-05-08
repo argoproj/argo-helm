@@ -1,4 +1,4 @@
-{{- if and .Values.server.enabled .Values.server.createServiceAccount -}}
+{{- if and .Values.server.enabled .Values.server.serviceAccount.create -}}
 apiVersion: rbac.authorization.k8s.io/v1
 {{- if .Values.singleNamespace }}
 kind: RoleBinding
@@ -19,7 +19,7 @@ roleRef:
   name: {{ template "argo-workflows.server.fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.server.serviceAccount }}
+  name: {{ template "argo-workflows.serverServiceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -34,6 +34,6 @@ roleRef:
   name: {{ template "argo-workflows.server.fullname" . }}-cluster-template
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.server.serviceAccount }}
+  name: {{ template "argo-workflows.serverServiceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 {{- end -}}

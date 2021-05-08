@@ -16,14 +16,14 @@ metadata:
 spec:
   ports:
   {{- if .Values.controller.metricsConfig.enabled }}
-  - name: {{ .Values.controller.metricsServicePortName }}
-    port: {{ .Values.controller.metricsServicePort }}
+  - name: {{ .Values.controller.metricsConfig.servicePortName }}
+    port: {{ .Values.controller.metricsConfig.servicePort }}
     protocol: TCP
     targetPort: {{ .Values.controller.metricsConfig.port }}
   {{- end }}
   {{- if .Values.controller.telemetryConfig.enabled }}
-  - name: {{ .Values.controller.telemetryServicePortName }}
-    port: {{ .Values.controller.telemetryServicePort }}
+  - name: {{ .Values.controller.telemetryConfig.servicePortName }}
+    port: {{ .Values.controller.telemetryConfig.servicePort }}
     protocol: TCP
     targetPort: {{ .Values.controller.telemetryConfig.port }}
   {{- end }}

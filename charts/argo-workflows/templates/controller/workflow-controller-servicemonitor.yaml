@@ -10,14 +10,14 @@ metadata:
     {{- end }}
 spec:
   endpoints:
-  {{- with .Values.controller.metricsConfig.enabled }}
+  {{- if .Values.controller.metricsConfig.enabled }}
     - port: metrics
-      path: {{ . }}
+      path: {{ .Values.controller.metricsConfig.path }}
       interval: 30s
   {{- end }}
-  {{- with .Values.controller.telemetryConfig.enabled }}
+  {{- if .Values.controller.telemetryConfig.enabled }}
     - port: telemetry
-      path: {{ . }}
+      path: {{ .Values.controller.telemetryConfig.path }}
       interval: 30s
   {{- end }}
   namespaceSelector:
