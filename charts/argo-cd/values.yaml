@@ -196,6 +196,9 @@ dex:
       labels: {}
     serviceMonitor:
       enabled: false
+      # selector:
+      #   prometheus: kube-prometheus
+      # additionalLabels: {}
 
   image:
     repository: quay.io/dexidp/dex
