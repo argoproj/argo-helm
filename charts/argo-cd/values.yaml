@@ -183,6 +183,13 @@ controller:
   ## Enable if you would like to grant rights to ArgoCD to deploy to the local Kubernetes cluster.
   clusterAdminAccess:
     enabled: true
+  ## Enable Custom Rules for the Application Controller's Cluster Role resource
+  ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
+  ## Defaults to off
+  clusterRoleRules:
+    enabled: false
+    rules: []
+
 
 ## Dex
 dex:
