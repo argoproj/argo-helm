@@ -22,6 +22,12 @@ helm delete argo-cd --purge
 kubectl delete crd -l app.kubernetes.io/part-of=argocd
 ```
 
+Pre-requisites:
+```
+helm repo add redis-ha https://dandydeveloper.github.io/charts/
+helm dependency update
+```
+
 Minimally:
 
 ```

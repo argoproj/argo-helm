@@ -80,6 +80,8 @@ spec:
         - mountPath: /app/config/tls
           name: tls-certs
         {{- end }}
+        - mountPath: /app/config/server/tls
+          name: argocd-repo-server-tls
         {{- if .Values.configs.styles }}
         - mountPath: "/shared/app/custom/custom.styles.css"
           subPath: "custom.styles.css"
@@ -159,6 +161,17 @@ spec:
           name: argocd-tls-certs-cm
         name: tls-certs
       {{- end }}
+      - name: argocd-repo-server-tls
+        secret:
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+          optional: true
+          secretName: argocd-repo-server-tls
 {{- if .Values.server.priorityClassName }}
       priorityClassName: {{ .Values.server.priorityClassName }}
 {{- end }}

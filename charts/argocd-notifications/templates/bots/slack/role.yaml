@@ -5,6 +5,15 @@ metadata:
   name: {{ include "argocd-notifications.name" . }}-bot
 rules:
 - apiGroups:
+  - ""
+  resources:
+  - secrets
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - argoproj.io
   resources:
   - applications
@@ -15,13 +24,4 @@ rules:
   - watch
   - update
   - patch
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
 {{ end }}
