@@ -19,6 +19,11 @@ nodeSelector: {}
 updateStrategy:
   type: Recreate
 
+context:
+  # Add custom values into context
+  #  region: east
+  #  environmentName: staging
+
 secret:
   # Whether helm chart creates controller secret
   create: true
@@ -87,6 +92,10 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: argocd-notifications-controller
+
+cm:
+  # Whether helm chart creates controller config map
+  create: true
 
 subscriptions:
   # For more information: https://argocd-notifications.readthedocs.io/en/stable/subscriptions/
