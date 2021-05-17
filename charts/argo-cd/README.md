@@ -40,7 +40,7 @@ Helm apiVersion switched to `v2`. Requires Helm `3.0.0` or above to install. [Re
 
 ### 2.14.7 and above
 
-The `matchLabels` key in the ArgoCD Appliaction Controller is no longer hard-coded. Note that labels are immutable so caution should be exercised when making changes to this resource.
+The `matchLabels` key in the ArgoCD Application Controller is no longer hard-coded. Note that labels are immutable so caution should be exercised when making changes to this resource.
 
 ### 2.10.x to 2.11.0
 
