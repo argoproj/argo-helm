@@ -10,7 +10,7 @@ installCRDs: true
 global:
   image:
     repository: quay.io/argoproj/argocd
-    tag: v2.0.0
+    tag: v2.0.1
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -283,7 +283,7 @@ redis:
 
   image:
     repository: redis
-    tag: 6.2.1-alpine
+    tag: 6.2.2-alpine
     imagePullPolicy: IfNotPresent
 
   ## Additional command line arguments to pass to redis-server
@@ -360,7 +360,7 @@ redis-ha:
     metrics:
       enabled: true
   image:
-    tag: 6.2.1-alpine
+    tag: 6.2.2-alpine
 
 ## Server
 server:
@@ -1015,9 +1015,16 @@ configs:
 
     # Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
     # `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
-    # argocdServerAdminPassword:
+    # argocdServerAdminPassword: ""
     # Password modification time defaults to current time if not set
     # argocdServerAdminPasswordMtime: "2006-01-02T15:04:05Z"
+
+  ## Custom CSS Styles
+  ## Reference: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
+  # styles: |
+  #  .nav-bar {
+  #    background: linear-gradient(to bottom, #999, #777, #333, #222, #111);
+  #  }
 
 openshift:
   enabled: false
