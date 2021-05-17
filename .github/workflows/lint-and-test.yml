@@ -27,19 +27,19 @@ jobs:
         id: list-changed
         run: |
           ## If executed with debug this won't work anymore.
-          changed=$(ct --config ./ct.yaml list-changed)
+          changed=$(ct --config ./.github/ct.yaml list-changed)
           charts=$(echo "$changed" | tr '\n' ' ' | xargs)
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::true"
             echo "::set-output name=changed_charts::$charts"
           fi
       - name: Run chart-testing (lint)
-        run: ct lint --debug --config ./ct.yaml --lint-conf ./lintconf.yaml
+        run: ct lint --debug --config ./.github/ct.yaml --lint-conf ./.github/lintconf.yaml
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.1.0
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Run chart-testing (install)
-        run: ct install --config ./ct.yaml
+        run: ct install --config ./.github/ct.yaml
         if: steps.list-changed.outputs.changed == 'true'
