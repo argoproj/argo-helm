@@ -95,9 +95,9 @@ spec:
         volumeMounts:
         - mountPath: /app/config/controller/tls
           name: argocd-repo-server-tls
-{{- if .Values.controller.volumeMounts }}
-{{- toYaml .Values.controller.volumeMounts | nindent 10}}
-{{- end }}
+        {{- with .Values.controller.volumeMounts }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         resources:
 {{- toYaml .Values.controller.resources | nindent 10 }}
     {{- if .Values.controller.nodeSelector }}
@@ -129,9 +129,9 @@ spec:
             path: ca.crt
           optional: true
           secretName: argocd-repo-server-tls
-{{- if .Values.controller.volumes }}
-{{- toYaml .Values.controller.volumes | nindent 8 }}
-{{- end }}
+      {{- with .Values.controller.volumes }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 {{- if .Values.controller.priorityClassName }}
       priorityClassName: {{ .Values.controller.priorityClassName }}
 {{- end }}
