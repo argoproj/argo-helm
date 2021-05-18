@@ -44,3 +44,5 @@ Fields to note:
 
 1. switched to quay.io as the default registry for all images
 1. removed any included usage of Minio
+1. aligned the configuration of serviceAccounts with the argo-cd chart, ie: what used to be `server.createServiceAccount` is now `server.serviceAccount.create`
+1. moved the previously known as `telemetryServicePort` inside the `telemetryConfig` as `telemetryConfig.servicePort` - same for `metricsConfig`
