@@ -44,6 +44,6 @@ spec:
 {{ toYaml .Values.server.service.loadBalancerSourceRanges | indent 4 }}
 {{- end }}
 {{- end -}}
-{{- if .Values.server.service.externalTrafficPolicy }}
-  externalTrafficPolicy: {{ toYaml .Values.server.service.externalTrafficPolicy }}
+{{- with .Values.server.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
 {{- end }}
