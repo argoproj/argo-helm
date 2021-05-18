@@ -82,6 +82,11 @@ spec:
         {{- end }}
         - mountPath: /app/config/server/tls
           name: argocd-repo-server-tls
+        {{- if .Values.configs.styles }}
+        - mountPath: "/shared/app/custom/custom.styles.css"
+          subPath: "custom.styles.css"
+          name: custom-styles
+        {{- end }}
         ports:
         - name: {{ .Values.server.name }}
           containerPort: {{ .Values.server.containerPort }}
@@ -141,6 +146,11 @@ spec:
       {{- end }}
       - emptyDir: {}
         name: static-files
+      {{- if .Values.configs.styles }}
+      - configMap:
+          name: argocd-custom-styles
+        name: custom-styles
+      {{- end }}
       {{- if .Values.configs.knownHosts }}
       - configMap:
           name: argocd-ssh-known-hosts-cm
