@@ -19,6 +19,11 @@ nodeSelector: {}
 updateStrategy:
   type: Recreate
 
+context:
+  # Add custom values into context
+  #  region: east
+  #  environmentName: staging
+
 secret:
   # Whether helm chart creates controller secret
   create: true

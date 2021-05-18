@@ -11,6 +11,5 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- end }}
-data:
-{{- toYaml .Values.server.config | nindent 4 }}
+data: {{- include "argo-cd.config" $ | nindent 4 }}
 {{- end }}

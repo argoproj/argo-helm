@@ -40,7 +40,7 @@ Helm apiVersion switched to `v2`. Requires Helm `3.0.0` or above to install. [Re
 
 ### 2.14.7 and above
 
-The `matchLabels` key in the ArgoCD Appliaction Controller is no longer hard-coded. Note that labels are immutable so caution should be exercised when making changes to this resource.
+The `matchLabels` key in the ArgoCD Application Controller is no longer hard-coded. Note that labels are immutable so caution should be exercised when making changes to this resource.
 
 ### 2.10.x to 2.11.0
 
@@ -113,6 +113,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | configs.tlsCertsAnnotations | TLS certificate configmap annotations | `{}` |
 | configs.tlsCerts.data."argocd.example.com" | TLS certificate | See [values.yaml](values.yaml) |
 | configs.secret.extra | add additional secrets to be added to argocd-secret | `{}` |
+| configs.styles | Define custom CSS styles for your argo instance ([Read More](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/)). This Settings will automatically mount the provided css and reference it in the argo configuration. | `""` (See [values.yaml](values.yaml)) |
 | openshift.enabled | enables using arbitrary uid for argo repo server | `false` |
 
 ## ArgoCD Controller
