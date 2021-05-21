@@ -5,7 +5,7 @@ jobs:
       - image: quay.io/helmpack/chart-testing:v3.3.1
     steps:
       - checkout
-      - run: ct lint --config .github/ct.yaml --lint-conf .github/lintconf.yaml
+      - run: ct lint --config .github/configs/ct-lint.yaml --lint-conf .github/configs/lintconf.yaml
   publish:
     docker:
       - image: bash
