@@ -18,6 +18,12 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Values.eventbusController.name }}
         release: {{ .Release.Name }}
+        {{- with .Values.eventbusController.podLabels }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+      {{- with .Values.eventbusController.podAnnotations }}
+      annotations: {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount }}
       containers:
@@ -49,6 +55,9 @@ spec:
               port: 8081
             initialDelaySeconds: 3
             periodSeconds: 3
+      {{- with .Values.eventbusController.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
       {{- with .Values.securityContext }}
       securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -71,6 +71,9 @@ spec:
         env:
 {{- toYaml .Values.controller.env | nindent 8 }}
         {{- end }}
+        {{- with .Values.controller.envFrom }}
+        envFrom: {{- toYaml . | nindent 8 }}
+        {{- end }}
         ports:
         - name: controller
           containerPort: {{ .Values.controller.containerPort }}
@@ -92,10 +95,12 @@ spec:
           timeoutSeconds: {{ .Values.controller.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.controller.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
-{{- if .Values.controller.volumeMounts }}
         volumeMounts:
-{{- toYaml .Values.controller.volumeMounts | nindent 10}}
-{{- end }}
+        - mountPath: /app/config/controller/tls
+          name: argocd-repo-server-tls
+        {{- with .Values.controller.volumeMounts }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         resources:
 {{- toYaml .Values.controller.resources | nindent 10 }}
     {{- if .Values.controller.nodeSelector }}
@@ -115,10 +120,21 @@ spec:
       hostAliases:
 {{ toYaml . | indent 6 }}
 {{- end }}
-{{- if .Values.controller.volumes }}
       volumes:
-{{- toYaml .Values.controller.volumes | nindent 8 }}
-{{- end }}
+      - name: argocd-repo-server-tls
+        secret:
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+          optional: true
+          secretName: argocd-repo-server-tls
+      {{- with .Values.controller.volumes }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 {{- if .Values.controller.priorityClassName }}
       priorityClassName: {{ .Values.controller.priorityClassName }}
 {{- end }}

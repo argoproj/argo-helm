@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "argo-applicationset.fullname" . }}
+  labels:
+    {{- include "argo-applicationset.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "argo-applicationset.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "argo-applicationset.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-applicationset.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          command:
+            - applicationset-controller
+            - --metrics-addr={{ .Values.args.metricsAddr }}
+            - --probe-addr={{ .Values.args.probeBindAddr }}
+            {{- if or (gt ( .Values.replicaCount | int64) 1) .Values.args.enableLeaderElection }}
+            - --enable-leader-election=true
+            {{- end }}
+            - --namespace={{ .Values.args.namespace }}
+            - --argocd-repo-server={{ .Values.args.argocdRepoServer }}
+            - --policy={{ .Values.args.policy }}
+            - --debug={{ .Values.args.debug }}
+            - --dry-run={{ .Values.args.dryRun }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ (split ":" .Values.args.probeBindAddr)._1 }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            {{- if .Values.mountSSHKnownHostsVolume }}
+            - mountPath: /app/config/ssh
+              name: ssh-known-hosts
+            {{- end }}
+            {{- if .Values.mountTLSCertsVolume }}
+            - mountPath: /app/config/tls
+              name: tls-certs
+            {{- end }}
+            {{- if .Values.mountGPGKeysVolume }}
+            - mountPath: /app/config/gpg/source
+              name: gpg-keys
+            {{- end }}
+            {{- if .Values.mountGPGKeyringVolume }}
+            - mountPath: /app/config/gpg/keys
+              name: gpg-keyring
+            {{- end }}
+      volumes:
+      {{- if .Values.mountSSHKnownHostsVolume }}
+      - configMap:
+          name: argocd-ssh-known-hosts-cm
+        name: ssh-known-hosts
+      {{- end }}
+      {{- if .Values.mountTLSCertsVolume }}
+      - configMap:
+          name: argocd-tls-certs-cm
+        name: tls-certs
+      {{- end }}
+      {{- if .Values.mountGPGKeysVolume }}
+      - configMap:
+          name: argocd-gpg-keys-cm
+        name: gpg-keys
+      {{- end }}
+      {{- if .Values.mountGPGKeyringVolume }}
+      - emptyDir: {}
+        name: gpg-keyring
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
