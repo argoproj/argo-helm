@@ -86,7 +86,7 @@ As part of the Continuous Integration system we run Helm's [Chart Testing](https
 
 The checks for this tool are stricter than the standard Helm requirements, where fields normally considered optional like `maintainer` are required in the standard spec and must be valid GitHub usernames.
 
-Linting configuration can be found in [ct.yaml](./.github/ct.yaml)
+Linting configuration can be found in [ct-lint.yaml](./.github/configs/ct-lint.yaml)
 
 The linting can be invoked manually with the following command:
 
