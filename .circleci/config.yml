@@ -5,7 +5,7 @@ jobs:
       - image: quay.io/helmpack/chart-testing:v3.3.1
     steps:
       - checkout
-      - run: ct lint --config .github/chart-testing.yaml --lint-conf .github/lintconf.yaml
+      - run: ct lint --config .github/ct.yaml --lint-conf .github/lintconf.yaml
 
   # Technically this only needs to be run on master, but it's good to have it run on every PR
   # so that it is regularly tested.
