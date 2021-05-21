@@ -34,7 +34,7 @@ jobs:
             echo "::set-output name=changed_charts::$charts"
           fi
       - name: Run chart-testing (lint)
-        run: ct lint --debug --config ./.github/configs/ct.yaml --lint-conf ./.github/configs/lintconf.yaml
+        run: ct lint --debug --config ./.github/configs/ct-lint.yaml --lint-conf ./.github/configs/lintconf.yaml
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.1.0
