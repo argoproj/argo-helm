@@ -20,9 +20,7 @@ spec:
       {{- with .Values.controller.metrics.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}
-      {{- with .Values.controller.metrics.serviceMonitor.path }}
-      path: {{ . }}
-      {{- end }}
+      path: /metrics
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}

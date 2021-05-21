@@ -144,7 +144,6 @@ controller:
     serviceMonitor:
       enabled: false
       interval: 30s
-      path: /metrics
     #   selector:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
@@ -206,7 +205,6 @@ dex:
     serviceMonitor:
       enabled: false
       interval: 30s
-      path: /metrics
 
   image:
     repository: quay.io/dexidp/dex
@@ -495,7 +493,6 @@ server:
     serviceMonitor:
       enabled: false
       interval: 30s
-      path: /metrics
     #   selector:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
@@ -845,7 +842,6 @@ repoServer:
     serviceMonitor:
       enabled: false
       interval: 30s
-      path: /metrics
     #   selector:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
