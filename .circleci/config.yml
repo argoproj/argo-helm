@@ -8,11 +8,9 @@ jobs:
       - run: ct lint --config .github/ct.yaml --lint-conf .github/lintconf.yaml
   publish:
     docker:
-      # We just need an image with `helm` on it. Handily we know of one already.
       - image: bash
     steps:
-      # install the additional keys needed to push to GitHub. Alex Collins owns these keys.
-      - echo "Replaced by Github Workflow: https://github.com/argoproj/argo-helm/actions/workflows/publish.yml"
+      - run: echo "Replaced by Github Workflow - https://github.com/argoproj/argo-helm/actions/workflows/publish.yml"
 
 workflows:
   version: 2
