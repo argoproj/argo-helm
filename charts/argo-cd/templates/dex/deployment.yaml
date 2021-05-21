@@ -63,6 +63,10 @@ spec:
         env:
 {{- toYaml .Values.dex.env | nindent 8 }}
         {{- end }}
+        {{- with .Values.dex.envFrom }}
+        envFrom:
+{{- toYaml . | nindent 8 }}
+        {{- end }}
         ports:
         - name: http
           containerPort: {{ .Values.dex.containerPortHttp }}
