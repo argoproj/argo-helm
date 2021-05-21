@@ -5,6 +5,6 @@ metadata:
   name: {{ template "argo-workflows.serverServiceAccountName" . }}
   {{- with .Values.server.serviceAccount.annotations  }}
   annotations:
-    {{- toYaml . | indent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end -}}
