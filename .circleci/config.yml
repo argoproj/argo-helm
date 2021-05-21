@@ -1,5 +1,12 @@
 version: 2.1
 jobs:
+  lint:
+    docker:
+      - image: quay.io/helmpack/chart-testing:v3.3.1
+    steps:
+      - checkout
+      - run: ct lint --config .github/chart-testing.yaml --lint-conf .github/lintconf.yaml
+
   # Technically this only needs to be run on master, but it's good to have it run on every PR
   # so that it is regularly tested.
   publish:
@@ -14,7 +21,6 @@ jobs:
       - checkout
       - run: helm repo add stable https://charts.helm.sh/stable
       - run: helm repo add minio https://helm.min.io/
-      - run: helm repo add minio-operator https://operator.min.io/
       - run: helm repo add argo https://argoproj.github.io/argo-helm
       - run: helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
       # Only actually publish charts on master.
@@ -30,4 +36,7 @@ workflows:
   version: 2
   workflow:
     jobs:
-      - publish
+      - lint
+      - publish:
+          requires:
+            - lint
