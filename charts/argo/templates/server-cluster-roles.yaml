@@ -1,0 +1,134 @@
+{{- if .Values.server.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+{{- if .Values.singleNamespace }}
+kind: Role
+{{- else }}
+kind: ClusterRole
+{{- end }}
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.server.name }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - events
+  verbs:
+  - get
+  - watch
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/exec
+  - pods/log
+  verbs:
+  - get
+  - list
+  - watch
+  - delete
+{{- if .Values.server.sso }}
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  resourceNames:
+  - sso
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+{{- end}}
+{{- if .Values.server.sso }}
+  {{- if .Values.server.sso.rbac }}
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - get
+  - list
+  {{- end }}
+{{- end }}
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+{{- if .Values.server.sso }}
+  {{- if .Values.server.sso.rbac }}
+    {{- with .Values.server.sso.rbac.secretWhitelist }}
+  resourceNames: {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - watch
+  - create
+  - patch
+{{- if .Values.controller.persistence }}
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  resourceNames:
+  {{- with .Values.controller.persistence.postgresql }}
+  - {{ .userNameSecret.name }}
+  - {{ .passwordSecret.name }}
+  {{- end}}
+  {{- with .Values.controller.persistence.mysql }}
+  - {{ .userNameSecret.name }}
+  - {{ .passwordSecret.name }}
+  {{- end}}
+  verbs:
+  - get
+{{- end}}
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  - workfloweventbindings
+  - workflowtemplates
+  - cronworkflows
+  - cronworkflows/finalizers
+  - clusterworkflowtemplates
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.server.name }}-cluster-template
+rules:
+- apiGroups:
+  - argoproj.io
+  resources:
+  - clusterworkflowtemplates
+  verbs:
+  - get
+  - list
+  - watch
+  {{- if .Values.server.clusterWorkflowTemplates.enableEditing }}
+  - create
+  - update
+  - patch
+  - delete
+  {{- end }}
+{{- end }}

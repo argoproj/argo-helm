@@ -1,0 +1,108 @@
+{{- if .Values.server.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.server.name}}
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.server.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.server.name}}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-{{ .Values.server.name}}
+        release: {{ .Release.Name }}
+        {{- if .Values.server.podLabels }}
+        {{- toYaml .Values.server.podLabels | nindent 8 }}
+        {{- end }}
+      {{- if .Values.server.podAnnotations }}
+      annotations:
+{{ toYaml .Values.server.podAnnotations | indent 8}}{{- end }}
+    spec:
+      serviceAccountName: {{ .Values.server.serviceAccount | quote }}
+      {{- if .Values.server.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.server.podSecurityContext | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: argo-server
+          args:
+          - server
+          - --configmap={{ .Release.Name }}-{{ .Values.controller.name }}-configmap
+          {{- if .Values.server.extraArgs }}
+          {{- toYaml .Values.server.extraArgs | nindent 10 }}
+          {{- end }}
+          {{- if .Values.server.secure }}
+          - "--secure"
+          {{- end }}
+          {{- if .Values.singleNamespace }}
+          - "--namespaced"
+          {{- end }}
+          image: "{{ .Values.images.namespace }}/{{ .Values.images.server }}:{{ default .Values.images.tag .Values.server.image.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          {{- if .Values.server.podPortName }}
+          ports:
+          - name: {{ .Values.server.podPortName }}
+            containerPort: 2746
+          {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 2746
+              {{- if .Values.server.secure }}
+              scheme: HTTPS
+              {{- else }}
+              scheme: HTTP
+              {{- end }}
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          env:
+          - name: IN_CLUSTER
+            value: "true"
+          - name: ARGO_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: BASE_HREF
+            value: {{ .Values.server.baseHref | quote }}
+          resources:
+            {{- toYaml .Values.server.resources | nindent 12 }}
+          volumeMounts:
+          - name: tmp
+            mountPath: /tmp
+          {{- with .Values.server.volumeMounts }}
+            {{- toYaml . | nindent 10}}
+          {{- end }}
+      {{- with .Values.images.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      {{- with .Values.server.volumes }}
+        {{- toYaml . | nindent 6}}
+      {{- end }}
+      {{- with .Values.server.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.server.priorityClassName }}
+      priorityClassName: {{ .Values.server.priorityClassName }}
+      {{- end }}
+{{- end -}}

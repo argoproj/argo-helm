@@ -1,0 +1,13 @@
+apiVersion: v2
+appVersion: v2.12.5
+description: A Helm chart for Argo Workflows
+name: argo
+version: 1.0.0
+icon: https://raw.githubusercontent.com/argoproj/argo/master/docs/assets/argo.png
+home: https://github.com/argoproj/argo-helm
+dependencies:
+- name: minio
+  version: 8.0.9
+  repository: https://helm.min.io/
+  condition: minio.install
+deprecated: true
