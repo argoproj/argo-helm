@@ -54,8 +54,7 @@ spec:
 {{- toYaml .Values.redis.env | nindent 8 }}
         {{- end }}
         {{- with .Values.redis.envFrom }}
-        envFrom:
-{{- toYaml . | nindent 8 }}
+        envFrom: {{- toYaml . | nindent 8 }}
         {{- end }}
         ports:
         - containerPort: {{ .Values.redis.containerPort }}

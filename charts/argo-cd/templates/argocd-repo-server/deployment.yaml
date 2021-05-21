@@ -68,8 +68,7 @@ spec:
 {{- end }}
 {{- end }}
         {{- with .Values.openshift.envFrom }}
-        envFrom:
-{{- toYaml . | nindent 8 }}
+        envFrom: {{- toYaml . | nindent 8 }}
         {{- end }}
         volumeMounts:
         {{- if .Values.repoServer.volumeMounts }}
