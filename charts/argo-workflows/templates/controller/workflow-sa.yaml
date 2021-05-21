@@ -1,0 +1,13 @@
+{{- if .Values.workflow.serviceAccount.create -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.workflow.serviceAccount.name }}
+  {{- with .Values.workflow.namespace }}
+  namespace: {{ . }}
+  {{- end }}
+  {{- with .Values.workflow.serviceAccount.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
