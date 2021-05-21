@@ -143,6 +143,7 @@ controller:
       servicePort: 8082
     serviceMonitor:
       enabled: false
+      interval: 30s
     #   selector:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
@@ -203,6 +204,7 @@ dex:
       labels: {}
     serviceMonitor:
       enabled: false
+      interval: 30s
 
   image:
     repository: quay.io/dexidp/dex
@@ -490,6 +492,7 @@ server:
       servicePort: 8083
     serviceMonitor:
       enabled: false
+      interval: 30s
     #   selector:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
@@ -838,6 +841,7 @@ repoServer:
       servicePort: 8084
     serviceMonitor:
       enabled: false
+      interval: 30s
     #   selector:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
