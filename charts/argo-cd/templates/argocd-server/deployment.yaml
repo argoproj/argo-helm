@@ -68,6 +68,9 @@ spec:
         env:
 {{- toYaml .Values.server.env | nindent 8 }}
         {{- end }}
+        {{- with .Values.server.envFrom }}
+        envFrom: {{- toYaml . | nindent 8 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.server.volumeMounts }}
 {{- toYaml .Values.server.volumeMounts | nindent 8}}

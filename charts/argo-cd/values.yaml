@@ -61,6 +61,14 @@ controller:
     # - name: "ARGOCD_CONTROLLER_REPLICAS"
     #   value: ""
 
+  ## envFrom to pass to argocd-controller
+  ##
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
   ## Annotations to be added to controller pods
   ##
   podAnnotations: {}
@@ -219,6 +227,13 @@ dex:
   ##
   env: []
 
+  ## envFrom to pass to the Dex server
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
   ## Annotations to be added to the Dex server pods
   ##
   podAnnotations: {}
@@ -300,6 +315,14 @@ redis:
   ## Environment variables to pass to the Redis server
   ##
   env: []
+
+  ## envFrom to pass to the Redis server
+  ##
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
   ## Annotations to be added to the Redis server pods
   ##
@@ -390,6 +413,14 @@ server:
   ## Environment variables to pass to argocd-server
   ##
   env: []
+
+  ## envFrom to pass to argocd-server
+  ##
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
   ## Specify postStart and preStop lifecycle hooks for your argo-cd-server container
   ##
@@ -761,6 +792,14 @@ repoServer:
   ## Environment variables to pass to argocd-repo-server
   ##
   env: []
+
+  ## envFrom to pass to argocd-repo-server
+  ##
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
   ## Argo repoServer log format: text|json
   logFormat: text
