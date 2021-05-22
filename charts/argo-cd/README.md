@@ -115,6 +115,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
 | kubeVersionOverride | Override the Kubernetes version, which is used to evaluate certain manifests | `""` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
+| fullnameOverride | String to fully override `"argo-cd.fullname"` | `""` |
 | installCRDs | Install CRDs if you are using Helm2. | `true` |
 | configs.clusterCredentials | Provide one or multiple [external cluster credentials](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters) | `[]` (See [values.yaml](values.yaml)) |
 | configs.knownHostsAnnotations | Known Hosts configmap annotations | `{}` |
