@@ -40,7 +40,7 @@ With this minor version we introduced the evaluation for the ingress manifest (d
 [Issue 703](https://github.com/argoproj/argo-helm/issues/703) reported that the capabilities evaluation is **not handled correctly when deploying the chart via an ArgoCD instance**,
 especially deploying on clusters running a cluster version prior to `1.19` (which misses  `Ingress` on apiVersion `networking.k8s.io/v1`).
 
-If you are running a cluster version prior to `1.19` you can avoid this issue by directly installing chart version `3.3.0` and setting `kubeVersionOverride` like:
+If you are running a cluster version prior to `1.19` you can avoid this issue by directly installing chart version `3.6.0` and setting `kubeVersionOverride` like:
 
 ```yaml
 kubeVersionOverride: "1.18.0"
