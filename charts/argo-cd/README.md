@@ -36,13 +36,14 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ### 3.2.* 
 
-With this minor version we introduced the evaluation for the ingress manifest (depending on the capabilities version), See [Pull Request](https://github.com/argoproj/argo-helm/pull/637). [This Issues](https://github.com/argoproj/argo-helm/issues/703) reported that the capabilities evaluation is not handled correctly on clusters running a cluster version prior to `1.19` (which misses the `Ingress.networking.k8s.io`).
+With this minor version we introduced the evaluation for the ingress manifest (depending on the capabilities version), See [Pull Request](https://github.com/argoproj/argo-helm/pull/637).
+[Issue 703](https://github.com/argoproj/argo-helm/issues/703) reported that the capabilities evaluation is **not handled correctly when deploying the chart via an ArgoCD instance**,
+especially deploying on clusters running a cluster version prior to `1.19` (which misses  `Ingress` on apiVersion `networking.k8s.io/v1`).
 
-If you are running a cluster version prior to `1.19` you can avoid this issue by directly installing chart version `3.3.0` and setting `global.kubeCapabilities` like:
+If you are running a cluster version prior to `1.19` you can avoid this issue by directly installing chart version `3.3.0` and setting `kubeVersionOverride` like:
 
-``` 
-global:
-  kubeCapabilities: "1.18.0"
+```yaml
+kubeVersionOverride: "1.18.0"
 ``` 
 
 Then you should no longer encounter this issue.
@@ -112,7 +113,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
-| global.kubeCapabilities | Define Capabilities version for kubernetes, which is used to evaluate certain manifests | "" | 
+| kubeVersionOverride | Override the Kubernetes version, which is used to evaluate certain manifests | `""` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | installCRDs | Install CRDs if you are using Helm2. | `true` |
 | configs.clusterCredentials | Provide one or multiple [external cluster credentials](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters) | `[]` (See [values.yaml](values.yaml)) |
