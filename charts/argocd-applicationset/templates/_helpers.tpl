@@ -40,7 +40,6 @@ helm.sh/chart: {{ include "argo-applicationset.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/name: {{ include "argo-applicationset.name" . }}
 app.kubernetes.io/part-of: argo-cd-applicationset
 app.kubernetes.io/component: controller
 {{- end }}

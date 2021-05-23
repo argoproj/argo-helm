@@ -1,8 +1,0 @@
-{{- if and .Values.server.enabled .Values.server.createServiceAccount -}}
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Values.server.serviceAccount }}
-  annotations:
-{{ toYaml .Values.server.serviceAccountAnnotations | indent 4 }}
-{{- end -}}
