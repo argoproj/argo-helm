@@ -67,7 +67,7 @@ spec:
           value: argocd
 {{- end }}
 {{- end }}
-        {{- with .Values.openshift.envFrom }}
+        {{- with .Values.repoServer.envFrom }}
         envFrom: {{- toYaml . | nindent 8 }}
         {{- end }}
         volumeMounts:
