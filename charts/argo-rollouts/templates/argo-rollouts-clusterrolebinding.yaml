@@ -2,17 +2,18 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ .Release.Name }}-clusterrolebinding
+  name: {{ include "argo-rollouts.fullname" . }}
   labels:
     app.kubernetes.io/component: {{ .Values.controller.component }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/name: {{ .Release.Name }}-clusterrolebinding
-    app.kubernetes.io/part-of: {{ .Release.Name }}
+    app.kubernetes.io/part-of: argo-rollouts
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ .Release.Name }}-clusterrole
+  name: {{ include "argo-rollouts.fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.serviceAccount.name }}
+  name: {{ include "argo-rollouts.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 {{- end }}

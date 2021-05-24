@@ -1,11 +1,13 @@
+{{- if not .Values.clusterInstall }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ .Release.Name }}-role
+  name: {{ include "argo-rollouts.fullname" . }}
   labels:
     app.kubernetes.io/component: {{ .Values.controller.component }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/name: {{ .Release.Name }}-role
-    app.kubernetes.io/part-of: {{ .Release.Name }}
+    app.kubernetes.io/part-of: argo-rollouts
 rules:
 - apiGroups:
   - argoproj.io
@@ -145,3 +147,4 @@ rules:
   - get
   - update
   - patch
+{{- end }}
