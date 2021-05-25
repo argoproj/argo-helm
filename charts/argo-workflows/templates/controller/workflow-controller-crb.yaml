@@ -31,6 +31,8 @@ subjects:
   {{- end }}
 {{- end }}
 {{- end }}
+
+{{- if .Values.controller.clusterWorkflowTemplates.enabled }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -46,3 +48,4 @@ subjects:
   - kind: ServiceAccount
     name: {{ template "argo-workflows.controllerServiceAccountName" . }}
     namespace: {{ .Release.Namespace }}
+{{- end }}
