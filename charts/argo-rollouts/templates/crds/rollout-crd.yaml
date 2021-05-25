@@ -7,6 +7,9 @@ metadata:
     {{- if .Values.crdAnnotations }}
 {{- toYaml .Values.crdAnnotations | nindent 4 }}
     {{- end }}
+  labels:
+    app.kubernetes.io/name: argo-rollouts
+    app.kubernetes.io/part-of: argo-rollouts
   name: rollouts.argoproj.io
 spec:
   group: argoproj.io

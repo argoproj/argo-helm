@@ -147,6 +147,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.extraArgs | Additional arguments for the controller. A list of flags | `[]` |
 | controller.enableStatefulSet | Enable deploying the controller as a StatefulSet instead of a Deployment. Used for HA installations. | `false` |
 | controller.env | Environment variables for the controller. | `[]` |
+| controller.envFrom | `envFrom` to pass to the controller. | `[]` (See [values.yaml](values.yaml)) |
 | controller.image.repository | Repository to use for the controller | `global.image.repository` |
 | controller.image.imagePullPolicy | Image pull policy for the controller | `global.image.imagePullPolicy` |
 | controller.image.tag | Tag to use for the controller | `global.image.tag` |
@@ -198,6 +199,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | repoServer.containerPort | Repo server port | `8081` |
 | repoServer.extraArgs | Additional arguments for the repo server. A  list of flags. | `[]` |
 | repoServer.env | Environment variables for the repo server. | `[]` |
+| repoServer.envFrom | `envFrom` to pass to the repo server. | `[]` (See [values.yaml](values.yaml)) |
 | repoServer.image.repository | Repository to use for the repo server | `global.image.repository` |
 | repoServer.image.imagePullPolicy | Image pull policy for the repo server | `global.image.imagePullPolicy` |
 | repoServer.image.tag | Tag to use for the repo server | `global.image.tag` |
@@ -258,6 +260,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
 | server.env | Environment variables for the server. | `[]` |
+| server.envFrom | `envFrom` to pass to the server. | `[]` (See [values.yaml](values.yaml)) |
 | server.image.repository | Repository to use for the server | `global.image.repository` |
 | server.image.imagePullPolicy | Image pull policy for the server | `global.image.imagePullPolicy` |
 | server.image.tag | Tag to use for the server | `global.image.tag` |
@@ -343,6 +346,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | dex.metrics.serviceMonitor.selector | Prometheus ServiceMonitor selector. | `{}` |
 | dex.name | Dex name | `"dex-server"` |
 | dex.env | Environment variables for the Dex server. | `[]` |
+| dex.envFrom | `envFrom` to pass to the Dex server. | `[]` (See [values.yaml](values.yaml)) |
 | dex.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | dex.podAnnotations | Annotations for the Dex server pods | `{}` |
 | dex.podLabels | Labels for the Dex server pods | `{}` |
@@ -376,6 +380,7 @@ through `xxx.extraArgs`
 | redis.extraArgs | Additional arguments for the `redis-server`. A list of flags. | `[]` |
 | redis.name | Redis name | `"redis"` |
 | redis.env | Environment variables for the Redis server. | `[]` |
+| redis.envFrom | `envFrom` to pass to the Redis server. | `[]` (See [values.yaml](values.yaml)) |
 | redis.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | redis.podAnnotations | Annotations for the Redis server pods | `{}` |
 | redis.podLabels | Labels for the Redis server pods | `{}` |
