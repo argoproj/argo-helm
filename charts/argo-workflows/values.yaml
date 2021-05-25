@@ -143,6 +143,9 @@ controller:
   priorityClassName: ""
   # https://argoproj.github.io/argo-workflows/links/
   links: []
+  clusterWorkflowTemplates:
+    # Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates.
+    enabled: true
 
 # executor controls how the init and wait container should be customized
 executor:
@@ -262,6 +265,8 @@ server:
     https: false
 
   clusterWorkflowTemplates:
+    # Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates.
+    enabled: true
     # Give the server permissions to edit ClusterWorkflowTemplates.
     enableEditing: true
   sso:
