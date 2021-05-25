@@ -111,6 +111,8 @@ rules:
     - update
     - patch
     - delete
+
+{{- if .Values.server.clusterWorkflowTemplates.enabled }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -133,4 +135,5 @@ rules:
   - patch
   - delete
   {{- end }}
+{{- end }}
 {{- end }}
