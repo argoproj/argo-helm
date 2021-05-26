@@ -5,32 +5,13 @@ jobs:
       - image: quay.io/helmpack/chart-testing:v3.3.1
     steps:
       - checkout
-      - run: helm repo add stable https://charts.helm.sh/stable
-      - run: ct lint --config .circleci/chart-testing.yaml --lint-conf .circleci/lintconf.yaml
-  # Technically this only needs to be run on master, but it's good to have it run on every PR
-  # so that it is regularly tested.
+      - run: ct lint --config .github/configs/ct-lint.yaml --lint-conf .github/configs/lintconf.yaml
   publish:
     docker:
-      # We just need an image with `helm` on it. Handily we know of one already.
-      - image: quay.io/helmpack/chart-testing:v3.3.1
+      - image: bash
     steps:
-      # install the additional keys needed to push to GitHub. Alex Collins owns these keys.
-      - add_ssh_keys
-      - run: git config --global user.email "nobody@circleci.com"
-      - run: git config --global user.name "Circle CI Build"
-      - checkout
-      - run: helm repo add stable https://charts.helm.sh/stable
-      - run: helm repo add minio https://helm.min.io/
-      - run: helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
-      # Only actually publish charts on master.
-      - run: |
-          set -x
-          if [ "$CIRCLE_BRANCH" = "master" ]; then
-            export GIT_PUSH=true
-          else 
-            export GIT_PUSH=false
-          fi
-          sh ./scripts/publish.sh
+      - run: echo "Replaced by Github Workflow - https://github.com/argoproj/argo-helm/actions/workflows/publish.yml"
+
 workflows:
   version: 2
   workflow:

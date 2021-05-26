@@ -68,6 +68,9 @@ spec:
         env:
 {{- toYaml .Values.server.env | nindent 8 }}
         {{- end }}
+        {{- with .Values.server.envFrom }}
+        envFrom: {{- toYaml . | nindent 8 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.server.volumeMounts }}
 {{- toYaml .Values.server.volumeMounts | nindent 8}}
@@ -79,6 +82,13 @@ spec:
         {{- if .Values.configs.tlsCerts }}
         - mountPath: /app/config/tls
           name: tls-certs
+        {{- end }}
+        - mountPath: /app/config/server/tls
+          name: argocd-repo-server-tls
+        {{- if .Values.configs.styles }}
+        - mountPath: "/shared/app/custom/custom.styles.css"
+          subPath: "custom.styles.css"
+          name: custom-styles
         {{- end }}
         ports:
         - name: {{ .Values.server.name }}
@@ -139,6 +149,11 @@ spec:
       {{- end }}
       - emptyDir: {}
         name: static-files
+      {{- if .Values.configs.styles }}
+      - configMap:
+          name: argocd-custom-styles
+        name: custom-styles
+      {{- end }}
       {{- if .Values.configs.knownHosts }}
       - configMap:
           name: argocd-ssh-known-hosts-cm
@@ -149,6 +164,17 @@ spec:
           name: argocd-tls-certs-cm
         name: tls-certs
       {{- end }}
+      - name: argocd-repo-server-tls
+        secret:
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+          optional: true
+          secretName: argocd-repo-server-tls
 {{- if .Values.server.priorityClassName }}
       priorityClassName: {{ .Values.server.priorityClassName }}
 {{- end }}

@@ -23,5 +23,5 @@ spec:
   issuerRef:
     kind: {{ .Values.server.certificate.issuer.kind | quote }}
     name: {{ .Values.server.certificate.issuer.name | quote }}
-  secretName: argocd-secret
+  secretName: argocd-tls-certificate
 {{- end }}

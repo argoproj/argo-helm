@@ -17,7 +17,9 @@ metadata:
 spec:
   endpoints:
     - port: metrics
-      interval: 30s
+      {{- with .Values.controller.metrics.serviceMonitor.interval }}
+      interval: {{ . }}
+      {{- end }}
       path: /metrics
   namespaceSelector:
     matchNames:

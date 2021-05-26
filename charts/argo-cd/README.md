@@ -12,7 +12,42 @@ The default installation is intended to be similar to the provided ArgoCD [relea
 
 This chart currently installs the non-HA version of ArgoCD.
 
+### Synchronizing Changes from Original Repository
+
+In the original [ArgoCD repository](https://github.com/argoproj/argo-cd/) an [`manifests/install.yaml`](https://github.com/argoproj/argo-cd/blob/master/manifests/install.yaml) is generated using `kustomize`. It's the basis for the installation as [described in the docs](https://argo-cd.readthedocs.io/en/stable/getting_started/#1-install-argo-cd).
+
+When installing ArgoCD using this helm chart the user should have a similar experience and configuration rolled out. Hence, it makes sense to try to achieve a similar output of rendered `.yaml` resources when calling `helm template` using the default settings in `values.yaml`.
+
+To update the templates and default settings in `values.yaml` it may come in handy to look up the diff of the `manifests/install.yaml` between two versions accordingly. This can either be done directly via github and look for `manifests/install.yaml`:
+
+https://github.com/argoproj/argo-cd/compare/v1.8.7...v2.0.0#files_bucket
+
+Or you clone the repository and do a local `git-diff`:
+
+```bash
+git clone https://github.com/argoproj/argo-cd.git
+cd argo-cd
+git diff v1.8.7 v2.0.0 -- manifests/install.yaml
+```
+
+Changes in the `CustomResourceDefinition` resources shall be fixed easily by copying 1:1 from the [`manifests/crds` folder](https://github.com/argoproj/argo-cd/tree/master/manifests/crds) into this [`charts/argo-cd/crds` folder](https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd/crds).
+
 ## Upgrading
+
+### 3.2.* 
+
+With this minor version we introduced the evaluation for the ingress manifest (depending on the capabilities version), See [Pull Request](https://github.com/argoproj/argo-helm/pull/637).
+[Issue 703](https://github.com/argoproj/argo-helm/issues/703) reported that the capabilities evaluation is **not handled correctly when deploying the chart via an ArgoCD instance**,
+especially deploying on clusters running a cluster version prior to `1.19` (which misses  `Ingress` on apiVersion `networking.k8s.io/v1`).
+
+If you are running a cluster version prior to `1.19` you can avoid this issue by directly installing chart version `3.6.0` and setting `kubeVersionOverride` like:
+
+```yaml
+kubeVersionOverride: "1.18.0"
+``` 
+
+Then you should no longer encounter this issue.
+
 
 ### 3.0.0 and above
 
@@ -20,7 +55,7 @@ Helm apiVersion switched to `v2`. Requires Helm `3.0.0` or above to install. [Re
 
 ### 2.14.7 and above
 
-The `matchLabels` key in the ArgoCD Appliaction Controller is no longer hard-coded. Note that labels are immutable so caution should be exercised when making changes to this resource.
+The `matchLabels` key in the ArgoCD Application Controller is no longer hard-coded. Note that labels are immutable so caution should be exercised when making changes to this resource.
 
 ### 2.10.x to 2.11.0
 
@@ -78,7 +113,9 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
+| kubeVersionOverride | Override the Kubernetes version, which is used to evaluate certain manifests | `""` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
+| fullnameOverride | String to fully override `"argo-cd.fullname"` | `""` |
 | installCRDs | Install CRDs if you are using Helm2. | `true` |
 | configs.clusterCredentials | Provide one or multiple [external cluster credentials](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters) | `[]` (See [values.yaml](values.yaml)) |
 | configs.knownHostsAnnotations | Known Hosts configmap annotations | `{}` |
@@ -93,6 +130,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | configs.tlsCertsAnnotations | TLS certificate configmap annotations | `{}` |
 | configs.tlsCerts.data."argocd.example.com" | TLS certificate | See [values.yaml](values.yaml) |
 | configs.secret.extra | add additional secrets to be added to argocd-secret | `{}` |
+| configs.styles | Define custom CSS styles for your argo instance ([Read More](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/)). This Settings will automatically mount the provided css and reference it in the argo configuration. | `""` (See [values.yaml](values.yaml)) |
 | openshift.enabled | enables using arbitrary uid for argo repo server | `false` |
 
 ## ArgoCD Controller
@@ -109,6 +147,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.extraArgs | Additional arguments for the controller. A list of flags | `[]` |
 | controller.enableStatefulSet | Enable deploying the controller as a StatefulSet instead of a Deployment. Used for HA installations. | `false` |
 | controller.env | Environment variables for the controller. | `[]` |
+| controller.envFrom | `envFrom` to pass to the controller. | `[]` (See [values.yaml](values.yaml)) |
 | controller.image.repository | Repository to use for the controller | `global.image.repository` |
 | controller.image.imagePullPolicy | Image pull policy for the controller | `global.image.imagePullPolicy` |
 | controller.image.tag | Tag to use for the controller | `global.image.tag` |
@@ -160,6 +199,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | repoServer.containerPort | Repo server port | `8081` |
 | repoServer.extraArgs | Additional arguments for the repo server. A  list of flags. | `[]` |
 | repoServer.env | Environment variables for the repo server. | `[]` |
+| repoServer.envFrom | `envFrom` to pass to the repo server. | `[]` (See [values.yaml](values.yaml)) |
 | repoServer.image.repository | Repository to use for the repo server | `global.image.repository` |
 | repoServer.image.imagePullPolicy | Image pull policy for the repo server | `global.image.imagePullPolicy` |
 | repoServer.image.tag | Tag to use for the repo server | `global.image.tag` |
@@ -220,6 +260,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
 | server.env | Environment variables for the server. | `[]` |
+| server.envFrom | `envFrom` to pass to the server. | `[]` (See [values.yaml](values.yaml)) |
 | server.image.repository | Repository to use for the server | `global.image.repository` |
 | server.image.imagePullPolicy | Image pull policy for the server | `global.image.imagePullPolicy` |
 | server.image.tag | Tag to use for the server | `global.image.tag` |
@@ -227,12 +268,14 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.ingress.enabled | Enable an ingress resource for the server | `false` |
 | server.ingress.hosts | List of ingress hosts | `[]` |
 | server.ingress.labels | Additional ingress labels. | `{}` |
+| server.ingress.ingressClassName | Defines which ingress controller will implement the resource | `""` |
 | server.ingress.tls | Ingress TLS configuration. | `[]` |
 | server.ingress.https | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` | `false` |
 | server.ingressGrpc.annotations | Additional ingress annotations for dedicated [gRPC-ingress] | `{}` |
 | server.ingressGrpc.enabled | Enable an ingress resource for the server for dedicated [gRPC-ingress] | `false` |
 | server.ingressGrpc.hosts | List of ingress hosts for dedicated [gRPC-ingress] | `[]` |
 | server.ingressGrpc.labels | Additional ingress labels for dedicated [gRPC-ingress] | `{}` |
+| server.ingressGrpc.ingressClassName | Defines which ingress controller will implement the resource [gRPC-ingress] | `""` |
 | server.ingressGrpc.tls | Ingress TLS configuration for dedicated [gRPC-ingress] | `[]` |
 | server.route.enabled | Enable a OpenShift route for the server | `false` |
 | server.route.hostname | Hostname of OpenShift route | `""` |
@@ -303,6 +346,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | dex.metrics.serviceMonitor.selector | Prometheus ServiceMonitor selector. | `{}` |
 | dex.name | Dex name | `"dex-server"` |
 | dex.env | Environment variables for the Dex server. | `[]` |
+| dex.envFrom | `envFrom` to pass to the Dex server. | `[]` (See [values.yaml](values.yaml)) |
 | dex.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | dex.podAnnotations | Annotations for the Dex server pods | `{}` |
 | dex.podLabels | Labels for the Dex server pods | `{}` |
@@ -332,9 +376,11 @@ through `xxx.extraArgs`
 | redis.enabled | Enable redis | `true` |
 | redis.image.imagePullPolicy | Redis imagePullPolicy | `"IfNotPresent"` |
 | redis.image.repository | Redis repository | `"redis"` |
-| redis.image.tag | Redis tag | `"5.0.8"` |
+| redis.image.tag | Redis tag | `"6.2.1-alpine"` |
+| redis.extraArgs | Additional arguments for the `redis-server`. A list of flags. | `[]` |
 | redis.name | Redis name | `"redis"` |
 | redis.env | Environment variables for the Redis server. | `[]` |
+| redis.envFrom | `envFrom` to pass to the Redis server. | `[]` (See [values.yaml](values.yaml)) |
 | redis.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | redis.podAnnotations | Annotations for the Redis server pods | `{}` |
 | redis.podLabels | Labels for the Redis server pods | `{}` |
@@ -352,6 +398,6 @@ through `xxx.extraArgs`
 | redis-ha.redis.config.save | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled | `""` |
 | redis-ha.haproxy.enabled | Enabled HAProxy LoadBalancing/Proxy | `true` |
 | redis-ha.haproxy.metrics.enabled | HAProxy enable prometheus metric scraping | `true` |
-| redis-ha.image.tag | Redis tag | `"5.0.8-alpine"` |
+| redis-ha.image.tag | Redis tag | `"6.2.1-alpine"` |
 
 [gRPC-ingress]: https://argoproj.github.io/argo-cd/operator-manual/ingress/

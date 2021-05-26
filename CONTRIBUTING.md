@@ -22,6 +22,12 @@ helm delete argo-cd --purge
 kubectl delete crd -l app.kubernetes.io/part-of=argocd
 ```
 
+Pre-requisites:
+```
+helm repo add redis-ha https://dandydeveloper.github.io/charts/
+helm dependency update
+```
+
 Minimally:
 
 ```
@@ -80,7 +86,7 @@ As part of the Continuous Integration system we run Helm's [Chart Testing](https
 
 The checks for this tool are stricter than the standard Helm requirements, where fields normally considered optional like `maintainer` are required in the standard spec and must be valid GitHub usernames.
 
-Linting configuration can be found in [lintconf.yaml](.circleci/lintconf.yaml)
+Linting configuration can be found in [ct-lint.yaml](./.github/configs/ct-lint.yaml)
 
 The linting can be invoked manually with the following command:
 
@@ -90,11 +96,4 @@ The linting can be invoked manually with the following command:
 
 ## Publishing Changes
 
-Changes are automatically publish whenever a commit is merged to master. The CI job (see `.circleci/config.yaml`) runs this:
-
-```
-GIT_PUSH=true ./scripts/publish.sh
-```
-
-Script generates tar file for each chart in `charts` directory and push changes to `gh-pages` branch.
-Write access to https://github.com/argoproj/argo-helm.git is required to publish changes.
+Changes are automatically publish whenever a commit is merged to master. The CI job (see `./.github/workflows/publish.yml`).
