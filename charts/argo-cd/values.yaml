@@ -23,15 +23,13 @@ global:
   #   hostnames:
   #   - git.myhostname
 
-# Override APIVersions 
-# If you want to template helm charts but cannot access k8s API server 
+# Override APIVersions
+# If you want to template helm charts but cannot access k8s API server
 # you can set api versions here
 APIOverrides:
   enabled: false
   certmanager: cert-manager.io/v1
   ingress: networking.k8s.io/v1beta1
-
-
 
 ## Controller
 controller:
