@@ -11,6 +11,9 @@ controller:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  metrics:
+    port: 8090
+    name: metrics
   image:
     repository: argoproj/argo-rollouts
     tag: v1.0.1
