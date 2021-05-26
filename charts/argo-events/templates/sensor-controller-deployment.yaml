@@ -53,6 +53,7 @@ spec:
               port: 8081
             initialDelaySeconds: 3
             periodSeconds: 3
+          resources: {{- toYaml .Values.eventbusController.resources | nindent 12 }}
       {{- with .Values.sensorController.priorityClassName }}
       priorityClassName: {{ . | quote }}
       {{- end }}
@@ -71,8 +72,4 @@ spec:
       {{- end }}
       {{- if .Values.sensorController.affinity }}
       affinity: {{ toYaml .Values.sensorController.affinity | nindent 8 }}
-      {{- end }}
-      {{- if .Values.sensorController.resources }}
-      resources:
-        {{- toYaml .Values.sensorController.resources | nindent 8 }}
       {{- end }}
