@@ -72,3 +72,7 @@ spec:
       {{- if .Values.sensorController.affinity }}
       affinity: {{ toYaml .Values.sensorController.affinity | nindent 8 }}
       {{- end }}
+      {{- if .Values.sensorController.resources }}
+      resources:
+        {{- toYaml .Values.sensorController.resources | nindent 8 }}
+      {{- end }}

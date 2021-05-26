@@ -72,3 +72,7 @@ spec:
       {{- if .Values.eventsourceController.affinity }}
       affinity: {{ toYaml .Values.eventsourceController.affinity | nindent 8 }}
       {{- end }}
+      {{- if .Values.eventsourceController.resources }}
+      resources:
+        {{- toYaml .Values.eventsourceController.resources | nindent 8 }}
+      {{- end }}
