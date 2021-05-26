@@ -37,6 +37,9 @@ spec:
         {{- end }}
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         name: {{ .Values.controller.name }}
+        ports:
+        - containerPort: {{ .Values.metrics.port }}
+          name: {{ .Values.metrics.name }}
         resources:
 {{- toYaml .Values.controller.resources | nindent 10 }}
         securityContext:
