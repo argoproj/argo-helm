@@ -37,8 +37,6 @@ spec:
         {{- end }}
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         name: {{ .Values.controller.name }}
-        resources:
-{{- toYaml .Values.controller.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
         resources:
