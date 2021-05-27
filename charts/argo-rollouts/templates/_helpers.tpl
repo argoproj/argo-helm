@@ -32,6 +32,27 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Common labels
+*/}}
+{{- define "argo-rollouts.labels" -}}
+helm.sh/chart: {{ include "argo-rollouts.chart" . }}
+{{ include "argo-rollouts.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/part-of: argo-rollouts
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "argo-rollouts.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "argo-rollouts.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "argo-rollouts.serviceAccountName" -}}

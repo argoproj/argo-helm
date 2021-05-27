@@ -6,9 +6,7 @@ metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
     app.kubernetes.io/component: {{ .Values.controller.component }}
-    app.kubernetes.io/name:  {{ .Release.Name }}-aggregate-to-view
-    app.kubernetes.io/part-of: argo-rollouts
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - argoproj.io
@@ -32,9 +30,7 @@ metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
     app.kubernetes.io/component: {{ .Values.controller.component }}
-    app.kubernetes.io/name:  {{ .Release.Name }}-aggregate-to-edit
-    app.kubernetes.io/part-of: argo-rollouts
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - argoproj.io
@@ -64,9 +60,7 @@ metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
     app.kubernetes.io/component: {{ .Values.controller.component }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name:  {{ .Release.Name }}-aggregate-to-admin
-    app.kubernetes.io/part-of: argo-rollouts
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - argoproj.io

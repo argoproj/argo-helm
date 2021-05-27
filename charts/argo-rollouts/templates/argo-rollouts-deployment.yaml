@@ -4,13 +4,11 @@ metadata:
   name: {{ include "argo-rollouts.fullname" . }}
   labels:
     app.kubernetes.io/component: {{ .Values.controller.component }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name: {{ .Release.Name }}
-    app.kubernetes.io/part-of: argo-rollouts
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Release.Name }}
+      {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
   strategy:
     type: Recreate
   template:
@@ -20,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        app.kubernetes.io/name: {{ .Release.Name }}
+        {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
         {{- range $key, $value := .Values.podLabels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}

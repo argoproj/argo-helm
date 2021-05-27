@@ -5,9 +5,7 @@ metadata:
   name: {{ include "argo-rollouts.fullname" . }}
   labels:
     app.kubernetes.io/component: server
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name: {{ .Release.Name }}-metrics
-    app.kubernetes.io/part-of: argo-rollouts
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
     {{- range $key, $value := .Values.controller.metrics.serviceMonitor.additionalLabels }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
@@ -24,7 +22,5 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/component: server
-      app.kubernetes.io/name: {{ .Release.Name }}-metrics
-      app.kubernetes.io/part-of: argo-rollouts
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
 {{- end }}

@@ -5,9 +5,7 @@ metadata:
   name: {{ include "argo-rollouts.serviceAccountName" . }}
   labels:
     app.kubernetes.io/component: {{ .Values.controller.component }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name: {{ .Release.Name }}
-    app.kubernetes.io/part-of: argo-rollouts
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
   {{- with .Values.serviceAccount.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
