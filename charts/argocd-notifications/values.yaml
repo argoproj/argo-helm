@@ -93,6 +93,8 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: argocd-notifications-controller
 
+  annotations: {}
+
 cm:
   # Whether helm chart creates controller config map
   create: true
@@ -370,6 +372,8 @@ bots:
       # The name of the service account to use.
       # If not set and create is true, a name is generated using the fullname template
       name: argocd-notifications-bot
+
+      annotations: {}
 
     resources: {}
     # limits:
