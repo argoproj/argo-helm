@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "argo-rollouts.fullname" . }}-view
+  name: {{ include "argo-rollouts.fullname" . }}-aggregate-to-view
   labels:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
     app.kubernetes.io/component: {{ .Values.controller.component }}
@@ -26,7 +26,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "argo-rollouts.fullname" . }}-edit
+  name: {{ include "argo-rollouts.fullname" . }}-aggregate-to-edit
   labels:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
     app.kubernetes.io/component: {{ .Values.controller.component }}
@@ -56,7 +56,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "argo-rollouts.fullname" . }}-admin
+  name: {{ include "argo-rollouts.fullname" . }}-aggregate-to-admin
   labels:
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
     app.kubernetes.io/component: {{ .Values.controller.component }}

@@ -22,7 +22,7 @@ To install the chart with the release name `my-release`:
 
 ```console
 $ helm repo add argo https://argoproj.github.io/argo-helm
-$ helm install --name my-release argo/argo-rollouts
+$ helm install my-release argo/argo-rollouts
 ```
 
 ## Chart Values
@@ -62,6 +62,8 @@ $ helm install --name my-release argo/argo-rollouts
 * `quay.io` is the default registry now
 * We introduce a template function for the labels here to reduce code duplication. This also affects the Deployment `matchLabels` selector.  
   To upgrade an existing installation, please **add the `--force` parameter** to the `helm upgrade` command or **delete the Deployment resource** before you upgrade. This is necessary because Deployment's label selector is immutable.
+* All resources are now prefixed with the template `"argo-rollouts.fullname"`.
+  This enables the users to override resource names via the `nameOverride` and `fullnameOverride` parameters.
 * Breaking parameters update
   * `securityContext` was renamed to `containerSecurityContext`
   * Added `controller.image.registry`. Prior to this chart version you had to override the registry via `controller.image.repository`
