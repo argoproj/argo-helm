@@ -57,6 +57,17 @@ rules:
   - update
   - patch
   - delete
+# replicaset access needed for managing Deployments and PodTemplates
+- apiGroups:
+  - ""
+  - apps
+  resources:
+  - deployments
+  - podtemplates
+  verbs:
+  - get
+  - list
+  - watch
 # services patch needed to update selector of canary/stable/active/preview services
 - apiGroups:
   - ""
@@ -135,6 +146,7 @@ rules:
   - watch
   - get
   - update
+  - patch
   - list
 # trafficsplit access needed for using the SMI provider
 - apiGroups:
@@ -147,4 +159,16 @@ rules:
   - get
   - update
   - patch
+# trafficsplit access needed for using the getambassador provider
+- apiGroups:
+  - getambassador.io
+  resources:
+  - mappings
+  verbs:
+  - create
+  - watch
+  - get
+  - update
+  - list
+  - delete
 {{- end }}
