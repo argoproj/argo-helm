@@ -11,7 +11,7 @@ installCRDs: true
 global:
   image:
     repository: quay.io/argoproj/argocd
-    tag: v2.0.1
+    tag: v2.0.3
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -561,7 +561,7 @@ server:
       #     servicePort: use-annotation
     tls:
       []
-      # - secretName: argocd-example-tls
+      # - secretName: argocd-tls-certificate
       #   hosts:
       #     - argocd.example.com
     https: false
@@ -590,7 +590,7 @@ server:
       #     servicePort: use-annotation
     tls:
       []
-      # - secretName: argocd-example-tls
+      # - secretName: argocd-tls-certificate
       #   hosts:
       #     - argocd.example.com
     https: false

@@ -65,7 +65,7 @@ Create the name of the server service account to use
 */}}
 {{- define "argo-workflows.serverServiceAccountName" -}}
 {{- if .Values.server.serviceAccount.create -}}
-    {{ default (include "argo-workflows.fullname" .) .Values.server.serviceAccount.name }}
+    {{ default (include "argo-workflows.server.fullname" .) .Values.server.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.server.serviceAccount.name }}
 {{- end -}}
@@ -76,7 +76,7 @@ Create the name of the controller service account to use
 */}}
 {{- define "argo-workflows.controllerServiceAccountName" -}}
 {{- if .Values.controller.serviceAccount.create -}}
-    {{ default (include "argo-workflows.fullname" .) .Values.controller.serviceAccount.name }}
+    {{ default (include "argo-workflows.controller.fullname" .) .Values.controller.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.controller.serviceAccount.name }}
 {{- end -}}

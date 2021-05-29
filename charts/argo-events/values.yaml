@@ -14,6 +14,9 @@ installCRD: true
 # ServiceAccount to use for running controller.
 serviceAccount: argo-events-sa
 
+# serviceAccountAnnotations can be used to enable GKE workload identity, or other use-cases
+serviceAccountAnnotations: {}
+
 # Create service accounts in additional namespaces specified
 # The SA will always be created in the release namespaces
 additionalSaNamespaces: []
@@ -54,6 +57,7 @@ sensorController:
   priorityClassName: ""
   tolerations: []
   affinity: {}
+  resources: {}
 
 eventsourceController:
   name: eventsource-controller
@@ -67,6 +71,7 @@ eventsourceController:
   priorityClassName: ""
   tolerations: []
   affinity: {}
+  resources: {}
 
 eventbusController:
   name: eventbus-controller
@@ -79,6 +84,7 @@ eventbusController:
   priorityClassName: ""
   tolerations: []
   affinity: {}
+  resources: {}
   natsStreamingImage: nats-streaming:0.17.0
   natsMetricsExporterImage: synadia/prometheus-nats-exporter:0.6.2
 
