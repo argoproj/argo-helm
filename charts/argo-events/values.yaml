@@ -14,6 +14,9 @@ installCRD: true
 # ServiceAccount to use for running controller.
 serviceAccount: argo-events-sa
 
+# serviceAccountAnnotations can be used to enable GKE workload identity, or other use-cases
+serviceAccountAnnotations: {}
+
 # Create service accounts in additional namespaces specified
 # The SA will always be created in the release namespaces
 additionalSaNamespaces: []
@@ -21,7 +24,6 @@ additionalSaNamespaces: []
 additionalServiceAccountRules:
 - apiGroups:
     - apiextensions.k8s.io
-    - apiextensions.k8s.io/v1beta1
   verbs:
     - create
     - delete
@@ -46,24 +48,49 @@ singleNamespace: true
 sensorController:
   name: sensor-controller
   image: sensor-controller
-  tag: v1.0.0
+  tag: v1.3.1
   replicaCount: 1
   debugLogging: false
   sensorImage: sensor
+  podAnnotations: {}
+  nodeSelector: {}
+  podLabels: {}
+  priorityClassName: ""
+  tolerations: []
+  affinity: {}
+  resources: {}
 
 eventsourceController:
   name: eventsource-controller
   image: eventsource-controller
-  tag: v1.0.0
+  tag: v1.3.1
   replicaCount: 1
   debugLogging: false
   eventsourceImage: eventsource
+  podAnnotations: {}
+  nodeSelector: {}
+  podLabels: {}
+  priorityClassName: ""
+  tolerations: []
+  affinity: {}
+  resources: {}
 
 eventbusController:
   name: eventbus-controller
   image: eventbus-controller
-  tag: v1.0.0
+  tag: v1.3.1
   replicaCount: 1
   debugLogging: false
+  podAnnotations: {}
+  nodeSelector: {}
+  podLabels: {}
+  priorityClassName: ""
+  tolerations: []
+  affinity: {}
+  resources: {}
   natsStreamingImage: nats-streaming:0.17.0
   natsMetricsExporterImage: synadia/prometheus-nats-exporter:0.6.2
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 9731

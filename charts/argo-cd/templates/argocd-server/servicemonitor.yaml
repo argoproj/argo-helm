@@ -7,12 +7,7 @@ metadata:
   namespace: {{ .Values.server.metrics.serviceMonitor.namespace }}
   {{- end }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.server.name }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     {{- if .Values.server.metrics.serviceMonitor.selector }}
 {{- toYaml .Values.server.metrics.serviceMonitor.selector | nindent 4 }}
     {{- end }}
@@ -22,15 +17,15 @@ metadata:
 spec:
   endpoints:
     - port: metrics
-      interval: 30s
+      {{- with .Values.controller.metrics.serviceMonitor.interval }}
+      interval: {{ . }}
+      {{- end }}
       path: /metrics
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}-metrics
-      app.kubernetes.io/component: {{ .Values.server.name }}
+      {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.server.name "name" (printf "%s-metrics" .Values.server.name)) | nindent 6 }}
 {{- end }}
 

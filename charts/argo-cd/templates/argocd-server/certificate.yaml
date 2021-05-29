@@ -12,12 +12,7 @@ kind: Certificate
 metadata:
   name: {{ template "argo-cd.server.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.server.name }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
   commonName: {{ .Values.server.certificate.domain | quote }}
   dnsNames:
@@ -28,5 +23,5 @@ spec:
   issuerRef:
     kind: {{ .Values.server.certificate.issuer.kind | quote }}
     name: {{ .Values.server.certificate.issuer.name | quote }}
-  secretName: argocd-secret
+  secretName: argocd-tls-certificate
 {{- end }}

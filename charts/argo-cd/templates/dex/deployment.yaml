@@ -4,18 +4,12 @@ kind: Deployment
 metadata:
   name: {{ template "argo-cd.dex.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.dex.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.dex.name }}
-    app.kubernetes.io/version: {{ .Values.dex.image.tag }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.dex.image.tag | quote }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.dex.name }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.dex.name) | nindent 6 }}
   template:
     metadata:
       {{- if .Values.dex.podAnnotations }}
@@ -25,13 +19,8 @@ spec:
       {{- end }}
       {{- end }}
       labels:
-        app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.dex.name }}
-        helm.sh/chart: {{ include "argo-cd.chart" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/component: {{ .Values.dex.name }}
-        app.kubernetes.io/version: {{ .Values.dex.image.tag }}
+        {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 8 }}
+        app.kubernetes.io/version: {{ .Values.dex.image.tag | quote }}
         {{- if .Values.dex.podLabels }}
 {{- toYaml .Values.dex.podLabels | nindent 8 }}
         {{- end }}
@@ -55,8 +44,8 @@ spec:
         command:
         - cp
         - -n
-        - /usr/local/bin/argocd-util
-        - /shared
+        - /usr/local/bin/argocd
+        - /shared/argocd-dex
         volumeMounts:
         - mountPath: /shared
           name: static-files
@@ -65,7 +54,7 @@ spec:
         image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
         imagePullPolicy: {{ .Values.dex.image.imagePullPolicy }}
         command:
-        - /shared/argocd-util
+        - /shared/argocd-dex
         - rundex
         {{- if .Values.dex.containerSecurityContext }}
         securityContext: {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
@@ -73,6 +62,9 @@ spec:
         {{- if .Values.dex.env }}
         env:
 {{- toYaml .Values.dex.env | nindent 8 }}
+        {{- end }}
+        {{- with .Values.dex.envFrom }}
+        envFrom: {{- toYaml . | nindent 8 }}
         {{- end }}
         ports:
         - name: http
@@ -86,10 +78,12 @@ spec:
           containerPort: {{ .Values.dex.containerPortMetrics }}
           protocol: TCP
         {{- end }}
-{{- if .Values.dex.volumeMounts }}
         volumeMounts:
-{{- toYaml .Values.dex.volumeMounts | nindent 10 }}
-{{- end }}
+        - mountPath: /tmp
+          name: tmp-dir
+        {{- if .Values.dex.volumeMounts }}
+        {{- toYaml .Values.dex.volumeMounts | nindent 8 }}
+        {{- end }}
         resources:
 {{- toYaml .Values.dex.resources | nindent 10 }}
     {{- if .Values.dex.nodeSelector }}
@@ -105,10 +99,12 @@ spec:
 {{- toYaml .Values.dex.affinity | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
-{{- if .Values.dex.volumes }}
       volumes:
-{{- toYaml .Values.dex.volumes | nindent 8}}
-{{- end }}
+      - emptyDir: {}
+        name: tmp-dir
+      {{- if .Values.dex.volumes }}
+      {{- toYaml .Values.dex.volumes | nindent 6 }}
+      {{- end }}
 {{- if .Values.dex.priorityClassName }}
       priorityClassName: {{ .Values.dex.priorityClassName }}
 {{- end }}

@@ -1,21 +1,18 @@
 {{- $redisHa := (index .Values "redis-ha") -}}
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ .Values.controller.enableStatefulSet | ternary "StatefulSet" "Deployment" }}
 metadata:
   name: {{ template "argo-cd.controller.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.controller.name }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.controller.image.tag | quote }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "argo-cd.name" . }}-application-controller
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
+  {{- if  .Values.controller.enableStatefulSet }}
+  serviceName: {{ template "argo-cd.controller.fullname" . }}
+  {{- end }}
   revisionHistoryLimit: 5
   replicas: {{ .Values.controller.replicas }}
   template:
@@ -27,12 +24,7 @@ spec:
       {{- end }}
       {{- end }}
       labels:
-        app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
-        helm.sh/chart: {{ include "argo-cd.chart" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/component: {{ .Values.controller.name }}
+        {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
         app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.controller.image.tag | quote }}
         {{- if .Values.controller.podLabels }}
 {{- toYaml .Values.controller.podLabels | nindent 8 }}
@@ -54,6 +46,8 @@ spec:
         - {{ .Values.controller.args.operationProcessors | quote }}
         - --app-resync
         - {{ .Values.controller.args.appResyncPeriod | quote }}
+        - --self-heal-timeout-seconds
+        - {{ .Values.controller.args.selfHealTimeout | quote }}
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
         - --logformat
@@ -77,6 +71,9 @@ spec:
         env:
 {{- toYaml .Values.controller.env | nindent 8 }}
         {{- end }}
+        {{- with .Values.controller.envFrom }}
+        envFrom: {{- toYaml . | nindent 8 }}
+        {{- end }}
         ports:
         - name: controller
           containerPort: {{ .Values.controller.containerPort }}
@@ -98,10 +95,12 @@ spec:
           timeoutSeconds: {{ .Values.controller.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.controller.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
-{{- if .Values.controller.volumeMounts }}
         volumeMounts:
-{{- toYaml .Values.controller.volumeMounts | nindent 10}}
-{{- end }}
+        - mountPath: /app/config/controller/tls
+          name: argocd-repo-server-tls
+        {{- with .Values.controller.volumeMounts }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         resources:
 {{- toYaml .Values.controller.resources | nindent 10 }}
     {{- if .Values.controller.nodeSelector }}
@@ -121,10 +120,21 @@ spec:
       hostAliases:
 {{ toYaml . | indent 6 }}
 {{- end }}
-{{- if .Values.controller.volumes }}
       volumes:
-{{- toYaml .Values.controller.volumes | nindent 8 }}
-{{- end }}
+      - name: argocd-repo-server-tls
+        secret:
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+          optional: true
+          secretName: argocd-repo-server-tls
+      {{- with .Values.controller.volumes }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 {{- if .Values.controller.priorityClassName }}
       priorityClassName: {{ .Values.controller.priorityClassName }}
 {{- end }}

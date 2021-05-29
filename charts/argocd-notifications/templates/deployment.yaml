@@ -26,6 +26,9 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "argocd-notifications.serviceAccountName" . }}
+      {{- if .Values.securityContext }}
+      securityContext: {{- toYaml .Values.securityContext | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ include "argocd-notifications.name" . }}-controller
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -33,7 +36,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           command:
-            - /app/argocd-notifications
+            - /app/argocd-notifications-backend
             - controller
             - --loglevel={{ .Values.logLevel }}
             {{- if .Values.metrics.enabled }}
@@ -42,11 +45,18 @@ spec:
             {{- range .Values.extraArgs }}
             - {{ . | squote }}
             {{- end }}
+          workingDir: /app
           ports:
           {{- if .Values.metrics.enabled }}
           - containerPort: {{ .Values.metrics.port }}
             name: metrics
             protocol: TCP
+          {{- end }}
+          {{- if .Values.containerSecurityContext }}
+          securityContext: {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          {{- end }}
+          {{- with .Values.extraEnv }}
+          env: {{ toYaml . | nindent 12 }}
           {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

@@ -1,19 +1,15 @@
+{{- if .Values.server.configEnabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-cm
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-cm
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.server.name }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" "cm") | nindent 4 }}
   {{- if .Values.server.configAnnotations }}
   annotations:
   {{- range $key, $value := .Values.server.configAnnotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- end }}
-data:
-{{- toYaml .Values.server.config | nindent 4 }}
+data: {{- include "argo-cd.config" $ | nindent 4 }}
+{{- end }}

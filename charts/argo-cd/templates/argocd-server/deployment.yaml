@@ -4,18 +4,12 @@ kind: Deployment
 metadata:
   name: {{ template "argo-cd.server.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.server.name }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.server.image.tag | quote }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}
   revisionHistoryLimit: 5
   {{- if (ne .Values.server.autoscaling.enabled true) }}
   replicas: {{ .Values.server.replicas }}
@@ -29,12 +23,7 @@ spec:
       {{- end }}
       {{- end }}
       labels:
-        app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-        helm.sh/chart: {{ include "argo-cd.chart" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/component: {{ .Values.server.name }}
+        {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 8 }}
         app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.server.image.tag | quote }}
         {{- if .Values.server.podLabels }}
 {{- toYaml .Values.server.podLabels | nindent 8 }}
@@ -79,6 +68,9 @@ spec:
         env:
 {{- toYaml .Values.server.env | nindent 8 }}
         {{- end }}
+        {{- with .Values.server.envFrom }}
+        envFrom: {{- toYaml . | nindent 8 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.server.volumeMounts }}
 {{- toYaml .Values.server.volumeMounts | nindent 8}}
@@ -90,6 +82,13 @@ spec:
         {{- if .Values.configs.tlsCerts }}
         - mountPath: /app/config/tls
           name: tls-certs
+        {{- end }}
+        - mountPath: /app/config/server/tls
+          name: argocd-repo-server-tls
+        {{- if .Values.configs.styles }}
+        - mountPath: "/shared/app/custom/custom.styles.css"
+          subPath: "custom.styles.css"
+          name: custom-styles
         {{- end }}
         ports:
         - name: {{ .Values.server.name }}
@@ -120,6 +119,10 @@ spec:
           failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
         resources:
 {{- toYaml .Values.server.resources | nindent 10 }}
+      {{- if .Values.server.lifecycle }}
+        lifecycle:
+{{- toYaml .Values.server.lifecycle | nindent 10 }}
+      {{- end }}
     {{- if .Values.server.extraContainers }}
 {{- toYaml .Values.server.extraContainers | nindent 6 }}
     {{- end }}
@@ -146,6 +149,11 @@ spec:
       {{- end }}
       - emptyDir: {}
         name: static-files
+      {{- if .Values.configs.styles }}
+      - configMap:
+          name: argocd-custom-styles
+        name: custom-styles
+      {{- end }}
       {{- if .Values.configs.knownHosts }}
       - configMap:
           name: argocd-ssh-known-hosts-cm
@@ -156,6 +164,17 @@ spec:
           name: argocd-tls-certs-cm
         name: tls-certs
       {{- end }}
+      - name: argocd-repo-server-tls
+        secret:
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+          optional: true
+          secretName: argocd-repo-server-tls
 {{- if .Values.server.priorityClassName }}
       priorityClassName: {{ .Values.server.priorityClassName }}
 {{- end }}
