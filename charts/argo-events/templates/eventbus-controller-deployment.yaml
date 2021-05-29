@@ -36,7 +36,7 @@ spec:
           {{- end }}
           env:
             - name: DEBUG_LOG
-              value: {{ .Values.eventbusController.debugLogging }}
+              value: {{ .Values.eventbusController.debugLogging | quote }}
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
