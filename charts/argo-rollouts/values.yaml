@@ -3,7 +3,6 @@ installCRDs: true
 clusterInstall: true
 
 controller:
-  name: argo-rollouts
   component: rollouts-controller
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
@@ -12,8 +11,9 @@ controller:
   tolerations: []
   affinity: {}
   image:
+    registry: quay.io
     repository: argoproj/argo-rollouts
-    tag: v0.10.2
+    tag: ""
     pullPolicy: IfNotPresent
 
   resources: {}
@@ -31,7 +31,13 @@ controller:
       additionalAnnotations: {}
 
 serviceAccount:
-  name: argo-rollouts
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
 
 ## Annotations to be added to all CRDs
 ##
@@ -40,6 +46,21 @@ crdAnnotations: {}
 ## Annotations to be added to the Rollout pods
 ##
 podAnnotations: {}
+
+## Security Context to set on pod level
+##
+podSecurityContext:
+  runAsNonRoot: true
+
+## Security Context to set on container level
+##
+containerSecurityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
 
 ## Annotations to be added to the Rollout service
 ##

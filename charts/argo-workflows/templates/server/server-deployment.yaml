@@ -60,15 +60,18 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 20
           env:
-          - name: IN_CLUSTER
-            value: "true"
-          - name: ARGO_NAMESPACE
-            valueFrom:
-              fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-          - name: BASE_HREF
-            value: {{ .Values.server.baseHref | quote }}
+            - name: IN_CLUSTER
+              value: "true"
+            - name: ARGO_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: BASE_HREF
+              value: {{ .Values.server.baseHref | quote }}
+          {{- with .Values.server.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.server.resources | nindent 12 }}
           volumeMounts:
