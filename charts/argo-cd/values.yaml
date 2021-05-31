@@ -559,6 +559,14 @@ server:
       #   backend:
       #     serviceName: ssl-redirect
       #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
     tls:
       []
       # - secretName: argocd-tls-certificate
@@ -588,6 +596,14 @@ server:
       #   backend:
       #     serviceName: ssl-redirect
       #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service
+      #       name: ssl-redirect
+      #       port:
+    #         name: use-annotation
     tls:
       []
       # - secretName: argocd-tls-certificate
