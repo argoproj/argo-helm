@@ -70,7 +70,7 @@ spec:
                   apiVersion: v1
                   fieldPath: metadata.name
           {{- with .Values.controller.extraEnv }}
-            {{ toYaml . | nindent 10 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           resources:
             {{- toYaml .Values.controller.resources | nindent 12 }}
