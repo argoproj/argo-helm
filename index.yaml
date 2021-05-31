@@ -1588,6 +1588,32 @@ entries:
   argo-cd:
   - apiVersion: v2
     appVersion: 2.0.3
+    created: "2021-05-31T20:15:38.845915759Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.14
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: e956d9c2149e5ac1e7b6fa6dc4e5eacfb1b3e57fcae04678695e129316b86ce2
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo/master/docs/assets/argo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.6.5/argo-cd-3.6.5.tgz
+    version: 3.6.5
+  - apiVersion: v2
+    appVersion: 2.0.3
     created: "2021-05-29T14:37:42.288723193Z"
     dependencies:
     - condition: redis-ha.enabled
@@ -6686,6 +6712,25 @@ entries:
   argo-workflows:
   - apiVersion: v2
     appVersion: v3.0.2
+    created: "2021-05-31T20:15:38.964136482Z"
+    description: A Helm chart for Argo Workflows
+    digest: c54ff686d03735c3ea51271e6704b15cb6e5be6a34464db152a4ed4fd78efa5d
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: benjaminws
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.2.2/argo-workflows-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: v3.0.2
     created: "2021-05-31T16:32:11.094813798Z"
     description: A Helm chart for Argo Workflows
     digest: 743ab3287a0329112823b3966433c55d116396713f498d32cb6fd43dfb57cd61
@@ -7389,4 +7434,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-05-31T16:32:11.098674002Z"
+generated: "2021-05-31T20:15:38.96774168Z"
