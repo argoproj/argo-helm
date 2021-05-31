@@ -2,17 +2,16 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ include "argo-rollouts.fullname" . }}
   labels:
     app.kubernetes.io/component: server
-    app.kubernetes.io/name: {{ .Release.Name }}-metrics
-    app.kubernetes.io/part-of: {{ .Release.Name }}
-    {{- if .Values.controller.metrics.serviceMonitor.additionalLabels }}
-{{ toYaml .Values.controller.metrics.serviceMonitor.additionalLabels | indent 4 }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
+    {{- range $key, $value := .Values.controller.metrics.serviceMonitor.additionalLabels }}
+    {{ $key }}: {{ $value | quote }}
     {{- end }}
-  {{- if .Values.controller.metrics.serviceMonitor.additionalAnnotations }}
+  {{- with .Values.controller.metrics.serviceMonitor.additionalAnnotations }}
   annotations:
-{{ toYaml .Values.controller.metrics.serviceMonitor.additionalAnnotations | indent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   endpoints:
@@ -23,6 +22,5 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/component: server
-      app.kubernetes.io/name: {{ .Release.Name }}-metrics
-      app.kubernetes.io/part-of: {{ .Release.Name }}
+      {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
 {{- end }}
