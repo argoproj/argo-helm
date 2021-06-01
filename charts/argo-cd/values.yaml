@@ -3,6 +3,7 @@
 ##
 nameOverride: argocd
 fullnameOverride: ""
+kubeVersionOverride: ""
 
 # Optional CRD installation for those without Helm hooks
 installCRDs: true
@@ -10,7 +11,7 @@ installCRDs: true
 global:
   image:
     repository: quay.io/argoproj/argocd
-    tag: v2.0.1
+    tag: v2.0.3
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -60,6 +61,14 @@ controller:
     []
     # - name: "ARGOCD_CONTROLLER_REPLICAS"
     #   value: ""
+
+  ## envFrom to pass to argocd-controller
+  ##
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
   ## Annotations to be added to controller pods
   ##
@@ -143,6 +152,7 @@ controller:
       servicePort: 8082
     serviceMonitor:
       enabled: false
+      interval: 30s
     #   selector:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
@@ -206,10 +216,11 @@ dex:
       # selector:
       #   prometheus: kube-prometheus
       # additionalLabels: {}
+      interval: 30s
 
   image:
-    repository: quay.io/dexidp/dex
-    tag: v2.26.0
+    repository: ghcr.io/dexidp/dex
+    tag: v2.27.0
     imagePullPolicy: IfNotPresent
   initImage:
     repository:
@@ -219,6 +230,13 @@ dex:
   ## Environment variables to pass to the Dex server
   ##
   env: []
+
+  ## envFrom to pass to the Dex server
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
   ## Annotations to be added to the Dex server pods
   ##
@@ -301,6 +319,14 @@ redis:
   ## Environment variables to pass to the Redis server
   ##
   env: []
+
+  ## envFrom to pass to the Redis server
+  ##
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
   ## Annotations to be added to the Redis server pods
   ##
@@ -392,6 +418,14 @@ server:
   ##
   env: []
 
+  ## envFrom to pass to argocd-server
+  ##
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
   ## Specify postStart and preStop lifecycle hooks for your argo-cd-server container
   ##
   lifecycle: {}
@@ -482,6 +516,7 @@ server:
     loadBalancerIP: ""
     loadBalancerSourceRanges: []
     externalIPs: []
+    externalTrafficPolicy: ""
 
   ## Server metrics service configuration
   metrics:
@@ -492,6 +527,7 @@ server:
       servicePort: 8083
     serviceMonitor:
       enabled: false
+      interval: 30s
     #   selector:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
@@ -526,13 +562,21 @@ server:
       #   backend:
       #     serviceName: ssl-redirect
       #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
     tls:
       []
-      # - secretName: argocd-example-tls
+      # - secretName: argocd-tls-certificate
       #   hosts:
       #     - argocd.example.com
     https: false
-  # dedicated ingess for gRPC as documented at
+  # dedicated ingress for gRPC as documented at
   # https://argoproj.github.io/argo-cd/operator-manual/ingress/
   ingressGrpc:
     enabled: false
@@ -555,9 +599,17 @@ server:
       #   backend:
       #     serviceName: ssl-redirect
       #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
     tls:
       []
-      # - secretName: argocd-example-tls
+      # - secretName: argocd-tls-certificate
       #   hosts:
       #     - argocd.example.com
     https: false
@@ -631,7 +683,7 @@ server:
   ## Annotations to be added to ArgoCD rbac ConfigMap
   rbacConfigAnnotations: {}
 
-  # Boolean determining whether or not to create the configmap. If false, it is expected tthe configmap will be created
+  # Boolean determining whether or not to create the configmap. If false, it is expected the configmap will be created
   # by something else. ArgoCD will not work if there is no configMap created with the name above.
   rbacConfigCreate: true
 
@@ -761,6 +813,14 @@ repoServer:
   ##
   env: []
 
+  ## envFrom to pass to argocd-repo-server
+  ##
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
   ## Argo repoServer log format: text|json
   logFormat: text
   ## Argo repoServer log level
@@ -840,6 +900,7 @@ repoServer:
       servicePort: 8084
     serviceMonitor:
       enabled: false
+      interval: 30s
     #   selector:
     #     prometheus: kube-prometheus
     #   namespace: monitoring

@@ -67,6 +67,9 @@ spec:
           value: argocd
 {{- end }}
 {{- end }}
+        {{- with .Values.repoServer.envFrom }}
+        envFrom: {{- toYaml . | nindent 8 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.repoServer.volumeMounts }}
 {{- toYaml .Values.repoServer.volumeMounts | nindent 8}}
