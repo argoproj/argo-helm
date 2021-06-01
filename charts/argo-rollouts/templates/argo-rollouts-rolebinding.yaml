@@ -1,15 +1,16 @@
+{{- if not .Values.clusterInstall }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ .Release.Name }}-role-binding
+  name: {{ include "argo-rollouts.fullname" . }}
   labels:
     app.kubernetes.io/component: {{ .Values.controller.component }}
-    app.kubernetes.io/name: {{ .Release.Name }}-role-binding
-    app.kubernetes.io/part-of: {{ .Release.Name }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ .Release.Name }}-role
+  name: {{ include "argo-rollouts.fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.serviceAccount.name }}
+  name: {{ include "argo-rollouts.serviceAccountName" . }}
+{{- end }}

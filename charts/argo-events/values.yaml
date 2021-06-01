@@ -1,5 +1,5 @@
 # docker registry
-registry: argoproj
+registry: quay.io
 
 # The image pull policy
 imagePullPolicy: Always
@@ -47,11 +47,11 @@ singleNamespace: true
 # sensor controller
 sensorController:
   name: sensor-controller
-  image: sensor-controller
+  image: argoproj/sensor-controller
   tag: v1.3.1
   replicaCount: 1
   debugLogging: false
-  sensorImage: sensor
+  sensorImage: argoproj/sensor
   podAnnotations: {}
   nodeSelector: {}
   podLabels: {}
@@ -62,11 +62,11 @@ sensorController:
 
 eventsourceController:
   name: eventsource-controller
-  image: eventsource-controller
+  image: argoproj/eventsource-controller
   tag: v1.3.1
   replicaCount: 1
   debugLogging: false
-  eventsourceImage: eventsource
+  eventsourceImage: argoproj/eventsource
   podAnnotations: {}
   nodeSelector: {}
   podLabels: {}
@@ -77,7 +77,7 @@ eventsourceController:
 
 eventbusController:
   name: eventbus-controller
-  image: eventbus-controller
+  image: argoproj/eventbus-controller
   tag: v1.3.1
   replicaCount: 1
   debugLogging: false
