@@ -120,9 +120,13 @@ controller:
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
   resources: {}
-  # The list of environment variable definitions to be added to the controller
-  # manages container verbatim.
+
+  ## Extra environment variables to provide to the controller container
+  ## extraEnv:
+  ##   - name: FOO
+  ##     value: "bar"
   extraEnv: []
+
   # Extra arguments to be added to the controller
   extraArgs: []
   replicas: 1
@@ -226,6 +230,12 @@ server:
   # https://argoproj.github.io/argo-workflows/tls/
   secure: false
 
+  ## Extra environment variables to provide to the argo-server container
+  ## extraEnv:
+  ##   - name: FOO
+  ##     value: "bar"
+  extraEnv: []
+
   # Extra arguments to provide to the Argo server binary.
   extraArgs: []
 
@@ -257,6 +267,14 @@ server:
       #   backend:
       #     serviceName: ssl-redirect
       #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
     tls:
       []
       # - secretName: argocd-example-tls

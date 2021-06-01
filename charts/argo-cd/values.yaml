@@ -559,13 +559,21 @@ server:
       #   backend:
       #     serviceName: ssl-redirect
       #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
     tls:
       []
       # - secretName: argocd-tls-certificate
       #   hosts:
       #     - argocd.example.com
     https: false
-  # dedicated ingess for gRPC as documented at
+  # dedicated ingress for gRPC as documented at
   # https://argoproj.github.io/argo-cd/operator-manual/ingress/
   ingressGrpc:
     enabled: false
@@ -588,6 +596,14 @@ server:
       #   backend:
       #     serviceName: ssl-redirect
       #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
     tls:
       []
       # - secretName: argocd-tls-certificate
@@ -664,7 +680,7 @@ server:
   ## Annotations to be added to ArgoCD rbac ConfigMap
   rbacConfigAnnotations: {}
 
-  # Boolean determining whether or not to create the configmap. If false, it is expected tthe configmap will be created
+  # Boolean determining whether or not to create the configmap. If false, it is expected the configmap will be created
   # by something else. ArgoCD will not work if there is no configMap created with the name above.
   rbacConfigCreate: true
 
