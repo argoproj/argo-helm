@@ -214,6 +214,10 @@ dex:
     serviceMonitor:
       enabled: false
       interval: 30s
+      # selector:
+      #   prometheus: kube-prometheus
+      # namespace: monitoring
+      # additionalLabels: {}
 
   image:
     repository: ghcr.io/dexidp/dex
