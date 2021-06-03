@@ -5,6 +5,13 @@ metadata:
   name: {{ include "argocd-notifications.name" . }}-metrics
   labels:
     {{- include "argocd-notifications.metrics.labels" . | nindent 4 }}
+    {{- with .Values.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.metrics.service.annotations  }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   selector:
     {{- include "argocd-notifications.selectorLabels" . | nindent 4 }}
