@@ -12,9 +12,12 @@ init:
 
 createAggregateRoles: true
 
-# Override app name
-# Internally, this will be truncated at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-fullnameOverride: ""
+## String to partially override "argo-workflows.fullname" template
+##
+# nameOverride:
+## String to fully override "argo-workflows.fullname" template
+##
+# fullnameOverride:
 
 # Restrict Argo to only deploy into a single namespace by apply Roles and RoleBindings instead of the Cluster equivalents,
 # and start argo-cli with the --namespaced flag. Use it in clusters with strict access policy.
