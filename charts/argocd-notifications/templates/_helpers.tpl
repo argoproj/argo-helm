@@ -53,8 +53,15 @@ helm.sh/chart: {{ include "argocd-notifications.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ toYaml .Values.metrics.service.labels }}
 {{- end -}}
 
+{{/*
+Common metrics annotations
+*/}}
+{{- define "argocd-notifications.metrics.annotations" -}}
+{{ toYaml .Values.metrics.service.annotations }}
+{{- end -}}
 
 {{/*
 Common slack bot labels

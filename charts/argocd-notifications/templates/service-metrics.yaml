@@ -5,6 +5,8 @@ metadata:
   name: {{ include "argocd-notifications.name" . }}-metrics
   labels:
     {{- include "argocd-notifications.metrics.labels" . | nindent 4 }}
+  annotations:
+    {{- include "argocd-notifications.metrics.annotations" . | nindent 4 }}
 spec:
   selector:
     {{- include "argocd-notifications.selectorLabels" . | nindent 4 }}
