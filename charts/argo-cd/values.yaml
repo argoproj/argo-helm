@@ -11,7 +11,7 @@ installCRDs: true
 global:
   image:
     repository: quay.io/argoproj/argocd
-    tag: v2.0.3
+    tag: v2.0.4
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -1048,6 +1048,8 @@ configs:
     # -----END RSA PRIVATE KEY-----
   secret:
     createSecret: true
+    # Use secret with stringData instead data, without base64 encryptions
+    encrypt: true
     ## Annotations to be added to argocd-secret
     ##
     annotations: {}
