@@ -26,7 +26,7 @@ metadata:
   name: argo-events-role
 rules:
   {{- with .Values.additionalServiceAccountRules }}
-  {{- toYaml . | nindent 2 }}
+    {{- toYaml . | nindent 2 }}
   {{- end }}
   - apiGroups:
       - argoproj.io
