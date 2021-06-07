@@ -83,6 +83,7 @@ server:
 ## Prerequisites
 
 - Kubernetes 1.7+
+- Helm v3.0.0+
 
 ## Installing the Chart
 
@@ -97,12 +98,6 @@ NAME: my-release
 ...
 ```
 
-### Helm v3 Compatibility
-
-Requires chart version 1.5.2 or newer.
-
-Helm v3 has removed the `install-crds` hook so CRDs are now populated by files in the [crds](./crds) directory. Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings about nonexistent webhooks.
-
 ## Chart Values
 
 | Parameter | Description | Default |
@@ -116,7 +111,6 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | kubeVersionOverride | Override the Kubernetes version, which is used to evaluate certain manifests | `""` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | fullnameOverride | String to fully override `"argo-cd.fullname"` | `""` |
-| installCRDs | Install CRDs if you are using Helm2. | `true` |
 | configs.clusterCredentials | Provide one or multiple [external cluster credentials](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters) | `[]` (See [values.yaml](values.yaml)) |
 | configs.knownHostsAnnotations | Known Hosts configmap annotations | `{}` |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
