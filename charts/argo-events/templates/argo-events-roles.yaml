@@ -1,5 +1,4 @@
 {{- if .Values.singleNamespace }}
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -28,8 +27,8 @@ metadata:
   name: argo-events-role
   namespace: {{ .Release.Namespace }}
 rules:
-  {{- if .Values.additionalServiceAccountRules }}
-  {{ .Values.additionalServiceAccountRules | toYaml | nindent 2}}
+  {{- with .Values.additionalServiceAccountRules }}
+    {{- toYaml . | nindent 2 }}
   {{- end }}
   - apiGroups:
       - argoproj.io
