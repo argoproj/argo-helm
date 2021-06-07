@@ -495,8 +495,11 @@ server:
   certificate:
     enabled: false
     domain: argocd.example.com
-    issuer: {}
+    issuer:
+      kind: # ClusterIssuer
+      name: # letsencrypt
     additionalHosts: []
+    secretName: argocd-server-tls
 
   ## Server service configuration
   service:
