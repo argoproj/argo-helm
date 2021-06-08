@@ -94,11 +94,18 @@ Create the name of the controller service account to use
 Return the appropriate apiVersion for ingress
 */}}
 {{- define "argo-workflows.ingress.apiVersion" -}}
-{{- if semverCompare "<1.14-0" .Capabilities.KubeVersion.Version -}}
+{{- if semverCompare "<1.14-0" (include "argo-workflows.kubeVersion" $) -}}
 {{- print "extensions/v1beta1" -}}
-{{- else if semverCompare "<1.19-0" .Capabilities.KubeVersion.Version -}}
+{{- else if semverCompare "<1.19-0" (include "argo-workflows.kubeVersion" $) -}}
 {{- print "networking.k8s.io/v1beta1" -}}
 {{- else -}}
 {{- print "networking.k8s.io/v1" -}}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Return the target Kubernetes version
+*/}}
+{{- define "argo-workflows.kubeVersion" -}}
+  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
 {{- end -}}
