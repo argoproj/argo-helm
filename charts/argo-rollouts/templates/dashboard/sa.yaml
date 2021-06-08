@@ -1,0 +1,13 @@
+{{- if and ( eq .Values.dashboard.enabled true) ( eq .Values.dashboard.serviceAccount.create true) }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "argo-rollouts.serviceAccountName" . }}-dashboard
+  labels:
+    app.kubernetes.io/component: {{ .Values.dashboard.component }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
+  {{- with .Values.dashboard.serviceAccount.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

@@ -53,6 +53,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Selector labels: dashboard
+*/}}
+{{- define "argo-rollouts.selectorLabels-dashboard" -}}
+app.kubernetes.io/name: {{ include "argo-rollouts.name" . }}-dashboard
+app.kubernetes.io/instance: {{ .Release.Name }}-dashboard
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "argo-rollouts.serviceAccountName" -}}

@@ -25,6 +25,9 @@ $ helm repo add argo https://argoproj.github.io/argo-helm
 $ helm install my-release argo/argo-rollouts
 ```
 
+If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-rollouts dashboard by
+`kubectl port-forward service/argo-rollouts-dashboard 31000:3100` and pointing the browser to `localhost:31000`
+
 ## Chart Values
 
 | Key | Type | Default | Description |
@@ -53,6 +56,7 @@ $ helm install my-release argo/argo-rollouts
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | podSecurityContext | object | `{"runAsNonRoot": true}` | Security Context to set on pod level |
 | containerSecurityContext | object | `{}` | Security Context to set on container level |
+| dashboard.enabled | bool | `false` | Deploy dashboard server |
 
 ## Upgrading
 
