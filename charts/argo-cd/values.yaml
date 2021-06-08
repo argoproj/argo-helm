@@ -20,6 +20,10 @@ global:
   #   hostnames:
   #   - git.myhostname
 
+  networkPolicy:
+    create: false
+    defaultDenyIngress: false
+
 ## Controller
 controller:
   name: application-controller
