@@ -77,12 +77,16 @@ spec:
           ports:
             - name: metrics
               containerPort: {{ .Values.controller.metricsConfig.port }}
+            - containerPort: 6060
           livenessProbe:
             httpGet:
-              port: metrics
-              path: {{ .Values.controller.metricsConfig.path }}
-            initialDelaySeconds: 30
-            periodSeconds: 30
+              port: 6060
+              path: /healthz
+            # Require three failures to tolerate transient errors.
+            failureThreshold: 3
+            initialDelaySeconds: 90
+            periodSeconds: 60
+            timeoutSeconds: 30
       {{- with .Values.images.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
