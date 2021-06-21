@@ -75,6 +75,15 @@ rules:
   - get
   - list
   - watch
+# configmap read access to support notification-engine
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
 # pod list/update needed for updating ephemeral data
 - apiGroups:
   - ""
