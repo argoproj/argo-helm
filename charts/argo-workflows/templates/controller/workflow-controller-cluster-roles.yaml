@@ -121,7 +121,15 @@ rules:
   resources:
   - leases
   resourceNames:
+{{- if .Values.controller.instanceID.enabled }}
+{{- if .Values.controller.instanceID.useReleaseName }}
+  - workflow-controller-{{ .Release.Name }}
+{{- else }}
+  - workflow-controller-{{ .Values.controller.instanceID.explicitID }}
+{{- end }}
+{{- else }}
   - workflow-controller
+{{- end }}
   - workflow-controller-lease
   verbs:
   - get
