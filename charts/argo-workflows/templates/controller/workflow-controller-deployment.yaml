@@ -77,12 +77,8 @@ spec:
           ports:
             - name: metrics
               containerPort: {{ .Values.controller.metricsConfig.port }}
-          livenessProbe:
-            httpGet:
-              port: metrics
-              path: {{ .Values.controller.metricsConfig.path }}
-            initialDelaySeconds: 30
-            periodSeconds: 30
+            - containerPort: 6060
+          livenessProbe: {{ .Values.controller.livenessProbe | toYaml | nindent 12 }}
       {{- with .Values.images.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
