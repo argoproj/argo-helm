@@ -19,7 +19,7 @@ metadata:
     {{- toYaml .Values.server.ingress.labels | nindent 4 }}
     {{- end }}
 spec:
-  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+  {{- if eq (include "argo-workflows.ingress.apiVersion" $) "networking.k8s.io/v1" }}
   {{- with .Values.server.ingress.ingressClassName }}
   ingressClassName: {{ . }}
   {{- end }}
@@ -35,11 +35,11 @@ spec:
           {{- end }}
           {{- range $p := $paths }}
           - path: {{ $p }}
-            {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+            {{- if eq (include "argo-workflows.ingress.apiVersion" $) "networking.k8s.io/v1" }}
             pathType: Prefix
             {{- end }}
             backend:
-              {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+              {{- if eq (include "argo-workflows.ingress.apiVersion" $) "networking.k8s.io/v1" }}
               service:
                 name: {{ $serviceName }}
                 port:
@@ -62,11 +62,11 @@ spec:
           {{- end }}
           {{- range $p := $paths }}
           - path: {{ $p }}
-            {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+            {{- if eq (include "argo-workflows.ingress.apiVersion" $) "networking.k8s.io/v1" }}
             pathType: Prefix
             {{- end }}
             backend:
-              {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+              {{- if eq (include "argo-workflows.ingress.apiVersion" $) "networking.k8s.io/v1" }}
               service:
                 name: {{ $serviceName }}
                 port:

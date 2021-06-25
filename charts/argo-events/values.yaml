@@ -1,5 +1,5 @@
 # docker registry
-registry: argoproj
+registry: quay.io
 
 # The image pull policy
 imagePullPolicy: Always
@@ -8,11 +8,11 @@ imagePullPolicy: Always
 imagePullSecrets: []
 # - name: argo-pull-secret
 
-# If set to false, skip installing the CRDs. Requires user to have them installed prior to helm chart installation.
-installCRD: true
-
 # ServiceAccount to use for running controller.
 serviceAccount: argo-events-sa
+
+# serviceAccountAnnotations can be used to enable GKE workload identity, or other use-cases
+serviceAccountAnnotations: {}
 
 # Create service accounts in additional namespaces specified
 # The SA will always be created in the release namespaces
@@ -44,33 +44,35 @@ singleNamespace: true
 # sensor controller
 sensorController:
   name: sensor-controller
-  image: sensor-controller
+  image: argoproj/sensor-controller
   tag: v1.3.1
   replicaCount: 1
-  sensorImage: sensor
+  sensorImage: argoproj/sensor
   podAnnotations: {}
   nodeSelector: {}
   podLabels: {}
   priorityClassName: ""
   tolerations: []
   affinity: {}
+  resources: {}
 
 eventsourceController:
   name: eventsource-controller
-  image: eventsource-controller
+  image: argoproj/eventsource-controller
   tag: v1.3.1
   replicaCount: 1
-  eventsourceImage: eventsource
+  eventsourceImage: argoproj/eventsource
   podAnnotations: {}
   nodeSelector: {}
   podLabels: {}
   priorityClassName: ""
   tolerations: []
   affinity: {}
+  resources: {}
 
 eventbusController:
   name: eventbus-controller
-  image: eventbus-controller
+  image: argoproj/eventbus-controller
   tag: v1.3.1
   replicaCount: 1
   podAnnotations: {}
@@ -79,6 +81,7 @@ eventbusController:
   priorityClassName: ""
   tolerations: []
   affinity: {}
+  resources: {}
   natsStreamingImage: nats-streaming:0.17.0
   natsMetricsExporterImage: synadia/prometheus-nats-exporter:0.6.2
 
