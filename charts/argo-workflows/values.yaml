@@ -132,6 +132,15 @@ controller:
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
   resources: {}
+  livenessProbe:
+    httpGet:
+      port: 6060
+      path: /healthz
+    # Require three failures to tolerate transient errors.
+    failureThreshold: 3
+    initialDelaySeconds: 90
+    periodSeconds: 60
+    timeoutSeconds: 30
 
   ## Extra environment variables to provide to the controller container
   ## extraEnv:
