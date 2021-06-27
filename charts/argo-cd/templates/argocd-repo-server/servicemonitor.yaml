@@ -17,7 +17,7 @@ metadata:
 spec:
   endpoints:
     - port: metrics
-      {{- with .Values.controller.metrics.serviceMonitor.interval }}
+      {{- with .Values.repoServer.metrics.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}
       path: /metrics
