@@ -1587,6 +1587,32 @@ entries:
     version: 0.1.0
   argo-cd:
   - apiVersion: v2
+    appVersion: 2.0.4
+    created: "2021-06-29T08:49:23.724677729Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.14
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 2823db211fa9cebd2f6b50c334e0ce6e33ac62de947f850ba1f6abca1273b47a
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo/master/docs/assets/argo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.6.11/argo-cd-3.6.11.tgz
+    version: 3.6.11
+  - apiVersion: v2
     appVersion: 2.0.3
     created: "2021-06-26T15:05:27.242574992Z"
     dependencies:
@@ -7713,4 +7739,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-06-26T15:05:27.245401745Z"
+generated: "2021-06-29T08:49:23.728246954Z"
