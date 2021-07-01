@@ -20,6 +20,10 @@ nameOverride:
 ##
 fullnameOverride:
 
+## Override the Kubernetes version, which is used to evaluate certain manifests
+##
+kubeVersionOverride: ""
+
 # Restrict Argo to only deploy into a single namespace by apply Roles and RoleBindings instead of the Cluster equivalents,
 # and start argo-cli with the --namespaced flag. Use it in clusters with strict access policy.
 singleNamespace: false
@@ -128,6 +132,15 @@ controller:
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
   resources: {}
+  livenessProbe:
+    httpGet:
+      port: 6060
+      path: /healthz
+    # Require three failures to tolerate transient errors.
+    failureThreshold: 3
+    initialDelaySeconds: 90
+    periodSeconds: 60
+    timeoutSeconds: 30
 
   ## Extra environment variables to provide to the controller container
   ## extraEnv:
