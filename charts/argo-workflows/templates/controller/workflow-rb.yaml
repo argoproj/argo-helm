@@ -1,19 +1,56 @@
-{{- if .Values.workflow.rbac.create -}}
+{{- define "workflow-rb-base" }}
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ template "argo-workflows.fullname" . }}-workflow
-  {{- with .Values.workflow.namespace }}
-  namespace: {{ . }} 
-  {{- end }}
+{{- end }}
+
+{{- define "workflow-rb-roleref" }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ template "argo-workflows.fullname" . }}-workflow
+{{- end }}
+
+{{- define "workflow-rb-subjects" }}
 subjects:
-- kind: ServiceAccount
-  name: {{ .Values.workflow.serviceAccount.name }}
-  {{- with .Values.workflow.namespace }}
-  namespace: {{ . }}
+  - kind: ServiceAccount
+{{- end }}
+
+{{- if .Values.workflow.rbac.create -}}
+
+  {{- if .Values.workflow.namespaces }}
+
+    {{- range .Values.workflow.namespaces }}
+      {{ $namespace := . }}
+
+      {{ include "workflow-rb-base" . }}
+  name: {{ $.Release.Name }}-workflow
+  namespace: {{ $namespace }}
+
+      {{- include "workflow-rb-roleref" . }}
+  name: {{ template "argo-workflows.fullname" $ }}-workflow
+
+      {{- include "workflow-rb-subjects" . }}
+    name: {{ $.Values.workflow.serviceAccount.name }}
+    namespace: {{ $namespace }}
+    {{- end }}
+
+  {{- else }}
+
+    {{ include "workflow-rb-base" . }}
+  name: {{ $.Release.Name }}-workflow
+    {{- if $.Values.workflow.namespace }}
+  namespace: {{ $.Values.workflow.namespace }}
+  {{- end }}
+
+    {{- include "workflow-rb-roleref" . }}
+  name: {{ template "argo-workflows.fullname" $ }}-workflow
+
+    {{- include "workflow-rb-subjects" . }}
+    name: {{ $.Values.workflow.serviceAccount.name }}
+    {{- if $.Values.workflow.namespace }}
+    namespace: {{ $.Values.workflow.namespace }}
+    {{- end }}
+
   {{- end }}
 {{- end }}
