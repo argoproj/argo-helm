@@ -7,7 +7,7 @@ Argo Helm is a collection of **community maintained** charts. Therefore we rely 
 Minimally:
 
 ```
-helm install charts/argo -n argo
+helm install charts/argo-workflows -n argo
 argo version
 ```
 
