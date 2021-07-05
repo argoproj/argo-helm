@@ -3,9 +3,9 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  {{- end }}
+{{- end }}
 
-  {{- if .Values.workflow.serviceAccount.create -}}
+{{- if .Values.workflow.serviceAccount.create -}}
 
   {{- /*
       Cardinality-check the namespaces/namespace variables
@@ -13,44 +13,44 @@ metadata:
   */}}
 
   {{- if and .Values.workflow.namespaces .Values.workflow.namespace }}
-  {{- fail "Please set either workflow.namespaces or workflow.namespace for the service account, not both" }}
+    {{- fail "Please set either workflow.namespaces or workflow.namespace for the service account, not both" }}
   {{- end }}
 
   {{- if and ( not .Values.workflow.namespace ) ( not .Values.workflow.namespaces ) }}
-  {{- fail "Please set either workflow.namespaces or workflow.namespace" }}
+    {{- fail "Please set either workflow.namespaces or workflow.namespace" }}
   {{- end }}
 
   {{- if .Values.workflow.namespaces }}
 
-  {{- /*
+    {{- /*
       Type-check the namespaces variable for being a list ("slice")
       This type check is done only once, here. It would be overkill to perform it for other RBAC resources as well.
     */}}
-  {{- if not ( kindIs "slice" .Values.workflow.namespaces ) }}
-  {{- fail ( printf "workflow.namespaces is a slice, got %s %s" ( kindOf .Values.workflow.namespaces ) .Values.workflow.namespaces ) }}
-  {{- end }}
+    {{- if not ( kindIs "slice" .Values.workflow.namespaces ) }}
+      {{- fail ( printf "workflow.namespaces is a slice, got %s %s" ( kindOf .Values.workflow.namespaces ) .Values.workflow.namespaces ) }}
+    {{- end }}
 
-  {{ $namespaces := .Values.workflow.namespaces }}
-  {{- range $namespaces }}
-  {{ $namespace := . }}
-  {{ include "sa-base" . }}
+    {{ $namespaces := .Values.workflow.namespaces }}
+    {{- range $namespaces }}
+      {{ $namespace := . }}
+      {{ include "sa-base" . }}
   name: {{ $.Values.workflow.serviceAccount.name }}
   namespace: {{ $namespace }}
   annotations:
-  {{- toYaml $.Values.workflow.serviceAccount.annotations | nindent 4 }}
-  {{- end }}
+      {{- toYaml $.Values.workflow.serviceAccount.annotations | nindent 4 }}
+    {{- end }}
 
   {{- else }}
 
-  {{- $namespaces := tuple .Values.workflow.namespace }}
-  {{- range $namespaces }}
-  {{- $namespace := . }}
-  {{ include "sa-base" . }}
+    {{- $namespaces := tuple .Values.workflow.namespace }}
+    {{- range $namespaces }}
+      {{- $namespace := . }}
+      {{ include "sa-base" . }}
   name: {{ $.Values.workflow.serviceAccount.name }}
   namespace: {{ $namespace }}
   annotations:
-  {{- toYaml $.Values.workflow.serviceAccount.annotations | nindent 4 }}
-  {{- end }}
-  {{- end }}
+        {{- toYaml $.Values.workflow.serviceAccount.annotations | nindent 4 }}
+      {{- end }}
+    {{- end }}
 
-  {{- end }}
+{{- end }}
