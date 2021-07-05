@@ -72,8 +72,10 @@ spec:
         {{- end }}
         volumeMounts:
         {{- if .Values.repoServer.volumeMounts }}
-{{- toYaml .Values.repoServer.volumeMounts | nindent 8}}
+          {{- toYaml .Values.repoServer.volumeMounts | nindent 8 }}
         {{- end }}
+        - mountPath: /app/config/gpg/source
+          name: gpg-keys
         - mountPath: /app/config/gpg/keys
           name: gpg-keyring
         {{- if .Values.configs.knownHosts }}
@@ -134,8 +136,11 @@ spec:
 {{- end }}
       volumes:
       {{- if .Values.repoServer.volumes }}
-{{- toYaml .Values.repoServer.volumes | nindent 6}}
+        {{- toYaml .Values.repoServer.volumes | nindent 6 }}
       {{- end }}
+      - name: gpg-keys
+        configMap:
+          name: argocd-gpg-keys-cm
       - emptyDir: {}
         name: gpg-keyring
       {{- if .Values.configs.knownHosts }}

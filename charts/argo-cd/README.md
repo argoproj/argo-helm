@@ -112,6 +112,8 @@ NAME: my-release
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | fullnameOverride | String to fully override `"argo-cd.fullname"` | `""` |
 | configs.clusterCredentials | Provide one or multiple [external cluster credentials](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters) | `[]` (See [values.yaml](values.yaml)) |
+| configs.gpgKeysAnnotations | GnuPG key ring annotations | `{}` |
+| configs.gpgKeys | [GnuPG](https://argoproj.github.io/argo-cd/user-guide/gpg-verification/) keys to add to the key ring | `{}` (See [values.yaml](values.yaml)) |
 | configs.knownHostsAnnotations | Known Hosts configmap annotations | `{}` |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
 | configs.secret.annotations | Annotations for argocd-secret | `{}` |
