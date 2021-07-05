@@ -3,6 +3,7 @@
 {{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingress.https -}}
 {{- $paths := .Values.server.ingress.paths -}}
 {{- $extraPaths := .Values.server.ingress.extraPaths -}}
+{{- $pathType := .Values.server.ingress.pathType -}}
 apiVersion: {{ include "argo-cd.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
@@ -60,7 +61,7 @@ spec:
             {{- end }}
           - path: {{ $p }}
             {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
-            pathType: Prefix
+            pathType: {{ $pathType }}
             {{- end }}
             backend:
               {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
@@ -87,7 +88,7 @@ spec:
           {{- range $p := $paths }}
           - path: {{ $p }}
             {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
-            pathType: Prefix
+            pathType: {{ $pathType }}
             {{- end }}
             backend:
               {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
