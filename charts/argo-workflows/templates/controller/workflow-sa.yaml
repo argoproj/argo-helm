@@ -16,10 +16,6 @@ metadata:
     {{- fail "Please set either workflow.namespaces or workflow.namespace for the service account, not both" }}
   {{- end }}
 
-  {{- if and ( not .Values.workflow.namespace ) ( not .Values.workflow.namespaces ) }}
-    {{- fail "Please set either workflow.namespaces or workflow.namespace" }}
-  {{- end }}
-
   {{- if .Values.workflow.namespaces }}
 
     {{- /*
@@ -42,7 +38,10 @@ metadata:
 
   {{- else }}
 
-    {{- $namespaces := tuple .Values.workflow.namespace }}
+    {{- /*
+      The namespace will default to "argo" if neither "namespaces" nor "namespace" is set
+    */}}
+    {{- $namespaces := tuple ( .Values | get "workflow.namespace" "argo") }}
     {{- range $namespaces }}
       {{- $namespace := . }}
       {{ include "sa-base" . }}
