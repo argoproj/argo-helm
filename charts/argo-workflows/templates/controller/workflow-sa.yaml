@@ -41,15 +41,11 @@ metadata:
     {{- /*
       The namespace will default to "argo" if neither "namespaces" nor "namespace" is set
     */}}
-    {{- $namespaces := tuple ( .Values | get "workflow.namespace" "argo") }}
-    {{- range $namespaces }}
-      {{- $namespace := . }}
-      {{ include "sa-base" . }}
+    {{ include "sa-base" . }}
   name: {{ $.Values.workflow.serviceAccount.name }}
-  namespace: {{ $namespace }}
+  namespace: {{ .Values.workflow.namespace | default "argo" }}
   annotations:
-        {{- toYaml $.Values.workflow.serviceAccount.annotations | nindent 4 }}
-      {{- end }}
-    {{- end }}
+    {{- toYaml $.Values.workflow.serviceAccount.annotations | nindent 4 }}
+  {{- end }}
 
 {{- end }}
