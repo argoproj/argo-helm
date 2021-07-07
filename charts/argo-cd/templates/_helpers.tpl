@@ -144,7 +144,7 @@ app.kubernetes.io/component: {{ .component }}
 Return the appropriate apiVersion for ingress
 */}}
 {{- define "argo-cd.ingress.apiVersion" -}}
-{{- if ne .Values.apiVersionOverrides.ingress "" -}}
+{{- if .Values.apiVersionOverrides.ingress -}}
 {{- print .Values.apiVersionOverrides.ingress -}}
 {{- else if semverCompare "<1.14-0" (include "argo-cd.kubeVersion" $) -}}
 {{- print "extensions/v1beta1" -}}

@@ -1,5 +1,5 @@
 {{- if .Values.server.certificate.enabled -}}
-{{-  if ne .Values.apiVersionOverrides.certmanager "" -}}
+{{- if .Values.apiVersionOverrides.certmanager -}}
 apiVersion: {{ .Values.apiVersionOverrides.certmanager }}
 {{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1" }}
 apiVersion: cert-manager.io/v1
