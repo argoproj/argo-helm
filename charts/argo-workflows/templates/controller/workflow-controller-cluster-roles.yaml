@@ -55,8 +55,6 @@ rules:
   resources:
   - workflowtemplates
   - workflowtemplates/finalizers
-  - clusterworkflowtemplates
-  - clusterworkflowtemplates/finalizers
   verbs:
   - get
   - list
@@ -131,11 +129,13 @@ rules:
   - update
   - patch
   - delete
+
+{{- if .Values.controller.clusterWorkflowTemplates.enabled }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.controller.name }}-cluster-template
+  name: {{ template "argo-workflows.controller.fullname" . }}-cluster-template
 rules:
 - apiGroups:
   - argoproj.io
@@ -146,3 +146,4 @@ rules:
   - get
   - list
   - watch
+{{- end }}

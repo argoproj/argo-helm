@@ -2,10 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-delete-policy: before-hook-creation
-  name: argo-workflows-aggregate-to-view
+  name: {{ template "argo-workflows.fullname" . }}-view
   labels:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
@@ -30,10 +27,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-delete-policy: before-hook-creation
-  name: argo-workflows-aggregate-to-edit
+  name: {{ template "argo-workflows.fullname" . }}-edit
   labels:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
 rules:
@@ -63,10 +57,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-delete-policy: before-hook-creation
-  name: argo-workflows-aggregate-to-admin
+  name: {{ template "argo-workflows.fullname" . }}-admin
   labels:
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:

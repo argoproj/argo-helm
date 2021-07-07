@@ -3,14 +3,12 @@
 ##
 nameOverride: argocd
 fullnameOverride: ""
-
-# Optional CRD installation for those without Helm hooks
-installCRDs: true
+kubeVersionOverride: ""
 
 global:
   image:
     repository: quay.io/argoproj/argocd
-    tag: v2.0.1
+    tag: v2.0.4
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -213,10 +211,14 @@ dex:
     serviceMonitor:
       enabled: false
       interval: 30s
+      # selector:
+      #   prometheus: kube-prometheus
+      # namespace: monitoring
+      # additionalLabels: {}
 
   image:
-    repository: quay.io/dexidp/dex
-    tag: v2.26.0
+    repository: ghcr.io/dexidp/dex
+    tag: v2.27.0
     imagePullPolicy: IfNotPresent
   initImage:
     repository:
@@ -493,8 +495,11 @@ server:
   certificate:
     enabled: false
     domain: argocd.example.com
-    issuer: {}
+    issuer:
+      kind: # ClusterIssuer
+      name: # letsencrypt
     additionalHosts: []
+    secretName: argocd-server-tls
 
   ## Server service configuration
   service:
@@ -552,19 +557,28 @@ server:
       # - argocd.example.com
     paths:
       - /
+    pathType: Prefix
     extraPaths:
       []
       # - path: /*
       #   backend:
       #     serviceName: ssl-redirect
       #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
     tls:
       []
-      # - secretName: argocd-example-tls
+      # - secretName: argocd-tls-certificate
       #   hosts:
       #     - argocd.example.com
     https: false
-  # dedicated ingess for gRPC as documented at
+  # dedicated ingress for gRPC as documented at
   # https://argoproj.github.io/argo-cd/operator-manual/ingress/
   ingressGrpc:
     enabled: false
@@ -581,15 +595,24 @@ server:
       # - argocd.example.com
     paths:
       - /
+    pathType: Prefix
     extraPaths:
       []
       # - path: /*
       #   backend:
       #     serviceName: ssl-redirect
       #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
     tls:
       []
-      # - secretName: argocd-example-tls
+      # - secretName: argocd-tls-certificate
       #   hosts:
       #     - argocd.example.com
     https: false
@@ -663,7 +686,7 @@ server:
   ## Annotations to be added to ArgoCD rbac ConfigMap
   rbacConfigAnnotations: {}
 
-  # Boolean determining whether or not to create the configmap. If false, it is expected tthe configmap will be created
+  # Boolean determining whether or not to create the configmap. If false, it is expected the configmap will be created
   # by something else. ArgoCD will not work if there is no configMap created with the name above.
   rbacConfigCreate: true
 
@@ -955,6 +978,27 @@ configs:
     #     tlsClientConfig:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
+
+  gpgKeysAnnotations: {}
+  gpgKeys: {}
+    # 4AEE18F83AFDEB23: |
+    #     -----BEGIN PGP PUBLIC KEY BLOCK-----
+    #
+    #     mQENBFmUaEEBCACzXTDt6ZnyaVtueZASBzgnAmK13q9Urgch+sKYeIhdymjuMQta
+    #     x15OklctmrZtqre5kwPUosG3/B2/ikuPYElcHgGPL4uL5Em6S5C/oozfkYzhwRrT
+    #     SQzvYjsE4I34To4UdE9KA97wrQjGoz2Bx72WDLyWwctD3DKQtYeHXswXXtXwKfjQ
+    #     7Fy4+Bf5IPh76dA8NJ6UtjjLIDlKqdxLW4atHe6xWFaJ+XdLUtsAroZcXBeWDCPa
+    #     buXCDscJcLJRKZVc62gOZXXtPfoHqvUPp3nuLA4YjH9bphbrMWMf810Wxz9JTd3v
+    #     yWgGqNY0zbBqeZoGv+TuExlRHT8ASGFS9SVDABEBAAG0NUdpdEh1YiAod2ViLWZs
+    #     b3cgY29tbWl0IHNpZ25pbmcpIDxub3JlcGx5QGdpdGh1Yi5jb20+iQEiBBMBCAAW
+    #     BQJZlGhBCRBK7hj4Ov3rIwIbAwIZAQAAmQEH/iATWFmi2oxlBh3wAsySNCNV4IPf
+    #     DDMeh6j80WT7cgoX7V7xqJOxrfrqPEthQ3hgHIm7b5MPQlUr2q+UPL22t/I+ESF6
+    #     9b0QWLFSMJbMSk+BXkvSjH9q8jAO0986/pShPV5DU2sMxnx4LfLfHNhTzjXKokws
+    #     +8ptJ8uhMNIDXfXuzkZHIxoXk3rNcjDN5c5X+sK8UBRH092BIJWCOfaQt7v7wig5
+    #     4Ra28pM9GbHKXVNxmdLpCFyzvyMuCmINYYADsC848QQFFwnd4EQnupo6QvhEVx1O
+    #     j7wDwvuH5dCrLuLwtwXaQh0onG4583p0LGms2Mf5F+Ick6o/4peOlBoZz48=
+    #     =Bvzs
+    #     -----END PGP PUBLIC KEY BLOCK-----
 
   knownHostsAnnotations: {}
   knownHosts:

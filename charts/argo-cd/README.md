@@ -34,6 +34,21 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ## Upgrading
 
+### 3.2.* 
+
+With this minor version we introduced the evaluation for the ingress manifest (depending on the capabilities version), See [Pull Request](https://github.com/argoproj/argo-helm/pull/637).
+[Issue 703](https://github.com/argoproj/argo-helm/issues/703) reported that the capabilities evaluation is **not handled correctly when deploying the chart via an ArgoCD instance**,
+especially deploying on clusters running a cluster version prior to `1.19` (which misses  `Ingress` on apiVersion `networking.k8s.io/v1`).
+
+If you are running a cluster version prior to `1.19` you can avoid this issue by directly installing chart version `3.6.0` and setting `kubeVersionOverride` like:
+
+```yaml
+kubeVersionOverride: "1.18.0"
+``` 
+
+Then you should no longer encounter this issue.
+
+
 ### 3.0.0 and above
 
 Helm apiVersion switched to `v2`. Requires Helm `3.0.0` or above to install. [Read More](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/) on how to migrate your release from Helm 2 to Helm 3.
@@ -68,6 +83,7 @@ server:
 ## Prerequisites
 
 - Kubernetes 1.7+
+- Helm v3.0.0+
 
 ## Installing the Chart
 
@@ -82,25 +98,22 @@ NAME: my-release
 ...
 ```
 
-### Helm v3 Compatibility
-
-Requires chart version 1.5.2 or newer.
-
-Helm v3 has removed the `install-crds` hook so CRDs are now populated by files in the [crds](./crds) directory. Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings about nonexistent webhooks.
-
 ## Chart Values
 
 | Parameter | Description | Default |
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.8.4"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v2.0.4"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
+| kubeVersionOverride | Override the Kubernetes version, which is used to evaluate certain manifests | `""` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
-| installCRDs | Install CRDs if you are using Helm2. | `true` |
+| fullnameOverride | String to fully override `"argo-cd.fullname"` | `""` |
 | configs.clusterCredentials | Provide one or multiple [external cluster credentials](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters) | `[]` (See [values.yaml](values.yaml)) |
+| configs.gpgKeysAnnotations | GnuPG key ring annotations | `{}` |
+| configs.gpgKeys | [GnuPG](https://argoproj.github.io/argo-cd/user-guide/gpg-verification/) keys to add to the key ring | `{}` (See [values.yaml](values.yaml)) |
 | configs.knownHostsAnnotations | Known Hosts configmap annotations | `{}` |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
 | configs.secret.annotations | Annotations for argocd-secret | `{}` |
@@ -130,6 +143,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | controller.extraArgs | Additional arguments for the controller. A list of flags | `[]` |
 | controller.enableStatefulSet | Enable deploying the controller as a StatefulSet instead of a Deployment. Used for HA installations. | `false` |
 | controller.env | Environment variables for the controller. | `[]` |
+| controller.envFrom | `envFrom` to pass to the controller. | `[]` (See [values.yaml](values.yaml)) |
 | controller.image.repository | Repository to use for the controller | `global.image.repository` |
 | controller.image.imagePullPolicy | Image pull policy for the controller | `global.image.imagePullPolicy` |
 | controller.image.tag | Tag to use for the controller | `global.image.tag` |
@@ -181,6 +195,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | repoServer.containerPort | Repo server port | `8081` |
 | repoServer.extraArgs | Additional arguments for the repo server. A  list of flags. | `[]` |
 | repoServer.env | Environment variables for the repo server. | `[]` |
+| repoServer.envFrom | `envFrom` to pass to the repo server. | `[]` (See [values.yaml](values.yaml)) |
 | repoServer.image.repository | Repository to use for the repo server | `global.image.repository` |
 | repoServer.image.imagePullPolicy | Image pull policy for the repo server | `global.image.imagePullPolicy` |
 | repoServer.image.tag | Tag to use for the repo server | `global.image.tag` |
@@ -241,6 +256,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
 | server.env | Environment variables for the server. | `[]` |
+| server.envFrom | `envFrom` to pass to the server. | `[]` (See [values.yaml](values.yaml)) |
 | server.image.repository | Repository to use for the server | `global.image.repository` |
 | server.image.imagePullPolicy | Image pull policy for the server | `global.image.imagePullPolicy` |
 | server.image.tag | Tag to use for the server | `global.image.tag` |
@@ -326,6 +342,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | dex.metrics.serviceMonitor.selector | Prometheus ServiceMonitor selector. | `{}` |
 | dex.name | Dex name | `"dex-server"` |
 | dex.env | Environment variables for the Dex server. | `[]` |
+| dex.envFrom | `envFrom` to pass to the Dex server. | `[]` (See [values.yaml](values.yaml)) |
 | dex.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | dex.podAnnotations | Annotations for the Dex server pods | `{}` |
 | dex.podLabels | Labels for the Dex server pods | `{}` |
@@ -359,6 +376,7 @@ through `xxx.extraArgs`
 | redis.extraArgs | Additional arguments for the `redis-server`. A list of flags. | `[]` |
 | redis.name | Redis name | `"redis"` |
 | redis.env | Environment variables for the Redis server. | `[]` |
+| redis.envFrom | `envFrom` to pass to the Redis server. | `[]` (See [values.yaml](values.yaml)) |
 | redis.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | redis.podAnnotations | Annotations for the Redis server pods | `{}` |
 | redis.podLabels | Labels for the Redis server pods | `{}` |
