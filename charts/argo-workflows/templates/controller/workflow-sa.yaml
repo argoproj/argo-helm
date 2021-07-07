@@ -38,12 +38,11 @@ metadata:
 
   {{- else }}
 
-    {{- /*
-      The namespace will default to "argo" if neither "namespaces" nor "namespace" is set
-    */}}
     {{ include "sa-base" . }}
   name: {{ $.Values.workflow.serviceAccount.name }}
-  namespace: {{ .Values.workflow.namespace | default "argo" }}
+    {{- if .Values.workflow.namespace }}
+  namespace: {{ .Values.workflow.namespace }}
+    {{- end }}
   annotations:
     {{- toYaml $.Values.workflow.serviceAccount.annotations | nindent 4 }}
   {{- end }}
