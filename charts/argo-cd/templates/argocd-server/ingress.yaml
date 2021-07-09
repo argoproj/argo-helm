@@ -14,7 +14,7 @@ metadata:
   {{- end }}
   {{- if and .Values.server.ingressGrpc.isAWSALB .Values.server.ingressGrpc.enabled }}
     alb.ingress.kubernetes.io/conditions.{{ template "argo-cd.server.fullname" . }}-grpc: |
-          [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "Content-Type", "values":["application/grpc"]}}]
+      [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "Content-Type", "values":["application/grpc"]}}]
   {{- end }}
 {{- end }}
   name: {{ template "argo-cd.server.fullname" . }}
