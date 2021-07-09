@@ -24,6 +24,13 @@ global:
     create: false
     defaultDenyIngress: false
 
+# Override APIVersions
+# If you want to template helm charts but cannot access k8s API server
+# you can set api versions here
+apiVersionOverrides:
+  certmanager: "" # cert-manager.io/v1
+  ingress: "" # networking.k8s.io/v1beta1
+
 ## Controller
 controller:
   name: application-controller
