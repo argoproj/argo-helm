@@ -21,9 +21,9 @@ Any breaking changes to a chart (backwards incompatible) require:
 Each release for each chart must be immutable. Any change to a chart (even just documentation) requires a version bump. Trying to release the same version twice will result in an error.
 
 
-### Artifacthub Annotations
+### Artifact Hub Annotations
 
-Since we release our charts on Artifacthub we encourage making use of the provided chart annotations for Artifacthub.
+Since we release our charts on Artifact Hub we encourage making use of the provided chart annotations for Artifact Hub.
 
   * [https://artifacthub.io/docs/topics/annotations/helm/](https://artifacthub.io/docs/topics/annotations/helm/)
 
