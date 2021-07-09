@@ -29,7 +29,7 @@ Since we release our charts on Artifacthub we encourage making use of the provid
 
 #### Changelog
 
-We want to deliver transparent chart releases for our chart consumers. Therefor we require a changelog per new chart release.
+We want to deliver transparent chart releases for our chart consumers. Therefore we require a changelog per new chart release.
 
 Changes on a chart must be documented in a chart specific changelog in the `Chart.yaml` [Annotation Section](https://helm.sh/docs/topics/charts/#the-chartyaml-file). For every new release the entire `artifacthub.io/changes` needs to be rewritten. Each change requires a new bullet point following the pattern `- "[{type}]: {description}"`. You can use the following template:
 
