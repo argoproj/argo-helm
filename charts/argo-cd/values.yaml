@@ -365,6 +365,14 @@ redis:
     fsGroup: 1000
     runAsNonRoot: true
 
+  serviceAccount:
+    create: false
+    name: ""
+    ## Annotations applied to created service account
+    annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: false
+
   resources: {}
   #  limits:
   #    cpu: 200m

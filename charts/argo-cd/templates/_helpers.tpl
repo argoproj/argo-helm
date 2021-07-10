@@ -89,6 +89,17 @@ Create the name of the dex service account to use
 {{- end -}}
 
 {{/*
+Create the name of the redis service account to use
+*/}}
+{{- define "argo-cd.redisServiceAccountName" -}}
+{{- if .Values.redis.serviceAccount.create -}}
+    {{ default (include "argo-cd.redis.fullname" .) .Values.redis.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.redis.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create the name of the ArgoCD server service account to use
 */}}
 {{- define "argo-cd.serverServiceAccountName" -}}
