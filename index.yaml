@@ -7338,6 +7338,29 @@ entries:
   argocd-applicationset:
   - annotations:
       artifacthub.io/changes: |
+        - "[Removed]: CRD installation via templates folder. CRDs are now only handled via the '/crds' folder in the same way like the ArgoCD chart."
+        - "[Removed]: Exclude '/ci' folder from being packaged into the final chart archive."
+        - "[Changed]: Fix icon url"
+    apiVersion: v2
+    appVersion: v0.1.0
+    created: "2021-07-12T10:54:41.205968506Z"
+    description: A Helm chart for installing ArgoCD ApplicationSet
+    digest: 21a7b1a017bd7964f1c72747ced306dcffd9bf6ca94c1679c5b56c0757e5b62f
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argocd-applicationset.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - appset
+    - gitops
+    maintainers:
+    - name: maruina
+    name: argocd-applicationset
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-applicationset-1.0.0/argocd-applicationset-1.0.0.tgz
+    version: 1.0.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Initialize Changelog"
     apiVersion: v2
     appVersion: v0.1.0
@@ -7968,4 +7991,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-07-09T12:34:39.834114499Z"
+generated: "2021-07-12T10:54:41.210638029Z"
