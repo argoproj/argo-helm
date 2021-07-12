@@ -17,20 +17,18 @@ subjects:
 {{- end }}
 
 {{- if .Values.workflow.rbac.create -}}
-  {{- if .Values.controller.workflowNamespaces }}
-    {{- range $namespace := append .Values.controller.workflowNamespaces .Values.workflow.namespace | compact | uniq }}
+  {{- range $namespace := append .Values.controller.workflowNamespaces .Values.workflow.namespace | compact | uniq }}
 
-      {{ include "workflow-rb-base" . }}
+    {{ include "workflow-rb-base" . }}
   name: {{ $.Release.Name }}-workflow
   namespace: {{ $namespace }}
 
-      {{- include "workflow-rb-roleref" . }}
+    {{- include "workflow-rb-roleref" . }}
   name: {{ template "argo-workflows.fullname" $ }}-workflow
 
-      {{- include "workflow-rb-subjects" . }}
+    {{- include "workflow-rb-subjects" . }}
     name: {{ $.Values.workflow.serviceAccount.name }}
     namespace: {{ $namespace }}
-    {{- end }}
-
   {{- end }}
+
 {{- end }}
