@@ -29,7 +29,6 @@ rules:
 {{- if .Values.workflow.rbac.create -}}
 
   {{- range $namespace := append .Values.controller.workflowNamespaces .Values.workflow.namespace | compact | uniq }}
-    {{ $namespace := . }}
     {{- include "workflow-role-base" . }}
   name: {{ template "argo-workflows.fullname" $ }}-workflow
   namespace: {{ $namespace }}
