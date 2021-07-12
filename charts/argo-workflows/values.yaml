@@ -29,15 +29,15 @@ kubeVersionOverride: ""
 singleNamespace: false
 
 workflow:
-  namespaces: [] # Specify all namespaces to run worksflows need to be able to run in. This controls where the service
-  # account and RBAC resources will be created. If unspecified, will run in the same namespace as argo.
   namespace: # Deprecated, for backwards compatibility: specify a single namespace to run workflows in
   serviceAccount:
     create: false # Specifies whether a service account should be created
     annotations: {}
     name: "argo-workflow" # Service account which is used to run workflows
   rbac:
-    create: true # adds Role and RoleBinding for the above specified service account to be able to run workflows
+    # Adds Role and RoleBinding for the above specified service account to be able to run workflows
+    # A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below)
+    create: true
 
 controller:
   image:
@@ -111,6 +111,8 @@ controller:
     # Annotations applied to created service account
     annotations: {}
   name: workflow-controller
+  # Specify all namespaces to run worksflows need to be able to run in. This controls where the service
+  # account and RBAC resources will be created. If unspecified, will run in the default namespace.
   workflowNamespaces:
     - default
   containerRuntimeExecutor: docker
