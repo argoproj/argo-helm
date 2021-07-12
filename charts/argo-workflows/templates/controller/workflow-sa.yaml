@@ -12,21 +12,21 @@ metadata:
       This type check is done only once, here. It would be overkill to perform it for other RBAC resources as well.
   */}}
 
-  {{- if and .Values.workflow.namespaces .Values.workflow.namespace }}
-    {{- fail "Please set either workflow.namespaces or workflow.namespace for the service account, not both" }}
+  {{- if and .Values.controller.workflowNamespaces .Values.workflow.namespace }}
+    {{- fail "Please set either controller.workflowNamespaces or workflow.namespace for the service account, not both" }}
   {{- end }}
 
-  {{- if .Values.workflow.namespaces }}
+  {{- if .Values.controller.workflowNamespaces }}
 
     {{- /*
       Type-check the namespaces variable for being a list ("slice")
       This type check is done only once, here. It would be overkill to perform it for other RBAC resources as well.
     */}}
-    {{- if not ( kindIs "slice" .Values.workflow.namespaces ) }}
-      {{- fail ( printf "workflow.namespaces is a slice, got %s %s" ( kindOf .Values.workflow.namespaces ) .Values.workflow.namespaces ) }}
+    {{- if not ( kindIs "slice" .Values.controller.workflowNamespaces ) }}
+      {{- fail ( printf "workflow.namespaces is a slice, got %s %s" ( kindOf .Values.controller.workflowNamespaces ) .Values.controller.workflowNamespaces ) }}
     {{- end }}
 
-    {{ $namespaces := .Values.workflow.namespaces }}
+    {{ $namespaces := .Values.controller.workflowNamespaces }}
     {{- range $namespaces }}
       {{ $namespace := . }}
       {{ include "sa-base" . }}
