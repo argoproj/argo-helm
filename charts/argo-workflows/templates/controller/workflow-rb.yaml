@@ -18,9 +18,9 @@ subjects:
 
 {{- if .Values.workflow.rbac.create -}}
 
-  {{- if .Values.workflow.namespaces }}
+  {{- if .Values.controller.workflowNamespaces }}
 
-    {{- range .Values.workflow.namespaces }}
+    {{- range .Values.controller.workflowNamespaces }}
       {{ $namespace := . }}
 
       {{ include "workflow-rb-base" . }}
