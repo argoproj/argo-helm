@@ -11,40 +11,26 @@ metadata:
       Cardinality-check the namespaces/namespace variables
       This type check is done only once, here. It would be overkill to perform it for other RBAC resources as well.
   */}}
-
   {{- if and .Values.controller.workflowNamespaces .Values.workflow.namespace }}
     {{- fail "Please set either controller.workflowNamespaces or workflow.namespace for the service account, not both" }}
   {{- end }}
 
-  {{- if .Values.controller.workflowNamespaces }}
-
-    {{- /*
+  {{- /*
       Type-check the namespaces variable for being a list ("slice")
       This type check is done only once, here. It would be overkill to perform it for other RBAC resources as well.
     */}}
+  {{- if .Values.controller.workflowNamespaces }}
     {{- if not ( kindIs "slice" .Values.controller.workflowNamespaces ) }}
       {{- fail ( printf "workflow.namespaces is a slice, got %s %s" ( kindOf .Values.controller.workflowNamespaces ) .Values.controller.workflowNamespaces ) }}
     {{- end }}
+  {{- end }}
 
-    {{ $namespaces := .Values.controller.workflowNamespaces }}
-    {{- range $namespaces }}
-      {{ $namespace := . }}
-      {{ include "sa-base" . }}
+  {{ range $namespace := append .Values.controller.workflowNamespaces .Values.workflow.namespace | compact | uniq }}
+    {{ $namespace := . }}
+    {{ include "sa-base" . }}
   name: {{ $.Values.workflow.serviceAccount.name }}
   namespace: {{ $namespace }}
   annotations:
-      {{- toYaml $.Values.workflow.serviceAccount.annotations | nindent 4 }}
-    {{- end }}
-
-  {{- else }}
-
-    {{ include "sa-base" . }}
-  name: {{ $.Values.workflow.serviceAccount.name }}
-    {{- if .Values.workflow.namespace }}
-  namespace: {{ .Values.workflow.namespace }}
-    {{- end }}
-  annotations:
     {{- toYaml $.Values.workflow.serviceAccount.annotations | nindent 4 }}
   {{- end }}
-
 {{- end }}
