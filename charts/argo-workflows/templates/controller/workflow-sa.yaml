@@ -26,7 +26,6 @@ metadata:
   {{- end }}
 
   {{ range $namespace := append .Values.controller.workflowNamespaces .Values.workflow.namespace | compact | uniq }}
-    {{ $namespace := . }}
     {{ include "sa-base" . }}
   name: {{ $.Values.workflow.serviceAccount.name }}
   namespace: {{ $namespace }}
