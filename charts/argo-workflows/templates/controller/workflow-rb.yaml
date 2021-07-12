@@ -20,7 +20,7 @@ subjects:
   {{- range $namespace := append .Values.controller.workflowNamespaces .Values.workflow.namespace | compact | uniq }}
 
     {{ include "workflow-rb-base" . }}
-  name: {{ "argo-workflows.fullname" }}-workflow
+  name: {{ template "argo-workflows.fullname" }}-workflow
   namespace: {{ $namespace }}
 
     {{- include "workflow-rb-roleref" . }}
