@@ -28,8 +28,8 @@ rules:
 
 {{- if .Values.workflow.rbac.create -}}
 
-  {{- if .Values.workflow.namespaces }}
-    {{- range .Values.workflow.namespaces}}
+  {{- if .Values.controller.workflowNamespaces }}
+    {{- range .Values.controller.workflowNamespaces}}
       {{ $namespace := . }}
       {{- include "workflow-role-base" . }}
   name: {{ template "argo-workflows.fullname" $ }}-workflow
