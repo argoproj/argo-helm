@@ -10,6 +10,11 @@ This is a **community maintained** chart. This chart installs the [applicationse
 
 This chart currently installs the non-HA version of Argo CD ApplicationSet.
 
+## Prerequisites
+
+- Helm v3.0.0+
+- The ApplicationSet controller **must** be installed into the same namespace as the Argo CD it is targetting.
+
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
@@ -23,10 +28,6 @@ NAME: my-release
 ...
 ```
 
-### Helm v3 Compatibility
-
-Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings about nonexistent webhooks.
-
 ### Testing
 
 Users can test the chart with [kind](https://kind.sigs.k8s.io/) and [ct](https://github.com/helm/chart-testing).
@@ -36,6 +37,19 @@ kind create cluster
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ct install --namespace argocd
+```
+
+## Notes on CRD Installation
+
+Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--skip-crds` when installing the chart.
+
+You then can install the CRDs manually from `crds` folder or via the manifests from the upstream project repo:
+
+```console
+kubectl apply -k https://github.com/argoproj-labs/applicationset.git/manifests/crds?ref=<appVersion>
+
+# Eg. version v0.1.0
+kubectl apply -k https://github.com/argoproj-labs/applicationset.git/manifests/crds?ref=v0.1.0
 ```
 
 ## Values
@@ -56,7 +70,6 @@ ct install --namespace argocd
 | image.repository | string | `"quay.io/argocdapplicationset/argocd-applicationset"` | If defined, a repository applied to the ApplicationSet deployment. |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
-| installCRDs | bool | `true` | Install Custom Resource Definition |
 | mountSSHKnownHostsVolume | bool | `true` | Mount the `argocd-ssh-known-hosts-cm` volume |
 | mountTLSCertsVolume | bool | `true` | Mount the `argocd-tls-certs-cm` volume |
 | mountGPGKeysVolume | bool | `false` | Mount the `argocd-gpg-keys-cm` volume |
