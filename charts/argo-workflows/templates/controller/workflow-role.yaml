@@ -1,13 +1,12 @@
-{{- define "workflow-role-base" }}
+{{- if .Values.workflow.rbac.create -}}
+
+  {{- range $namespace := append .Values.controller.workflowNamespaces .Values.workflow.namespace | compact | uniq }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-{{- end }}
-
-{{/* workflow-role-rules are defined separately so they can be inserted after templating the metadata */}}
-
-{{- define "workflow-role-rules" }}
+  name: {{ template "argo-workflows.fullname" $ }}-workflow
+  namespace: {{ $namespace }}
 rules:
   - apiGroups:
       - ""
@@ -24,15 +23,6 @@ rules:
     verbs:
       - get
       - watch
-{{- end }}
-
-{{- if .Values.workflow.rbac.create -}}
-
-  {{- range $namespace := append .Values.controller.workflowNamespaces .Values.workflow.namespace | compact | uniq }}
-    {{- include "workflow-role-base" . }}
-  name: {{ template "argo-workflows.fullname" $ }}-workflow
-  namespace: {{ $namespace }}
-    {{- include "workflow-role-rules" . }}
   {{- end }}
 
 {{- end }}
