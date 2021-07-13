@@ -30,7 +30,8 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      automountServiceAccountToken: false
+      automountServiceAccountToken: {{ .Values.redis.serviceAccount.automountServiceAccountToken }}
+      serviceAccountName: {{ template "argo-cd.redisServiceAccountName" . }}
       {{- if .Values.redis.securityContext }}
       securityContext: {{- toYaml .Values.redis.securityContext | nindent 8 }}
       {{- end }}
@@ -58,8 +59,8 @@ spec:
         {{- end }}
         ports:
         - containerPort: {{ .Values.redis.containerPort }}
+          name: redis
 {{- if .Values.redis.volumeMounts }}
-
         volumeMounts:
 {{- toYaml .Values.redis.volumeMounts | nindent 10 }}
 {{- end }}

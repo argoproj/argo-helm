@@ -20,6 +20,10 @@ global:
   #   hostnames:
   #   - git.myhostname
 
+  networkPolicy:
+    create: false
+    defaultDenyIngress: false
+
 # Override APIVersions
 # If you want to template helm charts but cannot access k8s API server
 # you can set api versions here
@@ -364,6 +368,14 @@ redis:
     runAsGroup: 1000
     fsGroup: 1000
     runAsNonRoot: true
+
+  serviceAccount:
+    create: false
+    name: ""
+    ## Annotations applied to created service account
+    annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: false
 
   resources: {}
   #  limits:
