@@ -2,9 +2,9 @@ apiVersion: v2
 appVersion: 2.0.4
 description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 3.8.2
+version: 3.9.0
 home: https://github.com/argoproj/argo-helm
-icon: https://raw.githubusercontent.com/argoproj/argo/master/docs/assets/argo.png
+icon: https://argoproj.github.io/argo-cd/assets/logo.png
 keywords:
   - argoproj
   - argocd
@@ -21,4 +21,5 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: Add important upgrading notes to README concerning potential ServiceAccount renamings introduced in chart version 3.8.1+."
+    - "[Added]: Ability to create network policies"
+    - "[Changed]: Fix icon url"

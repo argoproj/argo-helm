@@ -59,8 +59,8 @@ spec:
         {{- end }}
         ports:
         - containerPort: {{ .Values.redis.containerPort }}
+          name: redis
 {{- if .Values.redis.volumeMounts }}
-
         volumeMounts:
 {{- toYaml .Values.redis.volumeMounts | nindent 10 }}
 {{- end }}

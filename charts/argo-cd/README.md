@@ -136,6 +136,8 @@ NAME: my-release
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
+| global.networkPolicy.create | Create NetworkPolicy objects for all components | `false` |
+| global.networkPolicy.defaultDenyIngress | Default deny all ingress traffic | `false` |
 | kubeVersionOverride | Override the Kubernetes version, which is used to evaluate certain manifests | `""` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | fullnameOverride | String to fully override `"argo-cd.fullname"` | `""` |
