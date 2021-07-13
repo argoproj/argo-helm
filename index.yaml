@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Add important upgrading notes to README concerning potential ServiceAccount renamings introduced in chart version 3.8.1+."
+    apiVersion: v2
+    appVersion: 2.0.4
+    created: "2021-07-13T06:26:08.458099918Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.14
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 0b3cfc471dc43819296fd815dd300214cc2b397f843efaf4bbaca15f698c4e3e
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo/master/docs/assets/argo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.8.2/argo-cd-3.8.2.tgz
+    version: 3.8.2
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Cannot create a service account for redis"
     apiVersion: v2
     appVersion: 2.0.4
@@ -8020,4 +8049,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-07-12T11:07:21.965354769Z"
+generated: "2021-07-13T06:26:08.461013028Z"
