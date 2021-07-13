@@ -34,6 +34,34 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ## Upgrading
 
+### 3.8.1
+
+This bugfix version potentially introduces a rename (and recreation) of one or more ServiceAccounts. It _only happens_ when you use one of these customization:
+
+```yaml
+# Case 1) - only happens when you do not specify a custom name (repoServer.serviceAccount.name)
+repoServer:
+  serviceAccount:
+    create: true
+
+# Case 2)
+controller:
+  serviceAccount:
+    name: "" # or <nil>
+
+# Case 3)
+dex:
+  serviceAccount:
+    name: "" # or <nil>
+
+# Case 4)
+server:
+  serviceAccount:
+    name: "" # or <nil>
+```
+
+Please check if you are affected by one of these cases **before you upgrade**, especially when you use **cloud IAM roles for service accounts.** (eg. IRSA on AWS or Workload Identity for GKE)
+
 ### 3.2.* 
 
 With this minor version we introduced the evaluation for the ingress manifest (depending on the capabilities version), See [Pull Request](https://github.com/argoproj/argo-helm/pull/637).
@@ -108,6 +136,8 @@ NAME: my-release
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
+| global.networkPolicy.create | Create NetworkPolicy objects for all components | `false` |
+| global.networkPolicy.defaultDenyIngress | Default deny all ingress traffic | `false` |
 | kubeVersionOverride | Override the Kubernetes version, which is used to evaluate certain manifests | `""` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | fullnameOverride | String to fully override `"argo-cd.fullname"` | `""` |
