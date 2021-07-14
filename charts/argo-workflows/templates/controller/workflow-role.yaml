@@ -1,6 +1,5 @@
 {{- if .Values.workflow.rbac.create -}}
-
-  {{- range $namespace := append .Values.controller.workflowNamespaces .Values.workflow.namespace | compact | uniq }}
+  {{- range $namespace := .Values.singeNamespace | ternary (list "") (concat .Values.workflow.namespace .Values.controller.workflowNamespaces | compact | uniq) }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role

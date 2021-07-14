@@ -1,5 +1,5 @@
 {{- if .Values.workflow.serviceAccount.create -}}
-  {{ range $namespace := append .Values.controller.workflowNamespaces .Values.workflow.namespace | compact | uniq }}
+  {{ range $namespace := .Values.singeNamespace | ternary (list "") (concat .Values.workflow.namespace .Values.controller.workflowNamespaces | compact | uniq) }}
 ---
 apiVersion: v1
 kind: ServiceAccount
