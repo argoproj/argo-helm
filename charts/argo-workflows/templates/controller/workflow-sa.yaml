@@ -23,9 +23,13 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ $.Values.workflow.serviceAccount.name }}
+    {{- with $.Values.workflow.serviceAccount.name }}
+  name: {{ . }}
+    {{- end }}
   namespace: {{ $namespace }}
+    {{- with $.Values.workflow.serviceAccount.annotations }}
   annotations:
-    {{- toYaml $.Values.workflow.serviceAccount.annotations | nindent 4 }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- end }}
 {{- end }}
