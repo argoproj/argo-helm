@@ -5,11 +5,6 @@ images:
   pullSecrets: []
   # - name: argo-pull-secret
 
-init:
-  # By default the installation will not set an explicit one, which will mean it uses `default` for the namespace the chart is
-  # being deployed to.  In RBAC clusters, that will almost certainly fail.  See the NOTES: section of the readme for more info.
-  serviceAccount: ""
-
 createAggregateRoles: true
 
 ## String to partially override "argo-workflows.fullname" template
