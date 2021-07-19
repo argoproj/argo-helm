@@ -147,4 +147,15 @@ rules:
   - get
   - update
   - patch
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - routes
+  verbs:
+  - create
+  - watch
+  - get
+  - update
+  - list
+  - delete
 {{- end }}
