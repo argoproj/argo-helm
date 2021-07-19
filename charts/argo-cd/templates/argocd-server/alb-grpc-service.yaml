@@ -1,5 +1,4 @@
-{{- if .Values.server.ingressGrpc.enabled -}}
-{{- if .Values.server.ingressGrpc.isAWSALB -}}
+{{- if and .Values.server.ingressGrpc.enabled .Values.server.ingressGrpc.isAWSALB -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -22,5 +21,4 @@ spec:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
   sessionAffinity: None
   type: ClusterIP
-{{- end -}}
 {{- end -}}
