@@ -7186,6 +7186,28 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Pods stuck in pending phase due to workflow update timeouts."
+    apiVersion: v2
+    appVersion: v3.0.7
+    created: "2021-07-20T21:51:22.648490623Z"
+    description: A Helm chart for Argo Workflows
+    digest: 2b67c76f81e260e4eec527b75a35cb29d442a5c8956830693e894ff35e85f5fd
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: benjaminws
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.2.11/argo-workflows-0.2.11.tgz
+    version: 0.2.11
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Removed init.serviceAccount unused fields"
     apiVersion: v2
     appVersion: v3.0.7
@@ -8177,4 +8199,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-07-20T18:25:07.035108332Z"
+generated: "2021-07-20T21:51:22.65536049Z"
