@@ -7186,6 +7186,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Service accounts, roles and role bindings can now be auto-created for each workflow controller namespace"
+        - "[Fixed]: The contributer testing guidelines were updated to reflect the chart name change from 'argo' to
+        'argo-workflows'"
+    apiVersion: v2
+    appVersion: v3.0.7
+    created: "2021-07-20T18:18:55.989077639Z"
+    description: A Helm chart for Argo Workflows
+    digest: 294aaa47c6036afb41f8bd5850a3b23f713f4f706d4ea49ec0a15a6fe74e4992
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: benjaminws
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.2.9/argo-workflows-0.2.9.tgz
+    version: 0.2.9
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Controller Role/ClusterRole to work with InstanceID"
     apiVersion: v2
     appVersion: v3.0.7
@@ -8131,4 +8155,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-07-20T18:10:56.7633577Z"
+generated: "2021-07-20T18:18:55.993221709Z"
