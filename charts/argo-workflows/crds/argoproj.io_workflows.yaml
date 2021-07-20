@@ -36,9 +36,11 @@ spec:
           spec:
             type: object
             x-kubernetes-preserve-unknown-fields: true
+            x-kubernetes-map-type: atomic
           status:
             type: object
             x-kubernetes-preserve-unknown-fields: true
+            x-kubernetes-map-type: atomic
         required:
         - metadata
         - spec
