@@ -79,6 +79,9 @@ spec:
               containerPort: {{ .Values.controller.metricsConfig.port }}
             - containerPort: 6060
           livenessProbe: {{ .Values.controller.livenessProbe | toYaml | nindent 12 }}
+        {{- if .Values.controller.extraContainers }}
+        {{ toYaml .Values.controller.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.images.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

@@ -171,6 +171,8 @@ controller:
   clusterWorkflowTemplates:
     # Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates.
     enabled: true
+  # Extra containers to be added to the controller deployment
+  extraContainers: []
 
 # executor controls how the init and wait container should be customized
 executor:
@@ -337,6 +339,8 @@ server:
     ## decisions.
     # scopes:
     # - groups
+  # Extra containers to be added to the server deployment
+  extraContainers: []
 
 # Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false
