@@ -4,9 +4,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-    {{- with $.Values.workflow.serviceAccount.name }}
-  name: {{ . }}
-    {{- end }}
+  name: {{ $.Values.workflow.serviceAccount.name }}
     {{- with $namespace }}
   namespace: {{ . }}
     {{- end }}
