@@ -305,6 +305,7 @@ NAME: my-release
 | server.ingressGrpc.labels | Additional ingress labels for dedicated [gRPC-ingress] | `{}` |
 | server.ingressGrpc.ingressClassName | Defines which ingress controller will implement the resource [gRPC-ingress] | `""` |
 | server.ingressGrpc.tls | Ingress TLS configuration for dedicated [gRPC-ingress] | `[]` |
+| server.ingressGrpc.isAWSALB | Setup up GRPC ingress to work with an AWS ALB | `false` |
 | server.route.enabled | Enable a OpenShift route for the server | `false` |
 | server.route.hostname | Hostname of OpenShift route | `""` |
 | server.lifecycle | PostStart and PreStop hooks configuration | `{}` |
@@ -429,3 +430,23 @@ through `xxx.extraArgs`
 | redis-ha.image.tag | Redis tag | `"6.2.1-alpine"` |
 
 [gRPC-ingress]: https://argoproj.github.io/argo-cd/operator-manual/ingress/
+
+
+### Using AWS ALB Ingress Controller With GRPC
+If you are using an AWS ALB Ingress controller, you will need to set `server.ingressGrpc.isAWSALB` to `true`. This will create a second service with the annotation `alb.ingress.kubernetes.io/backend-protocol-version: HTTP2` and modify the server ingress to add a condition annotation to route GRPC traffic to the new service. 
+
+Example:
+```yaml
+server:
+  ingress:
+    enabled: true
+    annotations: 
+      alb.ingress.kubernetes.io/backend-protocol: HTTPS
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+      alb.ingress.kubernetes.io/scheme: internal
+      alb.ingress.kubernetes.io/target-type: ip
+  ingressGrpc:
+    enabled: true
+    isAWSALB: true
+      
+```

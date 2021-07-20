@@ -12,6 +12,10 @@ metadata:
   {{- range $key, $value := .Values.server.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
+  {{- if and .Values.server.ingressGrpc.isAWSALB .Values.server.ingressGrpc.enabled }}
+    alb.ingress.kubernetes.io/conditions.{{ template "argo-cd.server.fullname" . }}-grpc: |
+      [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "Content-Type", "values":["application/grpc"]}}]
+  {{- end }}
 {{- end }}
   name: {{ template "argo-cd.server.fullname" . }}
   labels:
@@ -35,6 +39,26 @@ spec:
           {{- toYaml $extraPaths | nindent 10 }}
           {{- end }}
           {{- range $p := $paths }}
+          {{- if and $.Values.server.ingressGrpc.isAWSALB $.Values.server.ingressGrpc.enabled }}
+          - path: {{ $p }}
+            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            pathType: Prefix
+            {{- end }}
+            backend:
+              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              service:
+                name: {{ template "argo-cd.server.fullname" $ }}-grpc
+                port:
+                  {{- if kindIs "float64" $servicePort }}
+                  number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
+              {{- else }}
+              serviceName: {{ template "argo-cd.server.fullname" $ }}-grpc
+              servicePort: {{ $servicePort }}
+              {{- end }}
+            {{- end }}
           - path: {{ $p }}
             {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
             pathType: {{ $pathType }}
