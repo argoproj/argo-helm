@@ -55,7 +55,7 @@ annotations:
 Minimally:
 
 ```
-helm install charts/argo -n argo
+helm install charts/argo-workflows -n argo
 argo version
 ```
 
