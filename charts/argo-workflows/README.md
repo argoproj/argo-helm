@@ -10,7 +10,7 @@ This chart uses an install hook to configure the CRD definition. Installation of
 
 A few options are:
 
-- Manually create a ServiceAccount in the Namespace which your release will be deployed w/ appropriate bindings to perform this action and set the `init.serviceAccount` attribute
+- Manually create a ServiceAccount in the Namespace which your release will be deployed w/ appropriate bindings to perform this action and set the `serviceAccountName` field in the Workflow spec
 - Augment the `default` ServiceAccount permissions in the Namespace in which your Release is deployed to have the appropriate permissions
 
 ## Usage Notes
