@@ -34,6 +34,11 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ## Upgrading
 
+### 3.10.2
+
+ArgoCD has recently deprecated the flag `--staticassets` and from chart version `3.10.2` has been disabled by default
+It can be re-enabled by setting `server.staticAssets.enabled` to true
+
 ### 3.8.1
 
 This bugfix version potentially introduces a rename (and recreation) of one or more ServiceAccounts. It _only happens_ when you use one of these customization:
@@ -287,6 +292,7 @@ NAME: my-release
 | server.config | [General Argo CD configuration](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#repositories) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
+| server.staticAssets.enabled | Disable deprecated flag --staticassets | `false` |
 | server.env | Environment variables for the server. | `[]` |
 | server.envFrom | `envFrom` to pass to the server. | `[]` (See [values.yaml](values.yaml)) |
 | server.image.repository | Repository to use for the server | `global.image.repository` |
