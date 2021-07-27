@@ -8,7 +8,7 @@ kubeVersionOverride: ""
 global:
   image:
     repository: quay.io/argoproj/argocd
-    tag: v2.0.4
+    tag: v2.0.5
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -19,6 +19,17 @@ global:
   # - ip: 10.20.30.40
   #   hostnames:
   #   - git.myhostname
+
+  networkPolicy:
+    create: false
+    defaultDenyIngress: false
+
+# Override APIVersions
+# If you want to template helm charts but cannot access k8s API server
+# you can set api versions here
+apiVersionOverrides:
+  certmanager: "" # cert-manager.io/v1
+  ingress: "" # networking.k8s.io/v1beta1
 
 ## Controller
 controller:
@@ -358,6 +369,14 @@ redis:
     fsGroup: 1000
     runAsNonRoot: true
 
+  serviceAccount:
+    create: false
+    name: ""
+    ## Annotations applied to created service account
+    annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: false
+
   resources: {}
   #  limits:
   #    cpu: 200m
@@ -582,6 +601,7 @@ server:
   # https://argoproj.github.io/argo-cd/operator-manual/ingress/
   ingressGrpc:
     enabled: false
+    isAWSALB: false
     annotations: {}
     labels: {}
     ingressClassName: ""
