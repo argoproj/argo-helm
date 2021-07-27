@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: 2.0.5
 description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 3.10.1
+version: 3.10.2
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-cd/assets/logo.png
 keywords:
@@ -22,3 +22,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - "[Added]: Support AWS ALB Ingress with gRPC"
+    - "[Deprecated]: Deprecate static assets flag passed to argocd-server"
