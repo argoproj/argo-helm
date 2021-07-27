@@ -36,8 +36,9 @@ spec:
             - --namespaced
           {{- end }}
           env:
-            - name: DEBUG_LOG
-              value: {{ .Values.sensorController.debugLogging | quote }}
+          {{- with .Values.sensorController.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
