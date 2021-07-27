@@ -2,8 +2,8 @@ apiVersion: v2
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.2.2
-appVersion: "v3.0.2"
+version: 0.2.12
+appVersion: "v3.0.7"
 icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -13,3 +13,6 @@ maintainers:
   - name: alexmt
   - name: jessesuen
   - name: benjaminws
+annotations:
+  artifacthub.io/changes: |
+    - "[Changed]: Argo workflows values file no longer has examples referencing ArgoCD"

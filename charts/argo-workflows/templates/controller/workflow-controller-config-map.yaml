@@ -7,11 +7,11 @@ metadata:
 data:
   config: |
     {{- if .Values.controller.instanceID.enabled }}
-    {{- if .Values.controller.instanceID.useReleaseName }}
+      {{- if .Values.controller.instanceID.useReleaseName }}
     instanceID: {{ .Release.Name }}
-    {{- else }}
+      {{- else }}
     instanceID: {{ .Values.controller.instanceID.explicitID }}
-    {{- end }}
+      {{- end }}
     {{- end }}
     containerRuntimeExecutor: {{ .Values.controller.containerRuntimeExecutor }}
     {{- if .Values.controller.parallelism }}

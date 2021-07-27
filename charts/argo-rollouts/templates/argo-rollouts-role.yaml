@@ -67,10 +67,12 @@ rules:
   - watch
   - patch
 # secret read access to run analysis templates which reference secrets
+# configmap access to read notification-engine configuration
 - apiGroups:
   - ""
   resources:
   - secrets
+  - configmaps
   verbs:
   - get
   - list

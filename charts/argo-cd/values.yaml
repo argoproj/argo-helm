@@ -5,13 +5,10 @@ nameOverride: argocd
 fullnameOverride: ""
 kubeVersionOverride: ""
 
-# Optional CRD installation for those without Helm hooks
-installCRDs: true
-
 global:
   image:
     repository: quay.io/argoproj/argocd
-    tag: v2.0.3
+    tag: v2.0.5
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -22,6 +19,17 @@ global:
   # - ip: 10.20.30.40
   #   hostnames:
   #   - git.myhostname
+
+  networkPolicy:
+    create: false
+    defaultDenyIngress: false
+
+# Override APIVersions
+# If you want to template helm charts but cannot access k8s API server
+# you can set api versions here
+apiVersionOverrides:
+  certmanager: "" # cert-manager.io/v1
+  ingress: "" # networking.k8s.io/v1beta1
 
 ## Controller
 controller:
@@ -214,6 +222,10 @@ dex:
     serviceMonitor:
       enabled: false
       interval: 30s
+      # selector:
+      #   prometheus: kube-prometheus
+      # namespace: monitoring
+      # additionalLabels: {}
 
   image:
     repository: ghcr.io/dexidp/dex
@@ -357,6 +369,14 @@ redis:
     fsGroup: 1000
     runAsNonRoot: true
 
+  serviceAccount:
+    create: false
+    name: ""
+    ## Annotations applied to created service account
+    annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: false
+
   resources: {}
   #  limits:
   #    cpu: 200m
@@ -494,8 +514,11 @@ server:
   certificate:
     enabled: false
     domain: argocd.example.com
-    issuer: {}
+    issuer:
+      kind: # ClusterIssuer
+      name: # letsencrypt
     additionalHosts: []
+    secretName: argocd-server-tls
 
   ## Server service configuration
   service:
@@ -553,6 +576,7 @@ server:
       # - argocd.example.com
     paths:
       - /
+    pathType: Prefix
     extraPaths:
       []
       # - path: /*
@@ -563,7 +587,7 @@ server:
       # - path: /*
       #   pathType: Prefix
       #   backend:
-      #     service
+      #     service:
       #       name: ssl-redirect
       #       port:
       #         name: use-annotation
@@ -577,6 +601,7 @@ server:
   # https://argoproj.github.io/argo-cd/operator-manual/ingress/
   ingressGrpc:
     enabled: false
+    isAWSALB: false
     annotations: {}
     labels: {}
     ingressClassName: ""
@@ -590,6 +615,7 @@ server:
       # - argocd.example.com
     paths:
       - /
+    pathType: Prefix
     extraPaths:
       []
       # - path: /*
@@ -600,7 +626,7 @@ server:
       # - path: /*
       #   pathType: Prefix
       #   backend:
-      #     service
+      #     service:
       #       name: ssl-redirect
       #       port:
       #         name: use-annotation
@@ -972,6 +998,27 @@ configs:
     #     tlsClientConfig:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
+
+  gpgKeysAnnotations: {}
+  gpgKeys: {}
+    # 4AEE18F83AFDEB23: |
+    #     -----BEGIN PGP PUBLIC KEY BLOCK-----
+    #
+    #     mQENBFmUaEEBCACzXTDt6ZnyaVtueZASBzgnAmK13q9Urgch+sKYeIhdymjuMQta
+    #     x15OklctmrZtqre5kwPUosG3/B2/ikuPYElcHgGPL4uL5Em6S5C/oozfkYzhwRrT
+    #     SQzvYjsE4I34To4UdE9KA97wrQjGoz2Bx72WDLyWwctD3DKQtYeHXswXXtXwKfjQ
+    #     7Fy4+Bf5IPh76dA8NJ6UtjjLIDlKqdxLW4atHe6xWFaJ+XdLUtsAroZcXBeWDCPa
+    #     buXCDscJcLJRKZVc62gOZXXtPfoHqvUPp3nuLA4YjH9bphbrMWMf810Wxz9JTd3v
+    #     yWgGqNY0zbBqeZoGv+TuExlRHT8ASGFS9SVDABEBAAG0NUdpdEh1YiAod2ViLWZs
+    #     b3cgY29tbWl0IHNpZ25pbmcpIDxub3JlcGx5QGdpdGh1Yi5jb20+iQEiBBMBCAAW
+    #     BQJZlGhBCRBK7hj4Ov3rIwIbAwIZAQAAmQEH/iATWFmi2oxlBh3wAsySNCNV4IPf
+    #     DDMeh6j80WT7cgoX7V7xqJOxrfrqPEthQ3hgHIm7b5MPQlUr2q+UPL22t/I+ESF6
+    #     9b0QWLFSMJbMSk+BXkvSjH9q8jAO0986/pShPV5DU2sMxnx4LfLfHNhTzjXKokws
+    #     +8ptJ8uhMNIDXfXuzkZHIxoXk3rNcjDN5c5X+sK8UBRH092BIJWCOfaQt7v7wig5
+    #     4Ra28pM9GbHKXVNxmdLpCFyzvyMuCmINYYADsC848QQFFwnd4EQnupo6QvhEVx1O
+    #     j7wDwvuH5dCrLuLwtwXaQh0onG4583p0LGms2Mf5F+Ick6o/4peOlBoZz48=
+    #     =Bvzs
+    #     -----END PGP PUBLIC KEY BLOCK-----
 
   knownHostsAnnotations: {}
   knownHosts:
