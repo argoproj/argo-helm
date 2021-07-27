@@ -1588,6 +1588,36 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Support AWS ALB Ingress with gRPC"
+        - "[Deprecated]: Deprecate static assets flag passed to argocd-server"
+    apiVersion: v2
+    appVersion: 2.0.5
+    created: "2021-07-27T11:07:31.613176343Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.14
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 645c49edf981e5a2df07c7e43d095c25b18d78fe5c98717e2dc87656753c4cd7
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-cd/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.10.2/argo-cd-3.10.2.tgz
+    version: 3.10.2
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Bump default version to v2.0.5"
     apiVersion: v2
     appVersion: 2.0.5
@@ -8250,4 +8280,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-07-27T06:51:00.738140755Z"
+generated: "2021-07-27T11:07:31.616299092Z"
