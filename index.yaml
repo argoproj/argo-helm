@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Set server.staticAssets.enabled=true since Argo CD 2.0.5 still needs it"
+    apiVersion: v2
+    appVersion: 2.0.5
+    created: "2021-07-28T15:42:38.956880117Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 16e15df53c66c00d2561dbaa70f55bf7c27377f6354b210bea8e7928eaab8272
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-cd/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.11.1/argo-cd-3.11.1.tgz
+    version: 3.11.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Updated]: Updated redis-ha chart dependency 4.12.14 -> 4.12.17"
         - "[Updated]: Updated dex image 2.27.0 -> 2.28.1"
         - "[Updated]: Updated redis alpine image 6.2.2 -> 6.2.4"
@@ -8311,4 +8340,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-07-28T14:37:28.269934418Z"
+generated: "2021-07-28T15:42:38.959872956Z"
