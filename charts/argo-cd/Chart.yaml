@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: 2.0.5
 description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 3.11.0
+version: 3.11.1
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-cd/assets/logo.png
 keywords:
@@ -21,6 +21,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Updated]: Updated redis-ha chart dependency 4.12.14 -> 4.12.17"
-    - "[Updated]: Updated dex image 2.27.0 -> 2.28.1"
-    - "[Updated]: Updated redis alpine image 6.2.2 -> 6.2.4"
+    - "[Changed]: Set server.staticAssets.enabled=true since Argo CD 2.0.5 still needs it"
