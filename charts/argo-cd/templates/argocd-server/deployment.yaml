@@ -42,7 +42,7 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         command:
         - argocd-server
-        {{ if .Values.server.staticAssets.enabled }}
+        {{- if semverCompare "< 2.1.0-0" (default .Values.global.image.tag .Values.server.image.tag) }}
         - --staticassets
         - /shared/app
         {{ end }}
