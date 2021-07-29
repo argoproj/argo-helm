@@ -42,10 +42,15 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         command:
         - argocd-server
-        {{ if .Values.server.staticAssets.enabled }}
+        {{- if .Values.server.staticAssets.enabled }}
         - --staticassets
         - /shared/app
-        {{ end }}
+        {{- else if eq (toString .Values.server.staticAssets.enabled) "<nil>" }}
+        {{- if semverCompare "< 2.1.0-0" (default .Values.global.image.tag .Values.server.image.tag) }}
+        - --staticassets
+        - /shared/app
+        {{- end }}
+        {{- end }}
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
         {{- if .Values.dex.enabled }}

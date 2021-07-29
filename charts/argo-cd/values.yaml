@@ -432,8 +432,9 @@ server:
   #  - --insecure
 
   # This flag is used to either remove or pass the CLI flag --staticassets /shared/app to the argocd-server app
+  # If a nil value (~) is specified the chart uses semverCompare to enable the flag based on the argocd-server version
   staticAssets:
-    enabled: true
+    enabled: ~
 
   ## Environment variables to pass to argocd-server
   ##
