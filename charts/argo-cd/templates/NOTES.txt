@@ -11,7 +11,7 @@ In order to access the server UI you have the following options:
 In case you are deploying on openshift 4
 3. You have to use the Openshift Routes. For that use folowing command:
 
-   oc create route passthrough YOUR_ROUTE_NAME --service=YOUR_POD --port=https --insecure-policy=Redirect
+   oc create route passthrough YOUR_ROUTE_NAME --service=YOUR_SERVICE --port=https --insecure-policy=Redirect
    
 After that execute the following command to get the server UI link:
 
