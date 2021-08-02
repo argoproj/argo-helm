@@ -34,6 +34,11 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ## Upgrading
 
+### 3.10.2
+
+ArgoCD has recently deprecated the flag `--staticassets` and from chart version `3.10.2` has been disabled by default
+It can be re-enabled by setting `server.staticAssets.enabled` to true
+
 ### 3.8.1
 
 This bugfix version potentially introduces a rename (and recreation) of one or more ServiceAccounts. It _only happens_ when you use one of these customization:
@@ -132,7 +137,7 @@ NAME: my-release
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v2.0.4"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v2.0.5"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
@@ -287,6 +292,7 @@ NAME: my-release
 | server.config | [General Argo CD configuration](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#repositories) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
+| server.staticAssets.enabled | Disable deprecated flag --staticassets | `false` |
 | server.env | Environment variables for the server. | `[]` |
 | server.envFrom | `envFrom` to pass to the server. | `[]` (See [values.yaml](values.yaml)) |
 | server.image.repository | Repository to use for the server | `global.image.repository` |
