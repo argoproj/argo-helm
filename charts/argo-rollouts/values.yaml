@@ -31,6 +31,27 @@ controller:
       additionalLabels: {}
       additionalAnnotations: {}
 
+dashboard:
+  enabled: false
+  component: rollouts-dashboard
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  image:
+    registry: quay.io
+    repository: argoproj/kubectl-argo-rollouts
+    tag: master
+    pullPolicy: IfNotPresent
+  servicePort: 3100
+  resources: {}
+  # Additional sidecar container. Like proxy. (With ingrss-nginx can use `External OAUTH Authentication` instead of proxy sidecar)
+  sidecarContainer: []
+  ingress:
+    enabled: false
+    previousApi: false
+    host: change.me
+    annotation: {}
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true

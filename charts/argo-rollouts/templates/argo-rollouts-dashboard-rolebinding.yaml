@@ -1,0 +1,16 @@
+{{- if and .Values.dashboard.enabled (not .Values.clusterInstall) }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "argo-rollouts.fullname" . | trunc 53}}-dashboard
+  labels:
+    app.kubernetes.io/component: {{ .Values.dashboard.component }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "argo-rollouts.fullname" . | trunc 53}}-dashboard
+subjects:
+- kind: ServiceAccount
+  name: {{ include "argo-rollouts.serviceAccountName" . | trunc 53 }}-dashboard
+{{- end }}

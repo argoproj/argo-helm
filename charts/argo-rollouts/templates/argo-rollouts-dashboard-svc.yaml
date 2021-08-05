@@ -1,0 +1,12 @@
+{{- if .Values.dashboard.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "argo-rollouts.fullname" . | trunc 53}}-dashboard
+spec:
+  selector:
+    {{- include "argo-rollouts-dashboard.selectorLabels" . | nindent 4 }}
+  ports:
+  - port: {{ .Values.dashboard.servicePort }}
+  type: ClusterIP
+{{- end }}

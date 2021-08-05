@@ -1,0 +1,37 @@
+{{- if .Values.dashboard.ingress.enabled -}}
+{{- if not .Values.dashboard.ingress.previousApi -}}
+apiVersion: networking.k8s.io/v1
+{{- else }}
+apiVersion:  extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "argo-rollouts.serviceAccountName" . | trunc 53 }}-dashboard
+  labels:
+    app.kubernetes.io/component: {{ .Values.dashboard.component }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
+  {{- with .Values.dashboard.ingress.annotation }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  tls:
+  - hosts:
+    - {{ .Values.dashboard.ingress.host }}
+    secretName: {{ .Values.dashboard.ingress.host | replace "." "-" }}-tls
+  rules:
+  - host: {{ .Values.dashboard.ingress.host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          {{- if not .Values.dashboard.ingress.previousApi -}}
+          service:
+            name: {{ include "argo-rollouts.fullname" . | trunc 53}}-dashboard
+            port:
+              number: {{ .Values.dashboard.servicePort }}
+          {{- else }}
+          serviceName: {{ include "argo-rollouts.fullname" . | trunc 53}}-dashboard
+          servicePort: {{ .Values.dashboard.servicePort }}
+          {{- end }}
+{{- end }}

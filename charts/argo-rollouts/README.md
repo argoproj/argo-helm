@@ -36,9 +36,9 @@ $ helm install my-release argo/argo-rollouts
 | controller.image.repository | string | `"argoproj/argo-rollouts"` | Repository to use |
 | controller.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
-| controller.tolerations | list | `[]` | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
-| controller.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
-| controller.nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
+| controller.tolerations | list | `[]` | [Tolerations for use with node taints] |
+| controller.affinity | object | `{}` | [Assign custom affinity rules to the deployment] |
+| controller.nodeSelector | object | `{}` | [Node selector] |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | controller.metrics.serviceMonitor.additionalAnnotations | object | `{}` | Annotations to be added to the ServiceMonitor |
@@ -53,6 +53,22 @@ $ helm install my-release argo/argo-rollouts
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | podSecurityContext | object | `{"runAsNonRoot": true}` | Security Context to set on pod level |
 | containerSecurityContext | object | `{}` | Security Context to set on container level |
+| dashboard.enable | bool | `false` | Enable dashboard |
+| dashboard.component | string | `"rollouts-dashboard"` | Value of label `app.kubernetes.io/component` |
+| dashboard.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| dashboard.image.registry | string | `quay.io` | Registry to use |
+| dashboard.image.repository | string | `"argoproj/kubectl-argo-rollouts"` | Repository to use |
+| dashboard.image.tag | string | `"master"` | Image tag |
+| dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
+| dashboard.tolerations | list | `[]` | [Tolerations for use with node taints] |
+| dashboard.affinity | object | `{}` | [Assign custom affinity rules to the deployment] |
+| dashboard.nodeSelector | object | `{}` | [Node selector] |
+| dashboard.servicePort | int | `3100` | Port for service and ingress. Default use dashboard port 3100. If use sidecar proxy, can change to that port. |
+| dashboard.sidecarContainer | list | `[]` | List of sidecar container |
+| dashboard.ingress.enabled | bool | `false` | Enable ingress for dashboard |
+| dashboard.ingress.previousApi | bool | `false` | Use old apiVersion `extensions/v1beta1` for ingress. Only enable for K8S < 1.19 |
+| dashboard.ingress.host | string | `change.me` | FQDN for dashboard |
+| dashboard.ingress.annotation | object | `{}` | Annotation for dashboard's ingress. |
 
 ## Upgrading
 
@@ -68,3 +84,7 @@ $ helm install my-release argo/argo-rollouts
 * Breaking parameters update
   * `securityContext` was renamed to `containerSecurityContext`
   * Added `controller.image.registry`. Prior to this chart version you had to override the registry via `controller.image.repository`
+
+[Tolerations for use with node taints]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+[Assign custom affinity rules to the deployment]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+[Node selector]: https://kubernetes.io/docs/user-guide/node-selection/
