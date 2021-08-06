@@ -21,4 +21,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: Set server.staticAssets.enabled=true since Argo CD 2.0.5 still needs it"
+    - "[Added]: Add server.service.sessionAffinity setting of the Service into account when deciding which backend Pod to use"
