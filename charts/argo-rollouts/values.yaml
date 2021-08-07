@@ -31,6 +31,26 @@ controller:
       additionalLabels: {}
       additionalAnnotations: {}
 
+  ## Readiness and liveness probes for rollouts controller
+  livenessProbe:
+    httpGet:
+      path: /metrics
+      port: 8090
+    initialDelaySeconds: 30
+    periodSeconds: 20
+    failureThreshold: 3
+    successThreshold: 1
+    timeoutSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /metrics
+      port: 8090
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+    timeoutSeconds: 4
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
