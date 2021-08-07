@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Add server.service.sessionAffinity setting of the Service into account when deciding which backend Pod to use"
+    apiVersion: v2
+    appVersion: 2.0.5
+    created: "2021-08-07T13:08:11.100043388Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: d9261e45129c7443a9ba616fe60ff4043fb3caa06f849702ee8cec0624481586
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-cd/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.11.2/argo-cd-3.11.2.tgz
+    version: 3.11.2
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Set server.staticAssets.enabled=true since Argo CD 2.0.5 still needs it"
     apiVersion: v2
     appVersion: 2.0.5
@@ -8340,4 +8369,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-07-28T15:42:38.959872956Z"
+generated: "2021-08-07T13:08:11.103850952Z"
