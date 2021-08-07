@@ -36,6 +36,9 @@ spec:
             - --namespaced
           {{- end }}
           env:
+          {{- with .Values.sensorController.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
