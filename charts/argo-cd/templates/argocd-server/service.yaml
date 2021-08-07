@@ -47,3 +47,6 @@ spec:
 {{- with .Values.server.service.externalTrafficPolicy }}
   externalTrafficPolicy: {{ . }}
 {{- end }}
+{{- with .Values.server.service.sessionAffinity }}
+  sessionAffinity: {{ . }}
+{{- end }}
