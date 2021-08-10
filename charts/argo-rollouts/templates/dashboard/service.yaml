@@ -17,6 +17,6 @@ spec:
     port: 3100
     targetPort: 3100
   selector:
-    # app.kubernetes.io/component: {{ .Values.dashboard.component }}
-    {{- include "argo-rollouts.selectorLabels-dashboard" . | nindent 6 }}
+    app.kubernetes.io/component: {{ .Values.dashboard.component }}
+    {{- include "argo-rollouts.selectorLabels" . | nindent 4 }}
 {{- end }}

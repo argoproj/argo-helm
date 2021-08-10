@@ -9,7 +9,8 @@ metadata:
 spec:
   selector:
     matchLabels:
-      {{- include "argo-rollouts.selectorLabels-dashboard" . | nindent 6 }}
+      {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: {{ .Values.dashboard.component }}
   strategy:
     type: Recreate
   template:
@@ -19,7 +20,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "argo-rollouts.selectorLabels-dashboard" . | nindent 8 }}
+        {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: {{ .Values.dashboard.component }}
         {{- range $key, $value := .Values.podLabels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}

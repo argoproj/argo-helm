@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: {{ include "argo-rollouts.fullname" . }}-metrics
   labels:
-    app.kubernetes.io/component: server
+    app.kubernetes.io/component: {{ .Values.controller.component }}
     {{- include "argo-rollouts.labels" . | nindent 4 }}
   {{- with .Values.serviceAnnotations }}
   annotations:
@@ -17,5 +17,6 @@ spec:
     port: 8090
     targetPort: 8090
   selector:
-    {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
+    app.kubernetes.io/component: {{ .Values.controller.component }}
+    {{- include "argo-rollouts.selectorLabels" . | nindent 4 }}
 {{- end }}

@@ -8,6 +8,7 @@ metadata:
 spec:
   selector:
     matchLabels:
+      app.kubernetes.io/component: {{ .Values.controller.component }}
       {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
   strategy:
     type: Recreate
@@ -19,6 +20,7 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: {{ .Values.controller.component }}
         {{- range $key, $value := .Values.podLabels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
