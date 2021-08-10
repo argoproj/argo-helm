@@ -2,8 +2,8 @@ apiVersion: v2
 appVersion: "v1.0.2"
 description: A Helm chart for Argo Rollouts
 name: argo-rollouts
-version: 1.0.3
-icon: https://raw.githubusercontent.com/argoproj/argo/master/argo.png
+version: 1.0.4
+icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 maintainers:
   - name: alexmt
@@ -11,4 +11,5 @@ maintainers:
   - name: jessesuen
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Initialize Changelog"
+    - "[Fixed]: Add missing liveness and readiness probes"
+    - "[Changed]: Fix icon url"

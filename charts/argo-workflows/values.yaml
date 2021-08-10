@@ -5,11 +5,6 @@ images:
   pullSecrets: []
   # - name: argo-pull-secret
 
-init:
-  # By default the installation will not set an explicit one, which will mean it uses `default` for the namespace the chart is
-  # being deployed to.  In RBAC clusters, that will almost certainly fail.  See the NOTES: section of the readme for more info.
-  serviceAccount: ""
-
 createAggregateRoles: true
 
 ## String to partially override "argo-workflows.fullname" template
@@ -29,13 +24,15 @@ kubeVersionOverride: ""
 singleNamespace: false
 
 workflow:
-  namespace: "" # Specify namespace if workflows run in another namespace than argo. This controls where the service account and RBAC resources will be created.
+  namespace: # Deprecated, for backwards compatibility: specify a single namespace to run workflows in
   serviceAccount:
     create: false # Specifies whether a service account should be created
     annotations: {}
     name: "argo-workflow" # Service account which is used to run workflows
   rbac:
-    create: false # adds Role and RoleBinding for the above specified service account to be able to run workflows
+    # Adds Role and RoleBinding for the above specified service account to be able to run workflows
+    # A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below)
+    create: true
 
 controller:
   image:
@@ -109,6 +106,8 @@ controller:
     # Annotations applied to created service account
     annotations: {}
   name: workflow-controller
+  # Specify all namespaces to run worksflows need to be able to run in. This controls where the service
+  # account and RBAC resources will be created. If unspecified, will run in the default namespace.
   workflowNamespaces:
     - default
   containerRuntimeExecutor: docker
@@ -281,9 +280,10 @@ server:
     ##
     hosts:
       []
-      # - argocd.example.com
+      # - argoworkflows.example.com
     paths:
       - /
+    pathType: Prefix
     extraPaths:
       []
       # - path: /*
@@ -300,9 +300,9 @@ server:
       #         name: use-annotation
     tls:
       []
-      # - secretName: argocd-example-tls
+      # - secretName: argoworkflows-example-tls
       #   hosts:
-      #     - argocd.example.com
+      #     - argoworkflows.example.com
     https: false
 
   clusterWorkflowTemplates:

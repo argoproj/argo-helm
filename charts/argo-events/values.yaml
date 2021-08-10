@@ -47,6 +47,9 @@ sensorController:
   image: argoproj/sensor-controller
   tag: v1.3.1
   replicaCount: 1
+  extraEnv: []
+    # - name: DEBUG_LOG
+    #   value: "true"
   sensorImage: argoproj/sensor
   podAnnotations: {}
   nodeSelector: {}
@@ -61,6 +64,9 @@ eventsourceController:
   image: argoproj/eventsource-controller
   tag: v1.3.1
   replicaCount: 1
+  extraEnv: []
+    # - name: DEBUG_LOG
+    #   value: "true"
   eventsourceImage: argoproj/eventsource
   podAnnotations: {}
   nodeSelector: {}
@@ -75,6 +81,9 @@ eventbusController:
   image: argoproj/eventbus-controller
   tag: v1.3.1
   replicaCount: 1
+  extraEnv: []
+    # - name: DEBUG_LOG
+    #   value: "true"
   podAnnotations: {}
   nodeSelector: {}
   podLabels: {}

@@ -39,6 +39,10 @@ spec:
         ports:
         - containerPort: 8090
           name: metrics
+        livenessProbe:
+          {{- toYaml .Values.controller.livenessProbe | nindent 10 }}
+        readinessProbe:
+          {{- toYaml .Values.controller.readinessProbe | nindent 10 }}
         securityContext:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
         resources:

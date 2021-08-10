@@ -8,7 +8,7 @@ kubeVersionOverride: ""
 global:
   image:
     repository: quay.io/argoproj/argocd
-    tag: v2.0.4
+    tag: v2.0.5
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -229,7 +229,7 @@ dex:
 
   image:
     repository: ghcr.io/dexidp/dex
-    tag: v2.27.0
+    tag: v2.28.1
     imagePullPolicy: IfNotPresent
   initImage:
     repository:
@@ -313,7 +313,7 @@ redis:
 
   image:
     repository: redis
-    tag: 6.2.2-alpine
+    tag: 6.2.4-alpine
     imagePullPolicy: IfNotPresent
 
   ## Additional command line arguments to pass to redis-server
@@ -406,7 +406,7 @@ redis-ha:
     metrics:
       enabled: true
   image:
-    tag: 6.2.2-alpine
+    tag: 6.2.4-alpine
 
 ## Server
 server:
@@ -430,6 +430,10 @@ server:
   ##
   extraArgs: []
   #  - --insecure
+
+  # This flag is used to either remove or pass the CLI flag --staticassets /shared/app to the argocd-server app
+  staticAssets:
+    enabled: true
 
   ## Environment variables to pass to argocd-server
   ##
@@ -537,6 +541,7 @@ server:
     loadBalancerSourceRanges: []
     externalIPs: []
     externalTrafficPolicy: ""
+    sessionAffinity: ""
 
   ## Server metrics service configuration
   metrics:
