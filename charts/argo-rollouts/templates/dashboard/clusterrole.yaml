@@ -1,4 +1,4 @@
-{{- if and ( eq .Values.dashboard.enabled true) ( eq .Values.clusterInstall true) }}
+{{- if and .Values.dashboard.enabled .Values.clusterInstall }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
