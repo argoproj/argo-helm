@@ -3,6 +3,7 @@
 {{- $servicePort := .Values.server.servicePort -}}
 {{- $paths := .Values.server.ingress.paths -}}
 {{- $extraPaths := .Values.server.ingress.extraPaths -}}
+{{- $pathType := .Values.server.ingress.pathType -}}
 apiVersion: {{ include "argo-workflows.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
