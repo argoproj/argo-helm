@@ -60,6 +60,12 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 
 ## Upgrading
 
+### To 2.0.0
+
+* The argo-rollouts dashboard is added to the template and can be enabled by setting `dashboard.enabled=true`.
+* There is a breaking change where the selector label `app.kubernetes.io/component: {{ .Values.controller.component }}` is added to rollout's deployment and service in order to distinguish between the controller and the dashboard component.
+  To upgrade an existing installation, please **add the `--force` parameter** to the `helm upgrade` command or **delete the Deployment and Service resource** before you upgrade. This is necessary because Deployment's label selector is immutable.
+
 ### To 1.0.0
 
 * This is a breaking change which only supports Helm v3.0.0+ now. If you still use Helm v2, please consider upgrading because v2 is EOL since November 2020.  
