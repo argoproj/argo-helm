@@ -80,6 +80,9 @@ spec:
           {{- with .Values.server.volumeMounts }}
             {{- toYaml . | nindent 10}}
           {{- end }}
+        {{- with .Values.server.extraContainers }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.images.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
