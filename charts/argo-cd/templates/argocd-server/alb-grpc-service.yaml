@@ -20,5 +20,5 @@ spec:
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
   sessionAffinity: None
-  type: NodePort
+  type: {{ .Values.server.ingressGrpc.awsALB.serviceType }}
 {{- end -}}
