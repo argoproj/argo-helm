@@ -57,6 +57,20 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | podSecurityContext | object | `{"runAsNonRoot": true}` | Security Context to set on pod level |
 | containerSecurityContext | object | `{}` | Security Context to set on container level |
 | dashboard.enabled | bool | `false` | Deploy dashboard server |
+| dashboard.component | string | `"rollouts-dashboard"` | Value of label `app.kubernetes.io/component` |
+| dashboard.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| dashboard.image.registry | string | `quay.io` | Registry to use |
+| dashboard.image.repository | string | `"argoproj/kubectl-argo-rollouts"` | Repository to use |
+| dashboard.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
+| dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
+| dashboard.tolerations | list | `[]` | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
+| dashboard.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
+| dashboard.nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
+| dashboard.podSecurityContext | object | `{"runAsNonRoot": true}` | Security Context to set on pod level |
+| dashboard.containerSecurityContext | object | `{}` | Security Context to set on container level |
+| dashboard.serviceAccount.create | bool | `true` | Specifies whether a dashboard service account should be created |
+| dashboard.serviceAccount.annotations | object | `{}` | Annotations to add to the dashboard service account |
+| dashboard.serviceAccount.name | string | `""` | The name of the dashboard service account to use. If not set and create is true, a name is generated using the fullname template |
 
 ## Upgrading
 
