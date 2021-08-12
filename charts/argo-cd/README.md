@@ -34,6 +34,39 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ## Upgrading
 
+### 3.10.2
+
+ArgoCD has recently deprecated the flag `--staticassets` and from chart version `3.10.2` has been disabled by default
+It can be re-enabled by setting `server.staticAssets.enabled` to true
+
+### 3.8.1
+
+This bugfix version potentially introduces a rename (and recreation) of one or more ServiceAccounts. It _only happens_ when you use one of these customization:
+
+```yaml
+# Case 1) - only happens when you do not specify a custom name (repoServer.serviceAccount.name)
+repoServer:
+  serviceAccount:
+    create: true
+
+# Case 2)
+controller:
+  serviceAccount:
+    name: "" # or <nil>
+
+# Case 3)
+dex:
+  serviceAccount:
+    name: "" # or <nil>
+
+# Case 4)
+server:
+  serviceAccount:
+    name: "" # or <nil>
+```
+
+Please check if you are affected by one of these cases **before you upgrade**, especially when you use **cloud IAM roles for service accounts.** (eg. IRSA on AWS or Workload Identity for GKE)
+
 ### 3.2.* 
 
 With this minor version we introduced the evaluation for the ingress manifest (depending on the capabilities version), See [Pull Request](https://github.com/argoproj/argo-helm/pull/637).
@@ -83,6 +116,7 @@ server:
 ## Prerequisites
 
 - Kubernetes 1.7+
+- Helm v3.0.0+
 
 ## Installing the Chart
 
@@ -97,27 +131,26 @@ NAME: my-release
 ...
 ```
 
-### Helm v3 Compatibility
-
-Requires chart version 1.5.2 or newer.
-
-Helm v3 has removed the `install-crds` hook so CRDs are now populated by files in the [crds](./crds) directory. Users of Helm v3 should set the `installCRDs` value to `false` to avoid warnings about nonexistent webhooks.
-
 ## Chart Values
 
 | Parameter | Description | Default |
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v1.8.4"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v2.0.5"` |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
+| global.networkPolicy.create | Create NetworkPolicy objects for all components | `false` |
+| global.networkPolicy.defaultDenyIngress | Default deny all ingress traffic | `false` |
 | kubeVersionOverride | Override the Kubernetes version, which is used to evaluate certain manifests | `""` |
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | fullnameOverride | String to fully override `"argo-cd.fullname"` | `""` |
-| installCRDs | Install CRDs if you are using Helm2. | `true` |
+| apiVersionOverrides.certmanager | String to override apiVersion of certmanager resources rendered by this helm chart | `""` |
+| apiVersionOverrides.ingress | String to override apiVersion of ingresses rendered by this helm chart | `""` |
 | configs.clusterCredentials | Provide one or multiple [external cluster credentials](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters) | `[]` (See [values.yaml](values.yaml)) |
+| configs.gpgKeysAnnotations | GnuPG key ring annotations | `{}` |
+| configs.gpgKeys | [GnuPG](https://argoproj.github.io/argo-cd/user-guide/gpg-verification/) keys to add to the key ring | `{}` (See [values.yaml](values.yaml)) |
 | configs.knownHostsAnnotations | Known Hosts configmap annotations | `{}` |
 | configs.knownHosts.data.ssh_known_hosts | Known Hosts | See [values.yaml](values.yaml) |
 | configs.secret.annotations | Annotations for argocd-secret | `{}` |
@@ -259,6 +292,7 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.config | [General Argo CD configuration](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#repositories) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
+| server.staticAssets.enabled | Disable deprecated flag --staticassets | `false` |
 | server.env | Environment variables for the server. | `[]` |
 | server.envFrom | `envFrom` to pass to the server. | `[]` (See [values.yaml](values.yaml)) |
 | server.image.repository | Repository to use for the server | `global.image.repository` |
@@ -277,6 +311,8 @@ Helm v3 has removed the `install-crds` hook so CRDs are now populated by files i
 | server.ingressGrpc.labels | Additional ingress labels for dedicated [gRPC-ingress] | `{}` |
 | server.ingressGrpc.ingressClassName | Defines which ingress controller will implement the resource [gRPC-ingress] | `""` |
 | server.ingressGrpc.tls | Ingress TLS configuration for dedicated [gRPC-ingress] | `[]` |
+| server.ingressGrpc.isAWSALB | Setup up GRPC ingress to work with an AWS ALB | `false` |
+| server.ingressGrpc.awsALB.serviceType | Service type for the AWS ALB GRPC service | `NodePort` |
 | server.route.enabled | Enable a OpenShift route for the server | `false` |
 | server.route.hostname | Hostname of OpenShift route | `""` |
 | server.lifecycle | PostStart and PreStop hooks configuration | `{}` |
@@ -401,3 +437,25 @@ through `xxx.extraArgs`
 | redis-ha.image.tag | Redis tag | `"6.2.1-alpine"` |
 
 [gRPC-ingress]: https://argoproj.github.io/argo-cd/operator-manual/ingress/
+
+
+### Using AWS ALB Ingress Controller With GRPC
+If you are using an AWS ALB Ingress controller, you will need to set `server.ingressGrpc.isAWSALB` to `true`. This will create a second service with the annotation `alb.ingress.kubernetes.io/backend-protocol-version: HTTP2` and modify the server ingress to add a condition annotation to route GRPC traffic to the new service. 
+
+Example:
+```yaml
+server:
+  ingress:
+    enabled: true
+    annotations: 
+      alb.ingress.kubernetes.io/backend-protocol: HTTPS
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+      alb.ingress.kubernetes.io/scheme: internal
+      alb.ingress.kubernetes.io/target-type: ip
+  ingressGrpc:
+    enabled: true
+    isAWSALB: true
+    awsALB:
+      serviceType: ClusterIP
+      
+```

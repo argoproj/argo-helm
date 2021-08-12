@@ -1,5 +1,5 @@
 # docker registry
-registry: argoproj
+registry: quay.io
 
 # The image pull policy
 imagePullPolicy: Always
@@ -7,9 +7,6 @@ imagePullPolicy: Always
 # Secrets with credentials to pull images from a private registry
 imagePullSecrets: []
 # - name: argo-pull-secret
-
-# If set to false, skip installing the CRDs. Requires user to have them installed prior to helm chart installation.
-installCRD: true
 
 # ServiceAccount to use for running controller.
 serviceAccount: argo-events-sa
@@ -47,10 +44,13 @@ singleNamespace: true
 # sensor controller
 sensorController:
   name: sensor-controller
-  image: sensor-controller
+  image: argoproj/sensor-controller
   tag: v1.3.1
   replicaCount: 1
-  sensorImage: sensor
+  extraEnv: []
+    # - name: DEBUG_LOG
+    #   value: "true"
+  sensorImage: argoproj/sensor
   podAnnotations: {}
   nodeSelector: {}
   podLabels: {}
@@ -61,10 +61,13 @@ sensorController:
 
 eventsourceController:
   name: eventsource-controller
-  image: eventsource-controller
+  image: argoproj/eventsource-controller
   tag: v1.3.1
   replicaCount: 1
-  eventsourceImage: eventsource
+  extraEnv: []
+    # - name: DEBUG_LOG
+    #   value: "true"
+  eventsourceImage: argoproj/eventsource
   podAnnotations: {}
   nodeSelector: {}
   podLabels: {}
@@ -75,9 +78,12 @@ eventsourceController:
 
 eventbusController:
   name: eventbus-controller
-  image: eventbus-controller
+  image: argoproj/eventbus-controller
   tag: v1.3.1
   replicaCount: 1
+  extraEnv: []
+    # - name: DEBUG_LOG
+    #   value: "true"
   podAnnotations: {}
   nodeSelector: {}
   podLabels: {}

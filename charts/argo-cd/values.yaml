@@ -5,14 +5,11 @@ nameOverride: argocd
 fullnameOverride: ""
 kubeVersionOverride: ""
 
-# Optional CRD installation for those without Helm hooks
-installCRDs: true
-
 global:
   image:
     repository: quay.io/argoproj/argocd
-    tag: v2.0.3
-    digest: # sha256:a2888d810d0741fe009b4ee4f4e7e76750be8e8732b05fe3f954e0ae319f7a61
+    tag: v2.0.5
+    digest: # sha256:<hash>
     imagePullPolicy: IfNotPresent
   securityContext: {}
   #  runAsUser: 999
@@ -23,6 +20,17 @@ global:
   # - ip: 10.20.30.40
   #   hostnames:
   #   - git.myhostname
+
+  networkPolicy:
+    create: false
+    defaultDenyIngress: false
+
+# Override APIVersions
+# If you want to template helm charts but cannot access k8s API server
+# you can set api versions here
+apiVersionOverrides:
+  certmanager: "" # cert-manager.io/v1
+  ingress: "" # networking.k8s.io/v1beta1
 
 ## Controller
 controller:
@@ -216,10 +224,14 @@ dex:
     serviceMonitor:
       enabled: false
       interval: 30s
+      # selector:
+      #   prometheus: kube-prometheus
+      # namespace: monitoring
+      # additionalLabels: {}
 
   image:
-    repository: quay.io/dexidp/dex
-    tag: v2.26.0
+    repository: ghcr.io/dexidp/dex
+    tag: v2.28.1
     digest:
     imagePullPolicy: IfNotPresent
   initImage:
@@ -305,7 +317,7 @@ redis:
 
   image:
     repository: redis
-    tag: 6.2.2-alpine
+    tag: 6.2.4-alpine
     digest:
     imagePullPolicy: IfNotPresent
 
@@ -362,6 +374,14 @@ redis:
     fsGroup: 1000
     runAsNonRoot: true
 
+  serviceAccount:
+    create: false
+    name: ""
+    ## Annotations applied to created service account
+    annotations: {}
+    ## Automount API credentials for the Service Account
+    automountServiceAccountToken: false
+
   resources: {}
   #  limits:
   #    cpu: 200m
@@ -391,7 +411,7 @@ redis-ha:
     metrics:
       enabled: true
   image:
-    tag: 6.2.2-alpine
+    tag: 6.2.4-alpine
 
 ## Server
 server:
@@ -416,6 +436,10 @@ server:
   ##
   extraArgs: []
   #  - --insecure
+
+  # This flag is used to either remove or pass the CLI flag --staticassets /shared/app to the argocd-server app
+  staticAssets:
+    enabled: true
 
   ## Environment variables to pass to argocd-server
   ##
@@ -500,8 +524,11 @@ server:
   certificate:
     enabled: false
     domain: argocd.example.com
-    issuer: {}
+    issuer:
+      kind: # ClusterIssuer
+      name: # letsencrypt
     additionalHosts: []
+    secretName: argocd-server-tls
 
   ## Server service configuration
   service:
@@ -520,6 +547,7 @@ server:
     loadBalancerSourceRanges: []
     externalIPs: []
     externalTrafficPolicy: ""
+    sessionAffinity: ""
 
   ## Server metrics service configuration
   metrics:
@@ -559,25 +587,44 @@ server:
       # - argocd.example.com
     paths:
       - /
+    pathType: Prefix
     extraPaths:
       []
       # - path: /*
       #   backend:
       #     serviceName: ssl-redirect
       #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
     tls:
       []
       # - secretName: argocd-tls-certificate
       #   hosts:
       #     - argocd.example.com
     https: false
-  # dedicated ingess for gRPC as documented at
+  # dedicated ingress for gRPC as documented at
   # https://argoproj.github.io/argo-cd/operator-manual/ingress/
   ingressGrpc:
     enabled: false
+    isAWSALB: false
     annotations: {}
     labels: {}
     ingressClassName: ""
+
+    ## Service Type if isAWSALB is set to true
+    ## Can be of type NodePort or ClusterIP depending on which mode you are
+    ## are running. Instance mode needs type NodePort, IP mode needs type
+    ## ClusterIP
+    ## Ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/how-it-works/#ingress-traffic
+    ##
+    awsALB:
+      serviceType: NodePort
 
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
@@ -588,12 +635,21 @@ server:
       # - argocd.example.com
     paths:
       - /
+    pathType: Prefix
     extraPaths:
       []
       # - path: /*
       #   backend:
       #     serviceName: ssl-redirect
       #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
     tls:
       []
       # - secretName: argocd-tls-certificate
@@ -670,7 +726,7 @@ server:
   ## Annotations to be added to ArgoCD rbac ConfigMap
   rbacConfigAnnotations: {}
 
-  # Boolean determining whether or not to create the configmap. If false, it is expected tthe configmap will be created
+  # Boolean determining whether or not to create the configmap. If false, it is expected the configmap will be created
   # by something else. ArgoCD will not work if there is no configMap created with the name above.
   rbacConfigCreate: true
 
@@ -963,6 +1019,27 @@ configs:
     #     tlsClientConfig:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
+
+  gpgKeysAnnotations: {}
+  gpgKeys: {}
+    # 4AEE18F83AFDEB23: |
+    #     -----BEGIN PGP PUBLIC KEY BLOCK-----
+    #
+    #     mQENBFmUaEEBCACzXTDt6ZnyaVtueZASBzgnAmK13q9Urgch+sKYeIhdymjuMQta
+    #     x15OklctmrZtqre5kwPUosG3/B2/ikuPYElcHgGPL4uL5Em6S5C/oozfkYzhwRrT
+    #     SQzvYjsE4I34To4UdE9KA97wrQjGoz2Bx72WDLyWwctD3DKQtYeHXswXXtXwKfjQ
+    #     7Fy4+Bf5IPh76dA8NJ6UtjjLIDlKqdxLW4atHe6xWFaJ+XdLUtsAroZcXBeWDCPa
+    #     buXCDscJcLJRKZVc62gOZXXtPfoHqvUPp3nuLA4YjH9bphbrMWMf810Wxz9JTd3v
+    #     yWgGqNY0zbBqeZoGv+TuExlRHT8ASGFS9SVDABEBAAG0NUdpdEh1YiAod2ViLWZs
+    #     b3cgY29tbWl0IHNpZ25pbmcpIDxub3JlcGx5QGdpdGh1Yi5jb20+iQEiBBMBCAAW
+    #     BQJZlGhBCRBK7hj4Ov3rIwIbAwIZAQAAmQEH/iATWFmi2oxlBh3wAsySNCNV4IPf
+    #     DDMeh6j80WT7cgoX7V7xqJOxrfrqPEthQ3hgHIm7b5MPQlUr2q+UPL22t/I+ESF6
+    #     9b0QWLFSMJbMSk+BXkvSjH9q8jAO0986/pShPV5DU2sMxnx4LfLfHNhTzjXKokws
+    #     +8ptJ8uhMNIDXfXuzkZHIxoXk3rNcjDN5c5X+sK8UBRH092BIJWCOfaQt7v7wig5
+    #     4Ra28pM9GbHKXVNxmdLpCFyzvyMuCmINYYADsC848QQFFwnd4EQnupo6QvhEVx1O
+    #     j7wDwvuH5dCrLuLwtwXaQh0onG4583p0LGms2Mf5F+Ick6o/4peOlBoZz48=
+    #     =Bvzs
+    #     -----END PGP PUBLIC KEY BLOCK-----
 
   knownHostsAnnotations: {}
   knownHosts:

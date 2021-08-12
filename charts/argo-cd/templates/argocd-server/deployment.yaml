@@ -50,8 +50,10 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         command:
         - argocd-server
+        {{ if .Values.server.staticAssets.enabled }}
         - --staticassets
         - /shared/app
+        {{ end }}
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
         {{- if .Values.dex.enabled }}
@@ -98,6 +100,8 @@ spec:
           subPath: "custom.styles.css"
           name: custom-styles
         {{- end }}
+        - mountPath: /tmp
+          name: tmp-dir
         ports:
         - name: {{ .Values.server.name }}
           containerPort: {{ .Values.server.containerPort }}
@@ -157,6 +161,8 @@ spec:
       {{- end }}
       - emptyDir: {}
         name: static-files
+      - emptyDir: {}
+        name: tmp-dir
       {{- if .Values.configs.styles }}
       - configMap:
           name: argocd-custom-styles
