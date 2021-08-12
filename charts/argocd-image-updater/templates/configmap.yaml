@@ -9,5 +9,5 @@ data:
   registries.conf: |
     {{ with .Values.config.registries }}
       registries:
-      {{ toYaml . | nindent 6 }}
+      {{- toYaml . | nindent 6 }}
     {{- end }}
