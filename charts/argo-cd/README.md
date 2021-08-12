@@ -147,7 +147,7 @@ NAME: my-release
 | nameOverride | Provide a name in place of `argocd` | `"argocd"` |
 | fullnameOverride | String to fully override `"argo-cd.fullname"` | `""` |
 | apiVersionOverrides.certmanager | String to override apiVersion of certmanager resources rendered by this helm chart | `""` |
-| apiVersionOverrides.ingress | String to override apiVersion of ingresses rendered by this helm chart | `""` |
+| apiVersionOverrides.ingress | String to override apiVersion of ingresses rendered by this helm chart | `""` | 
 | configs.clusterCredentials | Provide one or multiple [external cluster credentials](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters) | `[]` (See [values.yaml](values.yaml)) |
 | configs.gpgKeysAnnotations | GnuPG key ring annotations | `{}` |
 | configs.gpgKeys | [GnuPG](https://argoproj.github.io/argo-cd/user-guide/gpg-verification/) keys to add to the key ring | `{}` (See [values.yaml](values.yaml)) |
@@ -165,6 +165,7 @@ NAME: my-release
 | configs.secret.extra | add additional secrets to be added to argocd-secret | `{}` |
 | configs.styles | Define custom CSS styles for your argo instance ([Read More](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/)). This Settings will automatically mount the provided css and reference it in the argo configuration. | `""` (See [values.yaml](values.yaml)) |
 | openshift.enabled | enables using arbitrary uid for argo repo server | `false` |
+| rbac.create | Create clusterroles that extend aggregated roles to use argo-cd crds | `false` |
 
 ## ArgoCD Controller
 
