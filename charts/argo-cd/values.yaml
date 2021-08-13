@@ -33,8 +33,7 @@ apiVersionOverrides:
 
 ## Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
-rbac:
-  create: false
+createAggregateRoles: false
 
 ## Controller
 controller:
