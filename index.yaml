@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Support for aggregation clusterroles"
+    apiVersion: v2
+    appVersion: 2.0.5
+    created: "2021-08-13T20:15:29.183103512Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 586e1dbf075bb7696a8f21d2b951f34c7855e61782a74e3d66c29f994f102d3a
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-cd/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.12.0/argo-cd-3.12.0.tgz
+    version: 3.12.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Can't login when using configs.secret.argocdServerAdminPassword"
     apiVersion: v2
     appVersion: 2.0.5
@@ -8566,4 +8595,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-08-13T16:37:27.008714713Z"
+generated: "2021-08-13T20:15:29.18687216Z"
