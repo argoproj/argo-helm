@@ -5,7 +5,7 @@ metadata:
   name: {{ include "argo-cd.fullname" . }}-aggregate-to-view
   labels:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" .) | nindent 4 }}
 rules:
 - apiGroups:
   - argoproj.io
@@ -24,7 +24,7 @@ metadata:
   name: {{ include "argo-cd.fullname" . }}-aggregate-to-edit
   labels:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" .) | nindent 4 }}
 rules:
 - apiGroups:
   - argoproj.io
@@ -48,7 +48,7 @@ metadata:
   name: {{ include "argo-cd.fullname" . }}-aggregate-to-admin
   labels:
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" .) | nindent 4 }}
 rules:
 - apiGroups:
   - argoproj.io
