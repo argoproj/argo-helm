@@ -65,6 +65,8 @@ kubectl apply -k https://github.com/argoproj-labs/applicationset.git/manifests/c
 | args.policy | string | `sync` | How application is synced between the generator and the cluster |
 | args.debug | bool | `false` | Print debug logs |
 | args.dryRun | bool | `false` | Enable dry run mode |
+| extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
+| extraVolumes | list | `[]` | List of extra volumes to add |
 | fullnameOverride | string | `""` | Override the default fully qualified app name |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"quay.io/argocdapplicationset/argocd-applicationset"` | If defined, a repository applied to the ApplicationSet deployment. |
