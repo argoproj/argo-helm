@@ -1,10 +1,10 @@
-{{- if .Values.controller.metrics.enabled }}
+{{- if .Values.dashboard.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "argo-rollouts.fullname" . }}-metrics
+  name: {{ include "argo-rollouts.fullname" . }}-dashboard
   labels:
-    app.kubernetes.io/component: {{ .Values.controller.component }}
+    app.kubernetes.io/component: {{ .Values.dashboard.component }}
     {{- include "argo-rollouts.labels" . | nindent 4 }}
   {{- with .Values.serviceAnnotations }}
   annotations:
@@ -12,11 +12,11 @@ metadata:
   {{- end }}
 spec:
   ports:
-  - name: metrics
+  - name: dashboard
     protocol: TCP
-    port: 8090
-    targetPort: 8090
+    port: 3100
+    targetPort: 3100
   selector:
-    app.kubernetes.io/component: {{ .Values.controller.component }}
+    app.kubernetes.io/component: {{ .Values.dashboard.component }}
     {{- include "argo-rollouts.selectorLabels" . | nindent 4 }}
 {{- end }}

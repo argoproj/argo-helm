@@ -94,3 +94,28 @@ podLabels: {}
 # Secrets with credentials to pull images from a private registry
 imagePullSecrets: []
 # - name: argo-pull-secret
+
+dashboard:
+  enabled: false
+  component: rollouts-dashboard
+  ## Node selectors and tolerations for server scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  image:
+    registry: quay.io
+    repository: argoproj/kubectl-argo-rollouts
+    tag: ""
+    pullPolicy: IfNotPresent
+  resources: {}
+  podSecurityContext:
+    runAsNonRoot: true
+  containerSecurityContext: {}
+  serviceAccount:
+    create: true
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
