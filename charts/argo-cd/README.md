@@ -148,6 +148,7 @@ NAME: my-release
 | fullnameOverride | String to fully override `"argo-cd.fullname"` | `""` |
 | apiVersionOverrides.certmanager | String to override apiVersion of certmanager resources rendered by this helm chart | `""` |
 | apiVersionOverrides.ingress | String to override apiVersion of ingresses rendered by this helm chart | `""` |
+| createAggregateRoles | Create clusterroles that extend aggregated roles to use argo-cd crds | `false` |
 | configs.clusterCredentials | Provide one or multiple [external cluster credentials](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters) | `[]` (See [values.yaml](values.yaml)) |
 | configs.gpgKeysAnnotations | GnuPG key ring annotations | `{}` |
 | configs.gpgKeys | [GnuPG](https://argoproj.github.io/argo-cd/user-guide/gpg-verification/) keys to add to the key ring | `{}` (See [values.yaml](values.yaml)) |
@@ -312,6 +313,7 @@ NAME: my-release
 | server.ingressGrpc.ingressClassName | Defines which ingress controller will implement the resource [gRPC-ingress] | `""` |
 | server.ingressGrpc.tls | Ingress TLS configuration for dedicated [gRPC-ingress] | `[]` |
 | server.ingressGrpc.isAWSALB | Setup up GRPC ingress to work with an AWS ALB | `false` |
+| server.ingressGrpc.awsALB.serviceType | Service type for the AWS ALB GRPC service | `NodePort` |
 | server.route.enabled | Enable a OpenShift route for the server | `false` |
 | server.route.hostname | Hostname of OpenShift route | `""` |
 | server.lifecycle | PostStart and PreStop hooks configuration | `{}` |
@@ -454,5 +456,7 @@ server:
   ingressGrpc:
     enabled: true
     isAWSALB: true
+    awsALB:
+      serviceType: ClusterIP
       
 ```

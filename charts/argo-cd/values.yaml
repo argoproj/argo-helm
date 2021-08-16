@@ -31,6 +31,10 @@ apiVersionOverrides:
   certmanager: "" # cert-manager.io/v1
   ingress: "" # networking.k8s.io/v1beta1
 
+## Create clusterroles that extend existing clusterroles to interact with argo-cd crds
+## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
+createAggregateRoles: false
+
 ## Controller
 controller:
   name: application-controller
@@ -610,6 +614,15 @@ server:
     annotations: {}
     labels: {}
     ingressClassName: ""
+
+    ## Service Type if isAWSALB is set to true
+    ## Can be of type NodePort or ClusterIP depending on which mode you are
+    ## are running. Instance mode needs type NodePort, IP mode needs type
+    ## ClusterIP
+    ## Ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/how-it-works/#ingress-traffic
+    ##
+    awsALB:
+      serviceType: NodePort
 
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
