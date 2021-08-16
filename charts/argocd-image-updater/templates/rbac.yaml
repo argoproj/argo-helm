@@ -1,0 +1,48 @@
+{{- if .Values.rbac.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    {{ include "argocd-image-updater.labels" . | nindent 4 }}
+  name: {{ include "argocd-image-updater.fullname" . }} 
+rules:
+  - apiGroups:
+      - ''
+    resources:
+      - secrets
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - applications
+    verbs:
+      - get
+      - list
+      - update
+      - patch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    {{ include "argocd-image-updater.labels" . | nindent 4 }}
+  name: {{ include "argocd-image-updater.fullname" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "argocd-image-updater.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "argocd-image-updater.serviceAccountName" . }}
+{{- end }}
