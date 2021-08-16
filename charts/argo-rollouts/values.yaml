@@ -4,6 +4,7 @@ clusterInstall: true
 
 controller:
   component: rollouts-controller
+  replicas: 1
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
@@ -97,6 +98,7 @@ imagePullSecrets: []
 
 dashboard:
   enabled: false
+  replicas: 1
   component: rollouts-dashboard
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/

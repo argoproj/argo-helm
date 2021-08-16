@@ -12,6 +12,7 @@ spec:
       {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
   strategy:
     type: Recreate
+  replicas: {{ .Values.controller.replicas }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}

@@ -13,6 +13,7 @@ spec:
       app.kubernetes.io/component: {{ .Values.dashboard.component }}
   strategy:
     type: Recreate
+  replicas: {{ .Values.dashboard.replicas }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}

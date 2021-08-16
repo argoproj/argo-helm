@@ -34,6 +34,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 |-----|------|---------|-------------|
 | clusterInstall | bool | `true` | `false` runs controller in namespaced mode (does not require cluster RBAC) |
 | controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
+| controller.replicas | int | `1` | The number of controller pods to run |
 | controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | controller.image.registry | string | `quay.io` | Registry to use |
 | controller.image.repository | string | `"argoproj/argo-rollouts"` | Repository to use |
@@ -58,6 +59,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | containerSecurityContext | object | `{}` | Security Context to set on container level |
 | dashboard.enabled | bool | `false` | Deploy dashboard server |
 | dashboard.component | string | `"rollouts-dashboard"` | Value of label `app.kubernetes.io/component` |
+| dashboard.replicas | int | `1` | The number of dashboard pods to run |
 | dashboard.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | dashboard.image.registry | string | `quay.io` | Registry to use |
 | dashboard.image.repository | string | `"argoproj/kubectl-argo-rollouts"` | Repository to use |
