@@ -10,7 +10,7 @@ docker run \
      -v "$SRCROOT:/workdir" \
      --entrypoint /bin/sh \
      quay.io/helmpack/chart-testing:v3.3.1 \
-     -c cd /workdir \ 
+     -c cd /workdir \
      ct lint \
      --config .github/configs/ct-lint.yaml \
      --lint-conf .github/configs/lintconf.yaml \
