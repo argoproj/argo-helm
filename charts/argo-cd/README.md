@@ -148,6 +148,7 @@ NAME: my-release
 | fullnameOverride | String to fully override `"argo-cd.fullname"` | `""` |
 | apiVersionOverrides.certmanager | String to override apiVersion of certmanager resources rendered by this helm chart | `""` |
 | apiVersionOverrides.ingress | String to override apiVersion of ingresses rendered by this helm chart | `""` |
+| createAggregateRoles | Create clusterroles that extend aggregated roles to use argo-cd crds | `false` |
 | configs.clusterCredentials | Provide one or multiple [external cluster credentials](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#clusters) | `[]` (See [values.yaml](values.yaml)) |
 | configs.gpgKeysAnnotations | GnuPG key ring annotations | `{}` |
 | configs.gpgKeys | [GnuPG](https://argoproj.github.io/argo-cd/user-guide/gpg-verification/) keys to add to the key ring | `{}` (See [values.yaml](values.yaml)) |

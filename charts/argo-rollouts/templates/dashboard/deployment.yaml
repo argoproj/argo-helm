@@ -1,0 +1,59 @@
+{{- if .Values.dashboard.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "argo-rollouts.fullname" . }}-dashboard
+  labels:
+    app.kubernetes.io/component: {{ .Values.dashboard.component }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: {{ .Values.dashboard.component }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: {{ .Values.dashboard.component }}
+        {{- range $key, $value := .Values.podLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-rollouts.serviceAccountName" . }}-dashboard
+      containers:
+      - image: "{{ .Values.dashboard.image.registry }}/{{ .Values.dashboard.image.repository }}:{{ default .Chart.AppVersion .Values.dashboard.image.tag }}"
+        imagePullPolicy: {{ .Values.dashboard.image.pullPolicy }}
+        name: argo-rollouts-dashboard
+        ports:
+        - containerPort: 3100
+          name: dashboard
+        securityContext:
+          {{- toYaml .Values.dashboard.containerSecurityContext | nindent 10 }}
+        resources:
+          {{- toYaml .Values.dashboard.resources | nindent 10 }}
+      {{- if .Values.dashboard.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.dashboard.nodeSelector | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.dashboard.podSecurityContext | nindent 8 }}
+      {{- if .Values.dashboard.tolerations }}
+      tolerations:
+        {{- toYaml .Values.dashboard.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.dashboard.affinity }}
+      affinity:
+        {{- toYaml .Values.dashboard.affinity | nindent 8 }}
+      {{- end }}
+{{- end }}

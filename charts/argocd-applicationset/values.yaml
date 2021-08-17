@@ -75,3 +75,12 @@ mountSSHKnownHostsVolume: true
 mountTLSCertsVolume: true
 mountGPGKeysVolume: false
 mountGPGKeyringVolume: true
+
+# -- List of extra mounts to add (normally used with extraVolumes)
+extraVolumeMounts: []
+  # - mountPath: /tmp/foobar
+  #   name: foobar
+# -- List of extra volumes to add
+extraVolumes: []
+  # - name: foobar
+  #   emptyDir: {}

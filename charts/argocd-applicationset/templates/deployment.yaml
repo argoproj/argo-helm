@@ -50,6 +50,8 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
+            - mountPath: /tmp
+              name: tmp-dir
             {{- if .Values.mountSSHKnownHostsVolume }}
             - mountPath: /app/config/ssh
               name: ssh-known-hosts
@@ -66,7 +68,12 @@ spec:
             - mountPath: /app/config/gpg/keys
               name: gpg-keyring
             {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
       volumes:
+      - emptyDir: {}
+        name: tmp-dir
       {{- if .Values.mountSSHKnownHostsVolume }}
       - configMap:
           name: argocd-ssh-known-hosts-cm
@@ -85,6 +92,9 @@ spec:
       {{- if .Values.mountGPGKeyringVolume }}
       - emptyDir: {}
         name: gpg-keyring
+      {{- end }}
+      {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 6 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
