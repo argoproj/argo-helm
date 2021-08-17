@@ -21,10 +21,6 @@ data:
   {{- with .Values.templates }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- with .Values.defaultTriggers }}
-  defaultTriggers: |
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
   {{- with .Values.triggers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
