@@ -78,6 +78,14 @@ spec:
           containerPort: {{ .Values.dex.containerPortMetrics }}
           protocol: TCP
         {{- end }}
+        livenessProbe:
+          httpGet:
+            path: /healthz/live
+            port: {{ .Values.dex.containerPortMetrics }}
+        readinessProbe:
+          httpGet:
+            path: /healthz/ready
+            port: {{ .Values.dex.containerPortMetrics }}
         volumeMounts:
         - mountPath: /tmp
           name: tmp-dir
