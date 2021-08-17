@@ -23,9 +23,7 @@ data:
   {{- end }}
   {{- with .Values.defaultTriggers }}
   defaultTriggers: |
-    {{- range . }}
-    - {{ . }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .Values.triggers }}
     {{- toYaml . | nindent 2 }}
