@@ -1,0 +1,28 @@
+{{- if and .Values.dex.enabled .Values.dex.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" (printf "%s-hpa" .Values.dex.name)) | nindent 4 }}
+  name: {{ template "argo-cd.dex.fullname" . }}-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "argo-cd.dex.fullname" . }}
+  minReplicas: {{ .Values.dex.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.dex.autoscaling.maxReplicas }}
+  metrics:
+    {{- with .Values.dex.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ . }}
+    {{- end }}
+    {{- with .Values.dex.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ . }}
+    {{- end }}
+{{- end }}

@@ -68,6 +68,13 @@ Create argocd repo-server name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create argocd dex-server name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.dex.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.dex.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create the name of the controller service account to use
 */}}
 {{- define "argo-cd.controllerServiceAccountName" -}}
@@ -174,7 +181,7 @@ Return the target Kubernetes version
   {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
 {{- end -}}
 
-{{/* 
+{{/*
 Argo Configuration Preset Values (Incluenced by Values configuration)
 */}}
 {{- define "argo-cd.config.presets" -}}
@@ -183,7 +190,7 @@ ui.cssurl: "./custom/custom.styles.css"
   {{- end }}
 {{- end -}}
 
-{{/* 
+{{/*
 Merge Argo Configuration with Preset Configuration
 */}}
 {{- define "argo-cd.config" -}}

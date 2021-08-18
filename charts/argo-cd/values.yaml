@@ -220,6 +220,13 @@ dex:
 
   replicas: 1
 
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 50
+    targetMemoryUtilizationPercentage: 50
+
   metrics:
     enabled: false
     service:
