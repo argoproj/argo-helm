@@ -10,6 +10,8 @@ spec:
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.dex.name) | nindent 6 }}
+  revisionHistoryLimit: 5
+  replicas: {{ .Values.dex.replicas }}
   template:
     metadata:
       {{- if .Values.dex.podAnnotations }}
