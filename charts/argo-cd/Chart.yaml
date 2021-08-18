@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: 2.0.5
 description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 3.12.1
+version: 3.13.0
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-cd/assets/logo.png
 keywords:
@@ -21,4 +21,6 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Fixed]: redis-ha.nameOverride / redis-ha.fullnameOverride breaks the ArgoCD helm chart"
+    - "[Added]: Allow to set number of Dex server replicas"
+    - "[Added]: Allow to enable auto-scaling for Dex server"
+    - "[Fixed]: Dex server uses liveness and readiness probe"
