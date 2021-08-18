@@ -39,6 +39,10 @@ config:
     # -- If specified, use an unencrypted HTTP connection to the ArgoCD API instead of TLS.
     plaintext: false
 
+  customEnvVariables:
+    # Add some custom variables e.g. set AWS region during retrieve the ECR token
+    # AWS_REGION: us-west-1
+
   # -- ArgoCD Image Update log level
   logLevel: "info"
 

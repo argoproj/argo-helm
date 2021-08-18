@@ -51,6 +51,12 @@ spec:
                 optional: true
           - name: IMAGE_UPDATER_LOGLEVEL
             value: {{ .Values.config.logLevel }}
+          {{- if .Values.config.customEnvVariables }}
+          {{- range $key, $value := .Values.config.customEnvVariables }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
+          {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
