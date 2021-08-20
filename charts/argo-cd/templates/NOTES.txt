@@ -1,3 +1,8 @@
+{{- if .Values.configs.repositoryCredentials }}
+WARNING: You are using configs.repositoryCredentials parameter that's DEPRECATED
+Instead, use configs.repositoryTemplates and/or configs.repositories parameters
+
+{{- end}}
 In order to access the server UI you have the following options:
 
 1. kubectl port-forward service/{{include "argo-cd.fullname" . }}-server -n {{ .Release.Namespace }} 8080:443
