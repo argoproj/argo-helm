@@ -21,5 +21,6 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Update]: Update to ArgoCD v2.1.0"
-    - "[Feature]: Enable use of separated secret just for repositories"
+    - "[Changed]: Update to ArgoCD v2.1.0"
+    - "[Added]: Enable use of separated secret just for repositories"
+    - "[Deprecated]: configs.repositoryCredentials is deprecated now. Instead, use configs.credentialTemplates and/or configs.repositories"
