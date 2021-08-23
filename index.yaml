@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Parameterized dex service port names for istio-ingress 403 error"
+    apiVersion: v2
+    appVersion: 2.1.0
+    created: "2021-08-23T17:23:37.392084043Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 285f1e6622a1699a8f295b7c11626c35198d47d110a044a525e701785825b5ef
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-cd/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.13.2/argo-cd-3.13.2.tgz
+    version: 3.13.2
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Updated README.md for ArgoCD"
     apiVersion: v2
     appVersion: 2.1.0
@@ -8878,4 +8907,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-08-23T13:05:33.636550369Z"
+generated: "2021-08-23T17:23:37.396401671Z"
