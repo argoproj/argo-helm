@@ -669,7 +669,7 @@ server:
     # Argo CD instance label key
     application.instanceLabelKey: argocd.argoproj.io/instance
 
-    # DEPRECATED: Please instead use configs.repositoryTemplates and configs.repositories
+    # DEPRECATED: Please instead use configs.credentialTemplates and configs.repositories
     # repositories: |
     #   - url: git@github.com:group/repo.git
     #     sshPrivateKeySecret:
@@ -1089,11 +1089,11 @@ configs:
     #     XWyb96wrUlv+E8I=
     #     -----END CERTIFICATE-----
 ## # Creates a secret with optional repository credentials
-## DEPRECATED: Instead, use configs.repositoryTemplates and/or configs.repositories
+## DEPRECATED: Instead, use configs.credentialTemplates and/or configs.repositories
   repositoryCredentials: {}
 
 ## Creates a secret for each key/value specified below to create repository credentials
-  repositoryTemplates: {}
+  credentialTemplates: {}
     # github-enterprise-creds-1:
     #   url: https://github.com/argoproj
     #   githubAppID: 1
