@@ -78,6 +78,12 @@ spec:
           containerPort: {{ .Values.dex.containerPortMetrics }}
           protocol: TCP
         {{- end }}
+        {{- if .Values.dex.probes.enabled }}
+        livenessProbe:
+          {{- toYaml .Values.dex.probes.livenessProbe | nindent 10 }}
+        readinessProbe:
+          {{- toYaml .Values.dex.probes.readinessProbe | nindent 10 }}
+        {{- end }}
         volumeMounts:
         - mountPath: /tmp
           name: tmp-dir

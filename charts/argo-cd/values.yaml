@@ -259,6 +259,19 @@ dex:
   ##
   podLabels: {}
 
+  ## Probes for Dex server
+  ## Supported from Dex >= 2.28.0
+  probes:
+    enabled: false
+    livenessProbe:
+      httpGet:
+        path: /healthz/live
+        port: 5558
+    readinessProbe:
+      httpGet:
+        path: /healthz/ready
+        port: 5558
+
   serviceAccount:
     create: true
     name: argocd-dex-server
