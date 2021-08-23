@@ -73,16 +73,24 @@ spec:
         - name: grpc
           containerPort: {{ .Values.dex.containerPortGrpc }}
           protocol: TCP
-        {{- if .Values.dex.metrics.enabled }}
         - name: metrics
           containerPort: {{ .Values.dex.containerPortMetrics }}
           protocol: TCP
-        {{- end }}
         {{- if .Values.dex.probes.enabled }}
         livenessProbe:
-          {{- toYaml .Values.dex.probes.livenessProbe | nindent 10 }}
+          httpGet:
+            path: /healthz/live
+            port: metrics
+          {{- with .Values.dex.probes.livenessProbe }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
         readinessProbe:
-          {{- toYaml .Values.dex.probes.readinessProbe | nindent 10 }}
+          httpGet:
+            path: /healthz/ready
+            port: metrics
+          {{- with .Values.dex.probes.readinessProbe }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
         {{- end }}
         volumeMounts:
         - mountPath: /tmp
