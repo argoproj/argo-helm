@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Updated README.md for ArgoCD"
+    apiVersion: v2
+    appVersion: 2.1.0
+    created: "2021-08-23T13:01:58.821795703Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 72fcb30a459a0a0e83f55a3543b7dd229d71a89a0938f594f6f6e6368a7cc52c
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-cd/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.13.1/argo-cd-3.13.1.tgz
+    version: 3.13.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Remove ArgoCD Repo Server entrypoint file from command block. Defers to entrypoint defined in the Dockerfile"
         - "[Fixed]: Remove deprecated static assets flag"
     apiVersion: v2
@@ -8827,4 +8856,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-08-23T12:23:45.016828242Z"
+generated: "2021-08-23T13:01:58.827308921Z"
