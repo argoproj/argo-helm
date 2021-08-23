@@ -34,6 +34,10 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ## Upgrading
 
+### 3.13.0
+
+This release removes the flag `--staticassets` from argocd server as it has been dropped upstream. If this flag needs to be enabled e.g for older releases of ArgoCD, it can be passed via the `extraArgs` field 
+
 ### 3.10.2
 
 ArgoCD has recently deprecated the flag `--staticassets` and from chart version `3.10.2` has been disabled by default
