@@ -451,6 +451,37 @@ redis:
   ## Additional containers to be added to the redis pod.
   extraContainers: []
 
+  metrics:
+    enabled: false
+    image:
+      repository: quay.io/bitnami/redis-exporter
+      tag: 1.26.0-debian-10-r2
+      imagePullPolicy: IfNotPresent
+    containerPort: 9121
+    resources: {}
+      # limits:
+      #   cpu: 50m
+      #   memory: 64Mi
+      # requests:
+      #   cpu: 10m
+      #   memory: 32Mi
+    service:
+      type: ClusterIP
+      clusterIP: None
+      annotations: {}
+      labels: {}
+      servicePort: 9121
+      portName: http-metrics
+    serviceMonitor:
+      enabled: false
+      interval: 30s
+      relabelings: []
+      metricRelabelings: []
+      selector: {}
+        # prometheus: kube-prometheus
+      # namespace: monitoring
+      additionalLabels: {}
+
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
 redis-ha:
