@@ -397,7 +397,9 @@ NAME: my-release
 | dex.serviceAccount.create | Create dex service account | `true` |
 | dex.serviceAccount.name | Dex service account name | `"argocd-dex-server"` |
 | dex.servicePortGrpc | Server GRPC port | `5557` |
+| dex.servicePortGrpcName | Server GRPC port name | `grpc` |
 | dex.servicePortHttp | Server HTTP port | `5556` |
+| dex.servicePortHttpName | Server GRPC port name | `http` |
 | dex.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
 | dex.volumeMounts | Dex volume mounts | `"/shared"` |
 | dex.volumes | Dex volumes | `{}` |
