@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: 2.1.0
 description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 3.13.1
+version: 3.13.2
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-cd/assets/logo.png
 keywords:
@@ -21,4 +21,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Fixed]: Updated README.md for ArgoCD"
+    - "[Changed]: Parameterized dex service port names for istio-ingress 403 error"
