@@ -165,6 +165,9 @@ NAME: my-release
 | configs.secret.createSecret | Create the argocd-secret. | `true` |
 | configs.secret.githubSecret | GitHub incoming webhook secret | `""` |
 | configs.secret.gitlabSecret | GitLab incoming webhook secret | `""` |
+| configs.repositoryCredentials | DEPRECATED: Instead, use configs.credentialTemplates and/or configs.repositories. | `{}` |
+| configs.credentialTemplates | Repository credentials to be used as Templates for other repos. | `{}` |
+| configs.repositories | Repositories list to be used by applications. | `{}` |
 | configs.tlsCertsAnnotations | TLS certificate configmap annotations | `{}` |
 | configs.tlsCerts.data."argocd.example.com" | TLS certificate | See [values.yaml](values.yaml) |
 | configs.secret.extra | add additional secrets to be added to argocd-secret | `{}` |
@@ -295,6 +298,7 @@ NAME: my-release
 | server.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | server.configAnnotations | ArgoCD configuration configmap annotations | `{}` |
 | server.config | [General Argo CD configuration](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#repositories) | See [values.yaml](values.yaml) |
+| server.config.repositories | [DEPRECATED: Instead, use configs.credentialTemplates and/or configs.repositories.](https://argo-cd.readthedocs.io/en/latest/operator-manual/declarative-setup/#legacy-behaviour) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
 | server.staticAssets.enabled | Disable deprecated flag --staticassets | `false` |
