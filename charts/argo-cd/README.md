@@ -393,6 +393,18 @@ NAME: my-release
 | dex.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | dex.podAnnotations | Annotations for the Dex server pods | `{}` |
 | dex.podLabels | Labels for the Dex server pods | `{}` |
+| dex.livenessProbe.enabled | Enable Kubernetes liveness probe for Dex >= 2.28.0 | `false` |
+| dex.livenessProbe.failureThreshold | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `3` |
+| dex.livenessProbe.initialDelaySeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) |`10` |
+| dex.livenessProbe.periodSeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `10` |
+| dex.livenessProbe.successThreshold | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `1` |
+| dex.livenessProbe.timeoutSeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `1` |
+| dex.readinessProbe.enabled | Enable Kubernetes readiness probe for Dex >= 2.28.0 | `false` |
+| dex.readinessProbe.failureThreshold | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `3` |
+| dex.readinessProbe.initialDelaySeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) |`10` |
+| dex.readinessProbe.periodSeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `10` |
+| dex.readinessProbe.successThreshold | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `1` |
+| dex.readinessProbe.timeoutSeconds | [Kubernetes probe configuration](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes) | `1` |
 | dex.priorityClassName | Priority class for dex | `""` |
 | dex.resources | Resource limits and requests for dex | `{}` |
 | dex.serviceAccount.automountServiceAccountToken | Automount API credentials for the Service Account | `true` |
