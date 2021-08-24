@@ -76,20 +76,22 @@ spec:
         - name: metrics
           containerPort: {{ .Values.dex.containerPortMetrics }}
           protocol: TCP
-        {{- if .Values.dex.probes.enabled }}
+        {{- if .Values.dex.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /healthz/live
             port: metrics
-          {{- with .Values.dex.probes.livenessProbe }}
-            {{- toYaml . | nindent 10 }}
+          {{- with .Values.dex.livenessProbe }}
+            {{- omit . "enabled" | toYaml | nindent 10 }}
           {{- end }}
+        {{- end }}
+        {{- if .Values.dex.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
             path: /healthz/ready
             port: metrics
-          {{- with .Values.dex.probes.readinessProbe }}
-            {{- toYaml . | nindent 10 }}
+          {{- with .Values.dex.readinessProbe }}
+            {{- omit . "enabled" | toYaml | nindent 10 }}
           {{- end }}
         {{- end }}
         volumeMounts:
