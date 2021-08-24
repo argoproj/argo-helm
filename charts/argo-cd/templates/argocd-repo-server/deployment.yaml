@@ -16,17 +16,15 @@ spec:
   {{- end }}
   template:
     metadata:
-      {{- if .Values.repoServer.podAnnotations }}
+      {{- with (mergeOverwrite .Values.global.podAnnotations .Values.repoServer.podAnnotations) }}
       annotations:
-      {{- range $key, $value := .Values.repoServer.podAnnotations }}
-        {{ $key }}: {{ $value | quote }}
-      {{- end }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 8 }}
         app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.repoServer.image.tag | quote }}
-        {{- if .Values.repoServer.podLabels }}
-{{- toYaml .Values.repoServer.podLabels | nindent 8 }}
+        {{- with (mergeOverwrite .Values.global.podLabels .Values.repoServer.podLabels) }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       {{- with .Values.global.imagePullSecrets }}

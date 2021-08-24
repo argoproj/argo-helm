@@ -142,6 +142,8 @@ NAME: my-release
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
 | global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v2.0.5"` |
+| global.podAnnotations | Annotations for the all deployed pods |
+| global.podLabels | Labels for the all deployed pods |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
