@@ -36,7 +36,7 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ### 3.13.0
 
-This release removes the flag `--staticassets` from argocd server as it has been dropped upstream. If this flag needs to be enabled e.g for older releases of ArgoCD, it can be passed via the `server.extraArgs` field 
+This release removes the flag `--staticassets` from argocd server as it has been dropped upstream. If this flag needs to be enabled e.g for older releases of ArgoCD, it can be passed via the `server.extraArgs` field
 
 ### 3.10.2
 
@@ -71,7 +71,7 @@ server:
 
 Please check if you are affected by one of these cases **before you upgrade**, especially when you use **cloud IAM roles for service accounts.** (eg. IRSA on AWS or Workload Identity for GKE)
 
-### 3.2.* 
+### 3.2.*
 
 With this minor version we introduced the evaluation for the ingress manifest (depending on the capabilities version), See [Pull Request](https://github.com/argoproj/argo-helm/pull/637).
 [Issue 703](https://github.com/argoproj/argo-helm/issues/703) reported that the capabilities evaluation is **not handled correctly when deploying the chart via an ArgoCD instance**,
@@ -81,7 +81,7 @@ If you are running a cluster version prior to `1.19` you can avoid this issue by
 
 ```yaml
 kubeVersionOverride: "1.18.0"
-``` 
+```
 
 Then you should no longer encounter this issue.
 
@@ -142,6 +142,8 @@ NAME: my-release
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
 | global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v2.0.5"` |
+| global.podAnnotations | Annotations for the all deployed pods |
+| global.podLabels | Labels for the all deployed pods |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
 | global.imagePullSecrets | If defined, uses a Secret to pull an image from a private Docker registry or repository. | `[]` |
 | global.hostAliases | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files | `[]` |
@@ -447,14 +449,14 @@ through `xxx.extraArgs`
 
 
 ### Using AWS ALB Ingress Controller With GRPC
-If you are using an AWS ALB Ingress controller, you will need to set `server.ingressGrpc.isAWSALB` to `true`. This will create a second service with the annotation `alb.ingress.kubernetes.io/backend-protocol-version: HTTP2` and modify the server ingress to add a condition annotation to route GRPC traffic to the new service. 
+If you are using an AWS ALB Ingress controller, you will need to set `server.ingressGrpc.isAWSALB` to `true`. This will create a second service with the annotation `alb.ingress.kubernetes.io/backend-protocol-version: HTTP2` and modify the server ingress to add a condition annotation to route GRPC traffic to the new service.
 
 Example:
 ```yaml
 server:
   ingress:
     enabled: true
-    annotations: 
+    annotations:
       alb.ingress.kubernetes.io/backend-protocol: HTTPS
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
       alb.ingress.kubernetes.io/scheme: internal
@@ -464,5 +466,5 @@ server:
     isAWSALB: true
     awsALB:
       serviceType: ClusterIP
-      
+
 ```
