@@ -1,0 +1,57 @@
+# Argo CD ApplicationSet Chart
+
+A Helm chart for Argo CD ApplicationSet, a controller to programmatically generate Argo CD Application.
+
+Source code can be found [here](https://github.com/argoproj-labs/applicationset/)
+
+## Additional Information
+
+This is a **community maintained** chart. This chart installs the [applicationset](https://github.com/argoproj-labs/applicationset) controller.
+
+This chart currently installs the non-HA version of Argo CD ApplicationSet.
+
+## Prerequisites
+
+- Helm v3.0.0+
+- The ApplicationSet controller **must** be installed into the same namespace as the Argo CD it is targetting.
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add argo https://argoproj.github.io/argo-helm
+"argo" has been added to your repositories
+
+$ helm install --name my-release argo/argocd-applicationset
+NAME: my-release
+...
+```
+
+### Testing
+
+Users can test the chart with [kind](https://kind.sigs.k8s.io/) and [ct](https://github.com/helm/chart-testing).
+
+```console
+kind create cluster
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+ct install --namespace argocd
+```
+
+## Notes on CRD Installation
+
+Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--skip-crds` when installing the chart.
+
+You then can install the CRDs manually from `crds` folder or via the manifests from the upstream project repo:
+
+```console
+kubectl apply -k https://github.com/argoproj-labs/applicationset.git/manifests/crds?ref=<appVersion>
+
+# Eg. version v0.1.0
+kubectl apply -k https://github.com/argoproj-labs/applicationset.git/manifests/crds?ref=v0.1.0
+```
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}
