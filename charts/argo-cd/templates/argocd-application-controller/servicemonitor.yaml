@@ -18,7 +18,9 @@ spec:
   endpoints:
     - port: metrics
       path: /metrics
-      interval: {{ .Values.controller.metrics.serviceMonitor.interval }}
+      {{- with .Values.controller.metrics.serviceMonitor.interval }}
+      interval: {{ . }}
+      {{- end }}
       {{- with .Values.controller.metrics.serviceMonitor.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}

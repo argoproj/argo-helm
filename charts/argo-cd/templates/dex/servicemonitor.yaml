@@ -18,7 +18,9 @@ spec:
   endpoints:
     - port: metrics
       path: /metrics
-      interval: {{ .Values.dex.metrics.serviceMonitor.interval }}
+      {{- with .Values.dex.metrics.serviceMonitor.interval }}
+      interval: {{ . }}
+      {{- end }}
       {{- with .Values.dex.metrics.serviceMonitor.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}
