@@ -17,10 +17,10 @@ metadata:
 spec:
   endpoints:
     - port: metrics
-      path: /metrics
       {{- with .Values.controller.metrics.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}
+      path: /metrics
       {{- with .Values.controller.metrics.serviceMonitor.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}
