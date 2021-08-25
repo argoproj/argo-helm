@@ -204,7 +204,7 @@ NAME: my-release
 | controller.metrics.serviceMonitor.enabled | Enable a prometheus ServiceMonitor. | `false` |
 | controller.metrics.serviceMonitor.selector | Prometheus ServiceMonitor selector. | `{}` |
 | controller.metrics.serviceMonitor.relabelings | Prometheus [RelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config) to apply to samples before scraping | `[]` |
-| controller.metrics.serviceMonitor.metricRelabelings | Prometheus [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion | `[]`
+| controller.metrics.serviceMonitor.metricRelabelings | Prometheus [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion | `[]` |
 | controller.name | Controller name string. | `"application-controller"` |
 | controller.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | controller.podAnnotations | Annotations for the controller pods | `{}` |
@@ -258,7 +258,7 @@ NAME: my-release
 | repoServer.metrics.serviceMonitor.enabled | Enable a prometheus ServiceMonitor. | `false` |
 | repoServer.metrics.serviceMonitor.selector | Prometheus ServiceMonitor selector. | `{}` |
 | repoServer.metrics.serviceMonitor.relabelings | Prometheus [RelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config) to apply to samples before scraping | `[]` |
-| repoServer.metrics.serviceMonitor.metricRelabelings | Prometheus [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion | `[]`
+| repoServer.metrics.serviceMonitor.metricRelabelings | Prometheus [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion | `[]` |
 | repoServer.name | Repo server name | `"repo-server"` |
 | repoServer.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | repoServer.podAnnotations | Annotations for the repo server pods | `{}` |
@@ -340,7 +340,7 @@ NAME: my-release
 | server.metrics.serviceMonitor.enabled | Enable a prometheus ServiceMonitor. | `false` |
 | server.metrics.serviceMonitor.selector | Prometheus ServiceMonitor selector. | `{}` |
 | server.metrics.serviceMonitor.relabelings | Prometheus [RelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config) to apply to samples before scraping | `[]` |
-| server.metrics.serviceMonitor.metricRelabelings | Prometheus [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion | `[]`
+| server.metrics.serviceMonitor.metricRelabelings | Prometheus [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion | `[]` |
 | server.name | Argo CD server name | `"server"` |
 | server.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
 | server.podAnnotations | Annotations for the server pods | `{}` |
@@ -394,7 +394,7 @@ NAME: my-release
 | dex.metrics.serviceMonitor.enabled | Enable a prometheus ServiceMonitor. | `false` |
 | dex.metrics.serviceMonitor.selector | Prometheus ServiceMonitor selector. | `{}` |
 | dex.metrics.serviceMonitor.relabelings | Prometheus [RelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config) to apply to samples before scraping | `[]` |
-| dex.metrics.serviceMonitor.metricRelabelings | Prometheus [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion | `[]`
+| dex.metrics.serviceMonitor.metricRelabelings | Prometheus [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion | `[]` |
 | dex.name | Dex name | `"dex-server"` |
 | dex.env | Environment variables for the Dex server. | `[]` |
 | dex.envFrom | `envFrom` to pass to the Dex server. | `[]` (See [values.yaml](values.yaml)) |
