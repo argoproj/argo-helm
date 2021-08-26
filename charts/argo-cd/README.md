@@ -303,6 +303,7 @@ NAME: my-release
 | server.config | [General Argo CD configuration](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#repositories) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
+| server.extraContainers | Additional containers for the server. A list of containers. | `[]` |
 | server.staticAssets.enabled | Disable deprecated flag --staticassets | `false` |
 | server.env | Environment variables for the server. | `[]` |
 | server.envFrom | `envFrom` to pass to the server. | `[]` (See [values.yaml](values.yaml)) |
