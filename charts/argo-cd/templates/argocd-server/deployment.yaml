@@ -40,6 +40,10 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         command:
         - argocd-server
+        {{ if .Values.server.staticAssets.enabled }}
+        - --staticassets
+        - /shared/app
+        {{ end }}
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
         {{- if .Values.dex.enabled }}

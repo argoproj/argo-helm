@@ -8,7 +8,7 @@ kubeVersionOverride: ""
 global:
   image:
     repository: quay.io/argoproj/argocd
-    tag: v2.1.0
+    tag: v2.1.1
     imagePullPolicy: IfNotPresent
   ## Annotations applied to all pods
   podAnnotations: {}
@@ -461,6 +461,10 @@ server:
   ##
   extraArgs: []
   #  - --insecure
+
+  # This flag is used to either remove or pass the CLI flag --staticassets /shared/app to the argocd-server app
+  staticAssets:
+    enabled: true
 
   ## Environment variables to pass to argocd-server
   ##
