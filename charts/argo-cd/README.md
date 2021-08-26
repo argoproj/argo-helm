@@ -307,6 +307,7 @@ NAME: my-release
 | server.config.repositories | [DEPRECATED: Instead, use configs.credentialTemplates and/or configs.repositories.](https://argo-cd.readthedocs.io/en/latest/operator-manual/declarative-setup/#legacy-behaviour) | See [values.yaml](values.yaml) |
 | server.containerPort | Server container port. | `8080` |
 | server.extraArgs | Additional arguments for the server. A list of flags. | `[]` |
+| server.extraContainers | Additional containers for the server. A list of containers. | `[]` |
 | server.staticAssets.enabled | Disable deprecated flag --staticassets | `false` |
 | server.env | Environment variables for the server. | `[]` |
 | server.envFrom | `envFrom` to pass to the server. | `[]` (See [values.yaml](values.yaml)) |
