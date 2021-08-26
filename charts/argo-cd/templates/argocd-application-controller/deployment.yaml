@@ -48,6 +48,8 @@ spec:
         - {{ .Values.controller.args.selfHealTimeout | quote }}
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
+        - --repo-server-timeout-seconds
+        - {{ .Values.controller.args.repoServerTimeoutSeconds | quote }}
         - --logformat
         - {{ .Values.controller.logFormat }}
         - --loglevel
@@ -93,7 +95,10 @@ spec:
           timeoutSeconds: {{ .Values.controller.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.controller.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
+        workingDir: /home/argocd
         volumeMounts:
+        - name: argocd-home
+          mountPath: /home/argocd
         - mountPath: /app/config/controller/tls
           name: argocd-repo-server-tls
         {{- with .Values.controller.volumeMounts }}
@@ -119,6 +124,8 @@ spec:
 {{ toYaml . | indent 6 }}
 {{- end }}
       volumes:
+      - emptyDir: {}
+        name: argocd-home
       - name: argocd-repo-server-tls
         secret:
           items:
