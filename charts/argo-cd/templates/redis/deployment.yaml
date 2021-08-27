@@ -13,17 +13,15 @@ spec:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.redis.name }}
   template:
     metadata:
-      {{- if .Values.redis.podAnnotations }}
+      {{- with (mergeOverwrite .Values.global.podAnnotations .Values.redis.podAnnotations) }}
       annotations:
-      {{- range $key, $value := .Values.redis.podAnnotations }}
-        {{ $key }}: {{ $value | quote }}
-      {{- end }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 8 }}
         app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
-        {{- if .Values.redis.podLabels }}
-{{- toYaml .Values.redis.podLabels | nindent 8 }}
+        {{- with (mergeOverwrite .Values.global.podLabels .Values.redis.podLabels) }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       {{- with .Values.global.imagePullSecrets }}

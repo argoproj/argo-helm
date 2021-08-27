@@ -8,19 +8,27 @@ metadata:
   {{- end }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
-    {{- if .Values.server.metrics.serviceMonitor.selector }}
-{{- toYaml .Values.server.metrics.serviceMonitor.selector | nindent 4 }}
+    {{- with .Values.server.metrics.serviceMonitor.selector }}
+      {{- toYaml . | nindent 4 }}
     {{- end }}
-    {{- if .Values.server.metrics.serviceMonitor.additionalLabels }}
-{{- toYaml .Values.server.metrics.serviceMonitor.additionalLabels | nindent 4 }}
+    {{- with .Values.server.metrics.serviceMonitor.additionalLabels }}
+      {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
   endpoints:
     - port: metrics
-      {{- with .Values.controller.metrics.serviceMonitor.interval }}
+      {{- with .Values.server.metrics.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}
       path: /metrics
+      {{- with .Values.server.metrics.serviceMonitor.relabelings }}
+      relabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.metrics.serviceMonitor.metricRelabelings }}
+      metricRelabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
@@ -28,4 +36,3 @@ spec:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.server.name "name" (printf "%s-metrics" .Values.server.name)) | nindent 6 }}
 {{- end }}
-
