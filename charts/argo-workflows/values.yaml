@@ -42,6 +42,8 @@ controller:
     tag: ""
   # parallelism dictates how many workflows can be running at the same time
   parallelism:
+  # Limits the maximum number of incomplete workflows in a namespace
+  namespaceParallelism:
   # podAnnotations is an optional map of annotations to be applied to the controller Pods
   podAnnotations: {}
   # Optional labels to add to the controller pods
