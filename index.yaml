@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Upgrade dex server to 2.30.0"
+    apiVersion: v2
+    appVersion: 2.1.1
+    created: "2021-08-27T10:06:22.396860783Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 6591da9c0c4361a9ef9bc8d36bcea3cbd97a9271dbcfaaca58b493985e2ea475
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-cd/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.17.4/argo-cd-3.17.4.tgz
+    version: 3.17.4
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: use $ as context for repository secret labels"
     apiVersion: v2
     appVersion: 2.1.1
@@ -9157,4 +9186,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-08-26T15:11:20.739540246Z"
+generated: "2021-08-27T10:06:22.4016102Z"
