@@ -644,14 +644,15 @@ server:
     labels: {}
     ingressClassName: ""
 
-    ## Service Type if isAWSALB is set to true
-    ## Can be of type NodePort or ClusterIP depending on which mode you are
-    ## are running. Instance mode needs type NodePort, IP mode needs type
-    ## ClusterIP
-    ## Ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/how-it-works/#ingress-traffic
-    ##
     awsALB:
+      ## Service Type if isAWSALB is set to true
+      ## Can be of type NodePort or ClusterIP depending on which mode you are
+      ## are running. Instance mode needs type NodePort, IP mode needs type
+      ## ClusterIP
+      ## Ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/how-it-works/#ingress-traffic
       serviceType: NodePort
+      # This tells AWS to send traffic from the ALB using HTTP2. Can use GRPC as well if you want to leverage GRPC specific features
+      backendProtocolVersion: HTTP2
 
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
