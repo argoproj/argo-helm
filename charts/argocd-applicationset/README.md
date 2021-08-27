@@ -79,6 +79,7 @@ kubectl apply -k https://github.com/argoproj-labs/applicationset.git/manifests/c
 | nameOverride | string | `""` | Provide a name in place of `argocd-applicationset` |
 | nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
 | podAnnotations | object | `{}` | Annotations for the controller pods |
+| podLabels | object | `{}` | Labels for the controller pods |
 | podSecurityContext | object | `{}` | Pod Security Context |
 | priorityClassName | string | `""` | If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default. |
 | rbac.pspEnabled | bool | `true` | Enable Pod Security Policy |
