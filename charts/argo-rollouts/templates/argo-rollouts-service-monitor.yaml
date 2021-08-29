@@ -21,6 +21,6 @@ spec:
     - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app.kubernetes.io/component: server
+      app.kubernetes.io/component: {{ .Values.controller.component }}
       {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
 {{- end }}
