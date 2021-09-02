@@ -181,6 +181,7 @@ NAME: my-release
 | Parameter | Description | Default |
 |-----|---------|-------------|
 | controller.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
+| controller.topologySpreadConstraints | [Assign custom topologySpreadConstraints rules to the deployment](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) | `[]` |
 | controller.args.operationProcessors | define the controller `--operation-processors` | `"10"` |
 | controller.args.appResyncPeriod | define the controller `--app-resync` | `"180"` |
 | controller.args.selfHealTimeout | define the controller `--self-heal-timeout-seconds` | `"5"` |
@@ -236,6 +237,7 @@ NAME: my-release
 | Property | Description | Default |
 |-----|---------|-------------|
 | repoServer.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
+| repoServer.topologySpreadConstraints | [Assign custom topologySpreadConstraints rules to the deployment](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) | `[]` |
 | repoServer.autoscaling.enabled | Enable Horizontal Pod Autoscaler ([HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)) for the repo server | `false` |
 | repoServer.autoscaling.minReplicas | Minimum number of replicas for the repo server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `1` |
 | repoServer.autoscaling.maxReplicas | Maximum number of replicas for the repo server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `5` |
@@ -290,6 +292,7 @@ NAME: my-release
 | Parameter | Description | Default |
 |-----|---------|-------------|
 | server.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
+| server.topologySpreadConstraints | [Assign custom topologySpreadConstraints rules to the deployment](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) | `[]` |
 | server.autoscaling.enabled | Enable Horizontal Pod Autoscaler ([HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)) for the server | `false` |
 | server.autoscaling.minReplicas | Minimum number of replicas for the server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `1` |
 | server.autoscaling.maxReplicas | Maximum number of replicas for the server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `5` |
@@ -385,6 +388,7 @@ NAME: my-release
 | Property | Description | Default |
 |-----|---------|-------------|
 | dex.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
+| dex.topologySpreadConstraints | [Assign custom topologySpreadConstraints rules to the deployment](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) | `[]` |
 | dex.containerPortGrpc | GRPC container port | `5557` |
 | dex.containerPortHttp | HTTP container port | `5556` |
 | dex.enabled | Enable dex | `true` |
@@ -443,6 +447,7 @@ through `xxx.extraArgs`
 | Parameter | Description | Default |
 |-----|---------|-------------|
 | redis.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
+| redis.topologySpreadConstraints | [Assign custom topologySpreadConstraints rules to the deployment](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) | `[]` |
 | redis.containerPort | Redis container port | `6379` |
 | redis.enabled | Enable redis | `true` |
 | redis.image.imagePullPolicy | Redis imagePullPolicy | `"IfNotPresent"` |

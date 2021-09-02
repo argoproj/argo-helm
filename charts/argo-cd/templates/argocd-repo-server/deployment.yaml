@@ -126,6 +126,17 @@ spec:
       affinity:
 {{- toYaml .Values.repoServer.affinity | nindent 8 }}
     {{- end }}
+    {{- if .Values.repoServer.topologySpreadConstraints }}
+      topologySpreadConstraints:
+      {{- range $constraint := .Values.repoServer.topologySpreadConstraints }}
+      - {{ $constraint | toYaml | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.repoServer.name) | nindent 12 }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
       serviceAccountName: {{ template "argo-cd.repoServerServiceAccountName" . }}
 {{- with .Values.global.hostAliases }}
       hostAliases:

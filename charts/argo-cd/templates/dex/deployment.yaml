@@ -112,6 +112,17 @@ spec:
       affinity:
 {{- toYaml .Values.dex.affinity | nindent 8 }}
     {{- end }}
+    {{- if .Values.dex.topologySpreadConstraints }}
+      topologySpreadConstraints:
+      {{- range $constraint := .Values.dex.topologySpreadConstraints }}
+      - {{ $constraint | toYaml | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.dex.name) | nindent 12 }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
       serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
       volumes:
       - emptyDir: {}
