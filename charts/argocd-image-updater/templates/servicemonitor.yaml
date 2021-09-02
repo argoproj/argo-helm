@@ -1,4 +1,5 @@
 {{- if .Values.metrics.serviceMonitor.enabled }}
+{{- if .Capabilities.APIVersions.Has "monitoring.coreos.com/v1" }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -30,4 +31,5 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels: {{- include "argocd-image-updater.labels" . | nindent 6 }}
+{{- end }}
 {{- end }}

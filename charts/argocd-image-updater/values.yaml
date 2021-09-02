@@ -69,7 +69,7 @@ metrics:
     type: ClusterIP
     port: 8081
   serviceMonitor:
-    enabled: true
+    enabled: false
     namespace: ""
     path: /metrics
     interval: 30s
@@ -77,7 +77,7 @@ metrics:
     relabellings: []
     additionalLabels: {}
   grafanaDashboard:
-    enabled: true
+    enabled: false
     # -- The Grafana sidecar should watch all namespace by default, so this setting usually should not be necessary
     namespace: ""
     additionalLabels:
