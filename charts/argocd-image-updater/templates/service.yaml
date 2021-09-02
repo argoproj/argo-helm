@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "argocd-image-updater.fullname" . }}-metrics
+  labels:
+    {{- include "argocd-image-updater.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.metrics.service.type }}
+  ports:
+    - port: {{ .Values.metrics.service.port }}
+      targetPort: metrics
+      protocol: TCP
+      name: http-metrics
+  selector:
+    {{- include "argocd-image-updater.selectorLabels" . | nindent 4 }}

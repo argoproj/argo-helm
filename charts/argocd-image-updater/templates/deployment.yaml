@@ -31,10 +31,16 @@ spec:
           command: 
             - /usr/local/bin/argocd-image-updater
             - run
+          args:
+            {{- if and (eq .Values.config.argocd.applicationsAPI "kubernetes") (ne .Values.config.argocd.argocdNamespace "") }}
+            - argocd-namespace={{- .Values.config.argocd.argocdNamespace -}}
+            {{ end }}
             {{- with .Values.extraArgs }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
           env:
+          - name: APPLICATIONS_API
+            value: {{ .Values.config.argocd.applicationsAPI }}
           - name: ARGOCD_GRPC_WEB
             value: {{ .Values.config.argocd.grpcWeb | quote }}
           - name: ARGOCD_SERVER
@@ -56,17 +62,22 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 8080
+            - name: probe
+              containerPort: 8080
+              protocol: TCP
+            - name: metrics
+              containerPort: 8081
+              protocol: TCP
           readinessProbe:
             httpGet:
               path: /healthz
-              port: 8080
+              port: probe
             initialDelaySeconds: 3
             periodSeconds: 30
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 8080
+              port: probe
             initialDelaySeconds: 3
             periodSeconds: 30
           resources:

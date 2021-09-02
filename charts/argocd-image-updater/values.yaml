@@ -30,6 +30,10 @@ extraArgs: []
 config:
   # Described in detail here https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags
   argocd:
+    # -- API to use for managing Argo CD Applications, can be either kubernetes or argocd
+    applicationsAPI: "kubernetes"
+    # -- Namespace where Argo CD is running, used in combination with applicationAPI kubernetes. By default image updater tries to manage Argo CD applications in the same namespace where it is running.
+    argocdNamespace: ""
     # -- Use the gRPC-web protocol to connect to the Argo CD API
     grpcWeb: true
     # -- Connect to the Argo CD API server at server address
@@ -59,6 +63,29 @@ config:
     #   ping: no
     #   prefix: quay.io
     #   credentials: env:REGISTRY_SECRET
+
+metrics:
+  service:
+    type: ClusterIP
+    port: 8081
+  serviceMonitor:
+    enabled: true
+    namespace: ""
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: ""
+    relabellings: []
+    additionalLabels: {}
+  grafanaDashboard:
+    enabled: true
+    # -- The Grafana sidecar should watch all namespace by default, so this setting usually should not be necessary
+    namespace: ""
+    additionalLabels:
+      # -- This is the default annotation used by the Grafana sidecar to get dashboards
+      grafana_dashboard: "example-grafana-dashboard"
+    additionalAnnotations:
+      # -- This annotation can be used to place dashboard into a folder in Grafana
+      k8s-sidecar-target-directory: /tmp/dashboards/Argo CD Dashboards
 
 serviceAccount:
   # -- Specifies whether a service account should be created

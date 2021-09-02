@@ -1,0 +1,22 @@
+{{ if .Values.metrics.grafanaDashboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels: {{- include "argocd-image-updater.labels" . | nindent 4 }}
+    {{- with .Values.metrics.grafanaDashboard.additionalLabels }}
+      {{- toYaml . | nindent 4 }}
+    {{ end }}
+  annotations:
+    {{- with .Values.metrics.grafanaDashboard.additionalAnnotations }}
+      {{- toYaml . | nindent 4 }}
+    {{ end }}
+  name: argocd-image-updater-dashboard
+  {{- if .Values.metrics.serviceMonitor.namespace }}
+  namespace: {{ .Values.metrics.grafanaDashboard.namespace }}
+  {{- else }}
+  namespace: {{ .Release.Namespace }}
+  {{- end }}
+data:
+  example-grafana-dashboard.json: |-
+{{ .Files.Get "dashboards/example-grafana-dashboard.json" | indent 4 }}
+{{ end }}
