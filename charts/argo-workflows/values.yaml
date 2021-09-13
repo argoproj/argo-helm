@@ -113,6 +113,11 @@ controller:
   workflowNamespaces:
     - default
   containerRuntimeExecutor: docker
+  # containerRuntimeExecutors:
+  #   - name: emissary
+  #     selector:
+  #       matchLabels:
+  #         workflows.argoproj.io/container-runtime-executor: emissary
   instanceID:
     # `instanceID.enabled` configures the controller to filter workflow submissions
     # to only those which have a matching instanceID attribute.
