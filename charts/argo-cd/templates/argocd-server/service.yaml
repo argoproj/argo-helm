@@ -44,3 +44,9 @@ spec:
 {{ toYaml .Values.server.service.loadBalancerSourceRanges | indent 4 }}
 {{- end }}
 {{- end -}}
+{{- with .Values.server.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+{{- end }}
+{{- with .Values.server.service.sessionAffinity }}
+  sessionAffinity: {{ . }}
+{{- end }}

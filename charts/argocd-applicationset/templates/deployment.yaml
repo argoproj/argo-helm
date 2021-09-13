@@ -17,6 +17,9 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-applicationset.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -50,6 +53,8 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
+            - mountPath: /tmp
+              name: tmp-dir
             {{- if .Values.mountSSHKnownHostsVolume }}
             - mountPath: /app/config/ssh
               name: ssh-known-hosts
@@ -66,7 +71,12 @@ spec:
             - mountPath: /app/config/gpg/keys
               name: gpg-keyring
             {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
       volumes:
+      - emptyDir: {}
+        name: tmp-dir
       {{- if .Values.mountSSHKnownHostsVolume }}
       - configMap:
           name: argocd-ssh-known-hosts-cm
@@ -86,6 +96,9 @@ spec:
       - emptyDir: {}
         name: gpg-keyring
       {{- end }}
+      {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -97,4 +110,7 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
       {{- end }}

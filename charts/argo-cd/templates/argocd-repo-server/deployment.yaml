@@ -16,17 +16,15 @@ spec:
   {{- end }}
   template:
     metadata:
-      {{- if .Values.repoServer.podAnnotations }}
+      {{- with (mergeOverwrite .Values.global.podAnnotations .Values.repoServer.podAnnotations) }}
       annotations:
-      {{- range $key, $value := .Values.repoServer.podAnnotations }}
-        {{ $key }}: {{ $value | quote }}
-      {{- end }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 8 }}
         app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.repoServer.image.tag | quote }}
-        {{- if .Values.repoServer.podLabels }}
-{{- toYaml .Values.repoServer.podLabels | nindent 8 }}
+        {{- with (mergeOverwrite .Values.global.podLabels .Values.repoServer.podLabels) }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       {{- with .Values.global.imagePullSecrets }}
@@ -40,8 +38,7 @@ spec:
       - name: {{ .Values.repoServer.name }}
         image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default .Values.global.image.tag .Values.repoServer.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
-        command:
-        - uid_entrypoint.sh
+        args:
         - argocd-repo-server
         {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
         - --redis
@@ -67,10 +64,15 @@ spec:
           value: argocd
 {{- end }}
 {{- end }}
+        {{- with .Values.repoServer.envFrom }}
+        envFrom: {{- toYaml . | nindent 8 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.repoServer.volumeMounts }}
-{{- toYaml .Values.repoServer.volumeMounts | nindent 8}}
+          {{- toYaml .Values.repoServer.volumeMounts | nindent 8 }}
         {{- end }}
+        - mountPath: /app/config/gpg/source
+          name: gpg-keys
         - mountPath: /app/config/gpg/keys
           name: gpg-keyring
         {{- if .Values.configs.knownHosts }}
@@ -131,8 +133,11 @@ spec:
 {{- end }}
       volumes:
       {{- if .Values.repoServer.volumes }}
-{{- toYaml .Values.repoServer.volumes | nindent 6}}
+        {{- toYaml .Values.repoServer.volumes | nindent 6 }}
       {{- end }}
+      - name: gpg-keys
+        configMap:
+          name: argocd-gpg-keys-cm
       - emptyDir: {}
         name: gpg-keyring
       {{- if .Values.configs.knownHosts }}

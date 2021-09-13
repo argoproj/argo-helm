@@ -19,6 +19,11 @@ nodeSelector: {}
 updateStrategy:
   type: Recreate
 
+context:
+  # Add custom values into context
+  #  region: east
+  #  environmentName: staging
+
 secret:
   # Whether helm chart creates controller secret
   create: true
@@ -47,6 +52,9 @@ extraArgs: []
 metrics:
   enabled: false
   port: 9001
+  service:
+    annotations: {}
+    labels: {}
   serviceMonitor:
     enabled: false
     additionalLabels: {}
@@ -64,6 +72,8 @@ notifiers:
     token: $slack-token
 
 podAnnotations: {}
+
+podLabels: {}
 
 ## Pod Security Context
 securityContext:
@@ -87,6 +97,8 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: argocd-notifications-controller
+
+  annotations: {}
 
 cm:
   # Whether helm chart creates controller config map
@@ -336,6 +348,10 @@ triggers:
   #     send:
   #     - app-sync-succeeded
   #     when: app.status.operationState.phase in ['Succeeded']
+  #
+  # For more information: https://argocd-notifications.readthedocs.io/en/stable/triggers/#default-triggers
+  # defaultTriggers: |
+  #   - on-sync-status-unknown
 
 bots:
   # For more information: https://argocd-notifications.readthedocs.io/en/stable/bots/overview/
@@ -365,6 +381,8 @@ bots:
       # The name of the service account to use.
       # If not set and create is true, a name is generated using the fullname template
       name: argocd-notifications-bot
+
+      annotations: {}
 
     resources: {}
     # limits:

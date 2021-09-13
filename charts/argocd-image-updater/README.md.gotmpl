@@ -1,0 +1,58 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.description" . }}
+
+To regenerate this document, from the root of this chart directory run:
+```shell
+docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:latest
+```
+
+## Installation
+
+```console
+helm repo add argo https://argoproj.github.io/argo-helm
+helm install argocd-image-updater argo/argocd-image-updater
+```
+
+You will also need to run through the [secret setup documentation](https://argocd-image-updater.readthedocs.io/en/stable/install/start/#connect-using-argo-cd-api-server) so ArgoCD ImageUpdater can talk to the ArgoCD API (until its automated in this chart).
+
+## TODO
+
+- Automate setting up the ArgoCD API Authentication user/secret using a Helm Hook or something.
+
+## Prerequisites
+
+* Helm v3.0.0+
+
+## Configuration options
+
+In order for your deployment of ArgoCD Image Updater to be successful, you will need to make sure you set the correct configuration options described in detail on the [argocd-image-updater flags page](https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags).
+
+All of the `argocd-` prefixed flags, which tell `argocd-image-updater` how your ArgoCD instance is setup, are set in the `config.argocd` values block. For instance:
+
+```yaml
+config:
+  argocd:
+    grpcWeb: false
+    serverAddress: "http://argocd.argo"
+    insecure: true
+    plaintext: true
+```
+
+Any additional arguments mentioned on the [argocd-image-updater flags page](https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags) can be configured using the `extraArgs` value, like so.
+
+### Registries
+
+ArgoCD Image Updater natively supports the following registries (as mentioned in [the documentation](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/)):
+
+- Docker Hub
+- Google Container Registry
+- RedHat Quay
+- GitHub Container Registry
+- GitHub Docker Packages
+
+If you need support for ECR, you can reference [this issue](https://github.com/argoproj-labs/argocd-image-updater/issues/112) for configuration.
+
+The `config.registries` value can be used exactly as it looks in the documentation as it gets dumped directly into a configmap in this chart.
+
+{{ template "chart.valuesSection" . }}

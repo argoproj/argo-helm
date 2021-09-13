@@ -2,49 +2,66 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# -- The number of controller pods to run
 replicaCount: 1
 
-installCRDs: true
-
 image:
-  # The image repository
-  repository: quay.io/argocdapplicationset/argocd-applicationset
-  # Image pull policy
+  # -- The image repository
+  repository: quay.io/argoproj/argocd-applicationset
+  # -- Image pull policy
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
+  # -- Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
 args:
+  # -- The default metric address
   metricsAddr: :8080
+  # -- The default health check port
   probeBindAddr: :8081
+  # -- The default leader election setting
   enableLeaderElection: false
+  # -- The default Argo CD repo namespace
   namespace: argocd
+  # -- The default Argo CD repo server address
   argocdRepoServer: argocd-repo-server:8081
+  # -- How application is synced between the generator and the cluster
   policy: sync
+  # -- Print debug logs
   debug: false
+  # -- Enable dry run mode
   dryRun: false
 
+# -- If defined, uses a Secret to pull an image from a private Docker registry or repository.
 imagePullSecrets: []
+# -- Provide a name in place of `argocd-applicationset`
 nameOverride: ""
+# -- Override the default fully qualified app name
 fullnameOverride: ""
 
 serviceAccount:
-  # Specifies whether a service account should be created
+  # -- Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
+  # -- Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
+  # -- The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+# -- Annotations for the controller pods
 podAnnotations: {}
 
+# -- Labels for the controller pods
+podLabels: {}
+
 rbac:
+  # -- Enable Pod Security Policy
   pspEnabled: true
 
+# -- Pod Security Context
 podSecurityContext: {}
   # fsGroup: 2000
 
+# -- Security Context
 securityContext: {}
   # capabilities:
   #   drop:
@@ -53,6 +70,7 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# -- Resource limits and requests for the controller pods.
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -65,13 +83,33 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+# -- [Node selector](https://kubernetes.io/docs/user-guide/node-selection/)
 nodeSelector: {}
 
+# -- [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)
 tolerations: []
 
+# -- [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)
 affinity: {}
 
+# -- If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default.
+priorityClassName: ""
+
+# -- Mount the `argocd-ssh-known-hosts-cm` volume
 mountSSHKnownHostsVolume: true
+# -- Mount the `argocd-tls-certs-cm` volume
 mountTLSCertsVolume: true
+# -- Mount the `argocd-gpg-keys-cm` volume
 mountGPGKeysVolume: false
+# -- Mount an emptyDir volume for `gpg-keyring`
 mountGPGKeyringVolume: true
+
+# -- List of extra mounts to add (normally used with extraVolumes)
+extraVolumeMounts: []
+  # - mountPath: /tmp/foobar
+  #   name: foobar
+
+# -- List of extra volumes to add
+extraVolumes: []
+  # - name: foobar
+  #   emptyDir: {}

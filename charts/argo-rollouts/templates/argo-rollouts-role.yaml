@@ -1,11 +1,11 @@
+{{- if not .Values.clusterInstall }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ .Release.Name }}-role
+  name: {{ include "argo-rollouts.fullname" . }}
   labels:
     app.kubernetes.io/component: {{ .Values.controller.component }}
-    app.kubernetes.io/name: {{ .Release.Name }}-role
-    app.kubernetes.io/part-of: {{ .Release.Name }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - argoproj.io
@@ -67,10 +67,12 @@ rules:
   - watch
   - patch
 # secret read access to run analysis templates which reference secrets
+# configmap access to read notification-engine configuration
 - apiGroups:
   - ""
   resources:
   - secrets
+  - configmaps
   verbs:
   - get
   - list
@@ -145,3 +147,4 @@ rules:
   - get
   - update
   - patch
+{{- end }}

@@ -1,11 +1,14 @@
-apiVersion: v1
-appVersion: "0.10.2"
+apiVersion: v2
+appVersion: "v1.0.2"
 description: A Helm chart for Argo Rollouts
 name: argo-rollouts
-version: 0.5.2
-icon: https://raw.githubusercontent.com/argoproj/argo/master/argo.png
+version: 2.0.1
+icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 maintainers:
   - name: alexmt
   - name: dthomson25
   - name: jessesuen
+annotations:
+  artifacthub.io/changes: |
+    - "[Fixed]: ServiceMonitor selector labels match metrics Service"

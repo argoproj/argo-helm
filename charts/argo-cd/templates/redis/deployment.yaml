@@ -12,23 +12,22 @@ spec:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.redis.name }}
   template:
     metadata:
-      {{- if .Values.redis.podAnnotations }}
+      {{- with (mergeOverwrite .Values.global.podAnnotations .Values.redis.podAnnotations) }}
       annotations:
-      {{- range $key, $value := .Values.redis.podAnnotations }}
-        {{ $key }}: {{ $value | quote }}
-      {{- end }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 8 }}
-        {{- if .Values.redis.podLabels }}
-{{- toYaml .Values.redis.podLabels | nindent 8 }}
+        {{- with (mergeOverwrite .Values.global.podLabels .Values.redis.podLabels) }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      automountServiceAccountToken: false
+      automountServiceAccountToken: {{ .Values.redis.serviceAccount.automountServiceAccountToken }}
+      serviceAccountName: {{ template "argo-cd.redisServiceAccountName" . }}
       {{- if .Values.redis.securityContext }}
       securityContext: {{- toYaml .Values.redis.securityContext | nindent 8 }}
       {{- end }}
@@ -51,10 +50,13 @@ spec:
         env:
 {{- toYaml .Values.redis.env | nindent 8 }}
         {{- end }}
+        {{- with .Values.redis.envFrom }}
+        envFrom: {{- toYaml . | nindent 8 }}
+        {{- end }}
         ports:
         - containerPort: {{ .Values.redis.containerPort }}
+          name: redis
 {{- if .Values.redis.volumeMounts }}
-
         volumeMounts:
 {{- toYaml .Values.redis.volumeMounts | nindent 10 }}
 {{- end }}

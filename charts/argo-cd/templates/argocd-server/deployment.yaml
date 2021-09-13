@@ -16,17 +16,15 @@ spec:
   {{- end }}
   template:
     metadata:
-      {{- if .Values.server.podAnnotations }}
+      {{- with (mergeOverwrite .Values.global.podAnnotations .Values.server.podAnnotations) }}
       annotations:
-      {{- range $key, $value := .Values.server.podAnnotations }}
-        {{ $key }}: {{ $value | quote }}
-      {{- end }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 8 }}
         app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.server.image.tag | quote }}
-        {{- if .Values.server.podLabels }}
-{{- toYaml .Values.server.podLabels | nindent 8 }}
+        {{- with (mergeOverwrite .Values.global.podLabels .Values.server.podLabels) }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       {{- with .Values.global.imagePullSecrets }}
@@ -42,8 +40,10 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         command:
         - argocd-server
+        {{ if .Values.server.staticAssets.enabled }}
         - --staticassets
         - /shared/app
+        {{ end }}
         - --repo-server
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
         {{- if .Values.dex.enabled }}
@@ -68,6 +68,9 @@ spec:
         env:
 {{- toYaml .Values.server.env | nindent 8 }}
         {{- end }}
+        {{- with .Values.server.envFrom }}
+        envFrom: {{- toYaml . | nindent 8 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.server.volumeMounts }}
 {{- toYaml .Values.server.volumeMounts | nindent 8}}
@@ -82,6 +85,13 @@ spec:
         {{- end }}
         - mountPath: /app/config/server/tls
           name: argocd-repo-server-tls
+        {{- if .Values.configs.styles }}
+        - mountPath: "/shared/app/custom/custom.styles.css"
+          subPath: "custom.styles.css"
+          name: custom-styles
+        {{- end }}
+        - mountPath: /tmp
+          name: tmp-dir
         ports:
         - name: {{ .Values.server.name }}
           containerPort: {{ .Values.server.containerPort }}
@@ -141,6 +151,13 @@ spec:
       {{- end }}
       - emptyDir: {}
         name: static-files
+      - emptyDir: {}
+        name: tmp-dir
+      {{- if .Values.configs.styles }}
+      - configMap:
+          name: argocd-custom-styles
+        name: custom-styles
+      {{- end }}
       {{- if .Values.configs.knownHosts }}
       - configMap:
           name: argocd-ssh-known-hosts-cm

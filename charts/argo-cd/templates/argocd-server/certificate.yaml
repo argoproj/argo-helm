@@ -1,5 +1,7 @@
 {{- if .Values.server.certificate.enabled -}}
-{{- if .Capabilities.APIVersions.Has "cert-manager.io/v1" }}
+{{- if .Values.apiVersionOverrides.certmanager -}}
+apiVersion: {{ .Values.apiVersionOverrides.certmanager }}
+{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1" }}
 apiVersion: cert-manager.io/v1
 {{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha3" }}
 apiVersion: cert-manager.io/v1alpha3
@@ -23,5 +25,5 @@ spec:
   issuerRef:
     kind: {{ .Values.server.certificate.issuer.kind | quote }}
     name: {{ .Values.server.certificate.issuer.name | quote }}
-  secretName: argocd-secret
+  secretName: {{ .Values.server.certificate.secretName | quote }}
 {{- end }}

@@ -1,0 +1,102 @@
+# -- Replica count for the deployment. It is not advised to run more than one replica.
+replicaCount: 1
+image:
+  # -- Default image repository
+  repository: argoprojlabs/argocd-image-updater
+  # -- Default image pull policy
+  pullPolicy: Always
+  # -- Default image tag
+  tag: v0.10.1
+
+# -- ImagePullSecrets for the image updater deployment
+imagePullSecrets: []
+# -- Global name (argocd-image-updater.name in _helpers.tpl) override
+nameOverride: ""
+# -- Global fullname (argocd-image-updater.fullname in _helpers.tpl) override
+fullnameOverride: ""
+
+# -- Extra arguments for argocd-image-updater not defined in config.argocd
+extraArgs: []
+  # - --disable-kubernetes
+  # - --dry-run
+  # - --health-port 8080
+  # - --interval 2m
+  # - --kubeconfig ~/.kube/config
+  # - --match-application-name staging-*
+  # - --max-concurrency 5
+  # - --once
+  # - --registries-conf-path /app/config/registries.conf
+
+config:
+  # Described in detail here https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags
+  argocd:
+    # -- Use the gRPC-web protocol to connect to the Argo CD API
+    grpcWeb: true
+    # -- Connect to the Argo CD API server at server address
+    serverAddress: ""
+    # -- If specified, the certificate of the Argo CD API server is not verified.
+    insecure: false
+    # -- If specified, use an unencrypted HTTP connection to the ArgoCD API instead of TLS.
+    plaintext: false
+
+  # -- ArgoCD Image Update log level
+  logLevel: "info"
+
+  # -- ArgoCD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/)
+  registries: []
+    # - name: Docker Hub
+    #   api_url: https://registry-1.docker.io
+    #   ping: yes
+    #   credentials: secret:foo/bar#creds
+    #   defaultns: library
+    # - name: Google Container Registry
+    #   api_url: https://gcr.io
+    #   prefix: gcr.io
+    #   ping: no
+    #   credentials: pullsecret:foo/bar
+    # - name: RedHat Quay
+    #   api_url: https://quay.io
+    #   ping: no
+    #   prefix: quay.io
+    #   credentials: env:REGISTRY_SECRET
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Pod Annotations for the deployment
+podAnnotations: {}
+
+# -- Pod security context settings for the deployment
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Security context settings for the deployment
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+rbac:
+  # -- Enable RBAC creation
+  enabled: true
+
+# -- Pod memory and cpu resource settings for the deployment
+resources: {}
+
+# -- Kubernetes nodeSelector settings for the deployment
+nodeSelector: {}
+
+# -- Kubernetes toleration settings for the deployment
+tolerations: []
+
+# -- Kubernetes affinity settings for the deployment
+affinity: {}
