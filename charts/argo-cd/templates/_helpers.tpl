@@ -125,6 +125,10 @@ helm.sh/chart: {{ include "argo-cd.chart" .context }}
 {{ include "argo-cd.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
 app.kubernetes.io/managed-by: {{ .context.Release.Service }}
 app.kubernetes.io/part-of: argocd
+app.kubernetes.io/version: {{ .context.Chart.AppVersion | quote }}
+{{- if .context.Values.global.additionalLabels }}
+{{ toYaml .context.Values.global.additionalLabels }}
+{{- end }}
 {{- end }}
 
 {{/*

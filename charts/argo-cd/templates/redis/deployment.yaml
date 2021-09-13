@@ -6,7 +6,6 @@ metadata:
   name: {{ template "argo-cd.redis.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
 spec:
   selector:
     matchLabels:
@@ -21,7 +20,6 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
         {{- if .Values.redis.podLabels }}
 {{- toYaml .Values.redis.podLabels | nindent 8 }}
         {{- end }}
