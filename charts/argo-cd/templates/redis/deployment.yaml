@@ -13,14 +13,14 @@ spec:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.redis.name }}
   template:
     metadata:
-      {{- with (mergeOverwrite .Values.global.podAnnotations .Values.redis.podAnnotations) }}
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.redis.podAnnotations) }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 8 }}
         app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
-        {{- with (mergeOverwrite .Values.global.podLabels .Values.redis.podLabels) }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.redis.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
