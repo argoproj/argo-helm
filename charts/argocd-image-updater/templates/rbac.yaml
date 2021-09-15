@@ -31,6 +31,14 @@ rules:
       - events
     verbs:
       - create
+  - apiGroups:
+      - policy
+    resourceNames:
+      - {{ include "argocd-image-updater.fullname" . }}-psp
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - use
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding

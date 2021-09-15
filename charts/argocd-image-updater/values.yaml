@@ -86,8 +86,16 @@ securityContext: {}
   # runAsUser: 1000
 
 rbac:
+  # -- Annotations to add to rbac manifests
+  annotations: { }
   # -- Enable RBAC creation
   enabled: true
+  psp:
+    create: false
+    privileged: false
+    allowPrivilegeEscalation: false
+    useAppArmor: false
+    readOnlyRootFilesystem: true
 
 # -- Pod memory and cpu resource settings for the deployment
 resources: {}
