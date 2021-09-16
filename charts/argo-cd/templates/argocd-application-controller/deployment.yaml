@@ -118,10 +118,10 @@ spec:
       affinity:
 {{- toYaml .Values.controller.affinity | nindent 8 }}
     {{- end }}
-    {{- if .Values.controller.topologySpreadConstraints }}
+    {{- with .Values.controller.topologySpreadConstraints }}
       topologySpreadConstraints:
-      {{- range $constraint := .Values.controller.topologySpreadConstraints }}
-      - {{ $constraint | toYaml | nindent 8 | trim }}
+      {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
         {{- if not $constraint.labelSelector }}
         labelSelector:
           matchLabels:

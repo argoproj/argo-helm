@@ -126,10 +126,10 @@ spec:
       affinity:
 {{- toYaml .Values.repoServer.affinity | nindent 8 }}
     {{- end }}
-    {{- if .Values.repoServer.topologySpreadConstraints }}
+    {{- with .Values.repoServer.topologySpreadConstraints }}
       topologySpreadConstraints:
-      {{- range $constraint := .Values.repoServer.topologySpreadConstraints }}
-      - {{ $constraint | toYaml | nindent 8 | trim }}
+      {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
         {{- if not $constraint.labelSelector }}
         labelSelector:
           matchLabels:
