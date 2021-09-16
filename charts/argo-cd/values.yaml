@@ -8,7 +8,7 @@ kubeVersionOverride: ""
 global:
   image:
     repository: quay.io/argoproj/argocd
-    tag: v2.1.1
+    tag: v2.1.2
     imagePullPolicy: IfNotPresent
   ## Annotations applied to all pods
   podAnnotations: {}
@@ -228,6 +228,8 @@ controller:
     enabled: false
     rules: []
 
+  ## Additional containers to be added to the controller pod.
+  extraContainers: []
 
 ## Dex
 dex:
@@ -355,6 +357,9 @@ dex:
   #    cpu: 10m
   #    memory: 32Mi
 
+  ## Additional containers to be added to the dex pod.
+  extraContainers: []
+
 ## Redis
 redis:
   enabled: true
@@ -442,6 +447,9 @@ redis:
 
   volumeMounts: []
   volumes: []
+
+  ## Additional containers to be added to the redis pod.
+  extraContainers: []
 
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
@@ -1031,6 +1039,9 @@ repoServer:
     annotations: {}
     ## Automount API credentials for the Service Account
     automountServiceAccountToken: true
+
+  ## Additional containers to be added to the repo server pod.
+  extraContainers: []
 
   ## Repo server rbac rules
   # rbac:
