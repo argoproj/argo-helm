@@ -64,6 +64,9 @@ spec:
 {{- end }}
         resources:
 {{- toYaml .Values.redis.resources | nindent 10 }}
+    {{- with .Values.redis.extraContainers }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- if .Values.redis.nodeSelector }}
       nodeSelector:
 {{- toYaml .Values.redis.nodeSelector | nindent 8 }}

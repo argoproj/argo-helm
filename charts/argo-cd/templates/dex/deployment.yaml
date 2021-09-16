@@ -99,7 +99,10 @@ spec:
         {{- toYaml .Values.dex.volumeMounts | nindent 8 }}
         {{- end }}
         resources:
-{{- toYaml .Values.dex.resources | nindent 10 }}
+          {{- toYaml .Values.dex.resources | nindent 10 }}
+      {{- with .Values.dex.extraContainers }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
     {{- if .Values.dex.nodeSelector }}
       nodeSelector:
 {{- toYaml .Values.dex.nodeSelector | nindent 8 }}
