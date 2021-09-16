@@ -141,7 +141,7 @@ NAME: my-release
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v2.0.5"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v2.1.2"` |
 | global.podAnnotations | Annotations for the all deployed pods |
 | global.podLabels | Labels for the all deployed pods |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
@@ -329,6 +329,7 @@ NAME: my-release
 | server.ingressGrpc.tls | Ingress TLS configuration for dedicated [gRPC-ingress] | `[]` |
 | server.ingressGrpc.isAWSALB | Setup up GRPC ingress to work with an AWS ALB | `false` |
 | server.ingressGrpc.awsALB.serviceType | Service type for the AWS ALB GRPC service | `NodePort` |
+| server.ingressGrpc.awsALB.backendProtocolVersion | Backend protocol version for the AWS ALB GRPC service | `HTTP2` |
 | server.route.enabled | Enable a OpenShift route for the server | `false` |
 | server.route.hostname | Hostname of OpenShift route | `""` |
 | server.lifecycle | PostStart and PreStop hooks configuration | `{}` |

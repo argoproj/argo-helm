@@ -4,7 +4,7 @@ kind: ServiceMonitor
 metadata:
   name: {{ include "argo-rollouts.fullname" . }}
   labels:
-    app.kubernetes.io/component: server
+    app.kubernetes.io/component: {{ .Values.controller.component }}
     {{- include "argo-rollouts.labels" . | nindent 4 }}
     {{- range $key, $value := .Values.controller.metrics.serviceMonitor.additionalLabels }}
     {{ $key }}: {{ $value | quote }}
@@ -21,6 +21,6 @@ spec:
     - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app.kubernetes.io/component: server
+      app.kubernetes.io/component: {{ .Values.controller.component }}
       {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
 {{- end }}

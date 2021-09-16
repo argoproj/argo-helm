@@ -12,14 +12,14 @@ spec:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.dex.name) | nindent 6 }}
   template:
     metadata:
-      {{- with (mergeOverwrite .Values.global.podAnnotations .Values.dex.podAnnotations) }}
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.dex.podAnnotations) }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 8 }}
         app.kubernetes.io/version: {{ .Values.dex.image.tag | quote }}
-        {{- with (mergeOverwrite .Values.global.podLabels .Values.dex.podLabels) }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.dex.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
