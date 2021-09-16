@@ -220,6 +220,8 @@ controller:
     enabled: false
     rules: []
 
+  ## Additional containers to be added to the controller pod.
+  extraContainers: []
 
 ## Dex
 dex:
@@ -339,6 +341,9 @@ dex:
   #    cpu: 10m
   #    memory: 32Mi
 
+  ## Additional containers to be added to the controller pod.
+  extraContainers: []
+
 ## Redis
 redis:
   enabled: true
@@ -418,6 +423,9 @@ redis:
 
   volumeMounts: []
   volumes: []
+
+  ## Additional containers to be added to the controller pod.
+  extraContainers: []
 
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
@@ -1209,6 +1217,10 @@ configs:
   #  .nav-bar {
   #    background: linear-gradient(to bottom, #999, #777, #333, #222, #111);
   #  }
+
+
+  ## Additional containers to be added to the controller pod.
+  extraContainers: []
 
 openshift:
   enabled: false
