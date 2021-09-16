@@ -341,7 +341,7 @@ dex:
   #    cpu: 10m
   #    memory: 32Mi
 
-  ## Additional containers to be added to the controller pod.
+  ## Additional containers to be added to the dex pod.
   extraContainers: []
 
 ## Redis
@@ -424,7 +424,7 @@ redis:
   volumeMounts: []
   volumes: []
 
-  ## Additional containers to be added to the controller pod.
+  ## Additional containers to be added to the redis pod.
   extraContainers: []
 
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
@@ -1000,6 +1000,9 @@ repoServer:
     ## Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
+  ## Additional containers to be added to the repo server pod.
+  extraContainers: []
+
   ## Repo server rbac rules
   # rbac:
   #   - apiGroups:
@@ -1217,10 +1220,6 @@ configs:
   #  .nav-bar {
   #    background: linear-gradient(to bottom, #999, #777, #333, #222, #111);
   #  }
-
-
-  ## Additional containers to be added to the controller pod.
-  extraContainers: []
 
 openshift:
   enabled: false
