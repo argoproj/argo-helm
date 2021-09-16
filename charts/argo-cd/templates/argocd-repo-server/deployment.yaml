@@ -113,7 +113,10 @@ spec:
           successThreshold: {{ .Values.repoServer.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.readinessProbe.failureThreshold }}
         resources:
-{{- toYaml .Values.repoServer.resources | nindent 10 }}
+          {{- toYaml .Values.repoServer.resources | nindent 10 }}
+      {{- with .Values.controller.extraContainers }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
     {{- if .Values.repoServer.nodeSelector }}
       nodeSelector:
 {{- toYaml .Values.repoServer.nodeSelector | nindent 8 }}

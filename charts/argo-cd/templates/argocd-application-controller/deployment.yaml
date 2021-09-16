@@ -105,7 +105,10 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         resources:
-{{- toYaml .Values.controller.resources | nindent 10 }}
+          {{- toYaml .Values.controller.resources | nindent 10 }}
+      {{- with .Values.controller.extraContainers }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
     {{- if .Values.controller.nodeSelector }}
       nodeSelector:
 {{- toYaml .Values.controller.nodeSelector | nindent 8 }}
