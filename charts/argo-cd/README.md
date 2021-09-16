@@ -188,6 +188,7 @@ NAME: my-release
 | controller.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | controller.containerPort | Controller listening port. | `8082` |
 | controller.extraArgs | Additional arguments for the controller. A list of flags | `[]` |
+| controller.extraContainers | Additional containers for the controller. A list of containers. | `[]` |
 | controller.enableStatefulSet | Enable deploying the controller as a StatefulSet instead of a Deployment. Used for HA installations. | `false` |
 | controller.env | Environment variables for the controller. | `[]` |
 | controller.envFrom | `envFrom` to pass to the controller. | `[]` (See [values.yaml](values.yaml)) |
@@ -243,6 +244,7 @@ NAME: my-release
 | repoServer.autoscaling.targetMemoryUtilizationPercentage | Average memory utilization percentage for the repo server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `50` |
 | repoServer.containerPort | Repo server port | `8081` |
 | repoServer.extraArgs | Additional arguments for the repo server. A  list of flags. | `[]` |
+| repoServer.extraContainers | Additional containers for the repo server. A list of containers. | `[]` |
 | repoServer.env | Environment variables for the repo server. | `[]` |
 | repoServer.envFrom | `envFrom` to pass to the repo server. | `[]` (See [values.yaml](values.yaml)) |
 | repoServer.image.repository | Repository to use for the repo server | `global.image.repository` |
@@ -402,6 +404,7 @@ NAME: my-release
 | dex.metrics.serviceMonitor.relabelings | Prometheus [RelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config) to apply to samples before scraping | `[]` |
 | dex.metrics.serviceMonitor.metricRelabelings | Prometheus [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion | `[]` |
 | dex.name | Dex name | `"dex-server"` |
+| dex.extraContainers | Additional containers for the Dex server. A list of containers. | `[]` |
 | dex.env | Environment variables for the Dex server. | `[]` |
 | dex.envFrom | `envFrom` to pass to the Dex server. | `[]` (See [values.yaml](values.yaml)) |
 | dex.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
@@ -449,6 +452,7 @@ through `xxx.extraArgs`
 | redis.image.repository | Redis repository | `"redis"` |
 | redis.image.tag | Redis tag | `"6.2.1-alpine"` |
 | redis.extraArgs | Additional arguments for the `redis-server`. A list of flags. | `[]` |
+| redis.extraContainers | Additional containers for the redis. A list of containers. | `[]` |
 | redis.name | Redis name | `"redis"` |
 | redis.env | Environment variables for the Redis server. | `[]` |
 | redis.envFrom | `envFrom` to pass to the Redis server. | `[]` (See [values.yaml](values.yaml)) |
