@@ -67,6 +67,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.logLevel | string | `"info"` | ArgoCD Image Update log level |
 | config.registries | list | `[]` | ArgoCD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/) |
 | extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in config.argocd |
+| extraEnv | list | `[]` | Extra environment variables for argocd-image-updater |
 | fullnameOverride | string | `""` | Global fullname (argocd-image-updater.fullname in _helpers.tpl) override |
 | image.pullPolicy | string | `"Always"` | Default image pull policy |
 | image.repository | string | `"argoprojlabs/argocd-image-updater"` | Default image repository |
