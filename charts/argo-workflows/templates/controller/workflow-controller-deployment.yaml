@@ -75,7 +75,7 @@ spec:
           resources:
             {{- toYaml .Values.controller.resources | nindent 12 }}
           ports:
-            - name: metrics
+            - name: {{ .Values.controller.metricsConfig.portName }}
               containerPort: {{ .Values.controller.metricsConfig.port }}
             - containerPort: 6060
           livenessProbe: {{ .Values.controller.livenessProbe | toYaml | nindent 12 }}
