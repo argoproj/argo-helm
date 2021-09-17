@@ -469,6 +469,25 @@ through `xxx.extraArgs`
 | redis.securityContext | Redis Pod Security Context | See [values.yaml](values.yaml) |
 | redis.servicePort | Redis service port | `6379` |
 | redis.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
+| redis.metrics.enabled | Deploy metrics service and redis-exporter sidecar | `false` |
+| redis.metrics.image.repository | redis-exporter image repository | `quay.io/bitnami/redis-exporter` |
+| redis.metrics.image.tag | redis-exporter image tag | `1.26.0-debian-10-r2` |
+| redis.metrics.image.imagePullPolicy | redis-exporter image PullPolicy | `IfNotPresent` |
+| redis.metrics.containerPort | Port to use for redis-exporter sidecar | `9121` |
+| redis.metrics.resources | Resource limits and requests for redis-exporter sidecar | `{}` |
+| redis.metrics.service.type | Metrics service type | `ClusterIP` |
+| redis.metrics.service.clusterIP | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) | `None` |
+| redis.metrics.service.annotations | Metrics service annotations | `{}` |
+| redis.metrics.service.labels | Metrics service labels | `{}` |
+| redis.metrics.service.servicePort | Metrics service port | `9121` |
+| redis.metrics.service.portName | Metrics service port name | `http-metrics` |
+| redis.metrics.serviceMonitor.enabled | Enable a prometheus ServiceMonitor | `false` |
+| redis.metrics.serviceMonitor.interval | Interval at which metrics should be scraped | `30s` |
+| redis.metrics.serviceMonitor.relabelings | Prometheus [RelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config) to apply to samples before scraping | `[]` |
+| redis.metrics.serviceMonitor.metricRelabelings | Prometheus [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion | `[]` |
+| redis.metrics.serviceMonitor.selector | Prometheus ServiceMonitor selector labels | `{}` |
+| redis.metrics.serviceMonitor.namespace | Prometheus ServiceMonitor namespace | `<nil>` |
+| redis.metrics.serviceMonitor.additionalLabels | Additional labels to add to the Prometheus ServiceMonitor | `{}` |
 | redis-ha | Configures [Redis HA subchart](https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha) The properties below have been changed from the subchart defaults | |
 | redis-ha.enabled | Enables the Redis HA subchart and disables the custom Redis single node deployment| `false` |
 | redis-ha.exporter.enabled | If `true`, the prometheus exporter sidecar is enabled | `true` |
