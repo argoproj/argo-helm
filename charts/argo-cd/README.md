@@ -187,6 +187,8 @@ NAME: my-release
 | controller.args.selfHealTimeout | define the controller `--self-heal-timeout-seconds` | `"5"` |
 | controller.args.statusProcessors | define the controller `--status-processors` | `"20"` |
 | controller.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
+| controller.clusterRoleRules.enabled | Enable custom rules for the Application Controller's Cluster Role resource. | `false` |
+| controller.clusterRoleRules.rules | List of custom rules for the Application Controller's Cluster Role resource. | `[]` |
 | controller.containerPort | Controller listening port. | `8082` |
 | controller.extraArgs | Additional arguments for the controller. A list of flags | `[]` |
 | controller.extraContainers | Additional containers for the controller. A list of containers. | `[]` |
@@ -244,6 +246,9 @@ NAME: my-release
 | repoServer.autoscaling.maxReplicas | Maximum number of replicas for the repo server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `5` |
 | repoServer.autoscaling.targetCPUUtilizationPercentage | Average CPU utilization percentage for the repo server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `50` |
 | repoServer.autoscaling.targetMemoryUtilizationPercentage | Average memory utilization percentage for the repo server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `50` |
+| repoServer.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `false` |
+| repoServer.clusterRoleRules.enabled | Enable custom rules for the Repo server's Cluster Role resource. | `false` |
+| repoServer.clusterRoleRules.rules | List of custom rules for the Repo server's Cluster Role resource. | `[]` |
 | repoServer.containerPort | Repo server port | `8081` |
 | repoServer.extraArgs | Additional arguments for the repo server. A  list of flags. | `[]` |
 | repoServer.extraContainers | Additional containers for the repo server. A list of containers. | `[]` |

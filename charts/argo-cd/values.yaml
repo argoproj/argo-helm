@@ -1061,6 +1061,17 @@ repoServer:
     #   namespace: monitoring
     #   additionalLabels: {}
 
+  ## Enable Admin ClusterRole resources.
+  ## Enable if you would like to grant cluster rights to ArgoCD repo-server.
+  clusterAdminAccess:
+    enabled: false
+  ## Enable Custom Rules for the Repo server's Cluster Role resource
+  ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
+  ## Defaults to off
+  clusterRoleRules:
+    enabled: false
+    rules: []
+
   ## Repo server service account
   ## If create is set to true, make sure to uncomment the name and update the rbac section below
   serviceAccount:
