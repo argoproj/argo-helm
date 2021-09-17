@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Ability to provide cluster role to repo-server"
+    apiVersion: v2
+    appVersion: 2.1.2
+    created: "2021-09-17T20:14:57.459484072Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 93fb24547c137752acc7dc004de754b75fc30c92aec3507ed5511bfb62bd7524
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-cd/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.21.0/argo-cd-3.21.0.tgz
+    version: 3.21.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Ability to scrape redis metrics"
     apiVersion: v2
     appVersion: 2.1.2
@@ -9591,4 +9620,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-09-17T19:51:34.748712884Z"
+generated: "2021-09-17T20:14:57.463647984Z"
