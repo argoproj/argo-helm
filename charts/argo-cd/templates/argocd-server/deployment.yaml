@@ -140,6 +140,17 @@ spec:
       affinity:
 {{- toYaml .Values.server.affinity | nindent 8 }}
     {{- end }}
+    {{- with .Values.server.topologySpreadConstraints }}
+      topologySpreadConstraints:
+      {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.server.name) | nindent 12 }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
       serviceAccountName: {{ template "argo-cd.serverServiceAccountName" . }}
 {{- with .Values.global.hostAliases }}
       hostAliases:

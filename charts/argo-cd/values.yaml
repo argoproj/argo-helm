@@ -143,6 +143,14 @@ controller:
   tolerations: []
   affinity: {}
 
+  # Pod Topology Spread Constraints
+  # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  # If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   priorityClassName: ""
 
   resources: {}
@@ -323,6 +331,14 @@ dex:
   tolerations: []
   affinity: {}
 
+  # Pod Topology Spread Constraints
+  # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  # If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   priorityClassName: ""
 
   ## Labels to set container specific security contexts
@@ -389,6 +405,14 @@ redis:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+  # Pod Topology Spread Constraints
+  # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  # If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
 
   priorityClassName: ""
 
@@ -534,6 +558,14 @@ server:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+  # Pod Topology Spread Constraints
+  # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  # If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
 
   priorityClassName: ""
 
@@ -947,6 +979,14 @@ repoServer:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+  # Pod Topology Spread Constraints
+  # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  # If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
 
   priorityClassName: ""
 

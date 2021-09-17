@@ -79,6 +79,17 @@ spec:
       affinity:
 {{- toYaml .Values.redis.affinity | nindent 8 }}
     {{- end }}
+    {{- with .Values.redis.topologySpreadConstraints }}
+      topologySpreadConstraints:
+      {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: {{ include "argo-cd.name" $ }}-{{ $.Values.redis.name }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
 {{- if .Values.redis.volumes }}
       volumes:
 {{- toYaml .Values.redis.volumes | nindent 8}}
