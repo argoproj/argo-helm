@@ -1,5 +1,4 @@
-{{- if .Values.repoServer.serviceAccount.create }}
-{{- if .Values.repoServer.clusterAdminAccess.enabled }}
+{{- if and .Values.repoServer.serviceAccount.create .Values.repoServer.clusterAdminAccess.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -7,8 +6,18 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
 rules:
-{{- if .Values.repoServer.rbac }}
-{{toYaml .Values.repoServer.rbac }}
-{{- end }}
+{{- if .Values.repoServer.clusterRoleRules.enabled }}
+{{- toYaml .Values.repoServer.clusterRoleRules.rules | nindent 2 }}
+{{ else }}
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- nonResourceURLs:
+  - '*'
+  verbs:
+  - '*'
 {{- end }}
 {{- end }}
