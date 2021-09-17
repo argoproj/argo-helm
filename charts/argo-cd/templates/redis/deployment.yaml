@@ -13,14 +13,14 @@ spec:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.redis.name }}
   template:
     metadata:
-      {{- with (mergeOverwrite .Values.global.podAnnotations .Values.redis.podAnnotations) }}
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.redis.podAnnotations) }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 8 }}
         app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
-        {{- with (mergeOverwrite .Values.global.podLabels .Values.redis.podLabels) }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.redis.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -64,6 +64,9 @@ spec:
 {{- end }}
         resources:
 {{- toYaml .Values.redis.resources | nindent 10 }}
+    {{- with .Values.redis.extraContainers }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- if .Values.redis.nodeSelector }}
       nodeSelector:
 {{- toYaml .Values.redis.nodeSelector | nindent 8 }}
@@ -75,6 +78,17 @@ spec:
     {{- if .Values.redis.affinity }}
       affinity:
 {{- toYaml .Values.redis.affinity | nindent 8 }}
+    {{- end }}
+    {{- with .Values.redis.topologySpreadConstraints }}
+      topologySpreadConstraints:
+      {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: {{ include "argo-cd.name" $ }}-{{ $.Values.redis.name }}
+        {{- end }}
+      {{- end }}
     {{- end }}
 {{- if .Values.redis.volumes }}
       volumes:

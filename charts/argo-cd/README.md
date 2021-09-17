@@ -181,6 +181,7 @@ NAME: my-release
 | Parameter | Description | Default |
 |-----|---------|-------------|
 | controller.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
+| controller.topologySpreadConstraints | [Assign custom topologySpreadConstraints rules to the deployment](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) | `[]` |
 | controller.args.operationProcessors | define the controller `--operation-processors` | `"10"` |
 | controller.args.appResyncPeriod | define the controller `--app-resync` | `"180"` |
 | controller.args.selfHealTimeout | define the controller `--self-heal-timeout-seconds` | `"5"` |
@@ -188,6 +189,7 @@ NAME: my-release
 | controller.clusterAdminAccess.enabled | Enable RBAC for local cluster deployments. | `true` |
 | controller.containerPort | Controller listening port. | `8082` |
 | controller.extraArgs | Additional arguments for the controller. A list of flags | `[]` |
+| controller.extraContainers | Additional containers for the controller. A list of containers. | `[]` |
 | controller.enableStatefulSet | Enable deploying the controller as a StatefulSet instead of a Deployment. Used for HA installations. | `false` |
 | controller.env | Environment variables for the controller. | `[]` |
 | controller.envFrom | `envFrom` to pass to the controller. | `[]` (See [values.yaml](values.yaml)) |
@@ -236,6 +238,7 @@ NAME: my-release
 | Property | Description | Default |
 |-----|---------|-------------|
 | repoServer.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
+| repoServer.topologySpreadConstraints | [Assign custom topologySpreadConstraints rules to the deployment](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) | `[]` |
 | repoServer.autoscaling.enabled | Enable Horizontal Pod Autoscaler ([HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)) for the repo server | `false` |
 | repoServer.autoscaling.minReplicas | Minimum number of replicas for the repo server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `1` |
 | repoServer.autoscaling.maxReplicas | Maximum number of replicas for the repo server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `5` |
@@ -243,6 +246,7 @@ NAME: my-release
 | repoServer.autoscaling.targetMemoryUtilizationPercentage | Average memory utilization percentage for the repo server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `50` |
 | repoServer.containerPort | Repo server port | `8081` |
 | repoServer.extraArgs | Additional arguments for the repo server. A  list of flags. | `[]` |
+| repoServer.extraContainers | Additional containers for the repo server. A list of containers. | `[]` |
 | repoServer.env | Environment variables for the repo server. | `[]` |
 | repoServer.envFrom | `envFrom` to pass to the repo server. | `[]` (See [values.yaml](values.yaml)) |
 | repoServer.image.repository | Repository to use for the repo server | `global.image.repository` |
@@ -290,6 +294,7 @@ NAME: my-release
 | Parameter | Description | Default |
 |-----|---------|-------------|
 | server.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
+| server.topologySpreadConstraints | [Assign custom topologySpreadConstraints rules to the deployment](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) | `[]` |
 | server.autoscaling.enabled | Enable Horizontal Pod Autoscaler ([HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)) for the server | `false` |
 | server.autoscaling.minReplicas | Minimum number of replicas for the server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `1` |
 | server.autoscaling.maxReplicas | Maximum number of replicas for the server [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) | `5` |
@@ -385,6 +390,7 @@ NAME: my-release
 | Property | Description | Default |
 |-----|---------|-------------|
 | dex.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
+| dex.topologySpreadConstraints | [Assign custom topologySpreadConstraints rules to the deployment](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) | `[]` |
 | dex.containerPortGrpc | GRPC container port | `5557` |
 | dex.containerPortHttp | HTTP container port | `5556` |
 | dex.enabled | Enable dex | `true` |
@@ -402,6 +408,7 @@ NAME: my-release
 | dex.metrics.serviceMonitor.relabelings | Prometheus [RelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config) to apply to samples before scraping | `[]` |
 | dex.metrics.serviceMonitor.metricRelabelings | Prometheus [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion | `[]` |
 | dex.name | Dex name | `"dex-server"` |
+| dex.extraContainers | Additional containers for the Dex server. A list of containers. | `[]` |
 | dex.env | Environment variables for the Dex server. | `[]` |
 | dex.envFrom | `envFrom` to pass to the Dex server. | `[]` (See [values.yaml](values.yaml)) |
 | dex.nodeSelector | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) | `{}` |
@@ -443,12 +450,14 @@ through `xxx.extraArgs`
 | Parameter | Description | Default |
 |-----|---------|-------------|
 | redis.affinity | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `{}` |
+| redis.topologySpreadConstraints | [Assign custom topologySpreadConstraints rules to the deployment](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) | `[]` |
 | redis.containerPort | Redis container port | `6379` |
 | redis.enabled | Enable redis | `true` |
 | redis.image.imagePullPolicy | Redis imagePullPolicy | `"IfNotPresent"` |
 | redis.image.repository | Redis repository | `"redis"` |
 | redis.image.tag | Redis tag | `"6.2.1-alpine"` |
 | redis.extraArgs | Additional arguments for the `redis-server`. A list of flags. | `[]` |
+| redis.extraContainers | Additional containers for the redis. A list of containers. | `[]` |
 | redis.name | Redis name | `"redis"` |
 | redis.env | Environment variables for the Redis server. | `[]` |
 | redis.envFrom | `envFrom` to pass to the Redis server. | `[]` (See [values.yaml](values.yaml)) |
