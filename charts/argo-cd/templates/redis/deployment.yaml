@@ -19,6 +19,7 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 8 }}
+        app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
         {{- with (mergeOverwrite .Values.global.podLabels .Values.redis.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
