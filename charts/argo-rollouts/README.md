@@ -48,6 +48,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Labels to be added to the ServiceMonitor |
 | imagePullSecrets | list | `[]` | Registry secret names as an array |
 | installCRDs | bool | `true` | Install and upgrade CRDs |
+| keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
 | crdAnnotations | object | `{}` | Annotations to be added to all CRDs |
 | podAnnotations | object | `{}` | Annotations to be added to the Rollout pods |
 | podLabels | object | `{}` | Labels to be added to the Rollout pods |

@@ -51,6 +51,9 @@ spec:
                 optional: true
           - name: IMAGE_UPDATER_LOGLEVEL
             value: {{ .Values.config.logLevel }}
+          {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -74,6 +77,8 @@ spec:
           volumeMounts:
           - mountPath: /app/config
             name: registries-conf
+          - mountPath: /tmp
+            name: tmp-dir
       volumes:
       - configMap:
           items:
@@ -81,6 +86,8 @@ spec:
             path: registries.conf
           name: argocd-image-updater-config
         name: registries-conf
+      - emptyDir: {}
+        name: tmp-dir
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
