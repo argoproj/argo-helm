@@ -6,16 +6,22 @@ metadata:
   labels:
     app.kubernetes.io/component: {{ .Values.dashboard.component }}
     {{- include "argo-rollouts.labels" . | nindent 4 }}
-  {{- with .Values.serviceAnnotations }}
+    {{- with .Values.dashboard.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   annotations:
+  {{- with .Values.serviceAnnotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.dashboard.service.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   ports:
-  - name: dashboard
+  - name: {{ .Values.dashboard.service.portName }}
     protocol: TCP
-    port: 3100
-    targetPort: 3100
+    port: {{ .Values.dashboard.service.port }}
+    targetPort: {{ .Values.dashboard.service.targetPort }}
   selector:
     app.kubernetes.io/component: {{ .Values.dashboard.component }}
     {{- include "argo-rollouts.selectorLabels" . | nindent 4 }}

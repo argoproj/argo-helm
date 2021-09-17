@@ -72,6 +72,20 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.serviceAccount.create | bool | `true` | Specifies whether a dashboard service account should be created |
 | dashboard.serviceAccount.annotations | object | `{}` | Annotations to add to the dashboard service account |
 | dashboard.serviceAccount.name | string | `""` | The name of the dashboard service account to use. If not set and create is true, a name is generated using the fullname template |
+| dashboard.service.annotations | object | `{}` | Dashboard service annotations |
+| dashboard.service.labels | object | `{}` | Dashboard service labels |
+| dashboard.service.portName | string | `dashboard` | Dashboard service port name |
+| dashboard.service.port | int | `3100` | Dashboard service port |
+| dashboard.service.targetPort | int | `3100` | Dashboard service target port |
+| dashboard.ingress.enabled | bool | `false` | Enable dashboard ingress support |
+| dashboard.ingress.annotations | object | `{}` | Dashboard ingress annotations |
+| dashboard.ingress.labels | object | `{}` | Dashboard ingress labels |
+| dashboard.ingress.ingressClassName | string | `""` | Dashboard ingress class name |
+| dashboard.ingress.hosts | list | `[]` | Dashboard ingress hosts |
+| dashboard.ingress.paths | list | `[/]` | Dashboard ingress paths |
+| dashboard.ingress.pathType | string | `Prefix` | Dashboard ingress path type |
+| dashboard.ingress.extraPaths | list | `[]` | Dashboard ingress extra paths |
+| dashboard.ingress.tls | list | `[]` | Dashboard ingress tls |
 
 ## Upgrading
 
