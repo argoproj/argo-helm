@@ -16,14 +16,14 @@ spec:
   {{- end }}
   template:
     metadata:
-      {{- with (mergeOverwrite .Values.global.podAnnotations .Values.repoServer.podAnnotations) }}
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.repoServer.podAnnotations) }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 8 }}
         app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.repoServer.image.tag | quote }}
-        {{- with (mergeOverwrite .Values.global.podLabels .Values.repoServer.podLabels) }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.repoServer.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -113,7 +113,10 @@ spec:
           successThreshold: {{ .Values.repoServer.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.readinessProbe.failureThreshold }}
         resources:
-{{- toYaml .Values.repoServer.resources | nindent 10 }}
+          {{- toYaml .Values.repoServer.resources | nindent 10 }}
+      {{- with .Values.controller.extraContainers }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
     {{- if .Values.repoServer.nodeSelector }}
       nodeSelector:
 {{- toYaml .Values.repoServer.nodeSelector | nindent 8 }}
@@ -125,6 +128,17 @@ spec:
     {{- if .Values.repoServer.affinity }}
       affinity:
 {{- toYaml .Values.repoServer.affinity | nindent 8 }}
+    {{- end }}
+    {{- with .Values.repoServer.topologySpreadConstraints }}
+      topologySpreadConstraints:
+      {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.repoServer.name) | nindent 12 }}
+        {{- end }}
+      {{- end }}
     {{- end }}
       serviceAccountName: {{ template "argo-cd.repoServerServiceAccountName" . }}
 {{- with .Values.global.hostAliases }}

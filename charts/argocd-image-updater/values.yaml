@@ -27,6 +27,11 @@ extraArgs: []
   # - --once
   # - --registries-conf-path /app/config/registries.conf
 
+# -- Extra environment variables for argocd-image-updater
+extraEnv: []
+  # - name: AWS_REGION
+  #   value: "us-west-1"
+
 config:
   # Described in detail here https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags
   argocd:

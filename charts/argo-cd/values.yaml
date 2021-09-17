@@ -143,6 +143,14 @@ controller:
   tolerations: []
   affinity: {}
 
+  # Pod Topology Spread Constraints
+  # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  # If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   priorityClassName: ""
 
   resources: {}
@@ -220,6 +228,8 @@ controller:
     enabled: false
     rules: []
 
+  ## Additional containers to be added to the controller pod.
+  extraContainers: []
 
 ## Dex
 dex:
@@ -321,6 +331,14 @@ dex:
   tolerations: []
   affinity: {}
 
+  # Pod Topology Spread Constraints
+  # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  # If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   priorityClassName: ""
 
   ## Labels to set container specific security contexts
@@ -338,6 +356,9 @@ dex:
   #  requests:
   #    cpu: 10m
   #    memory: 32Mi
+
+  ## Additional containers to be added to the dex pod.
+  extraContainers: []
 
 ## Redis
 redis:
@@ -385,6 +406,14 @@ redis:
   tolerations: []
   affinity: {}
 
+  # Pod Topology Spread Constraints
+  # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  # If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   priorityClassName: ""
 
   ## Labels to set container specific security contexts
@@ -418,6 +447,9 @@ redis:
 
   volumeMounts: []
   volumes: []
+
+  ## Additional containers to be added to the redis pod.
+  extraContainers: []
 
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
@@ -526,6 +558,14 @@ server:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+  # Pod Topology Spread Constraints
+  # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  # If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
 
   priorityClassName: ""
 
@@ -940,6 +980,14 @@ repoServer:
   tolerations: []
   affinity: {}
 
+  # Pod Topology Spread Constraints
+  # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  # If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   priorityClassName: ""
 
   ## Labels to set container specific security contexts
@@ -991,6 +1039,9 @@ repoServer:
     annotations: {}
     ## Automount API credentials for the Service Account
     automountServiceAccountToken: true
+
+  ## Additional containers to be added to the repo server pod.
+  extraContainers: []
 
   ## Repo server rbac rules
   # rbac:

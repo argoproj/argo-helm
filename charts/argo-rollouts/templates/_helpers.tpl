@@ -38,7 +38,7 @@ Common labels
 helm.sh/chart: {{ include "argo-rollouts.chart" . }}
 {{ include "argo-rollouts.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ default .Chart.AppVersion $.Values.controller.image.tag | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/part-of: argo-rollouts
