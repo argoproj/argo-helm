@@ -16,16 +16,23 @@ nameOverride: ""
 fullnameOverride: ""
 
 # -- Extra arguments for argocd-image-updater not defined in config.argocd
+# If a flag contains both key and value, they need to be split to a new entry
 extraArgs: []
   # - --disable-kubernetes
   # - --dry-run
-  # - --health-port 8080
-  # - --interval 2m
-  # - --kubeconfig ~/.kube/config
-  # - --match-application-name staging-*
-  # - --max-concurrency 5
+  # - --health-port
+  # - 8080
+  # - --interval
+  # - 2m
+  # - --kubeconfig
+  # - ~/.kube/config
+  # - --match-application-name
+  # - staging-*
+  # - --max-concurrency
+  # - 5
   # - --once
-  # - --registries-conf-path /app/config/registries.conf
+  # - --registries-conf-path
+  # - /app/config/registries.conf
 
 # -- Extra environment variables for argocd-image-updater
 extraEnv: []
