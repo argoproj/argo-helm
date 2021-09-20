@@ -28,8 +28,8 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          command: 
-            - /usr/local/bin/argocd-image-updater
+          command: ["/usr/local/bin/argocd-image-updater"]
+          args:
             - run
             {{- with .Values.extraArgs }}
               {{- toYaml . | nindent 12 }}
