@@ -138,8 +138,8 @@ helm.sh/chart: {{ include "argo-cd.chart" .context }}
 app.kubernetes.io/managed-by: {{ .context.Release.Service }}
 app.kubernetes.io/part-of: argocd
 app.kubernetes.io/version: {{ .context.Chart.AppVersion | quote }}
-{{- if .context.Values.global.additionalLabels }}
-{{ toYaml .context.Values.global.additionalLabels }}
+{{- with .context.Values.global.additionalLabels }}
+{{ toYaml . }}
 {{- end }}
 {{- end }}
 
