@@ -44,6 +44,9 @@ spec:
             - --policy={{ .Values.args.policy }}
             - --debug={{ .Values.args.debug }}
             - --dry-run={{ .Values.args.dryRun }}
+            {{- with .Values.extraArgs }}
+            {{- . | toYaml | nindent 12 }}
+            {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
