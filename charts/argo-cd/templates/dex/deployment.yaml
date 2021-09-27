@@ -129,7 +129,7 @@ spec:
       serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
       {{- with .Values.global.hostAliases }}
       hostAliases:
-        {{ toYaml . | indent 6 }}
+        {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:
       - emptyDir: {}
