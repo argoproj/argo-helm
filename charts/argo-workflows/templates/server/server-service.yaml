@@ -17,7 +17,7 @@ spec:
     name: {{ . }}
     {{- end }}
     targetPort: 2746
-    {{- if eq .Values.server.serviceType "NodePort" }}
+    {{- if and (eq .Values.server.serviceType "NodePort") .Values.server.serviceNodePort }}
     nodePort: {{ .Values.server.serviceNodePort }}
     {{- end }}
   selector:
