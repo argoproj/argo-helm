@@ -2,45 +2,45 @@
 apiVersion: v1
 kind: List
 items:
-{{- range .Values.server.additionalApplications }}
+  {{- range .Values.server.additionalApplications }}
   - apiVersion: argoproj.io/v1alpha1
     kind: Application
     metadata:
-      {{- if .additionalAnnotations }}
+      {{- with .additionalAnnotations }}
       annotations:
-      {{- range $key, $value := .additionalAnnotations }}
+        {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
+        {{- end }}
       {{- end }}
-      {{- end }}
-      {{- if .additionalLabels }}
+      {{- with .additionalLabels }}
       labels:
-{{- toYaml .additionalLabels | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       name: {{ .name }}
-      {{- if .namespace }}
-      namespace: {{ .namespace }}
+      {{- with .namespace }}
+      namespace: {{ . }}
       {{- end }}
-      {{- if .finalizers }}
+      {{- with .finalizers }}
       finalizers:
-{{- toYaml .finalizers | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
       project: {{ tpl .project $ }}
       source:
-{{- toYaml .source | nindent 8 }}
+        {{- toYaml .source | nindent 8 }}
       destination:
-{{- toYaml .destination | nindent 8 }}
-      {{- if .syncPolicy }}
+        {{- toYaml .destination | nindent 8 }}
+      {{- with .syncPolicy }}
       syncPolicy:
-{{- toYaml .syncPolicy | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .ignoreDifferences }}
+      {{- with .ignoreDifferences }}
       ignoreDifferences:
-{{- toYaml .ignoreDifferences | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .info }}
+      {{- with .info }}
       info:
-{{- toYaml .info | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-{{- end }}
+  {{- end }}
 {{- end }}
