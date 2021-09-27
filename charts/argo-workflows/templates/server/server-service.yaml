@@ -17,6 +17,9 @@ spec:
     name: {{ . }}
     {{- end }}
     targetPort: 2746
+    {{- if and (eq .Values.server.serviceType "NodePort") .Values.server.serviceNodePort }}
+    nodePort: {{ .Values.server.serviceNodePort }}
+    {{- end }}
   selector:
     {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
   sessionAffinity: None
