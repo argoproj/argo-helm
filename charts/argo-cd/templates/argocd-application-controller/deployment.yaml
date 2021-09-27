@@ -133,10 +133,10 @@ spec:
       {{- end }}
     {{- end }}
       serviceAccountName: {{ template "argo-cd.controllerServiceAccountName" . }}
-{{- with .Values.global.hostAliases }}
+      {{- with .Values.global.hostAliases }}
       hostAliases:
-{{ toYaml . | indent 6 }}
-{{- end }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
       volumes:
       - emptyDir: {}
         name: argocd-home
