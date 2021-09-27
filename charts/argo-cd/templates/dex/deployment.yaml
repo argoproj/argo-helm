@@ -127,6 +127,10 @@ spec:
       {{- end }}
     {{- end }}
       serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
+{{- with .Values.global.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 6 }}
+{{- end }}
       volumes:
       - emptyDir: {}
         name: tmp-dir
