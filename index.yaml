@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Dex deployment now also supports hostAliases"
+    apiVersion: v2
+    appVersion: 2.1.2
+    created: "2021-09-27T10:04:50.675621225Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: ae90952ac956a6d1e517fe0d44381ae9afa31ac3cdfde963d835dcef9a6b9893
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-cd/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.21.1/argo-cd-3.21.1.tgz
+    version: 3.21.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Ability to provide cluster role to repo-server"
     apiVersion: v2
     appVersion: 2.1.2
@@ -9665,4 +9694,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-09-27T07:14:59.749110028Z"
+generated: "2021-09-27T10:04:50.67986505Z"
