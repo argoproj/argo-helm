@@ -175,6 +175,8 @@ NAME: my-release
 | configs.secret.extra | add additional secrets to be added to argocd-secret | `{}` |
 | configs.styles | Define custom CSS styles for your argo instance ([Read More](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/)). This Settings will automatically mount the provided css and reference it in the argo configuration. | `""` (See [values.yaml](values.yaml)) |
 | openshift.enabled | enables using arbitrary uid for argo repo server | `false` |
+| server.additionalApplications | Deploy ArgoCD Applications within this helm release | `[]` (See [values.yaml](values.yaml)) |
+| server.additionalProjects | Deploy ArgoCD Projects within this helm release | `[]` (See [values.yaml](values.yaml)) |
 
 ## ArgoCD Controller
 
