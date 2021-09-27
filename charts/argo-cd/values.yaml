@@ -847,13 +847,21 @@ server:
   #     path: guestbook
   #     directory:
   #       recurse: true
-  #  destination:
+  #   destination:
   #     server: https://kubernetes.default.svc
   #     namespace: guestbook
-  #  syncPolicy:
-  #    automated:
-  #      prune: false
-  #      selfHeal: false
+  #   syncPolicy:
+  #     automated:
+  #       prune: false
+  #       selfHeal: false
+  #   ignoreDifferences:
+  #   - group: apps
+  #     kind: Deployment
+  #     jsonPointers:
+  #     - /spec/replicas
+  #   info:
+  #   - name: url
+  #     value: https://argoproj.github.io/
 
   ## Projects
   ## reference: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
