@@ -451,6 +451,37 @@ redis:
   ## Additional containers to be added to the redis pod.
   extraContainers: []
 
+  metrics:
+    enabled: false
+    image:
+      repository: quay.io/bitnami/redis-exporter
+      tag: 1.26.0-debian-10-r2
+      imagePullPolicy: IfNotPresent
+    containerPort: 9121
+    resources: {}
+      # limits:
+      #   cpu: 50m
+      #   memory: 64Mi
+      # requests:
+      #   cpu: 10m
+      #   memory: 32Mi
+    service:
+      type: ClusterIP
+      clusterIP: None
+      annotations: {}
+      labels: {}
+      servicePort: 9121
+      portName: http-metrics
+    serviceMonitor:
+      enabled: false
+      interval: 30s
+      relabelings: []
+      metricRelabelings: []
+      selector: {}
+        # prometheus: kube-prometheus
+      # namespace: monitoring
+      additionalLabels: {}
+
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
 redis-ha:
@@ -816,13 +847,21 @@ server:
   #     path: guestbook
   #     directory:
   #       recurse: true
-  #  destination:
+  #   destination:
   #     server: https://kubernetes.default.svc
   #     namespace: guestbook
-  #  syncPolicy:
-  #    automated:
-  #      prune: false
-  #      selfHeal: false
+  #   syncPolicy:
+  #     automated:
+  #       prune: false
+  #       selfHeal: false
+  #   ignoreDifferences:
+  #   - group: apps
+  #     kind: Deployment
+  #     jsonPointers:
+  #     - /spec/replicas
+  #   info:
+  #   - name: url
+  #     value: https://argoproj.github.io/
 
   ## Projects
   ## reference: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
@@ -1029,6 +1068,17 @@ repoServer:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
     #   additionalLabels: {}
+
+  ## Enable Admin ClusterRole resources.
+  ## Enable if you would like to grant cluster rights to ArgoCD repo-server.
+  clusterAdminAccess:
+    enabled: false
+  ## Enable Custom Rules for the Repo server's Cluster Role resource
+  ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
+  ## Defaults to off
+  clusterRoleRules:
+    enabled: false
+    rules: []
 
   ## Repo server service account
   ## If create is set to true, make sure to uncomment the name and update the rbac section below

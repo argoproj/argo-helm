@@ -57,6 +57,7 @@ controller:
     enabled: false
     path: /metrics
     port: 9090
+    portName: metrics
     servicePort: 8080
     servicePortName: metrics
   # the controller container's securityContext
@@ -222,6 +223,7 @@ server:
   name: server
   serviceType: ClusterIP
   servicePort: 2746
+  # serviceNodePort: 32746
   # servicePortName: http
   serviceAccount:
     create: true

@@ -11,6 +11,23 @@ body:
   validations:
     required: true
 
+- type: dropdown
+  attributes:
+    label: Related helm chart
+    description: You may select more than one.
+    multiple: true
+    options:
+      - argo-cd
+      - argo-events
+      - argo-rollouts
+      - argo-workflows
+      - argocd-applicationset
+      - argocd-image-updater
+      - argocd-notifications
+      - other
+  validations:
+    required: true
+
 - type: textarea
   attributes:
     label: To Reproduce

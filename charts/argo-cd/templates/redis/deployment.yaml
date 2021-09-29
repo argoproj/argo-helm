@@ -64,6 +64,24 @@ spec:
 {{- end }}
         resources:
 {{- toYaml .Values.redis.resources | nindent 10 }}
+      {{- if .Values.redis.metrics.enabled }}
+      - name: metrics
+        env:
+        - name: REDIS_ADDR
+          value: {{ printf "redis://localhost:%v" .Values.redis.containerPort }}
+        - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS
+          value: {{ printf "0.0.0.0:%v" .Values.redis.metrics.containerPort }}
+        image: {{ .Values.redis.metrics.image.repository }}:{{ .Values.redis.metrics.image.tag }}
+        imagePullPolicy: {{ .Values.redis.metrics.image.imagePullPolicy}}
+        ports:
+        - containerPort: {{ .Values.redis.metrics.containerPort }}
+          name: metrics
+          protocol: TCP
+        resources: {{- toYaml .Values.redis.metrics.resources | nindent 10 }}
+        {{- with .Values.redis.containerSecurityContext }}
+        securityContext: {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- end }}
     {{- with .Values.redis.extraContainers }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
