@@ -17,14 +17,14 @@ spec:
   replicas: {{ .Values.controller.replicas }}
   template:
     metadata:
-      {{- with (mergeOverwrite .Values.global.podAnnotations .Values.controller.podAnnotations) }}
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.controller.podAnnotations) }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
         app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.controller.image.tag | quote }}
-        {{- with (mergeOverwrite .Values.global.podLabels .Values.controller.podLabels) }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.controller.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -105,7 +105,10 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         resources:
-{{- toYaml .Values.controller.resources | nindent 10 }}
+          {{- toYaml .Values.controller.resources | nindent 10 }}
+      {{- with .Values.controller.extraContainers }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
     {{- if .Values.controller.nodeSelector }}
       nodeSelector:
 {{- toYaml .Values.controller.nodeSelector | nindent 8 }}
@@ -118,11 +121,22 @@ spec:
       affinity:
 {{- toYaml .Values.controller.affinity | nindent 8 }}
     {{- end }}
+    {{- with .Values.controller.topologySpreadConstraints }}
+      topologySpreadConstraints:
+      {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.controller.name) | nindent 12 }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
       serviceAccountName: {{ template "argo-cd.controllerServiceAccountName" . }}
-{{- with .Values.global.hostAliases }}
+      {{- with .Values.global.hostAliases }}
       hostAliases:
-{{ toYaml . | indent 6 }}
-{{- end }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
       volumes:
       - emptyDir: {}
         name: argocd-home

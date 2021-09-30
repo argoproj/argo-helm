@@ -44,6 +44,8 @@ controller:
   parallelism:
   # Limits the maximum number of incomplete workflows in a namespace
   namespaceParallelism:
+  # Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224
+  initialDelay:
   # podAnnotations is an optional map of annotations to be applied to the controller Pods
   podAnnotations: {}
   # Optional labels to add to the controller pods
@@ -55,6 +57,7 @@ controller:
     enabled: false
     path: /metrics
     port: 9090
+    portName: metrics
     servicePort: 8080
     servicePortName: metrics
   # the controller container's securityContext
@@ -113,6 +116,11 @@ controller:
   workflowNamespaces:
     - default
   containerRuntimeExecutor: docker
+  # containerRuntimeExecutors:
+  #   - name: emissary
+  #     selector:
+  #       matchLabels:
+  #         workflows.argoproj.io/container-runtime-executor: emissary
   instanceID:
     # `instanceID.enabled` configures the controller to filter workflow submissions
     # to only those which have a matching instanceID attribute.
@@ -215,6 +223,7 @@ server:
   name: server
   serviceType: ClusterIP
   servicePort: 2746
+  # serviceNodePort: 32746
   # servicePortName: http
   serviceAccount:
     create: true

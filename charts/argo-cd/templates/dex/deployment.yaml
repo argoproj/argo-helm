@@ -12,14 +12,14 @@ spec:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.dex.name) | nindent 6 }}
   template:
     metadata:
-      {{- with (mergeOverwrite .Values.global.podAnnotations .Values.dex.podAnnotations) }}
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.dex.podAnnotations) }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 8 }}
         app.kubernetes.io/version: {{ .Values.dex.image.tag | quote }}
-        {{- with (mergeOverwrite .Values.global.podLabels .Values.dex.podLabels) }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.dex.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -99,7 +99,10 @@ spec:
         {{- toYaml .Values.dex.volumeMounts | nindent 8 }}
         {{- end }}
         resources:
-{{- toYaml .Values.dex.resources | nindent 10 }}
+          {{- toYaml .Values.dex.resources | nindent 10 }}
+      {{- with .Values.dex.extraContainers }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
     {{- if .Values.dex.nodeSelector }}
       nodeSelector:
 {{- toYaml .Values.dex.nodeSelector | nindent 8 }}
@@ -112,7 +115,22 @@ spec:
       affinity:
 {{- toYaml .Values.dex.affinity | nindent 8 }}
     {{- end }}
+    {{- with .Values.dex.topologySpreadConstraints }}
+      topologySpreadConstraints:
+      {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.dex.name) | nindent 12 }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
       serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
       volumes:
       - emptyDir: {}
         name: tmp-dir
