@@ -475,6 +475,8 @@ through `xxx.extraArgs`
 | redis.resources | Resource limits and requests for redis | `{}` |
 | redis.securityContext | Redis Pod Security Context | See [values.yaml](values.yaml) |
 | redis.servicePort | Redis service port | `6379` |
+| redis.service.annotations | Redis service annotations | `{}` |
+| redis.service.labels | Additional redis service labels | `{}` |
 | redis.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
 | redis.metrics.enabled | Deploy metrics service and redis-exporter sidecar | `false` |
 | redis.metrics.image.repository | redis-exporter image repository | `quay.io/bitnami/redis-exporter` |
