@@ -365,6 +365,10 @@ redis:
   enabled: true
   name: redis
 
+  # Annotations to be added to the provisioned service resource
+  service:
+    annotations: {}
+
   image:
     repository: redis
     tag: 6.2.4-alpine
@@ -394,9 +398,6 @@ redis:
   ## Annotations to be added to the Redis server pods
   ##
   podAnnotations: {}
-
-  # Annotations to be added to the provisioned service resource
-  serviceAnnotations: {}
 
   ## Labels to be added to the Redis server pods
   ##

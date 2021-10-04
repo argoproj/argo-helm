@@ -6,7 +6,7 @@ metadata:
   name: {{ template "argo-cd.redis.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
-  {{- with .Values.redis.serviceAnnotations }}
+  {{- with .Values.redis.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
