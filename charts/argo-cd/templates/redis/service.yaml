@@ -15,7 +15,8 @@ metadata:
   {{- end }}
 spec:
   ports:
-  - port: {{ .Values.redis.servicePort }}
+  - name: redis
+    port: {{ .Values.redis.servicePort }}
     targetPort: {{ .Values.redis.containerPort }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.redis.name) | nindent 4 }}
