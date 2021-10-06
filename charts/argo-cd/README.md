@@ -141,7 +141,7 @@ NAME: my-release
 |-----|------|---------|
 | global.image.imagePullPolicy | If defined, a imagePullPolicy applied to all ArgoCD deployments. | `"IfNotPresent"` |
 | global.image.repository | If defined, a repository applied to all ArgoCD deployments. | `"argoproj/argocd"` |
-| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v2.1.2"` |
+| global.image.tag | If defined, a tag applied to all ArgoCD deployments. | `"v2.1.3"` |
 | global.podAnnotations | Annotations for the all deployed pods |
 | global.podLabels | Labels for the all deployed pods |
 | global.securityContext | Toggle and define securityContext | See [values.yaml](values.yaml) |
