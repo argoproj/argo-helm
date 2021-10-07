@@ -1,0 +1,108 @@
+# Default values for argocd-operator.
+
+operator:
+  clusterDomain: ""
+  nsToWatch: "argocd-operator-system,argocd-system"
+  image:
+    repository: statcan/argocd-operator
+    tag: v0.0.16
+    pullPolicy: IfNotPresent
+  imagePullSecrets: []
+  podAnnotations: {}
+  podLabels: {}
+  replicaCount: 1
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    runAsNonRoot: true
+    fsGroup: 1000
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+      ephemeral-storage: 500Mi
+
+# For the argocd-vault-plugin
+vault:
+  enabled: false
+  auth:
+    url: http://vault.default:8200
+    # https://github.com/IBM/argocd-vault-plugin/blob/main/docs/config.md
+    type: k8s
+    # You need to create this kubernetes role in vault
+    # The end role is `{prefix}{namespace}`, like `argocd_dscd_system`.
+    # This is to isolate Vault spaces from eachother.
+    # NOTE: The namespace will have "-"s replaced with "_"s
+    rolePrefix: argocd_
+
+pluginConfig: &pluginConfig |
+  # If the argocd-vault-plugin is not enabled,
+  # then obviously these will not work.
+  - name: argocd-vault-plugin
+    generate:
+      command: ["argocd-vault-plugin"]
+      args: ["-s", "argocd-vault-secret", "generate", "./"]
+  - name: argocd-vault-plugin-helm
+    generate:
+      command: ["sh", "-c"]
+      args: ["helm template . > all.yaml && argocd-vault-plugin -s argocd-vault-secret generate all.yaml"]
+  - name: argocd-vault-plugin-kustomize
+    generate:
+      command: ["sh", "-c"]
+      args: ["kustomize build . > all.yaml && argocd-vault-plugin -s argocd-vault-secret generate all.yaml"]
+
+# ## ArgoCD Projects Definition
+# projects:
+#   # Project name
+#   - name: argprojo01
+#     namespace: "argocd-operator-system"
+#     podAnnotations: {}
+#     podLabels: {}
+#     spec:
+#       oidcConfig: |
+#         name: myoidc
+#         issuer: OIDC_FQDN
+#         clientID: id
+#         clientSecret: secret
+#         requestedIDTokenClaims:
+#           groups:
+#             essential: true
+#         requestedScopes: ["openid", "profile", "email"]
+#       rbac:
+#         defaultPolicy: 'role:readonly'
+#         policy: |
+#           g, system:cluster-admins, role:admin
+#         scopes: '[groups]'
+#       server:
+#         autoscale:
+#           enabled: true
+#         host: ARGOCD_FQDN
+#         insecure: false
+#       configManagementPlugins: *pluginConfig
+
+#   # Project name
+#   - name: argprojo02
+#     namespace: argocd-system
+#     podAnnotations: {}
+#     podLabels: {}
+#     spec:
+#       oidcConfig: |
+#         name: myoidc
+#         issuer: OIDC_FQDN
+#         clientID: id
+#         clientSecret: secret
+#         requestedIDTokenClaims:
+#           groups:
+#             essential: true
+#         requestedScopes: ["openid", "profile", "email"]
+#       rbac:
+#         defaultPolicy: 'role:readonly'
+#         policy: |
+#           g, system:cluster-admins, role:admin
+#         scopes: '[groups]'
+#       server:
+#         autoscale:
+#           enabled: true
+#         host: ARGOCD_FQDN
+#         insecure: false
+#       configManagementPlugins: *pluginConfig

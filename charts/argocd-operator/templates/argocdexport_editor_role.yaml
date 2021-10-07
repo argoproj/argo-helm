@@ -1,0 +1,24 @@
+# permissions for end users to edit argocdexports.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argocdexport-editor-role
+rules:
+- apiGroups:
+  - argoproj.io
+  resources:
+  - argocdexports
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - argocdexports/status
+  verbs:
+  - get

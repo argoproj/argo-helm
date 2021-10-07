@@ -1,0 +1,20 @@
+# permissions for end users to view argocdexports.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argocdexport-viewer-role
+rules:
+- apiGroups:
+  - argoproj.io
+  resources:
+  - argocdexports
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - argocdexports/status
+  verbs:
+  - get

@@ -1,0 +1,18 @@
+{{- if .Values.vault.enabled  }}
+{{ range .Values.projects }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argocd-repo-server-vault
+  namespace: {{ .namespace }}
+subjects:
+- kind: ServiceAccount
+  name: argocd-repo-server-vault
+  namespace: {{ .namespace }}
+roleRef:
+  kind: Role
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io
+{{ end }}
+{{- end }}

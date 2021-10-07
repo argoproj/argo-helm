@@ -1,0 +1,15 @@
+{{- if .Values.vault.enabled  }}
+{{ range .Values.projects }}
+---
+# This is to get the argocd-vault-secret
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: secret-reader
+  namespace: {{ .namespace }}
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get"]
+{{ end }}
+{{- end }}
