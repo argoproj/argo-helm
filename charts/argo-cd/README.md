@@ -445,6 +445,8 @@ NAME: my-release
 | dex.tolerations | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) | `[]` |
 | dex.volumeMounts | Dex volume mounts | `"/shared"` |
 | dex.volumes | Dex volumes | `{}` |
+| dex.extraVolumeMounts | Extra dex volume mounts | `[]` |
+| dex.extraVolumes | Extra dex volumes | `[]` |
 
 ## Redis
 

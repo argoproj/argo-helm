@@ -314,6 +314,12 @@ dex:
     - name: static-files
       emptyDir: {}
 
+  ## Extra volumes to the controller pod.
+  extraVolumes: []
+
+  ## Extra volumeMounts to the controller pod.
+  extraVolumeMounts: []
+
   ## Dex deployment container ports
   containerPortHttp: 5556
   servicePortHttp: 5556
