@@ -42,6 +42,7 @@ Chart version: 0.7.2
         - argo-helm/charts/argo-workflows/template/controller/workflow-role.yaml
         - argo-helm/charts/argo-workflows/template/controller/workflow-sa.yaml 
 ```
+
 ```
 name: argo-cd
 version: 3.4.1
