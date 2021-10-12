@@ -33,6 +33,15 @@ We want to deliver transparent chart releases for our chart consumers. Therefore
 
 Changes on a chart must be documented in a chart specific changelog in the `Chart.yaml` [Annotation Section](https://helm.sh/docs/topics/charts/#the-chartyaml-file). For every new release the entire `artifacthub.io/changes` needs to be rewritten. Each change requires a new bullet point following the pattern `- "[{type}]: {description}"`. You can use the following template:
 
+[Fixed]
+``` 
+name: argo-workflow
+Chart version: 0.7.2
+  - Fixed following files for namespaced 
+        - argo-helm/charts/argo-workflows/template/controller/workflow-rb.yaml
+        - argo-helm/charts/argo-workflows/template/controller/workflow-role.yaml
+        - argo-helm/charts/argo-workflows/template/controller/workflow-sa.yaml 
+```
 ```
 name: argo-cd
 version: 3.4.1
