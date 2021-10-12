@@ -98,6 +98,9 @@ spec:
         {{- if .Values.dex.volumeMounts }}
         {{- toYaml .Values.dex.volumeMounts | nindent 8 }}
         {{- end }}
+        {{- if .Values.dex.extraVolumeMounts }}
+        {{- toYaml .Values.dex.extraVolumeMounts | nindent 8 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.dex.resources | nindent 10 }}
       {{- with .Values.dex.extraContainers }}
@@ -136,6 +139,9 @@ spec:
         name: tmp-dir
       {{- if .Values.dex.volumes }}
       {{- toYaml .Values.dex.volumes | nindent 6 }}
+      {{- end }}
+      {{- if .Values.dex.extraVolumes }}
+      {{- toYaml .Values.dex.extraVolumes | nindent 6 }}
       {{- end }}
 {{- if .Values.dex.priorityClassName }}
       priorityClassName: {{ .Values.dex.priorityClassName }}
