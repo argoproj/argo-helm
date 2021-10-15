@@ -8392,6 +8392,28 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Additional service account, role and rolebinding which was not created for multiple namespaces in case of namespaced workflow."
+    apiVersion: v2
+    appVersion: v3.1.8
+    created: "2021-10-15T09:42:18.599488907Z"
+    description: A Helm chart for Argo Workflows
+    digest: e36f2ed765dcd930db11faeac3736e09fea72a3178637a3ac29b3f31eac1403b
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: benjaminws
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.7.2/argo-workflows-0.7.2.tgz
+    version: 0.7.2
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Also test with default values"
     apiVersion: v2
     appVersion: v3.1.8
@@ -10021,4 +10043,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-10-14T14:58:29.990208102Z"
+generated: "2021-10-15T09:42:18.606063168Z"
