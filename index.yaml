@@ -8392,6 +8392,29 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Bump appVersion to 3.2.0. Synced CRDs."
+        - "[Added]: WorkflowTaskSet CRD"
+    apiVersion: v2
+    appVersion: v3.2.0
+    created: "2021-10-15T10:22:14.302207407Z"
+    description: A Helm chart for Argo Workflows
+    digest: ba2ad6d856e35b719617d62d38c5a66738d4c5a6dceed43ed8391d3e2b0a0de8
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: benjaminws
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.7.3/argo-workflows-0.7.3.tgz
+    version: 0.7.3
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Additional service account, role and rolebinding which was not created for multiple namespaces in case of namespaced workflow."
     apiVersion: v2
     appVersion: v3.1.8
@@ -10043,4 +10066,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-10-15T09:42:18.606063168Z"
+generated: "2021-10-15T10:22:14.306847329Z"
