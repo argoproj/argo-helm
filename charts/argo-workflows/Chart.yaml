@@ -2,7 +2,7 @@ apiVersion: v2
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.7.1
+version: 0.7.2
 appVersion: "v3.1.8"
 icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
 home: https://github.com/argoproj/argo-helm
@@ -15,4 +15,4 @@ maintainers:
   - name: benjaminws
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Also test with default values"
+    - "[Fixed]: Additional service account, role and rolebinding which was not created for multiple namespaces in case of namespaced workflow."
