@@ -64,6 +64,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.image.repository | string | `"argoproj/kubectl-argo-rollouts"` | Repository to use |
 | dashboard.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
+| dashboard.service.type | string | `""` | Sets the `type` of the `Service` |
 | dashboard.tolerations | list | `[]` | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
 | dashboard.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
 | dashboard.nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
@@ -83,10 +84,10 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 
 ### To 1.0.0
 
-* This is a breaking change which only supports Helm v3.0.0+ now. If you still use Helm v2, please consider upgrading because v2 is EOL since November 2020.  
+* This is a breaking change which only supports Helm v3.0.0+ now. If you still use Helm v2, please consider upgrading because v2 is EOL since November 2020.
   To migrate to Helm v3 please have a look at the [Helm 2to3 Plugin](https://github.com/helm/helm-2to3). This tool will convert the existing ConfigMap used for Tiller to a Secret of type `helm.sh/release.v1`.
 * `quay.io` is the default registry now
-* We introduce a template function for the labels here to reduce code duplication. This also affects the Deployment `matchLabels` selector.  
+* We introduce a template function for the labels here to reduce code duplication. This also affects the Deployment `matchLabels` selector.
   To upgrade an existing installation, please **add the `--force` parameter** to the `helm upgrade` command or **delete the Deployment resource** before you upgrade. This is necessary because Deployment's label selector is immutable.
 * All resources are now prefixed with the template `"argo-rollouts.fullname"`.
   This enables the users to override resource names via the `nameOverride` and `fullnameOverride` parameters.
