@@ -62,7 +62,7 @@ kubectl apply -k https://github.com/argoproj-labs/applicationset.git/manifests/c
 | args.dryRun | bool | `false` | Enable dry run mode |
 | args.enableLeaderElection | bool | `false` | The default leader election setting |
 | args.metricsAddr | string | `":8080"` | The default metric address |
-| args.namespace | string | `"argocd"` | The default Argo CD repo namespace |
+| args.namespace | string | `""` | Namespace where ArgoCD is deployed to (defaults to .Release.Namespace) |
 | args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
 | args.probeBindAddr | string | `":8081"` | The default health check port |
 | extraArgs | list | `[]` | List of extra cli args to add |
