@@ -34,6 +34,10 @@ spec:
       containers:
       - image: "{{ .Values.dashboard.image.registry }}/{{ .Values.dashboard.image.repository }}:{{ default .Chart.AppVersion .Values.dashboard.image.tag }}"
         imagePullPolicy: {{ .Values.dashboard.image.pullPolicy }}
+        args:
+        {{- with .Values.dashboard.extraArgs }}
+        {{- . | toYaml | nindent 8 }}
+        {{- end }}
         name: argo-rollouts-dashboard
         ports:
         - containerPort: 3100
