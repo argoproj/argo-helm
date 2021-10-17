@@ -39,7 +39,7 @@ spec:
             {{- if or (gt ( .Values.replicaCount | int64) 1) .Values.args.enableLeaderElection }}
             - --enable-leader-election=true
             {{- end }}
-            - --namespace={{ .Values.args.namespace }}
+            - --namespace={{ .Values.args.namespace | default .Release.Namespace }}
             - --argocd-repo-server={{ .Values.args.argocdRepoServer }}
             - --policy={{ .Values.args.policy }}
             - --debug={{ .Values.args.debug }}
