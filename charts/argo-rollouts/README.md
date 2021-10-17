@@ -64,7 +64,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.image.repository | string | `"argoproj/kubectl-argo-rollouts"` | Repository to use |
 | dashboard.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
-| dashboard.service.type | string | `""` | Sets the `type` of the `Service` |
+| dashboard.service.type | string | `ClusterIP` | Sets the `type` of the `Service` |
 | dashboard.tolerations | list | `[]` | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
 | dashboard.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
 | dashboard.nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
