@@ -50,6 +50,12 @@ jobs:
         run: |
           kubectl apply -f charts/argo-cd/crds
 
+      - name: Skip HPA tests of ArgoCD
+        if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
+        run: |
+          ## Metrics API not available in kind cluster
+          rm charts/argo-cd/ci/ha-autoscaling-values.yaml
+
       - name: Run chart-testing (install)
         run: ct install --config ./.github/configs/ct-install.yaml
         if: steps.list-changed.outputs.changed == 'true'
