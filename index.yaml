@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Reorganize some files in repo, move applications.yaml and projects.yaml into argocd-configs."
+    apiVersion: v2
+    appVersion: 2.1.3
+    created: "2021-10-17T10:33:23.654998725Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: d3424a8b60d8c0a1cfcc4e9940827295e66700bc7e70e762576ee5f16786d675
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.25.2/argo-cd-3.25.2.tgz
+    version: 3.25.2
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Use correct chart icon url"
     apiVersion: v2
     appVersion: 2.1.3
@@ -10066,4 +10095,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-10-15T10:22:14.306847329Z"
+generated: "2021-10-17T10:33:23.659232102Z"
