@@ -36,7 +36,7 @@ spec:
         imagePullPolicy: {{ .Values.dashboard.image.pullPolicy }}
         args:
         {{- with .Values.dashboard.extraArgs }}
-        {{- . | toYaml | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         name: argo-rollouts-dashboard
         ports:
