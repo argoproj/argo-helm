@@ -2,7 +2,7 @@ apiVersion: v2
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.7.3
+version: 0.8.0
 appVersion: "v3.2.0"
 icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
 home: https://github.com/argoproj/argo-helm
@@ -15,5 +15,4 @@ maintainers:
   - name: benjaminws
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: Bump appVersion to 3.2.0. Synced CRDs."
-    - "[Added]: WorkflowTaskSet CRD"
+    - "[Added]: Workflow Controller ConfigMap Executor ImagePullPolicy"
