@@ -38,7 +38,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | controller.image.registry | string | `quay.io` | Registry to use |
 | controller.image.repository | string | `"argoproj/argo-rollouts"` | Repository to use |
 | controller.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
-| controller.extraArgs | Additional arguments for the controller. A  list of flags. | `[]` |
+| controller.extraArgs | list | `[]` | Additional arguments for the controller. A list of flags. |
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
 | controller.tolerations | list | `[]` | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
 | controller.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
@@ -64,7 +64,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.image.registry | string | `quay.io` | Registry to use |
 | dashboard.image.repository | string | `"argoproj/kubectl-argo-rollouts"` | Repository to use |
 | dashboard.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
-| dashboard.extraArgs | Additional arguments for the dashboard. A  list of flags. | `[]` |
+| dashboard.extraArgs | list | `[]` | Additional arguments for the dashboard. A list of flags. |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
 | dashboard.tolerations | list | `[]` | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
 | dashboard.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
