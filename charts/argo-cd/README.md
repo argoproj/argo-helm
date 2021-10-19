@@ -10,8 +10,52 @@ This is a **community maintained** chart. This chart installs [argo-cd](https://
 
 The default installation is intended to be similar to the provided ArgoCD [releases](https://github.com/argoproj/argo-cd/releases).
 
-This chart currently installs the non-HA version of ArgoCD.
+## High Availability
 
+This chart installs the non-HA version of ArgoCD by default. If you want to run ArgoCD in HA mode, you can use one of the example values in the next sections.
+Please also have a look into the upstream [Operator Manual regarding High Availability](https://argoproj.github.io/argo-cd/operator-manual/high_availability/) to understand how scaling of ArgoCD works in detail.
+
+> **Warning:**  
+> You need at least 3 worker nodes as the HA mode of redis enforces Pods to run on separate nodes.
+
+### HA mode with autoscaling
+
+```yaml
+redis-ha:
+  enabled: true
+
+controller:
+  enableStatefulSet: true
+
+server:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+
+repoServer:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+```
+
+### HA mode without autoscaling
+
+```yaml
+redis-ha:
+  enabled: true
+
+controller:
+  enableStatefulSet: true
+
+server:
+  replicas: 2
+  env:
+    - name: ARGOCD_API_SERVER_REPLICAS
+      value: '2'
+
+repoServer:
+  replicas: 2
+```
 ### Synchronizing Changes from Original Repository
 
 In the original [ArgoCD repository](https://github.com/argoproj/argo-cd/) an [`manifests/install.yaml`](https://github.com/argoproj/argo-cd/blob/master/manifests/install.yaml) is generated using `kustomize`. It's the basis for the installation as [described in the docs](https://argo-cd.readthedocs.io/en/stable/getting_started/#1-install-argo-cd).
