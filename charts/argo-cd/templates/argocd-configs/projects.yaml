@@ -20,6 +20,10 @@ items:
       {{- if .namespace }}
       namespace: {{ .namespace }}
       {{- end }}
+      {{- with .finalizers }}
+      finalizers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       description: {{ .description }}
       sourceRepos:
