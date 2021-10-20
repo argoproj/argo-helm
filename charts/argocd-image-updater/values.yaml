@@ -72,6 +72,14 @@ config:
     #   prefix: quay.io
     #   credentials: env:REGISTRY_SECRET
 
+# whether to create an authentication hscript, if enabled, an authentication script will be mounted on /script/auth.sh that can be used to authenticate with registries (ECR)
+# refer to https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/#specifying-credentials-for-accessing-container-registries for more info
+authScript:
+  enabled: false
+  script: |
+    #!/bin/sh
+    echo "add script here"
+
 serviceAccount:
   # -- Specifies whether a service account should be created
   create: true

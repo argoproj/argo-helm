@@ -6,6 +6,10 @@ metadata:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
   name: argocd-image-updater-config
 data:
+  {{- if .Values.authScript.enabled }}
+  authscript.sh: |
+  {{- .Values.authScript.script | nindent 4 }}
+  {{- end }}
   registries.conf: |
     {{- with .Values.config.registries }}
       registries:
