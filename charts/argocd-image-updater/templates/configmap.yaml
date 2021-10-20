@@ -7,7 +7,7 @@ metadata:
   name: argocd-image-updater-config
 data:
   {{- if .Values.authScript.enabled }}
-  authscript.sh: |
+  auth.sh: |
   {{- .Values.authScript.script | nindent 4 }}
   {{- end }}
   registries.conf: |
