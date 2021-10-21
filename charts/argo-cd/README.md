@@ -231,34 +231,34 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
-| controller.args.appResyncPeriod | string | `"180"` | define the controller `--app-resync` |
-| controller.args.operationProcessors | string | `"10"` | define the controller `--operation-processors` |
-| controller.args.repoServerTimeoutSeconds | string | `"60"` | define the controller `--repo-server-timeout-seconds` |
-| controller.args.selfHealTimeout | string | `"5"` | define the controller `--self-heal-timeout-seconds` |
-| controller.args.statusProcessors | string | `"20"` | define the controller `--status-processors` |
+| controller.args.appResyncPeriod | string | `"180"` | define the application controller `--app-resync` |
+| controller.args.operationProcessors | string | `"10"` | define the application controller `--operation-processors` |
+| controller.args.repoServerTimeoutSeconds | string | `"60"` | define the application controller `--repo-server-timeout-seconds` |
+| controller.args.selfHealTimeout | string | `"5"` | define the application controller `--self-heal-timeout-seconds` |
+| controller.args.statusProcessors | string | `"20"` | define the application controller `--status-processors` |
 | controller.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
-| controller.clusterRoleRules.enabled | bool | `false` | Enable Custom Rules for the Application Controller's Cluster Role resource |
-| controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
-| controller.containerPort | int | `8082` | Controller listening port |
-| controller.containerSecurityContext | object | `{}` | Controller container-level security context |
-| controller.enableStatefulSet | bool | `false` | Deploy the application as a StatefulSet instead of a Deployment, this is required for HA capability This is a feature flag that will become the default in chart version 3.x |
-| controller.env | list | `[]` | Environment variables to pass to argocd-controller |
-| controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to argocd-controller |
-| controller.extraArgs | list | `[]` | Additional command line arguments to pass to argocd-controller |
-| controller.extraContainers | list | `[]` | Additional containers to be added to the controller pod |
-| controller.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the controller |
-| controller.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the controller |
-| controller.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the controller |
+| controller.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the application controller's ClusterRole resource |
+| controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
+| controller.containerPort | int | `8082` | Application controller listening port |
+| controller.containerSecurityContext | object | `{}` | Application controller container-level security context |
+| controller.enableStatefulSet | bool | `false` | Deploy the application controller as a StatefulSet instead of a Deployment, this is required for HA capability. This is a feature flag that will become the default in chart version 3.x |
+| controller.env | list | `[]` | Environment variables to pass to application controller |
+| controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
+| controller.extraArgs | list | `[]` | Additional command line arguments to pass to application controller |
+| controller.extraContainers | list | `[]` | Additional containers to be added to the application controller pod |
+| controller.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application controller |
+| controller.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application controller |
+| controller.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application controller |
 | controller.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | controller.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | controller.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | controller.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | controller.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| controller.logFormat | string | `"text"` | Argo controller log format. Either `text` or `json` |
-| controller.logLevel | string | `"info"` | Argo controller log level |
+| controller.logFormat | string | `"text"` | Application controller log format. Either `text` or `json` |
+| controller.logLevel | string | `"info"` | Application controller log level |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
-| controller.metrics.rules.enabled | bool | `false` | Deploy a PrometheusRule for the controller |
-| controller.metrics.rules.spec | list | `[]` | PrometheusRule.Spec for the controller |
+| controller.metrics.rules.enabled | bool | `false` | Deploy a PrometheusRule for the application controller |
+| controller.metrics.rules.spec | list | `[]` | PrometheusRule.Spec for the application controller |
 | controller.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | controller.metrics.service.labels | object | `{}` | Metrics service labels |
 | controller.metrics.service.servicePort | int | `8082` | Metrics service port |
@@ -269,30 +269,30 @@ NAME: my-release
 | controller.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | controller.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
 | controller.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
-| controller.name | string | `"application-controller"` | Controller name string |
+| controller.name | string | `"application-controller"` | Application controller name string |
 | controller.nodeSelector | object | `{}` | [Node selector] |
-| controller.podAnnotations | object | `{}` | Annotations to be added to controller pods |
-| controller.podLabels | object | `{}` | Labels to be added to controller pods |
-| controller.priorityClassName | string | `""` | Priority class for the controller pods |
+| controller.podAnnotations | object | `{}` | Annotations to be added to application controller pods |
+| controller.podLabels | object | `{}` | Labels to be added to application controller pods |
+| controller.priorityClassName | string | `""` | Priority class for the application controller pods |
 | controller.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | controller.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | controller.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | controller.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | controller.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| controller.replicas | int | `1` | The number of controller pods to run. If changing the number of replicas you must pass the number as `ARGOCD_CONTROLLER_REPLICAS` as an environment variable |
-| controller.resources | object | `{}` | Resource limits and requests for the controller pods |
-| controller.service.annotations | object | `{}` | Controller service annotations |
-| controller.service.labels | object | `{}` | Controller service labels |
-| controller.service.port | int | `8082` | Controller service port |
-| controller.service.portName | string | `"https-controller"` | Controller service port name |
+| controller.replicas | int | `1` | The number of application controller pods to run. If changing the number of replicas you must pass the number as `ARGOCD_CONTROLLER_REPLICAS` as an environment variable |
+| controller.resources | object | `{}` | Resource limits and requests for the application controller pods |
+| controller.service.annotations | object | `{}` | Application controller service annotations |
+| controller.service.labels | object | `{}` | Application controller service labels |
+| controller.service.port | int | `8082` | Application controller service port |
+| controller.service.portName | string | `"https-controller"` | Application controller service port name |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
-| controller.serviceAccount.create | bool | `true` | Create a service account for the controller |
+| controller.serviceAccount.create | bool | `true` | Create a service account for the application controller |
 | controller.serviceAccount.name | string | `"argocd-application-controller"` | Service account name |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [topologySpreadConstraints] rules to the deployment |
-| controller.volumeMounts | list | `[]` | Additional volumeMounts to the controller main container |
-| controller.volumes | list | `[]` | Additional volumes to the controller pod |
+| controller.volumeMounts | list | `[]` | Additional volumeMounts to the application controller main container |
+| controller.volumes | list | `[]` | Additional volumes to the application controller pod |
 
 ## Argo Repo Server
 
@@ -309,21 +309,21 @@ NAME: my-release
 | repoServer.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
 | repoServer.containerPort | int | `8081` | Configures the repo server port |
 | repoServer.containerSecurityContext | object | `{}` | Repo server container-level security context |
-| repoServer.env | list | `[]` | Environment variables to pass to argocd-repo-server |
-| repoServer.envFrom | list | `[]` | envFrom to pass to argocd-repo-server |
-| repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to argocd-repo-server |
+| repoServer.env | list | `[]` | Environment variables to pass to repo server |
+| repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
+| repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to repo server |
 | repoServer.extraContainers | list | `[]` | Additional containers to be added to the repo server pod |
 | repoServer.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the repo server |
 | repoServer.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the repo server |
 | repoServer.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the repo server |
-| repoServer.initContainers | list | `[]` | Init containers to add to the repo-server pods |
+| repoServer.initContainers | list | `[]` | Init containers to add to the repo server pods |
 | repoServer.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | repoServer.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | repoServer.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | repoServer.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | repoServer.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| repoServer.logFormat | string | `"text"` | Argo repoServer log format: Either `text` or `json` |
-| repoServer.logLevel | string | `"info"` | Argo repoServer log level |
+| repoServer.logFormat | string | `"text"` | Repo server log format: Either `text` or `json` |
+| repoServer.logLevel | string | `"info"` | Repo server log level |
 | repoServer.metrics.enabled | bool | `false` | Deploy metrics service |
 | repoServer.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | repoServer.metrics.service.labels | object | `{}` | Metrics service labels |
@@ -368,11 +368,11 @@ NAME: my-release
 | server.GKEbackendConfig.enabled | bool | `false` | Enable BackendConfig custom resource for Google Kubernetes Engine |
 | server.GKEbackendConfig.spec | object | `{}` | [BackendConfigSpec] |
 | server.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
-| server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the server |
-| server.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the server [HPA] |
-| server.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the server [HPA] |
-| server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the server [HPA] |
-| server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the server [HPA] |
+| server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo CD server |
+| server.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the Argo CD server [HPA] |
+| server.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Argo CD server [HPA] |
+| server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the Argo CD server [HPA] |
+| server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo CD server [HPA] |
 | server.certificate.additionalHosts | list | `[]` | Certificate manager additional hosts |
 | server.certificate.domain | string | `"argocd.example.com"` | Certificate manager domain |
 | server.certificate.enabled | bool | `false` | Enables a certificate manager certificate |
@@ -385,15 +385,15 @@ NAME: my-release
 | server.configEnabled | bool | `true` | Manage ArgoCD configmap (Declarative Setup) |
 | server.containerPort | int | `8080` | Configures the server port |
 | server.containerSecurityContext | object | `{}` | Servers container-level security context |
-| server.env | list | `[]` | Environment variables to pass to argocd-server |
-| server.envFrom | list | `[]` | envFrom to pass to argocd-server |
-| server.extraArgs | list | `[]` | Additional command line arguments to pass to argocd-server |
+| server.env | list | `[]` | Environment variables to pass to Argo CD server |
+| server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
+| server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
-| server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the server |
-| server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the server |
-| server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the server |
+| server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Argo CD server |
+| server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
+| server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Argo CD server |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
-| server.ingress.enabled | bool | `false` | Enable an ingress resource for the server |
+| server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
 | server.ingress.extraPaths | list | `[]` | Additional ingress paths |
 | server.ingress.hosts | list | `[]` | List of ingress hosts |
 | server.ingress.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
@@ -405,7 +405,7 @@ NAME: my-release
 | server.ingressGrpc.annotations | object | `{}` | Additional ingress annotations for dedicated [gRPC-ingress] |
 | server.ingressGrpc.awsALB.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB GRPC service |
 | server.ingressGrpc.awsALB.serviceType | string | `"NodePort"` | Service type for the AWS ALB GRPC service |
-| server.ingressGrpc.enabled | bool | `false` | Enable an ingress resource for the server for dedicated [gRPC-ingress] |
+| server.ingressGrpc.enabled | bool | `false` | Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress] |
 | server.ingressGrpc.extraPaths | list | `[]` | Additional ingress paths for dedicated [gRPC-ingress] |
 | server.ingressGrpc.hosts | list | `[]` | List of ingress hosts for dedicated [gRPC-ingress] |
 | server.ingressGrpc.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
@@ -421,8 +421,8 @@ NAME: my-release
 | server.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | server.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | server.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| server.logFormat | string | `"text"` | Argo server log format: Either `text` or `json` |
-| server.logLevel | string | `"info"` | Argo server log level |
+| server.logFormat | string | `"text"` | Argo CD server log format: Either `text` or `json` |
+| server.logLevel | string | `"info"` | Argo CD server log level |
 | server.metrics.enabled | bool | `false` | Deploy metrics service |
 | server.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | server.metrics.service.labels | object | `{}` | Metrics service labels |
@@ -438,7 +438,7 @@ NAME: my-release
 | server.nodeSelector | object | `{}` | [Node selector] |
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
-| server.priorityClassName | string | `""` | Priority class for the server |
+| server.priorityClassName | string | `""` | Priority class for the Argo CD server |
 | server.rbacConfig | object | `{}` | ArgoCD rbac config ([ArgoCD RBAC policy]) |
 | server.rbacConfigAnnotations | object | `{}` | Annotations to be added to ArgoCD rbac ConfigMap |
 | server.rbacConfigCreate | bool | `true` | Whether or not to create the configmap. If false, it is expected the configmap will be created by something else. ArgoCD will not work if there is no configMap created with the name above. |
@@ -448,8 +448,8 @@ NAME: my-release
 | server.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | server.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | server.replicas | int | `1` | The number of server pods to run |
-| server.resources | object | `{}` | Resource limits and requests for the server |
-| server.route.enabled | bool | `false` | Enable a OpenShift route for the server |
+| server.resources | object | `{}` | Resource limits and requests for the Argo CD server |
+| server.route.enabled | bool | `false` | Enable a OpenShift route for the Argo CD server |
 | server.route.hostname | string | `""` | Hostname of OpenShift route |
 | server.service.annotations | object | `{}` | Server service annotations |
 | server.service.externalIPs | list | `[]` | Server service external IPs |
@@ -487,7 +487,7 @@ NAME: my-release
 | dex.containerSecurityContext | object | `{}` | Dex container-level security context |
 | dex.enabled | bool | `true` | Enable dex |
 | dex.env | list | `[]` | Environment variables to pass to the Dex server |
-| dex.envFrom | list | `[]` | envFrom to pass to the Dex server |
+| dex.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Dex server |
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.extraVolumeMounts | list | `[]` | Extra volumeMounts to the dex pod |
 | dex.extraVolumes | list | `[]` | Extra volumes to the dex pod |
@@ -548,7 +548,7 @@ NAME: my-release
 | redis.containerSecurityContext | object | `{}` | Redis container-level security context |
 | redis.enabled | bool | `true` | Enable redis |
 | redis.env | list | `[]` | Environment variables to pass to the Redis server |
-| redis.envFrom | list | `[]` | envFrom to pass to the Redis server |
+| redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
