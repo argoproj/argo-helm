@@ -119,7 +119,7 @@ controller:
   # -- Labels to be added to controller pods
   podLabels: {}
 
-  # -- Holds container-level security attributes and common container settings
+  # -- Controller container-level security context
   containerSecurityContext:
     {}
     # capabilities:
@@ -446,7 +446,7 @@ dex:
   # -- Priority class for dex
   priorityClassName: ""
 
-  # -- Holds container-level security attributes and common container settings
+  # -- Dex container-level security context
   containerSecurityContext:
     {}
     # capabilities:
@@ -525,7 +525,7 @@ redis:
   # -- Priority class for redis
   priorityClassName: ""
 
-  # -- Holds container-level security attributes and common container settings
+  # -- Redis container-level security context
   containerSecurityContext:
     {}
     # capabilities:
@@ -533,7 +533,7 @@ redis:
     #     - all
     # readOnlyRootFilesystem: true
 
-  # -- Redis Pod Security Context
+  # -- Redis pod-level security context
   securityContext:
     runAsNonRoot: true
     runAsUser: 999
@@ -769,7 +769,7 @@ server:
   # -- Priority class for the server
   priorityClassName: ""
 
-  # -- Holds container-level security attributes and common container settings
+  # -- Servers container-level security context
   containerSecurityContext:
     {}
     # capabilities:
@@ -1299,7 +1299,7 @@ repoServer:
   # -- Priority class for the repo server
   priorityClassName: ""
 
-  # -- Holds container-level security attributes and common container settings
+  # -- Repo server container-level security context
   containerSecurityContext:
     {}
     # capabilities:

@@ -240,7 +240,7 @@ NAME: my-release
 | controller.clusterRoleRules.enabled | bool | `false` | Enable Custom Rules for the Application Controller's Cluster Role resource |
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
 | controller.containerPort | int | `8082` | Controller listening port |
-| controller.containerSecurityContext | object | `{}` | Holds container-level security attributes and common container settings |
+| controller.containerSecurityContext | object | `{}` | Controller container-level security context |
 | controller.enableStatefulSet | bool | `false` | Deploy the application as a StatefulSet instead of a Deployment, this is required for HA capability This is a feature flag that will become the default in chart version 3.x |
 | controller.env | list | `[]` | Environment variables to pass to argocd-controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to argocd-controller |
@@ -308,7 +308,7 @@ NAME: my-release
 | repoServer.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the Repo server's Cluster Role resource |
 | repoServer.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
 | repoServer.containerPort | int | `8081` | Configures the repo server port |
-| repoServer.containerSecurityContext | object | `{}` | Holds container-level security attributes and common container settings |
+| repoServer.containerSecurityContext | object | `{}` | Repo server container-level security context |
 | repoServer.env | list | `[]` | Environment variables to pass to argocd-repo-server |
 | repoServer.envFrom | list | `[]` | envFrom to pass to argocd-repo-server |
 | repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to argocd-repo-server |
@@ -384,7 +384,7 @@ NAME: my-release
 | server.configAnnotations | object | `{}` | Annotations to be added to ArgoCD ConfigMap |
 | server.configEnabled | bool | `true` | Manage ArgoCD configmap (Declarative Setup) |
 | server.containerPort | int | `8080` | Configures the server port |
-| server.containerSecurityContext | object | `{}` | Holds container-level security attributes and common container settings |
+| server.containerSecurityContext | object | `{}` | Servers container-level security context |
 | server.env | list | `[]` | Environment variables to pass to argocd-server |
 | server.envFrom | list | `[]` | envFrom to pass to argocd-server |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to argocd-server |
@@ -484,7 +484,7 @@ NAME: my-release
 | dex.containerPortGrpc | int | `5557` | Container port for gRPC access |
 | dex.containerPortHttp | int | `5556` | Container port for HTTP access |
 | dex.containerPortMetrics | int | `5558` | Container port for metrics access |
-| dex.containerSecurityContext | object | `{}` | Holds container-level security attributes and common container settings |
+| dex.containerSecurityContext | object | `{}` | Dex container-level security context |
 | dex.enabled | bool | `true` | Enable dex |
 | dex.env | list | `[]` | Environment variables to pass to the Dex server |
 | dex.envFrom | list | `[]` | envFrom to pass to the Dex server |
@@ -545,7 +545,7 @@ NAME: my-release
 |-----|------|---------|-------------|
 | redis.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | redis.containerPort | int | `6379` | Redis container port |
-| redis.containerSecurityContext | object | `{}` | Holds container-level security attributes and common container settings |
+| redis.containerSecurityContext | object | `{}` | Redis container-level security context |
 | redis.enabled | bool | `true` | Enable redis |
 | redis.env | list | `[]` | Environment variables to pass to the Redis server |
 | redis.envFrom | list | `[]` | envFrom to pass to the Redis server |
@@ -579,7 +579,7 @@ NAME: my-release
 | redis.podLabels | object | `{}` | Labels to be added to the Redis server pods |
 | redis.priorityClassName | string | `""` | Priority class for redis |
 | redis.resources | object | `{}` | Resource limits and requests for redis |
-| redis.securityContext | object | `{"runAsNonRoot":true,"runAsUser":999}` | Redis Pod Security Context |
+| redis.securityContext | object | `{"runAsNonRoot":true,"runAsUser":999}` | Redis pod-level security context |
 | redis.service.annotations | object | `{}` | Redis service annotations |
 | redis.service.labels | object | `{}` | Additional redis service labels |
 | redis.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
