@@ -198,13 +198,13 @@ NAME: my-release
 | configs.secret.argocdServerAdminPassword | string | `""` | Bcrypt hashed admin password |
 | configs.secret.argocdServerAdminPasswordMtime | string | `""` (defaults to current time) | Admin password modification time. Eg. `"2006-01-02T15:04:05Z"` |
 | configs.secret.argocdServerTlsConfig | object | `{}` | Argo TLS Data |
-| configs.secret.bitbucketServerSecret | string | `""` | BitBucket incoming webhook secret |
-| configs.secret.bitbucketUUID | string | `""` | bitbucket webhook secret |
+| configs.secret.bitbucketServerSecret | string | `""` | Shared secret for authenticating BitbucketServer webhook events |
+| configs.secret.bitbucketUUID | string | `""` | UUID for authenticating Bitbucket webhook events |
 | configs.secret.createSecret | bool | `true` | Create the argocd-secret |
 | configs.secret.extra | object | `{}` | add additional secrets to be added to argocd-secret |
-| configs.secret.githubSecret | string | `""` | GitHub incoming webhook secret |
-| configs.secret.gitlabSecret | string | `""` | GitLab incoming webhook secret |
-| configs.secret.gogsSecret | string | `""` | gogs server webhook secret |
+| configs.secret.githubSecret | string | `""` | Shared secret for authenticating GitHub webhook events |
+| configs.secret.gitlabSecret | string | `""` | Shared secret for authenticating GitLab webhook events |
+| configs.secret.gogsSecret | string | `""` | Shared secret for authenticating Gogs webhook events |
 | configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |
 | configs.tlsCerts | object | See [values.yaml] | TLS certificate |
 | configs.tlsCertsAnnotations | object | `{}` | TLS certificate configmap annotations |

@@ -1574,15 +1574,15 @@ configs:
     # -- Annotations to be added to argocd-secret
     annotations: {}
 
-    # -- GitHub incoming webhook secret
+    # -- Shared secret for authenticating GitHub webhook events
     githubSecret: ""
-    # -- GitLab incoming webhook secret
+    # -- Shared secret for authenticating GitLab webhook events
     gitlabSecret: ""
-    # -- BitBucket incoming webhook secret
+    # -- Shared secret for authenticating BitbucketServer webhook events
     bitbucketServerSecret: ""
-    # -- bitbucket webhook secret
+    # -- UUID for authenticating Bitbucket webhook events
     bitbucketUUID: ""
-    # -- gogs server webhook secret
+    # -- Shared secret for authenticating Gogs webhook events
     gogsSecret: ""
 
     # -- add additional secrets to be added to argocd-secret
