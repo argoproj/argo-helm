@@ -933,7 +933,7 @@ server:
   ingressGrpc:
     # -- Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress]
     enabled: false
-    # -- Setup up GRPC ingress to work with an AWS ALB
+    # -- Setup up gRPC ingress to work with an AWS ALB
     isAWSALB: false
     # -- Additional ingress annotations for dedicated [gRPC-ingress]
     annotations: {}
@@ -943,15 +943,15 @@ server:
     ingressClassName: ""
 
     awsALB:
-      # -- Service type for the AWS ALB GRPC service
+      # -- Service type for the AWS ALB gRPC service
       ## Service Type if isAWSALB is set to true
       ## Can be of type NodePort or ClusterIP depending on which mode you are
       ## are running. Instance mode needs type NodePort, IP mode needs type
       ## ClusterIP
       ## Ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/how-it-works/#ingress-traffic
       serviceType: NodePort
-      # -- Backend protocol version for the AWS ALB GRPC service
-      ## This tells AWS to send traffic from the ALB using HTTP2. Can use GRPC as well if you want to leverage GRPC specific features
+      # -- Backend protocol version for the AWS ALB gRPC service
+      ## This tells AWS to send traffic from the ALB using HTTP2. Can use gRPC as well if you want to leverage gRPC specific features
       backendProtocolVersion: HTTP2
 
     # -- List of ingress hosts for dedicated [gRPC-ingress]
