@@ -181,7 +181,7 @@ controller:
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 
-  # -- Assign custom [topologySpreadConstraints] rules to the deployment
+  # -- Assign custom [TopologySpreadConstraints] rules to the application controller
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
@@ -436,7 +436,7 @@ dex:
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 
-  # -- Assign custom [topologySpreadConstraints] rules to the deployment
+  # -- Assign custom [TopologySpreadConstraints] rules to dex
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
@@ -516,7 +516,7 @@ redis:
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 
-  # -- Assign custom [topologySpreadConstraints] rules to the deployment
+  # -- Assign custom [TopologySpreadConstraints] rules to redis
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
@@ -761,7 +761,7 @@ server:
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 
-  # -- Assign custom [topologySpreadConstraints] rules to the deployment
+  # -- Assign custom [TopologySpreadConstraints] rules to the Argo CD server
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
@@ -1292,7 +1292,7 @@ repoServer:
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 
-  # -- Assign custom [topologySpreadConstraints] rules to the deployment
+  # -- Assign custom [TopologySpreadConstraints] rules to the repo server
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
