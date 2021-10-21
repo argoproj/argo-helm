@@ -20,17 +20,6 @@ subjects:
   - kind: ServiceAccount
     name: {{ template "argo-workflows.controllerServiceAccountName" . }}
     namespace: {{ .Release.Namespace }}
-{{- if .Values.controller.workflowNamespaces }}
-{{- $uiServiceAccount := (include "argo-workflows.controllerServiceAccountName" .) }}
-{{- $namespace := .Release.Namespace }}
-{{- range $key := .Values.controller.workflowNamespaces }}
-  {{- if not (eq $key $namespace) }}
-  - kind: ServiceAccount
-    name: {{ $uiServiceAccount }}
-    namespace: {{ $key }}
-  {{- end }}
-{{- end }}
-{{- end }}
 
 {{- if .Values.controller.clusterWorkflowTemplates.enabled }}
 ---
