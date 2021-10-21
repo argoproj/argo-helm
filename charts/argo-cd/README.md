@@ -388,7 +388,7 @@ NAME: my-release
 | server.env | list | `[]` | Environment variables to pass to argocd-server |
 | server.envFrom | list | `[]` | envFrom to pass to argocd-server |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to argocd-server |
-| server.extraContainers | list | `[]` | Additional containers to be added to the controller pod |
+| server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
 | server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the server |
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the server |
 | server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the server |
@@ -436,8 +436,8 @@ NAME: my-release
 | server.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | server.name | string | `"server"` | Argo CD server name |
 | server.nodeSelector | object | `{}` | [Node selector] |
-| server.podAnnotations | object | `{}` | Annotations to be added to controller pods |
-| server.podLabels | object | `{}` | Labels to be added to controller pods |
+| server.podAnnotations | object | `{}` | Annotations to be added to server pods |
+| server.podLabels | object | `{}` | Labels to be added to server pods |
 | server.priorityClassName | string | `""` | Priority class for the server |
 | server.rbacConfig | object | `{}` | ArgoCD rbac config ([ArgoCD RBAC policy]) |
 | server.rbacConfigAnnotations | object | `{}` | Annotations to be added to ArgoCD rbac ConfigMap |
@@ -473,8 +473,8 @@ NAME: my-release
 | server.staticAssets.enabled | bool | `true` | Disable deprecated flag `--staticassets` |
 | server.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | server.topologySpreadConstraints | list | `[]` | Assign custom [topologySpreadConstraints] rules to the deployment |
-| server.volumeMounts | list | `[]` | Additional volumeMounts to the server main container. |
-| server.volumes | list | `[]` | Additional volumes to the controller pod. |
+| server.volumeMounts | list | `[]` | Additional volumeMounts to the server main container |
+| server.volumes | list | `[]` | Additional volumes to the server pod |
 
 ## Dex
 
@@ -489,8 +489,8 @@ NAME: my-release
 | dex.env | list | `[]` | Environment variables to pass to the Dex server |
 | dex.envFrom | list | `[]` | envFrom to pass to the Dex server |
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
-| dex.extraVolumeMounts | list | `[]` | Extra volumeMounts to the controller pod. |
-| dex.extraVolumes | list | `[]` | Extra volumes to the controller pod. |
+| dex.extraVolumeMounts | list | `[]` | Extra volumeMounts to the dex pod |
+| dex.extraVolumes | list | `[]` | Extra volumes to the dex pod |
 | dex.image.imagePullPolicy | string | `"IfNotPresent"` | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
 | dex.image.tag | string | `"v2.30.0"` | Dex image tag |
@@ -536,8 +536,8 @@ NAME: my-release
 | dex.servicePortMetrics | int | `5558` | Service port for metrics access |
 | dex.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | dex.topologySpreadConstraints | list | `[]` | Assign custom [topologySpreadConstraints] rules to the deployment |
-| dex.volumeMounts | list | `[{"mountPath":"/shared","name":"static-files"}]` | Additional volumeMounts to the controller main container |
-| dex.volumes | list | `[{"emptyDir":{},"name":"static-files"}]` | Additional volumes to the controller pod |
+| dex.volumeMounts | list | `[{"mountPath":"/shared","name":"static-files"}]` | Additional volumeMounts to the dex main container |
+| dex.volumes | list | `[{"emptyDir":{},"name":"static-files"}]` | Additional volumes to the dex pod |
 
 ## Redis
 

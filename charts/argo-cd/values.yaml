@@ -395,20 +395,20 @@ dex:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
-  # -- Additional volumeMounts to the controller main container
+  # -- Additional volumeMounts to the dex main container
   volumeMounts:
     - name: static-files
       mountPath: /shared
 
-  # -- Additional volumes to the controller pod
+  # -- Additional volumes to the dex pod
   volumes:
     - name: static-files
       emptyDir: {}
 
-  # -- Extra volumes to the controller pod.
+  # -- Extra volumes to the dex pod
   extraVolumes: []
 
-  # -- Extra volumeMounts to the controller pod.
+  # -- Extra volumeMounts to the dex pod
   extraVolumeMounts: []
 
   # -- Container port for HTTP access
@@ -710,10 +710,10 @@ server:
   # -- Argo server log level
   logLevel: info
 
-  # -- Annotations to be added to controller pods
+  # -- Annotations to be added to server pods
   podAnnotations: {}
 
-  # -- Labels to be added to controller pods
+  # -- Labels to be added to server pods
   podLabels: {}
 
   # -- Configures the server port
@@ -745,10 +745,10 @@ server:
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
 
-  # -- Additional volumeMounts to the server main container.
+  # -- Additional volumeMounts to the server main container
   volumeMounts: []
 
-  # -- Additional volumes to the controller pod.
+  # -- Additional volumes to the server pod
   volumes: []
 
   # -- [Node selector]
@@ -1162,7 +1162,7 @@ server:
   #      oauthclientCredentials:
   #        secretName: argocd-secret
 
-  # -- Additional containers to be added to the controller pod
+  # -- Additional containers to be added to the server pod
   ## See https://github.com/lemonldap-ng-controller/lemonldap-ng-controller as example.
   extraContainers: []
   # - name: my-sidecar
