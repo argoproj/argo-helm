@@ -213,7 +213,7 @@ NAME: my-release
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all ArgoCD deployments |
 | global.image.repository | string | `"quay.io/argoproj/argocd"` | If defined, a repository applied to all ArgoCD deployments |
-| global.image.tag | string | `"v2.1.4"` | If defined, a tag applied to all ArgoCD deployments |
+| global.image.tag | string | `"v2.1.5"` | If defined, a tag applied to all ArgoCD deployments |
 | global.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository |
 | global.networkPolicy.create | bool | `false` | Create NetworkPolicy objects for all components |
 | global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
