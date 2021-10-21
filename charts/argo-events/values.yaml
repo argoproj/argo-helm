@@ -75,6 +75,8 @@ eventsourceController:
   tolerations: []
   affinity: {}
   resources: {}
+  natsStreamingImage: nats-streaming:0.17.0
+  natsMetricsExporterImage: synadia/prometheus-nats-exporter:0.6.2
 
 eventbusController:
   name: eventbus-controller
