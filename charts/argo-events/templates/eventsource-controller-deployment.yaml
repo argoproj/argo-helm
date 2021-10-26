@@ -32,10 +32,10 @@ spec:
           image: "{{ .Values.registry }}/{{ .Values.eventsourceController.image }}:{{ .Values.eventsourceController.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           args:
-            - eventsource-controller
           {{- if .Values.singleNamespace }}
             - --namespaced
           {{- end }}
+            - eventsource-controller
           env:
           {{- with .Values.eventsourceController.extraEnv }}
             {{- toYaml . | nindent 12 }}

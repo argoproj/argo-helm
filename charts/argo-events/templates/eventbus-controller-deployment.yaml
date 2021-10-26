@@ -32,10 +32,10 @@ spec:
           image: "{{ .Values.registry }}/{{ .Values.eventbusController.image }}:{{ .Values.eventbusController.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           args:
-            - eventbus-controller
           {{- if .Values.singleNamespace }}
             - --namespaced
           {{- end }}
+            - eventbus-controller
           env:
           {{- with .Values.eventbusController.extraEnv }}
             {{- toYaml . | nindent 12 }}
