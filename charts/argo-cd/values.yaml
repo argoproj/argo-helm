@@ -1443,6 +1443,40 @@ configs:
     #     tlsClientConfig:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
+  # -- Whether or not to create the configmap. If false, it is expected the configmap will be created
+  # by something else. ArgoCD will not work if there is no configMap created with the name above.
+  cmdParamConfigsEnabled: false
+  # -- ArgoCD Application Command Line Parameters annotations
+  cmdParamsConfigAnnotations: {}
+  # -- Specify CLI flags to be passed to the various ArgoCD components
+  # @default -- `{}` (See [values.yaml])
+  ## Ref:
+  ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#atomic-configuration
+  ## = https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml
+  cmdParamsConfigs: {}
+    # Repo server address. (default "argocd-repo-server:8081")
+    # repo.server: "argocd-repo-server:8081"
+    # Dex server address (default "http://argocd-dex-server:5556")
+    # dex.server: "http://argocd-dex-server:5556"
+    # Redis server hostname and port (e.g. argocd-redis:6379)
+    # redis.server: "argocd-redis:6379"
+    # Redis database
+    # redis.db:
+    # Controller Properties
+    # Repo server RPC call timeout seconds.
+    # controller.repo.server.timeout.seconds: "60"
+    # Disable TLS on connections to repo server
+    # controller.repo.server.plaintext: "false"
+    # Server properties
+    # Run server without TLS
+    # server.insecure: "false"
+    # Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from / (default "/")
+    # server.basehref: "/"
+    # Repo-server properties
+    # Set the logging format. One of: text|json (default "text")
+    # reposerver.log.format: "text"
+    # Set the logging level. One of: debug|info|warn|error (default "info")
+    # reposerver.log.level: "info"
 
   # -- GnuPG key ring annotations
   gpgKeysAnnotations: {}

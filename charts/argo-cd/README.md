@@ -187,6 +187,9 @@ NAME: my-release
 | apiVersionOverrides.certmanager | string | `""` | String to override apiVersion of certmanager resources rendered by this helm chart |
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
 | configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
+| configs.cmdParamConfigsEnabled | bool | `false` | Whether or not to create the configmap. If false, it is expected the configmap will be created by something else. ArgoCD will not work if there is no configMap created with the name above. |
+| configs.cmdParamsConfigAnnotations | object | `{}` | ArgoCD Application Command Line Parameters annotations |
+| configs.cmdParamsConfigs | object | `{}` (See [values.yaml]) | Specify CLI flags to be passed to the various ArgoCD components |
 | configs.credentialTemplates | object | `{}` | Repository credentials to be used as Templates for other repos |
 | configs.gpgKeys | object | `{}` (See [values.yaml]) | [GnuPG](https://argoproj.github.io/argo-cd/user-guide/gpg-verification/) keys to add to the key ring |
 | configs.gpgKeysAnnotations | object | `{}` | GnuPG key ring annotations |

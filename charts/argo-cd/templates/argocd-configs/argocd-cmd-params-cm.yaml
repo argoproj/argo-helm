@@ -1,0 +1,18 @@
+{{ if .Values.configs.cmdParamConfigsEnabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "name" "cmd-params-cm") | nindent 4 }}
+  annotations:
+  {{- if .Values.configs.cmdParamsConfigAnnotations }}
+  {{- range $key, $value := .Values.configs.cmdParamsConfigAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
+{{- with .Values.configs.cmdParamsConfigs }}
+data:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{ end }}
