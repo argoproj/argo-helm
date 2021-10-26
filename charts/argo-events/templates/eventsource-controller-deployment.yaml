@@ -31,8 +31,9 @@ spec:
         - name: {{ .Values.eventsourceController.name }}
           image: "{{ .Values.registry }}/{{ .Values.eventsourceController.image }}:{{ .Values.eventsourceController.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          {{- if .Values.singleNamespace }}
           args:
+            - eventsource-controller
+          {{- if .Values.singleNamespace }}
             - --namespaced
           {{- end }}
           env:

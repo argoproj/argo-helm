@@ -44,8 +44,8 @@ singleNamespace: true
 # sensor controller
 sensorController:
   name: sensor-controller
-  image: argoproj/sensor-controller
-  tag: v1.3.1
+  image: argoproj/argo-events
+  tag: v1.5.0
   replicaCount: 1
   extraEnv: []
     # - name: DEBUG_LOG
@@ -61,8 +61,8 @@ sensorController:
 
 eventsourceController:
   name: eventsource-controller
-  image: argoproj/eventsource-controller
-  tag: v1.3.1
+  image: argoproj/argo-events
+  tag: v1.5.0
   replicaCount: 1
   extraEnv: []
     # - name: DEBUG_LOG
@@ -78,8 +78,8 @@ eventsourceController:
 
 eventbusController:
   name: eventbus-controller
-  image: argoproj/eventbus-controller
-  tag: v1.3.1
+  image: argoproj/argo-events
+  tag: v1.5.0
   replicaCount: 1
   extraEnv: []
     # - name: DEBUG_LOG

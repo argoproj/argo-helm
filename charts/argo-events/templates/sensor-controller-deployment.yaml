@@ -31,8 +31,9 @@ spec:
         - name: {{ .Values.sensorController.name }}
           image: "{{ .Values.registry }}/{{ .Values.sensorController.image }}:{{ .Values.sensorController.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          {{- if .Values.singleNamespace }}
           args:
+            - sensor-controller
+          {{- if .Values.singleNamespace }}
             - --namespaced
           {{- end }}
           env:

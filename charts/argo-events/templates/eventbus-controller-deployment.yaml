@@ -31,8 +31,9 @@ spec:
         - name: {{ .Values.eventbusController.name }}
           image: "{{ .Values.registry }}/{{ .Values.eventbusController.image }}:{{ .Values.eventbusController.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          {{- if .Values.singleNamespace }}
           args:
+            - eventbus-controller
+          {{- if .Values.singleNamespace }}
             - --namespaced
           {{- end }}
           env:
