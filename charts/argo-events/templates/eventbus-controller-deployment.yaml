@@ -29,10 +29,11 @@ spec:
       serviceAccountName: {{ .Values.serviceAccount }}
       containers:
         - name: {{ .Values.eventbusController.name }}
-          image: "{{ .Values.registry }}/{{ .Values.eventbusController.image }}:{{ .Values.eventbusController.tag }}"
+          image: "{{ .Values.registry }}/{{ .Values.eventbusController.image }}:{{ .Values.eventbusController.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          {{- if .Values.singleNamespace }}
           args:
+            - eventbus-controller
+          {{- if .Values.singleNamespace }}
             - --namespaced
           {{- end }}
           env:
