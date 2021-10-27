@@ -32,10 +32,10 @@ spec:
           image: "{{ .Values.registry }}/{{ .Values.sensorController.image }}:{{ .Values.sensorController.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           args:
+            - sensor-controller
           {{- if .Values.singleNamespace }}
             - --namespaced
           {{- end }}
-            - sensor-controller
           env:
           {{- with .Values.sensorController.extraEnv }}
             {{- toYaml . | nindent 12 }}
