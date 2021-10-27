@@ -29,7 +29,7 @@ spec:
       serviceAccountName: {{ .Values.serviceAccount }}
       containers:
         - name: {{ .Values.sensorController.name }}
-          image: "{{ .Values.registry }}/{{ .Values.sensorController.image }}:{{ .Values.sensorController.tag }}"
+          image: "{{ .Values.registry }}/{{ .Values.sensorController.image }}:{{ .Values.sensorController.tag | default (printf "v%s" (.Chart.AppVersion)) }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           args:
             - sensor-controller
@@ -45,7 +45,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: SENSOR_IMAGE
-              value: "{{ .Values.registry }}/{{ .Values.sensorController.sensorImage }}:{{ .Values.sensorController.tag }}"
+              value: "{{ .Values.registry }}/{{ .Values.sensorController.sensorImage }}:{{ .Values.sensorController.tag | default (printf "v%s" (.Chart.AppVersion)) }}"
           livenessProbe:
             httpGet:
               path: /healthz
