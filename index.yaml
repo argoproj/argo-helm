@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: README update to reflect correct helm install syntax"
+    apiVersion: v2
+    appVersion: v2.1.6
+    created: "2021-10-31T19:32:19.746767733Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: e8b29d533485d6d54a59436855d415fb7f24d0fae635e92f27c9cd09ac2f20e0
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.26.5/argo-cd-3.26.5.tgz
+    version: 3.26.5
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Update to app version 2.1.6"
     apiVersion: v2
     appVersion: v2.1.6
@@ -10373,4 +10402,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-10-31T11:57:26.787374024Z"
+generated: "2021-10-31T19:32:19.750557755Z"
