@@ -175,7 +175,7 @@ To install the chart with the release name `my-release`:
 $ helm repo add argo https://argoproj.github.io/argo-helm
 "argo" has been added to your repositories
 
-$ helm install --name my-release argo/argo-cd
+$ helm install my-release argo/argo-cd
 NAME: my-release
 ...
 ```
