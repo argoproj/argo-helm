@@ -25,7 +25,11 @@ Fields to note:
 - `controller.instanceID.enabled`: If set to true, the Argo Controller will **ONLY** monitor Workflow submissions with a `--instanceid` attribute
 - `controller.instanceID.useReleaseName`: If set to true then chart set controller instance id to release name
 - `controller.instanceID.explicitID`: Allows customization of an instance id for the workflow controller to monitor
-- `controller.workflowNamespaces`: This is a list of namespaces where workflows will be ran
+- `singleNamespace`:  When true, restricts the workflow controller to operate
+  in just the single namespace (that one of the Helm release).
+- `controller.workflowNamespaces`: This is a list of namespaces where the
+  workflow controller will manage workflows. Only valid when `singleNamespace`
+  is false.
 
 ## Breaking changes from the deprecated `argo` chart
 
