@@ -1,38 +1,38 @@
 images:
-  # imagePullPolicy to apply to all containers
+  # -- imagePullPolicy to apply to all containers
   pullPolicy: Always
-  # Secrets with credentials to pull images from a private registry
+  # -- Secrets with credentials to pull images from a private registry
   pullSecrets: []
   # - name: argo-pull-secret
 
 createAggregateRoles: true
 
-## String to partially override "argo-workflows.fullname" template
-##
+# -- String to partially override "argo-workflows.fullname" template
 nameOverride:
 
-## String to fully override "argo-workflows.fullname" template
-##
+# -- String to fully override "argo-workflows.fullname" template
 fullnameOverride:
 
-## Override the Kubernetes version, which is used to evaluate certain manifests
-##
+# -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
 
-# Restrict Argo to operate only in a single namespace (the namespace of the
+# -- Restrict Argo to operate only in a single namespace (the namespace of the
 # Helm release) by apply Roles and RoleBindings instead of the Cluster
 # equivalents, and start workflow-controller with the --namespaced flag. Use it
 # in clusters with strict access policy.
 singleNamespace: false
 
 workflow:
-  namespace: # Deprecated; use controller.workflowNamespaces instead.
+  # -- Deprecated; use controller.workflowNamespaces instead.
+  namespace:
   serviceAccount:
-    create: false # Specifies whether a service account should be created
+    # -- Specifies whether a service account should be created
+    create: false
     annotations: {}
-    name: "argo-workflow" # Service account which is used to run workflows
+    # -- Service account which is used to run workflows
+    name: "argo-workflow"
   rbac:
-    # Adds Role and RoleBinding for the above specified service account to be able to run workflows
+    # -- Adds Role and RoleBinding for the above specified service account to be able to run workflows.
     # A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below)
     create: true
 
@@ -40,19 +40,19 @@ controller:
   image:
     registry: quay.io
     repository: argoproj/workflow-controller
-    # Overrides the image tag whose default is the chart appVersion.
+    # -- Overrides the image tag whose default is the chart appVersion.
     tag: ""
-  # parallelism dictates how many workflows can be running at the same time
+  # -- parallelism dictates how many workflows can be running at the same time
   parallelism:
-  # Limits the maximum number of incomplete workflows in a namespace
+  # -- Limits the maximum number of incomplete workflows in a namespace
   namespaceParallelism:
-  # Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224
+  # -- Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224
   initialDelay:
-  # podAnnotations is an optional map of annotations to be applied to the controller Pods
+  # -- podAnnotations is an optional map of annotations to be applied to the controller Pods
   podAnnotations: {}
-  # Optional labels to add to the controller pods
+  # -- Optional labels to add to the controller pods
   podLabels: {}
-  # SecurityContext to set on the controller pods
+  # -- SecurityContext to set on the controller pods
   podSecurityContext: {}
   # podPortName: http
   metricsConfig:
@@ -62,7 +62,7 @@ controller:
     portName: metrics
     servicePort: 8080
     servicePortName: metrics
-  # the controller container's securityContext
+  # -- the controller container's securityContext
   securityContext:
     readOnlyRootFilesystem: true
     runAsNonRoot: true
@@ -110,10 +110,10 @@ controller:
   serviceAccount:
     create: true
     name: ""
-    # Annotations applied to created service account
+    # -- Annotations applied to created service account
     annotations: {}
   name: workflow-controller
-  # Specify all namespaces where this workflow controller instance will manage
+  # -- Specify all namespaces where this workflow controller instance will manage
   # workflows. This controls where the service account and RBAC resources will
   # be created. Only valid when singleNamespace is false.
   workflowNamespaces:
@@ -125,7 +125,7 @@ controller:
   #       matchLabels:
   #         workflows.argoproj.io/container-runtime-executor: emissary
   instanceID:
-    # `instanceID.enabled` configures the controller to filter workflow submissions
+    # -- `instanceID.enabled` configures the controller to filter workflow submissions
     # to only those which have a matching instanceID attribute.
     enabled: false
     # NOTE: If `instanceID.enabled` is set to `true` then either `instanceID.userReleaseName`
@@ -136,11 +136,11 @@ controller:
     level: info
     globallevel: "0"
   serviceType: ClusterIP
-  # Annotations to be applied to the controller Service
+  # -- Annotations to be applied to the controller Service
   serviceAnnotations: {}
-  # Optional labels to add to the controller Service
+  # -- Optional labels to add to the controller Service
   serviceLabels: {}
-  # Source ranges to allow access to service from. Only applies to
+  # -- Source ranges to allow access to service from. Only applies to
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
   resources: {}
@@ -148,42 +148,42 @@ controller:
     httpGet:
       port: 6060
       path: /healthz
-    # Require three failures to tolerate transient errors.
+    # -- Require three failures to tolerate transient errors.
     failureThreshold: 3
     initialDelaySeconds: 90
     periodSeconds: 60
     timeoutSeconds: 30
 
-  ## Extra environment variables to provide to the controller container
+  # -- Extra environment variables to provide to the controller container
   ## extraEnv:
   ##   - name: FOO
   ##     value: "bar"
   extraEnv: []
 
-  # Extra arguments to be added to the controller
+  # -- Extra arguments to be added to the controller
   extraArgs: []
   replicas: 1
   pdb:
     enabled: false
     # minAvailable: 1
     # maxUnavailable: 1
-  ## Node selectors and tolerations for server scheduling to nodes with taints
+  # -- Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
   nodeSelector:
     kubernetes.io/os: linux
   tolerations: []
   affinity: {}
-  # Leverage a PriorityClass to ensure your pods survive resource shortages
+  # -- Leverage a PriorityClass to ensure your pods survive resource shortages.
   # ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   # PriorityClass: system-cluster-critical
   priorityClassName: ""
   # https://argoproj.github.io/argo-workflows/links/
   links: []
   clusterWorkflowTemplates:
-    # Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates.
+    # -- Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates.
     enabled: true
-  # Extra containers to be added to the controller deployment
+  # -- Extra containers to be added to the controller deployment
   extraContainers: []
 
 # executor controls how the init and wait container should be customized
@@ -191,30 +191,30 @@ executor:
   image:
     registry: quay.io
     repository: argoproj/argoexec
-    # Overrides the image tag whose default is the chart appVersion.
+    # -- Overrides the image tag whose default is the chart appVersion.
     tag: ""
   resources: {}
-  # Adds environment variables for the executor.
+  # -- Adds environment variables for the executor.
   env: {}
-  # sets security context for the executor container
+  # -- sets security context for the executor container
   securityContext: {}
 
 server:
   enabled: true
-  # only updates base url of resources on client side,
+  # -- only updates base url of resources on client side,
   # it's expected that a proxy server rewrites the request URL and gets rid of this prefix
   # https://github.com/argoproj/argo-workflows/issues/716#issuecomment-433213190
   baseHref: /
   image:
     registry: quay.io
     repository: argoproj/argocli
-    # Overrides the image tag whose default is the chart appVersion.
+    # -- Overrides the image tag whose default is the chart appVersion.
     tag: ""
-  # optional map of annotations to be applied to the ui Pods
+  # -- optional map of annotations to be applied to the ui Pods
   podAnnotations: {}
-  # Optional labels to add to the UI pods
+  # -- Optional labels to add to the UI pods
   podLabels: {}
-  # SecurityContext to set on the server pods
+  # -- SecurityContext to set on the server pods
   podSecurityContext: {}
   securityContext:
     readOnlyRootFilesystem: false
@@ -232,14 +232,14 @@ server:
     create: true
     name: ""
     annotations: {}
-  # Annotations to be applied to the UI Service
+  # -- Annotations to be applied to the UI Service
   serviceAnnotations: {}
-  # Optional labels to add to the UI Service
+  # -- Optional labels to add to the UI Service
   serviceLabels: {}
-  # Static IP address to assign to loadBalancer
+  # -- Static IP address to assign to loadBalancer
   # service type `LoadBalancer`
   loadBalancerIP: ""
-  # Source ranges to allow access to service from. Only applies to
+  # -- Source ranges to allow access to service from. Only applies to
   # service type `LoadBalancer`
   loadBalancerSourceRanges: []
   resources: {}
@@ -248,50 +248,48 @@ server:
     enabled: false
     # minAvailable: 1
     # maxUnavailable: 1
-  ## Node selectors and tolerations for server scheduling to nodes with taints
-  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-  ##
+  # -- Node selectors and tolerations for server scheduling to nodes with taints.
+  # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  #
   nodeSelector:
     kubernetes.io/os: linux
   tolerations: []
   affinity: {}
-  # Leverage a PriorityClass to ensure your pods survive resource shortages
+  # -- Leverage a PriorityClass to ensure your pods survive resource shortages
   # ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   # PriorityClass: system-cluster-critical
   priorityClassName: ""
 
-  # Run the argo server in "secure" mode. Configure this value instead of
+  # -- Run the argo server in "secure" mode. Configure this value instead of
   # "--secure" in extraArgs. See the following documentation for more details
   # on secure mode:
   # https://argoproj.github.io/argo-workflows/tls/
   secure: false
 
-  ## Extra environment variables to provide to the argo-server container
+  # -- Extra environment variables to provide to the argo-server container
   ## extraEnv:
   ##   - name: FOO
   ##     value: "bar"
   extraEnv: []
 
-  # Extra arguments to provide to the Argo server binary.
+  # -- Extra arguments to provide to the Argo server binary.
   extraArgs: []
 
-  ## Additional volumes to the server main container.
+  # -- Additional volumes to the server main container.
   volumeMounts: []
   volumes: []
 
-  ## Ingress configuration.
-  ## ref: https://kubernetes.io/docs/user-guide/ingress/
-  ##
+  # -- Ingress configuration.
+  # ref: https://kubernetes.io/docs/user-guide/ingress/
   ingress:
     enabled: false
     annotations: {}
     labels: {}
     ingressClassName: ""
 
-    ## Argo Workflows Server Ingress.
-    ## Hostnames must be provided if Ingress is enabled.
-    ## Secrets must be manually created in the namespace
-    ##
+    # -- Argo Workflows Server Ingress.
+    # Hostnames must be provided if Ingress is enabled.
+    # Secrets must be manually created in the namespace
     hosts:
       []
       # - argoworkflows.example.com
@@ -320,9 +318,9 @@ server:
     https: false
 
   clusterWorkflowTemplates:
-    # Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates.
+    # -- Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates.
     enabled: true
-    # Give the server permissions to edit ClusterWorkflowTemplates.
+    # -- Give the server permissions to edit ClusterWorkflowTemplates.
     enableEditing: true
   sso:
     ## SSO configuration when SSO is specified as a server auth mode.
@@ -356,11 +354,11 @@ server:
   # Extra containers to be added to the server deployment
   extraContainers: []
 
-# Influences the creation of the ConfigMap for the workflow-controller itself.
+# -- Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false
 useStaticCredentials: true
 artifactRepository:
-  # archiveLogs will archive the main container logs as an artifact
+  # -- archiveLogs will archive the main container logs as an artifact
   archiveLogs: false
   s3:
     # Note the `key` attribute is not the actual secret, it's the PATH to

@@ -17,7 +17,7 @@ A few options are:
 
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster. If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of it's configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.
 
-## Values
+## General parameters
 
 The `values.yaml` contains items used to tweak a deployment of this chart.
 Fields to note:
@@ -30,6 +30,156 @@ Fields to note:
 - `controller.workflowNamespaces`: This is a list of namespaces where the
   workflow controller will manage workflows. Only valid when `singleNamespace`
   is false.
+ 
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| createAggregateRoles | bool | `true` |  |
+| fullnameOverride | string | `nil` | String to fully override "argo-workflows.fullname" template |
+| images.pullPolicy | string | `"Always"` | imagePullPolicy to apply to all containers |
+| images.pullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
+| kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
+| nameOverride | string | `nil` | String to partially override "argo-workflows.fullname" template |
+| singleNamespace | bool | `false` | Restrict Argo to operate only in a single namespace (the namespace of the Helm release) by apply Roles and RoleBindings instead of the Cluster equivalents, and start workflow-controller with the --namespaced flag. Use it in clusters with strict access policy. |
+| useDefaultArtifactRepo | bool | `false` | Influences the creation of the ConfigMap for the workflow-controller itself. |
+| useStaticCredentials | bool | `true` |  |
+
+## Workflow
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| workflow.namespace | string | `nil` | Deprecated; use controller.workflowNamespaces instead. |
+| workflow.rbac.create | bool | `true` | Adds Role and RoleBinding for the above specified service account to be able to run workflows. A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below) |
+| workflow.serviceAccount.annotations | object | `{}` |  |
+| workflow.serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
+| workflow.serviceAccount.name | string | `"argo-workflow"` | Service account which is used to run workflows |
+
+## Workflow Controller
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| controller.affinity | object | `{}` |  |
+| controller.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates. |
+| controller.containerRuntimeExecutor | string | `"docker"` |  |
+| controller.extraArgs | list | `[]` | Extra arguments to be added to the controller |
+| controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
+| controller.extraEnv | list | `[]` | Extra environment variables to provide to the controller container |
+| controller.image.registry | string | `"quay.io"` |  |
+| controller.image.repository | string | `"argoproj/workflow-controller"` |  |
+| controller.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| controller.initialDelay | string | `nil` | Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224 |
+| controller.instanceID.enabled | bool | `false` | `instanceID.enabled` configures the controller to filter workflow submissions to only those which have a matching instanceID attribute. |
+| controller.links | list | `[]` |  |
+| controller.livenessProbe.failureThreshold | int | `3` | Require three failures to tolerate transient errors. |
+| controller.livenessProbe.httpGet.path | string | `"/healthz"` |  |
+| controller.livenessProbe.httpGet.port | int | `6060` |  |
+| controller.livenessProbe.initialDelaySeconds | int | `90` |  |
+| controller.livenessProbe.periodSeconds | int | `60` |  |
+| controller.livenessProbe.timeoutSeconds | int | `30` |  |
+| controller.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
+| controller.logging.globallevel | string | `"0"` |  |
+| controller.logging.level | string | `"info"` |  |
+| controller.metricsConfig.enabled | bool | `false` |  |
+| controller.metricsConfig.path | string | `"/metrics"` |  |
+| controller.metricsConfig.port | int | `9090` |  |
+| controller.metricsConfig.portName | string | `"metrics"` |  |
+| controller.metricsConfig.servicePort | int | `8080` |  |
+| controller.metricsConfig.servicePortName | string | `"metrics"` |  |
+| controller.name | string | `"workflow-controller"` |  |
+| controller.namespaceParallelism | string | `nil` | Limits the maximum number of incomplete workflows in a namespace |
+| controller.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | Node selectors and tolerations for server scheduling to nodes with taints |
+| controller.parallelism | string | `nil` | parallelism dictates how many workflows can be running at the same time |
+| controller.pdb.enabled | bool | `false` |  |
+| controller.persistence | object | `{}` |  |
+| controller.podAnnotations | object | `{}` | podAnnotations is an optional map of annotations to be applied to the controller Pods |
+| controller.podLabels | object | `{}` | Optional labels to add to the controller pods |
+| controller.podSecurityContext | object | `{}` | SecurityContext to set on the controller pods |
+| controller.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages. ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ PriorityClass: system-cluster-critical |
+| controller.replicas | int | `1` |  |
+| controller.resources | object | `{}` |  |
+| controller.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true}` | the controller container's securityContext |
+| controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
+| controller.serviceAccount.create | bool | `true` |  |
+| controller.serviceAccount.name | string | `""` |  |
+| controller.serviceAnnotations | object | `{}` | Annotations to be applied to the controller Service |
+| controller.serviceLabels | object | `{}` | Optional labels to add to the controller Service |
+| controller.serviceMonitor.additionalLabels | object | `{}` |  |
+| controller.serviceMonitor.enabled | bool | `false` |  |
+| controller.serviceType | string | `"ClusterIP"` |  |
+| controller.telemetryConfig.enabled | bool | `false` |  |
+| controller.telemetryConfig.path | string | `"/telemetry"` |  |
+| controller.telemetryConfig.port | int | `8081` |  |
+| controller.telemetryConfig.servicePort | int | `8081` |  |
+| controller.telemetryConfig.servicePortName | string | `"telemetry"` |  |
+| controller.tolerations | list | `[]` |  |
+| controller.workflowDefaults | object | `{}` |  |
+| controller.workflowNamespaces | list | `["default"]` | Specify all namespaces where this workflow controller instance will manage workflows. This controls where the service account and RBAC resources will be created. Only valid when singleNamespace is false. |
+| controller.workflowRestrictions | object | `{}` |  |
+
+## Workflow Executor
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| executor.env | object | `{}` | Adds environment variables for the executor. |
+| executor.image.registry | string | `"quay.io"` |  |
+| executor.image.repository | string | `"argoproj/argoexec"` |  |
+| executor.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| executor.resources | object | `{}` |  |
+| executor.securityContext | object | `{}` | sets security context for the executor container |
+
+## Workflow Server
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| server.affinity | object | `{}` |  |
+| server.baseHref | string | `"/"` | only updates base url of resources on client side, it's expected that a proxy server rewrites the request URL and gets rid of this prefix https://github.com/argoproj/argo-workflows/issues/716#issuecomment-433213190 |
+| server.clusterWorkflowTemplates.enableEditing | bool | `true` | Give the server permissions to edit ClusterWorkflowTemplates. |
+| server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
+| server.enabled | bool | `true` |  |
+| server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary. |
+| server.extraContainers | list | `[]` |  |
+| server.extraEnv | list | `[]` | Extra environment variables to provide to the argo-server container |
+| server.image.registry | string | `"quay.io"` |  |
+| server.image.repository | string | `"argoproj/argocli"` |  |
+| server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| server.ingress | object | `{"annotations":{},"enabled":false,"extraPaths":[],"hosts":[],"https":false,"ingressClassName":"","labels":{},"pathType":"Prefix","paths":["/"],"tls":[]}` | Ingress configuration. ref: https://kubernetes.io/docs/user-guide/ingress/ |
+| server.ingress.hosts | list | `[]` | Argo Workflows Server Ingress. Hostnames must be provided if Ingress is enabled. Secrets must be manually created in the namespace |
+| server.loadBalancerIP | string | `""` | Static IP address to assign to loadBalancer service type `LoadBalancer` |
+| server.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
+| server.name | string | `"server"` |  |
+| server.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | Node selectors and tolerations for server scheduling to nodes with taints. Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ |
+| server.pdb.enabled | bool | `false` |  |
+| server.podAnnotations | object | `{}` | optional map of annotations to be applied to the ui Pods |
+| server.podLabels | object | `{}` | Optional labels to add to the UI pods |
+| server.podSecurityContext | object | `{}` | SecurityContext to set on the server pods |
+| server.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ PriorityClass: system-cluster-critical |
+| server.replicas | int | `1` |  |
+| server.resources | object | `{}` |  |
+| server.secure | bool | `false` | Run the argo server in "secure" mode. Configure this value instead of "--secure" in extraArgs. See the following documentation for more details on secure mode: https://argoproj.github.io/argo-workflows/tls/ |
+| server.securityContext.allowPrivilegeEscalation | bool | `false` |  |
+| server.securityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| server.securityContext.readOnlyRootFilesystem | bool | `false` |  |
+| server.securityContext.runAsNonRoot | bool | `true` |  |
+| server.serviceAccount.annotations | object | `{}` |  |
+| server.serviceAccount.create | bool | `true` |  |
+| server.serviceAccount.name | string | `""` |  |
+| server.serviceAnnotations | object | `{}` | Annotations to be applied to the UI Service |
+| server.serviceLabels | object | `{}` | Optional labels to add to the UI Service |
+| server.servicePort | int | `2746` |  |
+| server.serviceType | string | `"ClusterIP"` |  |
+| server.sso | string | `nil` |  |
+| server.tolerations | list | `[]` |  |
+| server.volumeMounts | list | `[]` | Additional volumes to the server main container. |
+| server.volumes | list | `[]` |  |
+
+## Artifact Repository
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| artifactRepository.archiveLogs | bool | `false` | archiveLogs will archive the main container logs as an artifact |
+| artifactRepository.s3.accessKeySecret.key | string | `"accesskey"` |  |
+| artifactRepository.s3.insecure | bool | `true` |  |
+| artifactRepository.s3.secretKeySecret.key | string | `"secretkey"` |  |
 
 ## Breaking changes from the deprecated `argo` chart
 
