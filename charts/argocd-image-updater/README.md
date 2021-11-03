@@ -73,6 +73,17 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | image.repository | string | `"argoprojlabs/argocd-image-updater"` | Default image repository |
 | image.tag | string | `"v0.10.1"` | Default image tag |
 | imagePullSecrets | list | `[]` | ImagePullSecrets for the image updater deployment |
+| metrics.enabled | bool | `false` | Deploy metrics service |
+| metrics.service.annotations | object | `{}` | Metrics service annotations |
+| metrics.service.labels | object | `{}` | Metrics service labels |
+| metrics.service.servicePort | int | `8081` | Metrics service port |
+| metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
+| metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
+| metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
+| metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
+| metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
+| metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
+| metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | nameOverride | string | `""` | Global name (argocd-image-updater.name in _helpers.tpl) override |
 | nodeSelector | object | `{}` | Kubernetes nodeSelector settings for the deployment |
 | podAnnotations | object | `{}` | Pod Annotations for the deployment |
