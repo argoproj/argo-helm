@@ -90,6 +90,10 @@ spec:
           subPath: "custom.styles.css"
           name: custom-styles
         {{- end }}
+        {{- if .Values.server.containerSecurityContext.readOnlyRootFilesystem }}
+        - mountPath: /home/argocd/.aws
+          name: aws-config
+        {{- end }}
         - mountPath: /tmp
           name: tmp-dir
         ports:
@@ -164,6 +168,10 @@ spec:
         name: static-files
       - emptyDir: {}
         name: tmp-dir
+      {{- if .Values.server.containerSecurityContext.readOnlyRootFilesystem }}
+      - emptyDir: {}
+        name: aws-config
+      {{- end }}
       {{- if .Values.configs.styles }}
       - configMap:
           name: argocd-custom-styles
