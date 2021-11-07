@@ -44,13 +44,13 @@ singleNamespace: true
 # sensor controller
 sensorController:
   name: sensor-controller
-  image: argoproj/sensor-controller
-  tag: v1.3.1
+  image: argoproj/argo-events
+  tag: ""
   replicaCount: 1
   extraEnv: []
     # - name: DEBUG_LOG
     #   value: "true"
-  sensorImage: argoproj/sensor
+  sensorImage: argoproj/argo-events
   podAnnotations: {}
   nodeSelector: {}
   podLabels: {}
@@ -61,13 +61,13 @@ sensorController:
 
 eventsourceController:
   name: eventsource-controller
-  image: argoproj/eventsource-controller
-  tag: v1.3.1
+  image: argoproj/argo-events
+  tag: ""
   replicaCount: 1
   extraEnv: []
     # - name: DEBUG_LOG
     #   value: "true"
-  eventsourceImage: argoproj/eventsource
+  eventsourceImage: argoproj/argo-events
   podAnnotations: {}
   nodeSelector: {}
   podLabels: {}
@@ -78,8 +78,8 @@ eventsourceController:
 
 eventbusController:
   name: eventbus-controller
-  image: argoproj/eventbus-controller
-  tag: v1.3.1
+  image: argoproj/argo-events
+  tag: ""
   replicaCount: 1
   extraEnv: []
     # - name: DEBUG_LOG
@@ -91,8 +91,8 @@ eventbusController:
   tolerations: []
   affinity: {}
   resources: {}
-  natsStreamingImage: nats-streaming:0.17.0
-  natsMetricsExporterImage: synadia/prometheus-nats-exporter:0.6.2
+  natsStreamingImage: nats-streaming:0.22.1
+  natsMetricsExporterImage: natsio/prometheus-nats-exporter:0.8.0
 
 securityContext:
   runAsNonRoot: true

@@ -1,10 +1,10 @@
 apiVersion: v2
-appVersion: 2.1.2
+appVersion: v2.1.6
 description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 3.22.1
+version: 3.26.6
 home: https://github.com/argoproj/argo-helm
-icon: https://argoproj.github.io/argo-cd/assets/logo.png
+icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 keywords:
   - argoproj
   - argocd
@@ -21,4 +21,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Fixed]: repoServer.extraContainers unused"
+    - "[Changed]: Make argocd-server /home/argocd/.aws writeable when using readOnlyRootFilesystem=false security context"

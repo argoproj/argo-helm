@@ -29,6 +29,10 @@ controller:
     tag: ""
     pullPolicy: IfNotPresent
 
+  ## Additional command line arguments to pass to rollouts-controller
+  ##
+  extraArgs: []
+
   resources: {}
   #  limits:
   #    cpu: 100m
@@ -122,6 +126,9 @@ dashboard:
     repository: argoproj/kubectl-argo-rollouts
     tag: ""
     pullPolicy: IfNotPresent
+  ## Additional command line arguments to pass to rollouts-dashboard
+  ##
+  extraArgs: []
   resources: {}
   podSecurityContext:
     runAsNonRoot: true
