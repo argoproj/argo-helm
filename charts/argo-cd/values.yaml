@@ -999,10 +999,16 @@ server:
   # Find your domain with: kubectl describe --namespace=openshift-ingress-operator ingresscontroller/default | grep Domain:
   # If 'hostname' is an empty string "" OpenShift will create a hostname for you.
   route:
-    # -- Enable a OpenShift route for the Argo CD server
+    # -- Enable an OpenShift Route for the Argo CD server
     enabled: false
-    # -- Hostname of OpenShift route
+    # -- Openshift Route annotations
+    annotations: {}
+    # -- Hostname of OpenShift Route
     hostname: ""
+    # -- Termination type of Openshift Route
+    termination_type: Passthrough
+    # -- Termination policy of Openshift Route
+    termination_policy: None
 
   # -- Manage ArgoCD configmap (Declarative Setup)
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml

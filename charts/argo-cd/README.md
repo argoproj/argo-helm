@@ -449,8 +449,11 @@ NAME: my-release
 | server.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | server.replicas | int | `1` | The number of server pods to run |
 | server.resources | object | `{}` | Resource limits and requests for the Argo CD server |
-| server.route.enabled | bool | `false` | Enable a OpenShift route for the Argo CD server |
-| server.route.hostname | string | `""` | Hostname of OpenShift route |
+| server.route.enabled | bool | `false` | Enable an OpenShift Route for the Argo CD server |
+| server.route.annotations | object | `{}` | Openshift Route annotations |
+| server.route.hostname | string | `""` | Hostname of OpenShift Route |
+| server.route.termination_type | string | `"Passthrough"` | Openshift Route termination type |
+| server.route.termination_policy| string | `"None"` | Openshift Route termination policy |
 | server.service.annotations | object | `{}` | Server service annotations |
 | server.service.externalIPs | list | `[]` | Server service external IPs |
 | server.service.externalTrafficPolicy | string | `""` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |

@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v2.1.6
 description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 3.26.6
+version: 3.26.7
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 keywords:
@@ -21,4 +21,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: Make argocd-server /home/argocd/.aws writeable when using readOnlyRootFilesystem=false security context"
+    - "[Fixed]: Added Openshift Route values that were previously included in Route.yaml directives."
