@@ -60,6 +60,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8080
+            {{ if .Values.metrics.enabled }}
+            - name: metrics
+              containerPort: 8081
+              protocol: TCP
+            {{- end }}
           readinessProbe:
             httpGet:
               path: /healthz
