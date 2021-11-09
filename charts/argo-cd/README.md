@@ -452,7 +452,7 @@ NAME: my-release
 | server.route.enabled | bool | `false` | Enable an OpenShift Route for the Argo CD server |
 | server.route.annotations | object | `{}` | Openshift Route annotations |
 | server.route.hostname | string | `""` | Hostname of OpenShift Route |
-| server.route.termination_type | string | `"Passthrough"` | Openshift Route termination type |
+| server.route.termination_type | string | `"passthrough"` | Openshift Route termination type |
 | server.route.termination_policy| string | `"None"` | Openshift Route termination policy |
 | server.service.annotations | object | `{}` | Server service annotations |
 | server.service.externalIPs | list | `[]` | Server service external IPs |
