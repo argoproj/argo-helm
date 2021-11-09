@@ -9,12 +9,12 @@ data:
   {{- with .Values.config.applicationsAPIKind }}
   applications_api: {{ . }}
   {{- end }}
-  argocd.grpc_web: {{ .Values.config.argocd.grpcWeb }}
+  argocd.grpc_web: {{ .Values.config.argocd.grpcWeb | quote }}
   {{- with .Values.config.argocd.serverAddress }}
   argocd.server_addr: {{ . }}
   {{- end }}
-  argocd.insecure: {{ .Values.config.argocd.insecure }}
-  argocd.plaintext: {{ .Values.config.argocd.plaintext }}
+  argocd.insecure: {{ .Values.config.argocd.insecure | quote }}
+  argocd.plaintext: {{ .Values.config.argocd.plaintext | quote }}
   {{- with .Values.config.logLevel }}
   log.level: {{ . }}
   {{- end }}
@@ -28,7 +28,7 @@ data:
   git.commit-message-template: |
     {{- nindent 4 . }}
   {{- end }}
-  kube.events: {{ .Values.config.disableKubeEvents }}
+  kube.events: {{ .Values.config.disableKubeEvents | quote }}
   registries.conf: |
     {{- with .Values.config.registries }}
       registries:
