@@ -15,7 +15,7 @@ nameOverride: ""
 # -- Global fullname (argocd-image-updater.fullname in _helpers.tpl) override
 fullnameOverride: ""
 
-# -- Extra arguments for argocd-image-updater not defined in config.argocd
+# -- Extra arguments for argocd-image-updater not defined in `config.argocd`.
 # If a flag contains both key and value, they need to be split to a new entry
 extraArgs: []
   # - --disable-kubernetes
@@ -131,3 +131,32 @@ tolerations: []
 
 # -- Kubernetes affinity settings for the deployment
 affinity: {}
+
+# Metrics configuration
+metrics:
+  # -- Deploy metrics service
+  enabled: false
+  service:
+    # -- Metrics service annotations
+    annotations: {}
+    # -- Metrics service labels
+    labels: {}
+    # -- Metrics service port
+    servicePort: 8081
+  serviceMonitor:
+    # -- Enable a prometheus ServiceMonitor
+    enabled: false
+    # -- Prometheus ServiceMonitor interval
+    interval: 30s
+    # -- Prometheus [RelabelConfigs] to apply to samples before scraping
+    relabelings: []
+    # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
+    metricRelabelings: []
+    # -- Prometheus ServiceMonitor selector
+    selector: {}
+      # promtheus: kube-prometheus
+
+    # -- Prometheus ServiceMonitor namespace
+    namespace: ""
+    # -- Prometheus ServiceMonitor labels
+    additionalLabels: {}
