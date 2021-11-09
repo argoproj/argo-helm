@@ -6,6 +6,29 @@ metadata:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
   name: argocd-image-updater-config
 data:
+  {{- with .Values.config.applicationsAPIKind }}
+  applications_api: {{ . }}
+  {{- end }}
+  argocd.grpc_web: {{ .Values.config.argocd.grpcWeb }}
+  {{- with .Values.config.argocd.serverAddress }}
+  argocd.server_addr: {{ . }}
+  {{- end }}
+  argocd.insecure: {{ .Values.config.argocd.insecure }}
+  argocd.plaintext: {{ .Values.config.argocd.plaintext }}
+  {{- with .Values.config.logLevel }}
+  log.level: {{ . }}
+  {{- end }}
+  {{- with .Values.config.gitCommitUser }}
+  git.user: {{ . }}
+  {{- end }}
+  {{- with .Values.config.gitCommitMail }}
+  git.email: {{ . }}
+  {{- end }}
+  {{- with .Values.config.gitCommitTemplate }}
+  git.commit-message-template: |
+    {{- nindent 4 . }}
+  {{- end }}
+  kube.events: {{ .Values.config.disableKubeEvents }}
   registries.conf: |
     {{- with .Values.config.registries }}
       registries:

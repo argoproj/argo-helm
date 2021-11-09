@@ -35,14 +35,36 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           env:
+          - name: APPLICATIONS_API
+            valueFrom:
+              configMapKeyRef:
+                key: applications_api
+                name: argocd-image-updater-config
+                optional: true
           - name: ARGOCD_GRPC_WEB
-            value: {{ .Values.config.argocd.grpcWeb | quote }}
+            valueFrom:
+              configMapKeyRef:
+                key: argocd.grpc_web
+                name: argocd-image-updater-config
+                optional: true
           - name: ARGOCD_SERVER
-            value: {{ .Values.config.argocd.serverAddress }}
+            valueFrom:
+              configMapKeyRef:
+                key: argocd.server_addr
+                name: argocd-image-updater-config
+                optional: true
           - name: ARGOCD_INSECURE
-            value: {{ .Values.config.argocd.insecure | quote }}
+            valueFrom:
+              configMapKeyRef:
+                key: argocd.insecure
+                name: argocd-image-updater-config
+                optional: true
           - name: ARGOCD_PLAINTEXT
-            value: {{ .Values.config.argocd.plaintext | quote }}
+            valueFrom:
+              configMapKeyRef:
+                key: argocd.plaintext
+                name: argocd-image-updater-config
+                optional: true
           - name: ARGOCD_TOKEN
             valueFrom:
               secretKeyRef:
@@ -50,7 +72,29 @@ spec:
                 name: argocd-image-updater-secret
                 optional: true
           - name: IMAGE_UPDATER_LOGLEVEL
-            value: {{ .Values.config.logLevel }}
+            valueFrom:
+              configMapKeyRef:
+                key: log.level
+                name: argocd-image-updater-config
+                optional: true
+          - name: GIT_COMMIT_USER
+            valueFrom:
+              configMapKeyRef:
+                key: git.user
+                name: argocd-image-updater-config
+                optional: true
+          - name: GIT_COMMIT_EMAIL
+            valueFrom:
+              configMapKeyRef:
+                key: git.email
+                name: argocd-image-updater-config
+                optional: true
+          - name: IMAGE_UPDATER_KUBE_EVENTS
+            valueFrom:
+              configMapKeyRef:
+                key: kube.events
+                name: argocd-image-updater-config
+                optional: true
           {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -76,7 +120,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
           - mountPath: /app/config
-            name: registries-conf
+            name: image-updater-conf
           - mountPath: /tmp
             name: tmp-dir
       volumes:
@@ -87,7 +131,8 @@ spec:
           - key: git.commit-message-template
             path: commit.template
           name: argocd-image-updater-config
-        name: registries-conf
+          optional: true
+        name: image-updater-conf
       - emptyDir: {}
         name: tmp-dir
       {{- with .Values.nodeSelector }}
