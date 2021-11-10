@@ -1,0 +1,25 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  {{- if .Values.metrics.service.annotations }}
+  annotations:
+    {{- range $key, $value := .Values.metrics.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  labels:
+    {{- include "argocd-image-updater.labels" . | nindent 4 }}
+    {{- with .Values.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  name: {{ include "argocd-image-updater.fullname" . }}-metrics
+spec:
+  ports:
+    - name: metrics
+      protocol: TCP
+      port: {{ .Values.metrics.service.servicePort }}
+      targetPort: metrics
+  selector:
+    {{- include "argocd-image-updater.selectorLabels" . | nindent 4 }}
+{{- end }}
