@@ -39,11 +39,14 @@ spec:
             {{- if or (gt ( .Values.replicaCount | int64) 1) .Values.args.enableLeaderElection }}
             - --enable-leader-election=true
             {{- end }}
-            - --namespace={{ .Values.args.namespace }}
+            - --namespace={{ .Values.args.namespace | default .Release.Namespace }}
             - --argocd-repo-server={{ .Values.args.argocdRepoServer }}
             - --policy={{ .Values.args.policy }}
             - --debug={{ .Values.args.debug }}
             - --dry-run={{ .Values.args.dryRun }}
+            {{- with .Values.extraArgs }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:

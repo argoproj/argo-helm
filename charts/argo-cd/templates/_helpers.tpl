@@ -195,3 +195,10 @@ Merge Argo Configuration with Preset Configuration
 {{- toYaml (mergeOverwrite (default dict (fromYaml (include "argo-cd.config.presets" $))) .Values.server.config) }}
   {{- end -}}
 {{- end -}}
+
+{{/*
+Return the default ArgoCD app version
+*/}}
+{{- define "argo-cd.defaultTag" -}}
+  {{- default .Chart.AppVersion .Values.global.image.tag }}
+{{- end -}}

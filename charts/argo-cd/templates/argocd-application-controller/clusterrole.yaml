@@ -6,9 +6,9 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 rules:
-{{- if .Values.controller.clusterRoleRules.enabled }}
-{{- toYaml .Values.controller.clusterRoleRules.rules | nindent 2 }}
-{{ else }}
+  {{- if .Values.controller.clusterRoleRules.enabled }}
+  {{- toYaml .Values.controller.clusterRoleRules.rules | nindent 0 }}
+  {{- else }}
 - apiGroups:
   - '*'
   resources:
@@ -19,5 +19,5 @@ rules:
   - '*'
   verbs:
   - '*'
-{{- end }}
+  {{- end }}
 {{- end }}

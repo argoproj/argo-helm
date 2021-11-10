@@ -19,12 +19,14 @@ fullnameOverride:
 ##
 kubeVersionOverride: ""
 
-# Restrict Argo to only deploy into a single namespace by apply Roles and RoleBindings instead of the Cluster equivalents,
-# and start argo-cli with the --namespaced flag. Use it in clusters with strict access policy.
+# Restrict Argo to operate only in a single namespace (the namespace of the
+# Helm release) by apply Roles and RoleBindings instead of the Cluster
+# equivalents, and start workflow-controller with the --namespaced flag. Use it
+# in clusters with strict access policy.
 singleNamespace: false
 
 workflow:
-  namespace: # Deprecated, for backwards compatibility: specify a single namespace to run workflows in
+  namespace: # Deprecated; use controller.workflowNamespaces instead.
   serviceAccount:
     create: false # Specifies whether a service account should be created
     annotations: {}
@@ -57,6 +59,7 @@ controller:
     enabled: false
     path: /metrics
     port: 9090
+    portName: metrics
     servicePort: 8080
     servicePortName: metrics
   # the controller container's securityContext
@@ -110,8 +113,9 @@ controller:
     # Annotations applied to created service account
     annotations: {}
   name: workflow-controller
-  # Specify all namespaces to run worksflows need to be able to run in. This controls where the service
-  # account and RBAC resources will be created. If unspecified, will run in the default namespace.
+  # Specify all namespaces where this workflow controller instance will manage
+  # workflows. This controls where the service account and RBAC resources will
+  # be created. Only valid when singleNamespace is false.
   workflowNamespaces:
     - default
   containerRuntimeExecutor: docker
@@ -222,6 +226,7 @@ server:
   name: server
   serviceType: ClusterIP
   servicePort: 2746
+  # serviceNodePort: 32746
   # servicePortName: http
   serviceAccount:
     create: true

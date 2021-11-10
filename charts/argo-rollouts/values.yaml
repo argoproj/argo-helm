@@ -1,4 +1,5 @@
 installCRDs: true
+keepCRDs: true
 
 clusterInstall: true
 
@@ -15,6 +16,14 @@ controller:
     repository: argoproj/argo-rollouts
     tag: ""
     pullPolicy: IfNotPresent
+
+  ## Additional command line arguments to pass to rollouts-controller
+  ##
+  extraArgs: []
+
+  ## Additional containers to add to the rollouts controller deployment
+  ## This will be rendered as the literal yaml
+  extraContainers: []
 
   resources: {}
   #  limits:
@@ -109,6 +118,9 @@ dashboard:
     repository: argoproj/kubectl-argo-rollouts
     tag: ""
     pullPolicy: IfNotPresent
+  ## Additional command line arguments to pass to rollouts-dashboard
+  ##
+  extraArgs: []
   resources: {}
   podSecurityContext:
     runAsNonRoot: true
