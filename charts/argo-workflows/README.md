@@ -142,8 +142,16 @@ Fields to note:
 | server.image.registry | string | `"quay.io"` |  |
 | server.image.repository | string | `"argoproj/argocli"` |  |
 | server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
-| server.ingress | object | `{"annotations":{},"enabled":false,"extraPaths":[],"hosts":[],"https":false,"ingressClassName":"","labels":{},"pathType":"Prefix","paths":["/"],"tls":[]}` | Ingress configuration. ref: https://kubernetes.io/docs/user-guide/ingress/ |
+| server.ingress.annotations | object | `{}` |  |
+| server.ingress.enabled | bool | `false` |  |
+| server.ingress.extraPaths | list | `[]` |  |
 | server.ingress.hosts | list | `[]` | Argo Workflows Server Ingress. Hostnames must be provided if Ingress is enabled. Secrets must be manually created in the namespace |
+| server.ingress.https | bool | `false` |  |
+| server.ingress.ingressClassName | string | `""` |  |
+| server.ingress.labels | object | `{}` |  |
+| server.ingress.pathType | string | `"Prefix"` |  |
+| server.ingress.paths[0] | string | `"/"` |  |
+| server.ingress.tls | list | `[]` |  |
 | server.loadBalancerIP | string | `""` | Static IP address to assign to loadBalancer service type `LoadBalancer` |
 | server.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
 | server.name | string | `"server"` |  |
