@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Added Openshift Route values that were previously included in Route.yaml directives."
+    apiVersion: v2
+    appVersion: v2.1.6
+    created: "2021-11-10T17:18:51.612666515Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: a56543dc270ad731d6027c47f420942d50a9ed7a0725ccf148fa137c42d62634
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.26.7/argo-cd-3.26.7.tgz
+    version: 3.26.7
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: README update to reflect correct helm install syntax"
     apiVersion: v2
     appVersion: v2.1.6
@@ -10465,4 +10494,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-11-09T21:14:44.370049404Z"
+generated: "2021-11-10T17:18:51.618318259Z"
