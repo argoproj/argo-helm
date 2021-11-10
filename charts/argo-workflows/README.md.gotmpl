@@ -17,7 +17,7 @@ A few options are:
 
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster. If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of it's configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.
 
-## General parameters
+## Values
 
 The `values.yaml` contains items used to tweak a deployment of this chart.
 Fields to note:
@@ -30,17 +30,18 @@ Fields to note:
 - `controller.workflowNamespaces`: This is a list of namespaces where the
   workflow controller will manage workflows. Only valid when `singleNamespace`
   is false.
-  
+
+### General parameters
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}
-  {{- if not (or (hasPrefix "workflow" .Key) (hasPrefix "controller" .Key) (hasPrefix "executor" .Key) (hasPrefix "server" .Key) (hasPrefix "artifactRepository" .Key) ) }}
+  {{- if not (or (hasPrefix "workflow" .Key) (hasPrefix "controller" .Key) (hasPrefix "executor" .Key) (hasPrefix "server" .Key) (hasPrefix "artifactRepository" .Key) (hasPrefix "use" .Key) ) }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
 
-## Workflow
+### Workflow
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -50,7 +51,7 @@ Fields to note:
   {{- end }}
 {{- end }}
 
-## Workflow Controller
+### Workflow Controller
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -60,7 +61,7 @@ Fields to note:
   {{- end }}
 {{- end }}
 
-## Workflow Executor
+### Workflow Executor
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -70,7 +71,7 @@ Fields to note:
   {{- end }}
 {{- end }}
 
-## Workflow Server
+### Workflow Server
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -80,12 +81,12 @@ Fields to note:
   {{- end }}
 {{- end }}
 
-## Artifact Repository
+### Artifact Repository
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}
-  {{- if hasPrefix "artifactRepository" .Key }}
+  {{- if or (hasPrefix "artifactRepository" .Key) (hasPrefix "use" .Key) }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
@@ -109,3 +110,11 @@ Fields to note:
 1. removed any included usage of Minio
 1. aligned the configuration of serviceAccounts with the argo-cd chart, ie: what used to be `server.createServiceAccount` is now `server.serviceAccount.create`
 1. moved the previously known as `telemetryServicePort` inside the `telemetryConfig` as `telemetryConfig.servicePort` - same for `metricsConfig`
+
+[affinity]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+[links]: https://argoproj.github.io/argo-workflows/links/
+[Node selector]: https://kubernetes.io/docs/user-guide/node-selection/
+[Pod Disruption Budget]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+[probe]: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+[Tolerations]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+[values.yaml]: values.yaml
