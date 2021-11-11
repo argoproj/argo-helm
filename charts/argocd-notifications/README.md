@@ -30,7 +30,7 @@ docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:late
 | fullnameOverride | string | `""` | String to partially override "argocd-notifications.fullname" template |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the controller |
 | image.repository | string | `"argoprojlabs/argocd-notifications"` | Repository to use for the controller |
-| image.tag | string | `"v1.1.1"` | Tag to use for the controller |
+| image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | logLevel | string | `"info"` | Set the logging level. (One of: `debug`, `info`, `warn`, `error`) |
 | metrics.enabled | bool | `false` | Enables prometheus metrics server |
@@ -66,7 +66,7 @@ docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:late
 | bots.slack.enabled | bool | `false` | Enable slack bot |
 | bots.slack.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the Slack bot |
 | bots.slack.image.repository | string | `"argoprojlabs/argocd-notifications"` | Repository to use for the Slack bot |
-| bots.slack.image.tag | string | `"v1.1.1"` | Tag to use for the Slack bot |
+| bots.slack.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | bots.slack.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | bots.slack.nodeSelector | object | `{}` | [Node selector] |
 | bots.slack.resources | object | `{}` | Resource limits and requests for the Slack bot |

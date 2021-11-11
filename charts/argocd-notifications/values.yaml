@@ -10,8 +10,8 @@ fullnameOverride: ""
 image:
   # -- Repository to use for the controller
   repository: argoprojlabs/argocd-notifications
-  # -- Tag to use for the controller
-  tag: v1.1.1
+  # -- Overrides the image tag whose default is the chart appVersion
+  tag: ""
   # -- Image pull policy for the controller
   pullPolicy: IfNotPresent
 
@@ -393,8 +393,8 @@ bots:
     image:
       # -- Repository to use for the Slack bot
       repository: argoprojlabs/argocd-notifications
-      # -- Tag to use for the Slack bot
-      tag: v1.1.1
+      # -- Overrides the image tag whose default is the chart appVersion
+      tag: ""
       # -- Image pull policy for the Slack bot
       pullPolicy: IfNotPresent
 
