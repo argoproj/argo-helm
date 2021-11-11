@@ -1,41 +1,50 @@
+# -- Assign custom [affinity] rules
 affinity: {}
 
-# ArgoCD dashboard url; used in place of {{.context.argocdUrl}} in templates
+# -- ArgoCD dashboard url; used in place of {{.context.argocdUrl}} in templates
 argocdUrl:
 
+# -- String to partially override "argocd-notifications.fullname" template
 fullnameOverride: ""
 
 image:
+  # -- Repository to use for the controller
   repository: argoprojlabs/argocd-notifications
+  # -- Tag to use for the controller
   tag: v1.1.1
+  # -- Image pull policy for the controller
   pullPolicy: IfNotPresent
 
+# -- Secrets with credentials to pull images from a private registry
 imagePullSecrets: []
 
+# -- String to partially override "argocd-notifications.fullname" template
 nameOverride: "argocd-notifications"
 
+# -- [Node selector]
 nodeSelector: {}
 
+# -- The deployment strategy to use to replace existing pods with new ones
 updateStrategy:
   type: Recreate
 
-context:
-  # Add custom values into context
-  #  region: east
-  #  environmentName: staging
+# -- Define user-defined context
+## For more information: https://argocd-notifications.readthedocs.io/en/stable/templates/#defining-user-defined-context
+context: {}
+  # region: east
+  # environmentName: staging
 
 secret:
-  # Whether helm chart creates controller secret
+  # -- Whether helm chart creates controller secret
   create: true
 
-  # key:value pairs to be added to the secret
+  # -- key:value pairs of annotations to be added to the secret
   annotations: {}
 
-  items:
-    # Generic key:value pairs to be inserted into the secret
-    # Can be used for templates, notification services etc. Some examples given below.
-    # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
-
+  # -- Generic key:value pairs to be inserted into the secret
+  ## Can be used for templates, notification services etc. Some examples given below.
+  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
+  items: {}
     # slack-token:
     #   # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/slack/
 
@@ -48,43 +57,55 @@ secret:
     # email-password:
       # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/email/
 
+# -- Set the logging level. (One of: `debug`, `info`, `warn`, `error`)
 logLevel: info
 
+# -- Extra arguments to provide to the controller
 extraArgs: []
 
 metrics:
+  # -- Enables prometheus metrics server
   enabled: false
+  # -- Metrics port
   port: 9001
   service:
+    # -- Metrics service annotations
     annotations: {}
+    # -- Metrics service labels
     labels: {}
   serviceMonitor:
+    # -- Enable a prometheus ServiceMonitor
     enabled: false
+    # -- Prometheus ServiceMonitor labels
     additionalLabels: {}
     # namespace: monitoring
     # interval: 30s
     # scrapeTimeout: 10s
 
-# Additional container environment variables
+# -- Additional container environment variables
 extraEnv: []
 
+# -- Configures notification services
+# @default -- See [values.yaml]
+## For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
 notifiers:
-# For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
-
   service.slack: |
     token: $slack-token
 
+# -- Annotations to be applied to the controller Pods
 podAnnotations: {}
 
+# -- Labels to be applied to the controller Pods
 podLabels: {}
 
-## Pod Security Context
+# -- Pod Security Context
 securityContext:
   runAsNonRoot: true
 
-## Container Security Context
+# -- Container Security Context
 containerSecurityContext: {}
 
+# -- Resource limits and requests for the controller
 resources: {}
   # limits:
   #   cpu: 100m
@@ -94,22 +115,23 @@ resources: {}
   #   memory: 128Mi
 
 serviceAccount:
-  # Specifies whether a service account should be created
+  # -- Specifies whether a service account should be created
   create: true
 
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  # -- The name of the service account to use.
+  ## If not set and create is true, a name is generated using the fullname template
   name: argocd-notifications-controller
 
+  # -- Annotations applied to created service account
   annotations: {}
 
 cm:
-  # Whether helm chart creates controller config map
+  # -- Whether helm chart creates controller config map
   create: true
 
-subscriptions:
-  # For more information: https://argocd-notifications.readthedocs.io/en/stable/subscriptions/
-
+# -- Contains centrally managed global application subscriptions
+## For more information: https://argocd-notifications.readthedocs.io/en/stable/subscriptions/
+subscriptions: {}
   # # subscription for on-sync-status-unknown trigger notifications
   # - recipients:
   #   - slack:test2
@@ -123,9 +145,9 @@ subscriptions:
   #   triggers:
   #   - on-sync-status-unknown
 
-templates:
-  # For more information: https://argocd-notifications.readthedocs.io/en/stable/templates/
-
+# -- The notification template is used to generate the notification content
+## For more information: https://argocd-notifications.readthedocs.io/en/stable/templates/
+templates: {}
   # template.app-deployed: |
   #   email:
   #     subject: New version of an application {{.app.metadata.name}} is up and running.
@@ -314,12 +336,12 @@ templates:
   #   slack:
   #     attachments: "[{\n  \"title\": \"{{ .app.metadata.name}}\",\n  \"title_link\":\"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}\",\n  \"color\": \"#18be52\",\n  \"fields\": [\n  {\n    \"title\": \"Sync Status\",\n    \"value\": \"{{.app.status.sync.status}}\",\n    \"short\": true\n  },\n  {\n    \"title\": \"Repository\",\n    \"value\": \"{{.app.spec.source.repoURL}}\",\n    \"short\": true\n  }\n  {{range $index, $c := .app.status.conditions}}\n  {{if not $index}},{{end}}\n  {{if $index}},{{end}}\n  {\n    \"title\": \"{{$c.type}}\",\n    \"value\": \"{{$c.message}}\",\n    \"short\": true\n  }\n  {{end}}\n  ]\n}]    "
 
-
+# -- [Tolerations] for use with node taints
 tolerations: []
 
-triggers:
-  # For more information: https://argocd-notifications.readthedocs.io/en/stable/triggers/
-
+# -- The trigger defines the condition when the notification should be sent
+## For more information: https://argocd-notifications.readthedocs.io/en/stable/triggers/
+triggers: {}
   # trigger.on-deployed: |
   #   - description: Application is synced and healthy. Triggered once per commit.
   #     oncePer: app.status.sync.revision
@@ -356,37 +378,49 @@ triggers:
   # defaultTriggers: |
   #   - on-sync-status-unknown
 
+## The optional bot component simplifies managing subscriptions
+## For more information: https://argocd-notifications.readthedocs.io/en/stable/bots/overview/
 bots:
-  # For more information: https://argocd-notifications.readthedocs.io/en/stable/bots/overview/
   slack:
-    # You have to set secret.notifiers.slack.signingSecret
+    # -- Enable slack bot
+    ## You have to set secret.notifiers.slack.signingSecret
     enabled: false
 
+    # -- The deployment strategy to use to replace existing pods with new ones
     updateStrategy:
       type: Recreate
 
     image:
+      # -- Repository to use for the Slack bot
       repository: argoprojlabs/argocd-notifications
+      # -- Tag to use for the Slack bot
       tag: v1.1.1
+      # -- Image pull policy for the Slack bot
       pullPolicy: IfNotPresent
 
+    # -- Secrets with credentials to pull images from a private registry
     imagePullSecrets: []
 
     service:
+      # -- Service annotations for Slack bot
       annotations: {}
+      # -- Service port for Slack bot
       port: 80
+      # -- Service type for Slack bot
       type: LoadBalancer
 
     serviceAccount:
-      # Specifies whether a service account should be created
+      # -- Specifies whether a service account should be created
       create: true
 
-      # The name of the service account to use.
-      # If not set and create is true, a name is generated using the fullname template
+      # -- The name of the service account to use.
+      ## If not set and create is true, a name is generated using the fullname template
       name: argocd-notifications-bot
 
+      # -- Annotations applied to created service account
       annotations: {}
 
+    # -- Resource limits and requests for the Slack bot
     resources: {}
     # limits:
     #   cpu: 100m
@@ -395,8 +429,11 @@ bots:
     #   cpu: 100m
     #   memory: 128Mi
 
+    # -- Assign custom [affinity] rules
     affinity: {}
 
+    # -- [Tolerations] for use with node taints
     tolerations: []
 
+    # -- [Node selector]
     nodeSelector: {}
