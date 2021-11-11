@@ -71,14 +71,25 @@ config:
     #   ping: no
     #   prefix: quay.io
     #   credentials: env:REGISTRY_SECRET
+    # - name: ECR
+    #   api_url: https://123456789.dkr.ecr.eu-west-1.amazonaws.com
+    #   prefix: 123456789.dkr.ecr.eu-west-1.amazonaws.com
+    #   ping: yes
+    #   insecure: no
+    #   credentials: ext:/scripts/auth1.sh
+    #   credsexpire: 10h
 
-# whether to create an authentication script, if enabled, an authentication script will be mounted on /script/auth.sh that can be used to authenticate with registries (ECR)
+# whether to mount authentication scripts, if enabled, the authentication scripts will be mounted on /scripts/auth.sh that can be used to authenticate with registries (ECR)
 # refer to https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/#specifying-credentials-for-accessing-container-registries for more info
-authScript:
-  enabled: false
-  script: |
-    #!/bin/sh
-    echo "add script here"
+authScripts:
+  enabled: true
+  scripts: {}
+    # auth1.sh: |
+    #   #!/bin/sh
+    #   echo "auth script 1 here"
+    # auth2.sh: |
+    #   #!/bin/sh
+    #   echo "auth script 2 here"
 
 serviceAccount:
   # -- Specifies whether a service account should be created
