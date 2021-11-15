@@ -79,10 +79,10 @@ config:
     #   credentials: ext:/scripts/auth1.sh
     #   credsexpire: 10h
 
-# whether to mount authentication scripts, if enabled, the authentication scripts will be mounted on /scripts/auth.sh that can be used to authenticate with registries (ECR)
+# whether to mount authentication scripts, if enabled, the authentication scripts will be mounted on /scripts that can be used to authenticate with registries (ECR)
 # refer to https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/#specifying-credentials-for-accessing-container-registries for more info
 authScripts:
-  enabled: true
+  enabled: false
   scripts: {}
     # auth1.sh: |
     #   #!/bin/sh
