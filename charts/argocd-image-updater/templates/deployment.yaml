@@ -85,28 +85,21 @@ spec:
           - mountPath: /tmp
             name: tmp-dir
           {{- if .Values.authScripts.enabled }}
-          {{- range $k, $v := .Values.authScripts.scripts }}
           - mountPath: /scripts
-            name: {{ $k | replace "." "-" }}
-          {{- end }}
+            name: authscripts
           {{- end }}
       volumes:
-      - name: registries-conf
-        configMap:
+      - configMap:
           items:
           - key: registries.conf
             path: registries.conf
           name: argocd-image-updater-config
+        name: registries-conf
       {{- if .Values.authScripts.enabled }}
-      {{- range $k, $v := .Values.authScripts.scripts }}
-      - name: {{ $k | replace "." "-" }}
-        configMap:
+      - configMap:
           defaultMode: 0777
-          items:
-          - key: {{ $k }}
-            path: {{ $k }}
           name: argocd-image-updater-authscripts
-      {{- end }}
+        name: authscripts
       {{- end }}
       - emptyDir: {}
         name: tmp-dir
