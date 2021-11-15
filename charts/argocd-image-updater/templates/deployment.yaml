@@ -82,7 +82,7 @@ spec:
           {{- if .Values.authScripts.enabled }}
           {{- range $k, $v := .Values.authScripts.scripts }}
           - mountPath: /scripts
-            name: {{ $k }}
+            name: {{ $k | replace "." "-" }}
           {{- end }}
           {{- end }}
       volumes:
@@ -94,7 +94,7 @@ spec:
           name: argocd-image-updater-config
       {{- if .Values.authScripts.enabled }}
       {{- range $k, $v := .Values.authScripts.scripts }}
-      - name: authscript
+      - name: {{ $k | replace "." "-" }}
         configMap:
           defaultMode: 0777
           items:
