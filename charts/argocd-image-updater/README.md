@@ -60,7 +60,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes affinity settings for the deployment |
-| authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts/yourfilename.sh` |
+| authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts` |
 | authScripts.scripts | object |  `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents |
 | config.argocd.grpcWeb | bool | `true` | Use the gRPC-web protocol to connect to the Argo CD API |
 | config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
