@@ -82,6 +82,7 @@ config:
 # whether to mount authentication scripts, if enabled, the authentication scripts will be mounted on /scripts that can be used to authenticate with registries (ECR)
 # refer to https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/#specifying-credentials-for-accessing-container-registries for more info
 authScripts:
+  # -- Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts`
   enabled: false
   # -- Map of key-value pairs where the key consists of the name of the script and the value the contents
   scripts: {}
