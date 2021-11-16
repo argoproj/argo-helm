@@ -71,7 +71,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | fullnameOverride | string | `""` | Global fullname (argocd-image-updater.fullname in _helpers.tpl) override |
 | image.pullPolicy | string | `"Always"` | Default image pull policy |
 | image.repository | string | `"argoprojlabs/argocd-image-updater"` | Default image repository |
-| image.tag | string | `"v0.10.1"` | Default image tag |
+| image.tag | string | `"v0.10.3"` | Default image tag |
 | imagePullSecrets | list | `[]` | ImagePullSecrets for the image updater deployment |
 | metrics.enabled | bool | `false` | Deploy metrics service |
 | metrics.service.annotations | object | `{}` | Metrics service annotations |
