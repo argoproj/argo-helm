@@ -51,7 +51,7 @@ ArgoCD Image Updater natively supports the following registries (as mentioned in
 - GitHub Container Registry
 - GitHub Docker Packages
 
-If you need support for ECR, you can reference [this issue](https://github.com/argoproj-labs/argocd-image-updater/issues/112) for configuration.
+If you need support for ECR, you can reference [this issue](https://github.com/argoproj-labs/argocd-image-updater/issues/112) for configuration. You can use the `authScripts` values to configure the scripts that are needed to authenticate with ECR.
 
 The `config.registries` value can be used exactly as it looks in the documentation as it gets dumped directly into a configmap in this chart.
 
@@ -60,6 +60,8 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes affinity settings for the deployment |
+| authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts` |
+| authScripts.scripts | object |  `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents |
 | config.argocd.grpcWeb | bool | `true` | Use the gRPC-web protocol to connect to the Argo CD API |
 | config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
 | config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the ArgoCD API instead of TLS. |
