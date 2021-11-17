@@ -5,8 +5,8 @@ image:
   repository: argoprojlabs/argocd-image-updater
   # -- Default image pull policy
   pullPolicy: Always
-  # -- Default image tag
-  tag: v0.10.1
+  # -- Overrides the image tag whose default is the chart appVersion
+  tag: ""
 
 # -- ImagePullSecrets for the image updater deployment
 imagePullSecrets: []
