@@ -498,7 +498,7 @@ NAME: my-release
 | dex.extraVolumes | list | `[]` | Extra volumes to the dex pod |
 | dex.image.imagePullPolicy | string | `"IfNotPresent"` | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
-| dex.image.tag | string | `"v2.30.0"` | Dex image tag |
+| dex.image.tag | string | `"v2.30.2"` | Dex image tag |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
 | dex.initImage.repository | string | `""` (defaults to global.image.repository) | Argo CD init image repository |
 | dex.initImage.tag | string | `""` (defaults to global.image.tag) | Argo CD init image tag |
