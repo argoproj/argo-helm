@@ -6,10 +6,18 @@ metadata:
   name: {{ template "argo-cd.redis.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
+    {{- with .Values.redis.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.redis.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ports:
-  - port: {{ .Values.redis.servicePort }}
-    targetPort: {{ .Values.redis.servicePort }}
+  - name: redis
+    port: {{ .Values.redis.servicePort }}
+    targetPort: {{ .Values.redis.containerPort }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.redis.name) | nindent 4 }}
 {{- end }}

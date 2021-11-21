@@ -1,0 +1,62 @@
+{{- if .Values.server.additionalProjects }}
+apiVersion: v1
+kind: List
+items:
+  {{- range .Values.server.additionalProjects }}
+  - apiVersion: argoproj.io/v1alpha1
+    kind: AppProject
+    metadata:
+      {{- with .additionalAnnotations }}
+      annotations:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+      {{- end }}
+      {{- with .additionalLabels }}
+      labels:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      name: {{ .name }}
+      {{- with .namespace }}
+      namespace: {{ . }}
+      {{- end }}
+      {{- with .finalizers }}
+      finalizers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      description: {{ .description }}
+      sourceRepos:
+        {{- toYaml .sourceRepos | nindent 8 }}
+      destinations:
+        {{- toYaml .destinations | nindent 8 }}
+      {{- with .clusterResourceWhitelist }}
+      clusterResourceWhitelist:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .namespaceResourceBlacklist }}
+      namespaceResourceBlacklist:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .namespaceResourceWhitelist }}
+      namespaceResourceWhitelist:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .orphanedResources }}
+      orphanedResources:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .roles }}
+      roles:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .syncWindows }}
+      syncWindows:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .signatureKeys }}
+      signatureKeys:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- end }}
+{{- end }}

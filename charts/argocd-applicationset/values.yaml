@@ -20,8 +20,8 @@ args:
   probeBindAddr: :8081
   # -- The default leader election setting
   enableLeaderElection: false
-  # -- The default Argo CD repo namespace
-  namespace: argocd
+  # -- Namespace where ArgoCD is deployed to (defaults to .Release.Namespace)
+  namespace: ""
   # -- The default Argo CD repo server address
   argocdRepoServer: argocd-repo-server:8081
   # -- How application is synced between the generator and the cluster

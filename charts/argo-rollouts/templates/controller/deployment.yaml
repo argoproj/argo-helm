@@ -32,9 +32,12 @@ spec:
       serviceAccountName: {{ include "argo-rollouts.serviceAccountName" . }}
       containers:
       - image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ default .Chart.AppVersion .Values.controller.image.tag }}"
-        {{- if not .Values.clusterInstall }}
         args:
+        {{- if not .Values.clusterInstall }}
         - --namespaced
+        {{- end }}
+        {{- with .Values.controller.extraArgs }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         name: argo-rollouts
@@ -49,6 +52,9 @@ spec:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
+      {{- with .Values.controller.extraContainers }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
       {{- if .Values.controller.nodeSelector }}
       nodeSelector:
         {{- toYaml .Values.controller.nodeSelector | nindent 8 }}
