@@ -21,6 +21,9 @@ data:
     {{- if .Values.controller.parallelism }}
     parallelism: {{ .Values.controller.parallelism }}
     {{- end }}
+    {{- if .Values.controller.resourceRateLimit }}
+    resourceRateLimit: {{ toYaml .Values.controller.resourceRateLimit | nindent 6 }}
+    {{- end }}
     {{- with .Values.controller.namespaceParallelism }}
     namespaceParallelism: {{ . }}
     {{- end }}

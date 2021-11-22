@@ -49,6 +49,13 @@ controller:
     tag: ""
   # -- parallelism dictates how many workflows can be running at the same time
   parallelism:
+  # -- Globally limits the rate at which pods are created.
+  # This is intended to mitigate flooding of the Kubernetes API server by workflows with a large amount of
+  # parallel nodes.
+  resourceRateLimit: {}
+    # limit: 10
+    # burst: 1
+
   # -- Limits the maximum number of incomplete workflows in a namespace
   namespaceParallelism:
   # -- Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224
