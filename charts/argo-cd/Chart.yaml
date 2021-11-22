@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v2.1.7
 description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 3.26.11
+version: 3.26.12
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 keywords:
@@ -21,4 +21,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: add flag and labels for application labels"
+    - "[Changed]: Fix vulnerable containers - CVE-2021-3711, CVE-2021-36159"
