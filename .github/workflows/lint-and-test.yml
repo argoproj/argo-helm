@@ -35,6 +35,12 @@ jobs:
           fi
       - name: Run chart-testing (lint)
         run: ct lint --debug --config ./.github/configs/ct-lint.yaml --lint-conf ./.github/configs/lintconf.yaml
+      
+      - name: Run docs-testing (helm-docs)
+        uses: buttahtoast/helm-release-action@v2.0.1
+        with:
+          charts: "${{ steps.list-changed.outputs.changed_charts }}"
+        if: steps.list-changed.outputs.changed == 'true'
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.2.0
