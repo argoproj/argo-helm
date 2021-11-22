@@ -61,11 +61,16 @@ The `config.registries` value can be used exactly as it looks in the documentati
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes affinity settings for the deployment |
 | authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts` |
-| authScripts.scripts | object |  `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents |
+| authScripts.scripts | object | `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents |
+| config.applicationsAPIKind | string | `""` | API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`) |
 | config.argocd.grpcWeb | bool | `true` | Use the gRPC-web protocol to connect to the Argo CD API |
 | config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
 | config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the ArgoCD API instead of TLS. |
 | config.argocd.serverAddress | string | `""` | Connect to the Argo CD API server at server address |
+| config.disableKubeEvents | bool | `false` | Disable kubernetes events |
+| config.gitCommitMail | string | `""` | E-Mail address to use for Git commits |
+| config.gitCommitTemplate | string | `""` | Changing the Git commit message |
+| config.gitCommitUser | string | `""` | Username to use for Git commits |
 | config.logLevel | string | `"info"` | ArgoCD Image Update log level |
 | config.registries | list | `[]` | ArgoCD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/) |
 | extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry |
