@@ -256,6 +256,8 @@ NAME: my-release
 | controller.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | controller.logFormat | string | `"text"` | Application controller log format. Either `text` or `json` |
 | controller.logLevel | string | `"info"` | Application controller log level |
+| controller.metrics.applicationLabels.enabled | bool | `false` | Enables additional labels in argocd_app_labels metric |
+| controller.metrics.applicationLabels.labels | object | `{}` | Additional labels |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
 | controller.metrics.rules.enabled | bool | `false` | Deploy a PrometheusRule for the application controller |
 | controller.metrics.rules.spec | list | `[]` | PrometheusRule.Spec for the application controller |
