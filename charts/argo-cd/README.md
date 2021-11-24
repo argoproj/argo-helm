@@ -10,6 +10,9 @@ This is a **community maintained** chart. This chart installs [argo-cd](https://
 
 The default installation is intended to be similar to the provided ArgoCD [releases](https://github.com/argoproj/argo-cd/releases).
 
+If you want to avoid including sensitive information unencrypted (clear text) in your version control, make use of the [declarative set up](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/) of Argo CD.
+For instance, rather than adding repositories and their keys in your Helm values, you could deploy [SealedSecrets](https://github.com/bitnami-labs/sealed-secrets) with contents as seen in this [repositories section](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repositories) or any other secrets manager service (i.e. HashiCorp Vault, AWS/GCP Secrets Manager, etc.).
+
 ## High Availability
 
 This chart installs the non-HA version of ArgoCD by default. If you want to run ArgoCD in HA mode, you can use one of the example values in the next sections.
