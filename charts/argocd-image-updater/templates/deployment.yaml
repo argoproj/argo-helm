@@ -128,6 +128,8 @@ spec:
             name: image-updater-conf
           - mountPath: /tmp
             name: tmp-dir
+          - mountPath: /app/config/ssh
+            name: ssh-known-hosts
           {{- if .Values.authScripts.enabled }}
           - mountPath: /scripts
             name: authscripts
@@ -150,6 +152,10 @@ spec:
       {{- end }}
       - emptyDir: {}
         name: tmp-dir
+      - configMap:
+          name: argocd-ssh-known-hosts-cm
+          optional: true
+        name: ssh-known-hosts
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
