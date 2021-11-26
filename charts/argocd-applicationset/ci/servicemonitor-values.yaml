@@ -1,0 +1,8 @@
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    # -- Prometheus ServiceMonitor interval
+    interval: 30s
+    additionalLabels:
+      release: kube-prometheus-stack
