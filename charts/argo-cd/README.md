@@ -249,6 +249,7 @@ NAME: my-release
 | controller.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application controller |
 | controller.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application controller |
 | controller.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application controller |
+| controller.initContainers | list | `[]` | Init containers to add to the application controller pod |
 | controller.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | controller.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | controller.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -417,6 +418,7 @@ NAME: my-release
 | server.ingressGrpc.pathType | string | `"Prefix"` | Ingress path type for dedicated [gRPC-ingress]. One of `Exact`, `Prefix` or `ImplementationSpecific` |
 | server.ingressGrpc.paths | list | `["/"]` | List of ingress paths for dedicated [gRPC-ingress] |
 | server.ingressGrpc.tls | list | `[]` | Ingress TLS configuration for dedicated [gRPC-ingress] |
+| server.initContainers | list | `[]` | Init containers to add to the server pod |
 | server.lifecycle | object | `{}` | Specify postStart and preStop lifecycle hooks for your argo-cd-server container |
 | server.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
@@ -499,6 +501,7 @@ NAME: my-release
 | dex.image.imagePullPolicy | string | `"IfNotPresent"` | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
 | dex.image.tag | string | `"v2.30.0"` | Dex image tag |
+| dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
 | dex.initImage.repository | string | `""` (defaults to global.image.repository) | Argo CD init image repository |
 | dex.initImage.tag | string | `""` (defaults to global.image.tag) | Argo CD init image tag |
@@ -559,6 +562,7 @@ NAME: my-release
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
 | redis.image.repository | string | `"redis"` | Redis repository |
 | redis.image.tag | string | `"6.2.4-alpine"` | Redis tag |
+| redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
 | redis.metrics.image.imagePullPolicy | string | `"IfNotPresent"` | redis-exporter image PullPolicy |

@@ -294,6 +294,25 @@ controller:
   # -- Additional containers to be added to the application controller pod
   extraContainers: []
 
+  # -- Init containers to add to the application controller pod
+  ## If your target Kubernetes cluster(s) require a custom auth provider executable
+  ## you could use this (and the same in the server pod) to bootstrap
+  ## that executable into your ArgoCD container
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+  #        mv linux-amd64/helm /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+  #  volumeMounts:
+  #  - mountPath: /usr/local/bin/helm
+  #    name: custom-tools
+  #    subPath: helm
+
 ## Dex
 dex:
   # -- Enable dex
@@ -472,6 +491,22 @@ dex:
   # -- Additional containers to be added to the dex pod
   extraContainers: []
 
+  # -- Init containers to add to the dex pod
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+  #        mv linux-amd64/helm /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+  #  volumeMounts:
+  #  - mountPath: /usr/local/bin/helm
+  #    name: custom-tools
+  #    subPath: helm
+
 ## Redis
 redis:
   # -- Enable redis
@@ -571,6 +606,22 @@ redis:
 
   # -- Additional containers to be added to the redis pod
   extraContainers: []
+
+  # -- Init containers to add to the redis pod
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+  #        mv linux-amd64/helm /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+  #  volumeMounts:
+  #  - mountPath: /usr/local/bin/helm
+  #    name: custom-tools
+  #    subPath: helm
 
   service:
     # -- Redis service annotations
@@ -1201,6 +1252,25 @@ server:
   #   volumeMounts:
   #   - name: copy-portal-skins
   #     mountPath: /srv/var/lib/lemonldap-ng/portal/skins
+
+  # -- Init containers to add to the server pod
+  ## If your target Kubernetes cluster(s) require a custom auth provider executable
+  ## you could use this (and the same in the application controller pod) to bootstrap
+  ## that executable into your ArgoCD container
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+  #        mv linux-amd64/helm /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+  #  volumeMounts:
+  #  - mountPath: /usr/local/bin/helm
+  #    name: custom-tools
+  #    subPath: helm
 
 ## Repo Server
 repoServer:
