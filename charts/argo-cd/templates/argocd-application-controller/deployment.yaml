@@ -160,6 +160,10 @@ spec:
       {{- with .Values.controller.volumes }}
       {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- if .Values.controller.initContainers }}
+      initContainers:
+      {{- toYaml .Values.controller.initContainers | nindent 6 }}
+      {{- end }}
 {{- if .Values.controller.priorityClassName }}
       priorityClassName: {{ .Values.controller.priorityClassName }}
 {{- end }}

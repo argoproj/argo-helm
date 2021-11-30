@@ -179,7 +179,7 @@ spec:
         name: tmp-dir
       {{- if .Values.repoServer.initContainers }}
       initContainers:
-{{- toYaml .Values.repoServer.initContainers | nindent 6 }}
+      {{- toYaml .Values.repoServer.initContainers | nindent 6 }}
       {{- end }}
 {{- if .Values.repoServer.priorityClassName }}
       priorityClassName: {{ .Values.repoServer.priorityClassName }}
