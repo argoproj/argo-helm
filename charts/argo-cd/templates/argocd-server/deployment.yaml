@@ -198,6 +198,10 @@ spec:
             path: ca.crt
           optional: true
           secretName: argocd-repo-server-tls
+      {{- if .Values.server.initContainers }}
+      initContainers:
+      {{- toYaml .Values.server.initContainers | nindent 6 }}
+      {{- end }}
 {{- if .Values.server.priorityClassName }}
       priorityClassName: {{ .Values.server.priorityClassName }}
 {{- end }}

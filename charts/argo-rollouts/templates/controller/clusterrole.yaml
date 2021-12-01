@@ -56,6 +56,7 @@ rules:
   - update
   - patch
   - delete
+# deployments and podtemplates read access needed for workload reference support
 - apiGroups:
   - ""
   - apps
@@ -67,6 +68,7 @@ rules:
   - list
   - watch
 # services patch needed to update selector of canary/stable/active/preview services
+# services create needed to create services for experiments
 - apiGroups:
   - ""
   resources:
@@ -76,8 +78,17 @@ rules:
   - list
   - watch
   - patch
+  - create
+# leases create/get/update needed for leader election
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - get
+  - update
 # secret read access to run analysis templates which reference secrets
-# configmap access to read notification-engine configuration
 - apiGroups:
   - ""
   resources:
@@ -136,7 +147,7 @@ rules:
   - update
   - patch
   - delete
-# virtualservice access needed for using the Istio provider
+# virtualservice/destinationrule access needed for using the Istio provider
 - apiGroups:
   - networking.istio.io
   resources:
@@ -159,10 +170,13 @@ rules:
   - get
   - update
   - patch
+# ambassador access needed for Ambassador provider
 - apiGroups:
   - getambassador.io
+  - x.getambassador.io
   resources:
   - mappings
+  - ambassadormappings
   verbs:
   - create
   - watch
@@ -170,4 +184,18 @@ rules:
   - update
   - list
   - delete
+# Endpoints and TargetGroupBindings needed for ALB target group verification
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - get
+- apiGroups:
+  - elbv2.k8s.aws
+  resources:
+  - targetgroupbindings
+  verbs:
+  - list
+  - get
 {{- end }}

@@ -54,6 +54,12 @@ spec:
         - {{ .Values.controller.logFormat }}
         - --loglevel
         - {{ .Values.controller.logLevel }}
+        {{- if .Values.controller.metrics.applicationLabels.enabled }}
+        - --metrics-application-labels
+        {{- range .Values.controller.metrics.applicationLabels.labels }}
+        - {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- end }}
         {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
@@ -153,6 +159,10 @@ spec:
           secretName: argocd-repo-server-tls
       {{- with .Values.controller.volumes }}
       {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- if .Values.controller.initContainers }}
+      initContainers:
+      {{- toYaml .Values.controller.initContainers | nindent 6 }}
       {{- end }}
 {{- if .Values.controller.priorityClassName }}
       priorityClassName: {{ .Values.controller.priorityClassName }}
