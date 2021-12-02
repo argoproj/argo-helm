@@ -15,7 +15,7 @@ A few options are:
 
 ## Usage Notes
 
-### Workflow controller 
+### Workflow controller
 
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster. If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of it's configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.
 
@@ -181,7 +181,7 @@ Fields to note:
 | server.serviceType | string | `"ClusterIP"` | Service type for server pods |
 | server.sso | object | `{}` | SSO configuration when SSO is specified as a server auth mode. |
 | server.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| server.volumeMounts | list | `[]` | Additional volume mounts to the server main container. |
+| server.volumeMounts | list | `[]` |  |
 | server.volumes | list | `[]` | Additional volumes to the server pod. |
 
 ### Artifact Repository
