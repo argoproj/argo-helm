@@ -15,7 +15,13 @@ A few options are:
 
 ## Usage Notes
 
+### Workflow controller 
+
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster. If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of it's configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.
+
+### Workflow server authentication
+
+By default, the chart requires some kind of authentication mechanism. This adopts the [default behaviour from the Argo project](https://github.com/argoproj/argo-workflows/pull/5211) itself. However, for local development purposes, or cases where your gateway authentication is covered by some other means, you can set the authentication mode for the Argo server by setting the `server.extraArgs: [--auth-mode=server]`. There are a few additional comments in the values.yaml file itself, including commented-out settings to disable authentication on the server UI itself using the same `--auth-mode=server` setting.
 
 ## Values
 
