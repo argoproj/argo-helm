@@ -143,6 +143,10 @@ spec:
       {{- if .Values.dex.extraVolumes }}
       {{- toYaml .Values.dex.extraVolumes | nindent 6 }}
       {{- end }}
+      {{- if .Values.dex.initContainers }}
+      initContainers:
+      {{- toYaml .Values.dex.initContainers | nindent 6 }}
+      {{- end }}
 {{- if .Values.dex.priorityClassName }}
       priorityClassName: {{ .Values.dex.priorityClassName }}
 {{- end }}
