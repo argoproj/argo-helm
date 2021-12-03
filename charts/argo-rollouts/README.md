@@ -24,9 +24,14 @@ To install the chart with the release name `my-release`:
 $ helm repo add argo https://argoproj.github.io/argo-helm
 $ helm install my-release argo/argo-rollouts
 ```
+### UI Dashboard
 
 If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-rollouts dashboard by
 `kubectl port-forward service/argo-rollouts-dashboard 31000:3100` and pointing the browser to `localhost:31000`
+
+| :warning: WARNING when the Service type is set to LoadBalancer or NodePort |
+|:---------------------------------------------------------------------------|
+| The chart provides an option to change the service type (`dashboard.service.type`). Dashboard was never intended to be exposed as an administrative console -- it started out as a local view available via CLI. It should be protected by something (e.g. network access or even better an oauth proxy). |
 
 ## Chart Values
 
