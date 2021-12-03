@@ -5,7 +5,7 @@ metadata:
   name: {{ template "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.server.image.tag | quote }}
+    app.kubernetes.io/version: {{ default (include "argo-cd.defaultTag" .) .Values.server.image.tag | quote }}
 spec:
   selector:
     matchLabels:
@@ -22,7 +22,7 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.server.image.tag | quote }}
+        app.kubernetes.io/version: {{ default (include "argo-cd.defaultTag" .) .Values.server.image.tag | quote }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.server.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -36,7 +36,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ .Values.server.name }}
-        image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default .Values.global.image.tag .Values.server.image.tag }}
+        image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.server.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         command:
         - argocd-server
@@ -89,6 +89,10 @@ spec:
         - mountPath: "/shared/app/custom/custom.styles.css"
           subPath: "custom.styles.css"
           name: custom-styles
+        {{- end }}
+        {{- if .Values.server.containerSecurityContext.readOnlyRootFilesystem }}
+        - mountPath: /home/argocd/.aws
+          name: aws-config
         {{- end }}
         - mountPath: /tmp
           name: tmp-dir
@@ -164,6 +168,10 @@ spec:
         name: static-files
       - emptyDir: {}
         name: tmp-dir
+      {{- if .Values.server.containerSecurityContext.readOnlyRootFilesystem }}
+      - emptyDir: {}
+        name: aws-config
+      {{- end }}
       {{- if .Values.configs.styles }}
       - configMap:
           name: argocd-custom-styles
@@ -190,6 +198,10 @@ spec:
             path: ca.crt
           optional: true
           secretName: argocd-repo-server-tls
+      {{- if .Values.server.initContainers }}
+      initContainers:
+      {{- toYaml .Values.server.initContainers | nindent 6 }}
+      {{- end }}
 {{- if .Values.server.priorityClassName }}
       priorityClassName: {{ .Values.server.priorityClassName }}
 {{- end }}

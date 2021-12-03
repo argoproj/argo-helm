@@ -40,10 +40,6 @@ rules:
       - update
       - watch
     resources:
-      - workflows
-      - workflows/finalizers
-      - workflowtemplates
-      - workflowtemplates/finalizers
       - sensors
       - sensors/finalizers
       - sensors/status
@@ -61,20 +57,7 @@ rules:
       - configmaps
       - secrets
       - services
-      - events
       - persistentvolumeclaims
-    verbs:
-      - create
-      - get
-      - list
-      - watch
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - "batch"
-    resources:
-      - jobs
     verbs:
       - create
       - get
@@ -96,5 +79,4 @@ rules:
       - update
       - patch
       - delete
-
 {{- end }}

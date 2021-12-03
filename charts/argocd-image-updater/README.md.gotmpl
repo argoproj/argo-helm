@@ -51,8 +51,13 @@ ArgoCD Image Updater natively supports the following registries (as mentioned in
 - GitHub Container Registry
 - GitHub Docker Packages
 
-If you need support for ECR, you can reference [this issue](https://github.com/argoproj-labs/argocd-image-updater/issues/112) for configuration.
+If you need support for ECR, you can reference [this issue](https://github.com/argoproj-labs/argocd-image-updater/issues/112) for configuration. You can use the `authScripts` values to configure the scripts that are needed to authenticate with ECR.
 
 The `config.registries` value can be used exactly as it looks in the documentation as it gets dumped directly into a configmap in this chart.
 
 {{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}
+
+[MetricRelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
+[RelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config

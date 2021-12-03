@@ -44,6 +44,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | controller.image.repository | string | `"argoproj/argo-rollouts"` | Repository to use |
 | controller.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
 | controller.extraArgs | list | `[]` | Additional arguments for the controller. A list of flags. |
+| controller.extraContainers | list | `[]` | Literal yaml for extra containers to be added to controller deployment. |
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
 | controller.tolerations | list | `[]` | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
 | controller.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
