@@ -137,6 +137,9 @@ helm.sh/chart: {{ include "argo-cd.chart" .context }}
 {{ include "argo-cd.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
 app.kubernetes.io/managed-by: {{ .context.Release.Service }}
 app.kubernetes.io/part-of: argocd
+{{- with .context.Values.global.additionalLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end }}
 
 {{/*
