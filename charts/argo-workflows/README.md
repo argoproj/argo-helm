@@ -181,7 +181,7 @@ Fields to note:
 | server.serviceType | string | `"ClusterIP"` | Service type for server pods |
 | server.sso | object | `{}` | SSO configuration when SSO is specified as a server auth mode. |
 | server.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| server.volumeMounts | list | `[]` |  |
+| server.volumeMounts | list | `[]` | Additional volume mounts to the server main container. |
 | server.volumes | list | `[]` | Additional volumes to the server pod. |
 
 ### Artifact Repository
