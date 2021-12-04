@@ -142,7 +142,7 @@ Fields to note:
 | server.clusterWorkflowTemplates.enableEditing | bool | `true` | Give the server permissions to edit ClusterWorkflowTemplates. |
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
 | server.enabled | bool | `true` | Deploy the Argo Server |
-| server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary. |
+| server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary, such as for disabling authentication. |
 | server.extraContainers | list | `[]` | Extra containers to be added to the server deployment |
 | server.extraEnv | list | `[]` | Extra environment variables to provide to the argo-server container |
 | server.image.registry | string | `"quay.io"` | Registry to use for the server |
