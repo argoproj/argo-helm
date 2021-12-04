@@ -75,7 +75,7 @@ spec:
         {{- if .Values.server.volumeMounts }}
 {{- toYaml .Values.server.volumeMounts | nindent 8}}
         {{- end }}
-        {{- if .Values.server.extension }}
+        {{- if .Values.server.extensions }}
         - name: extensions
           mountPath: /tmp/extensions/
         {{- end }}
@@ -136,7 +136,7 @@ spec:
       {{- with .Values.server.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
-      {{- if .Values.server.extension }}
+      {{- if .Values.server.extensions }}
       - name: argocd-extensions
         image: ghcr.io/argoproj-labs/argocd-extensions:latest
         volumeMounts:
@@ -175,7 +175,7 @@ spec:
       {{- if .Values.server.volumes }}
 {{- toYaml .Values.server.volumes | nindent 6}}
       {{- end }}
-      {{- if .Values.server.extension }}
+      {{- if .Values.server.extensions }}
       - name: extensions
         emptyDir: {}
       {{- end }}

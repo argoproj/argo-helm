@@ -1,0 +1,23 @@
+{{- if .Values.server.extensions }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+  name: argocd-server-extensions
+rules:
+- apiGroups:
+  - argoproj.io
+  resources:
+  - argocdextensions
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - delete
+  - patch
+{{- end }}
