@@ -132,6 +132,13 @@ spec:
       {{- with .Values.server.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- if .Values.server.extension }}
+      - name: argocd-extensions
+        image: ghcr.io/argoproj-labs/argocd-extensions:latest
+        volumeMounts:
+          - name: extensions
+            mountPath: /tmp/extensions/
+      {{- end }}
     {{- if .Values.server.nodeSelector }}
       nodeSelector:
 {{- toYaml .Values.server.nodeSelector | nindent 8 }}
