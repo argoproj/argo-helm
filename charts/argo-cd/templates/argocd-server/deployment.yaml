@@ -75,6 +75,10 @@ spec:
         {{- if .Values.server.volumeMounts }}
 {{- toYaml .Values.server.volumeMounts | nindent 8}}
         {{- end }}
+        {{- if .Values.server.extension }}
+        - name: extensions
+          mountPath: /tmp/extensions/
+        {{- end }}
         {{- if .Values.configs.knownHosts }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
@@ -170,6 +174,10 @@ spec:
       volumes:
       {{- if .Values.server.volumes }}
 {{- toYaml .Values.server.volumes | nindent 6}}
+      {{- end }}
+      {{- if .Values.server.extension }}
+      - name: extensions
+        emptyDir: {}
       {{- end }}
       - emptyDir: {}
         name: static-files
