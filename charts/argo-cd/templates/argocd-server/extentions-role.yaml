@@ -3,9 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   labels:
-    app.kubernetes.io/name: argocd-server
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: server
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
   name: argocd-server-extensions
 rules:
 - apiGroups:

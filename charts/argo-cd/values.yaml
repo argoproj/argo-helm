@@ -1276,8 +1276,22 @@ server:
   #    name: custom-tools
   #    subPath: helm
 
-  # -- Enable support for extensions
-  extensions: false
+  extensions:
+    # -- Enable support for extensions
+    enabled: false
+    
+    image:
+      # -- Repository to use for extensions image
+      repository: "ghcr.io/argoproj-labs/argocd-extensions"
+      # -- Tag to use for extensions image
+      tag: "v0.1.0"
+      # -- Image pull policy for extensions
+      imagePullPolicy: IfNotPresent
+    
+    # -- Extensions to be loaded into the server
+    contents: []
+    # - name: argo-rollouts
+    #   url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.1.0/extension.tar
 
 ## Repo Server
 repoServer:
