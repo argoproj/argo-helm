@@ -176,7 +176,7 @@ spec:
       {{- if .Values.server.volumes }}
 {{- toYaml .Values.server.volumes | nindent 6}}
       {{- end }}
-      {{- if .Values.server.extensions }}
+      {{- if .Values.server.extensions.enabled }}
       - name: extensions
         emptyDir: {}
       {{- end }}
