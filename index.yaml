@@ -10139,6 +10139,29 @@ entries:
   argocd-image-updater:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Mount ssh-known-hosts from argocd"
+    apiVersion: v2
+    appVersion: v0.11.0
+    created: "2021-12-07T06:40:35.76242783Z"
+    description: A Helm chart for Argo CD Image Updater, a tool to automatically update
+      the container images of Kubernetes workloads which are managed by Argo CD
+    digest: 9aa09e682eb03dea403b7afe328089812ff57f09c484a61f4b7783e8ce239731
+    home: https://github.com/argoproj-labs/argocd-image-updater
+    icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-image-updater
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-image-updater-0.6.0/argocd-image-updater-0.6.0.tgz
+    version: 0.6.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Update to app version v0.11.0"
     apiVersion: v2
     appVersion: v0.11.0
@@ -10983,4 +11006,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2021-12-06T10:02:17.293442776Z"
+generated: "2021-12-07T06:40:35.76708561Z"
