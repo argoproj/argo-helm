@@ -24,9 +24,14 @@ To install the chart with the release name `my-release`:
 $ helm repo add argo https://argoproj.github.io/argo-helm
 $ helm install my-release argo/argo-rollouts
 ```
+### UI Dashboard
 
 If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-rollouts dashboard by
 `kubectl port-forward service/argo-rollouts-dashboard 31000:3100` and pointing the browser to `localhost:31000`
+
+| :warning: WARNING when the Service type is set to LoadBalancer or NodePort |
+|:---------------------------------------------------------------------------|
+| The chart provides an option to change the service type (`dashboard.service.type`). Dashboard was never intended to be exposed as an administrative console -- it started out as a local view available via CLI. It should be protected by something (e.g. network access or even better an oauth proxy). |
 
 ## Chart Values
 
@@ -67,6 +72,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
 | dashboard.extraArgs | list | `[]` | Additional arguments for the dashboard. A list of flags. |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
+| dashboard.service.type | string | `ClusterIP` | Sets the type of the Service |
 | dashboard.tolerations | list | `[]` | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
 | dashboard.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
 | dashboard.nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
