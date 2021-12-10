@@ -1,0 +1,17 @@
+{{- if .Values.server.extensions.enabled }}
+{{- range $extension := .Values.server.extensions.contents }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCDExtension
+metadata:
+  name: {{ $extension.name }}
+  finalizers:
+    - extensions-finalizer.argocd.argoproj.io
+  labels:
+    {{- include "argo-cd.labels" (dict "context" $ "component" $.Values.server.name "name" (printf "%s-extensions" $.Values.server.name)) | nindent 4 }}
+spec:
+  sources:
+  - web:
+      url: {{ $extension.url }}
+{{- end }}
+{{- end }}
