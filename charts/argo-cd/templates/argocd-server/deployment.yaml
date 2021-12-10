@@ -75,6 +75,10 @@ spec:
         {{- if .Values.server.volumeMounts }}
 {{- toYaml .Values.server.volumeMounts | nindent 8}}
         {{- end }}
+        {{- if .Values.server.extensions.enabled }}
+        - name: extensions
+          mountPath: /tmp/extensions/
+        {{- end }}
         {{- if .Values.configs.knownHosts }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
@@ -132,6 +136,14 @@ spec:
       {{- with .Values.server.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- if .Values.server.extensions.enabled }}
+      - name: argocd-extensions
+        image: {{ .Values.server.extensions.image.repository }}:{{ .Values.server.extensions.image.tag }}
+        imagePullPolicy: {{ .Values.server.extensions.image.imagePullPolicy }}
+        volumeMounts:
+          - name: extensions
+            mountPath: /tmp/extensions/
+      {{- end }}
     {{- if .Values.server.nodeSelector }}
       nodeSelector:
 {{- toYaml .Values.server.nodeSelector | nindent 8 }}
@@ -163,6 +175,10 @@ spec:
       volumes:
       {{- if .Values.server.volumes }}
 {{- toYaml .Values.server.volumes | nindent 6}}
+      {{- end }}
+      {{- if .Values.server.extensions.enabled }}
+      - name: extensions
+        emptyDir: {}
       {{- end }}
       - emptyDir: {}
         name: static-files

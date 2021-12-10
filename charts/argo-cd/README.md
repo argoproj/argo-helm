@@ -394,6 +394,11 @@ NAME: my-release
 | server.containerSecurityContext | object | `{}` | Servers container-level security context |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
 | server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
+| server.extensions.contents | list | `[]` | Extensions to be loaded into the server |
+| server.extensions.enabled | bool | `false` | Enable support for extensions |
+| server.extensions.image.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy for extensions |
+| server.extensions.image.repository | string | `"ghcr.io/argoproj-labs/argocd-extensions"` | Repository to use for extensions image |
+| server.extensions.image.tag | string | `"v0.1.0"` | Tag to use for extensions image |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
 | server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Argo CD server |
