@@ -1289,6 +1289,15 @@ server:
       # -- Image pull policy for extensions
       imagePullPolicy: IfNotPresent
 
+    # -- Resource limits and requests for the argocd-extensions pods
+    resources: {}
+    #  limits:
+    #    cpu: 50m
+    #    memory: 128Mi
+    #  requests:
+    #    cpu: 10m
+    #    memory: 64Mi
+
     # -- Extensions to be loaded into the server
     contents: []
     # - name: argo-rollouts
