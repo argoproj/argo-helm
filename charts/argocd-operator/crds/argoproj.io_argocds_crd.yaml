@@ -1,5 +1,3 @@
-
----
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -98,11 +96,131 @@ spec:
                       \n Set this to a duration, e.g. 10m or 600s to control the synchronisation
                       frequency."
                     type: string
+                  env:
+                    description: Env lets you specify environment for application
+                      controller pods
+                    items:
+                      description: EnvVar represents an environment variable present
+                        in a Container.
+                      properties:
+                        name:
+                          description: Name of the environment variable. Must be a
+                            C_IDENTIFIER.
+                          type: string
+                        value:
+                          description: 'Variable references $(VAR_NAME) are expanded
+                            using the previous defined environment variables in the
+                            container and any service environment variables. If a
+                            variable cannot be resolved, the reference in the input
+                            string will be unchanged. The $(VAR_NAME) syntax can be
+                            escaped with a double $$, ie: $$(VAR_NAME). Escaped references
+                            will never be expanded, regardless of whether the variable
+                            exists or not. Defaults to "".'
+                          type: string
+                        valueFrom:
+                          description: Source for the environment variable's value.
+                            Cannot be used if value is not empty.
+                          properties:
+                            configMapKeyRef:
+                              description: Selects a key of a ConfigMap.
+                              properties:
+                                key:
+                                  description: The key to select.
+                                  type: string
+                                name:
+                                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                    TODO: Add other useful fields. apiVersion, kind,
+                                    uid?'
+                                  type: string
+                                optional:
+                                  description: Specify whether the ConfigMap or its
+                                    key must be defined
+                                  type: boolean
+                              required:
+                              - key
+                              type: object
+                            fieldRef:
+                              description: 'Selects a field of the pod: supports metadata.name,
+                                metadata.namespace, `metadata.labels[''<KEY>'']`,
+                                `metadata.annotations[''<KEY>'']`, spec.nodeName,
+                                spec.serviceAccountName, status.hostIP, status.podIP,
+                                status.podIPs.'
+                              properties:
+                                apiVersion:
+                                  description: Version of the schema the FieldPath
+                                    is written in terms of, defaults to "v1".
+                                  type: string
+                                fieldPath:
+                                  description: Path of the field to select in the
+                                    specified API version.
+                                  type: string
+                              required:
+                              - fieldPath
+                              type: object
+                            resourceFieldRef:
+                              description: 'Selects a resource of the container: only
+                                resources limits and requests (limits.cpu, limits.memory,
+                                limits.ephemeral-storage, requests.cpu, requests.memory
+                                and requests.ephemeral-storage) are currently supported.'
+                              properties:
+                                containerName:
+                                  description: 'Container name: required for volumes,
+                                    optional for env vars'
+                                  type: string
+                                divisor:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: Specifies the output format of the
+                                    exposed resources, defaults to "1"
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                resource:
+                                  description: 'Required: resource to select'
+                                  type: string
+                              required:
+                              - resource
+                              type: object
+                            secretKeyRef:
+                              description: Selects a key of a secret in the pod's
+                                namespace
+                              properties:
+                                key:
+                                  description: The key of the secret to select from.  Must
+                                    be a valid secret key.
+                                  type: string
+                                name:
+                                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                    TODO: Add other useful fields. apiVersion, kind,
+                                    uid?'
+                                  type: string
+                                optional:
+                                  description: Specify whether the Secret or its key
+                                    must be defined
+                                  type: boolean
+                              required:
+                              - key
+                              type: object
+                          type: object
+                      required:
+                      - name
+                      type: object
+                    type: array
+                  logFormat:
+                    description: LogFormat refers to the log format used by the Application
+                      Controller component. Defaults to ArgoCDDefaultLogFormat if
+                      not configured. Valid options are text or json.
+                    type: string
                   logLevel:
                     description: LogLevel refers to the log level used by the Application
                       Controller component. Defaults to ArgoCDDefaultLogLevel if not
                       configured. Valid options are debug, info, error, and warn.
                     type: string
+                  parallelismLimit:
+                    description: ParallelismLimit defines the limit for parallel kubectl
+                      operations
+                    format: int32
+                    type: integer
                   processors:
                     description: Processors contains the options for the Application
                       Controller processors.
@@ -165,6 +283,12 @@ spec:
                   config:
                     description: Config is the dex connector configuration.
                     type: string
+                  groups:
+                    description: Optional list of required groups a user must be a
+                      member of
+                    items:
+                      type: string
+                    type: array
                   image:
                     description: Image is the Dex container image.
                     type: string
@@ -262,14 +386,15 @@ spec:
                               items:
                                 type: string
                               type: array
+                              x-kubernetes-list-type: atomic
                             secretName:
                               description: SecretName is the name of the secret used
-                                to terminate SSL traffic on 443. Field is left optional
-                                to allow SSL routing based on SNI hostname alone.
-                                If the SNI host in a listener conflicts with the "Host"
-                                header field used by an IngressRule, the SNI host
-                                is used for termination and value of the Host header
-                                is used for routing.
+                                to terminate TLS traffic on port 443. Field is left
+                                optional to allow TLS routing based on SNI hostname
+                                alone. If the SNI host in a listener conflicts with
+                                the "Host" header field used by an IngressRule, the
+                                SNI host is used for termination and value of the
+                                Host header is used for routing.
                               type: string
                           type: object
                         type: array
@@ -493,6 +618,59 @@ spec:
                       type: string
                   type: object
                 type: array
+              nodePlacement:
+                description: NodePlacement defines NodeSelectors and Taints for Argo
+                  CD workloads
+                properties:
+                  nodeSelector:
+                    additionalProperties:
+                      type: string
+                    description: NodeSelector is a field of PodSpec, it is a map of
+                      key value pairs used for node selection
+                    type: object
+                  tolerations:
+                    description: Tolerations allow the pods to schedule onto nodes
+                      with matching taints
+                    items:
+                      description: The pod this Toleration is attached to tolerates
+                        any taint that matches the triple <key,value,effect> using
+                        the matching operator <operator>.
+                      properties:
+                        effect:
+                          description: Effect indicates the taint effect to match.
+                            Empty means match all taint effects. When specified, allowed
+                            values are NoSchedule, PreferNoSchedule and NoExecute.
+                          type: string
+                        key:
+                          description: Key is the taint key that the toleration applies
+                            to. Empty means match all taint keys. If the key is empty,
+                            operator must be Exists; this combination means to match
+                            all values and all keys.
+                          type: string
+                        operator:
+                          description: Operator represents a key's relationship to
+                            the value. Valid operators are Exists and Equal. Defaults
+                            to Equal. Exists is equivalent to wildcard for value,
+                            so that a pod can tolerate all taints of a particular
+                            category.
+                          type: string
+                        tolerationSeconds:
+                          description: TolerationSeconds represents the period of
+                            time the toleration (which must be of effect NoExecute,
+                            otherwise this field is ignored) tolerates the taint.
+                            By default, it is not set, which means tolerate the taint
+                            forever (do not evict). Zero and negative values will
+                            be treated as 0 (evict immediately) by the system.
+                          format: int64
+                          type: integer
+                        value:
+                          description: Value is the taint value the toleration matches
+                            to. If the operator is Exists, the value should be empty,
+                            otherwise just a regular string.
+                          type: string
+                      type: object
+                    type: array
+                type: object
               oidcConfig:
                 description: OIDCConfig is the OIDC configuration as an alternative
                   to dex.
@@ -544,14 +722,15 @@ spec:
                               items:
                                 type: string
                               type: array
+                              x-kubernetes-list-type: atomic
                             secretName:
                               description: SecretName is the name of the secret used
-                                to terminate SSL traffic on 443. Field is left optional
-                                to allow SSL routing based on SNI hostname alone.
-                                If the SNI host in a listener conflicts with the "Host"
-                                header field used by an IngressRule, the SNI host
-                                is used for termination and value of the Host header
-                                is used for routing.
+                                to terminate TLS traffic on port 443. Field is left
+                                optional to allow TLS routing based on SNI hostname
+                                alone. If the SNI host in a listener conflicts with
+                                the "Host" header field used by an IngressRule, the
+                                SNI host is used for termination and value of the
+                                Host header is used for routing.
                               type: string
                           type: object
                         type: array
@@ -705,12 +884,127 @@ spec:
                       can currently be: - openshift - Use the OpenShift service CA
                       to request TLS config'
                     type: string
+                  env:
+                    description: Env lets you specify environment for repo server
+                      pods
+                    items:
+                      description: EnvVar represents an environment variable present
+                        in a Container.
+                      properties:
+                        name:
+                          description: Name of the environment variable. Must be a
+                            C_IDENTIFIER.
+                          type: string
+                        value:
+                          description: 'Variable references $(VAR_NAME) are expanded
+                            using the previous defined environment variables in the
+                            container and any service environment variables. If a
+                            variable cannot be resolved, the reference in the input
+                            string will be unchanged. The $(VAR_NAME) syntax can be
+                            escaped with a double $$, ie: $$(VAR_NAME). Escaped references
+                            will never be expanded, regardless of whether the variable
+                            exists or not. Defaults to "".'
+                          type: string
+                        valueFrom:
+                          description: Source for the environment variable's value.
+                            Cannot be used if value is not empty.
+                          properties:
+                            configMapKeyRef:
+                              description: Selects a key of a ConfigMap.
+                              properties:
+                                key:
+                                  description: The key to select.
+                                  type: string
+                                name:
+                                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                    TODO: Add other useful fields. apiVersion, kind,
+                                    uid?'
+                                  type: string
+                                optional:
+                                  description: Specify whether the ConfigMap or its
+                                    key must be defined
+                                  type: boolean
+                              required:
+                              - key
+                              type: object
+                            fieldRef:
+                              description: 'Selects a field of the pod: supports metadata.name,
+                                metadata.namespace, `metadata.labels[''<KEY>'']`,
+                                `metadata.annotations[''<KEY>'']`, spec.nodeName,
+                                spec.serviceAccountName, status.hostIP, status.podIP,
+                                status.podIPs.'
+                              properties:
+                                apiVersion:
+                                  description: Version of the schema the FieldPath
+                                    is written in terms of, defaults to "v1".
+                                  type: string
+                                fieldPath:
+                                  description: Path of the field to select in the
+                                    specified API version.
+                                  type: string
+                              required:
+                              - fieldPath
+                              type: object
+                            resourceFieldRef:
+                              description: 'Selects a resource of the container: only
+                                resources limits and requests (limits.cpu, limits.memory,
+                                limits.ephemeral-storage, requests.cpu, requests.memory
+                                and requests.ephemeral-storage) are currently supported.'
+                              properties:
+                                containerName:
+                                  description: 'Container name: required for volumes,
+                                    optional for env vars'
+                                  type: string
+                                divisor:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: Specifies the output format of the
+                                    exposed resources, defaults to "1"
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                resource:
+                                  description: 'Required: resource to select'
+                                  type: string
+                              required:
+                              - resource
+                              type: object
+                            secretKeyRef:
+                              description: Selects a key of a secret in the pod's
+                                namespace
+                              properties:
+                                key:
+                                  description: The key of the secret to select from.  Must
+                                    be a valid secret key.
+                                  type: string
+                                name:
+                                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                    TODO: Add other useful fields. apiVersion, kind,
+                                    uid?'
+                                  type: string
+                                optional:
+                                  description: Specify whether the Secret or its key
+                                    must be defined
+                                  type: boolean
+                              required:
+                              - key
+                              type: object
+                          type: object
+                      required:
+                      - name
+                      type: object
+                    type: array
                   execTimeout:
                     description: ExecTimeout specifies the timeout in seconds for
                       tool execution
                     type: integer
                   image:
                     description: Image is the ArgoCD Repo Server container image.
+                    type: string
+                  logFormat:
+                    description: LogFormat describes the log format that should be
+                      used by the Repo Server. Defaults to ArgoCDDefaultLogFormat
+                      if not configured. Valid options are text or json.
                     type: string
                   logLevel:
                     description: LogLevel describes the log level that should be used
@@ -839,6 +1133,115 @@ spec:
                     required:
                     - enabled
                     type: object
+                  env:
+                    description: Env lets you specify environment for API server pods
+                    items:
+                      description: EnvVar represents an environment variable present
+                        in a Container.
+                      properties:
+                        name:
+                          description: Name of the environment variable. Must be a
+                            C_IDENTIFIER.
+                          type: string
+                        value:
+                          description: 'Variable references $(VAR_NAME) are expanded
+                            using the previous defined environment variables in the
+                            container and any service environment variables. If a
+                            variable cannot be resolved, the reference in the input
+                            string will be unchanged. The $(VAR_NAME) syntax can be
+                            escaped with a double $$, ie: $$(VAR_NAME). Escaped references
+                            will never be expanded, regardless of whether the variable
+                            exists or not. Defaults to "".'
+                          type: string
+                        valueFrom:
+                          description: Source for the environment variable's value.
+                            Cannot be used if value is not empty.
+                          properties:
+                            configMapKeyRef:
+                              description: Selects a key of a ConfigMap.
+                              properties:
+                                key:
+                                  description: The key to select.
+                                  type: string
+                                name:
+                                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                    TODO: Add other useful fields. apiVersion, kind,
+                                    uid?'
+                                  type: string
+                                optional:
+                                  description: Specify whether the ConfigMap or its
+                                    key must be defined
+                                  type: boolean
+                              required:
+                              - key
+                              type: object
+                            fieldRef:
+                              description: 'Selects a field of the pod: supports metadata.name,
+                                metadata.namespace, `metadata.labels[''<KEY>'']`,
+                                `metadata.annotations[''<KEY>'']`, spec.nodeName,
+                                spec.serviceAccountName, status.hostIP, status.podIP,
+                                status.podIPs.'
+                              properties:
+                                apiVersion:
+                                  description: Version of the schema the FieldPath
+                                    is written in terms of, defaults to "v1".
+                                  type: string
+                                fieldPath:
+                                  description: Path of the field to select in the
+                                    specified API version.
+                                  type: string
+                              required:
+                              - fieldPath
+                              type: object
+                            resourceFieldRef:
+                              description: 'Selects a resource of the container: only
+                                resources limits and requests (limits.cpu, limits.memory,
+                                limits.ephemeral-storage, requests.cpu, requests.memory
+                                and requests.ephemeral-storage) are currently supported.'
+                              properties:
+                                containerName:
+                                  description: 'Container name: required for volumes,
+                                    optional for env vars'
+                                  type: string
+                                divisor:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: Specifies the output format of the
+                                    exposed resources, defaults to "1"
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                resource:
+                                  description: 'Required: resource to select'
+                                  type: string
+                              required:
+                              - resource
+                              type: object
+                            secretKeyRef:
+                              description: Selects a key of a secret in the pod's
+                                namespace
+                              properties:
+                                key:
+                                  description: The key of the secret to select from.  Must
+                                    be a valid secret key.
+                                  type: string
+                                name:
+                                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                    TODO: Add other useful fields. apiVersion, kind,
+                                    uid?'
+                                  type: string
+                                optional:
+                                  description: Specify whether the Secret or its key
+                                    must be defined
+                                  type: boolean
+                              required:
+                              - key
+                              type: object
+                          type: object
+                      required:
+                      - name
+                      type: object
+                    type: array
                   grpc:
                     description: GRPC defines the state for the Argo CD Server GRPC
                       options.
@@ -883,11 +1286,12 @@ spec:
                                   items:
                                     type: string
                                   type: array
+                                  x-kubernetes-list-type: atomic
                                 secretName:
                                   description: SecretName is the name of the secret
-                                    used to terminate SSL traffic on 443. Field is
-                                    left optional to allow SSL routing based on SNI
-                                    hostname alone. If the SNI host in a listener
+                                    used to terminate TLS traffic on port 443. Field
+                                    is left optional to allow TLS routing based on
+                                    SNI hostname alone. If the SNI host in a listener
                                     conflicts with the "Host" header field used by
                                     an IngressRule, the SNI host is used for termination
                                     and value of the Host header is used for routing.
@@ -937,14 +1341,15 @@ spec:
                               items:
                                 type: string
                               type: array
+                              x-kubernetes-list-type: atomic
                             secretName:
                               description: SecretName is the name of the secret used
-                                to terminate SSL traffic on 443. Field is left optional
-                                to allow SSL routing based on SNI hostname alone.
-                                If the SNI host in a listener conflicts with the "Host"
-                                header field used by an IngressRule, the SNI host
-                                is used for termination and value of the Host header
-                                is used for routing.
+                                to terminate TLS traffic on port 443. Field is left
+                                optional to allow TLS routing based on SNI hostname
+                                alone. If the SNI host in a listener conflicts with
+                                the "Host" header field used by an IngressRule, the
+                                SNI host is used for termination and value of the
+                                Host header is used for routing.
                               type: string
                           type: object
                         type: array
@@ -954,6 +1359,11 @@ spec:
                   insecure:
                     description: Insecure toggles the insecure flag.
                     type: boolean
+                  logFormat:
+                    description: LogFormat refers to the log level to be used by the
+                      ArgoCD Server component. Defaults to ArgoCDDefaultLogFormat
+                      if not configured. Valid options are text or json.
+                    type: string
                   logLevel:
                     description: LogLevel refers to the log level to be used by the
                       ArgoCD Server component. Defaults to ArgoCDDefaultLogLevel if
@@ -1221,6 +1631,12 @@ spec:
                   one of the  Argo CD server component Pods had a failure. Unknown:
                   For some reason the state of the Argo CD server component could
                   not be obtained.'
+                type: string
+              ssoConfig:
+                description: 'SSOConfig defines the status of SSO configuration. Success:
+                  Only one SSO provider is configured in CR. Failed: More than one
+                  SSO providers are configure in CR. Unknown: For some reason the
+                  SSO configuration could not be obtained.'
                 type: string
             type: object
         type: object

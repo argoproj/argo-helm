@@ -3,9 +3,10 @@
 operator:
   clusterDomain: ""
   nsToWatch: "argocd-operator-system,argocd-system"
+  nsClusterConfig: ""
   image:
-    repository: statcan/argocd-operator
-    tag: v0.0.16
+    repository: quay.io/argoprojlabs/argocd-operator
+    tag: v0.1.0
     pullPolicy: IfNotPresent
   imagePullSecrets: []
   podAnnotations: {}
