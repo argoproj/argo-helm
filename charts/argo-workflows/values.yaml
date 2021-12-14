@@ -454,6 +454,18 @@ server:
   # -- Extra containers to be added to the server deployment
   extraContainers: []
 
+  additionalClusterWorkflowTemplates: []
+
+  additionalCronWorkflows: []
+
+  additionalWorkflowEventBindings: []
+
+  additionalWorkflows: []
+
+  additionalWorkflowTaskSets: []
+
+  additionalWorkflowTemplates: []
+
 # -- Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false
 # -- Use static credentials for S3 (eg. when not using AWS IRSA)
@@ -494,3 +506,4 @@ artifactRepository:
   # serviceAccountKeySecret:
   # name: my-gcs-credentials
   # key: serviceAccountKey
+
