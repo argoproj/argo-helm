@@ -98,6 +98,8 @@ spec:
         - mountPath: /home/argocd/.aws
           name: aws-config
         {{- end }}
+        - mountPath: /home/argocd
+          name: plugins-home
         - mountPath: /tmp
           name: tmp-dir
         ports:
@@ -216,6 +218,8 @@ spec:
             path: ca.crt
           optional: true
           secretName: argocd-repo-server-tls
+      - emptyDir: {}
+        name: plugins-home
       {{- if .Values.server.initContainers }}
       initContainers:
       {{- toYaml .Values.server.initContainers | nindent 6 }}
