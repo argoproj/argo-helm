@@ -62,7 +62,7 @@ kubectl apply -k https://github.com/argoproj-labs/applicationset.git/manifests/c
 | args.dryRun | bool | `false` | Enable dry run mode |
 | args.enableLeaderElection | bool | `false` | The default leader election setting |
 | args.metricsAddr | string | `":8080"` | The default metric address |
-| args.namespace | string | `"argocd"` | The default Argo CD repo namespace |
+| args.namespace | string | `""` | Namespace where ArgoCD is deployed to (defaults to .Release.Namespace) |
 | args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
 | args.probeBindAddr | string | `":8081"` | The default health check port |
 | extraArgs | list | `[]` | List of extra cli args to add |
@@ -73,6 +73,17 @@ kubectl apply -k https://github.com/argoproj-labs/applicationset.git/manifests/c
 | image.repository | string | `"quay.io/argoproj/argocd-applicationset"` | The image repository |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
+| metrics.enabled | bool | `false` | Deploy metrics service |
+| metrics.service.annotations | object | `{}` | Metrics service annotations |
+| metrics.service.labels | object | `{}` | Metrics service labels |
+| metrics.service.servicePort | int | `8085` | Metrics service port |
+| metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
+| metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
+| metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
+| metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
+| metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
+| metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
+| metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | mountGPGKeyringVolume | bool | `true` | Mount an emptyDir volume for `gpg-keyring` |
 | mountGPGKeysVolume | bool | `false` | Mount the `argocd-gpg-keys-cm` volume |
 | mountSSHKnownHostsVolume | bool | `true` | Mount the `argocd-ssh-known-hosts-cm` volume |

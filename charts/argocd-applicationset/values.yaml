@@ -20,8 +20,8 @@ args:
   probeBindAddr: :8081
   # -- The default leader election setting
   enableLeaderElection: false
-  # -- The default Argo CD repo namespace
-  namespace: argocd
+  # -- Namespace where ArgoCD is deployed to (defaults to .Release.Namespace)
+  namespace: ""
   # -- The default Argo CD repo server address
   argocdRepoServer: argocd-repo-server:8081
   # -- How application is synced between the generator and the cluster
@@ -30,6 +30,35 @@ args:
   debug: false
   # -- Enable dry run mode
   dryRun: false
+
+  ## Metrics service configuration
+metrics:
+  # -- Deploy metrics service
+  enabled: false
+  service:
+    # -- Metrics service annotations
+    annotations: {}
+    # -- Metrics service labels
+    labels: {}
+    # -- Metrics service port
+    servicePort: 8085
+  serviceMonitor:
+    # -- Enable a prometheus ServiceMonitor
+    enabled: false
+    # -- Prometheus ServiceMonitor interval
+    interval: 30s
+    # -- Prometheus [RelabelConfigs] to apply to samples before scraping
+    relabelings: []
+    # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
+    metricRelabelings: []
+    # -- Prometheus ServiceMonitor selector
+    selector: {}
+      # prometheus: kube-prometheus
+
+    # -- Prometheus ServiceMonitor namespace
+    namespace: "" # monitoring
+    # -- Prometheus ServiceMonitor labels
+    additionalLabels: {}
 
 # -- If defined, uses a Secret to pull an image from a private Docker registry or repository.
 imagePullSecrets: []

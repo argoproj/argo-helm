@@ -1,0 +1,10 @@
+{{- if .Values.authScripts.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    {{- include "argocd-image-updater.labels" . | nindent 4 }}
+  name: argocd-image-updater-authscripts
+data:
+  {{- toYaml .Values.authScripts.scripts | nindent 2}}
+{{- end }}

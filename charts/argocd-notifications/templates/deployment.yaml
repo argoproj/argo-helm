@@ -34,7 +34,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ include "argocd-notifications.name" . }}-controller
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

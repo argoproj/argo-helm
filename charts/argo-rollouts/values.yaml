@@ -17,6 +17,14 @@ controller:
     tag: ""
     pullPolicy: IfNotPresent
 
+  ## Additional command line arguments to pass to rollouts-controller
+  ##
+  extraArgs: []
+
+  ## Additional containers to add to the rollouts controller deployment
+  ## This will be rendered as the literal yaml
+  extraContainers: []
+
   resources: {}
   #  limits:
   #    cpu: 100m
@@ -110,10 +118,15 @@ dashboard:
     repository: argoproj/kubectl-argo-rollouts
     tag: ""
     pullPolicy: IfNotPresent
+  ## Additional command line arguments to pass to rollouts-dashboard
+  ##
+  extraArgs: []
   resources: {}
   podSecurityContext:
     runAsNonRoot: true
   containerSecurityContext: {}
+  service:
+    type: ClusterIP
   serviceAccount:
     create: true
     annotations: {}
