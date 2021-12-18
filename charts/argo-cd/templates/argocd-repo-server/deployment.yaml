@@ -183,9 +183,7 @@ spec:
         name: var-files
       - emptyDir: {}
         name: plugins
-      {{- if or .Values.repoServer.initContainers .Values.repoServer.enableCopyutilInitContainer }}
       initContainers:
-      {{- if .Values.repoServer.enableCopyutilInitContainer }}
       - command:
         - cp
         - -n
@@ -196,10 +194,8 @@ spec:
         volumeMounts:
         - mountPath: /var/run/argocd
           name: var-files
-      {{- end }}
       {{- if .Values.repoServer.initContainers }}
       {{- toYaml .Values.repoServer.initContainers | nindent 6 }}
-      {{- end }}
       {{- end }}
 {{- if .Values.repoServer.priorityClassName }}
       priorityClassName: {{ .Values.repoServer.priorityClassName }}
