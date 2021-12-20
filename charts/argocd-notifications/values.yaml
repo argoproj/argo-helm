@@ -133,6 +133,10 @@ cm:
   # -- Whether helm chart creates controller config map
   create: true
 
+  # -- The name of the config map to use.
+  ## If not set and create is true, the default name 'argocd-notifications-cm' is used
+  name: ""
+
 # -- Contains centrally managed global application subscriptions
 ## For more information: https://argocd-notifications.readthedocs.io/en/stable/subscriptions/
 subscriptions: {}

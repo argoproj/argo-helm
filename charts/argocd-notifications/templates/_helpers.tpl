@@ -120,3 +120,11 @@ Create the name of the secret to use
 {{- define "argocd-notifications.secretName" -}}
 {{ default "argocd-notifications-secret" .Values.secret.name }}
 {{- end -}}
+
+
+{{/*
+Create the name of the configmap to use
+*/}}
+{{- define "argocd-notifications.configMapName" -}}
+{{ default "argocd-notifications-cm" .Values.cm.name }}
+{{- end -}}
