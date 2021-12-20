@@ -118,7 +118,11 @@ Create the name of the bot service account to use
 Create the name of the secret to use
 */}}
 {{- define "argocd-notifications.secretName" -}}
-{{ default "argocd-notifications-secret" .Values.secret.name }}
+{{- if .Values.secret.create -}}
+    {{ default (printf "%s-secret" (include "argocd-notifications.fullname" .)) .Values.secret.name }}
+{{- else -}}
+    {{ default "argocd-notifications-secret" .Values.secret.name }}
+{{- end -}}
 {{- end -}}
 
 
