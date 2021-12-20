@@ -45,6 +45,8 @@ spec:
             {{- if .Values.metrics.enabled }}
             - --metrics-port={{ .Values.metrics.port }}
             {{- end }}
+            - --secret-name={{ include "argocd-notifications.secretName" . }}
+            - --config-map-name={{ include "argocd-notifications.configMapName" . }}
             {{- range .Values.extraArgs }}
             - {{ . | squote }}
             {{- end }}

@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: argocd-notifications-cm
+  name: {{ include "argocd-notifications.configMapName" . }}
   labels:
     {{- include "argocd-notifications.labels" . | nindent 4 }}
 data:

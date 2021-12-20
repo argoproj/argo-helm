@@ -23,6 +23,7 @@ docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:late
 | affinity | object | `{}` | Assign custom [affinity] rules |
 | argocdUrl | string | `nil` | ArgoCD dashboard url; used in place of {{.context.argocdUrl}} in templates |
 | cm.create | bool | `true` | Whether helm chart creates controller config map |
+| cm.name | string | `""` | The name of the config map to use. |
 | containerSecurityContext | object | `{}` | Container Security Context |
 | context | object | `{}` | Define user-defined context |
 | extraArgs | list | `[]` | Extra arguments to provide to the controller |
@@ -48,6 +49,7 @@ docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:late
 | secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
 | secret.create | bool | `true` | Whether helm chart creates controller secret |
 | secret.items | object | `{}` | Generic key:value pairs to be inserted into the secret |
+| secret.name | string | `""` | The name of the secret to use. |
 | securityContext | object | `{"runAsNonRoot":true}` | Pod Security Context |
 | serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
