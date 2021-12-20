@@ -35,6 +35,10 @@ global:
   #   hostnames:
   #   - git.myhostname
 
+  # -- Additional labels to add to all resources
+  additionalLabels: {}
+    # app: argo-cd
+
   networkPolicy:
     # -- Create NetworkPolicy objects for all components
     create: false
@@ -215,6 +219,11 @@ controller:
   metrics:
     # -- Deploy metrics service
     enabled: false
+    applicationLabels:
+      # -- Enables additional labels in argocd_app_labels metric
+      enabled: false
+      # -- Additional labels
+      labels: {}
     service:
       # -- Metrics service annotations
       annotations: {}
@@ -288,6 +297,25 @@ controller:
 
   # -- Additional containers to be added to the application controller pod
   extraContainers: []
+
+  # -- Init containers to add to the application controller pod
+  ## If your target Kubernetes cluster(s) require a custom auth provider executable
+  ## you could use this (and the same in the server pod) to bootstrap
+  ## that executable into your ArgoCD container
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+  #        mv linux-amd64/helm /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+  #  volumeMounts:
+  #  - mountPath: /usr/local/bin/helm
+  #    name: custom-tools
+  #    subPath: helm
 
 ## Dex
 dex:
@@ -467,6 +495,22 @@ dex:
   # -- Additional containers to be added to the dex pod
   extraContainers: []
 
+  # -- Init containers to add to the dex pod
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+  #        mv linux-amd64/helm /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+  #  volumeMounts:
+  #  - mountPath: /usr/local/bin/helm
+  #    name: custom-tools
+  #    subPath: helm
+
 ## Redis
 redis:
   # -- Enable redis
@@ -566,6 +610,22 @@ redis:
 
   # -- Additional containers to be added to the redis pod
   extraContainers: []
+
+  # -- Init containers to add to the redis pod
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+  #        mv linux-amd64/helm /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+  #  volumeMounts:
+  #  - mountPath: /usr/local/bin/helm
+  #    name: custom-tools
+  #    subPath: helm
 
   service:
     # -- Redis service annotations
@@ -1197,6 +1257,52 @@ server:
   #   - name: copy-portal-skins
   #     mountPath: /srv/var/lib/lemonldap-ng/portal/skins
 
+  # -- Init containers to add to the server pod
+  ## If your target Kubernetes cluster(s) require a custom auth provider executable
+  ## you could use this (and the same in the application controller pod) to bootstrap
+  ## that executable into your ArgoCD container
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+  #        mv linux-amd64/helm /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+  #  volumeMounts:
+  #  - mountPath: /usr/local/bin/helm
+  #    name: custom-tools
+  #    subPath: helm
+
+  extensions:
+    # -- Enable support for extensions
+    ## This function in tech preview stage, do expect unstability or breaking changes in newer versions. Bump image.tag if necessary.
+    enabled: false
+
+    image:
+      # -- Repository to use for extensions image
+      repository: "ghcr.io/argoproj-labs/argocd-extensions"
+      # -- Tag to use for extensions image
+      tag: "v0.1.0"
+      # -- Image pull policy for extensions
+      imagePullPolicy: IfNotPresent
+
+    # -- Resource limits and requests for the argocd-extensions container
+    resources: {}
+    #  limits:
+    #    cpu: 50m
+    #    memory: 128Mi
+    #  requests:
+    #    cpu: 10m
+    #    memory: 64Mi
+
+    # -- Extensions to be loaded into the server
+    contents: []
+    # - name: argo-rollouts
+    #   url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.1.0/extension.tar
+
 ## Repo Server
 repoServer:
   # -- Repo server name
@@ -1484,6 +1590,8 @@ configs:
       # @default -- See [values.yaml]
       ssh_known_hosts: |
         bitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==
+        github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
+        github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
         github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
         gitlab.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFSMqzJeV9rUzU4kWitGjeR4PWSa29SPqJ1fVkhtj3Hw9xjLVXVYrU9QlYWrOLXBpQ6KWjbjTDTdDkoohFzgbEY=
         gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf

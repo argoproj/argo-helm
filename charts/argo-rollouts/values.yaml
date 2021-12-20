@@ -126,6 +126,8 @@ dashboard:
   podSecurityContext:
     runAsNonRoot: true
   containerSecurityContext: {}
+  service:
+    type: ClusterIP
   serviceAccount:
     create: true
     annotations: {}

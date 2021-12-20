@@ -53,6 +53,9 @@ spec:
             - name: http
               containerPort: {{ (split ":" .Values.args.probeBindAddr)._1 }}
               protocol: TCP
+            - name: metrics
+              containerPort: {{ (split ":" .Values.args.metricsAddr)._1 }}
+              protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
