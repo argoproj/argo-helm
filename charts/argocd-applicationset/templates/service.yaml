@@ -7,7 +7,7 @@ metadata:
 spec:
   ports:
   - name: webhook
-    port: "{{ .Values.args.webhookAddr }}"
+    port: {{ (split ":" .Values.args.webhookAddr)._1 }}
     protocol: TCP
     targetPort: webhook
   selector:
