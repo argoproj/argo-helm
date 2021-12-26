@@ -60,7 +60,7 @@ jobs:
         if: |
           contains(steps.list-changed.outputs.changed_charts, 'argocd-applicationset')
         run: |
-          kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+          kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
       - name: Skip HPA tests of ArgoCD
         if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
