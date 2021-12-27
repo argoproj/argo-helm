@@ -60,6 +60,7 @@ jobs:
         if: |
           contains(steps.list-changed.outputs.changed_charts, 'argocd-applicationset')
         run: |
+          kubectl create namespace argocd
           kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
       - name: Skip HPA tests of ArgoCD
