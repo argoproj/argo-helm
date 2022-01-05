@@ -11,6 +11,17 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- with .Values.dashboard.service.externalIPs }}
+  externalIPs: {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if eq .Values.dashboard.service.type "LoadBalancer" }}
+    {{- with .Values.dashboard.service.loadBalancerIP }}
+  loadBalancerIP: {{ . | quote }}
+    {{- end }}
+    {{- with .Values.dashboard.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
   type: {{ .Values.dashboard.service.type }}
   ports:
   - name: dashboard

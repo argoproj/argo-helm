@@ -128,6 +128,12 @@ dashboard:
   containerSecurityContext: {}
   service:
     type: ClusterIP
+    # -- LoadBalancer will get created with the IP specified in this field
+    loadBalancerIP: ""
+    # -- Source IP ranges to allow access to service from
+    loadBalancerSourceRanges: []
+    # -- Dashboard service external IPs
+    externalIPs: []
   serviceAccount:
     create: true
     annotations: {}

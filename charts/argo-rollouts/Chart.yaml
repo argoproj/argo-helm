@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "v1.1.0"
 description: A Helm chart for Argo Rollouts
 name: argo-rollouts
-version: 2.7.0
+version: 2.8.0
 icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 maintainers:
@@ -11,4 +11,5 @@ maintainers:
   - name: jessesuen
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Support high availability (HA) mode for controller with multiple replicas"
+    - "[Added]: Ability to specify LoadBalancer settings for dashboard svc"
+    - "[Added]: Ability to specify external IPs for dashboard svc"
