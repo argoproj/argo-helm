@@ -72,6 +72,9 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
 | dashboard.extraArgs | list | `[]` | Additional arguments for the dashboard. A list of flags. |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
+| dashboard.service.externalIPs | list | `[]` | Dashboard service external IPs |
+| dashboard.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
+| dashboard.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
 | dashboard.service.type | string | `ClusterIP` | Sets the type of the Service |
 | dashboard.tolerations | list | `[]` | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
 | dashboard.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
