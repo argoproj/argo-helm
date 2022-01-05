@@ -11,6 +11,17 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- with .Values.dashboard.service.externalIPs }}
+  externalIPs: {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if eq .Values.dashboard.service.type "LoadBalancer" }}
+    {{- with .Values.dashboard.service.loadBalancerIP }}
+  loadBalancerIP: {{ . | quote }}
+    {{- end }}
+    {{- with .Values.dashboard.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
   type: {{ .Values.dashboard.service.type }}
   ports:
   - name: dashboard
@@ -20,18 +31,4 @@ spec:
   selector:
     app.kubernetes.io/component: {{ .Values.dashboard.component }}
     {{- include "argo-rollouts.selectorLabels" . | nindent 4 }}
-
-  {{- if eq .Values.dashboard.service.type "LoadBalancer" }}
-  {{- if .Values.dashboard.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.dashboard.service.loadBalancerIP | quote }}
-  {{- end }}
-  {{- if .Values.dashboard.service.externalIPs }}
-  externalIPs: {{ .Values.dashboard.service.externalIPs }}
-  {{- end }}
-  {{- if .Values.dashboard.service.loadBalancerSourceRanges }}
-  loadBalancerSourceRanges:
-  {{ toYaml .Values.dashboard.service.loadBalancerSourceRanges | indent 4 }}
-  {{- end }}
-  {{- end -}}
-
 {{- end }}
