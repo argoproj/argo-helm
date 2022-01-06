@@ -147,14 +147,15 @@ extraVolumes: []
 extraArgs: []
   # - --loglevel=warn
 
-# -- Override APIVersions
-# If you want to template helm charts but cannot access k8s API server
-# you can set api versions here
+## Override APIVersions
+## If you want to template helm charts but cannot access k8s API server
+## you can set api versions here
 apiVersionOverrides:
   # -- String to override apiVersion of ingresses rendered by this helm chart
   ingress: "" # networking.k8s.io/v1beta1
 
-# -- [Webhook for the Git Generator](https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
+## Webhook for the Git Generator
+## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
 webhook:
   ingress:
     # -- Enable an ingress resource for Webhooks
