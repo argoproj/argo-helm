@@ -56,12 +56,12 @@ jobs:
         run: |
           kubectl apply -f charts/argo-cd/crds
 
-      - name: Deploy latest ArgoCD
-        if: |
-          contains(steps.list-changed.outputs.changed_charts, 'argocd-applicationset')
-        run: |
-          kubectl create namespace argocd
-          kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+      # - name: Deploy latest ArgoCD
+      #   if: |
+      #     contains(steps.list-changed.outputs.changed_charts, 'argocd-applicationset')
+      #   run: |
+      #     kubectl create namespace argocd
+      #     kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
       - name: Skip HPA tests of ArgoCD
         if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
