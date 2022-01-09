@@ -147,6 +147,9 @@ extraVolumes: []
 extraArgs: []
   # - --loglevel=warn
 
+# -- Override the Kubernetes version, which is used to evaluate certain manifests
+kubeVersionOverride: ""
+
 ## Override APIVersions
 ## If you want to template helm charts but cannot access k8s API server
 ## you can set api versions here

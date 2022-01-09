@@ -74,6 +74,7 @@ kubectl apply -k https://github.com/argoproj-labs/applicationset.git/manifests/c
 | image.repository | string | `"quay.io/argoproj/argocd-applicationset"` | The image repository |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
+| kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | metrics.enabled | bool | `false` | Deploy metrics service |
 | metrics.service.annotations | object | `{}` | Metrics service annotations |
 | metrics.service.labels | object | `{}` | Metrics service labels |
