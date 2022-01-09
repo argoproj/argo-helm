@@ -170,8 +170,7 @@ webhook:
     # -- List of ingress hosts
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
-    hosts:
-      []
+    hosts: []
       # - argocd-applicationset.example.com
 
     # -- List of ingress paths
@@ -180,8 +179,7 @@ webhook:
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
     # -- Additional ingress paths
-    extraPaths:
-      []
+    extraPaths: []
       # - path: /*
       #   backend:
       #     serviceName: ssl-redirect
@@ -196,8 +194,7 @@ webhook:
       #         name: use-annotation
 
     # -- Ingress TLS configuration
-    tls:
-      []
+    tls: []
       # - secretName: argocd-applicationset-tls
       #   hosts:
       #     - argocd-applicationset.example.com
