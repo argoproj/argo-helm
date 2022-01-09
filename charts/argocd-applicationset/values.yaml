@@ -146,3 +146,58 @@ extraVolumes: []
 # -- List of extra cli args to add
 extraArgs: []
   # - --loglevel=warn
+
+# -- Override the Kubernetes version, which is used to evaluate certain manifests
+kubeVersionOverride: ""
+
+## Override APIVersions
+## If you want to template helm charts but cannot access k8s API server
+## you can set api versions here
+apiVersionOverrides:
+  # -- String to override apiVersion of ingresses rendered by this helm chart
+  ingress: "" # networking.k8s.io/v1beta1
+
+## Webhook for the Git Generator
+## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
+webhook:
+  ingress:
+    # -- Enable an ingress resource for Webhooks
+    enabled: false
+    # -- Additional ingress annotations
+    annotations: {}
+    # -- Additional ingress labels
+    labels: {}
+    # -- Defines which ingress controller will implement the resource
+    ingressClassName: ""
+
+    # -- List of ingress hosts
+    ## Hostnames must be provided if Ingress is enabled.
+    ## Secrets must be manually created in the namespace
+    hosts: []
+      # - argocd-applicationset.example.com
+
+    # -- List of ingress paths
+    paths:
+      - /api/webhook
+    # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
+    pathType: Prefix
+    # -- Additional ingress paths
+    extraPaths: []
+      # - path: /*
+      #   backend:
+      #     serviceName: ssl-redirect
+      #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
+
+    # -- Ingress TLS configuration
+    tls: []
+      # - secretName: argocd-applicationset-tls
+      #   hosts:
+      #     - argocd-applicationset.example.com
