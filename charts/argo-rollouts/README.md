@@ -31,12 +31,13 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 
 | :warning: WARNING when the Service type is set to LoadBalancer or NodePort |
 |:---------------------------------------------------------------------------|
-| The chart provides an option to change the service type (`dashboard.service.type`). Dashboard was never intended to be exposed as an administrative console -- it started out as a local view available via CLI. It should be protected by something (e.g. network access or even better an oauth proxy). |
+| The chart provides an option to change the service type (`dashboard.service.type`). Also it provides the ability to expose the dashboard via Ingress. Dashboard was never intended to be exposed as an administrative console -- it started out as a local view available via CLI. It should be protected by something (e.g. network access or even better an oauth proxy). |
 
 ## Chart Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
 | clusterInstall | bool | `true` | `false` runs controller in namespaced mode (does not require cluster RBAC) |
 | controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
 | controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
@@ -56,6 +57,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | imagePullSecrets | list | `[]` | Registry secret names as an array |
 | installCRDs | bool | `true` | Install and upgrade CRDs |
 | keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
+| kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | crdAnnotations | object | `{}` | Annotations to be added to all CRDs |
 | podAnnotations | object | `{}` | Annotations to be added to the Rollout pods |
 | podLabels | object | `{}` | Labels to be added to the Rollout pods |
@@ -84,6 +86,20 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.serviceAccount.create | bool | `true` | Specifies whether a dashboard service account should be created |
 | dashboard.serviceAccount.annotations | object | `{}` | Annotations to add to the dashboard service account |
 | dashboard.serviceAccount.name | string | `""` | The name of the dashboard service account to use. If not set and create is true, a name is generated using the fullname template |
+| dashboard.service.annotations | object | `{}` | Dashboard service annotations |
+| dashboard.service.labels | object | `{}` | Dashboard service labels |
+| dashboard.service.portName | string | `dashboard` | Dashboard service port name |
+| dashboard.service.port | int | `3100` | Dashboard service port |
+| dashboard.service.targetPort | int | `3100` | Dashboard service target port |
+| dashboard.ingress.enabled | bool | `false` | Enable dashboard ingress support |
+| dashboard.ingress.annotations | object | `{}` | Dashboard ingress annotations |
+| dashboard.ingress.labels | object | `{}` | Dashboard ingress labels |
+| dashboard.ingress.ingressClassName | string | `""` | Dashboard ingress class name |
+| dashboard.ingress.hosts | list | `[]` | Dashboard ingress hosts |
+| dashboard.ingress.paths | list | `["/"]` | Dashboard ingress paths |
+| dashboard.ingress.pathType | string | `Prefix` | Dashboard ingress path type |
+| dashboard.ingress.extraPaths | list | `[]` | Dashboard ingress extra paths |
+| dashboard.ingress.tls | list | `[]` | Dashboard ingress tls |
 
 ## Upgrading
 

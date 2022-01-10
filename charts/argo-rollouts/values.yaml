@@ -3,6 +3,25 @@ keepCRDs: true
 
 clusterInstall: true
 
+## String to partially override "argo-rollouts.fullname" template
+##
+nameOverride:
+
+## String to fully override "argo-rollouts.fullname" template
+##
+fullnameOverride:
+
+## Override APIVersions
+## If you want to template helm charts but cannot access k8s API server
+## you can set api versions here
+apiVersionOverrides:
+  # String to override apiVersion of ingresses rendered by this helm chart
+  ingress: "" # networking.k8s.io/v1beta1
+
+## Override the Kubernetes version, which is used to evaluate certain manifests
+##
+kubeVersionOverride: ""
+
 controller:
   component: rollouts-controller
   ## Node selectors and tolerations for server scheduling to nodes with taints
@@ -134,9 +153,54 @@ dashboard:
     loadBalancerSourceRanges: []
     # -- Dashboard service external IPs
     externalIPs: []
+    # -- Service annotations
+    annotations: {}
+    # -- Service labels
+    labels: {}
+    # -- Service port name
+    portName: dashboard
+    # -- Service port
+    port: 3100
+    # -- Service target port
+    targetPort: 3100
   serviceAccount:
     create: true
     annotations: {}
     # The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name: ""
+  ## Ingress configuration.
+  ## ref: https://kubernetes.io/docs/user-guide/ingress/
+  ##
+  ingress:
+    enabled: false
+    annotations: {}
+    labels: {}
+    ingressClassName: ""
+
+    ## Argo Rollouts Dashboard Ingress.
+    ## Hostnames must be provided if Ingress is enabled.
+    ## Secrets must be manually created in the namespace
+    ##
+    hosts: []
+      # - argorollouts.example.com
+    paths:
+      - /
+    pathType: Prefix
+    extraPaths: []
+      # - path: /*
+      #   backend:
+      #     serviceName: ssl-redirect
+      #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
+    tls: []
+      # - secretName: argorollouts-example-tls
+      #   hosts:
+      #     - argorollouts.example.com
