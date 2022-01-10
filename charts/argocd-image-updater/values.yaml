@@ -40,6 +40,9 @@ extraEnv: []
   #   value: "us-west-1"
 
 config:
+  # -- API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`)
+  applicationsAPIKind: ""
+
   # Described in detail here https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags
   argocd:
     # -- Use the gRPC-web protocol to connect to the Argo CD API
@@ -50,6 +53,18 @@ config:
     insecure: false
     # -- If specified, use an unencrypted HTTP connection to the ArgoCD API instead of TLS.
     plaintext: false
+
+  # -- Disable kubernetes events
+  disableKubeEvents: false
+
+  # -- Username to use for Git commits
+  gitCommitUser: ""
+
+  # -- E-Mail address to use for Git commits
+  gitCommitMail: ""
+
+  # -- Changing the Git commit message
+  gitCommitTemplate: ""
 
   # -- ArgoCD Image Update log level
   logLevel: "info"

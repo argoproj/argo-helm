@@ -23,6 +23,7 @@ controller:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  replicas: 1
   image:
     registry: quay.io
     repository: argoproj/argo-rollouts
@@ -137,6 +138,14 @@ dashboard:
   podSecurityContext:
     runAsNonRoot: true
   containerSecurityContext: {}
+  service:
+    type: ClusterIP
+    # -- LoadBalancer will get created with the IP specified in this field
+    loadBalancerIP: ""
+    # -- Source IP ranges to allow access to service from
+    loadBalancerSourceRanges: []
+    # -- Dashboard service external IPs
+    externalIPs: []
   serviceAccount:
     create: true
     annotations: {}
