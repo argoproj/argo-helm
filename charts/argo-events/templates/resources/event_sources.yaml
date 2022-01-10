@@ -1,0 +1,30 @@
+{{- if .Values.server.additionalEventSources }}
+apiVersion: v1
+kind: List
+items:
+  {{- range .Values.server.additionalEventSources }}
+  - apiVersion: argoproj.io/v1alpha1
+    kind: EventSource
+    metadata:
+      {{- with .additionalAnnotations }}
+      annotations:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+      {{- end }}
+      {{- with .additionalLabels }}
+      labels:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      name: {{ .name }}
+      {{- with .namespace }}
+      namespace: {{ . }}
+      {{- end }}
+      {{- with .finalizers }}
+      finalizers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- toYaml .spec | nindent 6 }}
+  {{- end }}
+{{- end }}
