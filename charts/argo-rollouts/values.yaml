@@ -182,14 +182,12 @@ dashboard:
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
     ##
-    hosts:
-      []
+    hosts: []
       # - argorollouts.example.com
     paths:
       - /
     pathType: Prefix
-    extraPaths:
-      []
+    extraPaths: []
       # - path: /*
       #   backend:
       #     serviceName: ssl-redirect
@@ -202,8 +200,7 @@ dashboard:
       #       name: ssl-redirect
       #       port:
       #         name: use-annotation
-    tls:
-      []
+    tls: []
       # - secretName: argorollouts-example-tls
       #   hosts:
       #     - argorollouts.example.com
