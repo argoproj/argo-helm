@@ -67,7 +67,9 @@ Create the name of the service account to use
 Return the appropriate apiVersion for ingress
 */}}
 {{- define "argo-rollouts.ingress.apiVersion" -}}
-{{- if semverCompare "<1.14-0" (include "argo-rollouts.kubeVersion" $) -}}
+{{- if .Values.apiVersionOverrides.ingress -}}
+{{- print .Values.apiVersionOverrides.ingress -}}
+{{- else if semverCompare "<1.14-0" (include "argo-rollouts.kubeVersion" $) -}}
 {{- print "extensions/v1beta1" -}}
 {{- else if semverCompare "<1.19-0" (include "argo-rollouts.kubeVersion" $) -}}
 {{- print "networking.k8s.io/v1beta1" -}}

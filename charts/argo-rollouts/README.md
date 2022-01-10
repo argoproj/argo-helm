@@ -37,6 +37,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
 | clusterInstall | bool | `true` | `false` runs controller in namespaced mode (does not require cluster RBAC) |
 | controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
 | controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
@@ -56,6 +57,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | imagePullSecrets | list | `[]` | Registry secret names as an array |
 | installCRDs | bool | `true` | Install and upgrade CRDs |
 | keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
+| kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | crdAnnotations | object | `{}` | Annotations to be added to all CRDs |
 | podAnnotations | object | `{}` | Annotations to be added to the Rollout pods |
 | podLabels | object | `{}` | Labels to be added to the Rollout pods |
