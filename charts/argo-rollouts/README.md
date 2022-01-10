@@ -31,7 +31,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 
 | :warning: WARNING when the Service type is set to LoadBalancer or NodePort |
 |:---------------------------------------------------------------------------|
-| The chart provides an option to change the service type (`dashboard.service.type`). Dashboard was never intended to be exposed as an administrative console -- it started out as a local view available via CLI. It should be protected by something (e.g. network access or even better an oauth proxy). |
+| The chart provides an option to change the service type (`dashboard.service.type`). Also it provides the ability to expose the dashboard via Ingress. Dashboard was never intended to be exposed as an administrative console -- it started out as a local view available via CLI. It should be protected by something (e.g. network access or even better an oauth proxy). |
 
 ## Chart Values
 
