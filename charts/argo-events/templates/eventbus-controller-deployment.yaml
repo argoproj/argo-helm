@@ -61,6 +61,9 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 3
           resources: {{- toYaml .Values.eventbusController.resources | nindent 12 }}
+          {{- with .Values.eventbusController.containerSecurityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- with .Values.eventbusController.priorityClassName }}
       priorityClassName: {{ . | quote }}
       {{- end }}

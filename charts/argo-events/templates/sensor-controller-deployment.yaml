@@ -59,6 +59,9 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 3
           resources: {{- toYaml .Values.sensorController.resources | nindent 12 }}
+          {{- with .Values.sensorController.containerSecurityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- with .Values.sensorController.priorityClassName }}
       priorityClassName: {{ . | quote }}
       {{- end }}

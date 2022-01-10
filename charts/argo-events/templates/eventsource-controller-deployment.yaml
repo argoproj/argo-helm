@@ -59,6 +59,9 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 3
           resources: {{- toYaml .Values.eventsourceController.resources | nindent 12 }}
+          {{- with .Values.eventsourceController.containerSecurityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- with .Values.eventsourceController.priorityClassName }}
       priorityClassName: {{ . | quote }}
       {{- end }}
