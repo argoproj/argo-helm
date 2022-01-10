@@ -96,7 +96,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.ingress.labels | object | `{}` | Dashboard ingress labels |
 | dashboard.ingress.ingressClassName | string | `""` | Dashboard ingress class name |
 | dashboard.ingress.hosts | list | `[]` | Dashboard ingress hosts |
-| dashboard.ingress.paths | list | `[/]` | Dashboard ingress paths |
+| dashboard.ingress.paths | list | `["/"]` | Dashboard ingress paths |
 | dashboard.ingress.pathType | string | `Prefix` | Dashboard ingress path type |
 | dashboard.ingress.extraPaths | list | `[]` | Dashboard ingress extra paths |
 | dashboard.ingress.tls | list | `[]` | Dashboard ingress tls |
