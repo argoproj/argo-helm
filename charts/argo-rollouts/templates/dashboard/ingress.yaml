@@ -42,7 +42,7 @@ spec:
             backend:
               {{- if eq (include "argo-rollouts.ingress.apiVersion" $) "networking.k8s.io/v1" }}
               service:
-                name: {{ $serviceName }}
+                name: {{ $serviceName }}-dashboard
                 port:
                   {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
@@ -50,7 +50,7 @@ spec:
                   name: {{ $servicePort }}
                   {{- end }}
               {{- else }}
-              serviceName: {{ $serviceName }}
+              serviceName: {{ $serviceName }}-dashboard
               servicePort: {{ $servicePort }}
               {{- end }}
           {{- end -}}
@@ -69,7 +69,7 @@ spec:
             backend:
               {{- if eq (include "argo-rollouts.ingress.apiVersion" $) "networking.k8s.io/v1" }}
               service:
-                name: {{ $serviceName }}
+                name: {{ $serviceName }}-dashboard
                 port:
                   {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
@@ -77,7 +77,7 @@ spec:
                   name: {{ $servicePort }}
                   {{- end }}
               {{- else }}
-              serviceName: {{ $serviceName }}
+              serviceName: {{ $serviceName }}-dashboard
               servicePort: {{ $servicePort }}
               {{- end }}
           {{- end -}}
