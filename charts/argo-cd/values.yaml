@@ -1233,6 +1233,15 @@ server:
   #      oauthclientCredentials:
   #        secretName: argocd-secret
 
+  ## Create a Google Managed Certificate for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
+  GKEmanagedCertificate:
+    # -- Enable ManagedCertificate custom resource for Google Kubernetes Engine.
+    enabled: false
+    # -- Domains for the Google Managed Certificate
+    domains:
+    - argocd.example.com
+
   # -- Additional containers to be added to the server pod
   ## See https://github.com/lemonldap-ng-controller/lemonldap-ng-controller as example.
   extraContainers: []
