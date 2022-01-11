@@ -1,8 +1,8 @@
-{{- if .Values.server.additionalEventSources }}
+{{- if .Values.additionalEventSources }}
 apiVersion: v1
 kind: List
 items:
-  {{- range .Values.server.additionalEventSources }}
+  {{- range .Values.additionalEventSources }}
   - apiVersion: argoproj.io/v1alpha1
     kind: EventSource
     metadata:

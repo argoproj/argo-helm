@@ -1,8 +1,8 @@
-{{- if .Values.server.additionalEventBuses }}
+{{- if .Values.additionalEventBuses }}
 apiVersion: v1
 kind: List
 items:
-  {{- range .Values.server.additionalEventBuses }}
+  {{- range .Values.additionalEventBuses }}
   - apiVersion: argoproj.io/v1alpha1
     kind: EventBus
     metadata:
