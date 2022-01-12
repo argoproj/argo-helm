@@ -374,6 +374,8 @@ NAME: my-release
 |-----|------|---------|-------------|
 | server.GKEbackendConfig.enabled | bool | `false` | Enable BackendConfig custom resource for Google Kubernetes Engine |
 | server.GKEbackendConfig.spec | object | `{}` | [BackendConfigSpec] |
+| server.GKEfrontendConfig.enabled | bool | `false` | Enable FrontConfig custom resource for Google Kubernetes Engine |
+| server.GKEfrontendConfig.spec | object | `{}` | [FrontendConfigSpec] |
 | server.GKEmanagedCertificate.domains | list | `["argocd.example.com"]` | Domains for the Google Managed Certificate |
 | server.GKEmanagedCertificate.enabled | bool | `false` | Enable ManagedCertificate custom resource for Google Kubernetes Engine. |
 | server.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
