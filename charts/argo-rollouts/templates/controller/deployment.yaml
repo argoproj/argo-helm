@@ -12,6 +12,7 @@ spec:
       {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
   strategy:
     type: Recreate
+  replicas: {{ .Values.controller.replicas }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -35,6 +36,9 @@ spec:
         args:
         {{- if not .Values.clusterInstall }}
         - --namespaced
+        {{- end }}
+        {{- if gt .Values.controller.replicas 1.0 }}
+        - --leader-elect
         {{- end }}
         {{- with .Values.controller.extraArgs }}
         {{- toYaml . | nindent 8 }}

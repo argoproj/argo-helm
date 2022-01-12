@@ -40,7 +40,7 @@ spec:
         {{- end }}
         name: argo-rollouts-dashboard
         ports:
-        - containerPort: 3100
+        - containerPort: {{ .Values.dashboard.service.targetPort }}
           name: dashboard
         securityContext:
           {{- toYaml .Values.dashboard.containerSecurityContext | nindent 10 }}

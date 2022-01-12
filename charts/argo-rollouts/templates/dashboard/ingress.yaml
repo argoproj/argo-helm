@@ -1,0 +1,89 @@
+{{- if and .Values.dashboard.enabled .Values.dashboard.ingress.enabled -}}
+{{- $serviceName := printf "%s-dashboard" (include "argo-rollouts.fullname" .) -}}
+{{- $servicePort := .Values.dashboard.service.port -}}
+{{- $paths := .Values.dashboard.ingress.paths -}}
+{{- $extraPaths := .Values.dashboard.ingress.extraPaths -}}
+{{- $pathType := .Values.dashboard.ingress.pathType -}}
+apiVersion: {{ include "argo-rollouts.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+{{- if .Values.dashboard.ingress.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.dashboard.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+  name: {{ template "argo-rollouts.fullname" . }}-dashboard
+  labels:
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
+    {{- if .Values.dashboard.ingress.labels }}
+    {{- toYaml .Values.dashboard.ingress.labels | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if eq (include "argo-rollouts.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+  {{- with .Values.dashboard.ingress.ingressClassName }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  {{- end }}
+  rules:
+  {{- if .Values.dashboard.ingress.hosts }}
+    {{- range $host := .Values.dashboard.ingress.hosts }}
+    - host: {{ $host }}
+      http:
+        paths:
+          {{- if $extraPaths }}
+          {{- toYaml $extraPaths | nindent 10 }}
+          {{- end }}
+          {{- range $p := $paths }}
+          - path: {{ $p }}
+            {{- if eq (include "argo-rollouts.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            pathType: {{ $pathType }}
+            {{- end }}
+            backend:
+              {{- if eq (include "argo-rollouts.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              service:
+                name: {{ $serviceName }}
+                port:
+                  {{- if kindIs "float64" $servicePort }}
+                  number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
+              {{- else }}
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+              {{- end }}
+          {{- end -}}
+    {{- end -}}
+  {{- else }}
+    - http:
+        paths:
+          {{- if $extraPaths }}
+          {{- toYaml $extraPaths | nindent 10 }}
+          {{- end }}
+          {{- range $p := $paths }}
+          - path: {{ $p }}
+            {{- if eq (include "argo-rollouts.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            pathType: {{ $pathType }}
+            {{- end }}
+            backend:
+              {{- if eq (include "argo-rollouts.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              service:
+                name: {{ $serviceName }}
+                port:
+                  {{- if kindIs "float64" $servicePort }}
+                  number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
+              {{- else }}
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+              {{- end }}
+          {{- end -}}
+  {{- end -}}
+  {{- if .Values.dashboard.ingress.tls }}
+  tls:
+    {{- toYaml .Values.dashboard.ingress.tls | nindent 4 }}
+  {{- end -}}
+{{- end -}}

@@ -113,3 +113,26 @@ Create the name of the bot service account to use
     {{ default "default" .Values.bots.slack.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create the name of the secret to use
+*/}}
+{{- define "argocd-notifications.secretName" -}}
+{{- if .Values.secret.create -}}
+    {{ default (printf "%s-secret" (include "argocd-notifications.fullname" .)) .Values.secret.name }}
+{{- else -}}
+    {{ default "argocd-notifications-secret" .Values.secret.name }}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
+Create the name of the configmap to use
+*/}}
+{{- define "argocd-notifications.configMapName" -}}
+{{- if .Values.cm.create -}}
+    {{ default (printf "%s-cm" (include "argocd-notifications.fullname" .)) .Values.cm.name }}
+{{- else -}}
+    {{ default "argocd-notifications-cm" .Values.cm.name }}
+{{- end -}}
+{{- end -}}

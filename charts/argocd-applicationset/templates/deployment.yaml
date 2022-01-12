@@ -56,6 +56,9 @@ spec:
             - name: metrics
               containerPort: {{ (split ":" .Values.args.metricsAddr)._1 }}
               protocol: TCP
+            - name: webhook
+              containerPort: 7000
+              protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

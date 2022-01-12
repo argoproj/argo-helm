@@ -62,3 +62,25 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Return the target Kubernetes version
+*/}}
+{{- define "argo-applicationset.kubeVersion" -}}
+  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
+{{- end -}}
+
+{{/*
+Return the appropriate apiVersion for ingress
+*/}}
+{{- define "argo-applicationset.ingress.apiVersion" -}}
+{{- if .Values.apiVersionOverrides.ingress -}}
+{{- print .Values.apiVersionOverrides.ingress -}}
+{{- else if semverCompare "<1.14-0" (include "argo-applicationset.kubeVersion" $) -}}
+{{- print "extensions/v1beta1" -}}
+{{- else if semverCompare "<1.19-0" (include "argo-applicationset.kubeVersion" $) -}}
+{{- print "networking.k8s.io/v1beta1" -}}
+{{- else -}}
+{{- print "networking.k8s.io/v1" -}}
+{{- end -}}
+{{- end -}}

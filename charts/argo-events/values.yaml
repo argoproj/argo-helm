@@ -58,6 +58,7 @@ sensorController:
   tolerations: []
   affinity: {}
   resources: {}
+  containerSecurityContext: {}
 
 eventsourceController:
   name: eventsource-controller
@@ -75,6 +76,7 @@ eventsourceController:
   tolerations: []
   affinity: {}
   resources: {}
+  containerSecurityContext: {}
 
 eventbusController:
   name: eventbus-controller
@@ -93,6 +95,7 @@ eventbusController:
   resources: {}
   natsStreamingImage: nats-streaming:0.22.1
   natsMetricsExporterImage: natsio/prometheus-nats-exporter:0.8.0
+  containerSecurityContext: {}
 
 securityContext:
   runAsNonRoot: true
