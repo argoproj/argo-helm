@@ -4,7 +4,7 @@ metadata:
   labels:
     control-plane: controller-manager
   name: controller-manager-metrics-service
-  namespace: argocd-operator-system
+  namespace: {{ .Release.Namespace }}
 spec:
   ports:
   - name: https

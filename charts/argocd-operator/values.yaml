@@ -2,7 +2,7 @@
 
 operator:
   clusterDomain: ""
-  nsToWatch: "argocd-operator-system,argocd-system"
+  nsToWatch: "argo-cd-system"
   nsClusterConfig: ""
   image:
     repository: quay.io/argoprojlabs/argocd-operator
@@ -56,7 +56,7 @@ pluginConfig: &pluginConfig |
 # projects:
 #   # Project name
 #   - name: argprojo01
-#     namespace: "argocd-operator-system"
+#     namespace: "argo-cd-system"
 #     podAnnotations: {}
 #     podLabels: {}
 #     spec:
@@ -83,7 +83,7 @@ pluginConfig: &pluginConfig |
 
 #   # Project name
 #   - name: argprojo02
-#     namespace: argocd-system
+#     namespace: "argo-cd-system"
 #     podAnnotations: {}
 #     podLabels: {}
 #     spec:
