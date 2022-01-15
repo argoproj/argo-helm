@@ -6,6 +6,6 @@ metadata:
 spec:
   domains:
     {{- with .Values.server.GKEmanagedCertificate.domains }}
-    {{- . | toYaml | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
 {{- end }}
