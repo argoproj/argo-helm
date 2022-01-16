@@ -1,23 +1,26 @@
-# docker registry
+# -- docker registry
 registry: quay.io
 
-# The image pull policy
+# -- The image pull policy
 imagePullPolicy: Always
 
-# Secrets with credentials to pull images from a private registry
+# -- Secrets with credentials to pull images from a private registry
 imagePullSecrets: []
 # - name: argo-pull-secret
 
-# ServiceAccount to use for running controller.
+# -- ServiceAccount to use for running controller.
 serviceAccount: argo-events-sa
 
-# serviceAccountAnnotations can be used to enable GKE workload identity, or other use-cases
+# -- Annotations applied to created service account. Can be used to enable GKE workload identity, or other use-cases
 serviceAccountAnnotations: {}
 
-# Create service accounts in additional namespaces specified
+# -- Create service accounts in additional namespaces specified
 # The SA will always be created in the release namespaces
 additionalSaNamespaces: []
   # - argo-prod
+
+# -- Additional rules
+# @default -- (See [values.yaml])
 additionalServiceAccountRules:
 - apiGroups:
     - apiextensions.k8s.io
@@ -33,70 +36,118 @@ additionalServiceAccountRules:
   resources:
     - customresourcedefinitions
 
-instanceID: argo-events
-
-# set `singleNamespace` to false to have the controllers
+# -- Whether to run in namespaced scope.
+# Set `singleNamespace` to false to have the controllers
 # listen on all namespaces.  Otherwise the controllers will listen
-# on the namespace provided
-namespace: argo-events
+# on the namespace where the chart is installed in.
 singleNamespace: true
 
 # sensor controller
 sensorController:
+  # -- Sensor controller name
   name: sensor-controller
+  # -- Repository to use for the sensor controller
   image: argoproj/argo-events
+  # -- Overrides the image tag
+  # @default -- `""` (default is the chart appVersion)
   tag: ""
+  # -- The number of sensor controller pods to run
   replicaCount: 1
+  # -- Additional environment variables to pass to sensor controller
   extraEnv: []
     # - name: DEBUG_LOG
     #   value: "true"
+
+  # -- Repository to use for the sensor image
   sensorImage: argoproj/argo-events
+  # -- Annotations to be added to sensor controller pods
   podAnnotations: {}
+  # -- [Node selector]
   nodeSelector: {}
+  # -- Labels to be added to sensor controller pods
   podLabels: {}
+  # -- Priority class for the sensor controller
   priorityClassName: ""
+  # -- [Tolerations] for use with node taints
   tolerations: []
+  # -- Assign custom [affinity] rules to the sensor controller
   affinity: {}
+  # -- Resource limits and requests for the sensor controller pods
   resources: {}
+  # -- Sensor controllers container-level security context
   containerSecurityContext: {}
 
 eventsourceController:
+  # -- Event source controller name
   name: eventsource-controller
+  # -- Repository to use for the event source controller
   image: argoproj/argo-events
+  # -- Overrides the image tag
+  # @default -- `""` (default is the chart appVersion)
   tag: ""
+  # -- The number of event source controller pods to run
   replicaCount: 1
+  # -- Additional environment variables to pass to event source controller
   extraEnv: []
     # - name: DEBUG_LOG
     #   value: "true"
+
+  # -- Repository to use for the event source image
   eventsourceImage: argoproj/argo-events
+  # -- Annotations to be added to event source controller pods
   podAnnotations: {}
+  # -- [Node selector]
   nodeSelector: {}
+  # -- Labels to be added to event source controller pods
   podLabels: {}
+  # -- Priority class for the event source controller
   priorityClassName: ""
+  # -- [Tolerations] for use with node taints
   tolerations: []
+  # -- Assign custom [affinity] rules to the event source controller
   affinity: {}
+  # -- Resource limits and requests for the event source controller pods
   resources: {}
+  # -- Event source controller container-level security context
   containerSecurityContext: {}
 
 eventbusController:
+  # -- Event bus controller name
   name: eventbus-controller
+  # -- Repository to use for the event bus controller
   image: argoproj/argo-events
+  # -- Overrides the image tag
+  # @default -- `""` (default is the chart appVersion)
   tag: ""
+  # -- The number of event bus controller pods to run
   replicaCount: 1
+  # -- Additional environment variables to pass to event bus controller
   extraEnv: []
     # - name: DEBUG_LOG
     #   value: "true"
+
+  # -- Annotations to be added to event bus controller pods
   podAnnotations: {}
+  # -- [Node selector]
   nodeSelector: {}
+  # -- Labels to be added to event event bus controller pods
   podLabels: {}
+  # -- Priority class for the event bus controller
   priorityClassName: ""
+  # -- [Tolerations] for use with node taints
   tolerations: []
+  # -- Assign custom [affinity] rules to the event bus controller
   affinity: {}
+  # -- Resource limits and requests for the event bus controller pods
   resources: {}
+  # -- NATS streaming container image to use for the event bus
   natsStreamingImage: nats-streaming:0.22.1
+  # -- NATS metrics exporter container image to use for the event bus
   natsMetricsExporterImage: natsio/prometheus-nats-exporter:0.8.0
+  # -- Event bus controller container-level security context
   containerSecurityContext: {}
 
+# -- Common PodSecurityContext for all controllers
 securityContext:
   runAsNonRoot: true
   runAsUser: 9731
