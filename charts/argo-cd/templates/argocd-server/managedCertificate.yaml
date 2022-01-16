@@ -1,0 +1,11 @@
+{{- if .Values.server.GKEmanagedCertificate.enabled }}
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: {{ template "argo-cd.server.fullname" . }}
+spec:
+  domains:
+    {{- with .Values.server.GKEmanagedCertificate.domains }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}
