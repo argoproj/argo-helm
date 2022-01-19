@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Add configurable resources to copyutil initContainer"
+    apiVersion: v2
+    appVersion: v2.2.2
+    created: "2022-01-19T19:26:26.908155299Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: c709b88fc76807060d1d90eac43f8643c5db56edda6ca767baa9fddcb29e9134
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.30.1/argo-cd-3.30.1.tgz
+    version: 3.30.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Add support for Google ManagedCertificate on GKE
         - "[Added]: Add support for Google FrontendConfig on GKE
     apiVersion: v2
@@ -11601,4 +11630,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-01-18T22:20:09.671018447Z"
+generated: "2022-01-19T19:26:26.912629323Z"
