@@ -212,6 +212,7 @@ NAME: my-release
 | configs.tlsCerts | object | See [values.yaml] | TLS certificate |
 | configs.tlsCertsAnnotations | object | `{}` | TLS certificate configmap annotations |
 | createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
+| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
 | global.additionalLabels | object | `{}` | Additional labels to add to all resources |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
