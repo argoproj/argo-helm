@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Add support for extra K8s manifests"
+    apiVersion: v2
+    appVersion: v2.2.2
+    created: "2022-01-20T10:52:28.147695527Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 4f7b82ff5816702c1b6ca29207ce58a2c28b56888a246e2dada609517a3034fa
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.31.0/argo-cd-3.31.0.tgz
+    version: 3.31.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Add configurable resources to copyutil initContainer"
     apiVersion: v2
     appVersion: v2.2.2
@@ -11630,4 +11659,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-01-19T19:26:26.912629323Z"
+generated: "2022-01-20T10:52:28.153289979Z"
