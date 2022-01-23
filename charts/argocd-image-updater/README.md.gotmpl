@@ -16,10 +16,6 @@ helm install argocd-image-updater argo/argocd-image-updater
 
 You will also need to run through the [secret setup documentation](https://argocd-image-updater.readthedocs.io/en/stable/install/start/#connect-using-argo-cd-api-server) so ArgoCD ImageUpdater can talk to the ArgoCD API (until its automated in this chart).
 
-## TODO
-
-- Automate setting up the ArgoCD API Authentication user/secret using a Helm Hook or something.
-
 ## Prerequisites
 
 * Helm v3.0.0+
@@ -27,6 +23,8 @@ You will also need to run through the [secret setup documentation](https://argoc
 ## Configuration options
 
 In order for your deployment of ArgoCD Image Updater to be successful, you will need to make sure you set the correct configuration options described in detail on the [argocd-image-updater flags page](https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags).
+
+**Note**: You may also use helm hooks for auto-configuring argocd-image-updater-secret as described in the **Secret Hook** section below.
 
 All of the `argocd-` prefixed flags, which tell `argocd-image-updater` how your ArgoCD instance is setup, are set in the `config.argocd` values block. For instance:
 
@@ -54,6 +52,73 @@ ArgoCD Image Updater natively supports the following registries (as mentioned in
 If you need support for ECR, you can reference [this issue](https://github.com/argoproj-labs/argocd-image-updater/issues/112) for configuration. You can use the `authScripts` values to configure the scripts that are needed to authenticate with ECR.
 
 The `config.registries` value can be used exactly as it looks in the documentation as it gets dumped directly into a configmap in this chart.
+
+### Secret Hook
+
+Requirements:
+
+- Account with apiKey capability
+- Account authorized to create/delete tokens
+
+**Note**: Using the hooks to automatically configure the secret can take some time on hosts with slow internet connection. This is because the hook jobs use `apt update && apt install curl jq -y;` at the beginning. We can make the hook jobs faster if we create a container that already has preinstalled these dependencies
+
+To configure ArgoCD Image Updater to create the secret automatically you have the following options
+
+#### Create a secret automatically by using ArgoCD initial admin token secret
+
+This method is most desirable because:
+
+- ArgoCD admin is authorized by default to be able and manage account tokens.
+- It requires only an account that has `apiKey` capability to be present in ArgoCD
+- You do not pass any credentials in the helm values. The hook job will mount and read the admin admin secret automatically
+
+Setting option `hooks.argocd.mountInitialAdminSecret: true` will configure Image Updater to read the admin secret and use it to create a token for the account with the apiKey capability.
+
+Options required:
+
+- hooks.argocd.mountInitialAdminSecret: true
+- hooks.argocd.username: "admin"
+- hooks.secret.accountName: Account With apiKey Capability
+
+**Notes**: Option `hooks.argocd.username` must be `admin` since the secret that is mount and read is for that user. If the future we will add an option to also specify which secret should be read, in turn allowing the username to take any value
+
+Configuration flow:
+
+- Admin secret is mounted
+- A new sessions is created via the hook job
+- Session is used to create a token for `hooks.secret.accountName`
+- Token is saved in Kubernetes secret `argocd-image-updater-secret`
+
+#### Use the credentials from an ArgoCD account that can create and delete tokens
+
+This does essentially what the previous method from above does, but instead of reading the initial admin token from Kubernetes, we provide the credentials of an account that can create and delete tokens.
+
+This method is dessirable if:
+
+- You have disabled admin account
+- ArgoCD Image Updater is deployed in a namespace that is different for that which ArgoCD has been deployed
+
+Options required:
+
+- hooks.argocd.password: somePassword
+- hooks.argocd.username: someUsername
+- hooks.secret.accountName: Account With apiKey Capability
+
+#### Use a token that you have already exported
+
+This method desirable if:
+
+- You already have created tokens for an account
+- You want to manage the account tokens via external tooling
+- You want the helm install/upgrade action to be as fast as possible
+
+This method is simple and it only requires to pass the following options
+
+- hooks.secret.apiKey: someAPIKey
+
+Configuration flow:
+
+- Token is read from `values.yaml`, then encoded with b64 and finally saved as a secret
 
 {{ template "chart.valuesSection" . }}
 

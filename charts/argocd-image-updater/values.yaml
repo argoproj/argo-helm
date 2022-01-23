@@ -177,3 +177,66 @@ metrics:
     namespace: ""
     # -- Prometheus ServiceMonitor labels
     additionalLabels: {}
+
+# -- Chart hooks for creating argocd-image-updater-secret secret
+hooks:
+  # -- Must be set to true to enable chart hoooks
+  enabled: false
+  # -- Debug will enable shell debug set -x on hook jobs.
+  # Warning: Do not use DEBUG=true for production. If you do, ensure
+  #          that only the desired set of users are able to get logs
+  #          from the image-updater pods & jobs.
+  #          With DEBUG set to true, all secrets and tokens will be
+  #          visible during kubectl logs ... image-updater...
+  debug: false
+  # -- (Optional) Kubernetes cluster options.
+  # Note: Usually the options from the map will work out of the box,
+  #       but they have been included in case you want to use a specific
+  #       token from a service account or a different apiServer endpoint
+  kubernetes:
+    # -- The Kubernetes API Server endpoint. Must be routable
+    # from the network that image-updater will be deployed
+    apiServer: "https://kubernetes.default.svc"
+    # -- Base64 encoded token from the service account you want to use
+    # for configurring image-updater secret in the namespace of argocd.
+    # Note: The service account in the kubernetes cluster that hosts
+    #         argocd image updater must have permissions to create secrets
+    #         and list secret named "argocd-image-updater-secret"
+    serviceAccountToken: ""
+    # -- (Required if hooks.kubernetes.serviceAccountToken is anything else but "")
+    # Base64 encoded API Server Root CA of the cluster that argocd image updater
+    # has been / will be deployed
+    cacert: ""
+
+  # -- Argocd credentials that can be used to generate or export tokens
+  argocd:
+    # -- Should be used only if image-updater is deployed in the same cluster
+    # and namespace as argocd.
+    # Note-1: If you mount the initial admin secret then
+    #         .hooks.argocd.password must be "".
+    # Note-2: If you set this option, then .hooks.argocd.username must be
+    #         set to "admin" since the initial admin token is meant for
+    #         that user.
+    mountInitialAdminSecret: false
+    # -- Default admin account. Can be set to a different account that
+    # is authorized to manage tokens. If you want this account to also be used
+    # for authN/Z by image-updater then set hooks.secret.accountName the same
+    # as this
+    username: "admin"
+    # -- The password of the account that will be used to manage tokens
+    # Note: If you set this to anything than "", then you must set
+    # .hooks.argocd.mountInitialAdminSecret to false
+    password: ""
+  # -- Map with options about the actual token that will be used by the image-updater
+  secret:
+    # -- This is the apiKey that image-updater will use to authendicate with argocd.
+    # Note-1: If you set this to anything than "" then HOOK JOBS WILL NOT RUN and instead
+    # an "argocd-image-updater-secret" secret will be created inplace
+    # Note-2: apiKey is not encoded.
+    apiKey: ""
+    # -- The account name you want to use for generating tokens. The account must exist
+    # in argocd and must also have "get" and "update" RBAC application permissions
+    accountName: "image-updater"
+    # -- Setting this to true will force hook jobs to delete a token if it exists for
+    # a specific account and then create a new one
+    force: false

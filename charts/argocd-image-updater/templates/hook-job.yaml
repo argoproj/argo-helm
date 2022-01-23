@@ -1,0 +1,240 @@
+{{- with index .Values "hooks" }}
+{{- if and .enabled (eq .secret.apiKey "") -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ $.Release.Name }}-pre-install-job"
+  labels:
+    {{- include "argocd-image-updater.labels" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-2"
+    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      name: "{{ $.Release.Name }}-pre-install-job"
+      labels:
+        {{- include "argocd-image-updater.labels" $ | nindent 8 }}
+    spec:
+      serviceAccountName: "{{ $.Release.Name }}-hook-config-service-account"
+      restartPolicy: Never
+      containers:
+      - name: pre-install-job
+        image: "debian:stable-slim"
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash", "-c"]
+        args:
+          - set -e; echo "[Hook] Pre Install";
+
+            [ "${DEBUG}" == "true" ] && set -x  || SCURL="-s";
+
+            ERR_TOKEN_EXISTS="Token Exists for account ${ACCOUNT_NAME}. Force not set, exiting...";
+            ERR_API_KEY_EXISTS="API Token provided. Exiting...";
+            ERR_ARGOCD_AUTH="Could not authendicate with argocd. Exiting with error...";
+            ERR_ARGOCD_EMPTY_PASS="ARGOCD PASSWORD is empty. Exiting with error";
+            ERR_ARGOCD_EMPTY_USER="ARGOCD USERNAME is empty. Exiting with error";
+            ERR_ARGOCD_EMPTY_SERVER="ARGOCD SERVER is empty. Exiting with error";
+            ERR_ARGOCD_ACCOUNT_NAME="ARGOCD ACCOUNT NAME is empty. Exiting with error";
+            ERR_ARGOCD_SESSION="ARGOCD session is invalid";
+            ERR_ARGOCD_ACCOUNT="ARGOCD account ${ACCOUNT} does not exist";
+            ERR_ARGOCD_NO_SESSION="ARGOCD no session";
+            ERR_ARGOCD_TOKEN_ID="ARGOCD token loop check error";
+            ERR_KUBERNETES_SECRET="KUBERNETES could not create secret";
+
+            if [ -n "${API_KEY}" ]; then echo "${ERR_API_KEY_EXISTS}"; exit 0; fi;
+            apt update && apt install curl jq -y;
+
+            MOUNT_PATH="/mnt/argocd-secret/password";
+            [ -e "${MOUNT_PATH}"      ] && [ "${MOUNT_SECRET}" == "true" ]   && ARGOCD_PASSWORD="$(cat ${MOUNT_PATH})";
+            [ -z "${ARGOCD_PASSWORD}" ] && echo "${ERR_ARGOCD_EMPTY_PASS}"   && exit 1;
+            [ -z "${ARGOCD_USERNAME}" ] && echo "${ERR_ARGOCD_EMPTY_USER}"   && exit 1;
+            [ -z "${ARGOCD_SERVER}"   ] && echo "${ERR_ARGOCD_EMPTY_SERVER}" && exit 1;
+            [ -z "${ACCOUNT_NAME}"    ] && echo "${ERR_ARGOCD_ACCOUNT_NAME}" && exit 1;
+
+            ACCOUNT_TOKEN_ID="${ACCOUNT_NAME}";
+
+            ARGOCD_API_FLAGS="-L";
+            [ "${ARGOCD_INSECURE}" == "true" ] && ARGOCD_API_FLAGS="${ARGOCD_API_FLAGS} -k";
+
+            ARGOCD_LOGIN_DATA="{\"username\":\""${ARGOCD_USERNAME}"\",\"password\":\""${ARGOCD_PASSWORD}"\"}";
+            ARGOCD_TOKEN="$(curl ${SCURL} ${ARGOCD_API_FLAGS} "${ARGOCD_SERVER}/api/v1/session" -d "${ARGOCD_LOGIN_DATA}" | jq '.token')";
+            [ -z "${ARGOCD_TOKEN}" ] && echo "${ERR_ARGOCD_AUTH}" && exit 1;
+            [ "${ARGOCD_TOKEN}" == "null" ] && echo "${ERR_ARGOCD_AUTH}" && exit 1;
+            ARGOCD_TOKEN="${ARGOCD_TOKEN:1:-1}";
+
+            ARGOCD_API_FLAGS="${ARGOCD_API_FLAGS}";
+            CURL="curl ${SCURL} ${ARGOCD_API_FLAGS}";
+
+            SESSION_STATUS="$(${CURL} -H "Authorization:Bearer ${ARGOCD_TOKEN}" "${ARGOCD_SERVER}/api/v1/account/${ACCOUNT_NAME}" 2>&1)";
+
+            if echo "${SESSION_STATUS}" | grep -iq "no session information";
+            then echo "${ERR_ARGOCD_NO_SESSION}" && exit 1; fi;
+
+            if echo "${SESSION_STATUS}" | grep -iq "invalid session";
+            then echo "${ERR_ARGOCD_SESSION}" && exit 1; fi;
+
+            if echo "${SESSION_STATUS}" | grep -iq "does not exist";
+            then echo "${ERR_ARGOCD_ACCOUNT}" && exit 1; fi;
+
+            export c=0;
+            while true; do export e="$(${CURL} -H "Authorization:Bearer ${ARGOCD_TOKEN}" "${ARGOCD_SERVER}/api/v1/account/${ACCOUNT_NAME}" | jq ".tokens[${c}].id")";
+              if [ ${e:1:-1} == "${ACCOUNT_TOKEN_ID}" ];
+              then break; else if [ "${e}" == "null" ]; then c=""; break; fi; fi;
+              c=$((c+1)); [ "${c}" -gt 100 ] && echo "${ERR_ARGOCD_TOKEN_ID}" && exit 1;
+            done;
+
+            [ "${e}" != "null" ] && [ "${FORCE_NEW_TOKEN}" != "true" ] && echo "${ERR_TOKEN_EXISTS}" && exit 0;
+            [ "${e}" != "null" ] && ${CURL} -H "Authorization:Bearer ${ARGOCD_TOKEN}" -XDELETE "${ARGOCD_SERVER}/api/v1/account/${ACCOUNT_NAME}/token/${ACCOUNT_TOKEN_ID}";
+
+            echo "{\"id\":\""${ACCOUNT_TOKEN_ID}"\"}" >/mnt/token.json;
+            ACCOUNT_TOKEN="$(${CURL} -H "Authorization:Bearer ${ARGOCD_TOKEN}" -XPOST "${ARGOCD_SERVER}/api/v1/account/${ACCOUNT_NAME}/token" -d @/mnt/token.json | jq '.token')";
+            ACCOUNT_TOKEN="${ACCOUNT_TOKEN:1:-1}";
+            ACCOUNT_TOKEN_BASE64="$(echo "${ACCOUNT_TOKEN}" | base64 | tr -d '\n' )";
+
+            [ -z "${CLUSTER_APISERVER_EDNPOINT}" ] && CLUSTER_APISERVER_EDNPOINT='https://kubernetes.default.svc.cluster.local';
+
+            if [ -n "${CLUSTER_CACERT}" ]; then echo "${CLUSTER_CACERT}" | base64 -d > /mnt/ca.crt; fi;
+            if [ -e  /mnt/ca.crt ]; then CAFILE=/mnt/ca.crt; fi;
+            if [ -z "${CAFILE}" ]; then CAFILE=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt; fi;
+
+            if [ -n "${CLUSTER_SA_TOKEN}" ]; then echo "${CLUSTER_SA_TOKEN}" | base64 -d > /mnt/sa.token; fi;
+            if [ -e /mnt/sa.token ]; then K8_TOKEN_FILE=/mnt/sa.token; fi;
+            if [ -z "${K8_TOKEN_FILE}" ]; then K8_TOKEN_FILE=/var/run/secrets/kubernetes.io/serviceaccount/token; fi;
+
+            NAMESPACE=$(cat /run/secrets/kubernetes.io/serviceaccount/namespace);
+
+            K8_TOKEN=$(cat "${K8_TOKEN_FILE}");
+
+            SECRET_NAME=argocd-image-updater-secret;
+            SECRET_DATA="{\"argocd.token\":\""${ACCOUNT_TOKEN_BASE64}"\"}";
+            SECRET_LABELS="{\"app.kubernetes.io/instance\":\"argocd-image-updater\",\"app.kubernetes.io/managed-by\":\"Helm\",\"app.kubernetes.io/name\":\"argocd-image-updater\"}";
+            SECRET_META="{\"namespace\":\""${NAMESPACE}"\",\"name\":\""${SECRET_NAME}"\",\"labels\":"${SECRET_LABELS}"}";
+            SECRET="{\"apiVersion\":\"v1\",\"kind\":\"Secret\",\"metadata\":"${SECRET_META}",\"type\":\"Opaque\",\"data\":"${SECRET_DATA}"}";
+            echo "${SECRET}" >/mnt/secret.json;
+
+            RES_PATH="/api/v1/namespaces/${NAMESPACE}/secrets/argocd-image-updater-secret"
+            SECSTATUS=$(curl -L ${SCURL} --cacert "${CAFILE}" -H "Authorization:Bearer ${K8_TOKEN}" -XGET "${CLUSTER_APISERVER_EDNPOINT}${RES_PATH}" | jq '.kind');
+
+            if [ ${SECSTATUS:1:-1} == "Secret" ];
+              then RES_PATH="/api/v1/namespaces/${NAMESPACE}/secrets/argocd-image-updater-secret";
+              CURL="curl -L ${SCURL} -q --cacert ${CAFILE} -XPUT";
+            else
+              RES_PATH="/api/v1/namespaces/${NAMESPACE}/secrets";
+              CURL="curl -L ${SCURL} -q --cacert ${CAFILE} -XPOST";
+            fi;
+
+            ${CURL} -H 'Content-Type:application/json' -H "Authorization:Bearer ${K8_TOKEN}" "${CLUSTER_APISERVER_EDNPOINT}${RES_PATH}" -d @/mnt/secret.json >/dev/null;
+            [ "${?}" != 0 ] && echo "${ERR_KUBERNETES_SECRET}" && exit 1;
+            echo "Successfully configured argocd-image-updater-secret"
+        env:
+        - name: CLUSTER_APISERVER_EDNPOINT
+          value: {{ .kubernetes.apiServer | quote }}
+        - name: CLUSTER_SA_TOKEN
+          value: {{ .kubernetes.serviceAccountToken | quote }}
+        - name: CLUSTER_CACERT
+          value: {{ .kubernetes.cacert | quote }}
+        - name: DEBUG
+          value: {{ .debug | quote }}
+        - name: API_KEY
+          value: {{ .secret.apiKey | quote }}
+        - name: FORCE_NEW_TOKEN
+          value: {{ .secret.force | quote }}
+        - name: ARGOCD_SERVER
+          value: {{ $.Values.config.argocd.serverAddress | quote }}
+        - name: ARGOCD_INSECURE
+          value: {{ $.Values.config.argocd.insecure | quote }}
+        - name: ARGOCD_USERNAME
+          value: {{ .argocd.username | quote }}
+        - name: ACCOUNT_NAME
+          value: {{ .secret.accountName | quote }}
+        - name: MOUNT_SECRET
+          value: {{ .argocd.mountInitialAdminSecret | quote }}
+      {{- if and (ne .argocd.password "") (not .argocd.mountInitialAdminSecret) }}
+        - name: ARGOCD_PASSWORD
+          value: {{ .argocd.password | quote }}
+      {{- end }}
+      {{- if and (eq .argocd.password "") .argocd.mountInitialAdminSecret }}
+        volumeMounts:
+        - name: argo-cd-secret
+          mountPath: "/mnt/argocd-secret"
+          readOnly: true
+      volumes:
+      - name: argo-cd-secret
+        secret:
+          secretName: argocd-initial-admin-secret
+      {{- end }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ $.Release.Name }}-post-install-job"
+  labels:
+    {{- include "argocd-image-updater.labels" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      name: "{{ $.Release.Name }}-post-install-job"
+      labels:
+        {{- include "argocd-image-updater.labels" $ | nindent 8 }}
+    spec:
+      serviceAccountName: "{{ $.Release.Name }}-hook-config-service-account"
+      restartPolicy: Never
+      containers:
+      - name: post-install-job
+        image: "debian:stable-slim"
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash", "-c"]
+        args:
+          - set -e; echo "[Hook] Post Upgrade";
+
+            [ "${DEBUG}" == "true" ] && set -x  || SCURL="-s";
+            apt update && apt install curl -y;
+            if [ -n "${API_KEY}" ]; then echo "API Token provided. Aborting..."; exit 0; fi;
+
+            [ -z "${CLUSTER_APISERVER_EDNPOINT}" ] && CLUSTER_APISERVER_EDNPOINT='https://kubernetes.default.svc.cluster.local';
+
+            if [ -n "${CLUSTER_CACERT}" ]; then echo "${CLUSTER_CACERT}" | base64 -d > /mnt/ca.crt; fi;
+            if [ -e  /mnt/ca.crt ]; then CAFILE=/mnt/ca.crt; fi;
+            if [ -z "${CAFILE}" ]; then CAFILE=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt; fi;
+
+            if [ -n "${CLUSTER_SA_TOKEN}" ]; then echo "${CLUSTER_SA_TOKEN}" | base64 -d > /mnt/sa.token; fi;
+            if [ -e /mnt/sa.token ]; then K8_TOKEN_FILE=/mnt/sa.token; fi;
+            if [ -z "${K8_TOKEN_FILE}" ]; then K8_TOKEN_FILE=/var/run/secrets/kubernetes.io/serviceaccount/token; fi;
+
+            NAMESPACE=$(cat /run/secrets/kubernetes.io/serviceaccount/namespace);
+
+            K8_TOKEN=$(cat "${K8_TOKEN_FILE}");
+            
+            ROLLOUT_TIME="$(date +'%Y-%m-%dT%H:%M:%S%:z')";
+            ROLLOUT_PAYLOAD="{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"kubectl.kubernetes.io/restartedAt\":\""${ROLLOUT_TIME}"\"}}}}}";
+            echo "${ROLLOUT_PAYLOAD}" > rollout.json;
+
+            RES_PATH="/apis/apps/v1/namespaces/${NAMESPACE}/deployments/${DEPLOYMENT_NAME}?fieldManager=kubectl-rollout";
+
+            CURL="curl -L "${SCURL}" -k -v -XPATCH"
+            CURL="${CURL} -H \"Authorization:Bearer ${K8_TOKEN}\" -H \"Accept:application/json, */*\" -H \"Content-Type:application/strategic-merge-patch+json\"";
+            eval "${CURL}" "${CLUSTER_APISERVER_EDNPOINT}${RES_PATH}" -d @rollout.json;
+        env:
+        - name: CLUSTER_APISERVER_EDNPOINT
+          value: {{ .kubernetes.apiServer | quote }}
+        - name: CLUSTER_SA_TOKEN
+          value: {{ .kubernetes.serviceAccountToken | quote }}
+        - name: CLUSTER_CACERT
+          value: {{ .kubernetes.cacert | quote }}
+        - name: DEBUG
+          value: {{ .debug | quote }}
+        - name: API_KEY
+          value: {{ .secret.apiKey | quote }}
+        - name: FORCE_NEW_TOKEN
+          value: {{ .secret.force | quote }}
+        - name: DEPLOYMENT_NAME
+          value: {{ include "argocd-image-updater.fullname" $ | quote }}
+{{- end }}
+{{- end }}
