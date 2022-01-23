@@ -78,6 +78,8 @@ spec:
             if echo "${SESSION_STATUS}" | grep -iq "does not exist";
             then echo "${ERR_ARGOCD_ACCOUNT}" && exit 1; fi;
 
+            ${CURL} -H "Authorization:Bearer ${ARGOCD_TOKEN}" "${ARGOCD_SERVER}/api/v1/account/${ACCOUNT_NAME}" >/dev/null 2>&1 || exit 1;
+
             export c=0;
             while true; do export e="$(${CURL} -H "Authorization:Bearer ${ARGOCD_TOKEN}" "${ARGOCD_SERVER}/api/v1/account/${ACCOUNT_NAME}" | jq ".tokens[${c}].id")";
               if [ ${e:1:-1} == "${ACCOUNT_TOKEN_ID}" ];
