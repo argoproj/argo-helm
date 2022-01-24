@@ -58,6 +58,34 @@ apiVersionOverrides:
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
 createAggregateRoles: false
 
+# -- Array of extra K8s manifests to deploy
+extraObjects: []
+  # - apiVersion: secrets-store.csi.x-k8s.io/v1
+  #   kind: SecretProviderClass
+  #   metadata:
+  #     name: argocd-secrets-store
+  #   spec:
+  #     provider: aws
+  #     parameters:
+  #       objects: |
+  #         - objectName: "argocd"
+  #           objectType: "secretsmanager"
+  #           jmesPath:
+  #               - path: "client_id"
+  #                 objectAlias: "client_id"
+  #               - path: "client_secret"
+  #                 objectAlias: "client_secret"
+  #     secretObjects:
+  #     - data:
+  #       - key: client_id
+  #         objectName: client_id
+  #       - key: client_secret
+  #         objectName: client_secret
+  #       secretName: argocd-secrets-store
+  #       type: Opaque
+  #       labels:
+  #         app.kubernetes.io/part-of: argocd
+
 ## Controller
 controller:
   # -- Application controller name string
@@ -1233,6 +1261,27 @@ server:
   #      oauthclientCredentials:
   #        secretName: argocd-secret
 
+  ## Create a Google Managed Certificate for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
+  GKEmanagedCertificate:
+    # -- Enable ManagedCertificate custom resource for Google Kubernetes Engine.
+    enabled: false
+    # -- Domains for the Google Managed Certificate
+    domains:
+    - argocd.example.com
+
+  ## Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+  GKEfrontendConfig:
+    # -- Enable FrontConfig custom resource for Google Kubernetes Engine
+    enabled: false
+    # -- [FrontendConfigSpec]
+    spec: {}
+  # spec:
+  #   redirectToHttps:
+  #     enabled: true
+  #     responseCodeName: RESPONSE_CODE
+
   # -- Additional containers to be added to the server pod
   ## See https://github.com/lemonldap-ng-controller/lemonldap-ng-controller as example.
   extraContainers: []
@@ -1513,6 +1562,17 @@ repoServer:
   #     - get
   #     - list
   #     - watch
+
+  # Init container to copy argocd binary
+  copyutil:
+    # -- Resource limits and requests for the copyutil initContainer
+    resources: {}
+    #  limits:
+    #    cpu: 50m
+    #    memory: 64Mi
+    #  requests:
+    #    cpu: 10m
+    #    memory: 32Mi
 
   # -- Init containers to add to the repo server pods
   initContainers: []
