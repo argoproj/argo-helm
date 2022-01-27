@@ -110,6 +110,7 @@ Fields to note:
 | controller.serviceLabels | object | `{}` | Optional labels to add to the controller Service |
 | controller.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | controller.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
+| controller.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | controller.serviceType | string | `"ClusterIP"` | Service type of the controller Service |
 | controller.telemetryConfig.enabled | bool | `false` | Enables prometheus telemetry server |
 | controller.telemetryConfig.path | string | `"/telemetry"` | telemetry path |

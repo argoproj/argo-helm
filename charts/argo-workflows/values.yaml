@@ -145,6 +145,8 @@ controller:
     enabled: false
     # -- Prometheus ServiceMonitor labels
     additionalLabels: {}
+    # -- Prometheus ServiceMonitor namespace
+    namespace: "" # "monitoring"
   serviceAccount:
     # -- Create a service account for the controller
     create: true
