@@ -54,16 +54,20 @@ spec:
         {{- if .Values.repoServer.containerSecurityContext }}
         securityContext: {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
         {{- end }}
-{{- if or (.Values.repoServer.env) (.Values.openshift.enabled) }}
         env:
-{{- if .Values.repoServer.env }}
-{{- toYaml .Values.repoServer.env | nindent 8 }}
-{{- end }}
-{{- if .Values.openshift.enabled }}
+        - name: HELM_CACHE_HOME
+          value: /helm-working-dir
+        - name: HELM_CONFIG_HOME
+          value: /helm-working-dir
+        - name: HELM_DATA_HOME
+          value: /helm-working-dir
+        {{- if .Values.repoServer.env }}
+          {{- toYaml .Values.repoServer.env | nindent 8 }}
+        {{- end }}
+        {{- if .Values.openshift.enabled }}
         - name: USER_NAME
           value: argocd
-{{- end }}
-{{- end }}
+        {{- end }}
         {{- with .Values.repoServer.envFrom }}
         envFrom: {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -87,6 +91,8 @@ spec:
           name: argocd-repo-server-tls
         - mountPath: /tmp
           name: tmp-dir
+        - mountPath: /helm-working-dir
+          name: helm-working-dir
         - mountPath: /home/argocd/cmp-server/plugins
           name: plugins
         ports:
@@ -166,6 +172,8 @@ spec:
           name: argocd-tls-certs-cm
         name: tls-certs
       {{- end }}
+      - name: helm-working-dir
+        emptyDir: {}
       - name: argocd-repo-server-tls
         secret:
           items:
