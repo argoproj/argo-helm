@@ -279,6 +279,9 @@ NAME: my-release
 | controller.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | controller.name | string | `"application-controller"` | Application controller name string |
 | controller.nodeSelector | object | `{}` | [Node selector] |
+| controller.pdb.annotations | object | `{}` | Annotations to be added to application controller pdb |
+| controller.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the application controller |
+| controller.pdb.labels | object | `{}` | Labels to be added to application controller pdb |
 | controller.podAnnotations | object | `{}` | Annotations to be added to application controller pods |
 | controller.podLabels | object | `{}` | Labels to be added to application controller pods |
 | controller.priorityClassName | string | `""` | Priority class for the application controller pods |
@@ -346,6 +349,9 @@ NAME: my-release
 | repoServer.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | repoServer.name | string | `"repo-server"` | Repo server name |
 | repoServer.nodeSelector | object | `{}` | [Node selector] |
+| repoServer.pdb.annotations | object | `{}` | Annotations to be added to Repo server pdb |
+| repoServer.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the Repo server |
+| repoServer.pdb.labels | object | `{}` | Labels to be added to Repo server pdb |
 | repoServer.podAnnotations | object | `{}` | Annotations to be added to repo server pods |
 | repoServer.podLabels | object | `{}` | Labels to be added to repo server pods |
 | repoServer.priorityClassName | string | `""` | Priority class for the repo server |
@@ -456,6 +462,9 @@ NAME: my-release
 | server.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | server.name | string | `"server"` | Argo CD server name |
 | server.nodeSelector | object | `{}` | [Node selector] |
+| server.pdb.annotations | object | `{}` | Annotations to be added to server pdb |
+| server.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the server |
+| server.pdb.labels | object | `{}` | Labels to be added to server pdb |
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
 | server.priorityClassName | string | `""` | Priority class for the Argo CD server |
@@ -539,6 +548,9 @@ NAME: my-release
 | dex.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | dex.name | string | `"dex-server"` | Dex name |
 | dex.nodeSelector | object | `{}` | [Node selector] |
+| dex.pdb.annotations | object | `{}` | Annotations to be added to Dex server pdb |
+| dex.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the Dex server |
+| dex.pdb.labels | object | `{}` | Labels to be added to Dex server pdb |
 | dex.podAnnotations | object | `{}` | Annotations to be added to the Dex server pods |
 | dex.podLabels | object | `{}` | Labels to be added to the Dex server pods |
 | dex.priorityClassName | string | `""` | Priority class for dex |
@@ -600,6 +612,9 @@ NAME: my-release
 | redis.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | redis.name | string | `"redis"` | Redis name |
 | redis.nodeSelector | object | `{}` | [Node selector] |
+| redis.pdb.annotations | object | `{}` | Annotations to be added to Redis server pdb |
+| redis.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the Redis server |
+| redis.pdb.labels | object | `{}` | Labels to be added to Redis server pdb |
 | redis.podAnnotations | object | `{}` | Annotations to be added to the Redis server pods |
 | redis.podLabels | object | `{}` | Labels to be added to the Redis server pods |
 | redis.priorityClassName | string | `""` | Priority class for redis |
