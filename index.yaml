@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Consistent annotation quoting across all manifests"
+    apiVersion: v2
+    appVersion: v2.2.3
+    created: "2022-01-31T19:26:34.971051826Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: c601b2440b315cf90e37366a2d2a1176c07ed357f1c6df919704a98a765eaf07
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.33.1/argo-cd-3.33.1.tgz
+    version: 3.33.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: PodDisruptionBudget template"
     apiVersion: v2
     appVersion: v2.2.3
@@ -11946,4 +11975,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-01-31T15:37:36.998513067Z"
+generated: "2022-01-31T19:26:34.975409002Z"
