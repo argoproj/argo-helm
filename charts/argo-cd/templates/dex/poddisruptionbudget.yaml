@@ -1,0 +1,26 @@
+{{- if .Values.dex.pdb.enabled }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "argo-cd.dex.fullname" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
+  {{- with .Values.dex.pdb.labels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.dex.pdb.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.dex.pdb.minAvailable }}
+  minAvailable: {{ .Values.dex.pdb.minAvailable }}
+  {{- else if .Values.dex.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.dex.pdb.maxUnavailable }}
+  {{- else }}
+  minAvailable: 0
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.dex.name) | nindent 6 }}
+{{- end }}

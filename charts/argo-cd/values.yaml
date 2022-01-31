@@ -345,6 +345,17 @@ controller:
   #    name: custom-tools
   #    subPath: helm
 
+  pdb:
+    # -- Labels to be added to application controller pdb
+    labels: {}
+    # -- Annotations to be added to application controller pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the application controller
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
 ## Dex
 dex:
   # -- Enable dex
@@ -539,6 +550,17 @@ dex:
   #    name: custom-tools
   #    subPath: helm
 
+  pdb:
+    # -- Labels to be added to Dex server pdb
+    labels: {}
+    # -- Annotations to be added to Dex server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the Dex server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
 ## Redis
 redis:
   # -- Enable redis
@@ -711,6 +733,17 @@ redis:
       namespace: "" # "monitoring"
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
+
+  pdb:
+    # -- Labels to be added to Redis server pdb
+    labels: {}
+    # -- Annotations to be added to Redis server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the Redis server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
 
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
@@ -1352,6 +1385,17 @@ server:
     # - name: argo-rollouts
     #   url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.1.0/extension.tar
 
+  pdb:
+    # -- Labels to be added to server pdb
+    labels: {}
+    # -- Annotations to be added to server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
 ## Repo Server
 repoServer:
   # -- Repo server name
@@ -1589,6 +1633,17 @@ repoServer:
   #  - mountPath: /usr/local/bin/helm
   #    name: custom-tools
   #    subPath: helm
+
+  pdb:
+    # -- Labels to be added to Repo server pdb
+    labels: {}
+    # -- Annotations to be added to Repo server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the Repo server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
 
 ## Argo Configs
 configs:
