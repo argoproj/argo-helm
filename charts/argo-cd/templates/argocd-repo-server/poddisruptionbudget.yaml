@@ -1,0 +1,26 @@
+{{- if .Values.repoServer.pdb.enabled }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "argo-cd.repoServer.fullname" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
+  {{- with .Values.repoServer.pdb.labels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.repoServer.pdb.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.repoServer.pdb.minAvailable }}
+  minAvailable: {{ .Values.repoServer.pdb.minAvailable }}
+  {{- else if .Values.repoServer.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.repoServer.pdb.maxUnavailable }}
+  {{- else }}
+  minAvailable: 0
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 6 }}
+{{- end }}
