@@ -7,7 +7,9 @@ metadata:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 {{- with .Values.server.route.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 {{- end }}
 spec:
   host: {{ .Values.server.route.hostname | quote }}
