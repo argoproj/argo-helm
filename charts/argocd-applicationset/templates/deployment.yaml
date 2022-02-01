@@ -49,6 +49,12 @@ spec:
             {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.extraEnv }}
+          env:
+          {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ (split ":" .Values.args.probeBindAddr)._1 }}
