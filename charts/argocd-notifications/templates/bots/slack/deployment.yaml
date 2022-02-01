@@ -21,6 +21,9 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "argocd-notifications.bots.slack.serviceAccountName" . }}
+      {{- with .Values.bots.slack.securityContext }}
+      securityContext: {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ include "argocd-notifications.name" . }}-bot
           image: "{{ .Values.bots.slack.image.repository }}:{{ default .Chart.AppVersion .Values.bots.slack.image.tag }}"
@@ -34,6 +37,9 @@ spec:
           ports:
           - containerPort: 8080
             name: http
+          {{- with .Values.bots.slack.containerSecurityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- with .Values.bots.slack.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
