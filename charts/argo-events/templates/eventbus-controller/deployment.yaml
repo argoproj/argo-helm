@@ -45,9 +45,9 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: NATS_STREAMING_IMAGE
-              value: {{ .Values.eventbusController.natsStreamingImage }}
+              value: "{{ .Values.registry }}/{{ .Values.eventbusController.natsStreamingImage }}"
             - name: NATS_METRICS_EXPORTER_IMAGE
-              value: {{ .Values.eventbusController.natsMetricsExporterImage }}
+              value: "{{ .Values.registry }}/{{ .Values.eventbusController.natsMetricsExporterImage }}"
           livenessProbe:
             httpGet:
               path: /healthz
