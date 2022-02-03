@@ -1,0 +1,99 @@
+# Argo Rollouts Chart
+
+A Helm chart for Argo Rollouts, progressive delivery for Kubernetes.
+
+Source code can be found [here](https://github.com/argoproj/argo-rollouts)
+
+## Additional Information
+
+This is a **community maintained** chart. This chart installs [argo-rollouts](https://argoproj.github.io/argo-rollouts/), progressive delivery for Kubernetes.
+
+The default installation is intended to be similar to the provided Argo Rollouts [releases](https://github.com/argoproj/argo-rollouts/releases).
+
+## Prerequisites
+
+- Kubernetes 1.7+
+- Helm v3.0.0+
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add argo https://argoproj.github.io/argo-helm
+$ helm install my-release argo/argo-rollouts
+```
+
+### UI Dashboard
+
+If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-rollouts dashboard by
+`kubectl port-forward service/argo-rollouts-dashboard 31000:3100` and pointing the browser to `localhost:31000`
+
+| :warning: WARNING when the Service type is set to LoadBalancer or NodePort |
+|:---------------------------------------------------------------------------|
+| The chart provides an option to change the service type (`dashboard.service.type`). Also it provides the ability to expose the dashboard via Ingress. Dashboard was never intended to be exposed as an administrative console -- it started out as a local view available via CLI. It should be protected by something (e.g. network access or even better an oauth proxy). |
+
+## Chart Values
+
+### General parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if not (or (hasPrefix "controller" .Key) (hasPrefix "dashboard" .Key) (hasPrefix "container" .Key) (hasPrefix "pod" .Key) (hasPrefix "service" .Key) ) }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+  {{- if hasPrefix "server.additional" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+### Controller
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if or (hasPrefix "controller" .Key) (hasPrefix "container" .Key) (hasPrefix "pod" .Key) (hasPrefix "service" .Key) }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+### Dashboard
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "dashboard" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+## Upgrading
+
+### To 2.0.0
+
+* The argo-rollouts dashboard is added to the template and can be enabled by setting `dashboard.enabled=true`.
+* There is a breaking change where the selector label `app.kubernetes.io/component: {{ `{{ .Values.controller.component }}` }}` is added to rollout's deployment and service in order to distinguish between the controller and the dashboard component.
+  To upgrade an existing installation, please **add the `--force` parameter** to the `helm upgrade` command or **delete the Deployment and Service resource** before you upgrade. This is necessary because Deployment's label selector is immutable.
+
+### To 1.0.0
+
+* This is a breaking change which only supports Helm v3.0.0+ now. If you still use Helm v2, please consider upgrading because v2 is EOL since November 2020.   
+  To migrate to Helm v3 please have a look at the [Helm 2to3 Plugin](https://github.com/helm/helm-2to3). This tool will convert the existing ConfigMap used for Tiller to a Secret of type `helm.sh/release.v1`.
+* `quay.io` is the default registry now
+* We introduce a template function for the labels here to reduce code duplication. This also affects the Deployment `matchLabels` selector.   
+  To upgrade an existing installation, please **add the `--force` parameter** to the `helm upgrade` command or **delete the Deployment resource** before you upgrade. This is necessary because Deployment's label selector is immutable.
+* All resources are now prefixed with the template `"argo-rollouts.fullname"`.
+  This enables the users to override resource names via the `nameOverride` and `fullnameOverride` parameters.
+* Breaking parameters update
+  * `securityContext` was renamed to `containerSecurityContext`
+  * Added `controller.image.registry`. Prior to this chart version you had to override the registry via `controller.image.repository`
+
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/helm-docs)
+
+[affinity]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+[Node selector]: https://kubernetes.io/docs/user-guide/node-selection/
+[probe]: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+[Tolerations]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+[values.yaml]: https://github.com/argoproj/argo-helm/blob/argo-rollouts-{{ .Version }}/charts/argo-rollouts/values.yaml

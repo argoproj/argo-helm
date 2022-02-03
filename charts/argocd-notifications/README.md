@@ -65,6 +65,7 @@ docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:late
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | bots.slack.affinity | object | `{}` | Assign custom [affinity] rules |
+| bots.slack.containerSecurityContext | object | `{}` | Container Security Context |
 | bots.slack.enabled | bool | `false` | Enable slack bot |
 | bots.slack.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the Slack bot |
 | bots.slack.image.repository | string | `"argoprojlabs/argocd-notifications"` | Repository to use for the Slack bot |
@@ -72,6 +73,7 @@ docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:late
 | bots.slack.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | bots.slack.nodeSelector | object | `{}` | [Node selector] |
 | bots.slack.resources | object | `{}` | Resource limits and requests for the Slack bot |
+| bots.slack.securityContext | object | `{"runAsNonRoot":true}` | Pod Security Context |
 | bots.slack.service.annotations | object | `{}` | Service annotations for Slack bot |
 | bots.slack.service.port | int | `80` | Service port for Slack bot |
 | bots.slack.service.type | string | `"LoadBalancer"` | Service type for Slack bot |
