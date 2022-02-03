@@ -58,6 +58,34 @@ apiVersionOverrides:
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
 createAggregateRoles: false
 
+# -- Array of extra K8s manifests to deploy
+extraObjects: []
+  # - apiVersion: secrets-store.csi.x-k8s.io/v1
+  #   kind: SecretProviderClass
+  #   metadata:
+  #     name: argocd-secrets-store
+  #   spec:
+  #     provider: aws
+  #     parameters:
+  #       objects: |
+  #         - objectName: "argocd"
+  #           objectType: "secretsmanager"
+  #           jmesPath:
+  #               - path: "client_id"
+  #                 objectAlias: "client_id"
+  #               - path: "client_secret"
+  #                 objectAlias: "client_secret"
+  #     secretObjects:
+  #     - data:
+  #       - key: client_id
+  #         objectName: client_id
+  #       - key: client_secret
+  #         objectName: client_secret
+  #       secretName: argocd-secrets-store
+  #       type: Opaque
+  #       labels:
+  #         app.kubernetes.io/part-of: argocd
+
 ## Controller
 controller:
   # -- Application controller name string
@@ -317,6 +345,17 @@ controller:
   #    name: custom-tools
   #    subPath: helm
 
+  pdb:
+    # -- Labels to be added to application controller pdb
+    labels: {}
+    # -- Annotations to be added to application controller pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the application controller
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
 ## Dex
 dex:
   # -- Enable dex
@@ -511,6 +550,17 @@ dex:
   #    name: custom-tools
   #    subPath: helm
 
+  pdb:
+    # -- Labels to be added to Dex server pdb
+    labels: {}
+    # -- Annotations to be added to Dex server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the Dex server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
 ## Redis
 redis:
   # -- Enable redis
@@ -522,7 +572,7 @@ redis:
     # -- Redis repository
     repository: redis
     # -- Redis tag
-    tag: 6.2.4-alpine
+    tag: 6.2.6-alpine
     # -- Redis imagePullPolicy
     imagePullPolicy: IfNotPresent
 
@@ -684,6 +734,17 @@ redis:
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
 
+  pdb:
+    # -- Labels to be added to Redis server pdb
+    labels: {}
+    # -- Annotations to be added to Redis server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the Redis server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
 # Check the redis-ha chart for more properties
@@ -712,7 +773,7 @@ redis-ha:
       enabled: true
   image:
     # -- Redis tag
-    tag: 6.2.4-alpine
+    tag: 6.2.6-alpine
 
 ## Server
 server:
@@ -1324,6 +1385,17 @@ server:
     # - name: argo-rollouts
     #   url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.1.0/extension.tar
 
+  pdb:
+    # -- Labels to be added to server pdb
+    labels: {}
+    # -- Annotations to be added to server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
 ## Repo Server
 repoServer:
   # -- Repo server name
@@ -1535,6 +1607,17 @@ repoServer:
   #     - list
   #     - watch
 
+  # Init container to copy argocd binary
+  copyutil:
+    # -- Resource limits and requests for the copyutil initContainer
+    resources: {}
+    #  limits:
+    #    cpu: 50m
+    #    memory: 64Mi
+    #  requests:
+    #    cpu: 10m
+    #    memory: 32Mi
+
   # -- Init containers to add to the repo server pods
   initContainers: []
   #  - name: download-tools
@@ -1550,6 +1633,17 @@ repoServer:
   #  - mountPath: /usr/local/bin/helm
   #    name: custom-tools
   #    subPath: helm
+
+  pdb:
+    # -- Labels to be added to Repo server pdb
+    labels: {}
+    # -- Annotations to be added to Repo server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the Repo server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
 
 ## Argo Configs
 configs:
