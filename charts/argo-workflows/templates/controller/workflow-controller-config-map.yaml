@@ -76,9 +76,9 @@ data:
         {{- if .Values.artifactRepository.s3.useSDKCreds }}
         useSDKCreds: {{ .Values.artifactRepository.s3.useSDKCreds }}
         {{- end }}
-        {{- if .Values.artifactRepository.encryptionOptions }}
+        {{- if .Values.artifactRepository.s3.encryptionOptions }}
         encryptionOptions:
-{{ toYaml .Values.artifactRepository.encryptionOptions | indent 10}}
+{{ toYaml .Values.artifactRepository.s3.encryptionOptions | indent 10}}
         {{- end }}
       {{- end }}
     {{- end}}
