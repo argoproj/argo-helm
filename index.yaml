@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Update to Argo-CD v2.2.4"
+    apiVersion: v2
+    appVersion: v2.2.4
+    created: "2022-02-04T09:19:45.72971411Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 54ba1290a8f3baab9ea355f923e8940efdc46cd6209bdc35bfadebdeba1512f8
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.33.3/argo-cd-3.33.3.tgz
+    version: 3.33.3
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Convert manifests of 'kind: List' to dashes separated documents."
     apiVersion: v2
     appVersion: v2.2.3
@@ -12026,4 +12055,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-02-03T09:37:00.245372907Z"
+generated: "2022-02-04T09:19:45.735499224Z"
