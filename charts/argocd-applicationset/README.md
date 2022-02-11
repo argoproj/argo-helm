@@ -66,6 +66,8 @@ kubectl apply -k https://github.com/argoproj-labs/applicationset.git/manifests/c
 | args.namespace | string | `""` | Namespace where ArgoCD is deployed to (defaults to .Release.Namespace) |
 | args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
 | args.probeBindAddr | string | `":8081"` | The default health check port |
+| env | list | `[]` | Environment variables to pass to the controller |
+| envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
 | extraArgs | list | `[]` | List of extra cli args to add |
 | extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | extraVolumes | list | `[]` | List of extra volumes to add |
