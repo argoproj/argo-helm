@@ -74,7 +74,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | controller.nodeSelector | object | `{}` | [Node selector] |
 | controller.readinessProbe | object | See [values.yaml] | Configure readiness [probe] for the controller |
-| controller.replicas | int | `1` | The number of controller pods to run |
+| controller.replicas | int | `2` | The number of controller pods to run |
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | podAnnotations | object | `{}` | Annotations to be added to the Rollout pods |
