@@ -59,12 +59,13 @@ spec:
             - name: webhook
               containerPort: 7000
               protocol: TCP
-          {{- if .Values.env }}
+          {{- with .Values.extraEnv }}
           env:
-          {{- toYaml .Values.env | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.envFrom }}
-          envFrom: {{- toYaml . | nindent 12 }}
+          {{- with .Values.extraEnvFrom }}
+          envFrom: 
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
