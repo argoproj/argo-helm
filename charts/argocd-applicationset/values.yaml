@@ -147,6 +147,19 @@ extraVolumes: []
 extraArgs: []
   # - --loglevel=warn
 
+# -- Environment variables to pass to the controller
+extraEnv: []
+  # - name: "MY_VAR"
+  #   value: "value"
+
+# -- envFrom to pass to the controller
+# @default -- `[]` (See [values.yaml])
+extraEnvFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
 # -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
 
