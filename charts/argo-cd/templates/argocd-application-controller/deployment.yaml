@@ -86,6 +86,11 @@ spec:
         - name: controller
           containerPort: {{ .Values.controller.containerPort }}
           protocol: TCP
+        {{ if .Values.controller.metrics.enabled }}
+        - name: metrics
+          containerPort: 8083
+          protocol: TCP
+        {{- end }}
         livenessProbe:
           httpGet:
             path: /healthz
