@@ -41,6 +41,16 @@ config:
 
 Any additional arguments mentioned on the [argocd-image-updater flags page](https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags) can be configured using the `extraArgs` value, like so.
 
+### ArgoCD API token 
+ 
+You need to specify ArgoCD API token which was created according [instructions](https://argocd-image-updater.readthedocs.io/en/stable/install/start/#configure-api-access-token-secret)
+
+```yaml
+config:
+  argocd:
+    secret: <your_secret_here>
+```
+
 ### Registries
 
 ArgoCD Image Updater natively supports the following registries (as mentioned in [the documentation](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/)):
@@ -67,6 +77,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
 | config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the ArgoCD API instead of TLS. |
 | config.argocd.serverAddress | string | `""` | Connect to the Argo CD API server at server address |
+| config.argocd.token | string | `nil` | If specified, a secret will be generated to authenticate against the ArgoCD API. |
 | config.disableKubeEvents | bool | `false` | Disable kubernetes events |
 | config.gitCommitMail | string | `""` | E-Mail address to use for Git commits |
 | config.gitCommitTemplate | string | `""` | Changing the Git commit message |

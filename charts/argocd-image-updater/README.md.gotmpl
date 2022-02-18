@@ -41,6 +41,16 @@ config:
 
 Any additional arguments mentioned on the [argocd-image-updater flags page](https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags) can be configured using the `extraArgs` value, like so.
 
+### ArgoCD API token  
+  
+You need to specify ArgoCD API token which was created according [instructions](https://argocd-image-updater.readthedocs.io/en/stable/install/start/#configure-api-access-token-secret) 
+
+```yaml
+config:
+  argocd:
+    secret: <your_secret_here>
+```
+
 ### Registries
 
 ArgoCD Image Updater natively supports the following registries (as mentioned in [the documentation](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/)):
