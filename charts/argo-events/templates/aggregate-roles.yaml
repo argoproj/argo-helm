@@ -1,0 +1,83 @@
+{{- if and .Values.createAggregateRoles (not .Values.singleNamespace) }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+  name: {{ include "argo-events.fullname" . }}-aggregate-to-admin
+rules:
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - sensors
+      - sensors/finalizers
+      - sensors/status
+      - eventsources
+      - eventsources/finalizers
+      - eventsources/status
+      - eventbus
+      - eventbus/finalizers
+      - eventbus/status
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - get
+      - list
+      - patch
+      - update
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+  name: {{ include "argo-events.fullname" . }}-aggregate-to-edit
+rules:
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - sensors
+      - sensors/finalizers
+      - sensors/status
+      - eventsources
+      - eventsources/finalizers
+      - eventsources/status
+      - eventbus
+      - eventbus/finalizers
+      - eventbus/status
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - get
+      - list
+      - patch
+      - update
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+  name: {{ include "argo-events.fullname" . }}-aggregate-to-view
+rules:
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - sensors
+      - sensors/finalizers
+      - sensors/status
+      - eventsources
+      - eventsources/finalizers
+      - eventsources/status
+      - eventbus
+      - eventbus/finalizers
+      - eventbus/status
+    verbs:
+      - get
+      - list
+      - watch
+{{- end }}
