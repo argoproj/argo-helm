@@ -33,8 +33,11 @@ You can install the CRDs manually from `crds` folder.
 |-----|------|---------|-------------|
 | additionalSaNamespaces | list | `[]` | Create service accounts in additional namespaces specified The SA will always be created in the release namespaces |
 | additionalServiceAccountRules | list | (See [values.yaml]) | Additional rules |
+| createAggregateRoles | bool | `true` | Create clusterroles that extend existing clusterroles to interact with argo-events CRDs. Only applies for cluster-wide installation (`singleNamespace: true`) |
+| fullnameOverride | string | `""` | String to fully override "argo-events.fullname" template |
 | imagePullPolicy | string | `"Always"` | The image pull policy |
 | imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
+| nameOverride | string | `""` | String to partially override "argo-events.fullname" template |
 | registry | string | `"quay.io"` | docker registry |
 | securityContext | object | `{"runAsNonRoot":true,"runAsUser":9731}` | Common PodSecurityContext for all controllers |
 | serviceAccount | string | `"argo-events-sa"` | ServiceAccount to use for running controller. |
