@@ -39,6 +39,14 @@ config:
     plaintext: true
 ```
 
+### ArgoCD API key
+```yaml
+config:
+  argocd:
+    secret: <your_secret_here>
+```
+If you specify a secret value the secret will be created.
+
 Any additional arguments mentioned on the [argocd-image-updater flags page](https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags) can be configured using the `extraArgs` value, like so.
 
 ### Registries
@@ -66,6 +74,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.argocd.grpcWeb | bool | `true` | Use the gRPC-web protocol to connect to the Argo CD API |
 | config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
 | config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the ArgoCD API instead of TLS. |
+| config.argocd.secret | string | `""` | If specified, the secret with ArgoCD API key will be created. |
 | config.argocd.serverAddress | string | `""` | Connect to the Argo CD API server at server address |
 | config.disableKubeEvents | bool | `false` | Disable kubernetes events |
 | config.gitCommitMail | string | `""` | E-Mail address to use for Git commits |
