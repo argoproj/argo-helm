@@ -34,6 +34,9 @@ spec:
     protocol: TCP
     port: {{ .Values.dashboard.service.port }}
     targetPort: {{ .Values.dashboard.service.targetPort }}
+    {{- if and (eq .Values.dashboard.service.type "NodePort") .Values.dashboard.service.nodePort }}
+    nodePort: {{ .Values.dashboard.service.nodePort }}
+    {{- end }}
   selector:
     app.kubernetes.io/component: {{ .Values.dashboard.component }}
     {{- include "argo-rollouts.selectorLabels" . | nindent 4 }}
