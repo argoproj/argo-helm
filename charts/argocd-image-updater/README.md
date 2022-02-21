@@ -43,9 +43,9 @@ config:
 ```yaml
 config:
   argocd:
-    secret: <your_secret_here>
+    token: <your_secret_here>
 ```
-If you specify a secret value the secret will be created.
+If you specify a token value the secret will be created.
 
 Any additional arguments mentioned on the [argocd-image-updater flags page](https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags) can be configured using the `extraArgs` value, like so.
 
