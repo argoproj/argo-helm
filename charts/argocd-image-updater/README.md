@@ -74,8 +74,8 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.argocd.grpcWeb | bool | `true` | Use the gRPC-web protocol to connect to the Argo CD API |
 | config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
 | config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the ArgoCD API instead of TLS. |
-| config.argocd.secret | string | `""` | If specified, the secret with ArgoCD API key will be created. |
 | config.argocd.serverAddress | string | `""` | Connect to the Argo CD API server at server address |
+| config.argocd.token | string | `""` | If specified, the secret with ArgoCD API key will be created. |
 | config.disableKubeEvents | bool | `false` | Disable kubernetes events |
 | config.gitCommitMail | string | `""` | E-Mail address to use for Git commits |
 | config.gitCommitTemplate | string | `""` | Changing the Git commit message |
