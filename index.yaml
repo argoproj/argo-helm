@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: dex-server extraArgs"
+    apiVersion: v2
+    appVersion: v2.2.5
+    created: "2022-02-23T11:02:55.123059193Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: da0ee5919c9512a14d8cc4ba80204429a108ad82c3986a9310026f263d26bd63
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.33.7/argo-cd-3.33.7.tgz
+    version: 3.33.7
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Fix typo of policy.csv comment in values"
     apiVersion: v2
     appVersion: v2.2.5
@@ -12295,4 +12324,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-02-20T23:01:56.774644681Z"
+generated: "2022-02-23T11:02:55.129740044Z"
