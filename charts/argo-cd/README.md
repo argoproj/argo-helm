@@ -520,6 +520,7 @@ NAME: my-release
 | dex.enabled | bool | `true` | Enable dex |
 | dex.env | list | `[]` | Environment variables to pass to the Dex server |
 | dex.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Dex server |
+| dex.extraArgs | list | `[]` | Additional command line arguments to pass to the Dex server |
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.extraVolumeMounts | list | `[]` | Extra volumeMounts to the dex pod |
 | dex.extraVolumes | list | `[]` | Extra volumes to the dex pod |
