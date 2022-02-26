@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v2.2.5
 description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 3.33.7
+version: 3.33.8
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 keywords:
@@ -21,4 +21,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: dex-server extraArgs"
+    - "[Fixed]: repo-server copyutil init container has no securityContext"

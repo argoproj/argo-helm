@@ -203,6 +203,9 @@ spec:
         name: copyutil
         resources:
           {{- toYaml .Values.repoServer.copyutil.resources | nindent 10 }}
+        {{- if .Values.repoServer.containerSecurityContext }}
+        securityContext: {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
+        {{- end }}
         volumeMounts:
         - mountPath: /var/run/argocd
           name: var-files
