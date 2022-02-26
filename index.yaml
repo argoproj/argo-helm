@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Added repo-server copyutil securityContext"
+    apiVersion: v2
+    appVersion: v2.2.5
+    created: "2022-02-26T20:07:37.112593621Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: f0ba7e8703ca01af1ae7a1598340088b160f2c25ce920f73a3e2aea0d7b3ef8d
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.33.8/argo-cd-3.33.8.tgz
+    version: 3.33.8
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: dex-server extraArgs"
     apiVersion: v2
     appVersion: v2.2.5
@@ -12324,4 +12353,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-02-23T11:02:55.129740044Z"
+generated: "2022-02-26T20:07:37.118318285Z"
