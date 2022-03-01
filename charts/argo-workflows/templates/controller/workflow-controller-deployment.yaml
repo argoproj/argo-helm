@@ -74,9 +74,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.controller.resources | nindent 12 }}
-          volumeMounts:
           {{- with .Values.controller.volumeMounts }}
-            {{- toYaml . | nindent 10}}
+          volumeMounts:
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           ports:
             - name: {{ .Values.controller.metricsConfig.portName }}
@@ -90,9 +90,9 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      volumes:
       {{- with .Values.controller.volumes }}
-        {{- toYaml . | nindent 6}}
+      volumes:
+        {{- toYaml . | nindent 6 }}
       {{- end }}
       {{- with .Values.controller.nodeSelector }}
       nodeSelector:
