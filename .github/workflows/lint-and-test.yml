@@ -62,6 +62,13 @@ jobs:
           ## Metrics API not available in kind cluster
           rm charts/argo-cd/ci/ha-autoscaling-values.yaml
 
+      - name: Create an external redis for ArgoCD externalRedis feature
+        if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
+        run: |
+          kubectl create namespace redis
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm install redis bitnami/redis --wait --namespace redis --set auth.password=argocd --set architecture=standalone
+
       - name: Run chart-testing (install)
         run: ct install --config ./.github/configs/ct-install.yaml
         if: steps.list-changed.outputs.changed == 'true'

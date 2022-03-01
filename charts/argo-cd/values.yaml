@@ -777,6 +777,18 @@ redis-ha:
     # -- Redis tag
     tag: 6.2.6-alpine
 
+# External Redis parameters
+externalRedis:
+  # -- External Redis server host
+  host: ""
+  # -- External Redis password
+  password: ""
+  # -- External Redis server port
+  port: 6379
+  # -- The name of an existing secret with Redis credentials (must contain key `redis-password`).
+  # When it's set, the `externalRedis.password` parameter is ignored
+  existingSecret: ""
+
 ## Server
 server:
   # -- Argo CD server name

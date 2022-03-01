@@ -47,6 +47,9 @@ spec:
         {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
+        {{- else if and .Values.externalRedis.host .Values.externalRedis.port }}
+        - --redis
+        - {{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}
         {{- end }}
         - --logformat
         - {{ .Values.repoServer.logFormat }}
@@ -65,9 +68,10 @@ spec:
           value: /helm-working-dir
         - name: HELM_DATA_HOME
           value: /helm-working-dir
-        {{- if .Values.repoServer.env }}
-          {{- toYaml .Values.repoServer.env | nindent 8 }}
-        {{- end }}
+          {{- include "argo-cd.redisPasswordEnv" . | nindent 8 }}
+          {{- with .Values.repoServer.env }}
+          {{- toYaml . | nindent 8 }}
+          {{- end }}
         {{- if .Values.openshift.enabled }}
         - name: USER_NAME
           value: argocd

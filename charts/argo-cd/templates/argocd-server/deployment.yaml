@@ -59,6 +59,9 @@ spec:
         {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
+        {{- else if and .Values.externalRedis.host .Values.externalRedis.port }}
+        - --redis
+        - {{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}
         {{- end }}
         {{- with .Values.server.extraArgs }}
         {{- . | toYaml | nindent 8 }}
@@ -66,9 +69,12 @@ spec:
         {{- if .Values.server.containerSecurityContext }}
         securityContext: {{- toYaml .Values.server.containerSecurityContext | nindent 10 }}
         {{- end }}
-        {{- if .Values.server.env }}
+        {{- if or .Values.server.env .Values.externalRedis.password .Values.externalRedis.existingSecret }}
         env:
-{{- toYaml .Values.server.env | nindent 8 }}
+          {{- include "argo-cd.redisPasswordEnv" . | nindent 8 }}
+          {{- with .Values.server.env }}
+          {{- toYaml . | nindent 8 }}
+          {{- end }}
         {{- end }}
         {{- with .Values.server.envFrom }}
         envFrom: {{- toYaml . | nindent 8 }}
