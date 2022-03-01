@@ -2,7 +2,7 @@ apiVersion: v2
 name: argocd-image-updater
 description: A Helm chart for Argo CD Image Updater, a tool to automatically update the container images of Kubernetes workloads which are managed by Argo CD
 type: application
-version: 0.6.3
+version: 0.7.0
 appVersion: v0.11.3
 home: https://github.com/argoproj-labs/argocd-image-updater
 icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
@@ -15,4 +15,4 @@ maintainers:
     url: https://argoproj.github.io/
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: Update to app version v0.11.3"
+    - "[Added]: Ability to manage secret containing the ArgoCD API token"

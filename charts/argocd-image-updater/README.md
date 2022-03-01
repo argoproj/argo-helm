@@ -16,10 +16,6 @@ helm install argocd-image-updater argo/argocd-image-updater
 
 You will also need to run through the [secret setup documentation](https://argocd-image-updater.readthedocs.io/en/stable/install/start/#connect-using-argo-cd-api-server) so ArgoCD ImageUpdater can talk to the ArgoCD API (until its automated in this chart).
 
-## TODO
-
-- Automate setting up the ArgoCD API Authentication user/secret using a Helm Hook or something.
-
 ## Prerequisites
 
 * Helm v3.0.0+
@@ -40,6 +36,19 @@ config:
 ```
 
 Any additional arguments mentioned on the [argocd-image-updater flags page](https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags) can be configured using the `extraArgs` value, like so.
+
+### ArgoCD API key
+
+If you are unable to install Argo CD Image Updater into the same Kubernetes cluster you might configure it to use API of your Argo CD installation.
+Please also read [the documentation](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/).
+
+```yaml
+config:
+  argocd:
+    token: <your_secret_here>
+```
+
+If you specify a token value the secret will be created.
 
 ### Registries
 
@@ -67,6 +76,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
 | config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the ArgoCD API instead of TLS. |
 | config.argocd.serverAddress | string | `""` | Connect to the Argo CD API server at server address |
+| config.argocd.token | string | `""` | If specified, the secret with ArgoCD API key will be created. |
 | config.disableKubeEvents | bool | `false` | Disable kubernetes events |
 | config.gitCommitMail | string | `""` | E-Mail address to use for Git commits |
 | config.gitCommitTemplate | string | `""` | Changing the Git commit message |
