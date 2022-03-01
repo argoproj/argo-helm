@@ -31,6 +31,9 @@ args:
   # -- Enable dry run mode
   dryRun: false
 
+# -- Additional containers to be added to the applicationset controller pod
+extraContainers: []
+
   ## Metrics service configuration
 metrics:
   # -- Deploy metrics service
@@ -146,6 +149,19 @@ extraVolumes: []
 # -- List of extra cli args to add
 extraArgs: []
   # - --loglevel=warn
+
+# -- Environment variables to pass to the controller
+extraEnv: []
+  # - name: "MY_VAR"
+  #   value: "value"
+
+# -- envFrom to pass to the controller
+# @default -- `[]` (See [values.yaml])
+extraEnvFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
 # -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
