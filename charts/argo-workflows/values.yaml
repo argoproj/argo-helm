@@ -145,6 +145,8 @@ controller:
     enabled: false
     # -- Prometheus ServiceMonitor labels
     additionalLabels: {}
+    # -- Prometheus ServiceMonitor namespace
+    namespace: "" # "monitoring"
   serviceAccount:
     # -- Create a service account for the controller
     create: true
@@ -221,6 +223,10 @@ controller:
 
   # -- Extra arguments to be added to the controller
   extraArgs: []
+  # -- Additional volume mounts to the controller main container
+  volumeMounts: []
+  # -- Additional volumes to the controller pod
+  volumes: []
   # -- The number of controller pods to run
   replicas: 1
 

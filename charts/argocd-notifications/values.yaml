@@ -428,6 +428,13 @@ bots:
       # -- Annotations applied to created service account
       annotations: {}
 
+    # -- Pod Security Context
+    securityContext:
+      runAsNonRoot: true
+
+    # -- Container Security Context
+    containerSecurityContext: {}
+
     # -- Resource limits and requests for the Slack bot
     resources: {}
     # limits:

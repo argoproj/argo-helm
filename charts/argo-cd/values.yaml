@@ -345,12 +345,26 @@ controller:
   #    name: custom-tools
   #    subPath: helm
 
+  pdb:
+    # -- Labels to be added to application controller pdb
+    labels: {}
+    # -- Annotations to be added to application controller pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the application controller
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
 ## Dex
 dex:
   # -- Enable dex
   enabled: true
   # -- Dex name
   name: dex-server
+
+  # -- Additional command line arguments to pass to the Dex server
+  extraArgs: []
 
   metrics:
     # -- Deploy metrics service
@@ -539,6 +553,17 @@ dex:
   #    name: custom-tools
   #    subPath: helm
 
+  pdb:
+    # -- Labels to be added to Dex server pdb
+    labels: {}
+    # -- Annotations to be added to Dex server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the Dex server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
 ## Redis
 redis:
   # -- Enable redis
@@ -550,7 +575,7 @@ redis:
     # -- Redis repository
     repository: redis
     # -- Redis tag
-    tag: 6.2.4-alpine
+    tag: 6.2.6-alpine
     # -- Redis imagePullPolicy
     imagePullPolicy: IfNotPresent
 
@@ -712,6 +737,17 @@ redis:
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
 
+  pdb:
+    # -- Labels to be added to Redis server pdb
+    labels: {}
+    # -- Annotations to be added to Redis server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the Redis server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
 # Check the redis-ha chart for more properties
@@ -740,7 +776,7 @@ redis-ha:
       enabled: true
   image:
     # -- Redis tag
-    tag: 6.2.4-alpine
+    tag: 6.2.6-alpine
 
 ## Server
 server:
@@ -1142,7 +1178,7 @@ server:
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
   rbacConfig:
     {}
-    # policy.csv is an file containing user-defined RBAC policies and role definitions (optional).
+    # policy.csv is a file containing user-defined RBAC policies and role definitions (optional).
     # Policy rules are in the form:
     #   p, subject, resource, action, object, effect
     # Role definitions and bindings are in the form:
@@ -1351,6 +1387,17 @@ server:
     contents: []
     # - name: argo-rollouts
     #   url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.1.0/extension.tar
+
+  pdb:
+    # -- Labels to be added to server pdb
+    labels: {}
+    # -- Annotations to be added to server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
 
 ## Repo Server
 repoServer:
@@ -1589,6 +1636,17 @@ repoServer:
   #  - mountPath: /usr/local/bin/helm
   #    name: custom-tools
   #    subPath: helm
+
+  pdb:
+    # -- Labels to be added to Repo server pdb
+    labels: {}
+    # -- Annotations to be added to Repo server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the Repo server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
 
 ## Argo Configs
 configs:

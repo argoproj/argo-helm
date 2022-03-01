@@ -15,7 +15,6 @@ The default installation is intended to be similar to the provided Argo Rollouts
 - Kubernetes 1.7+
 - Helm v3.0.0+
 
-
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
@@ -24,6 +23,7 @@ To install the chart with the release name `my-release`:
 $ helm repo add argo https://argoproj.github.io/argo-helm
 $ helm install my-release argo/argo-rollouts
 ```
+
 ### UI Dashboard
 
 If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-rollouts dashboard by
@@ -35,71 +35,90 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 
 ## Chart Values
 
+### General parameters
+
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
 | clusterInstall | bool | `true` | `false` runs controller in namespaced mode (does not require cluster RBAC) |
-| controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
-| controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| controller.image.registry | string | `quay.io` | Registry to use |
-| controller.image.repository | string | `"argoproj/argo-rollouts"` | Repository to use |
-| controller.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
-| controller.extraArgs | list | `[]` | Additional arguments for the controller. A list of flags. |
-| controller.extraContainers | list | `[]` | Literal yaml for extra containers to be added to controller deployment. |
-| controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
-| controller.tolerations | list | `[]` | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
-| controller.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
-| controller.nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
-| controller.metrics.enabled | bool | `false` | Deploy metrics service |
-| controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
-| controller.metrics.serviceMonitor.additionalAnnotations | object | `{}` | Annotations to be added to the ServiceMonitor |
-| controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Labels to be added to the ServiceMonitor |
-| imagePullSecrets | list | `[]` | Registry secret names as an array |
+| crdAnnotations | object | `{}` | Annotations to be added to all CRDs |
+| fullnameOverride | string | `nil` | String to fully override "argo-rollouts.fullname" template |
+| imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry. Registry secret names as an array. |
 | installCRDs | bool | `true` | Install and upgrade CRDs |
 | keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
-| crdAnnotations | object | `{}` | Annotations to be added to all CRDs |
+| nameOverride | string | `nil` | String to partially override "argo-rollouts.fullname" template |
+
+### Controller
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| containerSecurityContext | object | `{}` | Security Context to set on container level |
+| controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
+| controller.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-controller.  A list of flags. |
+| controller.extraContainers | list | `[]` | Literal yaml for extra containers to be added to controller deployment. |
+| controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| controller.image.registry | string | `"quay.io"` | Registry to use |
+| controller.image.repository | string | `"argoproj/argo-rollouts"` | Repository to use |
+| controller.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
+| controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
+| controller.metrics.enabled | bool | `false` | Deploy metrics service |
+| controller.metrics.serviceMonitor.additionalAnnotations | object | `{}` | Annotations to be added to the ServiceMonitor |
+| controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Labels to be added to the ServiceMonitor |
+| controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
+| controller.nodeSelector | object | `{}` | [Node selector] |
+| controller.readinessProbe | object | See [values.yaml] | Configure readiness [probe] for the controller |
+| controller.replicas | int | `1` | The number of controller pods to run |
+| controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
+| controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | podAnnotations | object | `{}` | Annotations to be added to the Rollout pods |
 | podLabels | object | `{}` | Labels to be added to the Rollout pods |
-| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| podSecurityContext | object | `{"runAsNonRoot":true}` | Security Context to set on pod level |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| podSecurityContext | object | `{"runAsNonRoot": true}` | Security Context to set on pod level |
-| containerSecurityContext | object | `{}` | Security Context to set on container level |
-| dashboard.enabled | bool | `false` | Deploy dashboard server |
+| serviceAnnotations | object | `{}` | Annotations to be added to the Rollout service |
+
+### Dashboard
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| dashboard.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | dashboard.component | string | `"rollouts-dashboard"` | Value of label `app.kubernetes.io/component` |
+| dashboard.containerSecurityContext | object | `{}` | Security Context to set on container level |
+| dashboard.enabled | bool | `false` | Deploy dashboard server |
+| dashboard.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-dashboard. A list of flags. |
 | dashboard.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| dashboard.image.registry | string | `quay.io` | Registry to use |
+| dashboard.image.registry | string | `"quay.io"` | Registry to use |
 | dashboard.image.repository | string | `"argoproj/kubectl-argo-rollouts"` | Repository to use |
 | dashboard.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
-| dashboard.extraArgs | list | `[]` | Additional arguments for the dashboard. A list of flags. |
+| dashboard.ingress.annotations | object | `{}` | Dashboard ingress annotations |
+| dashboard.ingress.enabled | bool | `false` | Enable dashboard ingress support |
+| dashboard.ingress.extraPaths | list | `[]` | Dashboard ingress extra paths |
+| dashboard.ingress.hosts | list | `[]` | Dashboard ingress hosts |
+| dashboard.ingress.ingressClassName | string | `""` | Dashboard ingress class name |
+| dashboard.ingress.labels | object | `{}` | Dashboard ingress labels |
+| dashboard.ingress.pathType | string | `"Prefix"` | Dashboard ingress path type |
+| dashboard.ingress.paths | list | `["/"]` | Dashboard ingress paths |
+| dashboard.ingress.tls | list | `[]` | Dashboard ingress tls |
+| dashboard.nodeSelector | object | `{}` | [Node selector] |
+| dashboard.podSecurityContext | object | `{"runAsNonRoot":true}` | Security Context to set on pod level |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
+| dashboard.service.annotations | object | `{}` | Service annotations |
 | dashboard.service.externalIPs | list | `[]` | Dashboard service external IPs |
+| dashboard.service.labels | object | `{}` | Service labels |
 | dashboard.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | dashboard.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
-| dashboard.service.type | string | `ClusterIP` | Sets the type of the Service |
-| dashboard.tolerations | list | `[]` | [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
-| dashboard.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
-| dashboard.nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
-| dashboard.podSecurityContext | object | `{"runAsNonRoot": true}` | Security Context to set on pod level |
-| dashboard.containerSecurityContext | object | `{}` | Security Context to set on container level |
-| dashboard.serviceAccount.create | bool | `true` | Specifies whether a dashboard service account should be created |
+| dashboard.service.nodePort | int | `nil` | Service nodePort |
+| dashboard.service.port | int | `3100` | Service port |
+| dashboard.service.portName | string | `"dashboard"` | Service port name |
+| dashboard.service.targetPort | int | `3100` | Service target port |
+| dashboard.service.type | string | `"ClusterIP"` | Sets the type of the Service |
 | dashboard.serviceAccount.annotations | object | `{}` | Annotations to add to the dashboard service account |
-| dashboard.serviceAccount.name | string | `""` | The name of the dashboard service account to use. If not set and create is true, a name is generated using the fullname template |
-| dashboard.service.annotations | object | `{}` | Dashboard service annotations |
-| dashboard.service.labels | object | `{}` | Dashboard service labels |
-| dashboard.service.portName | string | `dashboard` | Dashboard service port name |
-| dashboard.service.port | int | `3100` | Dashboard service port |
-| dashboard.service.targetPort | int | `3100` | Dashboard service target port |
-| dashboard.ingress.enabled | bool | `false` | Enable dashboard ingress support |
-| dashboard.ingress.annotations | object | `{}` | Dashboard ingress annotations |
-| dashboard.ingress.labels | object | `{}` | Dashboard ingress labels |
-| dashboard.ingress.ingressClassName | string | `""` | Dashboard ingress class name |
-| dashboard.ingress.hosts | list | `[]` | Dashboard ingress hosts |
-| dashboard.ingress.paths | list | `["/"]` | Dashboard ingress paths |
-| dashboard.ingress.pathType | string | `Prefix` | Dashboard ingress path type |
-| dashboard.ingress.extraPaths | list | `[]` | Dashboard ingress extra paths |
-| dashboard.ingress.tls | list | `[]` | Dashboard ingress tls |
+| dashboard.serviceAccount.create | bool | `true` | Specifies whether a dashboard service account should be created |
+| dashboard.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| dashboard.tolerations | list | `[]` | [Tolerations] for use with node taints |
 
 ## Upgrading
 
@@ -121,3 +140,12 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 * Breaking parameters update
   * `securityContext` was renamed to `containerSecurityContext`
   * Added `controller.image.registry`. Prior to this chart version you had to override the registry via `controller.image.repository`
+
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/helm-docs)
+
+[affinity]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+[Node selector]: https://kubernetes.io/docs/user-guide/node-selection/
+[probe]: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+[Tolerations]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+[values.yaml]: https://github.com/argoproj/argo-helm/blob/argo-rollouts-2.10.0/charts/argo-rollouts/values.yaml

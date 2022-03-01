@@ -1,50 +1,57 @@
+# -- Install and upgrade CRDs
 installCRDs: true
+# -- Keep CRD's on helm uninstall
 keepCRDs: true
 
+# -- `false` runs controller in namespaced mode (does not require cluster RBAC)
 clusterInstall: true
 
-## String to partially override "argo-rollouts.fullname" template
-##
+# -- String to partially override "argo-rollouts.fullname" template
 nameOverride:
 
-## String to fully override "argo-rollouts.fullname" template
-##
+# -- String to fully override "argo-rollouts.fullname" template
 fullnameOverride:
 
 ## Override APIVersions
 ## If you want to template helm charts but cannot access k8s API server
 ## you can set api versions here
 apiVersionOverrides:
-  # String to override apiVersion of ingresses rendered by this helm chart
+  # -- String to override apiVersion of ingresses rendered by this helm chart
   ingress: "" # networking.k8s.io/v1beta1
 
-## Override the Kubernetes version, which is used to evaluate certain manifests
-##
+# -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
 
 controller:
+  # -- Value of label `app.kubernetes.io/component`
   component: rollouts-controller
-  ## Node selectors and tolerations for server scheduling to nodes with taints
-  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-  ##
+  # -- [Node selector]
   nodeSelector: {}
+  # -- [Tolerations] for use with node taints
   tolerations: []
+  # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+  # -- The number of controller pods to run
   replicas: 1
   image:
+    # -- Registry to use
     registry: quay.io
+    # -- Repository to use
     repository: argoproj/argo-rollouts
+    # -- Overrides the image tag (default is the chart appVersion)
     tag: ""
+    # -- Image pull policy
     pullPolicy: IfNotPresent
 
-  ## Additional command line arguments to pass to rollouts-controller
-  ##
+  # -- Additional command line arguments to pass to rollouts-controller.  A list of flags.
   extraArgs: []
 
+  # -- Literal yaml for extra containers to be added to controller deployment.
   ## Additional containers to add to the rollouts controller deployment
   ## This will be rendered as the literal yaml
   extraContainers: []
 
+  # -- Resource limits and requests for the controller pods.
   resources: {}
   #  limits:
   #    cpu: 100m
@@ -54,13 +61,18 @@ controller:
   #    memory: 64Mi
 
   metrics:
+    # -- Deploy metrics service
     enabled: false
     serviceMonitor:
+      # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Labels to be added to the ServiceMonitor
       additionalLabels: {}
+      # -- Annotations to be added to the ServiceMonitor
       additionalAnnotations: {}
 
-  ## Readiness and liveness probes for rollouts controller
+  # -- Configure liveness [probe] for the controller
+  # @default -- See [values.yaml]
   livenessProbe:
     httpGet:
       path: /metrics
@@ -70,6 +82,9 @@ controller:
     failureThreshold: 3
     successThreshold: 1
     timeoutSeconds: 10
+
+  # -- Configure readiness [probe] for the controller
+  # @default -- See [values.yaml]
   readinessProbe:
     httpGet:
       path: /metrics
@@ -81,29 +96,25 @@ controller:
     timeoutSeconds: 4
 
 serviceAccount:
-  # Specifies whether a service account should be created
+  # -- Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
+  # -- Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
+  # -- The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-## Annotations to be added to all CRDs
-##
+# -- Annotations to be added to all CRDs
 crdAnnotations: {}
 
-## Annotations to be added to the Rollout pods
-##
+# -- Annotations to be added to the Rollout pods
 podAnnotations: {}
 
-## Security Context to set on pod level
-##
+# -- Security Context to set on pod level
 podSecurityContext:
   runAsNonRoot: true
 
-## Security Context to set on container level
-##
+# -- Security Context to set on container level
 containerSecurityContext: {}
   # capabilities:
   #   drop:
@@ -112,40 +123,47 @@ containerSecurityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-## Annotations to be added to the Rollout service
-##
+# -- Annotations to be added to the Rollout service
 serviceAnnotations: {}
 
-## Labels to be added to the Rollout pods
-##
+# -- Labels to be added to the Rollout pods
 podLabels: {}
 
-# Secrets with credentials to pull images from a private registry
+# -- Secrets with credentials to pull images from a private registry. Registry secret names as an array.
 imagePullSecrets: []
 # - name: argo-pull-secret
 
 dashboard:
+  # -- Deploy dashboard server
   enabled: false
+  # -- Value of label `app.kubernetes.io/component`
   component: rollouts-dashboard
-  ## Node selectors and tolerations for server scheduling to nodes with taints
-  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-  ##
+  # -- [Node selector]
   nodeSelector: {}
+  # -- [Tolerations] for use with node taints
   tolerations: []
+  # -- Assign custom [affinity] rules to the deployment
   affinity: {}
   image:
+    # -- Registry to use
     registry: quay.io
+    # --  Repository to use
     repository: argoproj/kubectl-argo-rollouts
+    # -- Overrides the image tag (default is the chart appVersion)
     tag: ""
+    # -- Image pull policy
     pullPolicy: IfNotPresent
-  ## Additional command line arguments to pass to rollouts-dashboard
-  ##
+  # -- Additional command line arguments to pass to rollouts-dashboard. A list of flags.
   extraArgs: []
+  # -- Resource limits and requests for the dashboard pods.
   resources: {}
+  # -- Security Context to set on pod level
   podSecurityContext:
     runAsNonRoot: true
+  # -- Security Context to set on container level
   containerSecurityContext: {}
   service:
+    # -- Sets the type of the Service
     type: ClusterIP
     # -- LoadBalancer will get created with the IP specified in this field
     loadBalancerIP: ""
@@ -163,30 +181,43 @@ dashboard:
     port: 3100
     # -- Service target port
     targetPort: 3100
+    # -- (int) Service nodePort
+    nodePort:
   serviceAccount:
+    # -- Specifies whether a dashboard service account should be created
     create: true
+    # -- Annotations to add to the dashboard service account
     annotations: {}
-    # The name of the service account to use.
+    # -- The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name: ""
+
   ## Ingress configuration.
   ## ref: https://kubernetes.io/docs/user-guide/ingress/
   ##
   ingress:
+    # -- Enable dashboard ingress support
     enabled: false
+    # -- Dashboard ingress annotations
     annotations: {}
+    # -- Dashboard ingress labels
     labels: {}
+    # -- Dashboard ingress class name
     ingressClassName: ""
 
+    # -- Dashboard ingress hosts
     ## Argo Rollouts Dashboard Ingress.
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
-    ##
     hosts: []
       # - argorollouts.example.com
+
+    # -- Dashboard ingress paths
     paths:
       - /
+    # -- Dashboard ingress path type
     pathType: Prefix
+    # -- Dashboard ingress extra paths
     extraPaths: []
       # - path: /*
       #   backend:
@@ -200,6 +231,8 @@ dashboard:
       #       name: ssl-redirect
       #       port:
       #         name: use-annotation
+
+    # -- Dashboard ingress tls
     tls: []
       # - secretName: argorollouts-example-tls
       #   hosts:
