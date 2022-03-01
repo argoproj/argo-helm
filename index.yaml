@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Always mount argocd-tls-certs-cm in server and repo-server"
+    apiVersion: v2
+    appVersion: v2.2.5
+    created: "2022-03-01T17:37:13.89496938Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: f1f2d46a5d55915a89eb5f21ae74f733237b98de12b1153b4bfaa1f6d082e82c
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.34.0/argo-cd-3.34.0.tgz
+    version: 3.34.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Added repo-server copyutil securityContext"
     apiVersion: v2
     appVersion: v2.2.5
@@ -12398,4 +12427,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-03-01T10:26:54.026731681Z"
+generated: "2022-03-01T17:37:13.899931959Z"
