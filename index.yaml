@@ -9986,6 +9986,28 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Avoid "namespace: null" when singleNamespace is true"
+    apiVersion: v2
+    appVersion: v3.2.7
+    created: "2022-03-03T14:02:26.132857563Z"
+    description: A Helm chart for Argo Workflows
+    digest: b28b60dafa06c84adc23ba1f34f208a42060783afa05138260176ace298a9be7
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: benjaminws
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.11.1/argo-workflows-0.11.1.tgz
+    version: 0.11.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Workflow Controller Volumes and VolumeMounts parameters"
     apiVersion: v2
     appVersion: v3.2.7
@@ -12456,4 +12478,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-03-01T21:58:22.223297786Z"
+generated: "2022-03-03T14:02:26.138324773Z"
