@@ -318,6 +318,7 @@ NAME: my-release
 | repoServer.clusterAdminAccess.enabled | bool | `false` | Enable RBAC for local cluster deployments |
 | repoServer.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the Repo server's Cluster Role resource |
 | repoServer.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
+| repoServer.command | list | `[]` | Override container entrypoint |
 | repoServer.containerPort | int | `8081` | Configures the repo server port |
 | repoServer.containerSecurityContext | object | `{}` | Repo server container-level security context |
 | repoServer.copyutil.resources | object | `{}` | Resource limits and requests for the copyutil initContainer |
