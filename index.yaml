@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Quote clusterResources value to avoid invalid Secret manifest"
+    apiVersion: v2
+    appVersion: v2.2.5
+    created: "2022-03-06T15:54:12.522926193Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 832f4fb3de43e2fce516fe58e8cd95baadca9d95d8636bdb33611409460677bb
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.35.2/argo-cd-3.35.2.tgz
+    version: 3.35.2
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Use upstream entrypoint.sh for argocd-repo-server"
     apiVersion: v2
     appVersion: v2.2.5
@@ -12529,4 +12558,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-03-06T12:08:37.457755648Z"
+generated: "2022-03-06T15:54:12.52805906Z"
