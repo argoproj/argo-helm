@@ -1,4 +1,4 @@
-{{- if .Values.server.enabled }}
+{{- if and .Values.server.enabled .Values.server.createRoles}}
 apiVersion: rbac.authorization.k8s.io/v1
   {{- if .Values.singleNamespace }}
 kind: Role

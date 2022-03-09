@@ -1,4 +1,4 @@
-{{- if and .Values.server.enabled .Values.server.serviceAccount.create -}}
+{{- if and .Values.server.enabled .Values.server.serviceAccount.create .Values.server.createRoles -}}
 apiVersion: rbac.authorization.k8s.io/v1
 {{- if .Values.singleNamespace }}
 kind: RoleBinding
