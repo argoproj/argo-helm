@@ -57,9 +57,9 @@ spec:
         - --loglevel
         - {{ .Values.controller.logLevel }}
         {{- if .Values.controller.metrics.applicationLabels.enabled }}
-        - --metrics-application-labels
         {{- range .Values.controller.metrics.applicationLabels.labels }}
-        - {{- toYaml . | nindent 8 }}
+        - --metrics-application-labels
+        - {{ . }}
         {{- end }}
         {{- end }}
         {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
