@@ -56,8 +56,9 @@ controller:
     # limit: 10
     # burst: 1
 
-  # -- Whether to create roles and role bindings at all.
-  createRoles: true
+  rbac:
+    # -- Adds Role and RoleBinding for the controller.
+    create: true
 
   # -- Limits the maximum number of incomplete workflows in a namespace
   namespaceParallelism:
@@ -296,8 +297,9 @@ server:
   podLabels: {}
   # -- SecurityContext to set on the server pods
   podSecurityContext: {}
-  # -- Whether to create roles and role bindings at all.
-  createRoles: true
+  rbac:
+    # -- Adds Role and RoleBinding for the server.
+    create: true
   # -- Servers container-level security context
   securityContext:
     readOnlyRootFilesystem: false
