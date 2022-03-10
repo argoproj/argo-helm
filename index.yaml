@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Create service account for repo server by default"
+    apiVersion: v2
+    appVersion: v2.2.5
+    created: "2022-03-10T10:45:46.092661607Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 7f5ece934ee2fbd011262835fdfd3324e481507b257df0db0b04cbb1f2735512
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-3.35.3/argo-cd-3.35.3.tgz
+    version: 3.35.3
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Quote clusterResources value to avoid invalid Secret manifest"
     apiVersion: v2
     appVersion: v2.2.5
@@ -12558,4 +12587,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-03-06T15:54:12.52805906Z"
+generated: "2022-03-10T10:45:46.099859192Z"
