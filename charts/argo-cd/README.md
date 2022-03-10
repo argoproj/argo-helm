@@ -369,7 +369,7 @@ NAME: my-release
 | repoServer.service.portName | string | `"https-repo-server"` | Repo server service port name |
 | repoServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | repoServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
-| repoServer.serviceAccount.create | bool | `false` | Create repo server service account |
+| repoServer.serviceAccount.create | bool | `true` | Create repo server service account |
 | repoServer.serviceAccount.name | string | `""` | Repo server service account name |
 | repoServer.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | repoServer.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the repo server |
