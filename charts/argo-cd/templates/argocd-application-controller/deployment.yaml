@@ -57,8 +57,8 @@ spec:
         - --loglevel
         - {{ .Values.controller.logLevel }}
         {{- if .Values.controller.metrics.applicationLabels.enabled }}
-        - --metrics-application-labels
         {{- range .Values.controller.metrics.applicationLabels.labels }}
+        - --metrics-application-labels
         - {{ . }}
         {{- end }}
         {{- end }}
