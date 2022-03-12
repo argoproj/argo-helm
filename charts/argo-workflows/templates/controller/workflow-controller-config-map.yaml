@@ -78,7 +78,7 @@ data:
         {{- end }}
         {{- with .Values.artifactRepository.s3.encryptionOptions }}
         encryptionOptions:
-          {{ toYaml . | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
         {{- end }}
       {{- end }}
     {{- end}}
