@@ -56,6 +56,10 @@ controller:
     # limit: 10
     # burst: 1
 
+  rbac:
+    # -- Adds Role and RoleBinding for the controller.
+    create: true
+
   # -- Limits the maximum number of incomplete workflows in a namespace
   namespaceParallelism:
   # -- Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224
@@ -293,6 +297,9 @@ server:
   podLabels: {}
   # -- SecurityContext to set on the server pods
   podSecurityContext: {}
+  rbac:
+    # -- Adds Role and RoleBinding for the server.
+    create: true
   # -- Servers container-level security context
   securityContext:
     readOnlyRootFilesystem: false

@@ -99,6 +99,7 @@ Fields to note:
 | controller.podSecurityContext | object | `{}` | SecurityContext to set on the controller pods |
 | controller.podWorkers | string | `nil` | Number of pod workers |
 | controller.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages. |
+| controller.rbac.create | bool | `true` | Adds Role and RoleBinding for the controller. |
 | controller.replicas | int | `1` | The number of controller pods to run |
 | controller.resourceRateLimit | object | `{}` | Globally limits the rate at which pods are created. This is intended to mitigate flooding of the Kubernetes API server by workflows with a large amount of parallel nodes. |
 | controller.resources | object | `{}` | Resource limits and requests for the controller |
@@ -169,6 +170,7 @@ Fields to note:
 | server.podLabels | object | `{}` | Optional labels to add to the UI pods |
 | server.podSecurityContext | object | `{}` | SecurityContext to set on the server pods |
 | server.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages |
+| server.rbac.create | bool | `true` | Adds Role and RoleBinding for the server. |
 | server.replicas | int | `1` | The number of server pods to run |
 | server.resources | object | `{}` | Resource limits and requests for the server |
 | server.secure | bool | `false` | Run the argo server in "secure" mode. Configure this value instead of `--secure` in extraArgs. |
