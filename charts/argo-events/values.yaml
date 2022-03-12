@@ -1,3 +1,9 @@
+# -- String to partially override "argo-events.fullname" template
+nameOverride: ""
+
+# -- String to fully override "argo-events.fullname" template
+fullnameOverride: ""
+
 # -- docker registry
 registry: quay.io
 
@@ -35,6 +41,10 @@ additionalServiceAccountRules:
     - watch
   resources:
     - customresourcedefinitions
+
+# -- Create clusterroles that extend existing clusterroles to interact with argo-events CRDs.
+# Only applies for cluster-wide installation (`singleNamespace: true`)
+createAggregateRoles: true
 
 # -- Whether to run in namespaced scope.
 # Set `singleNamespace` to false to have the controllers

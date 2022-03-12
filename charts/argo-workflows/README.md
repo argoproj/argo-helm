@@ -99,6 +99,7 @@ Fields to note:
 | controller.podSecurityContext | object | `{}` | SecurityContext to set on the controller pods |
 | controller.podWorkers | string | `nil` | Number of pod workers |
 | controller.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages. |
+| controller.rbac.create | bool | `true` | Adds Role and RoleBinding for the controller. |
 | controller.replicas | int | `1` | The number of controller pods to run |
 | controller.resourceRateLimit | object | `{}` | Globally limits the rate at which pods are created. This is intended to mitigate flooding of the Kubernetes API server by workflows with a large amount of parallel nodes. |
 | controller.resources | object | `{}` | Resource limits and requests for the controller |
@@ -118,6 +119,8 @@ Fields to note:
 | controller.telemetryConfig.servicePort | int | `8081` | telemetry service port |
 | controller.telemetryConfig.servicePortName | string | `"telemetry"` | telemetry service port name |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
+| controller.volumeMounts | list | `[]` | Additional volume mounts to the controller main container |
+| controller.volumes | list | `[]` | Additional volumes to the controller pod |
 | controller.workflowDefaults | object | `{}` | Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level. Only valid for 2.7+ |
 | controller.workflowNamespaces | list | `["default"]` | Specify all namespaces where this workflow controller instance will manage workflows. This controls where the service account and RBAC resources will be created. Only valid when singleNamespace is false. |
 | controller.workflowRestrictions | object | `{}` | Restricts the Workflows that the controller will process. Only valid for 2.9+ |
@@ -167,6 +170,7 @@ Fields to note:
 | server.podLabels | object | `{}` | Optional labels to add to the UI pods |
 | server.podSecurityContext | object | `{}` | SecurityContext to set on the server pods |
 | server.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages |
+| server.rbac.create | bool | `true` | Adds Role and RoleBinding for the server. |
 | server.replicas | int | `1` | The number of server pods to run |
 | server.resources | object | `{}` | Resource limits and requests for the server |
 | server.secure | bool | `false` | Run the argo server in "secure" mode. Configure this value instead of `--secure` in extraArgs. |

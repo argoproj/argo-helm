@@ -85,10 +85,8 @@ spec:
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
         {{- end }}
-        {{- if .Values.configs.tlsCerts }}
         - mountPath: /app/config/tls
           name: tls-certs
-        {{- end }}
         - mountPath: /app/config/server/tls
           name: argocd-repo-server-tls
         {{- if .Values.configs.styles }}
@@ -204,11 +202,9 @@ spec:
           name: argocd-ssh-known-hosts-cm
         name: ssh-known-hosts
       {{- end }}
-      {{- if .Values.configs.tlsCerts }}
       - configMap:
           name: argocd-tls-certs-cm
         name: tls-certs
-      {{- end }}
       - name: argocd-repo-server-tls
         secret:
           items:

@@ -40,6 +40,8 @@ spec:
       - name: {{ .Values.repoServer.name }}
         image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
+        command:
+        - entrypoint.sh
         args:
         - argocd-repo-server
         {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
@@ -85,10 +87,8 @@ spec:
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
         {{- end }}
-        {{- if .Values.configs.tlsCerts }}
         - mountPath: /app/config/tls
           name: tls-certs
-        {{- end }}
         - mountPath: /app/config/reposerver/tls
           name: argocd-repo-server-tls
         - mountPath: /tmp
@@ -169,11 +169,9 @@ spec:
           name: argocd-ssh-known-hosts-cm
         name: ssh-known-hosts
       {{- end }}
-      {{- if .Values.configs.tlsCerts }}
       - configMap:
           name: argocd-tls-certs-cm
         name: tls-certs
-      {{- end }}
       - name: helm-working-dir
         emptyDir: {}
       - name: argocd-repo-server-tls
@@ -203,6 +201,9 @@ spec:
         name: copyutil
         resources:
           {{- toYaml .Values.repoServer.copyutil.resources | nindent 10 }}
+        {{- if .Values.repoServer.containerSecurityContext }}
+        securityContext: {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
+        {{- end }}
         volumeMounts:
         - mountPath: /var/run/argocd
           name: var-files

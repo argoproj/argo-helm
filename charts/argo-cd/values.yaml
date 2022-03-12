@@ -363,6 +363,9 @@ dex:
   # -- Dex name
   name: dex-server
 
+  # -- Additional command line arguments to pass to the Dex server
+  extraArgs: []
+
   metrics:
     # -- Deploy metrics service
     enabled: false
@@ -1175,7 +1178,7 @@ server:
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
   rbacConfig:
     {}
-    # policy.csv is an file containing user-defined RBAC policies and role definitions (optional).
+    # policy.csv is a file containing user-defined RBAC policies and role definitions (optional).
     # Policy rules are in the form:
     #   p, subject, resource, action, object, effect
     # Role definitions and bindings are in the form:
@@ -1585,7 +1588,7 @@ repoServer:
   ## If create is set to true, make sure to uncomment the name and update the rbac section below
   serviceAccount:
     # -- Create repo server service account
-    create: false
+    create: true
     # -- Repo server service account name
     name: "" # "argocd-repo-server"
     # -- Annotations applied to created service account
@@ -1667,6 +1670,7 @@ configs:
     #   labels: {}
     #   annotations: {}
     #   namespaces: namespace1,namespace2
+    #   clusterResources: true
     #   config:
     #     bearerToken: "<authentication token>"
     #     tlsClientConfig:
