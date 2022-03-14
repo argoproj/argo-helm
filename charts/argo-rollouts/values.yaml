@@ -238,9 +238,33 @@ dashboard:
       #   hosts:
       #     - argorollouts.example.com
 
-secret:
-  items: {}
-  # slack-token:
-notifiers: {}
-#  service.slack: |
-#    token: $slack-token
+notifications:
+  secret:
+    # -- Whether to create notifications secret
+    create: false
+    # -- Generic key:value pairs to be inserted into the notifications secret
+    items: {}
+      # slack-token:
+
+  # -- Configures notification services
+  notifiers: {}
+    # service.slack: |
+    #   token: $slack-token
+
+  # -- Notification templates
+  templates: {}
+    # template.my-purple-template: |
+    #   message: |
+    #     Rollout {{.rollout.metadata.name}} has purple image
+    #   slack:
+    #       attachments: |
+    #           [{
+    #             "title": "{{ .rollout.metadata.name}}",
+    #             "color": "#800080"
+    #           }]
+
+  # -- The trigger defines the condition when the notification should be sent
+  triggers: {}
+    # trigger.on-purple: |
+    #   - send: [my-purple-template]
+    #     when: rollout.spec.template.spec.containers[0].image == 'argoproj/rollouts-demo:purple'

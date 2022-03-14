@@ -48,8 +48,11 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `nil` | String to partially override "argo-rollouts.fullname" template |
-| notifiers | object | `{}` |  |
-| secret.items | object | `{}` |  |
+| notifications.notifiers | object | `{}` | Configures notification services |
+| notifications.secret.create | bool | `false` | Whether to create notifications secret |
+| notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the notifications secret |
+| notifications.templates | object | `{}` | Notification templates |
+| notifications.triggers | object | `{}` | The trigger defines the condition when the notification should be sent |
 
 ### Controller
 
