@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argo-rollouts-notification-configmap
+  labels:
+    app.kubernetes.io/component: {{ .Values.controller.component }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
+data:
+  {{- with .Values.notifications.notifiers }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- with .Values.notifications.templates }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- with .Values.notifications.triggers }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
