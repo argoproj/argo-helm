@@ -676,10 +676,6 @@ NAME: my-release
 | applicationSet.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | applicationSet.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
 | applicationSet.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
-| applicationSet.mountGPGKeyringVolume | bool | `true` | Mount an emptyDir volume for `gpg-keyring` |
-| applicationSet.mountGPGKeysVolume | bool | `false` | Mount the `argocd-gpg-keys-cm` volume |
-| applicationSet.mountSSHKnownHostsVolume | bool | `true` | Mount the `argocd-ssh-known-hosts-cm` volume |
-| applicationSet.mountTLSCertsVolume | bool | `true` | Mount the `argocd-tls-certs-cm` volume |
 | applicationSet.name | string | `"applicationset-controller"` | Application Set controller name string |
 | applicationSet.nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
 | applicationSet.podAnnotations | object | `{}` | Annotations for the controller pods |
@@ -738,6 +734,8 @@ NAME: my-release
 | notifications.context | object | `{}` | Define user-defined context |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
+| notifications.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
+| notifications.extraVolumes | list | `[]` | List of extra volumes to add |
 | notifications.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the notifications controller |
 | notifications.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the notifications controller |
 | notifications.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the notifications controller |

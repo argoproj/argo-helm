@@ -1994,15 +1994,6 @@ applicationSet:
   # -- If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default.
   priorityClassName: ""
 
-  # -- Mount the `argocd-ssh-known-hosts-cm` volume
-  mountSSHKnownHostsVolume: true
-  # -- Mount the `argocd-tls-certs-cm` volume
-  mountTLSCertsVolume: true
-  # -- Mount the `argocd-gpg-keys-cm` volume
-  mountGPGKeysVolume: false
-  # -- Mount an emptyDir volume for `gpg-keyring`
-  mountGPGKeyringVolume: true
-
   # -- List of extra mounts to add (normally used with extraVolumes)
   extraVolumeMounts: []
     # - mountPath: /tmp/foobar
@@ -2155,6 +2146,19 @@ notifications:
   # -- Extra arguments to provide to the controller
   extraArgs: []
 
+  # -- Additional container environment variables
+  extraEnv: []
+
+  # -- List of extra mounts to add (normally used with extraVolumes)
+  extraVolumeMounts: []
+    # - mountPath: /tmp/foobar
+    #   name: foobar
+
+  # -- List of extra volumes to add
+  extraVolumes: []
+    # - name: foobar
+    #   emptyDir: {}
+
   metrics:
     # -- Enables prometheus metrics server
     enabled: false
@@ -2173,9 +2177,6 @@ notifications:
       # namespace: monitoring
       # interval: 30s
       # scrapeTimeout: 10s
-
-  # -- Additional container environment variables
-  extraEnv: []
 
   # -- Configures notification services
   # @default -- See [values.yaml]

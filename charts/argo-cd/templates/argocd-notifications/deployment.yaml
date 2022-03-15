@@ -64,6 +64,32 @@ spec:
           {{- with .Values.notifications.extraEnv }}
           env: {{ toYaml . | nindent 12 }}
           {{- end }}
+          volumeMounts:
+            - name: tls-certs
+              mountPath: /app/config/tls
+            - name: argocd-repo-server-tls
+              mountPath: /app/config/reposerver/tls
+            {{- with .Values.notifications.extraVolumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        - configMap:
+            name: argocd-tls-certs-cm
+          name: tls-certs
+        - name: argocd-repo-server-tls
+          secret:
+            items:
+            - key: tls.crt
+              path: tls.crt
+            - key: tls.key
+              path: tls.key
+            - key: ca.crt
+              path: ca.crt
+            optional: true
+            secretName: argocd-repo-server-tls
+        {{- with .Values.notifications.extraVolumes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.notifications.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

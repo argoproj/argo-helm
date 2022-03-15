@@ -74,22 +74,16 @@ spec:
           volumeMounts:
             - mountPath: /tmp
               name: tmp-dir
-            {{- if .Values.applicationSet.mountSSHKnownHostsVolume }}
+            {{- if .Values.configs.knownHosts }}
             - mountPath: /app/config/ssh
               name: ssh-known-hosts
             {{- end }}
-            {{- if .Values.applicationSet.mountTLSCertsVolume }}
             - mountPath: /app/config/tls
               name: tls-certs
-            {{- end }}
-            {{- if .Values.applicationSet.mountGPGKeysVolume }}
             - mountPath: /app/config/gpg/source
               name: gpg-keys
-            {{- end }}
-            {{- if .Values.applicationSet.mountGPGKeyringVolume }}
             - mountPath: /app/config/gpg/keys
               name: gpg-keyring
-            {{- end }}
             {{- with .Values.applicationSet.extraVolumeMounts }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -99,25 +93,19 @@ spec:
       volumes:
       - emptyDir: {}
         name: tmp-dir
-      {{- if .Values.applicationSet.mountSSHKnownHostsVolume }}
+      {{- if .Values.configs.knownHosts }}
       - configMap:
           name: argocd-ssh-known-hosts-cm
         name: ssh-known-hosts
       {{- end }}
-      {{- if .Values.applicationSet.mountTLSCertsVolume }}
       - configMap:
           name: argocd-tls-certs-cm
         name: tls-certs
-      {{- end }}
-      {{- if .Values.applicationSet.mountGPGKeysVolume }}
       - configMap:
           name: argocd-gpg-keys-cm
         name: gpg-keys
-      {{- end }}
-      {{- if .Values.applicationSet.mountGPGKeyringVolume }}
       - emptyDir: {}
         name: gpg-keyring
-      {{- end }}
       {{- with .Values.applicationSet.extraVolumes }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
