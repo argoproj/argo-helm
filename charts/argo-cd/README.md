@@ -687,7 +687,6 @@ NAME: my-release
 | applicationSet.podLabels | object | `{}` | Labels for the controller pods |
 | applicationSet.podSecurityContext | object | `{}` | Pod Security Context |
 | applicationSet.priorityClassName | string | `""` | If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default. |
-| applicationSet.rbac.pspEnabled | bool | `true` | Enable Pod Security Policy |
 | applicationSet.replicaCount | int | `1` | The number of controller pods to run |
 | applicationSet.resources | object | `{}` | Resource limits and requests for the controller pods. |
 | applicationSet.securityContext | object | `{}` | Security Context |
