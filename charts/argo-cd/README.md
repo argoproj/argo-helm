@@ -663,9 +663,9 @@ NAME: my-release
 | applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
 | applicationSet.fullnameOverride | string | `""` | Override the default fully qualified app name |
-| applicationSet.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| applicationSet.image.repository | string | `"quay.io/argoproj/argocd-applicationset"` | The image repository |
-| applicationSet.image.tag | string | `"v0.4.1"` | Overrides the image tag whose default is the chart appVersion. |
+| applicationSet.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the application set controller |
+| applicationSet.image.repository | string | `"quay.io/argoproj/argocd-applicationset"` | Repository to use for the application set controller |
+| applicationSet.image.tag | string | `"v0.4.1"` | Tag to use for the application set controller |
 | applicationSet.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
 | applicationSet.kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | applicationSet.metrics.enabled | bool | `false` | Deploy metrics service |
@@ -721,9 +721,9 @@ NAME: my-release
 | notifications.bots.slack.affinity | object | `{}` | Assign custom [affinity] rules |
 | notifications.bots.slack.containerSecurityContext | object | `{}` | Container Security Context |
 | notifications.bots.slack.enabled | bool | `false` | Enable slack bot |
-| notifications.bots.slack.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the Slack bot |
-| notifications.bots.slack.image.repository | string | `"argoprojlabs/argocd-notifications"` | Repository to use for the Slack bot |
-| notifications.bots.slack.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
+| notifications.bots.slack.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Slack bot |
+| notifications.bots.slack.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Slack bot |
+| notifications.bots.slack.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Slack bot |
 | notifications.bots.slack.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | notifications.bots.slack.nodeSelector | object | `{}` | [Node selector] |
 | notifications.bots.slack.resources | object | `{}` | Resource limits and requests for the Slack bot |
@@ -743,9 +743,9 @@ NAME: my-release
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
 | notifications.fullnameOverride | string | `""` | String to partially override "argo-cd.notifications.fullname" template |
-| notifications.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application controller |
-| notifications.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application controller |
-| notifications.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application controller |
+| notifications.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the notifications controller |
+| notifications.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the notifications controller |
+| notifications.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the notifications controller |
 | notifications.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | notifications.logLevel | string | `"info"` | Set the logging level. (One of: `debug`, `info`, `warn`, `error`) |
 | notifications.metrics.enabled | bool | `false` | Enables prometheus metrics server |

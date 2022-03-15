@@ -21,5 +21,5 @@ spec:
     port: {{ .Values.applicationSet.metrics.service.servicePort }}
     targetPort: metrics
   selector:
-    {{- include "argo-applicationset.selectorLabels" . | nindent 4 }}
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 4 }}
 {{- end }}

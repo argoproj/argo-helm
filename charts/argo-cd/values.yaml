@@ -1870,11 +1870,11 @@ applicationSet:
   replicaCount: 1
 
   image:
-    # -- The image repository
+    # -- Repository to use for the application set controller
     repository: quay.io/argoproj/argocd-applicationset
-    # -- Image pull policy
+    # -- Image pull policy for the application set controller
     pullPolicy: IfNotPresent
-    # -- Overrides the image tag whose default is the chart appVersion.
+    # -- Tag to use for the application set controller
     tag: "v0.4.1"
 
   args:
@@ -2107,13 +2107,13 @@ notifications:
   fullnameOverride: ""
 
   image:
-    # -- Repository to use for the application controller
+    # -- Repository to use for the notifications controller
     # @default -- `""` (defaults to global.image.repository)
     repository: ""
-    # -- Tag to use for the application controller
+    # -- Tag to use for the notifications controller
     # @default -- `""` (defaults to global.image.tag)
     tag: ""
-    # -- Image pull policy for the application controller
+    # -- Image pull policy for the notifications controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
 
@@ -2502,11 +2502,14 @@ notifications:
 
       image:
         # -- Repository to use for the Slack bot
-        repository: argoprojlabs/argocd-notifications
-        # -- Overrides the image tag whose default is the chart appVersion
+        # @default -- `""` (defaults to global.image.repository)
+        repository: ""
+        # -- Tag to use for the Slack bot
+        # @default -- `""` (defaults to global.image.tag)
         tag: ""
         # -- Image pull policy for the Slack bot
-        pullPolicy: IfNotPresent
+        # @default -- `""` (defaults to global.image.imagePullPolicy)
+        imagePullPolicy: ""
 
       # -- Secrets with credentials to pull images from a private registry
       imagePullSecrets: []
