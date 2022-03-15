@@ -742,7 +742,7 @@ NAME: my-release
 | notifications.context | object | `{}` | Define user-defined context |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
-| notifications.fullnameOverride | string | `""` | String to partially override "argocd-notifications.fullname" template |
+| notifications.fullnameOverride | string | `""` | String to partially override "argo-cd.notifications.fullname" template |
 | notifications.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application controller |
 | notifications.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application controller |
 | notifications.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application controller |
@@ -755,7 +755,7 @@ NAME: my-release
 | notifications.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | notifications.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
-| notifications.nameOverride | string | `"argocd-notifications"` | String to partially override "argocd-notifications.fullname" template |
+| notifications.nameOverride | string | `"argocd-notifications"` | String to partially override "argo-cd.notifications.fullname" template |
 | notifications.nodeSelector | object | `{}` | [Node selector] |
 | notifications.notifiers | object | See [values.yaml] | Configures notification services |
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the controller Pods |
