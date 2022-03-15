@@ -648,12 +648,10 @@ NAME: my-release
 |-----|------|---------|-------------|
 | applicationSet.affinity | object | `{}` | [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
 | applicationSet.apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
-| applicationSet.args.argocdRepoServer | string | `"argocd-repo-server:8081"` | The default Argo CD repo server address |
 | applicationSet.args.debug | bool | `false` | Print debug logs |
 | applicationSet.args.dryRun | bool | `false` | Enable dry run mode |
 | applicationSet.args.enableLeaderElection | bool | `false` | The default leader election setting |
 | applicationSet.args.metricsAddr | string | `":8080"` | The default metric address |
-| applicationSet.args.namespace | string | `""` | Namespace where ArgoCD is deployed to (defaults to .Release.Namespace) |
 | applicationSet.args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
 | applicationSet.args.probeBindAddr | string | `":8081"` | The default health check port |
 | applicationSet.extraArgs | list | `[]` | List of extra cli args to add |
