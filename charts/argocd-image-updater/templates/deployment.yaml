@@ -9,6 +9,8 @@ spec:
   selector:
     matchLabels:
       {{- include "argocd-image-updater.selectorLabels" . | nindent 6 }}
+  strategy:
+    {{- .Values.updateStrategy | toYaml | nindent 4 }}
   template:
     metadata:
       annotations:
@@ -28,7 +30,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          command: 
+          command:
             - /usr/local/bin/argocd-image-updater
             - run
             {{- with .Values.extraArgs }}
@@ -130,6 +132,8 @@ spec:
             name: tmp-dir
           - mountPath: /app/config/ssh
             name: ssh-known-hosts
+          - mountPath: /app/.ssh
+            name: ssh-config
           {{- if .Values.authScripts.enabled }}
           - mountPath: /scripts
             name: authscripts
@@ -156,6 +160,10 @@ spec:
           name: argocd-ssh-known-hosts-cm
           optional: true
         name: ssh-known-hosts
+      - configMap:
+          name: argocd-image-updater-ssh-config
+          optional: true
+        name: ssh-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

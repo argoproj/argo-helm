@@ -2,12 +2,15 @@
 replicaCount: 1
 image:
   # -- Default image repository
-  repository: argoprojlabs/argocd-image-updater
+  repository: quay.io/argoprojlabs/argocd-image-updater
   # -- Default image pull policy
   pullPolicy: Always
   # -- Overrides the image tag whose default is the chart appVersion
   tag: ""
 
+# -- The deployment strategy to use to replace existing pods with new ones
+updateStrategy:
+  type: Recreate
 # -- ImagePullSecrets for the image updater deployment
 imagePullSecrets: []
 # -- Global name (argocd-image-updater.name in _helpers.tpl) override
@@ -95,6 +98,14 @@ config:
     #   insecure: no
     #   credentials: ext:/scripts/auth1.sh
     #   credsexpire: 10h
+
+  # -- ArgoCD Image Updater ssh client parameter configuration.
+  sshConfig:
+    {}
+    #  config: |
+    #    Host *
+    #          PubkeyAcceptedAlgorithms +ssh-rsa
+    #          HostkeyAlgorithms +ssh-rsa
 
 # whether to mount authentication scripts, if enabled, the authentication scripts will be mounted on /scripts that can be used to authenticate with registries (ECR)
 # refer to https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/#specifying-credentials-for-accessing-container-registries for more info
