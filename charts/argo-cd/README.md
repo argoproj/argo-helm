@@ -251,7 +251,7 @@ NAME: my-release
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
 | controller.containerPort | int | `8082` | Application controller listening port |
 | controller.containerSecurityContext | object | `{}` | Application controller container-level security context |
-| controller.enableStatefulSet | bool | `false` | Deploy the application controller as a StatefulSet instead of a Deployment, this is required for HA capability. This is a feature flag that will become the default in chart version 3.x |
+| controller.enableStatefulSet | bool | `true` | Deploy the application controller as a StatefulSet instead of a Deployment, this is required for HA capability. |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to application controller |
