@@ -662,7 +662,6 @@ NAME: my-release
 | applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
 | applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
-| applicationSet.fullnameOverride | string | `""` | Override the default fully qualified app name |
 | applicationSet.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the application set controller |
 | applicationSet.image.repository | string | `"quay.io/argoproj/argocd-applicationset"` | Repository to use for the application set controller |
 | applicationSet.image.tag | string | `"v0.4.1"` | Tag to use for the application set controller |
@@ -684,7 +683,6 @@ NAME: my-release
 | applicationSet.mountSSHKnownHostsVolume | bool | `true` | Mount the `argocd-ssh-known-hosts-cm` volume |
 | applicationSet.mountTLSCertsVolume | bool | `true` | Mount the `argocd-tls-certs-cm` volume |
 | applicationSet.name | string | `"applicationset-controller"` | Application Set controller name string |
-| applicationSet.nameOverride | string | `""` | Provide a name in place of `argocd-applicationset` |
 | applicationSet.nodeSelector | object | `{}` | [Node selector](https://kubernetes.io/docs/user-guide/node-selection/) |
 | applicationSet.podAnnotations | object | `{}` | Annotations for the controller pods |
 | applicationSet.podLabels | object | `{}` | Labels for the controller pods |
@@ -742,7 +740,6 @@ NAME: my-release
 | notifications.context | object | `{}` | Define user-defined context |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
-| notifications.fullnameOverride | string | `""` | String to partially override "argo-cd.notifications.fullname" template |
 | notifications.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the notifications controller |
 | notifications.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the notifications controller |
 | notifications.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the notifications controller |
@@ -755,7 +752,6 @@ NAME: my-release
 | notifications.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | notifications.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
-| notifications.nameOverride | string | `"argocd-notifications"` | String to partially override "argo-cd.notifications.fullname" template |
 | notifications.nodeSelector | object | `{}` | [Node selector] |
 | notifications.notifiers | object | See [values.yaml] | Configures notification services |
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the controller Pods |

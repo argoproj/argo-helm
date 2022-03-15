@@ -1929,10 +1929,6 @@ applicationSet:
 
   # -- If defined, uses a Secret to pull an image from a private Docker registry or repository.
   imagePullSecrets: []
-  # -- Provide a name in place of `argocd-applicationset`
-  nameOverride: ""
-  # -- Override the default fully qualified app name
-  fullnameOverride: ""
 
   ## Application set service configuration
   service:
@@ -2103,9 +2099,6 @@ notifications:
   # -- ArgoCD dashboard url; used in place of {{.context.argocdUrl}} in templates
   argocdUrl:
 
-  # -- String to partially override "argo-cd.notifications.fullname" template
-  fullnameOverride: ""
-
   image:
     # -- Repository to use for the notifications controller
     # @default -- `""` (defaults to global.image.repository)
@@ -2119,9 +2112,6 @@ notifications:
 
   # -- Secrets with credentials to pull images from a private registry
   imagePullSecrets: []
-
-  # -- String to partially override "argo-cd.notifications.fullname" template
-  nameOverride: "argocd-notifications"
 
   # -- [Node selector]
   nodeSelector: {}
