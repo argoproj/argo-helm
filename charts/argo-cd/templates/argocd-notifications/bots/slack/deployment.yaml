@@ -1,0 +1,55 @@
+{{ if .Values.notifications.bots.slack.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "argocd-notifications.name" . }}-bot
+  labels:
+    {{- include "argocd-notifications.bots.slack.labels" . | nindent 4 }}
+spec:
+  strategy:
+    {{- .Values.notifications.bots.slack.updateStrategy | toYaml | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "argocd-notifications.bots.slack.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "argocd-notifications.bots.slack.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.notifications.bots.slack.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "argocd-notifications.bots.slack.serviceAccountName" . }}
+      {{- with .Values.notifications.bots.slack.securityContext }}
+      securityContext: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ include "argocd-notifications.name" . }}-bot
+          image: "{{ .Values.notifications.bots.slack.image.repository }}:{{ default .Chart.AppVersion .Values.notifications.bots.slack.image.tag }}"
+          imagePullPolicy: {{ .Values.notifications.bots.slack.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.notifications.bots.slack.resources | nindent 12 }}
+          command:
+            - argocd-notifications
+            - bot
+          workingDir: /app
+          ports:
+          - containerPort: 8080
+            name: http
+          {{- with .Values.notifications.bots.slack.containerSecurityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.notifications.bots.slack.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.notifications.bots.slack.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.notifications.bots.slack.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{ end }}

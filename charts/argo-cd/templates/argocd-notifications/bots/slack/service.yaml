@@ -1,0 +1,19 @@
+{{ if .Values.notifications.bots.slack.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "argocd-notifications.name" . }}-bot
+  {{- if .Values.notifications.bots.slack.service.annotations }}
+  annotations:
+    {{- toYaml .Values.notifications.bots.slack.service.annotations | nindent 4 }}
+  {{- end }}
+spec:
+  ports:
+  - name: http
+    port: {{ .Values.notifications.bots.slack.service.port }}
+    protocol: TCP
+    targetPort: http
+  selector:
+    {{- include "argocd-notifications.bots.slack.selectorLabels" . | nindent 4 }}
+  type: {{ .Values.notifications.bots.slack.service.type }}
+{{ end }}
