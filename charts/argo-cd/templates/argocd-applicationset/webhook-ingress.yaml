@@ -1,9 +1,10 @@
 {{- if .Values.applicationSet.webhook.ingress.enabled -}}
 {{- $serviceName := include "argo-cd.applicationSet.fullname" . -}}
-{{- $servicePort := ternary .Values.applicationSet.service.servicePortHttps .Values.applicationSet.service.servicePortHttp .Values.applicationSet.ingress.https -}}
+{{- $servicePort := .Values.applicationSet.service.portName -}}
 {{- $paths := .Values.applicationSet.webhook.ingress.paths -}}
 {{- $extraPaths := .Values.applicationSet.webhook.ingress.extraPaths -}}
 {{- $pathType := .Values.applicationSet.webhook.ingress.pathType -}}
+apiVersion: {{ include "argo-cd.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
 {{- if .Values.applicationSet.webhook.ingress.annotations }}
