@@ -1977,13 +1977,13 @@ applicationSet:
     #   cpu: 100m
     #   memory: 128Mi
 
-  # -- [Node selector](https://kubernetes.io/docs/user-guide/node-selection/)
+  # -- [Node selector]
   nodeSelector: {}
 
-  # -- [Tolerations for use with node taints](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)
+  # -- [Tolerations] for use with node taints
   tolerations: []
 
-  # -- [Assign custom affinity rules to the deployment](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)
+  # -- Assign custom [affinity] rules
   affinity: {}
 
   # -- If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default.
@@ -2015,16 +2015,6 @@ applicationSet:
     #     name: config-map-name
     # - secretRef:
     #     name: secret-name
-
-  # -- Override the Kubernetes version, which is used to evaluate certain manifests
-  kubeVersionOverride: ""
-
-  ## Override APIVersions
-  ## If you want to template helm charts but cannot access k8s API server
-  ## you can set api versions here
-  apiVersionOverrides:
-    # -- String to override apiVersion of ingresses rendered by this helm chart
-    ingress: "" # networking.k8s.io/v1beta1
 
   ## Webhook for the Git Generator
   ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
