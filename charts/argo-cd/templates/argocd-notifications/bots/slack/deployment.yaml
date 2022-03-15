@@ -2,30 +2,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "argocd-notifications.name" . }}-bot
+  name: {{ template "argo-cd.notifications.fullname" . }}-bot
   labels:
-    {{- include "argocd-notifications.bots.slack.labels" . | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" .Values.notifications.bots.slack.name) | nindent 4 }}
 spec:
   strategy:
     {{- .Values.notifications.bots.slack.updateStrategy | toYaml | nindent 4 }}
   selector:
     matchLabels:
-      {{- include "argocd-notifications.bots.slack.selectorLabels" . | nindent 6 }}
+      {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" "metrics") | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "argocd-notifications.bots.slack.selectorLabels" . | nindent 8 }}
+        {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" "metrics") | nindent 8 }}
     spec:
     {{- with .Values.notifications.bots.slack.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "argocd-notifications.bots.slack.serviceAccountName" . }}
+      serviceAccountName: {{ template "argo-cd.notificationsBotsSlackServiceAccountName" . }}
       {{- with .Values.notifications.bots.slack.securityContext }}
       securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ include "argocd-notifications.name" . }}-bot
+        - name: {{ template "argo-cd.notifications.fullname" . }}-bot
           image: "{{ .Values.notifications.bots.slack.image.repository }}:{{ default .Chart.AppVersion .Values.notifications.bots.slack.image.tag }}"
           imagePullPolicy: {{ .Values.notifications.bots.slack.image.pullPolicy }}
           resources:

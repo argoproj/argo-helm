@@ -2,12 +2,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "argocd-notifications.name" . }}-bot
+  name: {{ template "argo-cd.notifications.fullname" . }}-bot
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "argocd-notifications.name" . }}-bot
+  name: {{ template "argo-cd.notifications.fullname" . }}-bot
 subjects:
 - kind: ServiceAccount
-  name: {{ include "argocd-notifications.bots.slack.serviceAccountName" . }}
+  name: {{ template "argo-cd.notificationsBotsSlackServiceAccountName" . }}
 {{ end }}
