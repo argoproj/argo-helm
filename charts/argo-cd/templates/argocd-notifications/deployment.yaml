@@ -46,6 +46,8 @@ spec:
             {{- if .Values.notifications.metrics.enabled }}
             - --metrics-port={{ .Values.notifications.metrics.port }}
             {{- end }}
+            - --namespace={{ .Release.Namespace }}
+            - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
             - --secret-name={{ include "argo-cd.notifications.secretName" . }}
             - --config-map-name={{ include "argo-cd.notifications.configMapName" . }}
             {{- range .Values.notifications.extraArgs }}
