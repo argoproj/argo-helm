@@ -1,4 +1,4 @@
-## ArgoCD configuration
+## Argo CD configuration
 ## Ref: https://github.com/argoproj/argo-cd
 ##
 
@@ -11,11 +11,11 @@ kubeVersionOverride: ""
 
 global:
   image:
-    # -- If defined, a repository applied to all ArgoCD deployments
+    # -- If defined, a repository applied to all Argo CD deployments
     repository: quay.io/argoproj/argocd
-    # -- Overrides the global ArgoCD image tag whose default is the chart appVersion
+    # -- Overrides the global Argo CD image tag whose default is the chart appVersion
     tag: ""
-    # -- If defined, a imagePullPolicy applied to all ArgoCD deployments
+    # -- If defined, a imagePullPolicy applied to all Argo CD deployments
     imagePullPolicy: IfNotPresent
   # -- Annotations for the all deployed pods
   podAnnotations: {}
@@ -287,9 +287,9 @@ controller:
       #   labels:
       #     severity: critical
       #   annotations:
-      #     summary: "[ArgoCD] No reported applications"
+      #     summary: "[Argo CD] No reported applications"
       #     description: >
-      #       ArgoCD has not reported any applications data for the past 15 minutes which
+      #       Argo CD has not reported any applications data for the past 15 minutes which
       #       means that it must be down or not functioning properly.  This needs to be
       #       resolved for this cloud to continue to maintain state.
       # - alert: ArgoAppNotSynced
@@ -309,7 +309,7 @@ controller:
     #   namespace: monitoring
     #   additionalLabels: {}
 
-  ## Enable if you would like to grant rights to ArgoCD to deploy to the local Kubernetes cluster.
+  ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.
   clusterAdminAccess:
     # -- Enable RBAC for local cluster deployments
     enabled: true
@@ -328,7 +328,7 @@ controller:
   # -- Init containers to add to the application controller pod
   ## If your target Kubernetes cluster(s) require a custom auth provider executable
   ## you could use this (and the same in the server pod) to bootstrap
-  ## that executable into your ArgoCD container
+  ## that executable into your Argo CD container
   initContainers: []
   #  - name: download-tools
   #    image: alpine:3.8
@@ -1133,7 +1133,7 @@ server:
     # -- Termination policy of Openshift Route
     termination_policy: None
 
-  # -- Manage ArgoCD configmap (Declarative Setup)
+  # -- Manage Argo CD configmap (Declarative Setup)
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
   configEnabled: true
   # -- [General Argo CD configuration]
@@ -1170,10 +1170,10 @@ server:
     #     - profile
     #     - email
 
-  # -- Annotations to be added to ArgoCD ConfigMap
+  # -- Annotations to be added to Argo CD ConfigMap
   configAnnotations: {}
 
-  # -- ArgoCD rbac config ([ArgoCD RBAC policy])
+  # -- Argo CD rbac config ([Argo CD RBAC policy])
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
   rbacConfig:
     {}
@@ -1196,14 +1196,14 @@ server:
     # If omitted, defaults to: '[groups]'. The scope value can be a string, or a list of strings.
     # scopes: '[cognito:groups, email]'
 
-  # -- Annotations to be added to ArgoCD rbac ConfigMap
+  # -- Annotations to be added to Argo CD rbac ConfigMap
   rbacConfigAnnotations: {}
 
   # -- Whether or not to create the configmap. If false, it is expected the configmap will be created
-  # by something else. ArgoCD will not work if there is no configMap created with the name above.
+  # by something else. Argo CD will not work if there is no configMap created with the name above.
   rbacConfigCreate: true
 
-  # -- Deploy ArgoCD Applications within this helm release
+  # -- Deploy Argo CD Applications within this helm release
   # @default -- `[]` (See [values.yaml])
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
   additionalApplications: []
@@ -1236,7 +1236,7 @@ server:
   #   - name: url
   #     value: https://argoproj.github.io/
 
-  # -- Deploy ArgoCD Projects within this helm release
+  # -- Deploy Argo CD Projects within this helm release
   # @default -- `[]` (See [values.yaml])
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
   additionalProjects: []
@@ -1280,7 +1280,7 @@ server:
   #   - keyID: ABCDEF1234567890
 
   ## Enable Admin ClusterRole resources.
-  ## Enable if you would like to grant rights to ArgoCD to deploy to the local Kubernetes cluster.
+  ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.
   clusterAdminAccess:
     # -- Enable RBAC for local cluster deployments
     enabled: true
@@ -1344,7 +1344,7 @@ server:
   # -- Init containers to add to the server pod
   ## If your target Kubernetes cluster(s) require a custom auth provider executable
   ## you could use this (and the same in the application controller pod) to bootstrap
-  ## that executable into your ArgoCD container
+  ## that executable into your Argo CD container
   initContainers: []
   #  - name: download-tools
   #    image: alpine:3.8
@@ -1570,7 +1570,7 @@ repoServer:
       additionalLabels: {}
 
   ## Enable Admin ClusterRole resources.
-  ## Enable if you would like to grant cluster rights to ArgoCD repo server.
+  ## Enable if you would like to grant cluster rights to Argo CD repo server.
   clusterAdminAccess:
     # -- Enable RBAC for local cluster deployments
     enabled: false
@@ -2068,7 +2068,7 @@ notifications:
   # -- Assign custom [affinity] rules
   affinity: {}
 
-  # -- ArgoCD dashboard url; used in place of {{.context.argocdUrl}} in templates
+  # -- Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates
   argocdUrl:
 
   image:

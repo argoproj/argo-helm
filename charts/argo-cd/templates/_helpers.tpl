@@ -115,7 +115,7 @@ Create the name of the redis service account to use
 {{- end -}}
 
 {{/*
-Create the name of the ArgoCD server service account to use
+Create the name of the Argo CD server service account to use
 */}}
 {{- define "argo-cd.serverServiceAccountName" -}}
 {{- if .Values.server.serviceAccount.create -}}
@@ -243,7 +243,7 @@ Merge Argo Configuration with Preset Configuration
 {{- end -}}
 
 {{/*
-Return the default ArgoCD app version
+Return the default Argo CD app version
 */}}
 {{- define "argo-cd.defaultTag" -}}
   {{- default .Chart.AppVersion .Values.global.image.tag }}
