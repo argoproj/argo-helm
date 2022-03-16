@@ -1,0 +1,30 @@
+{{- if and .Values.notifications.metrics.enabled .Values.notifications.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "argo-cd.notifications.fullname" . }}-metrics
+  {{- if .Values.notifications.metrics.serviceMonitor.namespace }}
+  namespace: {{ .Values.notifications.metrics.serviceMonitor.namespace }}
+  {{- end }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
+    {{- if .Values.notifications.metrics.serviceMonitor.additionalLabels }}
+      {{- toYaml .Values.notifications.metrics.serviceMonitor.additionalLabels | nindent 4 }}
+    {{- end }}
+spec:
+  endpoints:
+    - port: metrics
+      path: /metrics
+      {{- if .Values.notifications.metrics.serviceMonitor.interval }}
+      interval: {{ .Values.notifications.metrics.serviceMonitor.interval }}
+      {{- end }}
+      {{- if .Values.notifications.metrics.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ .Values.notifications.metrics.serviceMonitor.scrapeTimeout }}
+      {{- end }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.name "name" "metrics") | nindent 6 }}
+{{- end }}

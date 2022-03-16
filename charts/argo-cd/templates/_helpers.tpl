@@ -68,6 +68,20 @@ Create argocd repo-server name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create argocd application set name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.applicationSet.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.applicationSet.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create argocd notifications name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.notifications.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.notifications.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create the name of the controller service account to use
 */}}
 {{- define "argo-cd.controllerServiceAccountName" -}}
@@ -101,7 +115,7 @@ Create the name of the redis service account to use
 {{- end -}}
 
 {{/*
-Create the name of the ArgoCD server service account to use
+Create the name of the Argo CD server service account to use
 */}}
 {{- define "argo-cd.serverServiceAccountName" -}}
 {{- if .Values.server.serviceAccount.create -}}
@@ -119,6 +133,39 @@ Create the name of the repo-server service account to use
     {{ default (include "argo-cd.repoServer.fullname" .) .Values.repoServer.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.repoServer.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the application set service account to use
+*/}}
+{{- define "argo-cd.applicationSetServiceAccountName" -}}
+{{- if .Values.applicationSet.serviceAccount.create -}}
+    {{ default (include "argo-cd.applicationSet.fullname" .) .Values.applicationSet.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.applicationSet.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the notifications service account to use
+*/}}
+{{- define "argo-cd.notificationsServiceAccountName" -}}
+{{- if .Values.notifications.serviceAccount.create -}}
+    {{ default (include "argo-cd.notifications.fullname" .) .Values.notifications.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.notifications.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the notifications bots slack service account to use
+*/}}
+{{- define "argo-cd.notificationsBotsSlackServiceAccountName" -}}
+{{- if .Values.notifications.bots.slack.serviceAccount.create -}}
+    {{ default (include "argo-cd.notifications.fullname" .) .Values.notifications.bots.slack.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.notifications.bots.slack.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
@@ -177,7 +224,7 @@ Return the target Kubernetes version
   {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
 {{- end -}}
 
-{{/* 
+{{/*
 Argo Configuration Preset Values (Incluenced by Values configuration)
 */}}
 {{- define "argo-cd.config.presets" -}}
@@ -186,7 +233,7 @@ ui.cssurl: "./custom/custom.styles.css"
   {{- end }}
 {{- end -}}
 
-{{/* 
+{{/*
 Merge Argo Configuration with Preset Configuration
 */}}
 {{- define "argo-cd.config" -}}
@@ -196,8 +243,30 @@ Merge Argo Configuration with Preset Configuration
 {{- end -}}
 
 {{/*
-Return the default ArgoCD app version
+Return the default Argo CD app version
 */}}
 {{- define "argo-cd.defaultTag" -}}
   {{- default .Chart.AppVersion .Values.global.image.tag }}
+{{- end -}}
+
+{{/*
+Create the name of the notifications controller secret to use
+*/}}
+{{- define "argo-cd.notifications.secretName" -}}
+{{- if .Values.notifications.secret.create -}}
+    {{ default (printf "%s-secret" (include "argo-cd.notifications.fullname" .)) .Values.notifications.secret.name }}
+{{- else -}}
+    {{ default "argocd-notifications-secret" .Values.notifications.secret.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the configmap to use
+*/}}
+{{- define "argo-cd.notifications.configMapName" -}}
+{{- if .Values.notifications.cm.create -}}
+    {{ default (printf "%s-cm" (include "argo-cd.notifications.fullname" .)) .Values.notifications.cm.name }}
+{{- else -}}
+    {{ default "argocd-notifications-cm" .Values.notifications.cm.name }}
+{{- end -}}
 {{- end -}}

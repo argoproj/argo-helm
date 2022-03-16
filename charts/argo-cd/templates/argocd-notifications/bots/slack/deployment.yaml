@@ -1,0 +1,55 @@
+{{ if .Values.notifications.bots.slack.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "argo-cd.notifications.fullname" . }}-bot
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" .Values.notifications.bots.slack.name) | nindent 4 }}
+spec:
+  strategy:
+    {{- .Values.notifications.bots.slack.updateStrategy | toYaml | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" "metrics") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" "metrics") | nindent 8 }}
+    spec:
+    {{- with .Values.notifications.bots.slack.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "argo-cd.notificationsBotsSlackServiceAccountName" . }}
+      {{- with .Values.notifications.bots.slack.securityContext }}
+      securityContext: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ template "argo-cd.notifications.fullname" . }}-bot
+          image: {{ default .Values.global.image.repository .Values.notifications.bots.slack.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.notifications.bots.slack.image.tag }}
+          imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.notifications.bots.slack.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.notifications.bots.slack.resources | nindent 12 }}
+          command:
+            - argocd-notifications
+            - bot
+          workingDir: /app
+          ports:
+          - containerPort: 8080
+            name: http
+          {{- with .Values.notifications.bots.slack.containerSecurityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.notifications.bots.slack.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.notifications.bots.slack.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.notifications.bots.slack.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{ end }}
