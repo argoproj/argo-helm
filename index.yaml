@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: added notifications.metrics.serviceMonitor.selector value"
+    apiVersion: v2
+    appVersion: v2.3.1
+    created: "2022-03-17T17:16:26.42039763Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 79732b88b8b2a1f56f65d1ca7aea15cbe689c70e229a1cb775d4168627a1361e
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.1.0/argo-cd-4.1.0.tgz
+    version: 4.1.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: make notification-metrics service target pods properly"
         - "[Fixed]: make notification-metrics servicemonitor target service properly"
     apiVersion: v2
@@ -12738,4 +12767,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-03-17T12:54:22.033473328Z"
+generated: "2022-03-17T17:16:26.425044233Z"
