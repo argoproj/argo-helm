@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "argo-cd.notifications.fullname" . }}
+  name: {{ template "argo-cd.notifications.fullname" . }}-metrics
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" "metrics") | nindent 4 }}
     {{- with .Values.notifications.metrics.service.labels }}

@@ -7,7 +7,7 @@ metadata:
   namespace: {{ .Values.notifications.metrics.serviceMonitor.namespace }}
   {{- end }}
   labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" "metrics") | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
     {{- if .Values.notifications.metrics.serviceMonitor.additionalLabels }}
       {{- toYaml .Values.notifications.metrics.serviceMonitor.additionalLabels | nindent 4 }}
     {{- end }}
