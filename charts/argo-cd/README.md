@@ -749,6 +749,7 @@ NAME: my-release
 | notifications.metrics.service.labels | object | `{}` | Metrics service labels |
 | notifications.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | notifications.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
+| notifications.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
 | notifications.nodeSelector | object | `{}` | [Node selector] |
 | notifications.notifiers | object | See [values.yaml] | Configures notification services |

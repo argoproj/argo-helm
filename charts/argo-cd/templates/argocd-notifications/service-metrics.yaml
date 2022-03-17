@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: {{ template "argo-cd.notifications.fullname" . }}-metrics
   labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" "metrics") | nindent 4 }}
     {{- with .Values.notifications.metrics.service.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -14,7 +14,7 @@ metadata:
   {{- end }}
 spec:
   selector:
-    {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.name "name" "metrics") | nindent 6 }}
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 6 }}
   ports:
   - name: metrics
     port: {{ .Values.notifications.metrics.port }}
