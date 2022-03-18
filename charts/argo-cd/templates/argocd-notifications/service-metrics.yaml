@@ -1,5 +1,4 @@
-{{- if .Values.notifications.enabled }}
-{{- if .Values.notifications.metrics.enabled }}
+{{- if and .Values.notifications.enabled .Values.notifications.metrics.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -20,5 +19,4 @@ spec:
   - name: metrics
     port: {{ .Values.notifications.metrics.port }}
     targetPort: {{ .Values.notifications.metrics.port }}
-{{- end }}
 {{- end }}

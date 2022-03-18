@@ -1,5 +1,4 @@
-{{- if .Values.notifications.enabled }}
-{{ if .Values.notifications.cm.create }}
+{{- if and .Values.notifications.enabled .Values.notifications.cm.create }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -25,5 +24,4 @@ data:
   {{- with .Values.notifications.triggers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-{{- end }}
 {{- end }}

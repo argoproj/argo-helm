@@ -1,5 +1,4 @@
-{{- if .Values.notifications.enabled }}
-{{- if and .Values.notifications.metrics.enabled .Values.notifications.metrics.serviceMonitor.enabled }}
+{{- if and .Values.notifications.enabled .Values.notifications.metrics.enabled .Values.notifications.metrics.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -31,5 +30,4 @@ spec:
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.name "name" "metrics") | nindent 6 }}
-{{- end }}
 {{- end }}

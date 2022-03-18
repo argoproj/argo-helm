@@ -1,5 +1,4 @@
-{{- if .Values.applicationSet.enabled }}
-{{- if .Values.applicationSet.webhook.ingress.enabled -}}
+{{- if and .Values.applicationSet.enabled .Values.applicationSet.webhook.ingress.enabled -}}
 {{- $serviceName := include "argo-cd.applicationSet.fullname" . -}}
 {{- $servicePort := .Values.applicationSet.service.portName -}}
 {{- $paths := .Values.applicationSet.webhook.ingress.paths -}}
@@ -88,4 +87,3 @@ spec:
     {{- toYaml .Values.applicationSet.webhook.ingress.tls | nindent 4 }}
   {{- end -}}
 {{- end -}}
-{{- end }}
