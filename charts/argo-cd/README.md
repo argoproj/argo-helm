@@ -658,6 +658,7 @@ NAME: my-release
 | applicationSet.args.metricsAddr | string | `":8080"` | The default metric address |
 | applicationSet.args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
 | applicationSet.args.probeBindAddr | string | `":8081"` | The default health check port |
+| applicationSet.enabled | bool | `true` | Enable Application Set controller |
 | applicationSet.extraArgs | list | `[]` | List of extra cli args to add |
 | applicationSet.extraContainers | list | `[]` | Additional containers to be added to the applicationset controller pod |
 | applicationSet.extraEnv | list | `[]` | Environment variables to pass to the controller |
@@ -734,6 +735,7 @@ NAME: my-release
 | notifications.cm.name | string | `""` | The name of the config map to use. |
 | notifications.containerSecurityContext | object | `{}` | Container Security Context |
 | notifications.context | object | `{}` | Define user-defined context |
+| notifications.enabled | bool | `true` | Enable Notifications controller |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
 | notifications.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |

@@ -1,3 +1,4 @@
+{{- if .Values.applicationSet.enabled }}
 {{- if .Values.applicationSet.metrics.enabled }}
 apiVersion: v1
 kind: Service
@@ -22,4 +23,5 @@ spec:
     targetPort: metrics
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 4 }}
+{{- end }}
 {{- end }}
