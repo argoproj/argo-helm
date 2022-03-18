@@ -1,4 +1,4 @@
-{{- if .Values.applicationSet.webhook.ingress.enabled -}}
+{{- if and .Values.applicationSet.enabled .Values.applicationSet.webhook.ingress.enabled -}}
 {{- $serviceName := include "argo-cd.applicationSet.fullname" . -}}
 {{- $servicePort := .Values.applicationSet.service.portName -}}
 {{- $paths := .Values.applicationSet.webhook.ingress.paths -}}
