@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: added applicationSet.enabled and notifications.enabled to allow to disable them"
+    apiVersion: v2
+    appVersion: v2.3.1
+    created: "2022-03-18T16:42:45.180400906Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: dada45bbe420af45fefe7079a4db26a921a3ce0267c945987321de564e59d836
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.2.0/argo-cd-4.2.0.tgz
+    version: 4.2.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: added notifications.metrics.serviceMonitor.selector value"
     apiVersion: v2
     appVersion: v2.3.1
@@ -12790,4 +12819,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-03-17T19:35:00.282206006Z"
+generated: "2022-03-18T16:42:45.186123234Z"
