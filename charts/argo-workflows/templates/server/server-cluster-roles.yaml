@@ -62,6 +62,7 @@ rules:
   - secrets
   verbs:
   - get
+  - list
 {{- if .Values.server.sso }}
   {{- if .Values.server.sso.rbac }}
     {{- with .Values.server.sso.rbac.secretWhitelist }}
