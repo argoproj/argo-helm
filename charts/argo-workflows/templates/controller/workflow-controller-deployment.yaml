@@ -5,6 +5,10 @@ metadata:
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | quote }}
+    {{- with .Values.controller.deploymentAnnotations }}
+    annotations:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.controller.replicas }}
   selector:
