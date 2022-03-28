@@ -15,7 +15,7 @@ spec:
   ports:
   - name: {{ .Values.applicationSet.service.portName }}
     port: {{ .Values.applicationSet.service.port }}
-    targetPort: 7000
+    targetPort: webhook
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 4 }}
 {{- end }}
