@@ -2175,9 +2175,9 @@ notifications:
   # -- Configures notification services
   # @default -- See [values.yaml]
   ## For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
-  notifiers:
-    service.slack: |
-      token: $slack-token
+  notifiers: {}
+    # service.slack: |
+    #   token: $slack-token
 
   # -- Annotations to be applied to the controller Pods
   podAnnotations: {}
