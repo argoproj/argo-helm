@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Update to Argo CD v2.3.3"
+    apiVersion: v2
+    appVersion: v2.3.3
+    created: "2022-03-30T13:40:18.529196843Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: f3e6b772542dd04c541213ff63ca6aa9b567eb5390fbef66273dd0ffe294de7a
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.3.1/argo-cd-4.3.1.tgz
+    version: 4.3.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Removed]: Remove Argo CD notification default notifier"
     apiVersion: v2
     appVersion: v2.3.2
@@ -13004,4 +13033,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-03-29T11:24:35.578853816Z"
+generated: "2022-03-30T13:40:18.535445902Z"
