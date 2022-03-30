@@ -82,6 +82,10 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ## Upgrading
 
+### 4.3.*
+
+With this minor version, the notification notifier's `service.slack` is no longer configured by default.
+
 ### 4.0.0 and above
 
 This helm chart version deploys Argo CD v2.3. The Argo CD Notifications and ApplicationSet are part of Argo CD now. You no longer need to install them separately. The Notifications and ApplicationSet components **are bundled into default** Argo CD installation.
