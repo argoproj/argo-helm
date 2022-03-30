@@ -40,10 +40,20 @@ rules:
       - get
       - list
       - watch
+  # deployments and podtemplates read access needed for workload reference support
   - apiGroups:
+      - ""
       - apps
     resources:
       - deployments
+      - podtemplates
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - apps
+    resources:
       - replicasets
     verbs:
       - get
