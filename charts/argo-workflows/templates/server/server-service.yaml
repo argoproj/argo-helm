@@ -1,3 +1,4 @@
+{{- $tag := include "argo-workflows.server.tag" . -}}
 {{- if .Values.server.enabled -}}
 apiVersion: v1
 kind: Service
@@ -5,7 +6,7 @@ metadata:
   name: {{ template "argo-workflows.server.fullname" . }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.server.image.tag | quote }}
+    app.kubernetes.io/version: {{ default .Chart.AppVersion $tag | quote }}
   {{- with .Values.server.serviceAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
