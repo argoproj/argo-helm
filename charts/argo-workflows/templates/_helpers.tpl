@@ -114,20 +114,12 @@ Return the target Kubernetes version
 Strips long controller image tag down to work with maximum label lengths of 63
 */}}
 {{- define "argo-workflows.controller.tag" -}}
-{{- if gt (len .Values.controller.image.tag) 63 -}}
 {{- trunc 63 .Values.controller.image.tag }}
-{{- else -}}
-{{- .Values.controller.image.tag }}
-{{- end -}}
 {{- end -}}
 
 {{/*
 Strips long server image tag down to work with maximum label lengths of 63
 */}}
 {{- define "argo-workflows.server.tag" -}}
-{{- if gt (len .Values.server.image.tag) 63 -}}
 {{- trunc 63 .Values.server.image.tag }}
-{{- else -}}
-{{- .Values.server.image.tag }}
-{{- end -}}
 {{- end -}}
