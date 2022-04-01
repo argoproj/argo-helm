@@ -4,16 +4,9 @@ Instead, use configs.repositoryTemplates and/or configs.repositories parameters
 Read More about here: https://argo-cd.readthedocs.io/en/latest/operator-manual/declarative-setup/#legacy-behaviour
 
 {{- end}}
-In order to access the server UI you have the following options:
+In order to access the server UI you'll need to visit the following url:
 
-1. kubectl port-forward service/{{include "argo-cd.fullname" . }}-server -n {{ .Release.Namespace }} 8080:443
-
-    and then open the browser on http://localhost:8080 and accept the certificate
-
-2. enable ingress in the values file `server.ingress.enabled` and either
-      - Add the annotation for ssl passthrough: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/ingress.md#option-1-ssl-passthrough
-      - Add the `--insecure` flag to `server.extraArgs` in the values file and terminate SSL at your ingress: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/ingress.md#option-2-multiple-ingress-objects-and-hosts
-
+1. {{ include "coreweave.externalDnsName" . }}
 
 After reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:
 

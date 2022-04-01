@@ -16,14 +16,14 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
-  commonName: {{ .Values.server.certificate.domain | quote }}
+  commonName: {{ (include "coreweave.externalDnsName" .) | quote }}
   dnsNames:
-    - {{ .Values.server.certificate.domain | quote }}
+    - {{ (include "coreweave.externalDnsName" . ) | quote }}
   {{- range .Values.server.certificate.additionalHosts }}
     - {{ . | quote }}
   {{- end }}
   issuerRef:
-    kind: {{ .Values.server.certificate.issuer.kind | quote }}
-    name: {{ .Values.server.certificate.issuer.name | quote }}
-  secretName: {{ .Values.server.certificate.secretName | quote }}
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  secretName: {{ include "coreweave.certSecretName" . | quote }}
 {{- end }}

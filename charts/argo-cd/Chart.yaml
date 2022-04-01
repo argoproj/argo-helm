@@ -3,17 +3,14 @@ appVersion: v2.3.1
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
 version: 4.2.1
-home: https://github.com/argoproj/argo-helm
+home: https://github.com/coreweave/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 keywords:
   - argoproj
   - argocd
   - gitops
 maintainers:
-  - name: alexec
-  - name: alexmt
-  - name: jessesuen
-  - name: seanson
+  - name: coreweave
 dependencies:
   - name: redis-ha
     version: 4.12.17
@@ -22,3 +19,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - "[Fixed]: Add missing NetworkPolicy for ApplicationSet and Notifications"
+  category: CI/CD

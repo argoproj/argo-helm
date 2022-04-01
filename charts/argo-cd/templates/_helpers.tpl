@@ -241,7 +241,11 @@ Merge Argo Configuration with Preset Configuration
 {{- toYaml (mergeOverwrite (default dict (fromYaml (include "argo-cd.config.presets" $))) .Values.server.config) }}
   {{- end -}}
 {{- end -}}
-
+{{- define "coreweave.config" -}}
+  {{- if .Values.server.configEnabled -}}
+{{- toYaml (mergeOverwrite (default dict (fromYaml (include "argo-cd.config" $))) .Values.server.exclusions) }}
+    {{- end -}}
+{{- end -}}
 {{/*
 Return the default Argo CD app version
 */}}
@@ -269,4 +273,36 @@ Create the name of the configmap to use
 {{- else -}}
     {{ default "argocd-notifications-cm" .Values.notifications.cm.name }}
 {{- end -}}
+{{- end -}}
+
+{{/* 
+    Create Hostname helper -- Coreweave Use Only
+*/}}
+{{- define "coreweave.externalDnsName" -}}
+{{ default (printf "argocd.%s.ord1.ingress.coreweave.cloud" .Release.Namespace) .Values.customExternalDnsName }}
+{{- end -}}
+
+{{/*
+    Create DRY Helpers
+*/}}
+{{- define "coreweave.nodeAffinityAndTolerations" -}}
+tolerations:
+  - key: is_cpu_compute
+    operator: Exists
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: topology.kubernetes.io/region
+              operator: In
+              values:
+                - ORD1
+            - key: node.coreweave.cloud/class
+              operator: In
+              values:
+                - cpu
+{{- end -}}
+{{- define "coreweave.certSecretName" -}}
+{{printf "%s-tls-cert" .Release.Name }}
 {{- end -}}

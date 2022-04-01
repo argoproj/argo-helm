@@ -111,29 +111,7 @@ spec:
       {{- with .Values.dex.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
-    {{- if .Values.dex.nodeSelector }}
-      nodeSelector:
-{{- toYaml .Values.dex.nodeSelector | nindent 8 }}
-    {{- end }}
-    {{- if .Values.dex.tolerations }}
-      tolerations:
-{{- toYaml .Values.dex.tolerations | nindent 8 }}
-    {{- end }}
-    {{- if .Values.dex.affinity }}
-      affinity:
-{{- toYaml .Values.dex.affinity | nindent 8 }}
-    {{- end }}
-    {{- with .Values.dex.topologySpreadConstraints }}
-      topologySpreadConstraints:
-      {{- range $constraint := . }}
-      - {{ toYaml $constraint | nindent 8 | trim }}
-        {{- if not $constraint.labelSelector }}
-        labelSelector:
-          matchLabels:
-            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.dex.name) | nindent 12 }}
-        {{- end }}
-      {{- end }}
-    {{- end }}
+      {{include "coreweave.nodeAffinityAndTolerations" . | nindent 6 }}
       serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
       {{- with .Values.global.hostAliases }}
       hostAliases:

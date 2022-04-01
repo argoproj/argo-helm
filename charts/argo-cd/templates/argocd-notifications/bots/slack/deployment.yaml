@@ -40,16 +40,5 @@ spec:
           {{- with .Values.notifications.bots.slack.containerSecurityContext }}
           securityContext: {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with .Values.notifications.bots.slack.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.notifications.bots.slack.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.notifications.bots.slack.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{include "coreweave.nodeAffinityAndTolerations" . | nindent 6 }}
 {{ end }}

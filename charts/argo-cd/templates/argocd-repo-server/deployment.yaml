@@ -127,29 +127,7 @@ spec:
       {{- with .Values.repoServer.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
-    {{- if .Values.repoServer.nodeSelector }}
-      nodeSelector:
-{{- toYaml .Values.repoServer.nodeSelector | nindent 8 }}
-    {{- end }}
-    {{- if .Values.repoServer.tolerations }}
-      tolerations:
-{{- toYaml .Values.repoServer.tolerations | nindent 8 }}
-    {{- end }}
-    {{- if .Values.repoServer.affinity }}
-      affinity:
-{{- toYaml .Values.repoServer.affinity | nindent 8 }}
-    {{- end }}
-    {{- with .Values.repoServer.topologySpreadConstraints }}
-      topologySpreadConstraints:
-      {{- range $constraint := . }}
-      - {{ toYaml $constraint | nindent 8 | trim }}
-        {{- if not $constraint.labelSelector }}
-        labelSelector:
-          matchLabels:
-            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.repoServer.name) | nindent 12 }}
-        {{- end }}
-      {{- end }}
-    {{- end }}
+      {{include "coreweave.nodeAffinityAndTolerations" . | nindent 6 }}
       serviceAccountName: {{ template "argo-cd.repoServerServiceAccountName" . }}
       {{- with .Values.global.hostAliases }}
       hostAliases:
