@@ -1588,6 +1588,36 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Set 'server.config.url' to empty string so logout function can calculate the right redirect URL"
+        - "[Fixed]: Do not create slack service account when notifications controller is disabled"
+    apiVersion: v2
+    appVersion: v2.3.3
+    created: "2022-04-02T18:45:19.474291044Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 21c3b245b849a9566b0009952894b5cb8f46245cc3e649b07c6e2d92096d0000
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.4.1/argo-cd-4.4.1.tgz
+    version: 4.4.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Ability to use external/existing Redis (eg. a managed cloud service)"
     apiVersion: v2
     appVersion: v2.3.3
@@ -13109,4 +13139,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-03-31T17:32:04.29989544Z"
+generated: "2022-04-02T18:45:19.481884433Z"
