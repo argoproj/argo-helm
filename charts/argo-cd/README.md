@@ -403,9 +403,11 @@ NAME: my-release
 | server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo CD server [HPA] |
 | server.certificate.additionalHosts | list | `[]` | Certificate manager additional hosts |
 | server.certificate.domain | string | `"argocd.example.com"` | Certificate manager domain |
+| server.certificate.duration | string | `""` | The requested 'duration' (i.e. lifetime) of the Certificate. Value must be in units accepted by Go time.ParseDuration |
 | server.certificate.enabled | bool | `false` | Enables a certificate manager certificate |
 | server.certificate.issuer.kind | string | `nil` | Certificate manager issuer |
 | server.certificate.issuer.name | string | `nil` | Certificate manager name |
+| server.certificate.renewBefore | string | `""` | How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration |
 | server.certificate.secretName | string | `"argocd-server-tls"` | Certificate manager secret name |
 | server.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
 | server.config | object | See [values.yaml] | [General Argo CD configuration] |
