@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: New parameters to override Certificate duration and renewBefore"
+    apiVersion: v2
+    appVersion: v2.3.3
+    created: "2022-04-03T09:14:26.170723635Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 3df121c4809477e21ab767a964c9f020b1723b6b98aea9f59aa7b00d4100700e
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.5.0/argo-cd-4.5.0.tgz
+    version: 4.5.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Set 'server.config.url' to empty string so logout function can calculate the right redirect URL"
         - "[Fixed]: Do not create slack service account when notifications controller is disabled"
     apiVersion: v2
@@ -13139,4 +13168,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-04-02T18:45:19.481884433Z"
+generated: "2022-04-03T09:14:26.178995842Z"
