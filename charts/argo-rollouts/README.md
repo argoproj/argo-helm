@@ -110,6 +110,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.ingress.tls | list | `[]` | Dashboard ingress tls |
 | dashboard.nodeSelector | object | `{}` | [Node selector] |
 | dashboard.podSecurityContext | object | `{"runAsNonRoot":true}` | Security Context to set on pod level |
+| dashboard.priorityClassName | string | `"priorityClassName"` | [priorityClassName] for the dashboard server |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
 | dashboard.service.annotations | object | `{}` | Service annotations |
 | dashboard.service.externalIPs | list | `[]` | Dashboard service external IPs |

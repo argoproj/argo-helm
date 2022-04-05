@@ -146,6 +146,8 @@ dashboard:
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+  # -- [priorityClassName] for the dashboard server
+  priorityClassName: priorityClassName
   image:
     # -- Registry to use
     registry: quay.io
