@@ -24,4 +24,7 @@ data:
   {{- with .Values.notifications.triggers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
+  {{- with .Values.notifications.services }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
 {{- end }}
