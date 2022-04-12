@@ -764,7 +764,7 @@ NAME: my-release
 | notifications.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
 | notifications.nodeSelector | object | `{}` | [Node selector] |
-| notifications.notifiers | object | See [values.yaml] | Configures notification services |
+| notifications.notifiers | object | See [values.yaml] | Configures notification services such as slack, email or custom webhook |
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the controller Pods |
 | notifications.podLabels | object | `{}` | Labels to be applied to the controller Pods |
 | notifications.resources | object | `{}` | Resource limits and requests for the controller |
@@ -776,7 +776,6 @@ NAME: my-release
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | notifications.serviceAccount.name | string | `"argocd-notifications-controller"` | The name of the service account to use. |
-| notifications.services | object | `{}` | The notification services such as slack, email or custom webhook. This will be stored on `notifications.cm.name` ConfigMap. |
 | notifications.subscriptions | list | `[]` | Contains centrally managed global application subscriptions |
 | notifications.templates | object | `{}` | The notification template is used to generate the notification content |
 | notifications.tolerations | list | `[]` | [Tolerations] for use with node taints |
