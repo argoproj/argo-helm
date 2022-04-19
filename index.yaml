@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: added ImagePullPolicy to repo server's init containers"
+    apiVersion: v2
+    appVersion: v2.3.3
+    created: "2022-04-19T11:02:11.360708018Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 9e54c196210246da30b29ccb369e98c1e31b4a2d54d37c8b4a0f7373bc4c7268
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.5.4/argo-cd-4.5.4.tgz
+    version: 4.5.4
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: update comment to clarify usecase"
     apiVersion: v2
     appVersion: v2.3.3
@@ -13273,4 +13302,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-04-12T14:28:37.793791133Z"
+generated: "2022-04-19T11:02:11.367369564Z"
