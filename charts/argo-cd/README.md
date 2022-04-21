@@ -606,7 +606,7 @@ NAME: my-release
 | redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
 | redis.metrics.image.imagePullPolicy | string | `"IfNotPresent"` | redis-exporter image PullPolicy |
-| redis.metrics.image.repository | string | `"quay.io/bitnami/redis-exporter"` | redis-exporter image repository |
+| redis.metrics.image.repository | string | `"docker.io/bitnami/redis-exporter"` | redis-exporter image repository |
 | redis.metrics.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
 | redis.metrics.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.metrics.service.annotations | object | `{}` | Metrics service annotations |
