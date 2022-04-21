@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: changed redis-exporter repository to docker hub as bitami migrated their images off quay"
+    apiVersion: v2
+    appVersion: v2.3.3
+    created: "2022-04-21T22:02:42.849547452Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 8ee6f2eed8b136153b967e770ad83849499514fcde224f1076dddada705b8ae3
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.5.5/argo-cd-4.5.5.tgz
+    version: 4.5.5
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: added ImagePullPolicy to repo server's init containers"
     apiVersion: v2
     appVersion: v2.3.3
@@ -13302,4 +13331,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-04-19T11:02:11.367369564Z"
+generated: "2022-04-21T22:02:42.85536919Z"
