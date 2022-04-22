@@ -11844,6 +11844,28 @@ entries:
   argocd-applicationset:
   - annotations:
       artifacthub.io/changes: |
+        - "[Deprecated]: This chart is now deprecated and will be removed soon. Please upgrade to Argo CD 2.3+ (chart version 4.x) which includes ApplicationSet."
+    apiVersion: v2
+    appVersion: v0.4.1
+    created: "2022-04-22T09:42:55.611374103Z"
+    deprecated: true
+    description: A Helm chart for installing ArgoCD ApplicationSet
+    digest: bc43dbd4be36dfcbe32022bb87961be995cd89eb340ff8561d4c8ac5ba900bb8
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argocd-applicationset.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - appset
+    - gitops
+    maintainers:
+    - name: maruina
+    name: argocd-applicationset
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-applicationset-1.12.1/argocd-applicationset-1.12.1.tgz
+    version: 1.12.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: updated application version for v0.4.1 and its CRD for support of skipCrds in applications"
     apiVersion: v2
     appVersion: v0.4.1
@@ -12679,6 +12701,29 @@ entries:
   argocd-notifications:
   - annotations:
       artifacthub.io/changes: |
+        - "[Deprecated]: This chart is now deprecated and will be removed soon. Please upgrade to Argo CD 2.3+ (chart version 4.x) which includes Argo CD Notifications."
+    apiVersion: v2
+    appVersion: v1.2.1
+    created: "2022-04-22T09:42:55.767564976Z"
+    deprecated: true
+    description: A Helm chart for ArgoCD notifications, an add-on to ArgoCD.
+    digest: 25c721eebb6428ff8bfeb9cc3d8b28d2eacb0daf7ff929cb34ee45376f679a7c
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argocd-notifications.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - argocd-notifications
+    maintainers:
+    - name: alexmt
+    - name: andyfeller
+    name: argocd-notifications
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-notifications-1.8.1/argocd-notifications-1.8.1.tgz
+    version: 1.8.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Ability to define security context for Slack bot deployment"
     apiVersion: v2
     appVersion: v1.2.1
@@ -13403,4 +13448,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-04-22T08:34:17.38402164Z"
+generated: "2022-04-22T09:42:55.775838281Z"
