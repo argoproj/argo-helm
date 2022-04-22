@@ -19,11 +19,17 @@ spec:
   commonName: {{ .Values.server.certificate.domain | quote }}
   dnsNames:
     - {{ .Values.server.certificate.domain | quote }}
-  {{- range .Values.server.certificate.additionalHosts }}
+    {{- range .Values.server.certificate.additionalHosts }}
     - {{ . | quote }}
+    {{- end }}
+  {{- with .Values.server.certificate.duration }}
+  duration: {{ . | quote }}
   {{- end }}
   issuerRef:
     kind: {{ .Values.server.certificate.issuer.kind | quote }}
     name: {{ .Values.server.certificate.issuer.name | quote }}
+  {{- with .Values.server.certificate.renewBefore }}
+  renewBefore: {{ . | quote }}
+  {{- end }}
   secretName: {{ .Values.server.certificate.secretName | quote }}
 {{- end }}

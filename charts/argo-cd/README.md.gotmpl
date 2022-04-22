@@ -198,7 +198,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}
-  {{- if not (or (hasPrefix "controller" .Key) (hasPrefix "repoServer" .Key) (hasPrefix "server" .Key) (hasPrefix "dex" .Key) (hasPrefix "redis" .Key) (hasPrefix "applicationSet" .Key) (hasPrefix "notifications" .Key) ) }}
+  {{- if not (or (hasPrefix "controller" .Key) (hasPrefix "repoServer" .Key) (hasPrefix "server" .Key) (hasPrefix "dex" .Key) (hasPrefix "redis" .Key) (hasPrefix "externalRedis" .Key) (hasPrefix "applicationSet" .Key) (hasPrefix "notifications" .Key) ) }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
   {{- if hasPrefix "server.additional" .Key }}
@@ -257,6 +257,11 @@ NAME: my-release
 {{- end }}
 {{- range .Values }}
   {{- if hasPrefix "redis-ha" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+{{- range .Values }}
+  {{- if hasPrefix "externalRedis" .Key }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}

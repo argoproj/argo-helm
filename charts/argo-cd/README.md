@@ -402,11 +402,13 @@ NAME: my-release
 | server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the Argo CD server [HPA] |
 | server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo CD server [HPA] |
 | server.certificate.additionalHosts | list | `[]` | Certificate manager additional hosts |
-| server.certificate.domain | string | `"argocd.example.com"` | Certificate manager domain |
-| server.certificate.enabled | bool | `false` | Enables a certificate manager certificate |
-| server.certificate.issuer.kind | string | `nil` | Certificate manager issuer |
-| server.certificate.issuer.name | string | `nil` | Certificate manager name |
-| server.certificate.secretName | string | `"argocd-server-tls"` | Certificate manager secret name |
+| server.certificate.domain | string | `"argocd.example.com"` | Certificate primary domain (commonName) |
+| server.certificate.duration | string | `""` | The requested 'duration' (i.e. lifetime) of the Certificate. Value must be in units accepted by Go time.ParseDuration |
+| server.certificate.enabled | bool | `false` | Deploy a Certificate resource (requires cert-manager) |
+| server.certificate.issuer.kind | string | `""` | Certificate issuer kind. Either `Issuer` or `ClusterIssuer` |
+| server.certificate.issuer.name | string | `""` | Certificate isser name. Eg. `letsencrypt` |
+| server.certificate.renewBefore | string | `""` | How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration |
+| server.certificate.secretName | string | `"argocd-server-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
 | server.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
 | server.config | object | See [values.yaml] | [General Argo CD configuration] |
 | server.configAnnotations | object | `{}` | Annotations to be added to Argo CD ConfigMap |
@@ -535,7 +537,7 @@ NAME: my-release
 | dex.extraVolumes | list | `[]` | Extra volumes to the dex pod |
 | dex.image.imagePullPolicy | string | `"IfNotPresent"` | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
-| dex.image.tag | string | `"v2.30.0"` | Dex image tag |
+| dex.image.tag | string | `"v2.30.2"` | Dex image tag |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
 | dex.initImage.repository | string | `""` (defaults to global.image.repository) | Argo CD init image repository |
@@ -604,7 +606,7 @@ NAME: my-release
 | redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
 | redis.metrics.image.imagePullPolicy | string | `"IfNotPresent"` | redis-exporter image PullPolicy |
-| redis.metrics.image.repository | string | `"quay.io/bitnami/redis-exporter"` | redis-exporter image repository |
+| redis.metrics.image.repository | string | `"bitnami/redis-exporter"` | redis-exporter image repository |
 | redis.metrics.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
 | redis.metrics.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.metrics.service.annotations | object | `{}` | Metrics service annotations |
@@ -650,6 +652,10 @@ NAME: my-release
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `"\"\""` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
 | redis-ha.redis.masterGroupName | string | `"argocd"` | Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated |
+| externalRedis.existingSecret | string | `""` | The name of an existing secret with Redis credentials (must contain key `redis-password`). When it's set, the `externalRedis.password` parameter is ignored |
+| externalRedis.host | string | `""` | External Redis server host |
+| externalRedis.password | string | `""` | External Redis password |
+| externalRedis.port | int | `6379` | External Redis server port |
 
 ## ApplicationSet
 
@@ -758,7 +764,7 @@ NAME: my-release
 | notifications.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
 | notifications.nodeSelector | object | `{}` | [Node selector] |
-| notifications.notifiers | object | See [values.yaml] | Configures notification services |
+| notifications.notifiers | object | See [values.yaml] | Configures notification services such as slack, email or custom webhook |
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the controller Pods |
 | notifications.podLabels | object | `{}` | Labels to be applied to the controller Pods |
 | notifications.resources | object | `{}` | Resource limits and requests for the controller |

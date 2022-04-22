@@ -395,7 +395,7 @@ dex:
     # -- Dex image repository
     repository: ghcr.io/dexidp/dex
     # -- Dex image tag
-    tag: v2.30.0
+    tag: v2.30.2
     # -- Dex imagePullPolicy
     imagePullPolicy: IfNotPresent
   initImage:
@@ -690,7 +690,7 @@ redis:
     enabled: false
     image:
       # -- redis-exporter image repository
-      repository: quay.io/bitnami/redis-exporter
+      repository: bitnami/redis-exporter
       # -- redis-exporter image tag
       tag: 1.26.0-debian-10-r2
       # -- redis-exporter image PullPolicy
@@ -776,6 +776,18 @@ redis-ha:
   image:
     # -- Redis tag
     tag: 6.2.6-alpine
+
+# External Redis parameters
+externalRedis:
+  # -- External Redis server host
+  host: ""
+  # -- External Redis password
+  password: ""
+  # -- External Redis server port
+  port: 6379
+  # -- The name of an existing secret with Redis credentials (must contain key `redis-password`).
+  # When it's set, the `externalRedis.password` parameter is ignored
+  existingSecret: ""
 
 ## Server
 server:
@@ -914,18 +926,22 @@ server:
 
   ## Certificate configuration
   certificate:
-    # -- Enables a certificate manager certificate
+    # -- Deploy a Certificate resource (requires cert-manager)
     enabled: false
-    # -- Certificate manager domain
+    # -- Certificate primary domain (commonName)
     domain: argocd.example.com
+    # -- The requested 'duration' (i.e. lifetime) of the Certificate. Value must be in units accepted by Go time.ParseDuration
+    duration: ""
+    # -- How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration
+    renewBefore: ""
     issuer:
-      # -- Certificate manager issuer
-      kind: # ClusterIssuer
-      # -- Certificate manager name
-      name: # letsencrypt
+      # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
+      kind: ""
+      # -- Certificate isser name. Eg. `letsencrypt`
+      name: ""
     # -- Certificate manager additional hosts
     additionalHosts: []
-    # -- Certificate manager secret name
+    # -- The name of the Secret that will be automatically created and managed by this Certificate resource
     secretName: argocd-server-tls
 
   ## Server service configuration
@@ -1140,7 +1156,7 @@ server:
   # @default -- See [values.yaml]
   config:
     # Argo CD's externally facing base URL (optional). Required when configuring SSO
-    url: https://argocd.example.com
+    url: ""
     # Argo CD instance label key
     application.instanceLabelKey: argocd.argoproj.io/instance
 
@@ -2172,7 +2188,7 @@ notifications:
       # interval: 30s
       # scrapeTimeout: 10s
 
-  # -- Configures notification services
+  # -- Configures notification services such as slack, email or custom webhook
   # @default -- See [values.yaml]
   ## For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
   notifiers: {}
