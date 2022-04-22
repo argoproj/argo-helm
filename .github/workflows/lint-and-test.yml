@@ -50,9 +50,7 @@ jobs:
 
       - name: Deploy latest ArgoCD CRDs when testing ArgoCD extensions
         if: |
-          contains(steps.list-changed.outputs.changed_charts, 'argocd-applicationset') ||
-          contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater') ||
-          contains(steps.list-changed.outputs.changed_charts, 'argocd-notifications')
+          contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater')
         run: |
           kubectl apply -f charts/argo-cd/crds
 
