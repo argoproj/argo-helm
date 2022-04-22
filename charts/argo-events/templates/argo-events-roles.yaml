@@ -31,6 +31,13 @@ rules:
     {{- toYaml . | nindent 2 }}
   {{- end }}
   - apiGroups:
+    - ""
+    resources:
+    - "events"
+    verbs:
+      - "create"
+      - "patch"
+  - apiGroups:
       - coordination.k8s.io
     resources:
       - leases
