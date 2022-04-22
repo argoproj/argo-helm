@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: applicationset resources were not included in aggregate argo cluster roles"
+    apiVersion: v2
+    appVersion: v2.3.3
+    created: "2022-04-22T08:34:17.378996638Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 9bb97002ad1ef4a53cad9cd619c6cdd4320b948d2780bfc2e8c51dd9d2529ee1
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.5.6/argo-cd-4.5.6.tgz
+    version: 4.5.6
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: changed redis-exporter repository to docker hub as bitami migrated their images off quay"
     apiVersion: v2
     appVersion: v2.3.3
@@ -13374,4 +13403,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-04-22T07:23:44.399600502Z"
+generated: "2022-04-22T08:34:17.38402164Z"
