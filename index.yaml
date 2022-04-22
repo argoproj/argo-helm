@@ -11815,6 +11815,27 @@ entries:
   argocd-applicationset:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: updated application version for v0.4.1 and its CRD for support of skipCrds in applications"
+    apiVersion: v2
+    appVersion: v0.4.1
+    created: "2022-04-22T07:23:44.394341223Z"
+    description: A Helm chart for installing ArgoCD ApplicationSet
+    digest: 9b9d56ef0769896e75303e48e2139ff97f2e4e99b1760b7f3121db0569197f1d
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argocd-applicationset.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - appset
+    - gitops
+    maintainers:
+    - name: maruina
+    name: argocd-applicationset
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-applicationset-1.12.0/argocd-applicationset-1.12.0.tgz
+    version: 1.12.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: extraContainers support in Deployment resource"
     apiVersion: v2
     appVersion: v0.3.0
@@ -13353,4 +13374,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-04-22T07:09:43.643406657Z"
+generated: "2022-04-22T07:23:44.399600502Z"
