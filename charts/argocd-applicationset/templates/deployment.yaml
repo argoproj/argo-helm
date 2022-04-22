@@ -33,6 +33,7 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           command:
+            - entrypoint.sh
             - applicationset-controller
             - --metrics-addr={{ .Values.args.metricsAddr }}
             - --probe-addr={{ .Values.args.probeBindAddr }}
