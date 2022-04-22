@@ -1,8 +1,9 @@
 apiVersion: v2
 name: argocd-applicationset
 description: A Helm chart for installing ArgoCD ApplicationSet
+deprecated: true
 type: application
-version: 1.12.0
+version: 1.12.1
 appVersion: "v0.4.1"
 home: https://github.com/argoproj/argo-helm
 icon: https://argocd-applicationset.readthedocs.io/en/stable/assets/logo.png
@@ -14,4 +15,4 @@ maintainers:
   - name: maruina
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: updated application version for v0.4.1 and its CRD for support of skipCrds in applications"
+    - "[Deprecated]: This chart is now deprecated and will be removed soon. Please upgrade to Argo CD 2.3+ (chart version 4.x) which includes ApplicationSet."
