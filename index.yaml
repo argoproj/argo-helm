@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Removed]: Drop unneeded static-files volume from argocd-server"
+    apiVersion: v2
+    appVersion: v2.3.3
+    created: "2022-04-22T09:55:28.108023815Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 46bc00cb3a080d3577036f95d9e673e23754f5cfc4b24c88db3312c40331c119
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.5.7/argo-cd-4.5.7.tgz
+    version: 4.5.7
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: applicationset resources were not included in aggregate argo cluster roles"
     apiVersion: v2
     appVersion: v2.3.3
@@ -13448,4 +13477,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-04-22T09:42:55.775838281Z"
+generated: "2022-04-22T09:55:28.113053064Z"
