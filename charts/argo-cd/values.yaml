@@ -690,7 +690,7 @@ redis:
     enabled: false
     image:
       # -- redis-exporter image repository
-      repository: quay.io/bitnami/redis-exporter
+      repository: bitnami/redis-exporter
       # -- redis-exporter image tag
       tag: 1.26.0-debian-10-r2
       # -- redis-exporter image PullPolicy
@@ -2188,7 +2188,7 @@ notifications:
       # interval: 30s
       # scrapeTimeout: 10s
 
-  # -- Configures notification services
+  # -- Configures notification services such as slack, email or custom webhook
   # @default -- See [values.yaml]
   ## For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
   notifiers: {}
