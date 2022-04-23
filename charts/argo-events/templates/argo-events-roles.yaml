@@ -31,9 +31,9 @@ rules:
     {{- toYaml . | nindent 2 }}
   {{- end }}
   - apiGroups:
-    - ""
+      - ""
     resources:
-    - "events"
+      - "events"
     verbs:
       - "create"
       - "patch"
