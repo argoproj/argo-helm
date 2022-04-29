@@ -82,6 +82,19 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ## Upgrading
 
+### Custom resource definitions
+
+Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations).
+
+Please use `kubectl` to upgrade CRDs manually:
+
+```sh
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/argo-cd-{{ template "chart.version" . }}/charts/argo-cd/crds/crd-application.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/argo-cd-{{ template "chart.version" . }}/charts/argo-cd/crds/crd-applicationset.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/argo-cd-{{ template "chart.version" . }}/charts/argo-cd/crds/crd-extension.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/argo-cd-{{ template "chart.version" . }}/charts/argo-cd/crds/crd-project.yaml
+```
+
 ### 4.3.*
 
 With this minor version, the notification notifier's `service.slack` is no longer configured by default.
