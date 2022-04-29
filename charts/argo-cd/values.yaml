@@ -397,7 +397,8 @@ dex:
     # -- Dex image tag
     tag: v2.30.2
     # -- Dex imagePullPolicy
-    imagePullPolicy: IfNotPresent
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: ""
   initImage:
     # -- Argo CD init image repository
     # @default -- `""` (defaults to global.image.repository)
