@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Document how to upgrade CRDs"
+    apiVersion: v2
+    appVersion: v2.3.3
+    created: "2022-04-30T12:31:19.35420669Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: d7995357d4fa909ed451d8050937653ed20ea499dc6142d428d3a8119c51dfd0
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.5.8/argo-cd-4.5.8.tgz
+    version: 4.5.8
+  - annotations:
+      artifacthub.io/changes: |
         - "[Removed]: Drop unneeded static-files volume from argocd-server"
     apiVersion: v2
     appVersion: v2.3.3
@@ -13501,4 +13530,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-04-23T07:25:53.565743877Z"
+generated: "2022-04-30T12:31:19.360491691Z"
