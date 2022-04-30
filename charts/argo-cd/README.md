@@ -675,9 +675,9 @@ NAME: my-release
 | applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
 | applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
-| applicationSet.image.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy for the application set controller |
-| applicationSet.image.repository | string | `"quay.io/argoproj/argocd-applicationset"` | Repository to use for the application set controller |
-| applicationSet.image.tag | string | `"v0.4.1"` | Tag to use for the application set controller |
+| applicationSet.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application set controller |
+| applicationSet.image.repository | string | `quay.io/argoproj/argocd-applicationset` (defaults to global.image.repository) | Repository to use for the application set controller |
+| applicationSet.image.tag | string | `v0.4.1` (defaults to global.image.tag) | Tag to use for the application set controller |
 | applicationSet.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
 | applicationSet.metrics.enabled | bool | `false` | Deploy metrics service |
 | applicationSet.metrics.service.annotations | object | `{}` | Metrics service annotations |
