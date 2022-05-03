@@ -89,10 +89,10 @@ Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs
 Please use `kubectl` to upgrade CRDs manually:
 
 ```sh
-kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/argo-cd-4.5.8/charts/argo-cd/crds/crd-application.yaml
-kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/argo-cd-4.5.8/charts/argo-cd/crds/crd-applicationset.yaml
-kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/argo-cd-4.5.8/charts/argo-cd/crds/crd-extension.yaml
-kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/argo-cd-4.5.8/charts/argo-cd/crds/crd-project.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/master/charts/argo-cd/crds/crd-application.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/master/charts/argo-cd/crds/crd-applicationset.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/master/charts/argo-cd/crds/crd-extension.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-helm/master/charts/argo-cd/crds/crd-project.yaml
 ```
 
 ### 4.3.*
