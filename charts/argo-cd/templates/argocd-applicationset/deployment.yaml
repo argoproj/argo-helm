@@ -30,7 +30,7 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "argo-cd.applicationSetServiceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.applicationSet.podSecurityContext | nindent 8 }}
+        {{- toYaml (mergeOverwrite (deepCopy .Values.global.securityContext) .Values.notifications.securityContext) | nindent 8 }}
       containers:
         - name: {{ .Values.applicationSet.name }}
           securityContext:
