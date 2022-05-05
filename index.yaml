@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Use global imagePullPolicy for Dex by default"
+        - "[Fixed]: ApplicationSet imagePullPolicy variable in values.yaml"
+        - "[Fixed]: Use global imagePullPolicy for ApplicationSet by default"
+    apiVersion: v2
+    appVersion: v2.3.3
+    created: "2022-05-05T21:59:45.73920963Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: a64aa94547ece097c174e623558554ad28f3615bd8776980e49ebd60ef828a9d
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.5.10/argo-cd-4.5.10.tgz
+    version: 4.5.10
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fix]: Remove version dependencies in README for CRD paths"
     apiVersion: v2
     appVersion: v2.3.3
@@ -13581,4 +13612,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-05-04T16:40:53.403778126Z"
+generated: "2022-05-05T21:59:45.744589479Z"
