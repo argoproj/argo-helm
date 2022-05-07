@@ -36,7 +36,7 @@ spec:
           securityContext:
             {{- toYaml .Values.applicationSet.securityContext | nindent 12 }}
           command:
-            - applicationset-controller
+            - argocd-applicationset-controller
             - --metrics-addr={{ .Values.applicationSet.args.metricsAddr }}
             - --probe-addr={{ .Values.applicationSet.args.probeBindAddr }}
             {{- if or (gt ( .Values.applicationSet.replicaCount | int64) 1) .Values.applicationSet.args.enableLeaderElection }}

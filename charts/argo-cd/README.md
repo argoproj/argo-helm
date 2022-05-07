@@ -95,6 +95,10 @@ kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=<app
 kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=v2.3.3
 ```
 
+### 4.6.0
+
+This version starts to use upstream image with applicationset binary. Start command was changed from `applicationset-controller` to `argocd-applicationset-controller`
+
 ### 4.3.*
 
 With this minor version, the notification notifier's `service.slack` is no longer configured by default.
@@ -689,8 +693,8 @@ NAME: my-release
 | applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
 | applicationSet.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application set controller |
-| applicationSet.image.repository | string | `"quay.io/argoproj/argocd-applicationset"` | Repository to use for the application set controller |
-| applicationSet.image.tag | string | `"v0.4.1"` | Tag to use for the application set controller |
+| applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application set controller |
+| applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application set controller |
 | applicationSet.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
 | applicationSet.metrics.enabled | bool | `false` | Deploy metrics service |
 | applicationSet.metrics.service.annotations | object | `{}` | Metrics service annotations |
