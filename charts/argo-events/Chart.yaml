@@ -1,20 +1,27 @@
 apiVersion: v2
-description: A Helm chart to install Argo-Events in k8s Cluster
+appVersion: v1.7.0
+description: A Helm chart for Argo Events, the event-driven workflow automation framework
 name: argo-events
-version: 1.13.0
+version: 2.0.0
+home: https://github.com/argoproj/argo-helm
+icon: https://argoproj.github.io/argo-events/assets/logo.png
 keywords:
+  - argoproj
   - argo-events
-  - sensor-controller
-  - eventsource-controller
-  - eventbus-controller
 sources:
   - https://github.com/argoproj/argo-events
 maintainers:
   - name: VaibhavPage
   - name: whynowy
-appVersion: v1.6.0
-icon: https://argoproj.github.io/argo-events/assets/logo.png
-home: https://github.com/argoproj/argo-helm
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Additional RBAC for leader election"
+    - "[Added]: Argo events controller for v1.7.0"
+    - "[Added]: Argo events addmission webhook deployment"
+    - "[Added]: Global configuration options for all deployments"
+    - "[Added]: Pod disruption budgets for HA deployments"
+    - "[Added]: Support for Prometheus metrics on controller deployment"
+    - "[Changed]: Enable cluster-wide deployment by default"
+    - "[Removed]: Deprecated EventBus controller deployment"
+    - "[Removed]: Deprecated EventSource controller deployment"
+    - "[Removed]: Deprecated Sensor controller deployment"
+    - "[Removed]: Removed RBAC that allowed controller to create / modify CRDs"

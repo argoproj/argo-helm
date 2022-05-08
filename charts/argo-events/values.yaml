@@ -1,163 +1,403 @@
-# -- String to partially override "argo-events.fullname" template
-nameOverride: ""
+## Argo Events configuration
+## Ref: https://github.com/argoproj/argo-events
+##
 
+# -- Provide a name in place of `argo-events`
+nameOverride: argo-events
 # -- String to fully override "argo-events.fullname" template
 fullnameOverride: ""
 
-# -- docker registry
-registry: quay.io
+# -- Deploy on OpenShift
+openshift: false
 
-# -- The image pull policy
-imagePullPolicy: Always
+global:
+  image:
+    # -- If defined, a repository applied to all Argo Events deployments
+    repository: quay.io/argoproj/argo-events
+    # -- Overrides the global Argo Events image tag whose default is the chart appVersion
+    tag: ""
+    # -- If defined, a imagePullPolicy applied to all Argo Events deployments
+    imagePullPolicy: IfNotPresent
 
-# -- Secrets with credentials to pull images from a private registry
-imagePullSecrets: []
-# - name: argo-pull-secret
+  # -- If defined, uses a Secret to pull an image from a private Docker registry or repository
+  imagePullSecrets: []
+  # -- Annotations for the all deployed pods
+  podAnnotations: {}
+  # -- Labels for the all deployed pods
+  podLabels: {}
 
-# -- ServiceAccount to use for running controller.
-serviceAccount: argo-events-sa
+  # -- Additional labels to add to all resources
+  additionalLabels: {}
+    # app: argo-cd
 
-# -- Annotations applied to created service account. Can be used to enable GKE workload identity, or other use-cases
-serviceAccountAnnotations: {}
+  # -- Toggle and define securityContext. See [values.yaml]
+  securityContext:
+  #  runAsNonRoot: true
+  #  runAsUser: 9731
+  #  runAsGroup: 9731
+  #  fsGroup: 9731
 
-# -- Create service accounts in additional namespaces specified
-# The SA will always be created in the release namespaces
-additionalSaNamespaces: []
-  # - argo-prod
+  # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
+  hostAliases: []
+  # - ip: 10.20.30.40
+  #   hostnames:
+  #   - git.myhostname
 
-# -- Additional rules
-# @default -- (See [values.yaml])
-additionalServiceAccountRules:
-- apiGroups:
-    - apiextensions.k8s.io
-  verbs:
-    - create
-    - delete
-    - deletecollection
-    - get
-    - list
-    - patch
-    - update
-    - watch
-  resources:
-    - customresourcedefinitions
-
-# -- Create clusterroles that extend existing clusterroles to interact with argo-events CRDs.
+# -- Create clusterroles that extend existing clusterroles to interact with argo-events crds
 # Only applies for cluster-wide installation (`singleNamespace: true`)
-createAggregateRoles: true
+## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
+createAggregateRoles: false
 
-# -- Whether to run in namespaced scope.
-# Set `singleNamespace` to false to have the controllers
-# listen on all namespaces.  Otherwise the controllers will listen
-# on the namespace where the chart is installed in.
-singleNamespace: true
+## Event bus configuration
+configs:
+  ## NATS event bus
+  nats:
+    # -- Supported versions of NATS event bus
+    # @default -- `[]` (See [values.yaml])
+    versions: []
+    # - version: 0.22.1
+    #   natsStreamingImage: nats-streaming:0.22.1
+    #   metricsExporterImage: natsio/prometheus-nats-exporter:0.8.0
 
-# sensor controller
-sensorController:
-  # -- Sensor controller name
-  name: sensor-controller
-  # -- Repository to use for the sensor controller
-  image: argoproj/argo-events
-  # -- Overrides the image tag
-  # @default -- `""` (default is the chart appVersion)
-  tag: ""
-  # -- The number of sensor controller pods to run
-  replicaCount: 1
-  # -- Additional environment variables to pass to sensor controller
-  extraEnv: []
-    # - name: DEBUG_LOG
-    #   value: "true"
+  ## JetStream event bus
+  jetstream:
+    # Default JetStream settings, could be overriden by EventBus JetStream spec
+    # Ref: https://docs.nats.io/running-a-nats-service/configuration#jetstream
+    settings:
+      # -- Maximum size of the memory storage (e.g. 1G)
+      maxMemoryStore: -1
+      # -- Maximum size of the file storage (e.g. 20G)
+      maxFileStore: -1
+    streamConfig:
+      # -- Maximum number of messages before expiring oldest message
+      maxMsgs: 1000000
+      # -- Maximum age of existing messages, i.e. “72h”, “4h35m”
+      maxAge: 72h
+      # Total size of messages before expiring oldest message, 0 means unlimited.
+      maxBytes: 1GB
+      # -- Number of replicas, defaults to 3 and requires minimal 3
+      replicas: 3
+      # -- Not documented at the moment
+      duplicates: 300s
+    # Supported versions of JetStream eventbus
+    # @default -- `[]` (See [values.yaml])
+    versions: []
+    # - version: latest
+    #   natsImage: nats:2.8.1
+    #   metricsExporterImage: natsio/prometheus-nats-exporter:0.9.1
+    #   configReloaderImage: natsio/nats-server-config-reloader:0.6.3
+    #   startCommand: /nats-server
+    # - version: "2.8.1"
+    #   natsImage: nats:2.8.1
+    #   metricsExporterImage: natsio/prometheus-nats-exporter:0.9.1
+    #   configReloaderImage: natsio/nats-server-config-reloader:0.6.3
+    #   startCommand: /nats-server
+    # - version: 2.8.1-alpine
+    #   natsImage: nats:2.8.1-alpine
+    #   metricsExporterImage: natsio/prometheus-nats-exporter:0.9.1
+    #   configReloaderImage: natsio/nats-server-config-reloader:0.6.3
+    #   startCommand: nats-server
 
-  # -- Repository to use for the sensor image
-  sensorImage: argoproj/argo-events
-  # -- Annotations to be added to sensor controller pods
+## Argo Events controller
+controller:
+  # -- Argo Events controller name string
+  name: controller-manager
+
+  rbac:
+    # -- Create events controller RBAC
+    enabled: true
+    # -- Restrict events controller to operate only in a single namespace instead of cluster-wide scope.
+    namespaced: false
+    # -- Additional user rules for event controller's rbac
+    rules: []
+
+  image:
+    # -- Repository to use for the events controller
+    # @default -- `""` (defaults to global.image.repository)
+    repository: ""
+    # -- Tag to use for the events controller
+    # @default -- `""` (defaults to global.image.tag)
+    tag: ""
+    # -- Image pull policy for the events controller
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: ""
+
+  # -- The number of events controller pods to run.
+  replicas: 1
+
+  # Pod disruption budget
+  pdb:
+    # -- Deploy a PodDisruptionBudget for the events controller
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+    # -- Labels to be added to events controller pdb
+    labels: {}
+    # -- Annotations to be added to events controller pdb
+    annotations: {}
+
+  # -- Environment variables to pass to events controller
+  env: []
+  # - name: DEBUG_LOG
+  #   value: "true"
+
+  # -- envFrom to pass to events controller
+  # @default -- `[]` (See [values.yaml])
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
+  # -- Annotations to be added to events controller pods
   podAnnotations: {}
+
+  # -- Labels to be added to events controller pods
+  podLabels: {}
+
+  # -- Events controller container-level security context
+  containerSecurityContext:
+    {}
+    # capabilities:
+    #   drop:
+    #     - all
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+
+  ## Readiness and liveness probes for default backend
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  readinessProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+  livenessProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  # -- Additional volumes to the events controller pod
+  volumes: []
+
+  # -- Additional volumeMounts to the events controller main container
+  volumeMounts: []
+
   # -- [Node selector]
   nodeSelector: {}
-  # -- Labels to be added to sensor controller pods
-  podLabels: {}
-  # -- Priority class for the sensor controller
-  priorityClassName: ""
   # -- [Tolerations] for use with node taints
   tolerations: []
-  # -- Assign custom [affinity] rules to the sensor controller
+  # -- Asign custom [affinity] rules to the deployment
   affinity: {}
-  # -- Resource limits and requests for the sensor controller pods
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the events controller
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
+  # -- Priority class for the events controller pods
+  priorityClassName: ""
+
+  # -- Resource limits and requests for the events controller pods
   resources: {}
-  # -- Sensor controllers container-level security context
-  containerSecurityContext: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 250m
+  #    memory: 256Mi
 
-eventsourceController:
-  # -- Event source controller name
-  name: eventsource-controller
-  # -- Repository to use for the event source controller
-  image: argoproj/argo-events
-  # -- Overrides the image tag
-  # @default -- `""` (default is the chart appVersion)
-  tag: ""
-  # -- The number of event source controller pods to run
-  replicaCount: 1
-  # -- Additional environment variables to pass to event source controller
-  extraEnv: []
-    # - name: DEBUG_LOG
-    #   value: "true"
+  # -- Additional containers to be added to the events controller pods
+  extraContainers: []
 
-  # -- Repository to use for the event source image
-  eventsourceImage: argoproj/argo-events
-  # -- Annotations to be added to event source controller pods
+  # -- Init containers to add to the events controller pods
+  initContainers: []
+
+  serviceAccount:
+    # -- Create a service account for the events controller
+    create: true
+    # -- Service account name
+    name: argo-events
+    # -- Annotations applied to created service account
+    annotations: {}
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
+
+  ## Events controller metrics configuration
+  metrics:
+    # -- Deploy metrics service
+    enabled: false
+    applicationLabels:
+      # -- Enables additional labels in argocd_app_labels metric
+      enabled: false
+      # -- Additional labels
+      labels: []
+    service:
+      # -- Metrics service annotations
+      annotations: {}
+      # -- Metrics service labels
+      labels: {}
+      # -- Metrics service port
+      servicePort: 8082
+    serviceMonitor:
+      # -- Enable a prometheus ServiceMonitor
+      enabled: false
+      # -- Prometheus ServiceMonitor interval
+      interval: 30s
+      # -- Prometheus [RelabelConfigs] to apply to samples before scraping
+      relabelings: []
+      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
+      metricRelabelings: []
+      # -- Prometheus ServiceMonitor selector
+      selector: {}
+        # prometheus: kube-prometheus
+
+      # -- Prometheus ServiceMonitor namespace
+      namespace: "" # "monitoring"
+      # -- Prometheus ServiceMonitor labels
+      additionalLabels: {}
+
+## Argo Events admission webhook
+webhook:
+  # -- Enable admission webhook. Applies only for cluster-wide installation
+  enabled: true
+
+  # -- Argo Events admission webhook name string
+  name: events-webhook
+
+  image:
+    # -- Repository to use for the event controller
+    # @default -- `""` (defaults to global.image.repository)
+    repository: ""
+    # -- Tag to use for the event controller
+    # @default -- `""` (defaults to global.image.tag)
+    tag: ""
+    # -- Image pull policy for the event controller
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: ""
+
+  # -- The number of webhook pods to run.
+  replicas: 1
+
+  # Pod disruption budget
+  pdb:
+    # -- Deploy a PodDisruptionBudget for the admission webhook
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+    # -- Labels to be added to admission webhook pdb
+    labels: {}
+    # -- Annotations to be added to admission webhook pdb
+    annotations: {}
+
+  # -- Environment variables to pass to event controller
+  # @default -- `[]` (See [values.yaml])
+  env: []
+  # - name: DEBUG_LOG
+  #   value: "true"
+
+  # -- envFrom to pass to event controller
+  # @default -- `[]` (See [values.yaml])
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
+  # -- Annotations to be added to event controller pods
   podAnnotations: {}
+
+  # -- Labels to be added to event controller pods
+  podLabels: {}
+
+  # -- Event controller container-level security context
+  containerSecurityContext:
+    {}
+    # capabilities:
+    #   drop:
+    #     - all
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+
+  ## Readiness and liveness probes for default backend
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  readinessProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+  livenessProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  # -- Additional volumeMounts to the event controller main container
+  volumeMounts: []
+
+  # -- Additional volumes to the event controller pod
+  volumes: []
+
   # -- [Node selector]
   nodeSelector: {}
-  # -- Labels to be added to event source controller pods
-  podLabels: {}
-  # -- Priority class for the event source controller
-  priorityClassName: ""
   # -- [Tolerations] for use with node taints
   tolerations: []
-  # -- Assign custom [affinity] rules to the event source controller
+  # -- Asign custom [affinity] rules to the deployment
   affinity: {}
-  # -- Resource limits and requests for the event source controller pods
-  resources: {}
-  # -- Event source controller container-level security context
-  containerSecurityContext: {}
 
-eventbusController:
-  # -- Event bus controller name
-  name: eventbus-controller
-  # -- Repository to use for the event bus controller
-  image: argoproj/argo-events
-  # -- Overrides the image tag
-  # @default -- `""` (default is the chart appVersion)
-  tag: ""
-  # -- The number of event bus controller pods to run
-  replicaCount: 1
-  # -- Additional environment variables to pass to event bus controller
-  extraEnv: []
-    # - name: DEBUG_LOG
-    #   value: "true"
+  # -- Assign custom [TopologySpreadConstraints] rules to the event controller
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
 
-  # -- Annotations to be added to event bus controller pods
-  podAnnotations: {}
-  # -- [Node selector]
-  nodeSelector: {}
-  # -- Labels to be added to event event bus controller pods
-  podLabels: {}
-  # -- Priority class for the event bus controller
+  # -- Priority class for the event controller pods
   priorityClassName: ""
-  # -- [Tolerations] for use with node taints
-  tolerations: []
-  # -- Assign custom [affinity] rules to the event bus controller
-  affinity: {}
-  # -- Resource limits and requests for the event bus controller pods
-  resources: {}
-  # -- NATS streaming container image to use for the event bus
-  natsStreamingImage: nats-streaming:0.22.1
-  # -- NATS metrics exporter container image to use for the event bus
-  natsMetricsExporterImage: natsio/prometheus-nats-exporter:0.8.0
-  # -- Event bus controller container-level security context
-  containerSecurityContext: {}
 
-# -- Common PodSecurityContext for all controllers
-securityContext:
-  runAsNonRoot: true
-  runAsUser: 9731
+  # -- Resource limits and requests for the event controller pods
+  resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 250m
+  #    memory: 256Mi
+
+  serviceAccount:
+    # -- Create a service account for the admission webhook
+    create: true
+    # -- Service account name
+    name: argo-events-webhook
+    # -- Annotations applied to created service account
+    annotations: {}
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
