@@ -172,7 +172,7 @@ controller:
 
   # -- Specifies the container runtime interface to use (one of: `docker`, `kubelet`, `k8sapi`, `pns`, `emissary`)
   ## Ref: https://argoproj.github.io/argo-workflows/workflow-executors/
-  containerRuntimeExecutor: docker
+  containerRuntimeExecutor: emissary
   # -- Specifies the executor to use. This has precedence over `controller.containerRuntimeExecutor`.
   containerRuntimeExecutors: []
     # - name: emissary
