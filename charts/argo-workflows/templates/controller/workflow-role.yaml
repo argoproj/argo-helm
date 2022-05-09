@@ -30,6 +30,12 @@ rules:
       - pods/exec
     verbs:
       - create
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - workflowtaskresults
+    verbs:
+      - create
   {{- end }}
 
 {{- end }}

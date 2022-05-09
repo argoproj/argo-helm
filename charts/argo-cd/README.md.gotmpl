@@ -82,6 +82,19 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ## Upgrading
 
+### Custom resource definitions
+
+Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations).
+
+Please use `kubectl` to upgrade CRDs manually from [crds](crds/) folder or via the manifests from the upstream project repo:
+
+```bash
+kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=<appVersion>
+
+# Eg. version v2.3.3
+kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=v2.3.3
+```
+
 ### 4.3.*
 
 With this minor version, the notification notifier's `service.slack` is no longer configured by default.

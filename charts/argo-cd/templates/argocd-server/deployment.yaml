@@ -191,8 +191,6 @@ spec:
         emptyDir: {}
       {{- end }}
       - emptyDir: {}
-        name: static-files
-      - emptyDir: {}
         name: tmp-dir
       {{- if .Values.server.containerSecurityContext.readOnlyRootFilesystem }}
       - emptyDir: {}
