@@ -291,7 +291,7 @@ NAME: my-release
 | controller.metrics.rules.spec | list | `[]` | PrometheusRule.Spec for the application controller |
 | controller.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | controller.metrics.service.labels | object | `{}` | Metrics service labels |
-| controller.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
+| controller.metrics.service.portName | string | `"metrics"` | Metrics service port name |
 | controller.metrics.service.servicePort | int | `8082` | Metrics service port |
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
@@ -364,7 +364,7 @@ NAME: my-release
 | repoServer.metrics.enabled | bool | `false` | Deploy metrics service |
 | repoServer.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | repoServer.metrics.service.labels | object | `{}` | Metrics service labels |
-| repoServer.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
+| repoServer.metrics.service.portName | string | `"metrics"` | Metrics service port name |
 | repoServer.metrics.service.servicePort | int | `8084` | Metrics service port |
 | repoServer.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | repoServer.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
@@ -482,7 +482,7 @@ NAME: my-release
 | server.metrics.enabled | bool | `false` | Deploy metrics service |
 | server.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | server.metrics.service.labels | object | `{}` | Metrics service labels |
-| server.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
+| server.metrics.service.portName | string | `"metrics"` | Metrics service port name |
 | server.metrics.service.servicePort | int | `8083` | Metrics service port |
 | server.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | server.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
@@ -573,7 +573,7 @@ NAME: my-release
 | dex.metrics.enabled | bool | `false` | Deploy metrics service |
 | dex.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | dex.metrics.service.labels | object | `{}` | Metrics service labels |
-| dex.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
+| dex.metrics.service.portName | string | `"metrics"` | Metrics service port name |
 | dex.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | dex.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | dex.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
@@ -637,7 +637,7 @@ NAME: my-release
 | redis.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | redis.metrics.service.clusterIP | string | `"None"` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
 | redis.metrics.service.labels | object | `{}` | Metrics service labels |
-| redis.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
+| redis.metrics.service.portName | string | `"metrics"` | Metrics service port name |
 | redis.metrics.service.servicePort | int | `9121` | Metrics service port |
 | redis.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | redis.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
@@ -709,7 +709,7 @@ NAME: my-release
 | applicationSet.metrics.enabled | bool | `false` | Deploy metrics service |
 | applicationSet.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | applicationSet.metrics.service.labels | object | `{}` | Metrics service labels |
-| applicationSet.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
+| applicationSet.metrics.service.portName | string | `"metrics"` | Metrics service port name |
 | applicationSet.metrics.service.servicePort | int | `8085` | Metrics service port |
 | applicationSet.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | applicationSet.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
@@ -789,7 +789,7 @@ NAME: my-release
 | notifications.metrics.port | int | `9001` | Metrics port |
 | notifications.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | notifications.metrics.service.labels | object | `{}` | Metrics service labels |
-| notifications.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
+| notifications.metrics.service.portName | string | `"metrics"` | Metrics service port name |
 | notifications.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | notifications.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | notifications.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
