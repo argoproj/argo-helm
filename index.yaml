@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Consider global securityContext for notifications and applicationset deployment"
+    apiVersion: v2
+    appVersion: v2.3.3
+    created: "2022-05-09T19:18:37.449377985Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 50abc2a8b5b5c4e358477015db6c49e8bd6a2ed50d088bf4332fc7f8434e67c1
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.5.12/argo-cd-4.5.12.tgz
+    version: 4.5.12
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Use global imagePullSecret value for notfications deployment"
     apiVersion: v2
     appVersion: v2.3.3
@@ -13641,4 +13670,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-05-07T20:58:57.486671149Z"
+generated: "2022-05-09T19:18:37.456172195Z"
