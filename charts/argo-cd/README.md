@@ -82,6 +82,19 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ## Upgrading
 
+### Custom resource definitions
+
+Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations).
+
+Please use `kubectl` to upgrade CRDs manually from [crds](crds/) folder or via the manifests from the upstream project repo:
+
+```bash
+kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=<appVersion>
+
+# Eg. version v2.3.3
+kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=v2.3.3
+```
+
 ### 4.3.*
 
 With this minor version, the notification notifier's `service.slack` is no longer configured by default.
@@ -535,7 +548,7 @@ NAME: my-release
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.extraVolumeMounts | list | `[]` | Extra volumeMounts to the dex pod |
 | dex.extraVolumes | list | `[]` | Extra volumes to the dex pod |
-| dex.image.imagePullPolicy | string | `"IfNotPresent"` | Dex imagePullPolicy |
+| dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
 | dex.image.tag | string | `"v2.30.2"` | Dex image tag |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
@@ -675,7 +688,7 @@ NAME: my-release
 | applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
 | applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
-| applicationSet.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the application set controller |
+| applicationSet.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application set controller |
 | applicationSet.image.repository | string | `"quay.io/argoproj/argocd-applicationset"` | Repository to use for the application set controller |
 | applicationSet.image.tag | string | `"v0.4.1"` | Tag to use for the application set controller |
 | applicationSet.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
