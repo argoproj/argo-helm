@@ -397,7 +397,8 @@ dex:
     # -- Dex image tag
     tag: v2.30.2
     # -- Dex imagePullPolicy
-    imagePullPolicy: IfNotPresent
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: ""
   initImage:
     # -- Argo CD init image repository
     # @default -- `""` (defaults to global.image.repository)
@@ -1890,10 +1891,11 @@ applicationSet:
   image:
     # -- Repository to use for the application set controller
     repository: quay.io/argoproj/argocd-applicationset
-    # -- Image pull policy for the application set controller
-    pullPolicy: IfNotPresent
     # -- Tag to use for the application set controller
     tag: "v0.4.1"
+    # -- Image pull policy for the application set controller
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: ""
 
   args:
     # -- The default metric address
