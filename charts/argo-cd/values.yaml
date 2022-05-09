@@ -259,7 +259,7 @@ controller:
       # -- Metrics service port
       servicePort: 8082
       # -- Metrics service port name
-      portName: metrics
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -380,7 +380,7 @@ dex:
       # -- Metrics service labels
       labels: {}
       # -- Metrics service port name
-      portName: metrics
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -730,7 +730,7 @@ redis:
       # -- Metrics service port
       servicePort: 9121
       # -- Metrics service port name
-      portName: metrics
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -1008,7 +1008,7 @@ server:
       # -- Metrics service port
       servicePort: 8083
       # -- Metrics service port name
-      portName: metrics
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -1591,7 +1591,7 @@ repoServer:
       # -- Metrics service port
       servicePort: 8084
       # -- Metrics service port name
-      portName: metrics
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -1954,7 +1954,7 @@ applicationSet:
       # -- Metrics service port
       servicePort: 8085
       # -- Metrics service port name
-      portName: metrics
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -2213,7 +2213,7 @@ notifications:
       # -- Metrics service labels
       labels: {}
       # -- Metrics service port name
-      portName: metrics
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
