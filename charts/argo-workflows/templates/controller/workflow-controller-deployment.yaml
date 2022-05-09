@@ -4,7 +4,11 @@ metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | quote }}
+    app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | trunc 63 | quote }}
+  {{- with .Values.controller.deploymentAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.controller.replicas }}
   selector:
@@ -14,7 +18,7 @@ spec:
     metadata:
       labels:
         {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | quote }}
+        app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | trunc 63 | quote }}
         {{- with.Values.controller.podLabels }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
