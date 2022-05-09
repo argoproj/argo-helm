@@ -1,4 +1,3 @@
-{{- $tag := include "argo-workflows.controller.tag" . -}}
 {{- if or .Values.controller.metricsConfig.enabled .Values.controller.telemetryConfig.enabled }}
 apiVersion: v1
 kind: Service
@@ -6,7 +5,7 @@ metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default .Chart.AppVersion $tag | quote }}
+    app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | trunc 63 | quote }}
     {{- with .Values.controller.serviceLabels }}
       {{ toYaml . | nindent 4 }}
     {{- end }}

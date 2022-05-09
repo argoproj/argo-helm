@@ -109,17 +109,3 @@ Return the target Kubernetes version
 {{- define "argo-workflows.kubeVersion" -}}
   {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
 {{- end -}}
-
-{{/*
-Strips long controller image tag down to work with maximum label lengths of 63
-*/}}
-{{- define "argo-workflows.controller.tag" -}}
-{{- trunc 63 .Values.controller.image.tag }}
-{{- end -}}
-
-{{/*
-Strips long server image tag down to work with maximum label lengths of 63
-*/}}
-{{- define "argo-workflows.server.tag" -}}
-{{- trunc 63 .Values.server.image.tag }}
-{{- end -}}
