@@ -299,7 +299,7 @@ NAME: my-release
 | controller.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
 | controller.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | controller.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| controller.metrics.serviceMonitor.scheme | string | `"https"` | Prometheus ServiceMonitor scheme |
+| controller.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | controller.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | controller.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | controller.name | string | `"application-controller"` | Application controller name string |
@@ -372,7 +372,7 @@ NAME: my-release
 | repoServer.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
 | repoServer.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | repoServer.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| repoServer.metrics.serviceMonitor.scheme | string | `"https"` | Prometheus ServiceMonitor scheme |
+| repoServer.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | repoServer.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | repoServer.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | repoServer.name | string | `"repo-server"` | Repo server name |
@@ -490,7 +490,7 @@ NAME: my-release
 | server.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
 | server.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | server.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| server.metrics.serviceMonitor.scheme | string | `"https"` | Prometheus ServiceMonitor scheme |
+| server.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | server.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | server.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | server.name | string | `"server"` | Argo CD server name |
@@ -580,7 +580,7 @@ NAME: my-release
 | dex.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
 | dex.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | dex.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| dex.metrics.serviceMonitor.scheme | string | `"https"` | Prometheus ServiceMonitor scheme |
+| dex.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | dex.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | dex.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | dex.name | string | `"dex-server"` | Dex name |
@@ -646,7 +646,7 @@ NAME: my-release
 | redis.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
 | redis.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | redis.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| redis.metrics.serviceMonitor.scheme | string | `"https"` | Prometheus ServiceMonitor scheme |
+| redis.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | redis.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | redis.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | redis.name | string | `"redis"` | Redis name |
@@ -717,7 +717,7 @@ NAME: my-release
 | applicationSet.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
 | applicationSet.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | applicationSet.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| applicationSet.metrics.serviceMonitor.scheme | string | `"https"` | Prometheus ServiceMonitor scheme |
+| applicationSet.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | applicationSet.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | applicationSet.name | string | `"applicationset-controller"` | Application Set controller name string |
@@ -792,7 +792,7 @@ NAME: my-release
 | notifications.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | notifications.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | notifications.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
-| notifications.metrics.serviceMonitor.scheme | string | `"https"` | Prometheus ServiceMonitor scheme |
+| notifications.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | notifications.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | notifications.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
