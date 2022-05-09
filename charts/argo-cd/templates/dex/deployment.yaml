@@ -76,14 +76,14 @@ spec:
         - name: grpc
           containerPort: {{ .Values.dex.containerPortGrpc }}
           protocol: TCP
-        - name: metrics
+        - name: {{ .Values.dex.metrics.service.portName }}
           containerPort: {{ .Values.dex.containerPortMetrics }}
           protocol: TCP
         {{- if .Values.dex.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /healthz/live
-            port: metrics
+            port: {{ .Values.dex.metrics.service.portName }}
           {{- with .Values.dex.livenessProbe }}
             {{- omit . "enabled" | toYaml | nindent 10 }}
           {{- end }}
@@ -92,7 +92,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /healthz/ready
-            port: metrics
+            port: {{ .Values.dex.metrics.service.portName }}
           {{- with .Values.dex.readinessProbe }}
             {{- omit . "enabled" | toYaml | nindent 10 }}
           {{- end }}
