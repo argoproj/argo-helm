@@ -10957,6 +10957,29 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Add support for controller Deployment annotations via controller.deploymentAnnotations chart value."
+        - "[Added]: Add support for server Deployment annotations via server.deploymentAnnotations chart value."
+    apiVersion: v2
+    appVersion: v3.3.2
+    created: "2022-05-09T20:45:53.911466792Z"
+    description: A Helm chart for Argo Workflows
+    digest: 5b5b0cb1793b85a8b37083abd5616be5b8db47b3a11455866c8327278b8f6489
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: benjaminws
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.15.0/argo-workflows-0.15.0.tgz
+    version: 0.15.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Add missing create verb to pod/exec for the workflow role"
     apiVersion: v2
     appVersion: v3.3.2
@@ -13758,4 +13781,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-05-09T20:36:41.043873331Z"
+generated: "2022-05-09T20:45:53.91807893Z"
