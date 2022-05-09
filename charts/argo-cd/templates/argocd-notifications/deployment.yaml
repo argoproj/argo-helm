@@ -27,7 +27,7 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- with .Values.notifications.imagePullSecrets }}
+    {{- with .Values.notifications.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
