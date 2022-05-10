@@ -29,10 +29,10 @@ spec:
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.metrics.serviceMonitor.scheme }}
+      {{- with .Values.repoServer.metrics.serviceMonitor.scheme }}
       scheme: {{ . }}
       {{- end }}
-      {{- with .Values.controller.metrics.serviceMonitor.tlsConfig }}
+      {{- with .Values.repoServer.metrics.serviceMonitor.tlsConfig }}
       tlsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}

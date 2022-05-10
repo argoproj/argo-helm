@@ -30,10 +30,10 @@ spec:
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.metrics.serviceMonitor.scheme }}
+      {{- with .Values.applicationSet.metrics.serviceMonitor.scheme }}
       scheme: {{ . }}
       {{- end }}
-      {{- with .Values.controller.metrics.serviceMonitor.tlsConfig }}
+      {{- with .Values.applicationSet.metrics.serviceMonitor.tlsConfig }}
       tlsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
