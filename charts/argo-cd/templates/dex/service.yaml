@@ -25,7 +25,7 @@ spec:
     port: {{ .Values.dex.servicePortGrpc }}
     targetPort: grpc
 {{- if .Values.dex.metrics.enabled }}
-  - name: metrics
+  - name: {{ .Values.dex.metrics.service.portName }}
     protocol: TCP
     port: {{ .Values.dex.servicePortMetrics }}
     targetPort: metrics
