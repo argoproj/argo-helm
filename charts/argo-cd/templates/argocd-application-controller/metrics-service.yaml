@@ -16,7 +16,7 @@ metadata:
   name: {{ template "argo-cd.controller.fullname" . }}-metrics
 spec:
   ports:
-  - name: metrics
+  - name: {{ .Values.controller.metrics.service.portName }}
     protocol: TCP
     port: {{ .Values.controller.metrics.service.servicePort }}
     targetPort: controller

@@ -64,6 +64,8 @@ controller:
   namespaceParallelism:
   # -- Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224
   initialDelay:
+  # -- deploymentAnnotations is an optional map of annotations to be applied to the controller Deployment
+  deploymentAnnotations: {}
   # -- podAnnotations is an optional map of annotations to be applied to the controller Pods
   podAnnotations: {}
   # -- Optional labels to add to the controller pods
@@ -170,7 +172,7 @@ controller:
 
   # -- Specifies the container runtime interface to use (one of: `docker`, `kubelet`, `k8sapi`, `pns`, `emissary`)
   ## Ref: https://argoproj.github.io/argo-workflows/workflow-executors/
-  containerRuntimeExecutor: docker
+  containerRuntimeExecutor: emissary
   # -- Specifies the executor to use. This has precedence over `controller.containerRuntimeExecutor`.
   containerRuntimeExecutors: []
     # - name: emissary
@@ -291,6 +293,8 @@ server:
     repository: argoproj/argocli
     # -- Overrides the image tag whose default is the chart appVersion.
     tag: ""
+  # -- optional map of annotations to be applied to the ui Deployment
+  deploymentAnnotations: {}
   # -- optional map of annotations to be applied to the ui Pods
   podAnnotations: {}
   # -- Optional labels to add to the UI pods
