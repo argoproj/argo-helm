@@ -16,7 +16,7 @@ spec:
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 6 }}
   ports:
-  - name: metrics
+  - name: {{ .Values.notifications.metrics.service.portName }}
     port: {{ .Values.notifications.metrics.port }}
     targetPort: {{ .Values.notifications.metrics.port }}
 {{- end }}
