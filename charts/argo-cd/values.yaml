@@ -258,6 +258,8 @@ controller:
       labels: {}
       # -- Metrics service port
       servicePort: 8082
+      # -- Metrics service port name
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -271,6 +273,10 @@ controller:
       selector: {}
         # prometheus: kube-prometheus
 
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: {}
       # -- Prometheus ServiceMonitor namespace
       namespace: "" # "monitoring"
       # -- Prometheus ServiceMonitor labels
@@ -373,6 +379,8 @@ dex:
       annotations: {}
       # -- Metrics service labels
       labels: {}
+      # -- Metrics service port name
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -386,6 +394,10 @@ dex:
       selector: {}
         # prometheus: kube-prometheus
 
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: {}
       # -- Prometheus ServiceMonitor namespace
       namespace: "" # "monitoring"
       # -- Prometheus ServiceMonitor labels
@@ -732,6 +744,10 @@ redis:
       selector: {}
         # prometheus: kube-prometheus
 
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: {}
       # -- Prometheus ServiceMonitor namespace
       namespace: "" # "monitoring"
       # -- Prometheus ServiceMonitor labels
@@ -991,6 +1007,8 @@ server:
       labels: {}
       # -- Metrics service port
       servicePort: 8083
+      # -- Metrics service port name
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -1004,6 +1022,10 @@ server:
       selector: {}
         # prometheus: kube-prometheus
 
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: {}
       # -- Prometheus ServiceMonitor namespace
       namespace: ""  # monitoring
       # -- Prometheus ServiceMonitor labels
@@ -1568,6 +1590,8 @@ repoServer:
       labels: {}
       # -- Metrics service port
       servicePort: 8084
+      # -- Metrics service port name
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -1581,6 +1605,10 @@ repoServer:
       selector: {}
         # prometheus: kube-prometheus
 
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: {}
       # -- Prometheus ServiceMonitor namespace
       namespace: "" # "monitoring"
       # -- Prometheus ServiceMonitor labels
@@ -1925,6 +1953,8 @@ applicationSet:
       labels: {}
       # -- Metrics service port
       servicePort: 8085
+      # -- Metrics service port name
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -1938,6 +1968,10 @@ applicationSet:
       selector: {}
         # prometheus: kube-prometheus
 
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: {}
       # -- Prometheus ServiceMonitor namespace
       namespace: ""  # monitoring
       # -- Prometheus ServiceMonitor labels
@@ -2178,6 +2212,8 @@ notifications:
       annotations: {}
       # -- Metrics service labels
       labels: {}
+      # -- Metrics service port name
+      portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
@@ -2189,6 +2225,10 @@ notifications:
       # namespace: monitoring
       # interval: 30s
       # scrapeTimeout: 10s
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: {}
 
   # -- Configures notification services such as slack, email or custom webhook
   # @default -- See [values.yaml]
