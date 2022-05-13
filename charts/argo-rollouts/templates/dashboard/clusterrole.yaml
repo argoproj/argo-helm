@@ -17,7 +17,7 @@ rules:
       - get
       - list
       - watch
-      {{- if not .Values.dashboard.readonly -}}
+      {{- if not .Values.dashboard.readonly }}
       - update
       - patch
       {{- end }}
