@@ -138,6 +138,8 @@ imagePullSecrets: []
 dashboard:
   # -- Deploy dashboard server
   enabled: false
+  # -- Set cluster role to readonly
+  readonly: false
   # -- Value of label `app.kubernetes.io/component`
   component: rollouts-dashboard
   # -- [Node selector]
