@@ -11,7 +11,7 @@ metadata:
   {{- end }}
   {{- with .additionalLabels }}
   labels:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   name: {{ .name }}
   {{- with .namespace }}
@@ -19,24 +19,24 @@ metadata:
   {{- end }}
   {{- with .finalizers }}
   finalizers:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   project: {{ tpl .project $ }}
   source:
-    {{- toYaml .source | nindent 8 }}
+    {{- toYaml .source | nindent 4 }}
   destination:
-    {{- toYaml .destination | nindent 8 }}
+    {{- toYaml .destination | nindent 4 }}
   {{- with .syncPolicy }}
   syncPolicy:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .ignoreDifferences }}
   ignoreDifferences:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .info }}
   info:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
