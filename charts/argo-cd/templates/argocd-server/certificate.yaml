@@ -26,7 +26,9 @@ spec:
   duration: {{ . | quote }}
   {{- end }}
   issuerRef:
-    group: {{ .Values.server.certificate.issuer.group | quote }}
+    {{- with .Values.server.certificate.issuer.group }}
+    group: {{ . | quote }}
+    {{-end }}
     kind: {{ .Values.server.certificate.issuer.kind | quote }}
     name: {{ .Values.server.certificate.issuer.name | quote }}
   {{- with .Values.server.certificate.renewBefore }}
