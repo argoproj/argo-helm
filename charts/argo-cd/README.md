@@ -91,8 +91,8 @@ Please use `kubectl` to upgrade CRDs manually from [crds](crds/) folder or via t
 ```bash
 kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=<appVersion>
 
-# Eg. version v2.3.3
-kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=v2.3.3
+# Eg. version v2.3.4
+kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=v2.3.4
 ```
 
 ### 4.3.*
