@@ -28,7 +28,7 @@ spec:
   issuerRef:
     {{- with .Values.server.certificate.issuer.group }}
     group: {{ . | quote }}
-    {{-end }}
+    {{- end }}
     kind: {{ .Values.server.certificate.issuer.kind | quote }}
     name: {{ .Values.server.certificate.issuer.name | quote }}
   {{- with .Values.server.certificate.renewBefore }}
