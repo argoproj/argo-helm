@@ -1588,6 +1588,36 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Fix indent on 'additionalApplications'"
+        - "[Fixed]: Fix indent on 'additionalProjects'"
+    apiVersion: v2
+    appVersion: v2.3.3
+    created: "2022-05-19T11:51:32.664619394Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.12.17
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 0693ec60a10c1e3a74eeaffd25903d7f448e250aa717e3aa5c0fed76243b61f5
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.6.1/argo-cd-4.6.1.tgz
+    version: 4.6.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Metrics service name can now be changed"
         - "[Added]: ServiceMonitor now support tlsConfig"
         - "[Changed]: All metrics Service ports were renamed from 'metrics' to 'http-metrics' (istio compatibility)"
@@ -13812,4 +13842,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-05-10T07:41:17.457396325Z"
+generated: "2022-05-19T11:51:32.671247641Z"
