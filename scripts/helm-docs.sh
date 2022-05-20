@@ -8,4 +8,4 @@ echo "Running Helm-Docs"
 docker run \
     -v "$CHART_DIR:/helm-docs" \
     -u $(id -u) \
-    jnorwood/helm-docs:latest
+    jnorwood/helm-docs:v1.9.1

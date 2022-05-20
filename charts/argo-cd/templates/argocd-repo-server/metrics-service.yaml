@@ -16,7 +16,7 @@ metadata:
   name: {{ template "argo-cd.repoServer.fullname" . }}-metrics
 spec:
   ports:
-  - name: metrics
+  - name: {{ .Values.repoServer.metrics.service.portName }}
     protocol: TCP
     port: {{ .Values.repoServer.metrics.service.servicePort }}
     targetPort: metrics
