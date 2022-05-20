@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: v2.3.3
+appVersion: v2.3.4
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 4.6.0
+version: 4.6.2
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 keywords:
@@ -21,6 +21,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Metrics service name can now be changed"
-    - "[Added]: ServiceMonitor now support tlsConfig"
-    - "[Changed]: All metrics Service ports were renamed from 'metrics' to 'http-metrics' (istio compatibility)"
+    - "[Changed]: Update Argo CD to v2.3.4"
