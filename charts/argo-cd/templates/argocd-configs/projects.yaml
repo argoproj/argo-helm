@@ -11,7 +11,7 @@ metadata:
   {{- end }}
   {{- with .additionalLabels }}
   labels:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   name: {{ .name }}
   {{- with .namespace }}
@@ -19,40 +19,40 @@ metadata:
   {{- end }}
   {{- with .finalizers }}
   finalizers:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   description: {{ .description }}
   sourceRepos:
-    {{- toYaml .sourceRepos | nindent 8 }}
+    {{- toYaml .sourceRepos | nindent 4 }}
   destinations:
-    {{- toYaml .destinations | nindent 8 }}
+    {{- toYaml .destinations | nindent 4 }}
   {{- with .clusterResourceWhitelist }}
   clusterResourceWhitelist:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .namespaceResourceBlacklist }}
   namespaceResourceBlacklist:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .namespaceResourceWhitelist }}
   namespaceResourceWhitelist:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .orphanedResources }}
   orphanedResources:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .roles }}
   roles:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .syncWindows }}
   syncWindows:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .signatureKeys }}
   signatureKeys:
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
