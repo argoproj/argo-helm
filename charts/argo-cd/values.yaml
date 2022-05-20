@@ -952,6 +952,8 @@ server:
     # -- How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration
     renewBefore: ""
     issuer:
+      # -- Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io`
+      group: ""
       # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
       kind: ""
       # -- Certificate isser name. Eg. `letsencrypt`
