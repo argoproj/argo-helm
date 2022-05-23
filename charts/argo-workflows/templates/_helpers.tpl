@@ -120,19 +120,3 @@ Return the target Kubernetes version
 {{- define "argo-workflows.kubeVersion" -}}
   {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
 {{- end -}}
-
-{{/*
-Return the appropriate resource name for workflow role to patch HTTP/plugin templates
-*/}}
-{{- define "argo-workflows.workflowRole.httpTemplatePatchResourceName" -}}
-{{- $tagVersion := (trimPrefix "v" .Chart.AppVersion) -}}
-{{- if (regexMatch "^v([0-9]\\.){2}([0-9]){1}.*" .Values.controller.image.tag) -}}
-    {{- $tagVersion = (regexFind "([0-9]\\.){2}([0-9]){1}" .Values.controller.image.tag) -}}
-{{- end -}}
-
-{{- if or (semverCompare ">=3.3.0" $tagVersion) (regexMatch "^latest.*" .Values.controller.image.tag) -}}
-    {{- print "workflowtasksets/status" }}
-{{- else -}}
-    {{- print "workflowtasksets" }}
-{{- end -}}
-{{- end -}}

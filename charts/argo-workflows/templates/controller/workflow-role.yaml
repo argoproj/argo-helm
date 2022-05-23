@@ -46,7 +46,9 @@ rules:
   - apiGroups:
       - argoproj.io
     resources:
-      - {{ include "argo-workflows.workflowRole.httpTemplatePatchResourceName" $ }}
+      - workflowtasksets/status
+      {{/* TODO: This resource is for app version <= v3.2, so please remove it when app version v3.2 is no more used. */}}
+      - workflowtasksets
     verbs:
       - patch
   {{- end }}
