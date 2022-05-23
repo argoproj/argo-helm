@@ -36,6 +36,19 @@ rules:
       - workflowtaskresults
     verbs:
       - create
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - workflowtasksets
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - {{ include "argo-workflows.workflowRole.httpTemplatePatchResourceName" $ }}
+    verbs:
+      - patch
   {{- end }}
 
 {{- end }}
