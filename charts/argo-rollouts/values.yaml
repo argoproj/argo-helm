@@ -97,6 +97,18 @@ controller:
     successThreshold: 1
     timeoutSeconds: 4
 
+  # -- Configure [Pod Disruption Budget] for the controller
+  pdb:
+    # -- Labels to be added to controller pdb
+    labels: {}
+    # -- Annotations to be added to controller pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the controller
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
 serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
@@ -197,6 +209,18 @@ dashboard:
     # -- The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name: ""
+
+  # -- Configure [Pod Disruption Budget] for the dashboard
+  pdb:
+    # -- Labels to be added to dashboard pdb
+    labels: {}
+    # -- Annotations to be added to dashboard pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the dashboard
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
 
   ## Ingress configuration.
   ## ref: https://kubernetes.io/docs/user-guide/ingress/
