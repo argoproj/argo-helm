@@ -91,6 +91,7 @@ Fields to note:
 | controller.metricsConfig.servicePortName | string | `"metrics"` | Service metrics port name |
 | controller.name | string | `"workflow-controller"` | Workflow controller name string |
 | controller.namespaceParallelism | string | `nil` | Limits the maximum number of incomplete workflows in a namespace |
+| controller.navColor | string | `""` | Set ui navigation bar background color |
 | controller.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
 | controller.parallelism | string | `nil` | parallelism dictates how many workflows can be running at the same time |
 | controller.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the controller pods |
