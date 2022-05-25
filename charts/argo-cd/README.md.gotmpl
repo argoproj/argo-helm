@@ -261,6 +261,8 @@ NAME: my-release
 
 ## Redis
 
+### Option 1 - Single Redis instance (default option)
+
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}
@@ -268,11 +270,27 @@ NAME: my-release
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
+
+### Option 2 - Redis HA
+
+This option uses the following third-party chart to bootstrap a clustered Redis: https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha.
+For all available configuration options, please read upstream README and/or chart source.
+The main options are listed here:
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
 {{- range .Values }}
   {{- if hasPrefix "redis-ha" .Key }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
+
+### Option 3 - External Redis
+
+If you want to use an existing Redis (eg. a managed service from a cloud provider), you can use these parameters:
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
 {{- range .Values }}
   {{- if hasPrefix "externalRedis" .Key }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
