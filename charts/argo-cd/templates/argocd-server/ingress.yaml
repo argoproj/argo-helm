@@ -19,11 +19,24 @@ spec:
     - host: {{ include "coreweave.externalDnsName" . }}
       http:
         paths:
-        - backend:
-            serviceName: {{ $serviceName }}
-            servicePort: {{ $servicePort }}
-          path: /
-          pathType: Prefix
+          - path: /
+            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            pathType: Prefix
+            {{- end }}
+            backend:
+              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              service:
+                name: {{ $serviceName }}
+                port:
+                  {{- if kindIs "float64" $servicePort }}
+                  number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
+              {{- else }}
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+              {{- end }}
   tls:
     - hosts:
       - {{ include "coreweave.externalDnsName" . }}

@@ -50,7 +50,13 @@ rules:
     resources:
       - virtualservers
     verbs:
-      - '*'
+      - create
+      - delete
+      - update
+      - patch
+      - get
+      - list
+      - watch
   - apiGroups:
       - argoproj.io
     resources:
