@@ -148,4 +148,4 @@ The linting can be invoked manually with the following command:
 
 ## Publishing Changes
 
-Changes are automatically publish whenever a commit is merged to master. The CI job (see `./.github/workflows/publish.yml`).
+Changes are automatically publish whenever a commit is merged to main. The CI job (see `./.github/workflows/publish.yml`).
