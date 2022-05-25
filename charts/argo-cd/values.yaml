@@ -794,6 +794,20 @@ redis-ha:
     # -- Redis tag
     tag: 6.2.6-alpine
 
+  ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints:
+    # -- Enable Redis HA topology spread constraints
+    enabled: false
+    # -- Max skew of pods tolerated
+    # @default -- `""` (defaults to `1`)
+    maxSkew: ""
+    # -- Topology key for spread
+    # @default -- `""` (defaults to `topology.kubernetes.io/zone`)
+    topologyKey: ""
+    # -- Enforcement policy, hard or soft
+    # @default -- `""` (defaults to `ScheduleAnyway`)
+    whenUnsatisfiable: ""
+
 # External Redis parameters
 externalRedis:
   # -- External Redis server host
