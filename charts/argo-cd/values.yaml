@@ -773,6 +773,12 @@ redis-ha:
   exporter:
     # -- If `true`, the prometheus exporter sidecar is enabled
     enabled: true
+    # -- Exporter image
+    # @default -- `nil` (follows subchart default)
+    image: ~
+    # -- Exporter tag
+    # @default -- `nil` (follows subchart default)
+    tag: ~
   persistentVolume:
     # -- Configures persistency on Redis nodes
     enabled: false
@@ -783,14 +789,25 @@ redis-ha:
     # @default -- See [values.yaml]
     config:
       # -- Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled
+      # @default -- `'""'`
       save: '""'
   haproxy:
     # -- Enabled HAProxy LoadBalancing/Proxy
     enabled: true
+    image:
+      # -- HAProxy Image Repository
+      # @default -- `nil` (follows subchart default)
+      repository: ~
+      # -- HAProxy Image Tag
+      # @default -- `nil` (follows subchart default)
+      tag: ~
     metrics:
       # -- HAProxy enable prometheus metric scraping
       enabled: true
   image:
+    # -- Redis image repository
+    # @default -- `nil` (follows subchart default)
+    repository: ~
     # -- Redis tag
     tag: 6.2.6-alpine
 
