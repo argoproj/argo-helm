@@ -73,10 +73,11 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Labels to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | controller.nodeSelector | object | `{}` | [Node selector] |
-| controller.pdb | object | `{"annotations":{},"enabled":false,"labels":{}}` | Configure [Pod Disruption Budget] for the controller |
-| controller.pdb.annotations | object | `{}` | Annotations to be added to controller pdb |
-| controller.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the controller |
-| controller.pdb.labels | object | `{}` | Labels to be added to controller pdb |
+| controller.pdb.annotations | object | `{}` | Annotations to be added to controller [Pod Disruption Budget] |
+| controller.pdb.enabled | bool | `false` | Deploy a [Pod Disruption Budget] for the controller |
+| controller.pdb.labels | object | `{}` | Labels to be added to controller [Pod Disruption Budget] |
+| controller.pdb.maxUnavailable | string | `nil` | Maximum number / percentage of pods that may be made unavailable |
+| controller.pdb.minAvailable | string | `nil` | Minimum number / percentage of pods that should remain scheduled |
 | controller.priorityClassName | string | `""` | [priorityClassName] for the controller |
 | controller.readinessProbe | object | See [values.yaml] | Configure readiness [probe] for the controller |
 | controller.replicas | int | `2` | The number of controller pods to run |
@@ -113,10 +114,11 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.ingress.paths | list | `["/"]` | Dashboard ingress paths |
 | dashboard.ingress.tls | list | `[]` | Dashboard ingress tls |
 | dashboard.nodeSelector | object | `{}` | [Node selector] |
-| dashboard.pdb | object | `{"annotations":{},"enabled":false,"labels":{}}` | Configure [Pod Disruption Budget] for the dashboard |
-| dashboard.pdb.annotations | object | `{}` | Annotations to be added to dashboard pdb |
-| dashboard.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the dashboard |
-| dashboard.pdb.labels | object | `{}` | Labels to be added to dashboard pdb |
+| dashboard.pdb.annotations | object | `{}` | Annotations to be added to dashboard [Pod Disruption Budget] |
+| dashboard.pdb.enabled | bool | `false` | Deploy a [Pod Disruption Budget] for the dashboard |
+| dashboard.pdb.labels | object | `{}` | Labels to be added to dashboard [Pod Disruption Budget] |
+| dashboard.pdb.maxUnavailable | string | `nil` | Maximum number / percentage of pods that may be made unavailable |
+| dashboard.pdb.minAvailable | string | `nil` | Minimum number / percentage of pods that should remain scheduled |
 | dashboard.podSecurityContext | object | `{"runAsNonRoot":true}` | Security Context to set on pod level |
 | dashboard.priorityClassName | string | `""` | [priorityClassName] for the dashboard server |
 | dashboard.replicas | int | `1` | The number of dashboard pods to run |
@@ -146,10 +148,10 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 
 ### To 1.0.0
 
-* This is a breaking change which only supports Helm v3.0.0+ now. If you still use Helm v2, please consider upgrading because v2 is EOL since November 2020.
+* This is a breaking change which only supports Helm v3.0.0+ now. If you still use Helm v2, please consider upgrading because v2 is EOL since November 2020.  
   To migrate to Helm v3 please have a look at the [Helm 2to3 Plugin](https://github.com/helm/helm-2to3). This tool will convert the existing ConfigMap used for Tiller to a Secret of type `helm.sh/release.v1`.
 * `quay.io` is the default registry now
-* We introduce a template function for the labels here to reduce code duplication. This also affects the Deployment `matchLabels` selector.
+* We introduce a template function for the labels here to reduce code duplication. This also affects the Deployment `matchLabels` selector.  
   To upgrade an existing installation, please **add the `--force` parameter** to the `helm upgrade` command or **delete the Deployment resource** before you upgrade. This is necessary because Deployment's label selector is immutable.
 * All resources are now prefixed with the template `"argo-rollouts.fullname"`.
   This enables the users to override resource names via the `nameOverride` and `fullnameOverride` parameters.
