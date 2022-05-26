@@ -773,6 +773,12 @@ redis-ha:
   exporter:
     # -- If `true`, the prometheus exporter sidecar is enabled
     enabled: true
+    # -- Exporter image
+    # @default -- `nil` (follows subchart default)
+    image: ~
+    # -- Exporter tag
+    # @default -- `nil` (follows subchart default)
+    tag: ~
   persistentVolume:
     # -- Configures persistency on Redis nodes
     enabled: false
@@ -783,16 +789,41 @@ redis-ha:
     # @default -- See [values.yaml]
     config:
       # -- Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled
+      # @default -- `'""'`
       save: '""'
   haproxy:
     # -- Enabled HAProxy LoadBalancing/Proxy
     enabled: true
+    image:
+      # -- HAProxy Image Repository
+      # @default -- `nil` (follows subchart default)
+      repository: ~
+      # -- HAProxy Image Tag
+      # @default -- `nil` (follows subchart default)
+      tag: ~
     metrics:
       # -- HAProxy enable prometheus metric scraping
       enabled: true
   image:
+    # -- Redis image repository
+    # @default -- `nil` (follows subchart default)
+    repository: ~
     # -- Redis tag
     tag: 6.2.6-alpine
+
+  ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints:
+    # -- Enable Redis HA topology spread constraints
+    enabled: false
+    # -- Max skew of pods tolerated
+    # @default -- `""` (defaults to `1`)
+    maxSkew: ""
+    # -- Topology key for spread
+    # @default -- `""` (defaults to `topology.kubernetes.io/zone`)
+    topologyKey: ""
+    # -- Enforcement policy, hard or soft
+    # @default -- `""` (defaults to `ScheduleAnyway`)
+    whenUnsatisfiable: ""
 
 # External Redis parameters
 externalRedis:
@@ -952,6 +983,8 @@ server:
     # -- How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration
     renewBefore: ""
     issuer:
+      # -- Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io`
+      group: ""
       # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
       kind: ""
       # -- Certificate isser name. Eg. `letsencrypt`
