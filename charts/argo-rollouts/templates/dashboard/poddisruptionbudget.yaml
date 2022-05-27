@@ -1,0 +1,27 @@
+{{- if .Values.dashboard.pdb.enabled }}
+apiVersion: {{ include "argo-rollouts.podDisruptionBudget.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "argo-rollouts.fullname" . }}-dashboard
+  labels:
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
+  {{- with .Values.dashboard.pdb.labels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.dashboard.pdb.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.dashboard.pdb.minAvailable }}
+  minAvailable: {{ .Values.dashboard.pdb.minAvailable }}
+  {{- else if .Values.dashboard.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.dashboard.pdb.maxUnavailable }}
+  {{- else }}
+  minAvailable: 0
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: {{ .Values.dashboard.component }}
+{{- end }}
