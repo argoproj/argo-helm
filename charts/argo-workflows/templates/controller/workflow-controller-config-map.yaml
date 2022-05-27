@@ -103,3 +103,6 @@ data:
     {{- with .Values.controller.links }}
     links: {{- toYaml . | nindent 6 }}
     {{- end }}
+    {{- with .Values.controller.navColor }}
+    navColor: {{ . }}
+    {{- end }}
