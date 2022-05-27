@@ -254,7 +254,7 @@ Create the name of the notifications controller secret to use
 */}}
 {{- define "argo-cd.notifications.secretName" -}}
 {{- if .Values.notifications.secret.create -}}
-    {{ default (printf "%s-secret" (include "argo-cd.notifications.fullname" .)) .Values.notifications.secret.name }}
+    {{ default "argocd-notifications-secret" .Values.notifications.secret.name }}
 {{- else -}}
     {{ default "argocd-notifications-secret" .Values.notifications.secret.name }}
 {{- end -}}
@@ -265,7 +265,7 @@ Create the name of the configmap to use
 */}}
 {{- define "argo-cd.notifications.configMapName" -}}
 {{- if .Values.notifications.cm.create -}}
-    {{ default (printf "%s-cm" (include "argo-cd.notifications.fullname" .)) .Values.notifications.cm.name }}
+    {{ default "argocd-notifications-cm" .Values.notifications.cm.name }}
 {{- else -}}
     {{ default "argocd-notifications-cm" .Values.notifications.cm.name }}
 {{- end -}}
