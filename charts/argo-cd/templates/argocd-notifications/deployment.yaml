@@ -42,6 +42,7 @@ spec:
           command:
             - argocd-notifications
             - --loglevel={{ .Values.notifications.logLevel }}
+            - --logformat={{ .Values.notifications.logFormat }}
             {{- if .Values.notifications.metrics.enabled }}
             - --metrics-port={{ .Values.notifications.metrics.port }}
             {{- end }}
