@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Can specify log format for Argo-CD Notifications component"
+    apiVersion: v2
+    appVersion: v2.3.4
+    created: "2022-05-30T16:20:15.010515509Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.16.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 33b8719d6fdcdd5fa58a82c8ea3a85751d618bb1c680121a9f40c338f3880e9a
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.8.0/argo-cd-4.8.0.tgz
+    version: 4.8.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Updated redis-ha dependency chart to 4.16.0"
     apiVersion: v2
     appVersion: v2.3.4
@@ -14155,4 +14184,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-05-26T12:00:19.799236865Z"
+generated: "2022-05-30T16:20:15.018024345Z"
