@@ -99,6 +99,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.component | string | `"rollouts-dashboard"` | Value of label `app.kubernetes.io/component` |
 | dashboard.containerSecurityContext | object | `{}` | Security Context to set on container level |
 | dashboard.enabled | bool | `false` | Deploy dashboard server |
+| dashboard.readonly | bool | `false` | Set cluster role to readonly |
 | dashboard.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-dashboard. A list of flags. |
 | dashboard.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | dashboard.image.registry | string | `"quay.io"` | Registry to use |
