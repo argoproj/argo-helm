@@ -29,7 +29,9 @@ rules:
       - experiments
       - experiments/finalizers
     verbs:
+      {{- if not .Values.dashboard.readonly }}
       - create
+      {{- end }}
       - get
       - list
       - watch
