@@ -84,3 +84,14 @@ Return the target Kubernetes version
 {{- define "argo-rollouts.kubeVersion" -}}
   {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
 {{- end -}}
+
+{{/*
+Return the appropriate apiVersion for pod disruption budget
+*/}}
+{{- define "argo-rollouts.podDisruptionBudget.apiVersion" -}}
+{{- if semverCompare "<1.21-0" (include "argo-rollouts.kubeVersion" $) -}}
+{{- print "policy/v1beta1" -}}
+{{- else -}}
+{{- print "policy/v1" -}}
+{{- end -}}
+{{- end -}}
