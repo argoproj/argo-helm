@@ -121,6 +121,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | dashboard.pdb.minAvailable | string | `nil` | Minimum number / percentage of pods that should remain scheduled |
 | dashboard.podSecurityContext | object | `{"runAsNonRoot":true}` | Security Context to set on pod level |
 | dashboard.priorityClassName | string | `""` | [priorityClassName] for the dashboard server |
+| dashboard.readonly | bool | `false` | Set cluster role to readonly |
 | dashboard.replicas | int | `1` | The number of dashboard pods to run |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
 | dashboard.service.annotations | object | `{}` | Service annotations |
