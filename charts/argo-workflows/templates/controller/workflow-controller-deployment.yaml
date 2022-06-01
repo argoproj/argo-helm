@@ -53,10 +53,6 @@ spec:
           - "--workflow-workers"
           - {{ . | quote }}
           {{- end }}
-          {{- with .Values.controller.podWorkers }}
-          - "--pod-workers"
-          - {{ . | quote }}
-          {{- end }}
           {{- with .Values.controller.extraArgs }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
