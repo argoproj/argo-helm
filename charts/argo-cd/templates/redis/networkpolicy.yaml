@@ -17,7 +17,7 @@ spec:
           {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 10 }}
     - podSelector:
         matchLabels:
-          {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 10 }}
+          {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.testName) | nindent 10 }}
     ports:
     - port: redis
       protocol: TCP

@@ -7,7 +7,7 @@ metadata:
   namespace: {{ . }}
   {{- end }}
   labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.testName "name" .Values.controller.testName) | nindent 4 }}
     {{- with .Values.controller.metrics.serviceMonitor.selector }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -41,5 +41,5 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.controller.name "name" "metrics") | nindent 6 }}
+      {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.controller.testName "name" "metrics") | nindent 6 }}
 {{- end }}

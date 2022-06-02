@@ -7,7 +7,7 @@ metadata:
   namespace: {{ .Values.controller.metrics.rules.namespace }}
   {{- end }}
   labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.testName "name" .Values.controller.testName) | nindent 4 }}
     {{- if .Values.controller.metrics.rules.selector }}
 {{- toYaml .Values.controller.metrics.rules.selector | nindent 4 }}
     {{- end }}

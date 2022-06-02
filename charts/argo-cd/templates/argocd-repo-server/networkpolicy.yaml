@@ -13,7 +13,7 @@ spec:
           {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 10 }}
     - podSelector:
         matchLabels:
-          {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 10 }}
+          {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.testName) | nindent 10 }}
     {{- if .Values.notifications.enabled }}
     - podSelector:
         matchLabels:

@@ -303,7 +303,6 @@ NAME: my-release
 | controller.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | controller.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | controller.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
-| controller.name | string | `"application-controller"` | Application controller name string |
 | controller.nodeSelector | object | `{}` | [Node selector] |
 | controller.pdb.annotations | object | `{}` | Annotations to be added to application controller pdb |
 | controller.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the application controller |
@@ -326,6 +325,7 @@ NAME: my-release
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the application controller |
 | controller.serviceAccount.name | string | `"argocd-application-controller"` | Service account name |
+| controller.testName | string | `"application-controller"` | Application controller name string |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to the application controller main container |

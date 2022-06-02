@@ -3,7 +3,7 @@ kind: RoleBinding
 metadata:
   name: {{ template "argo-cd.controller.fullname" . }}
   labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.testName "name" .Values.controller.testName) | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

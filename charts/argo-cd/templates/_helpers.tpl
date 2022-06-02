@@ -28,7 +28,7 @@ If release name contains chart name it will be used as a full name.
 Create controller name and version as used by the chart label.
 */}}
 {{- define "argo-cd.controller.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.controller.name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.controller.testName | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
