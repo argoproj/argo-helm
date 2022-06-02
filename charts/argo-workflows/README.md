@@ -127,6 +127,14 @@ Fields to note:
 | controller.workflowRestrictions | object | `{}` | Restricts the Workflows that the controller will process. Only valid for 2.9+ |
 | controller.workflowWorkers | string | `nil` | Number of workflow workers |
 
+### Workflow Main Container
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| mainContainer.env | object | `{}` | Adds environment variables for the main container. |
+| mainContainer.resources | object | `{}` | Resource limits and requests for the workflow main container |
+| mainContainer.securityContext | object | `{}` | sets security context for the workflow main container |
+
 ### Workflow Executor
 
 | Key | Type | Default | Description |
