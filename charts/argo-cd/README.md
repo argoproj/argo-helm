@@ -276,6 +276,7 @@ NAME: my-release
 | controller.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application controller |
 | controller.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application controller |
 | controller.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application controller |
+| controller.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | controller.initContainers | list | `[]` | Init containers to add to the application controller pod |
 | controller.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | controller.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
@@ -353,6 +354,7 @@ NAME: my-release
 | repoServer.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the repo server |
 | repoServer.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the repo server |
 | repoServer.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the repo server |
+| repoServer.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | repoServer.initContainers | list | `[]` | Init containers to add to the repo server pods |
 | repoServer.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | repoServer.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
@@ -448,6 +450,7 @@ NAME: my-release
 | server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Argo CD server |
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
 | server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Argo CD server |
+| server.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
 | server.ingress.extraPaths | list | `[]` | Additional ingress paths |
@@ -561,6 +564,7 @@ NAME: my-release
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
 | dex.image.tag | string | `"v2.30.2"` | Dex image tag |
+| dex.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
 | dex.initImage.repository | string | `""` (defaults to global.image.repository) | Argo CD init image repository |
@@ -630,6 +634,7 @@ NAME: my-release
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
 | redis.image.repository | string | `"redis"` | Redis repository |
 | redis.image.tag | string | `"6.2.6-alpine"` | Redis tag |
+| redis.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |

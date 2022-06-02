@@ -361,6 +361,9 @@ controller:
     # minAvailable: 1
     # maxUnavailable: 0
 
+  # -- Secrets with credentials to pull images from a private registry
+  imagePullSecrets: []
+
 ## Dex
 dex:
   # -- Enable dex
@@ -576,6 +579,9 @@ dex:
     # minAvailable: 1
     # maxUnavailable: 0
 
+  # -- Secrets with credentials to pull images from a private registry
+  imagePullSecrets: []
+
 ## Redis
 redis:
   # -- Enable redis
@@ -763,6 +769,9 @@ redis:
     enabled: false
     # minAvailable: 1
     # maxUnavailable: 0
+
+  # -- Secrets with credentials to pull images from a private registry
+  imagePullSecrets: []
 
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
@@ -1470,6 +1479,9 @@ server:
     # minAvailable: 1
     # maxUnavailable: 0
 
+  # -- Secrets with credentials to pull images from a private registry
+  imagePullSecrets: []
+
 ## Repo Server
 repoServer:
   # -- Repo server name
@@ -1724,6 +1736,9 @@ repoServer:
     enabled: false
     # minAvailable: 1
     # maxUnavailable: 0
+
+  # -- Secrets with credentials to pull images from a private registry
+  imagePullSecrets: []
 
 ## Argo Configs
 configs:
