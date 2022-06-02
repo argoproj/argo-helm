@@ -17,8 +17,10 @@ rules:
       - get
       - list
       - watch
+      {{- if not .Values.dashboard.readonly }}
       - update
       - patch
+      {{- end }}
   - apiGroups:
       - argoproj.io
     resources:
@@ -27,7 +29,9 @@ rules:
       - experiments
       - experiments/finalizers
     verbs:
+      {{- if not .Values.dashboard.readonly }}
       - create
+      {{- end }}
       - get
       - list
       - watch

@@ -16,7 +16,7 @@ spec:
       labels:
         {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" "metrics") | nindent 8 }}
     spec:
-    {{- with .Values.notifications.bots.slack.imagePullSecrets }}
+    {{- with .Values.notifications.bots.slack.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
