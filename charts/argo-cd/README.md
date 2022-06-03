@@ -218,7 +218,9 @@ NAME: my-release
 | configs.knownHosts.data.ssh_known_hosts | string | See [values.yaml] | Known Hosts |
 | configs.knownHostsAnnotations | object | `{}` | Known Hosts configmap annotations |
 | configs.repositories | object | `{}` | Repositories list to be used by applications |
+| configs.repositoryCredentialSecretAnnotations | object | `{}` | Repository credential secret annotations |
 | configs.repositoryCredentials | object | `{}` | *DEPRECATED:* Instead, use `configs.credentialTemplates` and/or `configs.repositories` |
+| configs.repositorySecretAnnotations | object | `{}` | Repository secret annotations |
 | configs.secret.annotations | object | `{}` | Annotations to be added to argocd-secret |
 | configs.secret.argocdServerAdminPassword | string | `""` | Bcrypt hashed admin password |
 | configs.secret.argocdServerAdminPasswordMtime | string | `""` (defaults to current time) | Admin password modification time. Eg. `"2006-01-02T15:04:05Z"` |
@@ -716,6 +718,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | externalRedis.host | string | `""` | External Redis server host |
 | externalRedis.password | string | `""` | External Redis password |
 | externalRedis.port | int | `6379` | External Redis server port |
+| externalRedis.secretAnnotations | object | `{}` | External Redis Secret annotations |
 
 ## ApplicationSet
 
