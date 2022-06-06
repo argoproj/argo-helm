@@ -13,9 +13,11 @@ spec:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.applicationSet.podAnnotations }}
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.applicationSet.podAnnotations) }}
       annotations:
-        {{- toYaml . | nindent 8 }}
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 8 }}
@@ -24,7 +26,7 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- with .Values.applicationSet.imagePullSecrets }}
+      {{- with .Values.applicationSet.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
