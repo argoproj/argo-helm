@@ -1880,8 +1880,8 @@ configs:
     #    ...
     #    -----END OPENSSH PRIVATE KEY-----
 
-  # -- Repository credential secret annotations
-  repositoryCredentialSecretAnnotations: {}
+  # -- Annotations to be added to `configs.credentialTemplates` Secret
+  credentialTemplatesAnnotations: {}
 
   # -- Repositories list to be used by applications
   ## Creates a secret for each key/value specified below to create repositories
@@ -1900,8 +1900,8 @@ configs:
     # private-repo:
     #   url: https://github.com/argoproj/private-repo
 
-  # -- Repository secret annotations
-  repositorySecretAnnotations: {}
+  # -- Annotations to be added to `configs.repositories` Secret
+  repositoriesAnnotations: {}
 
   secret:
     # -- Create the argocd-secret

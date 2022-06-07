@@ -213,14 +213,14 @@ NAME: my-release
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
 | configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.credentialTemplates | object | `{}` | Repository credentials to be used as Templates for other repos |
+| configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
 | configs.gpgKeys | object | `{}` (See [values.yaml]) | [GnuPG](https://argoproj.github.io/argo-cd/user-guide/gpg-verification/) keys to add to the key ring |
 | configs.gpgKeysAnnotations | object | `{}` | GnuPG key ring annotations |
 | configs.knownHosts.data.ssh_known_hosts | string | See [values.yaml] | Known Hosts |
 | configs.knownHostsAnnotations | object | `{}` | Known Hosts configmap annotations |
 | configs.repositories | object | `{}` | Repositories list to be used by applications |
-| configs.repositoryCredentialSecretAnnotations | object | `{}` | Repository credential secret annotations |
+| configs.repositoriesAnnotations | object | `{}` | Annotations to be added to `configs.repositories` Secret |
 | configs.repositoryCredentials | object | `{}` | *DEPRECATED:* Instead, use `configs.credentialTemplates` and/or `configs.repositories` |
-| configs.repositorySecretAnnotations | object | `{}` | Repository secret annotations |
 | configs.secret.annotations | object | `{}` | Annotations to be added to argocd-secret |
 | configs.secret.argocdServerAdminPassword | string | `""` | Bcrypt hashed admin password |
 | configs.secret.argocdServerAdminPasswordMtime | string | `""` (defaults to current time) | Admin password modification time. Eg. `"2006-01-02T15:04:05Z"` |
