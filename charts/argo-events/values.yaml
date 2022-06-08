@@ -10,6 +10,20 @@ fullnameOverride: ""
 # -- Deploy on OpenShift
 openshift: false
 
+# -- Create clusterroles that extend existing clusterroles to interact with argo-events crds
+# Only applies for cluster-wide installation (`controller.rbac.namespaced: false`)
+## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
+createAggregateRoles: false
+
+## Custom resource configuration
+crds:
+  # -- Install and upgrade CRDs
+  install: true
+  # -- Keep CRD's on chart uninstall
+  keep: true
+  # -- Annotations to be added to all CRDs
+  annotations: {}
+
 global:
   image:
     # -- If defined, a repository applied to all Argo Events deployments
@@ -42,11 +56,6 @@ global:
   # - ip: 10.20.30.40
   #   hostnames:
   #   - git.myhostname
-
-# -- Create clusterroles that extend existing clusterroles to interact with argo-events crds
-# Only applies for cluster-wide installation (`singleNamespace: true`)
-## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
-createAggregateRoles: false
 
 ## Event bus configuration
 configs:

@@ -40,7 +40,10 @@ You can install the CRDs manually from `crds` folder.
 | configs.jetstream.streamConfig.replicas | int | `3` | Number of replicas, defaults to 3 and requires minimal 3 |
 | configs.jetstream.versions | list | `[]` |  |
 | configs.nats.versions | list | `[]` (See [values.yaml]) | Supported versions of NATS event bus |
-| createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-events crds Only applies for cluster-wide installation (`singleNamespace: true`) |
+| crds.annotations | object | `{}` | Annotations to be added to all CRDs |
+| crds.install | bool | `true` | Install and upgrade CRDs |
+| crds.keep | bool | `true` | Keep CRD's on chart uninstall |
+| createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-events crds Only applies for cluster-wide installation (`controller.rbac.namespaced: false`) |
 | fullnameOverride | string | `""` | String to fully override "argo-events.fullname" template |
 | global.additionalLabels | object | `{}` | Additional labels to add to all resources |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |

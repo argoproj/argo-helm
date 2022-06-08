@@ -1,17 +1,24 @@
----
+{{- if .Values.crds.install }}
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: eventbus.argoproj.io
+  name: sensors.argoproj.io
+  annotations:
+    {{- if .Values.crds.keep }}
+    "helm.sh/resource-policy": keep
+    {{- end }}
+    {{- with .Values.crds.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   group: argoproj.io
   names:
-    kind: EventBus
-    listKind: EventBusList
-    plural: eventbus
+    kind: Sensor
+    listKind: SensorList
+    plural: sensors
     shortNames:
-    - eb
-    singular: eventbus
+    - sn
+    singular: sensor
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -38,3 +45,4 @@ spec:
     storage: true
     subresources:
       status: {}
+{{- end }}
