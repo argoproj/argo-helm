@@ -44,6 +44,8 @@ spec:
         - {{ .Values.controller.args.operationProcessors | quote }}
         - --app-resync
         - {{ .Values.controller.args.appResyncPeriod | quote }}
+        - --app-hard-resync
+        - {{ .Values.controller.args.appHardResyncPeriod | quote }}
         - --self-heal-timeout-seconds
         - {{ .Values.controller.args.selfHealTimeout | quote }}
         - --repo-server
