@@ -50,7 +50,7 @@ You can install the CRDs manually from `crds` folder.
 | global.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository |
 | global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
-| global.securityContext | string | `nil` | Toggle and define securityContext. See [values.yaml] |
+| global.securityContext | object | `{}` | Toggle and define securityContext. See [values.yaml] |
 | nameOverride | string | `"argo-events"` | Provide a name in place of `argo-events` |
 | openshift | bool | `false` | Deploy on OpenShift |
 
@@ -58,7 +58,7 @@ You can install the CRDs manually from `crds` folder.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| controller.affinity | object | `{}` | Asign custom [affinity] rules to the deployment |
+| controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | controller.containerSecurityContext | object | `{}` | Events controller container-level security context |
 | controller.env | list | `[]` | Environment variables to pass to events controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to events controller |
@@ -72,8 +72,6 @@ You can install the CRDs manually from `crds` folder.
 | controller.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | controller.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | controller.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| controller.metrics.applicationLabels.enabled | bool | `false` | Enables additional labels in argocd_app_labels metric |
-| controller.metrics.applicationLabels.labels | list | `[]` | Additional labels |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
 | controller.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | controller.metrics.service.labels | object | `{}` | Metrics service labels |
@@ -106,7 +104,7 @@ You can install the CRDs manually from `crds` folder.
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the events controller |
-| controller.serviceAccount.name | string | `"argo-events"` | Service account name |
+| controller.serviceAccount.name | string | `""` | Service account name |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the events controller |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to the events controller main container |
@@ -116,7 +114,7 @@ You can install the CRDs manually from `crds` folder.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| webhook.affinity | object | `{}` | Asign custom [affinity] rules to the deployment |
+| webhook.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | webhook.containerSecurityContext | object | `{}` | Event controller container-level security context |
 | webhook.enabled | bool | `true` | Enable admission webhook. Applies only for cluster-wide installation |
 | webhook.env | list | `[]` (See [values.yaml]) | Environment variables to pass to event controller |
@@ -147,7 +145,7 @@ You can install the CRDs manually from `crds` folder.
 | webhook.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | webhook.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | webhook.serviceAccount.create | bool | `true` | Create a service account for the admission webhook |
-| webhook.serviceAccount.name | string | `"argo-events-webhook"` | Service account name |
+| webhook.serviceAccount.name | string | `""` | Service account name |
 | webhook.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | webhook.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the event controller |
 | webhook.volumeMounts | list | `[]` | Additional volumeMounts to the event controller main container |
