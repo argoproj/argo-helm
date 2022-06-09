@@ -131,8 +131,9 @@ Fields to note:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| mainContainer.env | object | `{}` | Adds environment variables for the Workflow main container |
+| mainContainer.imagePullPolicy | string | `"Always"` | imagePullPolicy to apply to Workflow main container |
 | mainContainer.resources | object | `{}` | Resource limits and requests for the Workflow main container |
+| mainContainer.env | object | `{}` | Adds environment variables for the Workflow main container |
 | mainContainer.securityContext | object | `{}` | sets security context for the Workflow main container |
 
 ### Workflow Executor
