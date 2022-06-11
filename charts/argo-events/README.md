@@ -7,11 +7,9 @@ This is a **community maintained** chart. It installs the [argo-events](https://
 - EventBus Custom Resource Definition (See CRD Notes)
 - Controller Deployment
 - Validation Webhook Deployment
-- Service Account
-- Roles
-- Role Bindings
-- Cluster Roles
-- Cluster Role Bindings
+- Service Accounts
+- Roles / Cluster Roles
+- Role Bindings / Cluster Role Bindings
 
 To regenerate this document, from the root of this chart directory run:
 
@@ -19,11 +17,27 @@ To regenerate this document, from the root of this chart directory run:
 docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:latest
 ```
 
-## Notes on CRD Installation
+## Upgrading
 
-Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--skip-crds` when installing the chart.
+### Custom resource definitions
 
-You can install the CRDs manually from `crds` folder.
+Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
+
+You can install the CRDs manually from `templates/crds` folder.
+
+### 2.0.*
+
+Custom resource definitions were moved to `templates` folder so they can be managed by Helm.
+
+To adopt already created CRDs please use following command:
+
+```bash
+for crd in "eventbus.argoproj.io" "eventsources.argoproj.io" "sensors.argoproj.io"; do
+  kubectl label --overwrite crd $crd app.kubernetes.io/managed-by=Helm
+  kubectl annotate --overwrite crd $crd meta.helm.sh/release-namespace=<YOUR_NAMESPACE>
+  kubectl annotate --overwrite crd $crd meta.helm.sh/release-name=<YOUR_HELM_REALEASE>
+done
+```
 
 ## Values
 
