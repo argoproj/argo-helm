@@ -262,6 +262,17 @@ controller:
   # -- Extra containers to be added to the controller deployment
   extraContainers: []
 
+# mainContainer adds default config for main container that could be overriden in workflows template
+mainContainer:
+  # -- imagePullPolicy to apply to Workflow main container
+  imagePullPolicy: Always
+  # -- Resource limits and requests for the Workflow main container
+  resources: {}
+  # -- Adds environment variables for the Workflow main container
+  env: {}
+  # -- sets security context for the Workflow main container
+  securityContext: {}
+
 # executor controls how the init and wait container should be customized
 executor:
   image:
