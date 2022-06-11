@@ -784,9 +784,11 @@ redis-ha:
     enabled: true
     # -- Exporter image
     # @default -- `nil` (follows subchart default)
+    ## Note that default value (nil) causes error when using kustomize, so please make sure to override it as a workaround.
     image: ~
     # -- Exporter tag
     # @default -- `nil` (follows subchart default)
+    ## Note that default value (nil) causes error when using kustomize, so please make sure to override it as a workaround.
     tag: ~
   persistentVolume:
     # -- Configures persistency on Redis nodes
@@ -806,9 +808,11 @@ redis-ha:
     image:
       # -- HAProxy Image Repository
       # @default -- `nil` (follows subchart default)
+      ## Note that default value (nil) causes error when using kustomize, so please make sure to override it as a workaround.
       repository: ~
       # -- HAProxy Image Tag
       # @default -- `nil` (follows subchart default)
+      ## Note that default value (nil) causes error when using kustomize, so please make sure to override it as a workaround.
       tag: ~
     metrics:
       # -- HAProxy enable prometheus metric scraping
@@ -816,6 +820,7 @@ redis-ha:
   image:
     # -- Redis image repository
     # @default -- `nil` (follows subchart default)
+    ## Note that default value (nil) causes error when using kustomize, so please make sure to override it as a workaround.
     repository: ~
     # -- Redis tag
     tag: 6.2.6-alpine
