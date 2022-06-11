@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "argo-events.controller.fullname" . }}
   labels:
-    {{- include "argo-events.labels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
+    {{- include "argo-events.labels" (dict "context" . "name" .Values.controller.name) | nindent 4 }}
 data:
   controller-config.yaml: |
     eventBus:
