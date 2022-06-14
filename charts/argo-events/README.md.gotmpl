@@ -11,10 +11,10 @@ This is a **community maintained** chart. It installs the [argo-events](https://
 - Roles / Cluster Roles
 - Role Bindings / Cluster Role Bindings
 
-To regenerate this document, from the root of this chart directory run:
+To regenerate this document, please run:
 
 ```shell
-docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:latest
+./scripts/helm-docs.sh
 ```
 
 ## Upgrading
