@@ -95,6 +95,10 @@ kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=<app
 kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=v2.3.3
 ```
 
+### 4.6.0
+
+This version starts to use upstream image with applicationset binary. Start command was changed from `applicationset-controller` to `argocd-applicationset-controller`
+
 ### 4.3.*
 
 With this minor version, the notification notifier's `service.slack` is no longer configured by default.
@@ -635,7 +639,7 @@ NAME: my-release
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
 | redis.image.repository | string | `"redis"` | Redis repository |
-| redis.image.tag | string | `"6.2.6-alpine"` | Redis tag |
+| redis.image.tag | string | `"7.0.0-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
@@ -698,7 +702,7 @@ The main options are listed here:
 | redis-ha.haproxy.image.tag | string | `nil` (follows subchart default) | HAProxy Image Tag |
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
 | redis-ha.image.repository | string | `nil` (follows subchart default) | Redis image repository |
-| redis-ha.image.tag | string | `"6.2.6-alpine"` | Redis tag |
+| redis-ha.image.tag | string | `"7.0.0-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistency on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
@@ -739,8 +743,8 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
 | applicationSet.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application set controller |
-| applicationSet.image.repository | string | `"quay.io/argoproj/argocd-applicationset"` | Repository to use for the application set controller |
-| applicationSet.image.tag | string | `"v0.4.1"` | Tag to use for the application set controller |
+| applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application set controller |
+| applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application set controller |
 | applicationSet.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
 | applicationSet.metrics.enabled | bool | `false` | Deploy metrics service |
 | applicationSet.metrics.service.annotations | object | `{}` | Metrics service annotations |
