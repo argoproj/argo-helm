@@ -1,0 +1,120 @@
+{{- if and .Values.webhook.enabled (not .Values.controller.rbac.namespaced) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: events-webhook
+  labels:
+    {{- include "argo-events.labels" (dict "context" . "component" .Values.webhook.name "name" .Values.webhook.name) | nindent 4 }}
+    app.kubernetes.io/version: {{ default (include "argo-events.defaultTag" .) .Values.webhook.image.tag | quote }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "argo-events.selectorLabels" (dict "context" . "name" .Values.webhook.name) | nindent 6 }}
+  revisionHistoryLimit: 5
+  replicas: {{ .Values.webhook.replicas }}
+  template:
+    metadata:
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.webhook.podAnnotations) }}
+      annotations:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+      {{- end }}
+      labels:
+        {{- include "argo-events.labels" (dict "context" . "component" .Values.webhook.name "name" .Values.webhook.name) | nindent 8 }}
+        app.kubernetes.io/version: {{ default (include "argo-events.defaultTag" .) .Values.webhook.image.tag | quote }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.webhook.podLabels) }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ .Values.webhook.name }}
+        image: {{ default .Values.global.image.repository .Values.webhook.image.repository }}:{{ default (include "argo-events.defaultTag" .) .Values.controller.image.tag }}
+        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.webhook.image.imagePullPolicy }}
+        args:
+        - webhook-service
+        {{- with .Values.webhook.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        {{- with .Values.webhook.env }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.webhook.envFrom }}
+        envFrom:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.webhook.volumeMounts }}
+        volumeMounts:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        ports:
+        - name: webhook
+          containerPort: 443
+          protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: webhook
+          initialDelaySeconds: {{ .Values.webhook.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.webhook.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.webhook.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.webhook.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.webhook.livenessProbe.failureThreshold }}
+        readinessProbe:
+          tcpSocket:
+            port: webhook
+          initialDelaySeconds: {{ .Values.webhook.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.webhook.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.webhook.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.webhook.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.webhook.readinessProbe.failureThreshold }}
+        {{- with .Values.webhook.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- with .Values.webhook.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhook.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhook.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhook.topologySpreadConstraints }}
+      topologySpreadConstraints:
+      {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-events.selectorLabels" (dict "context" $ "name" $.Values.webhook.name) | nindent 12 }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-events.webhook.serviceAccountName" . }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with .Values.webhook.volumes }}
+      volumes:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+{{- end }}
