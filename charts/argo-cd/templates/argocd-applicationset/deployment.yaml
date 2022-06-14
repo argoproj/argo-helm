@@ -38,6 +38,7 @@ spec:
           securityContext:
             {{- toYaml .Values.applicationSet.securityContext | nindent 12 }}
           command:
+            - entrypoint.sh
             - argocd-applicationset-controller
             - --metrics-addr={{ .Values.applicationSet.args.metricsAddr }}
             - --probe-addr={{ .Values.applicationSet.args.probeBindAddr }}
