@@ -9622,6 +9622,38 @@ entries:
   argo-events:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Argo events controller for v1.7.0"
+        - "[Added]: Argo events addmission webhook deployment"
+        - "[Added]: Global configuration options for all deployments"
+        - "[Added]: Pod disruption budgets for HA deployments"
+        - "[Added]: Support for Prometheus metrics on controller deployment"
+        - "[Changed]: Enable cluster-wide deployment by default"
+        - "[Removed]: Deprecated EventBus controller deployment"
+        - "[Removed]: Deprecated EventSource controller deployment"
+        - "[Removed]: Deprecated Sensor controller deployment"
+        - "[Removed]: Removed RBAC that allowed controller to create / modify CRDs"
+    apiVersion: v2
+    appVersion: v1.7.0
+    created: "2022-06-14T15:38:28.490260174Z"
+    description: A Helm chart for Argo Events, the event-driven workflow automation
+      framework
+    digest: cfdbf5dc563a1ed6536487a6bbd7177c1cf669f7b2b42e0eb2772f5d45fb3b0b
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-events/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-events
+    maintainers:
+    - name: VaibhavPage
+    - name: whynowy
+    name: argo-events
+    sources:
+    - https://github.com/argoproj/argo-events
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-events-2.0.0/argo-events-2.0.0.tgz
+    version: 2.0.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Additional RBAC for leader election"
     apiVersion: v2
     appVersion: v1.6.0
@@ -14395,4 +14427,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-06-14T12:32:18.563077869Z"
+generated: "2022-06-14T15:38:28.496719401Z"
