@@ -35,7 +35,7 @@ To adopt already created CRDs please use following command:
 for crd in "eventbus.argoproj.io" "eventsources.argoproj.io" "sensors.argoproj.io"; do
   kubectl label --overwrite crd $crd app.kubernetes.io/managed-by=Helm
   kubectl annotate --overwrite crd $crd meta.helm.sh/release-namespace=<YOUR_NAMESPACE>
-  kubectl annotate --overwrite crd $crd meta.helm.sh/release-name=<YOUR_HELM_REALEASE>
+  kubectl annotate --overwrite crd $crd meta.helm.sh/release-name=<YOUR_HELM_RELEASE>
 done
 ```
 
