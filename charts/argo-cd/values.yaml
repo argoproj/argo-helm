@@ -593,7 +593,7 @@ redis:
     # -- Redis repository
     repository: redis
     # -- Redis tag
-    tag: 6.2.6-alpine
+    tag: 7.0.0-alpine
     # -- Redis imagePullPolicy
     imagePullPolicy: IfNotPresent
 
@@ -823,7 +823,7 @@ redis-ha:
     ## Note that default value (nil) causes error when using kustomize, so please make sure to override it as a workaround.
     repository: ~
     # -- Redis tag
-    tag: 6.2.6-alpine
+    tag: 7.0.0-alpine
 
   ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints:
@@ -1231,6 +1231,10 @@ server:
     url: ""
     # Argo CD instance label key
     application.instanceLabelKey: argocd.argoproj.io/instance
+
+    # Enabled logs RBAC enforcement
+    # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.3-2.4/#enable-logs-rbac-enforcement
+    server.rbac.log.enforce.enable: "false"
 
     # DEPRECATED: Please instead use configs.credentialTemplates and configs.repositories
     # repositories: |
@@ -1979,9 +1983,11 @@ applicationSet:
 
   image:
     # -- Repository to use for the application set controller
-    repository: quay.io/argoproj/argocd-applicationset
+    # @default -- `""` (defaults to global.image.repository)
+    repository: ""
     # -- Tag to use for the application set controller
-    tag: "v0.4.1"
+    # @default -- `""` (defaults to global.image.tag)
+    tag: ""
     # -- Image pull policy for the application set controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
