@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Extend K8s RBAC when using UI exec feature"
+    apiVersion: v2
+    appVersion: v2.4.0
+    created: "2022-06-14T12:32:18.557276804Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.16.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 3419d3b349bda45bd4585f1a5fedad7237e90979b6652b24f427ef391553d733
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.9.1/argo-cd-4.9.1.tgz
+    version: 4.9.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Update Argo CD to v2.4.0"
         - "[Added]: Specify logs RBAC enforcement config in server"
         - "[Changed]: Remove ksonnet and helm 2 support from Application and applicationSet CRDs"
@@ -14366,4 +14395,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-06-14T10:10:38.615889143Z"
+generated: "2022-06-14T12:32:18.563077869Z"
