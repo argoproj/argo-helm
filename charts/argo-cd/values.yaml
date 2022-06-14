@@ -1978,9 +1978,11 @@ applicationSet:
 
   image:
     # -- Repository to use for the application set controller
-    repository: quay.io/argoproj/argocd-applicationset
+    # @default -- `""` (defaults to global.image.repository)
+    repository: ""
     # -- Tag to use for the application set controller
-    tag: "v0.4.1"
+    # @default -- `""` (defaults to global.image.tag)
+    tag: ""
     # -- Image pull policy for the application set controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
