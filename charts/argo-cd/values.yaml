@@ -1236,6 +1236,10 @@ server:
     # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.3-2.4/#enable-logs-rbac-enforcement
     server.rbac.log.enforce.enable: "false"
 
+    # exec.enabled indicates whether the UI exec feature is enabled. It is disabled by default.
+    # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/rbac/#exec-resource
+    exec.enabled: "false"
+
     # DEPRECATED: Please instead use configs.credentialTemplates and configs.repositories
     # repositories: |
     #   - url: git@github.com:group/repo.git
