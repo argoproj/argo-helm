@@ -56,7 +56,7 @@ done
 | configs.nats.versions | list | `[]` (See [values.yaml]) | Supported versions of NATS event bus |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
-| crds.keep | bool | `true` | Keep CRD's on chart uninstall |
+| crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-events crds Only applies for cluster-wide installation (`controller.rbac.namespaced: false`) |
 | fullnameOverride | string | `""` | String to fully override "argo-events.fullname" template |
 | global.additionalLabels | object | `{}` | Additional labels to add to all resources |

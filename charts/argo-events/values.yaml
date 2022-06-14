@@ -19,7 +19,7 @@ createAggregateRoles: false
 crds:
   # -- Install and upgrade CRDs
   install: true
-  # -- Keep CRD's on chart uninstall
+  # -- Keep CRDs on chart uninstall
   keep: true
   # -- Annotations to be added to all CRDs
   annotations: {}
@@ -70,7 +70,7 @@ configs:
 
   ## JetStream event bus
   jetstream:
-    # Default JetStream settings, could be overriden by EventBus JetStream spec
+    # Default JetStream settings, could be overridden by EventBus JetStream spec
     # Ref: https://docs.nats.io/running-a-nats-service/configuration#jetstream
     settings:
       # -- Maximum size of the memory storage (e.g. 1G)
@@ -165,8 +165,7 @@ controller:
   podLabels: {}
 
   # -- Events controller container-level security context
-  containerSecurityContext:
-    {}
+  containerSecurityContext: {}
     # capabilities:
     #   drop:
     #     - all
@@ -241,7 +240,7 @@ controller:
     # -- Create a service account for the events controller
     create: true
     # -- Service account name
-    name: ''
+    name: ""
     # -- Annotations applied to created service account
     annotations: {}
     # -- Automount API credentials for the Service Account
@@ -329,8 +328,7 @@ webhook:
   podLabels: {}
 
   # -- Event controller container-level security context
-  containerSecurityContext:
-    {}
+  containerSecurityContext: {}
     # capabilities:
     #   drop:
     #     - all
@@ -399,7 +397,7 @@ webhook:
     # -- Create a service account for the admission webhook
     create: true
     # -- Service account name
-    name: ''
+    name: ""
     # -- Annotations applied to created service account
     annotations: {}
     # -- Automount API credentials for the Service Account
