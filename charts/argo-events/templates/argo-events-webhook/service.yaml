@@ -1,0 +1,14 @@
+{{- if and .Values.webhook.enabled (not .Values.controller.rbac.namespaced) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: events-webhook
+  labels:
+    {{- include "argo-events.labels" (dict "context" . "name" .Values.webhook.name) | nindent 4 }}
+spec:
+  ports:
+  - port: 443
+    targetPort: webhook
+  selector:
+    {{- include "argo-events.selectorLabels" (dict "context" $ "name" $.Values.webhook.name) | nindent 4 }}
+{{- end }}

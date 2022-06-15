@@ -1,0 +1,25 @@
+{{- if .Values.controller.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "argo-events.controller.fullname" . }}-metrics
+  {{- with .Values.controller.metrics.service.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  labels:
+    {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" (printf "%s-metrics" .Values.controller.name)) | nindent 4 }}
+    {{- with .Values.controller.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ports:
+  - name: metrics
+    protocol: TCP
+    port: {{ .Values.controller.metrics.service.servicePort }}
+    targetPort: metrics
+  selector:
+    {{- include "argo-events.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 4 }}
+{{- end }}
