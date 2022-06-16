@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Long release names cause invalid app controller statefulset resource"
+    apiVersion: v2
+    appVersion: v2.4.0
+    created: "2022-06-16T11:24:10.468402435Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.16.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: fc3a5b7086b4421a2c0d7c362d5b6ceafd948b9ed2b449fabaf36fcaceeac4ff
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.9.3/argo-cd-4.9.3.tgz
+    version: 4.9.3
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Use latest URLs"
     apiVersion: v2
     appVersion: v2.4.0
@@ -14456,4 +14485,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-06-15T13:16:33.318695822Z"
+generated: "2022-06-16T11:24:10.47411807Z"
