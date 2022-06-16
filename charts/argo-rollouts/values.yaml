@@ -48,6 +48,11 @@ controller:
   # -- Additional command line arguments to pass to rollouts-controller.  A list of flags.
   extraArgs: []
 
+  # -- Additional environment variables for rollouts-controller. A list of name/value maps.
+  extraEnv: []
+    # - name: AWS_REGION
+    #   value: us-east-1
+
   # -- Literal yaml for extra containers to be added to controller deployment.
   ## Additional containers to add to the rollouts controller deployment
   ## This will be rendered as the literal yaml
