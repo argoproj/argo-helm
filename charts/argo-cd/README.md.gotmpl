@@ -95,7 +95,7 @@ kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=<app
 kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=v2.3.3
 ```
 
-### 4.6.0
+### 4.9.0
 
 This version starts to use upstream image with applicationset binary. Start command was changed from `applicationset-controller` to `argocd-applicationset-controller`
 
