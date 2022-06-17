@@ -695,13 +695,8 @@ The main options are listed here:
 |-----|------|---------|-------------|
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
 | redis-ha.exporter.enabled | bool | `true` | If `true`, the prometheus exporter sidecar is enabled |
-| redis-ha.exporter.image | string | `nil` (follows subchart default) | Exporter image |
-| redis-ha.exporter.tag | string | `nil` (follows subchart default) | Exporter tag |
 | redis-ha.haproxy.enabled | bool | `true` | Enabled HAProxy LoadBalancing/Proxy |
-| redis-ha.haproxy.image.repository | string | `nil` (follows subchart default) | HAProxy Image Repository |
-| redis-ha.haproxy.image.tag | string | `nil` (follows subchart default) | HAProxy Image Tag |
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
-| redis-ha.image.repository | string | `nil` (follows subchart default) | Redis image repository |
 | redis-ha.image.tag | string | `"7.0.0-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistency on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |

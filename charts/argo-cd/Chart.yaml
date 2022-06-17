@@ -21,4 +21,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Fixed]: Add notes on redis-ha for kustomize users"
+    - "[Fixed]: Drop all `~` keys from redis-ha because they cause error on kustomize and cannot document via helm-docs"
