@@ -1,0 +1,29 @@
+## Reference: https://github.com/amannn/action-semantic-pull-request
+name: "Lint PR"
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  main:
+    name: Validate PR title
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Configure which scopes are allowed.
+          scopes: |
+            argo-cd
+            argo-events
+            argo-rollouts
+            argo-workflows
+            argocd-image-updater
+            github
+          # Configure that a scope must always be provided.
+          requireScope: true

@@ -1,0 +1,113 @@
+{{- if .Values.controller.rbac.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: {{ .Values.controller.rbac.namespaced | ternary "Role" "ClusterRole" }}
+metadata:
+  name: {{ include "argo-events.controller.fullname" . }}
+  labels:
+    {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+rules:
+{{- if .Values.openshift }}
+- apiGroups:
+  - apps
+  resources:
+  - deployments/finalizers
+  verbs:
+  - update
+  {{- if not .Values.controller.rbac.namespaced }}
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterroles/finalizers
+  verbs:
+  - update
+  {{- end }}
+{{- end }}
+{{- with .Values.controller.rbac.rules }}
+  {{- toYaml . | nindent 0 }}
+{{- end }}
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - argoproj.io
+  resources:
+  - sensors
+  - sensors/finalizers
+  - sensors/status
+  - eventsources
+  - eventsources/finalizers
+  - eventsources/status
+  - eventbus
+  - eventbus/finalizers
+  - eventbus/status
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/exec
+  - configmaps
+  - secrets
+  - services
+  - persistentvolumeclaims
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - statefulsets
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: {{ .Values.controller.rbac.namespaced | ternary "RoleBinding" "ClusterRoleBinding" }}
+metadata:
+  name: {{ include "argo-events.controller.fullname" . }}
+  labels:
+    {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: {{ .Values.controller.rbac.namespaced | ternary "Role" "ClusterRole" }}
+  name: {{ include "argo-events.controller.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "argo-events.controller.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
