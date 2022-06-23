@@ -31,6 +31,10 @@ spec:
   clusterResourceWhitelist:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .clusterResourceBlacklist }}
+  clusterResourceBlacklist:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with .namespaceResourceBlacklist }}
   namespaceResourceBlacklist:
     {{- toYaml . | nindent 4 }}
