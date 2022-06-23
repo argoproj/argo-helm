@@ -154,6 +154,15 @@ rules:
   - update
   - patch
   - delete
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  resourceNames:
+  {{/* for HTTP templates */}}
+  - argo-workflows-agent-ca-certificates
 
 {{- if .Values.controller.clusterWorkflowTemplates.enabled }}
 ---
