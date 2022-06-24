@@ -84,15 +84,34 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ### Custom resource definitions
 
+Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
+
 Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations).
 
-Please use `kubectl` to upgrade CRDs manually from [crds](crds/) folder or via the manifests from the upstream project repo:
+Please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
 
 ```bash
-kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=<appVersion>
+kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=<appVersion>
 
-# Eg. version v2.3.3
-kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=v2.3.3
+# Eg. version v2.4.2
+kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=v2.4.2
+```
+
+### 4.10.0
+
+Custom resource definitions were moved to `templates` folder so they can be managed by Helm.
+
+To adopt already created CRDs, please use following command:
+
+```bash
+YOUR_ARGOCD_NAMESPACE="" # e.g. argo-cd
+YOUR_ARGOCD_RELEASENAME="" # e.g. argo-cd
+
+for crd in "applications.argoproj.io" "applicationsets.argoproj.io" "argocdextensions.argoproj.io" "appprojects.argoproj.io"; do
+  kubectl label --overwrite crd $crd app.kubernetes.io/managed-by=Helm
+  kubectl annotate --overwrite crd $crd meta.helm.sh/release-namespace="$YOUR_ARGOCD_NAMESPACE"
+  kubectl annotate --overwrite crd $crd meta.helm.sh/release-name="$YOUR_ARGOCD_RELEASENAME"
+done
 ```
 
 ### 4.9.0
@@ -239,6 +258,7 @@ NAME: my-release
 | configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |
 | configs.tlsCerts | object | See [values.yaml] | TLS certificate |
 | configs.tlsCertsAnnotations | object | `{}` | TLS certificate configmap annotations |
+| crds.install | bool | `true` | Install and upgrade CRDs |
 | createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |

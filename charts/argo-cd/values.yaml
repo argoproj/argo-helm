@@ -9,6 +9,11 @@ fullnameOverride: ""
 # -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
 
+## Custom resource configuration
+crds:
+  # -- Install and upgrade CRDs
+  install: true
+
 global:
   image:
     # -- If defined, a repository applied to all Argo CD deployments
