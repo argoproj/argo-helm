@@ -9,8 +9,8 @@ data:
     eventBus:
       {{- if .Values.configs.nats.versions }}
       nats:
-        {{- range .Values.configs.nats.versions }}
         versions:
+        {{- range .Values.configs.nats.versions }}
         - version: {{ .version }}
           natsStreamingImage: {{ .natsStreamingImage }}
           metricsExporterImage: {{ .metricsExporterImage }}
@@ -30,8 +30,8 @@ data:
           maxBytes: {{ .Values.configs.jetstream.streamConfig.maxBytes }}
           replicas: {{ .Values.configs.jetstream.streamConfig.replicas }}
           duplicates: {{ .Values.configs.jetstream.streamConfig.duplicates }}
-        {{- range .Values.configs.jetstream.versions }}
         versions:
+        {{- range .Values.configs.jetstream.versions }}
         - version: {{ .version }}
           natsImage: {{ .natsImage }}
           metricsExporterImage: {{ .metricsExporterImage }}
