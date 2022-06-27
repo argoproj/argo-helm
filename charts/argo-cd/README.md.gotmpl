@@ -89,10 +89,10 @@ Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs
 Please use `kubectl` to upgrade CRDs manually from [crds](crds/) folder or via the manifests from the upstream project repo:
 
 ```bash
-kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=<appVersion>
+kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=<appVersion>
 
-# Eg. version v2.3.3
-kubectl apply -k https://github.com/argoproj/argo-cd.git/manifests/crds?ref=v2.3.3
+# Eg. version v2.4.2
+kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=v2.4.2
 ```
 
 ### 4.9.0
