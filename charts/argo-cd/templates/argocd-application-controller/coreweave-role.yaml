@@ -5,15 +5,20 @@ metadata:
 rules:
   - apiGroups:
       - ""
+    resources:
+    - pods
+    - pods/log
+    - pods/portforward
+    - pods/exec
+    - pods/attach
+    verbs:
+      - "*"
+  - apiGroups:
+      - ""
       - extensions
       - apps
       - networking.k8s.io
     resources:
-      - pods
-      - pods/log
-      - pods/portforward
-      - pods/exec
-      - pods/attach
       - configmaps
       - endpoints
       - events
