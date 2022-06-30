@@ -478,6 +478,15 @@ server:
     ## decisions.
     # scopes:
     # - groups
+  # -- secret for token authentication
+  # this is required if using --auth-mode sso to the server command line.
+  authTokenSecret: {}
+    ## Auto create secret
+    # create: true
+    ## Default secret name
+    # name: argo-workflows-token
+    ## Set token from value (unsafe)
+    # token: test-token
 
   # -- Extra containers to be added to the server deployment
   extraContainers: []

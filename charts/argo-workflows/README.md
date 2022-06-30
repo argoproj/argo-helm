@@ -152,6 +152,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | server.affinity | object | `{}` | Assign custom [affinity] rules |
+| server.authTokenSecret | object | `{}` | secret for token authentication this is required if using --auth-mode sso to the server command line. |
 | server.baseHref | string | `"/"` | Value for base href in index.html. Used if the server is running behind reverse proxy under subpath different from /. |
 | server.clusterWorkflowTemplates.enableEditing | bool | `true` | Give the server permissions to edit ClusterWorkflowTemplates. |
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
