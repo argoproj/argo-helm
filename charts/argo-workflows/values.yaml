@@ -480,11 +480,12 @@ server:
     # - groups
   # -- secret for token authentication
   # this is required if using --auth-mode sso to the server command line.
-  authTokenSecret: {}
+  authTokenSecret:
+    enabled: false
     ## Auto create secret
-    # create: true
+    create: true
     ## Default secret name
-    # name: argo-workflows-token
+    name: '{{ include "argo-workflows.fullname" . }}-static-token'
     ## Set token from value (unsafe)
     # token: test-token
 
