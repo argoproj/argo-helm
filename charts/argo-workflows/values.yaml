@@ -478,13 +478,14 @@ server:
     ## decisions.
     # scopes:
     # - groups
-  # -- secret for token authentication
-  # this is required if using --auth-mode sso to the server command line.
+  ## secret for token authentication
   authTokenSecret:
+    # -- Enable secret for token authentication
+    # this is required if using `--auth-mode sso` to the server command line.
     enabled: false
-    ## Auto create secret
+    # -- Auto create secret
     create: true
-    ## Default secret name
+    # -- Default secret name
     name: '{{ include "argo-workflows.fullname" . }}-static-token'
     ## Set token from value (unsafe)
     # token: test-token

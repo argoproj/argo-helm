@@ -152,7 +152,9 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | server.affinity | object | `{}` | Assign custom [affinity] rules |
-| server.authTokenSecret | object | `{"create":true,"enabled":false,"name":"{{ include \"argo-workflows.fullname\" . }}-static-token"}` | secret for token authentication this is required if using --auth-mode sso to the server command line. |
+| server.authTokenSecret.create | bool | `true` | Auto create secret |
+| server.authTokenSecret.enabled | bool | `false` | Enable secret for token authentication this is required if using `--auth-mode sso` to the server command line. |
+| server.authTokenSecret.name | string | `"{{ include \"argo-workflows.fullname\" . }}-static-token"` | Default secret name |
 | server.baseHref | string | `"/"` | Value for base href in index.html. Used if the server is running behind reverse proxy under subpath different from /. |
 | server.clusterWorkflowTemplates.enableEditing | bool | `true` | Give the server permissions to edit ClusterWorkflowTemplates. |
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
