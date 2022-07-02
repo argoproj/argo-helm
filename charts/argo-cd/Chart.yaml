@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v2.4.3
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 4.9.11
+version: 4.9.12
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 keywords:
@@ -21,4 +21,5 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - [Changed]: Update redis-ha dependency for better configuration options
+    - [Added]: Updaing applicationset crd to support pullRequest generator for gitlab/Azure DevOps
+    - [Added]: Updaing applicationset crd to support scmProvider generator for gitlab/Azure DevOps
