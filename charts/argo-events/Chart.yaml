@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: v1.7.0
+appVersion: v1.7.1
 description: A Helm chart for Argo Events, the event-driven workflow automation framework
 name: argo-events
-version: 2.0.1
+version: 2.0.3
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-events/assets/logo.png
 keywords:
@@ -11,8 +11,9 @@ keywords:
 sources:
   - https://github.com/argoproj/argo-events
 maintainers:
+  - name: pdrastil
   - name: VaibhavPage
   - name: whynowy
 annotations:
   artifacthub.io/changes: |
-    - "[Fixed]: Fixed generation of configured EventBus versions"
+    - "[Fixed]: Fixed selectorLabel of ServiceMonitor that doesn't match metrics Service"
