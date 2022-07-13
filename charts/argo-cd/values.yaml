@@ -1227,7 +1227,7 @@ server:
     # Argo CD instance label key
     application.instanceLabelKey: argocd.argoproj.io/instance
 
-    # Enabled logs RBAC enforcement
+    # Enable logs RBAC enforcement
     # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.3-2.4/#enable-logs-rbac-enforcement
     server.rbac.log.enforce.enable: "false"
 
@@ -1247,6 +1247,10 @@ server:
     #   - type: helm
     #     url: https://argoproj.github.io/argo-helm
     #     name: argo
+
+    # admin.enabled indicates whether the admin user is enabled. It is enabled by default.
+    # https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
+    admin.enabled: "true"
 
     # oidc.config: |
     #   name: AzureAD
