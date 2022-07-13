@@ -116,7 +116,10 @@ authScripts:
   scripts: {}
     # auth1.sh: |
     #   #!/bin/sh
-    #   echo "auth script 1 here"
+    #  Use when serviceaccount is not working
+    #  aws configure set aws_access_key_id <key>
+    #  aws configure set aws_secret_access_key <secret-key> 
+    #  aws ecr --region $AWS_REGION get-authorization-token --output text --query 'authorizationData[].authorizationToken' | base64 -d
     # auth2.sh: |
     #   #!/bin/sh
     #   echo "auth script 2 here"
