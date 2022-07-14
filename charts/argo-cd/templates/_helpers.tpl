@@ -220,6 +220,19 @@ Return the appropriate apiVersion for ingress
 {{- end -}}
 
 {{/*
+Return the appropriate apiVersion for autoscaling
+*/}}
+{{- define "argo-cd.autoscaling.apiVersion" -}}
+{{- if .Values.apiVersionOverrides.autoscaling -}}
+{{- print .Values.apiVersionOverrides.autoscaling -}}
+{{- else if semverCompare "<1.23-0" (include "argo-cd.kubeVersion" $) -}}
+{{- print "autoscaling/v2beta1" -}}
+{{- else -}}
+{{- print "autoscaling/v2" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return the target Kubernetes version
 */}}
 {{- define "argo-cd.kubeVersion" -}}
