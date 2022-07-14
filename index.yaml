@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - [Changed]: Autoscaling now uses autoscaling/v2 apiVersion on kubernetes >= 1.23
+    apiVersion: v2
+    appVersion: v2.4.6
+    created: "2022-07-14T13:03:21.192250314Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.17.1
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 35622d538b0688aab7e5cf49bf2107395c3d561ed90ead8f9e37b65cf751a1a4
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.9.14/argo-cd-4.9.14.tgz
+    version: 4.9.14
+  - annotations:
+      artifacthub.io/changes: |
         - [Changed]: Update to app version 2.4.6"
     apiVersion: v2
     appVersion: v2.4.6
@@ -14954,4 +14983,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-07-13T20:43:09.683095461Z"
+generated: "2022-07-14T13:03:21.197244875Z"
