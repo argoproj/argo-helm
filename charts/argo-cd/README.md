@@ -159,7 +159,6 @@ kubeVersionOverride: "1.18.0"
 
 Then you should no longer encounter this issue.
 
-
 ### 3.0.0 and above
 
 Helm apiVersion switched to `v2`. Requires Helm `3.0.0` or above to install. [Read More](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/) on how to migrate your release from Helm 2 to Helm 3.
@@ -857,7 +856,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.triggers | object | `{}` | The trigger defines the condition when the notification should be sent |
 | notifications.updateStrategy | object | `{"type":"Recreate"}` | The deployment strategy to use to replace existing pods with new ones |
-
 
 ### Using AWS ALB Ingress Controller With GRPC
 
