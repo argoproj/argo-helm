@@ -42,7 +42,7 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
 | clusterInstall | bool | `true` | `false` runs controller in namespaced mode (does not require cluster RBAC) |
 | crdAnnotations | object | `{}` | Annotations to be added to all CRDs |
-| extraManifests | list | `[]` | Additional manifests to deploy within the chart. A list of objects. |
+| extraObjects | list | `[]` | Additional manifests to deploy within the chart. A list of objects. |
 | fullnameOverride | string | `nil` | String to fully override "argo-rollouts.fullname" template |
 | imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry. Registry secret names as an array. |
 | installCRDs | bool | `true` | Install and upgrade CRDs |
