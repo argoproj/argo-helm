@@ -37,4 +37,11 @@ spec:
           type: Utilization
         {{- end }}
 {{- end }}
+{{- if eq (include "argo-cd.autoscaling.apiVersion" $) "autoscaling/v2beta1" }}
+{{- with .Values.server.autoscaling.behavior }}
+  behavior:
+    {{- toYaml . | nindent 6 }}
+{{- end }}
+{{- end }}
+
 {{- end }}
