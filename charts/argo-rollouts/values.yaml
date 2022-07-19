@@ -22,6 +22,19 @@ apiVersionOverrides:
 # -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
 
+# -- Additional manifests to deploy within the chart. A list of objects.
+## Can be used to add secrets for Analysis with 3rd-party monitoring solutions.
+extraObjects: []
+  # - apiVersion: v1
+  #   kind: Secret
+  #   metadata:
+  #     name: datadog
+  #   type: Opaque
+  #   data:
+  #     address: https://api.datadoghq.com
+  #     api-key: <datadog-api-key>
+  #     app-key: <datadog-app-key>
+
 controller:
   # -- Value of label `app.kubernetes.io/component`
   component: rollouts-controller
