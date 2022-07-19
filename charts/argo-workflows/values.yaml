@@ -1,9 +1,12 @@
-images:
-  # -- imagePullPolicy to apply to all containers
-  pullPolicy: Always
-  # -- Secrets with credentials to pull images from a private registry
-  pullSecrets: []
-  # - name: argo-pull-secret
+global:
+  image:
+    # -- Overrides the global Argo Workflows image tag whose default is the chart appVersion
+    tag: ""
+    # -- If defined, a imagePullPolicy applied to all Argo Workflows deployments
+    pullPolicy: IfNotPresent
+    # -- Secrets with credentials to pull images from a private registry
+    pullSecrets: []
+    # - name: argo-pull-secret
 
 # -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -45,7 +48,7 @@ controller:
     registry: quay.io
     # -- Registry to use for the controller
     repository: argoproj/workflow-controller
-    # -- Overrides the image tag whose default is the chart appVersion.
+    # -- Overrides the image tag whose default is `global.image.tag`.
     tag: ""
   # -- parallelism dictates how many workflows can be running at the same time
   parallelism:
@@ -280,7 +283,7 @@ executor:
     registry: quay.io
     # -- Repository to use for the Workflow Executors
     repository: argoproj/argoexec
-    # -- Overrides the image tag whose default is the chart appVersion.
+    # -- Overrides the image tag whose default is `global.image.tag`.
     tag: ""
   # -- Resource limits and requests for the Workflow Executors
   resources: {}
@@ -302,7 +305,7 @@ server:
     registry: quay.io
     # -- Repository to use for the server
     repository: argoproj/argocli
-    # -- Overrides the image tag whose default is the chart appVersion.
+    # -- Overrides the image tag whose default is `global.image.tag`.
     tag: ""
   # -- optional map of annotations to be applied to the ui Deployment
   deploymentAnnotations: {}
