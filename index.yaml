@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - [Changed]: Truncate version labels to 63 characters"
+    apiVersion: v2
+    appVersion: v2.4.7
+    created: "2022-07-21T09:53:45.794925788Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.17.1
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 781a04ef632f2f282f51944ba92d427514d2913624b3156094d4b9627ea99323
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.10.0/argo-cd-4.10.0.tgz
+    version: 4.10.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Fix ArgoCD notification metrics unmarshal error"
     apiVersion: v2
     appVersion: v2.4.7
@@ -15059,4 +15088,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-07-19T12:48:09.701581483Z"
+generated: "2022-07-21T09:53:45.800965493Z"
