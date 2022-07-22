@@ -53,6 +53,8 @@ apiVersionOverrides:
   certmanager: "" # cert-manager.io/v1
   # -- String to override apiVersion of ingresses rendered by this helm chart
   ingress: "" # networking.k8s.io/v1beta1
+  # -- String to override apiVersion of autoscaling rendered by this helm chart
+  autoscaling: "" # autoscaling/v2
 
 # -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
