@@ -120,10 +120,3 @@ Return the target Kubernetes version
 {{- define "argo-workflows.kubeVersion" -}}
   {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
 {{- end -}}
-
-{{/*
-Return the default Argo Workflows app version
-*/}}
-{{- define "argo-workflows.defaultTag" -}}
-  {{- default .Chart.AppVersion .Values.global.image.tag }}
-{{- end -}}
