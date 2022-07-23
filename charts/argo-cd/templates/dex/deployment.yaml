@@ -5,7 +5,7 @@ metadata:
   name: {{ template "argo-cd.dex.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ .Values.dex.image.tag | quote }}
+    app.kubernetes.io/version: {{ .Values.dex.image.tag | trunc 63 | quote }}
 spec:
   selector:
     matchLabels:
@@ -20,7 +20,7 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ .Values.dex.image.tag | quote }}
+        app.kubernetes.io/version: {{ .Values.dex.image.tag | trunc 63 | quote }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.dex.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
