@@ -45,6 +45,7 @@ Fields to note:
 | fullnameOverride | string | `nil` | String to fully override "argo-workflows.fullname" template |
 | images.pullPolicy | string | `"Always"` | imagePullPolicy to apply to all containers |
 | images.pullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
+| images.tag | string | `""` | Common tag for Argo Workflows images. Defaults to `.Chart.AppVersion`. |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `nil` | String to partially override "argo-workflows.fullname" template |
 | singleNamespace | bool | `false` | Restrict Argo to operate only in a single namespace (the namespace of the Helm release) by apply Roles and RoleBindings instead of the Cluster equivalents, and start workflow-controller with the --namespaced flag. Use it in clusters with strict access policy. |
@@ -73,7 +74,7 @@ Fields to note:
 | controller.extraEnv | list | `[]` | Extra environment variables to provide to the controller container |
 | controller.image.registry | string | `"quay.io"` | Registry to use for the controller |
 | controller.image.repository | string | `"argoproj/workflow-controller"` | Registry to use for the controller |
-| controller.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| controller.image.tag | string | `""` | Image tag for the workflow controller. Defaults to `.Values.images.tag`. |
 | controller.initialDelay | string | `nil` | Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224 |
 | controller.instanceID.enabled | bool | `false` | Configures the controller to filter workflow submissions to only those which have a matching instanceID attribute. |
 | controller.instanceID.explicitID | string | `""` | Use a custom instanceID |
@@ -143,7 +144,7 @@ Fields to note:
 | executor.env | object | `{}` | Adds environment variables for the executor. |
 | executor.image.registry | string | `"quay.io"` | Registry to use for the Workflow Executors |
 | executor.image.repository | string | `"argoproj/argoexec"` | Repository to use for the Workflow Executors |
-| executor.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| executor.image.tag | string | `""` | Image tag for the workflow executor. Defaults to `.Values.images.tag`. |
 | executor.resources | object | `{}` | Resource limits and requests for the Workflow Executors |
 | executor.securityContext | object | `{}` | sets security context for the executor container |
 
@@ -162,7 +163,7 @@ Fields to note:
 | server.extraEnv | list | `[]` | Extra environment variables to provide to the argo-server container |
 | server.image.registry | string | `"quay.io"` | Registry to use for the server |
 | server.image.repository | string | `"argoproj/argocli"` | Repository to use for the server |
-| server.image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| server.image.tag | string | `""` | Image tag for the Argo Workflows server. Defaults to `.Values.images.tag`. |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource |
 | server.ingress.extraPaths | list | `[]` | Additional ingress paths |
