@@ -639,7 +639,7 @@ NAME: my-release
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
-| redis.image.repository | string | `"redis"` | Redis repository |
+| redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
 | redis.image.tag | string | `"7.0.0-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
