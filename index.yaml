@@ -1588,6 +1588,36 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - [Changed]: redis image was migrated from docker hub to public ecr for docker hub rate limit
+        - [Changed]: redis-exporter image was migrated from docker hub to public ecr for docker hub rate limit
+    apiVersion: v2
+    appVersion: v2.4.7
+    created: "2022-07-29T14:40:59.888608406Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.17.1
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: ac395aa8687eda9ad2268d3341fd0e409b931fb1123c36edd897f3fab6da99b0
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.10.1/argo-cd-4.10.1.tgz
+    version: 4.10.1
+  - annotations:
+      artifacthub.io/changes: |
         - [Changed]: Truncate version labels to 63 characters"
     apiVersion: v2
     appVersion: v2.4.7
@@ -15110,4 +15140,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-07-27T00:51:08.598908758Z"
+generated: "2022-07-29T14:40:59.894089686Z"
