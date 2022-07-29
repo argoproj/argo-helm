@@ -639,14 +639,14 @@ NAME: my-release
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
-| redis.image.repository | string | `"redis"` | Redis repository |
+| redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
 | redis.image.tag | string | `"7.0.0-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
 | redis.metrics.image.imagePullPolicy | string | `"IfNotPresent"` | redis-exporter image PullPolicy |
-| redis.metrics.image.repository | string | `"bitnami/redis-exporter"` | redis-exporter image repository |
+| redis.metrics.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
 | redis.metrics.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
 | redis.metrics.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.metrics.service.annotations | object | `{}` | Metrics service annotations |
