@@ -593,7 +593,7 @@ redis:
 
   image:
     # -- Redis repository
-    repository: redis
+    repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
     tag: 7.0.0-alpine
     # -- Redis imagePullPolicy
@@ -711,7 +711,7 @@ redis:
     enabled: false
     image:
       # -- redis-exporter image repository
-      repository: bitnami/redis-exporter
+      repository: public.ecr.aws/bitnami/redis-exporter
       # -- redis-exporter image tag
       tag: 1.26.0-debian-10-r2
       # -- redis-exporter image PullPolicy
