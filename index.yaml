@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Drop all `~` keys from redis-ha because they cause error on kustomize and cannot document via helm-docs"
+    apiVersion: v2
+    appVersion: v2.4.7
+    created: "2022-07-29T18:15:37.878534418Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.17.1
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 8e812f3572977c460f75e87d05b00de5e026a1807a31831637c6235ef784921a
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-4.10.2/argo-cd-4.10.2.tgz
+    version: 4.10.2
+  - annotations:
+      artifacthub.io/changes: |
         - [Changed]: redis image was migrated from docker hub to public ecr for docker hub rate limit
         - [Changed]: redis-exporter image was migrated from docker hub to public ecr for docker hub rate limit
     apiVersion: v2
@@ -15140,4 +15169,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-07-29T14:40:59.894089686Z"
+generated: "2022-07-29T18:15:37.885170385Z"
