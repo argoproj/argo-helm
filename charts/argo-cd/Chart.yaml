@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v2.4.7
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 4.10.1
+version: 4.10.2
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 keywords:
@@ -21,5 +21,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - [Changed]: redis image was migrated from docker hub to public ecr for docker hub rate limit
-    - [Changed]: redis-exporter image was migrated from docker hub to public ecr for docker hub rate limit
+    - "[Fixed]: Drop all `~` keys from redis-ha because they cause error on kustomize and cannot document via helm-docs"
