@@ -53,6 +53,8 @@ apiVersionOverrides:
   certmanager: "" # cert-manager.io/v1
   # -- String to override apiVersion of ingresses rendered by this helm chart
   ingress: "" # networking.k8s.io/v1beta1
+  # -- String to override apiVersion of autoscaling rendered by this helm chart
+  autoscaling: "" # autoscaling/v2
 
 # -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -591,9 +593,9 @@ redis:
 
   image:
     # -- Redis repository
-    repository: redis
+    repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.0.0-alpine
+    tag: 7.0.4-alpine
     # -- Redis imagePullPolicy
     imagePullPolicy: IfNotPresent
 
@@ -709,7 +711,7 @@ redis:
     enabled: false
     image:
       # -- redis-exporter image repository
-      repository: bitnami/redis-exporter
+      repository: public.ecr.aws/bitnami/redis-exporter
       # -- redis-exporter image tag
       tag: 1.26.0-debian-10-r2
       # -- redis-exporter image PullPolicy
@@ -782,12 +784,6 @@ redis-ha:
   exporter:
     # -- If `true`, the prometheus exporter sidecar is enabled
     enabled: true
-    # -- Exporter image
-    # @default -- `nil` (follows subchart default)
-    image: ~
-    # -- Exporter tag
-    # @default -- `nil` (follows subchart default)
-    tag: ~
   persistentVolume:
     # -- Configures persistency on Redis nodes
     enabled: false
@@ -803,22 +799,12 @@ redis-ha:
   haproxy:
     # -- Enabled HAProxy LoadBalancing/Proxy
     enabled: true
-    image:
-      # -- HAProxy Image Repository
-      # @default -- `nil` (follows subchart default)
-      repository: ~
-      # -- HAProxy Image Tag
-      # @default -- `nil` (follows subchart default)
-      tag: ~
     metrics:
       # -- HAProxy enable prometheus metric scraping
       enabled: true
   image:
-    # -- Redis image repository
-    # @default -- `nil` (follows subchart default)
-    repository: ~
     # -- Redis tag
-    tag: 7.0.0-alpine
+    tag: 7.0.4-alpine
 
   ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints:

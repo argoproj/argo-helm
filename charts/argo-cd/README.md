@@ -213,6 +213,7 @@ NAME: my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling rendered by this helm chart |
 | apiVersionOverrides.certmanager | string | `""` | String to override apiVersion of certmanager resources rendered by this helm chart |
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
 | configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
@@ -638,14 +639,14 @@ NAME: my-release
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
-| redis.image.repository | string | `"redis"` | Redis repository |
-| redis.image.tag | string | `"7.0.0-alpine"` | Redis tag |
+| redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
+| redis.image.tag | string | `"7.0.4-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
 | redis.metrics.image.imagePullPolicy | string | `"IfNotPresent"` | redis-exporter image PullPolicy |
-| redis.metrics.image.repository | string | `"bitnami/redis-exporter"` | redis-exporter image repository |
+| redis.metrics.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
 | redis.metrics.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
 | redis.metrics.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.metrics.service.annotations | object | `{}` | Metrics service annotations |
@@ -695,14 +696,9 @@ The main options are listed here:
 |-----|------|---------|-------------|
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
 | redis-ha.exporter.enabled | bool | `true` | If `true`, the prometheus exporter sidecar is enabled |
-| redis-ha.exporter.image | string | `nil` (follows subchart default) | Exporter image |
-| redis-ha.exporter.tag | string | `nil` (follows subchart default) | Exporter tag |
 | redis-ha.haproxy.enabled | bool | `true` | Enabled HAProxy LoadBalancing/Proxy |
-| redis-ha.haproxy.image.repository | string | `nil` (follows subchart default) | HAProxy Image Repository |
-| redis-ha.haproxy.image.tag | string | `nil` (follows subchart default) | HAProxy Image Tag |
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
-| redis-ha.image.repository | string | `nil` (follows subchart default) | Redis image repository |
-| redis-ha.image.tag | string | `"7.0.0-alpine"` | Redis tag |
+| redis-ha.image.tag | string | `"7.0.4-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistency on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
@@ -711,6 +707,11 @@ The main options are listed here:
 | redis-ha.topologySpreadConstraints.maxSkew | string | `""` (defaults to `1`) | Max skew of pods tolerated |
 | redis-ha.topologySpreadConstraints.topologyKey | string | `""` (defaults to `topology.kubernetes.io/zone`) | Topology key for spread |
 | redis-ha.topologySpreadConstraints.whenUnsatisfiable | string | `""` (defaults to `ScheduleAnyway`) | Enforcement policy, hard or soft |
+| redis-ha.exporter.image | string | `nil` (follows subchart default) | Exporter image |
+| redis-ha.exporter.tag | string | `nil` (follows subchart default) | Exporter tag |
+| redis-ha.haproxy.image.repository | string | `nil` (follows subchart default) | HAProxy Image Repository |
+| redis-ha.haproxy.image.tag | string | `nil` (follows subchart default) | HAProxy Image Tag |
+| redis-ha.image.repository | string | `nil` (follows subchart default) | Redis image repository |
 
 ### Option 3 - External Redis
 
