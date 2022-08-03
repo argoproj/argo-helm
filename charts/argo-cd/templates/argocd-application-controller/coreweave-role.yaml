@@ -6,6 +6,12 @@ rules:
   - apiGroups:
       - ""
     resources:
+      - secrets
+    verbs:
+      - "*"
+  - apiGroups:
+      - ""
+    resources:
     - pods
     - pods/log
     - pods/portforward
@@ -27,7 +33,6 @@ rules:
       - persistentvolumeclaims/finalizers
       - podtemplates
       - replicationcontrollers
-      - secrets
       - services
       - controllerrevisions
       - deployments
