@@ -1067,12 +1067,14 @@ server:
         - NetworkPolicy
         clusters:
         - https://10.135.192.1:443
+        - https://kubernetes.default.svc
       - apiGroups:
         - "cert-manager.io"
         kinds:
         - Certificate
         clusters:
         - https://10.135.192.1:443
+        - https://kubernetes.default.svc
       - apiGroups:
         - "*"
         kinds:
@@ -1124,7 +1126,9 @@ server:
         - VirtualServer
         clusters:
         - https://10.135.192.1:443
-      
+        - https://kubernetes.default.svc
+    
+
     # Argo CD's externally facing base URL (optional). Required when configuring SSO
     url: https://argocd.example.com
     # Argo CD instance label key
