@@ -92,10 +92,22 @@ data:
     {{- end}}
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:
-{{ toYaml .Values.controller.metricsConfig | indent 6}}{{- end }}
+      - enabled: {{ .Values.controller.metricsConfig.enabled }}
+      - path: {{ .Values.controller.metricsConfig.path }}
+      - port: {{ .Values.controller.metricsConfig.port }}
+      - metricsTTL: {{ .Values.controller.metricsConfig.metricsTTL }}
+      - ignoreErrors: {{ .Values.controller.metricsConfig.ignoreErrors | default true }}
+      - secure: {{ .Values.controller.metricsConfig.secure | default false }}
+    {{- end }}
     {{- if .Values.controller.telemetryConfig.enabled }}
     telemetryConfig:
-{{ toYaml .Values.controller.telemetryConfig | indent 6}}{{- end }}
+      - enabled: {{ .Values.controller.telemetryConfig.enabled }}
+      - path: {{ .Values.controller.telemetryConfig.path }}
+      - port: {{ .Values.controller.telemetryConfig.port }}
+      - metricsTTL: {{ .Values.controller.telemetryConfig.metricsTTL }}
+      - ignoreErrors: {{ .Values.controller.telemetryConfig.ignoreErrors | default true }}
+      - secure: {{ .Values.controller.telemetryConfig.secure | default false }}
+    {{- end }}
     {{- if .Values.controller.persistence }}
     persistence:
 {{ toYaml .Values.controller.persistence | indent 6 }}{{- end }}
