@@ -95,18 +95,30 @@ data:
       enabled: {{ .Values.controller.metricsConfig.enabled }}
       path: {{ .Values.controller.metricsConfig.path }}
       port: {{ .Values.controller.metricsConfig.port }}
-      metricsTTL: {{ .Values.controller.metricsConfig.metricsTTL }}
-      ignoreErrors: {{ .Values.controller.metricsConfig.ignoreErrors | default true }}
-      secure: {{ .Values.controller.metricsConfig.secure | default false }}
+      {{ with .Values.controller.metricsConfig.metricsTTL }}
+      metricsTTL: {{ . }}
+      {{- end }}
+      {{ with .Values.controller.metricsConfig.ignoreErrors }}
+      ignoreErrors: {{ . }}
+      {{- end }}
+      {{ with .Values.controller.metricsConfig.secure }}
+      secure: {{ . }}
+      {{- end }}
     {{- end }}
     {{- if .Values.controller.telemetryConfig.enabled }}
     telemetryConfig:
       enabled: {{ .Values.controller.telemetryConfig.enabled }}
       path: {{ .Values.controller.telemetryConfig.path }}
       port: {{ .Values.controller.telemetryConfig.port }}
-      metricsTTL: {{ .Values.controller.telemetryConfig.metricsTTL }}
-      ignoreErrors: {{ .Values.controller.telemetryConfig.ignoreErrors | default true }}
-      secure: {{ .Values.controller.telemetryConfig.secure | default false }}
+      {{ with .Values.controller.telemetryConfig.metricsTTL }}
+      metricsTTL: {{ . }}
+      {{- end }}
+      {{ with .Values.controller.telemetryConfig.ignoreErrors }}
+      ignoreErrors: {{ . }}
+      {{- end }}
+      {{ with .Values.controller.telemetryConfig.secure }}
+      secure: {{ . }}
+      {{- end }}
     {{- end }}
     {{- if .Values.controller.persistence }}
     persistence:
