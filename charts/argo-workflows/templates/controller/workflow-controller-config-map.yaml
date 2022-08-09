@@ -95,13 +95,13 @@ data:
       enabled: {{ .Values.controller.metricsConfig.enabled }}
       path: {{ .Values.controller.metricsConfig.path }}
       port: {{ .Values.controller.metricsConfig.port }}
-      {{ with .Values.controller.metricsConfig.metricsTTL }}
+      {{- with .Values.controller.metricsConfig.metricsTTL }}
       metricsTTL: {{ . }}
       {{- end }}
-      {{ with .Values.controller.metricsConfig.ignoreErrors }}
+      {{- with .Values.controller.metricsConfig.ignoreErrors }}
       ignoreErrors: {{ . }}
       {{- end }}
-      {{ with .Values.controller.metricsConfig.secure }}
+      {{- with .Values.controller.metricsConfig.secure }}
       secure: {{ . }}
       {{- end }}
     {{- end }}
@@ -110,13 +110,13 @@ data:
       enabled: {{ .Values.controller.telemetryConfig.enabled }}
       path: {{ .Values.controller.telemetryConfig.path }}
       port: {{ .Values.controller.telemetryConfig.port }}
-      {{ with .Values.controller.telemetryConfig.metricsTTL }}
+      {{- with .Values.controller.telemetryConfig.metricsTTL }}
       metricsTTL: {{ . }}
       {{- end }}
-      {{ with .Values.controller.telemetryConfig.ignoreErrors }}
+      {{- with .Values.controller.telemetryConfig.ignoreErrors }}
       ignoreErrors: {{ . }}
       {{- end }}
-      {{ with .Values.controller.telemetryConfig.secure }}
+      {{- with .Values.controller.telemetryConfig.secure }}
       secure: {{ . }}
       {{- end }}
     {{- end }}
