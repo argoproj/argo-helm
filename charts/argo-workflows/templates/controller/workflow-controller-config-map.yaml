@@ -13,11 +13,6 @@ data:
     instanceID: {{ .Values.controller.instanceID.explicitID }}
       {{- end }}
     {{- end }}
-    containerRuntimeExecutor: {{ .Values.controller.containerRuntimeExecutor }}
-    {{- with .Values.controller.containerRuntimeExecutors }}
-    containerRuntimeExecutors:
-    {{- toYaml . | nindent 6 }}
-    {{- end }}
     {{- if .Values.controller.parallelism }}
     parallelism: {{ .Values.controller.parallelism }}
     {{- end }}
