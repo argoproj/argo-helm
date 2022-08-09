@@ -80,6 +80,12 @@ controller:
     path: /metrics
     # -- Port is the port where metrics are emitted
     port: 9090
+    # -- Container metrics port name
+    portName: metrics
+    # -- Service metrics port
+    servicePort: 8080
+    # -- Service metrics port name
+    servicePortName: metrics
   # -- the controller container's securityContext
   securityContext:
     readOnlyRootFilesystem: true
@@ -134,6 +140,10 @@ controller:
     path: /telemetry
     # -- telemetry container port
     port: 8081
+    # -- telemetry service port
+    servicePort: 8081
+    # -- telemetry service port name
+    servicePortName: telemetry
   serviceMonitor:
     # -- Enable a prometheus ServiceMonitor
     enabled: false
