@@ -130,7 +130,8 @@ data:
     sso: {{- toYaml . | nindent 6 }}
     {{- end }}
     {{- if .Values.server.authTokenSecret.enabled }}
-    tokenSecretName: {{ tpl .Values.server.authTokenSecret.name . }}
+    token:
+      secretName: {{ tpl .Values.server.authTokenSecret.name . }}
     {{- end }}
     {{- with .Values.controller.workflowRestrictions }}
     workflowRestrictions: {{- toYaml . | nindent 6 }}
