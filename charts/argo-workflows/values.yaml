@@ -43,6 +43,8 @@ workflow:
 
 controller:
   image:
+    # -- Image Digest for the workflow controller
+    digest: ""
     # -- Registry to use for the controller
     registry: quay.io
     # -- Registry to use for the controller
@@ -278,6 +280,8 @@ mainContainer:
 # executor controls how the init and wait container should be customized
 executor:
   image:
+    # -- Image Digest for the Workflow Executors
+    digest: ""
     # -- Registry to use for the Workflow Executors
     registry: quay.io
     # -- Repository to use for the Workflow Executors
@@ -300,6 +304,8 @@ server:
   ## https://github.com/argoproj/argo-workflows/issues/716#issuecomment-433213190
   baseHref: /
   image:
+    # -- Image Digest for the server
+    digest: ""
     # -- Registry to use for the server
     registry: quay.io
     # -- Repository to use for the server

@@ -127,3 +127,14 @@ Return the default Argo Workflows app version
 {{- define "argo-workflows.defaultTag" -}}
   {{- default .Chart.AppVersion .Values.images.tag }}
 {{- end -}}
+
+{{/*
+Return image path
+*/}}
+{{- define "image-path" -}}
+{{- if .image.digest -}}
+{{ .image.registry }}/{{ .image.repository }}@{{ .image.digest }}
+{{- else -}}
+{{ .image.registry }}/{{ .image.repository }}:{{ default .defaultTag .image.tag }}
+{{- end -}}
+{{- end -}}

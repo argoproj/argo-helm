@@ -34,14 +34,14 @@ spec:
       {{- end }}
       containers:
         - name: controller
-          image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ default (include "argo-workflows.defaultTag" .) .Values.controller.image.tag }}"
+          image: "{{ include "image-path" (dict "image" .Values.controller.image "defaultTag" (include "argo-workflows.defaultTag" .)) }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           command: [ "workflow-controller" ]
           args:
           - "--configmap"
           - "{{ template "argo-workflows.controller.fullname" . }}-configmap"
           - "--executor-image"
-          - "{{ .Values.executor.image.registry }}/{{ .Values.executor.image.repository }}:{{ default (include "argo-workflows.defaultTag" .) .Values.executor.image.tag }}"
+          - "{{ include "image-path" (dict "image" .Values.executor.image "defaultTag" (include "argo-workflows.defaultTag" .)) }}"
           - "--loglevel"
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"
