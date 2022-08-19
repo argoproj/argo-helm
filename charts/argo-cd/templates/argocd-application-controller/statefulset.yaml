@@ -1,6 +1,6 @@
 {{- $redisHa := (index .Values "redis-ha") -}}
 apiVersion: apps/v1
-kind: {{ .Values.controller.enableStatefulSet | ternary "StatefulSet" "Deployment" }}
+kind: StatefulSet
 metadata:
   name: {{ template "argo-cd.controller.fullname" . }}
   labels:
@@ -10,9 +10,7 @@ spec:
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
-  {{- if  .Values.controller.enableStatefulSet }}
   serviceName: {{ template "argo-cd.controller.fullname" . }}
-  {{- end }}
   revisionHistoryLimit: 5
   replicas: {{ .Values.controller.replicas }}
   template:
