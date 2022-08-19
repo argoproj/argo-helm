@@ -287,17 +287,13 @@ Create the name of the configmap to use
 {{- end -}}
 
 {{- define "argo-cd.redisPasswordEnv" -}}
-  {{- if or .Values.externalRedis.password .Values.externalRedis.existingSecret }}
+{{- if or .Values.externalRedis.password .Values.externalRedis.existingSecret -}}
 - name: REDIS_PASSWORD
   valueFrom:
     secretKeyRef:
-    {{- if .Values.externalRedis.existingSecret }}
-      name: {{ .Values.externalRedis.existingSecret }}
-    {{- else }}
-      name: {{ template "argo-cd.redis.fullname" . }}
-    {{- end }}
+      name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
       key: redis-password
-  {{- end }}
+{{- end -}}
 {{- end -}}
 
 {{/*
