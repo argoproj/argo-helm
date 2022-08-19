@@ -71,6 +71,16 @@ controller:
   ## This will be rendered as the literal yaml
   extraContainers: []
 
+  # -- Init containers to add to the rollouts controller pod
+  ## This will be rendered as the literal yaml
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      -  ls
+  
+
   # -- Resource limits and requests for the controller pods.
   resources: {}
   #  limits:

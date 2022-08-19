@@ -89,7 +89,7 @@ rules:
   - create
   - get
   - update
-# secret read access to run analysis templates which reference secrets
+# secret access to run analysis templates which reference secrets, allow init containers to manipulate secrets
 - apiGroups:
   - ""
   resources:
@@ -99,6 +99,9 @@ rules:
   - get
   - list
   - watch
+  - create
+  - patch
+  - update
 # pod list/update needed for updating ephemeral data
 - apiGroups:
   - ""
