@@ -502,7 +502,8 @@ artifactRepository:
     secretKeySecret:
       # name: <releaseName>-minio
       key: secretkey
-    insecure: true
+    # insecure will disable TLS. Primarily used for minio installs not configured with TLS
+    insecure: false
     # bucket:
     # endpoint:
     # region:
