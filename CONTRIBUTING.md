@@ -50,17 +50,13 @@ annotations:
 
 ## Documentation
 
-The documentation for each chart is done with [helm-docs](https://github.com/norwoodj/helm-docs). This way we can ensure that values are consistent with the chart documentation.
-
-We have a script on the repository which will execute the helm-docs docker container, so that you don't have to worry about downloading the binary etc. Simply execute the script (Bash compatible, might require sudo privileges):
+The documentation for each chart is done with [helm-docs](https://github.com/norwoodj/helm-docs). This way we can ensure that values are consistent with the chart documentation:
 
 ```
-bash scripts/helm-docs.sh
+make helm-docs
 ```
 
 **NOTE**: When creating your own `README.md.gotmpl`, don't forget to add it to your `.helmignore` file.
-
-
 
 # Testing
 
@@ -143,7 +139,7 @@ Linting configuration can be found in [ct-lint.yaml](./.github/configs/ct-lint.y
 The linting can be invoked manually with the following command:
 
 ```
-./scripts/lint.sh
+make ct-lint
 ```
 
 ## Publishing Changes
