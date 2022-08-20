@@ -100,11 +100,53 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 
 ### 5.0.0
 
+This release **removes the parameters** `server.additionalApplications` and `server.additionalProjects`. Please carefully read the following section if you are using these parameters!
+
 In order to upgrade Applications and Projects safely against CRDs' upgrade, `server.additionalApplications` and `server.additionalProjects` are moved to [argocd-apps](../argocd-apps).
 
 If you are using `server.additionalApplications` or `server.additionalProjects`, you can adopt to [argocd-apps](../argocd-apps) as below:
 
 1. Add [helm.sh/resource-policy annotation](https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource) to avoid resources being removed by upgrading Helm chart
+
+You can keep your existing CRDs by adding `"helm.sh/resource-policy": keep` on `additionalAnnotations`, under `server.additionalApplications` and `server.additionalProjects` blocks, and running `helm upgrade`.
+
+e.g:
+
+```yaml
+server:
+  additionalApplications:
+    - name: guestbook
+      namespace: argocd
+      additionalLabels: {}
+      additionalAnnotations:
+        "helm.sh/resource-policy": keep # <-- add this
+      finalizers:
+      - resources-finalizer.argocd.argoproj.io
+      project: guestbook
+      source:
+        repoURL: https://github.com/argoproj/argocd-example-apps.git
+        targetRevision: HEAD
+        path: guestbook
+        directory:
+          recurse: true
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: guestbook
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: false
+      ignoreDifferences:
+      - group: apps
+        kind: Deployment
+        jsonPointers:
+        - /spec/replicas
+      info:
+      - name: url
+        value: https://argoproj.github.io/
+```
+
+You can also keep your existing CRDs by running the following scripts.
 
 ```bash
 # keep Applications
