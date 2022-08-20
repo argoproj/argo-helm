@@ -28,7 +28,7 @@ redis-ha:
   enabled: true
 
 controller:
-  enableStatefulSet: true
+  replicas: 1
 
 server:
   autoscaling:
@@ -39,6 +39,9 @@ repoServer:
   autoscaling:
     enabled: true
     minReplicas: 2
+
+applicationSet:
+  replicas: 2
 ```
 
 ### HA mode without autoscaling
@@ -48,15 +51,15 @@ redis-ha:
   enabled: true
 
 controller:
-  enableStatefulSet: true
+  replicas: 1
 
 server:
   replicas: 2
-  env:
-    - name: ARGOCD_API_SERVER_REPLICAS
-      value: '2'
 
 repoServer:
+  replicas: 2
+
+applicationSet:
   replicas: 2
 ```
 
@@ -89,10 +92,10 @@ Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs
 Please use `kubectl` to upgrade CRDs manually from [crds](crds/) folder or via the manifests from the upstream project repo:
 
 ```bash
-kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=<appVersion>
+kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVersion>"
 
-# Eg. version v2.4.2
-kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=v2.4.2
+# Eg. version v2.4.9
+kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
 
 ### 5.0.0
@@ -254,6 +257,28 @@ NAME: my-release
 | apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling rendered by this helm chart |
 | apiVersionOverrides.certmanager | string | `""` | String to override apiVersion of certmanager resources rendered by this helm chart |
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
+| createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
+| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
+| fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
+| global.additionalLabels | object | `{}` | Additional labels to add to all resources |
+| global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
+| global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
+| global.image.repository | string | `"quay.io/argoproj/argocd"` | If defined, a repository applied to all Argo CD deployments |
+| global.image.tag | string | `""` | Overrides the global Argo CD image tag whose default is the chart appVersion |
+| global.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository |
+| global.networkPolicy.create | bool | `false` | Create NetworkPolicy objects for all components |
+| global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
+| global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
+| global.podLabels | object | `{}` | Labels for the all deployed pods |
+| global.securityContext | object | `{}` | Toggle and define securityContext. See [values.yaml] |
+| kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
+| nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
+| openshift.enabled | bool | `false` | enables using arbitrary uid for argo repo server |
+
+## Argo CD Configs
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
 | configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.credentialTemplates | object | `{}` | Repository credentials to be used as Templates for other repos |
 | configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
@@ -278,23 +303,6 @@ NAME: my-release
 | configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |
 | configs.tlsCerts | object | See [values.yaml] | TLS certificate |
 | configs.tlsCertsAnnotations | object | `{}` | TLS certificate configmap annotations |
-| createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
-| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
-| fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
-| global.additionalLabels | object | `{}` | Additional labels to add to all resources |
-| global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
-| global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
-| global.image.repository | string | `"quay.io/argoproj/argocd"` | If defined, a repository applied to all Argo CD deployments |
-| global.image.tag | string | `""` | Overrides the global Argo CD image tag whose default is the chart appVersion |
-| global.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository |
-| global.networkPolicy.create | bool | `false` | Create NetworkPolicy objects for all components |
-| global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
-| global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
-| global.podLabels | object | `{}` | Labels for the all deployed pods |
-| global.securityContext | object | `{}` | Toggle and define securityContext. See [values.yaml] |
-| kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
-| nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
-| openshift.enabled | bool | `false` | enables using arbitrary uid for argo repo server |
 
 ## Argo CD Controller
 
@@ -675,14 +683,14 @@ NAME: my-release
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
-| redis.image.repository | string | `"redis"` | Redis repository |
-| redis.image.tag | string | `"7.0.0-alpine"` | Redis tag |
+| redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
+| redis.image.tag | string | `"7.0.4-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
 | redis.metrics.image.imagePullPolicy | string | `"IfNotPresent"` | redis-exporter image PullPolicy |
-| redis.metrics.image.repository | string | `"bitnami/redis-exporter"` | redis-exporter image repository |
+| redis.metrics.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
 | redis.metrics.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
 | redis.metrics.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.metrics.service.annotations | object | `{}` | Metrics service annotations |
@@ -732,14 +740,9 @@ The main options are listed here:
 |-----|------|---------|-------------|
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
 | redis-ha.exporter.enabled | bool | `true` | If `true`, the prometheus exporter sidecar is enabled |
-| redis-ha.exporter.image | string | `nil` (follows subchart default) | Exporter image |
-| redis-ha.exporter.tag | string | `nil` (follows subchart default) | Exporter tag |
 | redis-ha.haproxy.enabled | bool | `true` | Enabled HAProxy LoadBalancing/Proxy |
-| redis-ha.haproxy.image.repository | string | `nil` (follows subchart default) | HAProxy Image Repository |
-| redis-ha.haproxy.image.tag | string | `nil` (follows subchart default) | HAProxy Image Tag |
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
-| redis-ha.image.repository | string | `nil` (follows subchart default) | Redis image repository |
-| redis-ha.image.tag | string | `"7.0.0-alpine"` | Redis tag |
+| redis-ha.image.tag | string | `"7.0.4-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistency on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
@@ -748,6 +751,11 @@ The main options are listed here:
 | redis-ha.topologySpreadConstraints.maxSkew | string | `""` (defaults to `1`) | Max skew of pods tolerated |
 | redis-ha.topologySpreadConstraints.topologyKey | string | `""` (defaults to `topology.kubernetes.io/zone`) | Topology key for spread |
 | redis-ha.topologySpreadConstraints.whenUnsatisfiable | string | `""` (defaults to `ScheduleAnyway`) | Enforcement policy, hard or soft |
+| redis-ha.exporter.image | string | `nil` (follows subchart default) | Exporter image |
+| redis-ha.exporter.tag | string | `nil` (follows subchart default) | Exporter tag |
+| redis-ha.haproxy.image.repository | string | `nil` (follows subchart default) | HAProxy Image Repository |
+| redis-ha.haproxy.image.tag | string | `nil` (follows subchart default) | HAProxy Image Tag |
+| redis-ha.image.repository | string | `nil` (follows subchart default) | Redis image repository |
 
 ### Option 3 - External Redis
 
@@ -925,7 +933,7 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [CSS styles]: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
 [external cluster credentials]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
 [FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
-[General Argo CD configuration]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repositories
+[Declarative setup]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup
 [gRPC-ingress]: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
 [HPA]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 [MetricRelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
