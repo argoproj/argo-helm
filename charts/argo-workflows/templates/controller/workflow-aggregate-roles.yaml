@@ -4,6 +4,7 @@ kind: ClusterRole
 metadata:
   name: {{ template "argo-workflows.fullname" . }}-view
   labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
 - apiGroups:
@@ -29,6 +30,7 @@ kind: ClusterRole
 metadata:
   name: {{ template "argo-workflows.fullname" . }}-edit
   labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
 rules:
 - apiGroups:
@@ -59,6 +61,7 @@ kind: ClusterRole
 metadata:
   name: {{ template "argo-workflows.fullname" . }}-admin
   labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
 - apiGroups:

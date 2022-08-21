@@ -4,7 +4,7 @@ metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | trunc 63 | quote }}
+    app.kubernetes.io/version: {{ default (include "argo-workflows.defaultTag" .) .Values.controller.image.tag | trunc 63 | quote }}
   {{- with .Values.controller.deploymentAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -18,7 +18,7 @@ spec:
     metadata:
       labels:
         {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.controller.image.tag | trunc 63 | quote }}
+        app.kubernetes.io/version: {{ default (include "argo-workflows.defaultTag" .) .Values.controller.image.tag | trunc 63 | quote }}
         {{- with.Values.controller.podLabels }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -34,14 +34,14 @@ spec:
       {{- end }}
       containers:
         - name: controller
-          image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ default (include "argo-workflows.defaultTag" .) .Values.controller.image.tag }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           command: [ "workflow-controller" ]
           args:
           - "--configmap"
           - "{{ template "argo-workflows.controller.fullname" . }}-configmap"
           - "--executor-image"
-          - "{{ .Values.executor.image.registry }}/{{ .Values.executor.image.repository }}:{{ .Values.executor.image.tag | default .Chart.AppVersion }}"
+          - "{{ .Values.executor.image.registry }}/{{ .Values.executor.image.repository }}:{{ default (include "argo-workflows.defaultTag" .) .Values.executor.image.tag }}"
           - "--loglevel"
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"
