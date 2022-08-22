@@ -28,7 +28,7 @@ redis-ha:
   enabled: true
 
 controller:
-  enableStatefulSet: true
+  replicas: 1
 
 server:
   autoscaling:
@@ -39,6 +39,9 @@ repoServer:
   autoscaling:
     enabled: true
     minReplicas: 2
+
+applicationSet:
+  replicas: 2
 ```
 
 ### HA mode without autoscaling
@@ -48,15 +51,15 @@ redis-ha:
   enabled: true
 
 controller:
-  enableStatefulSet: true
+  replicas: 1
 
 server:
   replicas: 2
-  env:
-    - name: ARGOCD_API_SERVER_REPLICAS
-      value: '2'
 
 repoServer:
+  replicas: 2
+
+applicationSet:
   replicas: 2
 ```
 
@@ -89,10 +92,10 @@ Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs
 Please use `kubectl` to upgrade CRDs manually from [crds](crds/) folder or via the manifests from the upstream project repo:
 
 ```bash
-kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=<appVersion>
+kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVersion>"
 
-# Eg. version v2.4.2
-kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=v2.4.2
+# Eg. version v2.4.9
+kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
 
 ### 4.9.0
@@ -216,6 +219,30 @@ NAME: my-release
 | apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling rendered by this helm chart |
 | apiVersionOverrides.certmanager | string | `""` | String to override apiVersion of certmanager resources rendered by this helm chart |
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
+| createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
+| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
+| fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
+| global.additionalLabels | object | `{}` | Additional labels to add to all resources |
+| global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
+| global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
+| global.image.repository | string | `"quay.io/argoproj/argocd"` | If defined, a repository applied to all Argo CD deployments |
+| global.image.tag | string | `""` | Overrides the global Argo CD image tag whose default is the chart appVersion |
+| global.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository |
+| global.networkPolicy.create | bool | `false` | Create NetworkPolicy objects for all components |
+| global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
+| global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
+| global.podLabels | object | `{}` | Labels for the all deployed pods |
+| global.securityContext | object | `{}` | Toggle and define securityContext. See [values.yaml] |
+| kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
+| nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
+| openshift.enabled | bool | `false` | enables using arbitrary uid for argo repo server |
+| server.additionalApplications | list | `[]` (See [values.yaml]) | Deploy Argo CD Applications within this helm release |
+| server.additionalProjects | list | `[]` (See [values.yaml]) | Deploy Argo CD Projects within this helm release |
+
+## Argo CD Configs
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
 | configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.credentialTemplates | object | `{}` | Repository credentials to be used as Templates for other repos |
 | configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
@@ -240,25 +267,6 @@ NAME: my-release
 | configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |
 | configs.tlsCerts | object | See [values.yaml] | TLS certificate |
 | configs.tlsCertsAnnotations | object | `{}` | TLS certificate configmap annotations |
-| createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
-| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
-| fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
-| global.additionalLabels | object | `{}` | Additional labels to add to all resources |
-| global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
-| global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
-| global.image.repository | string | `"quay.io/argoproj/argocd"` | If defined, a repository applied to all Argo CD deployments |
-| global.image.tag | string | `""` | Overrides the global Argo CD image tag whose default is the chart appVersion |
-| global.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository |
-| global.networkPolicy.create | bool | `false` | Create NetworkPolicy objects for all components |
-| global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
-| global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
-| global.podLabels | object | `{}` | Labels for the all deployed pods |
-| global.securityContext | object | `{}` | Toggle and define securityContext. See [values.yaml] |
-| kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
-| nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
-| openshift.enabled | bool | `false` | enables using arbitrary uid for argo repo server |
-| server.additionalApplications | list | `[]` (See [values.yaml]) | Deploy Argo CD Applications within this helm release |
-| server.additionalProjects | list | `[]` (See [values.yaml]) | Deploy Argo CD Projects within this helm release |
 
 ## Argo CD Controller
 
@@ -889,7 +897,7 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [CSS styles]: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
 [external cluster credentials]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
 [FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
-[General Argo CD configuration]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repositories
+[Declarative setup]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup
 [gRPC-ingress]: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
 [HPA]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 [MetricRelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
