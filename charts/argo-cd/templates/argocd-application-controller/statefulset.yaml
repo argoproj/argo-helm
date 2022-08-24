@@ -78,11 +78,11 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         env:
-          - name: ARGOCD_CONTROLLER_REPLICAS
-            value: {{ .Values.controller.replicas | quote }}
           {{- with .Values.controller.env }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+          - name: ARGOCD_CONTROLLER_REPLICAS
+            value: {{ .Values.controller.replicas | quote }}
           {{- include "argo-cd.redisPasswordEnv" . | nindent 10 }}
         {{- with .Values.controller.envFrom }}
         envFrom:
