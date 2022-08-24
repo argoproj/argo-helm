@@ -1,10 +1,10 @@
----
+## Reference: https://github.com/helm/chart-releaser-action
 name: Chart Publish
 on:
   push:
     branches:
       - main
-      - rewrite-build
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -19,11 +19,8 @@ jobs:
 
       - name: Add dependency chart repos
         run: |
-          helm repo add argo https://argoproj.github.io/argo-helm
-          helm repo add minio https://helm.min.io/
           helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
-          helm repo add stable https://charts.helm.sh/stable
-          helm repo add incubator https://charts.helm.sh/incubator
+
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"

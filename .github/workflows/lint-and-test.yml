@@ -1,5 +1,4 @@
 ## Reference: https://github.com/helm/chart-testing-action
----
 name: Linting and Testing
 on: pull_request
 jobs: 
@@ -21,7 +20,10 @@ jobs:
 
       - name: Setup Chart Linting
         id: lint
-        uses: helm/chart-testing-action@v2.2.1
+        uses: helm/chart-testing-action@v2.3.0
+        with:
+          # Note: Also update in scripts/lint.sh
+          version: v3.7.0
 
       - name: List changed charts
         id: list-changed
