@@ -6,6 +6,9 @@ keepCRDs: true
 # -- `false` runs controller in namespaced mode (does not require cluster RBAC)
 clusterInstall: true
 
+# -- flag to enable creation of cluster aggregate roles (requires cluster RBAC)
+createClusterAggregateRoles: true
+
 # -- String to partially override "argo-rollouts.fullname" template
 nameOverride:
 
@@ -79,6 +82,9 @@ controller:
   #  requests:
   #    cpu: 50m
   #    memory: 64Mi
+
+  # -- flag to enable creation of cluster controller role (requires cluster RBAC)
+  createClusterRole: true
 
   metrics:
     # -- Deploy metrics service
@@ -181,6 +187,10 @@ dashboard:
   affinity: {}
   # -- [priorityClassName] for the dashboard server
   priorityClassName: ""
+
+  # -- flag to enable creation of dashbord cluster role (requires cluster RBAC)
+  createClusterRole: true
+
   # -- The number of dashboard pods to run
   replicas: 1
   image:
