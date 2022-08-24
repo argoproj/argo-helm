@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v2.4.11
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.0.0
+version: 5.1.0
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 keywords:
@@ -21,6 +21,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Removed]: Legacy support to run controller as a Deployment"
-    - "[Removed]: Legacy support to use old format of repository secrets"
-    - "[Removed]: Parameters server.additionalApplications and server.additionalProjects are moved to a separate chart - argocd-apps"
+    - [Added]: Ability to customize HPAs spec.behavior field"
