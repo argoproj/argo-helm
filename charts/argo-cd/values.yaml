@@ -13,6 +13,10 @@ kubeVersionOverride: ""
 crds:
   # -- Install and upgrade CRDs
   install: true
+  # -- Keep CRDs on chart uninstall
+  keep: true
+  # -- Annotations to be added to all CRDs
+  annotations: {}
 
 global:
   image:

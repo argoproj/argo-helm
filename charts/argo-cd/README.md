@@ -324,7 +324,9 @@ NAME: my-release
 | apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling rendered by this helm chart |
 | apiVersionOverrides.certmanager | string | `""` | String to override apiVersion of certmanager resources rendered by this helm chart |
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
+| crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
+| crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
