@@ -1,4 +1,6 @@
 images:
+  # -- Common tag for Argo Workflows images. Defaults to `.Chart.AppVersion`.
+  tag: ""
   # -- imagePullPolicy to apply to all containers
   pullPolicy: Always
   # -- Secrets with credentials to pull images from a private registry
@@ -45,7 +47,7 @@ controller:
     registry: quay.io
     # -- Registry to use for the controller
     repository: argoproj/workflow-controller
-    # -- Overrides the image tag whose default is the chart appVersion.
+    # -- Image tag for the workflow controller. Defaults to `.Values.images.tag`.
     tag: ""
   # -- parallelism dictates how many workflows can be running at the same time
   parallelism:
@@ -280,7 +282,7 @@ executor:
     registry: quay.io
     # -- Repository to use for the Workflow Executors
     repository: argoproj/argoexec
-    # -- Overrides the image tag whose default is the chart appVersion.
+    # -- Image tag for the workflow executor. Defaults to `.Values.images.tag`.
     tag: ""
   # -- Resource limits and requests for the Workflow Executors
   resources: {}
@@ -302,7 +304,7 @@ server:
     registry: quay.io
     # -- Repository to use for the server
     repository: argoproj/argocli
-    # -- Overrides the image tag whose default is the chart appVersion.
+    # -- Image tag for the Argo Workflows server. Defaults to `.Values.images.tag`.
     tag: ""
   # -- optional map of annotations to be applied to the ui Deployment
   deploymentAnnotations: {}
@@ -500,7 +502,8 @@ artifactRepository:
     secretKeySecret:
       # name: <releaseName>-minio
       key: secretkey
-    insecure: true
+    # insecure will disable TLS. Primarily used for minio installs not configured with TLS
+    insecure: false
     # bucket:
     # endpoint:
     # region:

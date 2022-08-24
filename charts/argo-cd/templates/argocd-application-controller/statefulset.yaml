@@ -1,18 +1,16 @@
 {{- $redisHa := (index .Values "redis-ha") -}}
 apiVersion: apps/v1
-kind: {{ .Values.controller.enableStatefulSet | ternary "StatefulSet" "Deployment" }}
+kind: StatefulSet
 metadata:
   name: {{ template "argo-cd.controller.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default (include "argo-cd.defaultTag" .) .Values.controller.image.tag | quote }}
+    app.kubernetes.io/version: {{ default (include "argo-cd.defaultTag" .) .Values.controller.image.tag | trunc 63 | quote }}
 spec:
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
-  {{- if  .Values.controller.enableStatefulSet }}
   serviceName: {{ template "argo-cd.controller.fullname" . }}
-  {{- end }}
   revisionHistoryLimit: 5
   replicas: {{ .Values.controller.replicas }}
   template:
@@ -25,7 +23,7 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ default (include "argo-cd.defaultTag" .) .Values.controller.image.tag | quote }}
+        app.kubernetes.io/version: {{ default (include "argo-cd.defaultTag" .) .Values.controller.image.tag | trunc 63 | quote }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.controller.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}

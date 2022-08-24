@@ -28,7 +28,7 @@ redis-ha:
   enabled: true
 
 controller:
-  enableStatefulSet: true
+  replicas: 1
 
 server:
   autoscaling:
@@ -39,6 +39,9 @@ repoServer:
   autoscaling:
     enabled: true
     minReplicas: 2
+
+applicationSet:
+  replicas: 2
 ```
 
 ### HA mode without autoscaling
@@ -48,15 +51,15 @@ redis-ha:
   enabled: true
 
 controller:
-  enableStatefulSet: true
+  replicas: 1
 
 server:
   replicas: 2
-  env:
-    - name: ARGOCD_API_SERVER_REPLICAS
-      value: '2'
 
 repoServer:
+  replicas: 2
+
+applicationSet:
   replicas: 2
 ```
 
@@ -91,13 +94,13 @@ Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs
 Please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
 
 ```bash
-kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=<appVersion>
+kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVersion>"
 
-# Eg. version v2.4.2
-kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=v2.4.2
+# Eg. version v2.4.9
+kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
 
-### 4.10.0
+### 5.1.0
 
 Custom resource definitions were moved to `templates` folder so they can be managed by Helm.
 
@@ -113,6 +116,92 @@ for crd in "applications.argoproj.io" "applicationsets.argoproj.io" "argocdexten
   kubectl annotate --overwrite crd $crd meta.helm.sh/release-name="$YOUR_ARGOCD_RELEASENAME"
 done
 ```
+
+### 5.0.0
+
+This version **removes support for**:
+
+- deprecated repository credentials (parameter `configs.repositoryCredentials`)
+- option to run application controller as a Deployment
+- the parameters `server.additionalApplications` and `server.additionalProjects`
+
+Please carefully read the following section if you are using these parameters!
+
+In order to upgrade Applications and Projects safely against CRDs' upgrade, `server.additionalApplications` and `server.additionalProjects` are moved to [argocd-apps](../argocd-apps).
+
+If you are using `server.additionalApplications` or `server.additionalProjects`, you can adopt to [argocd-apps](../argocd-apps) as below:
+
+1. Add [helm.sh/resource-policy annotation](https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource) to avoid resources being removed by upgrading Helm chart
+
+You can keep your existing CRDs by adding `"helm.sh/resource-policy": keep` on `additionalAnnotations`, under `server.additionalApplications` and `server.additionalProjects` blocks, and running `helm upgrade`.
+
+e.g:
+
+```yaml
+server:
+  additionalApplications:
+    - name: guestbook
+      namespace: argocd
+      additionalLabels: {}
+      additionalAnnotations:
+        "helm.sh/resource-policy": keep # <-- add this
+      finalizers:
+      - resources-finalizer.argocd.argoproj.io
+      project: guestbook
+      source:
+        repoURL: https://github.com/argoproj/argocd-example-apps.git
+        targetRevision: HEAD
+        path: guestbook
+        directory:
+          recurse: true
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: guestbook
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: false
+      ignoreDifferences:
+      - group: apps
+        kind: Deployment
+        jsonPointers:
+        - /spec/replicas
+      info:
+      - name: url
+        value: https://argoproj.github.io/
+```
+
+You can also keep your existing CRDs by running the following scripts.
+
+```bash
+# keep Applications
+for app in "guestbook"; do
+  kubectl annotate --overwrite application $app helm.sh/resource-policy=keep
+done
+
+# keep Projects
+for project in "guestbook"; do
+  kubectl annotate --overwrite appproject $project helm.sh/resource-policy=keep
+done
+```
+
+2. Upgrade argo-cd Helm chart to v5.0.0
+
+3. Remove keep [helm.sh/resource-policy annotation](https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource)
+
+```bash
+# delete annotations from Applications
+for app in "guestbook"; do
+  kubectl annotate --overwrite application $app helm.sh/resource-policy-
+done
+
+# delete annotations from Projects
+for project in "guestbook"; do
+  kubectl annotate --overwrite appproject $project helm.sh/resource-policy-
+done
+```
+
+4. Adopt existing resources to [argocd-apps](../argocd-apps)
 
 ### 4.9.0
 
@@ -234,10 +323,20 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}
-  {{- if not (or (hasPrefix "controller" .Key) (hasPrefix "repoServer" .Key) (hasPrefix "server" .Key) (hasPrefix "dex" .Key) (hasPrefix "redis" .Key) (hasPrefix "externalRedis" .Key) (hasPrefix "applicationSet" .Key) (hasPrefix "notifications" .Key) ) }}
+  {{- if not (or  (hasPrefix "configs" .Key) (hasPrefix "controller" .Key) (hasPrefix "repoServer" .Key) (hasPrefix "server" .Key) (hasPrefix "dex" .Key) (hasPrefix "redis" .Key) (hasPrefix "externalRedis" .Key) (hasPrefix "applicationSet" .Key) (hasPrefix "notifications" .Key) ) }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
   {{- if hasPrefix "server.additional" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+## Argo CD Configs
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "configs" .Key }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
@@ -307,6 +406,11 @@ The main options are listed here:
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
+| redis-ha.exporter.image | string | `nil` (follows subchart default) | Exporter image |
+| redis-ha.exporter.tag | string | `nil` (follows subchart default) | Exporter tag |
+| redis-ha.haproxy.image.repository | string | `nil` (follows subchart default) | HAProxy Image Repository |
+| redis-ha.haproxy.image.tag | string | `nil` (follows subchart default) | HAProxy Image Tag |
+| redis-ha.image.repository | string | `nil` (follows subchart default) | Redis image repository |
 
 ### Option 3 - External Redis
 
@@ -373,7 +477,7 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [CSS styles]: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
 [external cluster credentials]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
 [FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
-[General Argo CD configuration]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repositories
+[Declarative setup]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup
 [gRPC-ingress]: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
 [HPA]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 [MetricRelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs

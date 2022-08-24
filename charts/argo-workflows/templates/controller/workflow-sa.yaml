@@ -5,6 +5,8 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ $.Values.workflow.serviceAccount.name }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" $ "component" $.Values.controller.name "name" $.Values.controller.name) | nindent 4 }}
     {{- with $namespace }}
   namespace: {{ . }}
     {{- end }}

@@ -9,8 +9,8 @@ data:
     eventBus:
       {{- if .Values.configs.nats.versions }}
       nats:
-        {{- range .Values.configs.nats.versions }}
         versions:
+        {{- range .Values.configs.nats.versions }}
         - version: {{ .version }}
           natsStreamingImage: {{ .natsStreamingImage }}
           metricsExporterImage: {{ .metricsExporterImage }}
@@ -24,14 +24,15 @@ data:
           # Only configure "max_memory_store" or "max_file_store", do not set "store_dir" as it has been hardcoded.
           max_memory_store: {{ .Values.configs.jetstream.settings.maxMemoryStore | default -1 }}
           max_file_store: {{ .Values.configs.jetstream.settings.maxFileStore | default -1 }}
+        # The default properties of the streams to be created in this JetStream service
         streamConfig: |
           maxMsgs: {{ .Values.configs.jetstream.streamConfig.maxMsgs }}
           maxAge: {{ .Values.configs.jetstream.streamConfig.maxAge }}
           maxBytes: {{ .Values.configs.jetstream.streamConfig.maxBytes }}
           replicas: {{ .Values.configs.jetstream.streamConfig.replicas }}
           duplicates: {{ .Values.configs.jetstream.streamConfig.duplicates }}
-        {{- range .Values.configs.jetstream.versions }}
         versions:
+        {{- range .Values.configs.jetstream.versions }}
         - version: {{ .version }}
           natsImage: {{ .natsImage }}
           metricsExporterImage: {{ .metricsExporterImage }}

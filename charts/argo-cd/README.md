@@ -28,7 +28,7 @@ redis-ha:
   enabled: true
 
 controller:
-  enableStatefulSet: true
+  replicas: 1
 
 server:
   autoscaling:
@@ -39,6 +39,9 @@ repoServer:
   autoscaling:
     enabled: true
     minReplicas: 2
+
+applicationSet:
+  replicas: 2
 ```
 
 ### HA mode without autoscaling
@@ -48,15 +51,15 @@ redis-ha:
   enabled: true
 
 controller:
-  enableStatefulSet: true
+  replicas: 1
 
 server:
   replicas: 2
-  env:
-    - name: ARGOCD_API_SERVER_REPLICAS
-      value: '2'
 
 repoServer:
+  replicas: 2
+
+applicationSet:
   replicas: 2
 ```
 
@@ -91,13 +94,13 @@ Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs
 Please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
 
 ```bash
-kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=<appVersion>
+kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVersion>"
 
-# Eg. version v2.4.2
-kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=v2.4.2
+# Eg. version v2.4.9
+kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
 
-### 4.10.0
+### 5.1.0
 
 Custom resource definitions were moved to `templates` folder so they can be managed by Helm.
 
@@ -113,6 +116,92 @@ for crd in "applications.argoproj.io" "applicationsets.argoproj.io" "argocdexten
   kubectl annotate --overwrite crd $crd meta.helm.sh/release-name="$YOUR_ARGOCD_RELEASENAME"
 done
 ```
+
+### 5.0.0
+
+This version **removes support for**:
+
+- deprecated repository credentials (parameter `configs.repositoryCredentials`)
+- option to run application controller as a Deployment
+- the parameters `server.additionalApplications` and `server.additionalProjects`
+
+Please carefully read the following section if you are using these parameters!
+
+In order to upgrade Applications and Projects safely against CRDs' upgrade, `server.additionalApplications` and `server.additionalProjects` are moved to [argocd-apps](../argocd-apps).
+
+If you are using `server.additionalApplications` or `server.additionalProjects`, you can adopt to [argocd-apps](../argocd-apps) as below:
+
+1. Add [helm.sh/resource-policy annotation](https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource) to avoid resources being removed by upgrading Helm chart
+
+You can keep your existing CRDs by adding `"helm.sh/resource-policy": keep` on `additionalAnnotations`, under `server.additionalApplications` and `server.additionalProjects` blocks, and running `helm upgrade`.
+
+e.g:
+
+```yaml
+server:
+  additionalApplications:
+    - name: guestbook
+      namespace: argocd
+      additionalLabels: {}
+      additionalAnnotations:
+        "helm.sh/resource-policy": keep # <-- add this
+      finalizers:
+      - resources-finalizer.argocd.argoproj.io
+      project: guestbook
+      source:
+        repoURL: https://github.com/argoproj/argocd-example-apps.git
+        targetRevision: HEAD
+        path: guestbook
+        directory:
+          recurse: true
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: guestbook
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: false
+      ignoreDifferences:
+      - group: apps
+        kind: Deployment
+        jsonPointers:
+        - /spec/replicas
+      info:
+      - name: url
+        value: https://argoproj.github.io/
+```
+
+You can also keep your existing CRDs by running the following scripts.
+
+```bash
+# keep Applications
+for app in "guestbook"; do
+  kubectl annotate --overwrite application $app helm.sh/resource-policy=keep
+done
+
+# keep Projects
+for project in "guestbook"; do
+  kubectl annotate --overwrite appproject $project helm.sh/resource-policy=keep
+done
+```
+
+2. Upgrade argo-cd Helm chart to v5.0.0
+
+3. Remove keep [helm.sh/resource-policy annotation](https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource)
+
+```bash
+# delete annotations from Applications
+for app in "guestbook"; do
+  kubectl annotate --overwrite application $app helm.sh/resource-policy-
+done
+
+# delete annotations from Projects
+for project in "guestbook"; do
+  kubectl annotate --overwrite appproject $project helm.sh/resource-policy-
+done
+```
+
+4. Adopt existing resources to [argocd-apps](../argocd-apps)
 
 ### 4.9.0
 
@@ -232,32 +321,9 @@ NAME: my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling rendered by this helm chart |
 | apiVersionOverrides.certmanager | string | `""` | String to override apiVersion of certmanager resources rendered by this helm chart |
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
-| configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
-| configs.credentialTemplates | object | `{}` | Repository credentials to be used as Templates for other repos |
-| configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
-| configs.gpgKeys | object | `{}` (See [values.yaml]) | [GnuPG](https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/) keys to add to the key ring |
-| configs.gpgKeysAnnotations | object | `{}` | GnuPG key ring annotations |
-| configs.knownHosts.data.ssh_known_hosts | string | See [values.yaml] | Known Hosts |
-| configs.knownHostsAnnotations | object | `{}` | Known Hosts configmap annotations |
-| configs.repositories | object | `{}` | Repositories list to be used by applications |
-| configs.repositoriesAnnotations | object | `{}` | Annotations to be added to `configs.repositories` Secret |
-| configs.repositoryCredentials | object | `{}` | *DEPRECATED:* Instead, use `configs.credentialTemplates` and/or `configs.repositories` |
-| configs.secret.annotations | object | `{}` | Annotations to be added to argocd-secret |
-| configs.secret.argocdServerAdminPassword | string | `""` | Bcrypt hashed admin password |
-| configs.secret.argocdServerAdminPasswordMtime | string | `""` (defaults to current time) | Admin password modification time. Eg. `"2006-01-02T15:04:05Z"` |
-| configs.secret.argocdServerTlsConfig | object | `{}` | Argo TLS Data |
-| configs.secret.bitbucketServerSecret | string | `""` | Shared secret for authenticating BitbucketServer webhook events |
-| configs.secret.bitbucketUUID | string | `""` | UUID for authenticating Bitbucket webhook events |
-| configs.secret.createSecret | bool | `true` | Create the argocd-secret |
-| configs.secret.extra | object | `{}` | add additional secrets to be added to argocd-secret |
-| configs.secret.githubSecret | string | `""` | Shared secret for authenticating GitHub webhook events |
-| configs.secret.gitlabSecret | string | `""` | Shared secret for authenticating GitLab webhook events |
-| configs.secret.gogsSecret | string | `""` | Shared secret for authenticating Gogs webhook events |
-| configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |
-| configs.tlsCerts | object | See [values.yaml] | TLS certificate |
-| configs.tlsCertsAnnotations | object | `{}` | TLS certificate configmap annotations |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
@@ -276,8 +342,34 @@ NAME: my-release
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
 | openshift.enabled | bool | `false` | enables using arbitrary uid for argo repo server |
-| server.additionalApplications | list | `[]` (See [values.yaml]) | Deploy Argo CD Applications within this helm release |
-| server.additionalProjects | list | `[]` (See [values.yaml]) | Deploy Argo CD Projects within this helm release |
+
+## Argo CD Configs
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
+| configs.credentialTemplates | object | `{}` | Repository credentials to be used as Templates for other repos |
+| configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
+| configs.gpgKeys | object | `{}` (See [values.yaml]) | [GnuPG](https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/) keys to add to the key ring |
+| configs.gpgKeysAnnotations | object | `{}` | GnuPG key ring annotations |
+| configs.knownHosts.data.ssh_known_hosts | string | See [values.yaml] | Known Hosts |
+| configs.knownHostsAnnotations | object | `{}` | Known Hosts configmap annotations |
+| configs.repositories | object | `{}` | Repositories list to be used by applications |
+| configs.repositoriesAnnotations | object | `{}` | Annotations to be added to `configs.repositories` Secret |
+| configs.secret.annotations | object | `{}` | Annotations to be added to argocd-secret |
+| configs.secret.argocdServerAdminPassword | string | `""` | Bcrypt hashed admin password |
+| configs.secret.argocdServerAdminPasswordMtime | string | `""` (defaults to current time) | Admin password modification time. Eg. `"2006-01-02T15:04:05Z"` |
+| configs.secret.argocdServerTlsConfig | object | `{}` | Argo TLS Data |
+| configs.secret.bitbucketServerSecret | string | `""` | Shared secret for authenticating BitbucketServer webhook events |
+| configs.secret.bitbucketUUID | string | `""` | UUID for authenticating Bitbucket webhook events |
+| configs.secret.createSecret | bool | `true` | Create the argocd-secret |
+| configs.secret.extra | object | `{}` | add additional secrets to be added to argocd-secret |
+| configs.secret.githubSecret | string | `""` | Shared secret for authenticating GitHub webhook events |
+| configs.secret.gitlabSecret | string | `""` | Shared secret for authenticating GitLab webhook events |
+| configs.secret.gogsSecret | string | `""` | Shared secret for authenticating Gogs webhook events |
+| configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |
+| configs.tlsCerts | object | See [values.yaml] | TLS certificate |
+| configs.tlsCertsAnnotations | object | `{}` | TLS certificate configmap annotations |
 
 ## Argo CD Controller
 
@@ -294,7 +386,6 @@ NAME: my-release
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
 | controller.containerPort | int | `8082` | Application controller listening port |
 | controller.containerSecurityContext | object | `{}` | Application controller container-level security context |
-| controller.enableStatefulSet | bool | `true` | Deploy the application controller as a StatefulSet instead of a Deployment, this is required for HA capability. |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to application controller |
@@ -658,14 +749,14 @@ NAME: my-release
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
-| redis.image.repository | string | `"redis"` | Redis repository |
-| redis.image.tag | string | `"7.0.0-alpine"` | Redis tag |
+| redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
+| redis.image.tag | string | `"7.0.4-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
 | redis.metrics.image.imagePullPolicy | string | `"IfNotPresent"` | redis-exporter image PullPolicy |
-| redis.metrics.image.repository | string | `"bitnami/redis-exporter"` | redis-exporter image repository |
+| redis.metrics.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
 | redis.metrics.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
 | redis.metrics.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.metrics.service.annotations | object | `{}` | Metrics service annotations |
@@ -715,14 +806,9 @@ The main options are listed here:
 |-----|------|---------|-------------|
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
 | redis-ha.exporter.enabled | bool | `true` | If `true`, the prometheus exporter sidecar is enabled |
-| redis-ha.exporter.image | string | `nil` (follows subchart default) | Exporter image |
-| redis-ha.exporter.tag | string | `nil` (follows subchart default) | Exporter tag |
 | redis-ha.haproxy.enabled | bool | `true` | Enabled HAProxy LoadBalancing/Proxy |
-| redis-ha.haproxy.image.repository | string | `nil` (follows subchart default) | HAProxy Image Repository |
-| redis-ha.haproxy.image.tag | string | `nil` (follows subchart default) | HAProxy Image Tag |
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
-| redis-ha.image.repository | string | `nil` (follows subchart default) | Redis image repository |
-| redis-ha.image.tag | string | `"7.0.0-alpine"` | Redis tag |
+| redis-ha.image.tag | string | `"7.0.4-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistency on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
@@ -731,6 +817,11 @@ The main options are listed here:
 | redis-ha.topologySpreadConstraints.maxSkew | string | `""` (defaults to `1`) | Max skew of pods tolerated |
 | redis-ha.topologySpreadConstraints.topologyKey | string | `""` (defaults to `topology.kubernetes.io/zone`) | Topology key for spread |
 | redis-ha.topologySpreadConstraints.whenUnsatisfiable | string | `""` (defaults to `ScheduleAnyway`) | Enforcement policy, hard or soft |
+| redis-ha.exporter.image | string | `nil` (follows subchart default) | Exporter image |
+| redis-ha.exporter.tag | string | `nil` (follows subchart default) | Exporter tag |
+| redis-ha.haproxy.image.repository | string | `nil` (follows subchart default) | HAProxy Image Repository |
+| redis-ha.haproxy.image.tag | string | `nil` (follows subchart default) | HAProxy Image Tag |
+| redis-ha.image.repository | string | `nil` (follows subchart default) | Redis image repository |
 
 ### Option 3 - External Redis
 
@@ -908,7 +999,7 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [CSS styles]: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
 [external cluster credentials]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
 [FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
-[General Argo CD configuration]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repositories
+[Declarative setup]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup
 [gRPC-ingress]: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
 [HPA]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 [MetricRelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs

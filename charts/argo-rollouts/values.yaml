@@ -6,6 +6,9 @@ keepCRDs: true
 # -- `false` runs controller in namespaced mode (does not require cluster RBAC)
 clusterInstall: true
 
+# -- flag to enable creation of cluster aggregate roles (requires cluster RBAC)
+createClusterAggregateRoles: true
+
 # -- String to partially override "argo-rollouts.fullname" template
 nameOverride:
 
@@ -21,6 +24,19 @@ apiVersionOverrides:
 
 # -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
+
+# -- Additional manifests to deploy within the chart. A list of objects.
+## Can be used to add secrets for Analysis with 3rd-party monitoring solutions.
+extraObjects: []
+  # - apiVersion: v1
+  #   kind: Secret
+  #   metadata:
+  #     name: datadog
+  #   type: Opaque
+  #   data:
+  #     address: https://api.datadoghq.com
+  #     api-key: <datadog-api-key>
+  #     app-key: <datadog-app-key>
 
 controller:
   # -- Value of label `app.kubernetes.io/component`
@@ -66,6 +82,9 @@ controller:
   #  requests:
   #    cpu: 50m
   #    memory: 64Mi
+
+  # -- flag to enable creation of cluster controller role (requires cluster RBAC)
+  createClusterRole: true
 
   metrics:
     # -- Deploy metrics service
@@ -168,6 +187,10 @@ dashboard:
   affinity: {}
   # -- [priorityClassName] for the dashboard server
   priorityClassName: ""
+
+  # -- flag to enable creation of dashbord cluster role (requires cluster RBAC)
+  createClusterRole: true
+
   # -- The number of dashboard pods to run
   replicas: 1
   image:

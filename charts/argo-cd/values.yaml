@@ -58,6 +58,8 @@ apiVersionOverrides:
   certmanager: "" # cert-manager.io/v1
   # -- String to override apiVersion of ingresses rendered by this helm chart
   ingress: "" # networking.k8s.io/v1beta1
+  # -- String to override apiVersion of autoscaling rendered by this helm chart
+  autoscaling: "" # autoscaling/v2
 
 # -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -110,9 +112,6 @@ controller:
   # -- The number of application controller pods to run.
   # If changing the number of replicas you must pass the number as `ARGOCD_CONTROLLER_REPLICAS` as an environment variable
   replicas: 1
-
-  # -- Deploy the application controller as a StatefulSet instead of a Deployment, this is required for HA capability.
-  enableStatefulSet: true
 
   ## Application controller commandline flags
   args:
@@ -596,9 +595,9 @@ redis:
 
   image:
     # -- Redis repository
-    repository: redis
+    repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.0.0-alpine
+    tag: 7.0.4-alpine
     # -- Redis imagePullPolicy
     imagePullPolicy: IfNotPresent
 
@@ -714,7 +713,7 @@ redis:
     enabled: false
     image:
       # -- redis-exporter image repository
-      repository: bitnami/redis-exporter
+      repository: public.ecr.aws/bitnami/redis-exporter
       # -- redis-exporter image tag
       tag: 1.26.0-debian-10-r2
       # -- redis-exporter image PullPolicy
@@ -787,12 +786,6 @@ redis-ha:
   exporter:
     # -- If `true`, the prometheus exporter sidecar is enabled
     enabled: true
-    # -- Exporter image
-    # @default -- `nil` (follows subchart default)
-    image: ~
-    # -- Exporter tag
-    # @default -- `nil` (follows subchart default)
-    tag: ~
   persistentVolume:
     # -- Configures persistency on Redis nodes
     enabled: false
@@ -808,22 +801,12 @@ redis-ha:
   haproxy:
     # -- Enabled HAProxy LoadBalancing/Proxy
     enabled: true
-    image:
-      # -- HAProxy Image Repository
-      # @default -- `nil` (follows subchart default)
-      repository: ~
-      # -- HAProxy Image Tag
-      # @default -- `nil` (follows subchart default)
-      tag: ~
     metrics:
       # -- HAProxy enable prometheus metric scraping
       enabled: true
   image:
-    # -- Redis image repository
-    # @default -- `nil` (follows subchart default)
-    repository: ~
     # -- Redis tag
-    tag: 7.0.0-alpine
+    tag: 7.0.4-alpine
 
   ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints:
@@ -1232,7 +1215,7 @@ server:
     # Argo CD instance label key
     application.instanceLabelKey: argocd.argoproj.io/instance
 
-    # Enabled logs RBAC enforcement
+    # Enable logs RBAC enforcement
     # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.3-2.4/#enable-logs-rbac-enforcement
     server.rbac.log.enforce.enable: "false"
 
@@ -1240,18 +1223,21 @@ server:
     # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/rbac/#exec-resource
     exec.enabled: "false"
 
-    # DEPRECATED: Please instead use configs.credentialTemplates and configs.repositories
-    # repositories: |
-    #   - url: git@github.com:group/repo.git
-    #     sshPrivateKeySecret:
-    #       name: secret-name
-    #       key: sshPrivateKey
-    #   - type: helm
-    #     url: https://charts.helm.sh/stable
-    #     name: stable
-    #   - type: helm
-    #     url: https://argoproj.github.io/argo-helm
-    #     name: argo
+    # admin.enabled indicates whether the admin user is enabled. It is enabled by default.
+    # https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
+    admin.enabled: "true"
+
+    # dex.config: |
+    #   connectors:
+    #     # GitHub example
+    #     - type: github
+    #       id: github
+    #       name: GitHub
+    #       config:
+    #         clientID: aabbccddeeff00112233
+    #         clientSecret: $dex.github.clientSecret # Alternatively $<some_K8S_secret>:dex.github.clientSecret
+    #         orgs:
+    #         - name: your-github-org
 
     # oidc.config: |
     #   name: AzureAD
@@ -1298,83 +1284,6 @@ server:
   # -- Whether or not to create the configmap. If false, it is expected the configmap will be created
   # by something else. Argo CD will not work if there is no configMap created with the name above.
   rbacConfigCreate: true
-
-  # -- Deploy Argo CD Applications within this helm release
-  # @default -- `[]` (See [values.yaml])
-  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
-  additionalApplications: []
-  # - name: guestbook
-  #   namespace: argocd
-  #   additionalLabels: {}
-  #   additionalAnnotations: {}
-  #   finalizers:
-  #   - resources-finalizer.argocd.argoproj.io
-  #   project: guestbook
-  #   source:
-  #     repoURL: https://github.com/argoproj/argocd-example-apps.git
-  #     targetRevision: HEAD
-  #     path: guestbook
-  #     directory:
-  #       recurse: true
-  #   destination:
-  #     server: https://kubernetes.default.svc
-  #     namespace: guestbook
-  #   syncPolicy:
-  #     automated:
-  #       prune: false
-  #       selfHeal: false
-  #   ignoreDifferences:
-  #   - group: apps
-  #     kind: Deployment
-  #     jsonPointers:
-  #     - /spec/replicas
-  #   info:
-  #   - name: url
-  #     value: https://argoproj.github.io/
-
-  # -- Deploy Argo CD Projects within this helm release
-  # @default -- `[]` (See [values.yaml])
-  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
-  additionalProjects: []
-  # - name: guestbook
-  #   namespace: argocd
-  #   additionalLabels: {}
-  #   additionalAnnotations: {}
-  #   finalizers:
-  #   - resources-finalizer.argocd.argoproj.io
-  #   description: Example Project
-  #   sourceRepos:
-  #   - '*'
-  #   destinations:
-  #   - namespace: guestbook
-  #     server: https://kubernetes.default.svc
-  #   clusterResourceWhitelist: []
-  #   clusterResourceBlacklist: []
-  #   namespaceResourceBlacklist:
-  #   - group: ''
-  #     kind: ResourceQuota
-  #   - group: ''
-  #     kind: LimitRange
-  #   - group: ''
-  #     kind: NetworkPolicy
-  #     orphanedResources: {}
-  #     roles: []
-  #   namespaceResourceWhitelist:
-  #   - group: 'apps'
-  #     kind: Deployment
-  #   - group: 'apps'
-  #     kind: StatefulSet
-  #   orphanedResources: {}
-  #   roles: []
-  #   syncWindows:
-  #   - kind: allow
-  #     schedule: '10 1 * * *'
-  #     duration: 1h
-  #     applications:
-  #     - '*-prod'
-  #     manualSync: true
-  #   signatureKeys:
-  #   - keyID: ABCDEF1234567890
 
   ## Enable Admin ClusterRole resources.
   ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.
@@ -1867,9 +1776,6 @@ configs:
     #     +LB9LGh4OAp68ImTjqf6ioGKG0RBSznwME+r4nXtT1S/qLR6ASWUS4ViWRhbRlNK
     #     XWyb96wrUlv+E8I=
     #     -----END CERTIFICATE-----
-
-  # -- *DEPRECATED:* Instead, use `configs.credentialTemplates` and/or `configs.repositories`
-  repositoryCredentials: {}
 
   # -- Repository credentials to be used as Templates for other repos
   ## Creates a secret for each key/value specified below to create repository credentials

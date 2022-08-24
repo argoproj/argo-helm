@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: v1.7.0
+appVersion: v1.7.1
 description: A Helm chart for Argo Events, the event-driven workflow automation framework
 name: argo-events
-version: 2.0.0
+version: 2.0.3
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-events/assets/logo.png
 keywords:
@@ -11,17 +11,9 @@ keywords:
 sources:
   - https://github.com/argoproj/argo-events
 maintainers:
+  - name: pdrastil
   - name: VaibhavPage
   - name: whynowy
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Argo events controller for v1.7.0"
-    - "[Added]: Argo events addmission webhook deployment"
-    - "[Added]: Global configuration options for all deployments"
-    - "[Added]: Pod disruption budgets for HA deployments"
-    - "[Added]: Support for Prometheus metrics on controller deployment"
-    - "[Changed]: Enable cluster-wide deployment by default"
-    - "[Removed]: Deprecated EventBus controller deployment"
-    - "[Removed]: Deprecated EventSource controller deployment"
-    - "[Removed]: Deprecated Sensor controller deployment"
-    - "[Removed]: Removed RBAC that allowed controller to create / modify CRDs"
+    - "[Fixed]: Fixed selectorLabel of ServiceMonitor that doesn't match metrics Service"
