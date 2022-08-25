@@ -40,6 +40,10 @@ spec:
           command:
             - entrypoint.sh
             - argocd-applicationset-controller
+            - --logformat
+            - {{ default .Values.global.logging.format .Values.applicationSet.logFormat }}
+            - --loglevel
+            - {{ default .Values.global.logging.level .Values.applicationSet.logLevel }}
             - --metrics-addr={{ .Values.applicationSet.args.metricsAddr }}
             - --probe-addr={{ .Values.applicationSet.args.probeBindAddr }}
             {{- if or (gt ( .Values.applicationSet.replicaCount | int64) 1) .Values.applicationSet.args.enableLeaderElection }}

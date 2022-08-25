@@ -53,9 +53,9 @@ spec:
         - http://{{ template "argo-cd.dex.fullname" . }}:{{ .Values.dex.servicePortHttp }}
         {{- end }}
         - --logformat
-        - {{ .Values.server.logFormat }}
+        - {{default .Values.global.logging.format .Values.server.logFormat }}
         - --loglevel
-        - {{ .Values.server.logLevel }}
+        - {{ default .Values.global.logging.level .Values.server.logLevel }}
         {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
         - --redis
         - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}

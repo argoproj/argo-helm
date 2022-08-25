@@ -26,6 +26,11 @@ global:
     tag: ""
     # -- If defined, a imagePullPolicy applied to all Argo CD deployments
     imagePullPolicy: IfNotPresent
+  logging:
+    # -- Set the global logging format. Either: `text` or `json`
+    format: text
+    # -- Set the global logging level. One of: `debug`, `info`, `warn` or `error`
+    level: info
   # -- Annotations for the all deployed pods
   podAnnotations: {}
   # -- Labels for the all deployed pods
@@ -131,9 +136,11 @@ controller:
     repoServerTimeoutSeconds: "60"
 
   # -- Application controller log format. Either `text` or `json`
-  logFormat: text
-  # -- Application controller log level
-  logLevel: info
+  # @default -- `""` (defaults to global.logging.format)
+  logFormat: ""
+  # -- Application controller log level. One of: `debug`, `info`, `warn` or `error`
+  # @default -- `""` (defaults to global.logging.level)
+  logLevel: ""
 
   # -- Additional command line arguments to pass to application controller
   extraArgs: []
@@ -906,9 +913,11 @@ server:
   lifecycle: {}
 
   # -- Argo CD server log format: Either `text` or `json`
-  logFormat: text
-  # -- Argo CD server log level
-  logLevel: info
+  # @default -- `""` (defaults to global.logging.format)
+  logFormat: ""
+  # -- Argo CD server log level. One of: `debug`, `info`, `warn` or `error`
+  # @default -- `""` (defaults to global.logging.level)
+  logLevel: ""
 
   # -- Annotations to be added to server pods
   podAnnotations: {}
@@ -1483,9 +1492,11 @@ repoServer:
   #     name: secret-name
 
   # -- Repo server log format: Either `text` or `json`
-  logFormat: text
-  # -- Repo server log level
-  logLevel: info
+  # @default -- `""` (defaults to global.logging.level)
+  logFormat: ""
+  # -- Repo server log level. One of: `debug`, `info`, `warn` or `error`
+  # @default -- `""` (defaults to global.logging.format)
+  logLevel: ""
 
   # -- Annotations to be added to repo server pods
   podAnnotations: {}
@@ -1947,6 +1958,13 @@ applicationSet:
     # -- Enable dry run mode
     dryRun: false
 
+  # -- ApplicationSet controller log format. Either `text` or `json`
+  # @default -- `""` (defaults to global.logging.format)
+  logFormat: ""
+  # -- ApplicationSet controller log level. One of: `debug`, `info`, `warn`, `error`
+  # @default -- `""` (defaults to global.logging.level)
+  logLevel: ""
+
   # -- Additional containers to be added to the applicationset controller pod
   extraContainers: []
 
@@ -2064,7 +2082,6 @@ applicationSet:
 
   # -- List of extra cli args to add
   extraArgs: []
-    # - --loglevel=warn
 
   # -- Environment variables to pass to the controller
   extraEnv: []
@@ -2187,10 +2204,12 @@ notifications:
       # email-password:
         # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/email/
 
-  # -- Set the logging level. (One of: `debug`, `info`, `warn`, `error`)
-  logLevel: info
   # -- Application controller log format. Either `text` or `json`
-  logFormat: text
+  # @default -- `""` (defaults to global.logging.format)
+  logFormat: ""
+  # -- Application controller log level. One of: `debug`, `info`, `warn`, `error`
+  # @default -- `""` (defaults to global.logging.level)
+  logLevel: ""
 
   # -- Extra arguments to provide to the controller
   extraArgs: []

@@ -41,8 +41,8 @@ spec:
             {{- toYaml .Values.notifications.resources | nindent 12 }}
           command:
             - argocd-notifications
-            - --loglevel={{ .Values.notifications.logLevel }}
-            - --logformat={{ .Values.notifications.logFormat }}
+            - --loglevel={{ default .Values.global.logging.level .Values.notifications.logLevel }}
+            - --logformat={{ default .Values.global.logging.format .Values.notifications.logFormat }}
             {{- if .Values.notifications.metrics.enabled }}
             - --metrics-port={{ .Values.notifications.metrics.port }}
             {{- end }}
