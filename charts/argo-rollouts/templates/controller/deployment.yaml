@@ -65,9 +65,9 @@ spec:
       {{- with .Values.controller.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
-      {{- if .Values.controller.initContainers }}
+      {{- with .Values.controller.initContainers }}
       initContainers:
-      {{- toYaml .Values.controller.initContainers | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- if .Values.controller.nodeSelector }}
       nodeSelector:
