@@ -145,6 +145,7 @@ spec:
             {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.controller.name) | nindent 12 }}
         {{- end }}
       {{- end }}
+      {{- end }}
       serviceAccountName: {{ template "argo-cd.controllerServiceAccountName" . }}
       {{- with .Values.global.hostAliases }}
       hostAliases:
