@@ -119,7 +119,7 @@ controller:
     imagePullPolicy: ""
 
   # -- The number of application controller pods to run.
-  # If changing the number of replicas you must pass the number as `ARGOCD_CONTROLLER_REPLICAS` as an environment variable
+  # Additional replicas will cause sharding of managed clusters across number of replicas.
   replicas: 1
 
   ## Application controller commandline flags
@@ -146,10 +146,7 @@ controller:
   extraArgs: []
 
   # -- Environment variables to pass to application controller
-  env:
-    []
-    # - name: "ARGOCD_CONTROLLER_REPLICAS"
-    #   value: ""
+  env: []
 
   # -- envFrom to pass to application controller
   # @default -- `[]` (See [values.yaml])
