@@ -51,9 +51,9 @@ spec:
         - --repo-server-timeout-seconds
         - {{ .Values.controller.args.repoServerTimeoutSeconds | quote }}
         - --logformat
-        - {{ .Values.controller.logFormat }}
+        - {{ default .Values.global.logging.format .Values.controller.logFormat }}
         - --loglevel
-        - {{ .Values.controller.logLevel }}
+        - {{ default .Values.global.logging.level .Values.controller.logLevel }}
         {{- if .Values.controller.metrics.applicationLabels.enabled }}
         {{- range .Values.controller.metrics.applicationLabels.labels }}
         - --metrics-application-labels
