@@ -137,14 +137,14 @@ spec:
       {{- end }}
       {{- with .Values.controller.topologySpreadConstraints }}
       topologySpreadConstraints:
-      {{- range $constraint := . }}
+        {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
-        {{- if not $constraint.labelSelector }}
+          {{- if not $constraint.labelSelector }}
         labelSelector:
           matchLabels:
             {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.controller.name) | nindent 12 }}
+          {{- end }}
         {{- end }}
-      {{- end }}
       {{- end }}
       serviceAccountName: {{ template "argo-cd.controllerServiceAccountName" . }}
       {{- with .Values.global.hostAliases }}
