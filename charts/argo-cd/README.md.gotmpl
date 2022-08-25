@@ -81,7 +81,7 @@ cd argo-cd
 git diff v1.8.7 v2.0.0 -- manifests/install.yaml
 ```
 
-Changes in the `CustomResourceDefinition` resources shall be fixed easily by copying 1:1 from the [`manifests/crds` folder](https://github.com/argoproj/argo-cd/tree/master/manifests/crds) into this [`charts/argo-cd/crds` folder](https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd/crds).
+Changes in the `CustomResourceDefinition` resources shall be fixed easily by copying 1:1 from the [`manifests/crds` folder](https://github.com/argoproj/argo-cd/tree/master/manifests/crds) into this [`charts/argo-cd/templates/crds` folder](https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd/templates/crds).
 
 ## Upgrading
 
