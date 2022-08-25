@@ -264,28 +264,6 @@ Return the default Argo CD app version
   {{- default .Chart.AppVersion .Values.global.image.tag }}
 {{- end -}}
 
-{{/*
-Create the name of the notifications controller secret to use
-*/}}
-{{- define "argo-cd.notifications.secretName" -}}
-{{- if .Values.notifications.secret.create -}}
-    {{ default (printf "%s-secret" (include "argo-cd.notifications.fullname" .)) .Values.notifications.secret.name }}
-{{- else -}}
-    {{ default "argocd-notifications-secret" .Values.notifications.secret.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the configmap to use
-*/}}
-{{- define "argo-cd.notifications.configMapName" -}}
-{{- if .Values.notifications.cm.create -}}
-    {{ default (printf "%s-cm" (include "argo-cd.notifications.fullname" .)) .Values.notifications.cm.name }}
-{{- else -}}
-    {{ default "argocd-notifications-cm" .Values.notifications.cm.name }}
-{{- end -}}
-{{- end -}}
-
 {{- define "argo-cd.redisPasswordEnv" -}}
   {{- if or .Values.externalRedis.password .Values.externalRedis.existingSecret }}
 - name: REDIS_PASSWORD
