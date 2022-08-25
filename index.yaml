@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Invalid yaml for controller topologySpreadConstraints"
+    apiVersion: v2
+    appVersion: v2.4.11
+    created: "2022-08-25T21:39:22.391020805Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.20.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: b38a625197599f658fcf9ec0e5e3e337c4f4bd85ef8c64a451f30821e5fb22f3
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.3.2/argo-cd-5.3.2.tgz
+    version: 5.3.2
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Env variable ARGOCD_CONTROLLER_REPLICAS is now automatically set by replica count"
     apiVersion: v2
     appVersion: v2.4.11
@@ -15664,4 +15693,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-08-25T11:35:36.792570143Z"
+generated: "2022-08-25T21:39:22.396696245Z"
