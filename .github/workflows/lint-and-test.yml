@@ -1,7 +1,7 @@
 ## Reference: https://github.com/helm/chart-testing-action
 name: Linting and Testing
 on: pull_request
-jobs: 
+jobs:
   chart-test:
     runs-on: ubuntu-latest
     steps:
@@ -37,7 +37,7 @@ jobs:
           fi
       - name: Run chart-testing (lint)
         run: ct lint --debug --config ./.github/configs/ct-lint.yaml --lint-conf ./.github/configs/lintconf.yaml
-      
+
       - name: Run docs-testing (helm-docs)
         id: helm-docs
         run: |
@@ -60,7 +60,7 @@ jobs:
         if: |
           contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater')
         run: |
-          kubectl apply -f charts/argo-cd/crds
+          kubectl apply -f charts/argo-cd/templates/crds
 
       - name: Skip HPA tests of ArgoCD
         if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
