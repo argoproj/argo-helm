@@ -2171,10 +2171,6 @@ notifications:
     # -- key:value pairs of annotations to be added to the secret
     annotations: {}
 
-    # -- The name of the secret to use.
-    ## If not set and create is true, the default name 'argocd-notifications-secret' is used
-    name: ""
-
     # -- Generic key:value pairs to be inserted into the secret
     ## Can be used for templates, notification services etc. Some examples given below.
     ## For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
@@ -2283,10 +2279,6 @@ notifications:
   cm:
     # -- Whether helm chart creates controller config map
     create: true
-
-    # -- The name of the config map to use.
-    ## If not set and create is true, the default name 'argocd-notifications-cm' is used
-    name: ""
 
   # -- Contains centrally managed global application subscriptions
   ## For more information: https://argocd-notifications.readthedocs.io/en/stable/subscriptions/
