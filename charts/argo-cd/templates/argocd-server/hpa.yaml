@@ -13,7 +13,7 @@ spec:
   minReplicas: {{ .Values.server.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.server.autoscaling.maxReplicas }}
   metrics:
-{{- with .Values.server.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- with .Values.server.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
@@ -24,8 +24,8 @@ spec:
           averageUtilization: {{ . }}
           type: Utilization
         {{- end }}
-{{- end }}
-{{- with .Values.server.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- with .Values.server.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
@@ -36,5 +36,9 @@ spec:
           averageUtilization: {{ . }}
           type: Utilization
         {{- end }}
-{{- end }}
+  {{- end }}
+  {{- with .Values.server.autoscaling.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
