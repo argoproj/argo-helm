@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Removal of duplicate mapping key annotations in crds"
+    apiVersion: v2
+    appVersion: v2.4.11
+    created: "2022-08-25T22:09:37.641186444Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.20.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 858a8b52196de425f2e51a20dc6ce3526bed041abf82855fda11d8dbd10cd75c
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.3.3/argo-cd-5.3.3.tgz
+    version: 5.3.3
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Invalid yaml for controller topologySpreadConstraints"
     apiVersion: v2
     appVersion: v2.4.11
@@ -15693,4 +15722,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-08-25T21:39:22.396696245Z"
+generated: "2022-08-25T22:09:37.646826706Z"
