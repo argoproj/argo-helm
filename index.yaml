@@ -1588,6 +1588,36 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Move notification configs to config folder"
+        - "[Changed]: Use default names for notification configs"
+    apiVersion: v2
+    appVersion: v2.4.11
+    created: "2022-08-25T10:13:11.249930565Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.20.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 6b33af2969e9c56e49827a8b07be02c51884fde2c7816043f5f256065cacc81b
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.2.2/argo-cd-5.2.2.tgz
+    version: 5.2.2
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Update redis-ha"
     apiVersion: v2
     appVersion: v2.4.11
@@ -15575,4 +15605,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-08-25T09:08:05.366762363Z"
+generated: "2022-08-25T10:13:11.255395215Z"
