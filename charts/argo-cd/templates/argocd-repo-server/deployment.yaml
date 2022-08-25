@@ -52,9 +52,9 @@ spec:
         - {{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}
         {{- end }}
         - --logformat
-        - {{ .Values.repoServer.logFormat }}
+        - {{ default .Values.global.logging.format .Values.repoServer.logFormat }}
         - --loglevel
-        - {{ .Values.repoServer.logLevel }}
+        - {{ default .Values.global.logging.level .Values.repoServer.logLevel }}
         {{- with .Values.repoServer.extraArgs }}
         {{- . | toYaml | nindent 8 }}
         {{- end }}
