@@ -1588,6 +1588,35 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: manage CRD by Helm"
+    apiVersion: v2
+    appVersion: v2.4.11
+    created: "2022-08-25T08:43:08.635205065Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.17.1
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: edf94b1281c5cd497cbb69ee73508903887902336f61b8a0468b968da1b2f6cc
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: alexec
+    - name: alexmt
+    - name: jessesuen
+    - name: seanson
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.2.0/argo-cd-5.2.0.tgz
+    version: 5.2.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Ability to customize HPAs spec.behavior field"
     apiVersion: v2
     appVersion: v2.4.11
@@ -15517,4 +15546,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-08-25T06:41:12.653545734Z"
+generated: "2022-08-25T08:43:08.643326772Z"
