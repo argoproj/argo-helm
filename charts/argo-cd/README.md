@@ -380,6 +380,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| controller.args.appHardResyncPeriod | string | `"0"` | define the application controller `--app-hard-resync` |
 | controller.args.appResyncPeriod | string | `"180"` | define the application controller `--app-resync` |
 | controller.args.operationProcessors | string | `"10"` | define the application controller `--operation-processors` |
 | controller.args.repoServerTimeoutSeconds | string | `"60"` | define the application controller `--repo-server-timeout-seconds` |
