@@ -5,7 +5,6 @@ metadata:
   name: {{ template "argo-cd.repoServer.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag | trunc 63 | quote }}
 spec:
   selector:
     matchLabels:
@@ -24,7 +23,6 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag | trunc 63 | quote }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.repoServer.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
