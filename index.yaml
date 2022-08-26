@@ -1588,6 +1588,33 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Add appHardResyncPeriod option for application controller"
+    apiVersion: v2
+    appVersion: v2.4.11
+    created: "2022-08-26T16:15:53.373012562Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.1
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 466babf919e12cc5db560c9107066a656f727d8e64d70abb8441079432acb879
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.3.6/argo-cd-5.3.6.tgz
+    version: 5.3.6
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Upgrade Redis HA to 4.22.1
     apiVersion: v2
     appVersion: v2.4.11
@@ -15836,4 +15863,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-08-26T13:38:02.837216988Z"
+generated: "2022-08-26T16:15:53.378479538Z"
