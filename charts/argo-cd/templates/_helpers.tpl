@@ -284,3 +284,10 @@ Return the appropriate apiVersion for pod disruption budget
 {{- print "policy/v1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return valid version label
+*/}}
+{{- define "argo-cd.versionLabel" -}}
+app.kubernetes.io/version: {{ regexReplaceAll "[^-A-Za-z0-9.]" . "-" | trunc 63 | quote }}
+{{- end -}}
