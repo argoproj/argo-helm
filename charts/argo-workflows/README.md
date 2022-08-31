@@ -15,6 +15,12 @@ A few options are:
 
 ## Usage Notes
 
+### Custom resource definitions
+
+Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
+
+You can install the CRDs manually from `templates/crds` folder.
+
 ### Workflow controller
 
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster. If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of its configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.
@@ -42,6 +48,9 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | createAggregateRoles | bool | `true` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
+| crds.install  | bool  `true`  | Install and update CRDs |
+| crds.keep  | bool  `true`  | Keep CRDs on chart uninstallation |
+| crds.annotations  | object  `{}`  | Additional annotations to be added to the CRDs |
 | fullnameOverride | string | `nil` | String to fully override "argo-workflows.fullname" template |
 | images.pullPolicy | string | `"Always"` | imagePullPolicy to apply to all containers |
 | images.pullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |

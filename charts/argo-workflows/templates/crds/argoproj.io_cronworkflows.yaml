@@ -1,16 +1,25 @@
+{{- if .Values.crds.install }}
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: workflowtemplates.argoproj.io
+  name: cronworkflows.argoproj.io
+  annotations:
+    {{- if .Values.crds.keep }}
+    "helm.sh/resource-policy": keep
+    {{- end }}
+    {{- with .Values.crds.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   group: argoproj.io
   names:
-    kind: WorkflowTemplate
-    listKind: WorkflowTemplateList
-    plural: workflowtemplates
+    kind: CronWorkflow
+    listKind: CronWorkflowList
+    plural: cronworkflows
     shortNames:
-    - wftmpl
-    singular: workflowtemplate
+    - cwf
+    - cronwf
+    singular: cronworkflow
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -27,9 +36,14 @@ spec:
             type: object
             x-kubernetes-map-type: atomic
             x-kubernetes-preserve-unknown-fields: true
+          status:
+            type: object
+            x-kubernetes-map-type: atomic
+            x-kubernetes-preserve-unknown-fields: true
         required:
         - metadata
         - spec
         type: object
     served: true
     storage: true
+{{- end }}
