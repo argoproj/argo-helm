@@ -297,11 +297,45 @@ affinity:
             - key: topology.kubernetes.io/region
               operator: In
               values:
-                - ORD1
+                - {{ .Values.region }}
             - key: node.coreweave.cloud/class
               operator: In
               values:
                 - cpu
+{{- end -}}
+{{- define "coreweave.tolerations" -}}
+{{- if .Values.tolerations }}
+{{- with .Values.tolerations }}
+tolerations:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- else }}
+tolerations:
+  - key: is_cpu_compute
+    operator: Exists
+{{- end }}
+{{- end -}}
+{{- define "coreweave.affinity" -}}
+{{- if .Values.affinity }}
+{{- with .Values.affinity }}
+affinity:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- else }}
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: topology.kubernetes.io/region
+              operator: In
+              values:
+                - {{ .Values.region }}
+            - key: node.coreweave.cloud/class
+              operator: In
+              values:
+                - cpu
+{{- end }}
 {{- end -}}
 {{- define "coreweave.certSecretName" -}}
 {{printf "%s-tls-cert" .Release.Name }}

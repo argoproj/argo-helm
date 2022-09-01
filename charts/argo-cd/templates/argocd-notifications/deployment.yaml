@@ -93,5 +93,6 @@ spec:
         {{- with .Values.notifications.extraVolumes }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{include "coreweave.nodeAffinityAndTolerations" . | nindent 6 }}
+      {{include "coreweave.affinity" . | nindent 6 }}
+      {{include "coreweave.tolerations" . | nindent 6 }}
 {{- end }}

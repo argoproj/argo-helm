@@ -149,7 +149,8 @@ spec:
         resources:
           {{- toYaml .Values.server.extensions.resources | nindent 10 }}
       {{- end }}
-      {{include "coreweave.nodeAffinityAndTolerations" . | nindent 6 }}
+      {{include "coreweave.affinity" . | nindent 6 }}
+      {{include "coreweave.tolerations" . | nindent 6 }}
       serviceAccountName: {{ template "argo-cd.serverServiceAccountName" . }}
       {{- with .Values.global.hostAliases }}
       hostAliases:

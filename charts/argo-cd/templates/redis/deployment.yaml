@@ -87,7 +87,8 @@ spec:
     {{- with .Values.redis.extraContainers }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
-      {{include "coreweave.nodeAffinityAndTolerations" . | nindent 6 }}
+      {{include "coreweave.affinity" . | nindent 6 }}
+      {{include "coreweave.tolerations" . | nindent 6 }}
 {{- if .Values.redis.volumes }}
       volumes:
 {{- toYaml .Values.redis.volumes | nindent 8}}

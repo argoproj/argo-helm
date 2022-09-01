@@ -127,7 +127,8 @@ spec:
       {{- with .Values.repoServer.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
-      {{include "coreweave.nodeAffinityAndTolerations" . | nindent 6 }}
+      {{include "coreweave.affinity" . | nindent 6 }}
+      {{include "coreweave.tolerations" . | nindent 6 }}
       serviceAccountName: {{ template "argo-cd.repoServerServiceAccountName" . }}
       {{- with .Values.global.hostAliases }}
       hostAliases:

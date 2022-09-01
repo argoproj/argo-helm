@@ -1,9 +1,19 @@
 {
     "$schema": "http://json-schema.org/schema#",
     "properties": {
+        "region": {
+            "type": "string",
+            "form": false,
+            "enum": [
+                "ORD1",
+                "LAS1",
+                "LGA1"
+            ],
+            "title": "Region"
+        },
         "notifications": {
             "type": "object",
-            "form":"true",
+            "form": true,
             "title": "Notifications Controller",
             "properties": {
                 "enabled": {

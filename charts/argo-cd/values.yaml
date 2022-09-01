@@ -1,4 +1,8 @@
-## CoreWeave Ingress Options
+## CoreWeave Custom Options
+region: ORD1
+
+affinity: {}
+tolerations: []
 
 # -- Provide a custom dns name in place of coreweave's ingress. Requires custom Ingress Controller
 customExternalDnsName: ''
@@ -213,16 +217,6 @@ controller:
     # -- Application controller service port name
     portName: https-controller
 
-  # -- [Node selector]
-  nodeSelector:
-    node.coreweave.cloud/class: cpu
-  # -- [Tolerations] for use with node taints
-  tolerations:
-    - key: is_cpu_compute
-      operator: Exists
-  # -- Assign custom [affinity] rules to the deployment
-  affinity: {}
-
   # -- Assign custom [TopologySpreadConstraints] rules to the application controller
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
@@ -235,13 +229,13 @@ controller:
   priorityClassName: ""
 
   # -- Resource limits and requests for the application controller pods
-  resources: {}
-  #  limits:
-  #    cpu: 500m
-  #    memory: 512Mi
-  #  requests:
-  #    cpu: 250m
-  #    memory: 256Mi
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 500m
+      memory: 256Mi
 
   serviceAccount:
     # -- Create a service account for the application controller
@@ -521,13 +515,13 @@ dex:
     # readOnlyRootFilesystem: true
 
 # -- Resource limits and requests for dex
-  resources: {}
-  #  limits:
-  #    cpu: 50m
-  #    memory: 64Mi
-  #  requests:
-  #    cpu: 10m
-  #    memory: 32Mi
+  resources:
+    limits:
+      cpu: 100m
+      memory: 64Mi
+    requests:
+      cpu: 100m
+      memory: 32Mi
 
   # -- Additional containers to be added to the dex pod
   extraContainers: []
@@ -636,13 +630,13 @@ redis:
     automountServiceAccountToken: false
 
   # -- Resource limits and requests for redis
-  resources: {}
-  #  limits:
-  #    cpu: 200m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 64Mi
+  resources:
+    limits:
+      cpu: 200m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 64Mi
 
   # -- Additional volumeMounts to the redis container
   volumeMounts: []
@@ -687,13 +681,13 @@ redis:
     # -- Port to use for redis-exporter sidecar
     containerPort: 9121
     # -- Resource limits and requests for redis-exporter sidecar
-    resources: {}
-      # limits:
-      #   cpu: 50m
-      #   memory: 64Mi
-      # requests:
-      #   cpu: 10m
-      #   memory: 32Mi
+    resources:
+       limits:
+         cpu: 50m
+         memory: 64Mi
+       requests:
+         cpu: 10m
+         memory: 32Mi
     service:
       # -- Metrics service type
       type: ClusterIP
@@ -878,13 +872,13 @@ server:
     # readOnlyRootFilesystem: true
 
   # -- Resource limits and requests for the Argo CD server
-  resources: {}
-  #  limits:
-  #    cpu: 100m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 50m
-  #    memory: 64Mi
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
 
   ## Certificate configuration
   certificate:
@@ -1484,16 +1478,6 @@ repoServer:
   #  - name: custom-tools
   #    emptyDir: {}
 
-  # -- [Node selector]
-  nodeSelector:
-    node.coreweave.cloud/class: cpu
-  # -- [Tolerations] for use with node taints
-  tolerations:
-    - key: is_cpu_compute
-      operator: Exists
-  # -- Assign custom [affinity] rules to the deployment
-  affinity: {}
-
   # -- Assign custom [TopologySpreadConstraints] rules to the repo server
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
@@ -1514,13 +1498,13 @@ repoServer:
     # readOnlyRootFilesystem: true
 
   # -- Resource limits and requests for the repo server pods
-  resources: {}
-  #  limits:
-  #    cpu: 50m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 10m
-  #    memory: 64Mi
+  resources:
+    limits:
+      cpu: 50m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
 
   ## Repo server service configuration
   service:
@@ -1961,29 +1945,17 @@ applicationSet:
     # runAsUser: 1000
 
   # -- Resource limits and requests for the controller pods.
-  resources: {}
+  resources:
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-
-  # -- [Node selector]
-  nodeSelector:
-    node.coreweave.cloud/class: cpu
-
-  # -- [Tolerations] for use with node taints
-  tolerations:
-    - key: is_cpu_compute
-      operator: Exists
-
-  # -- Assign custom [affinity] rules
-  affinity: {}
+     limits:
+       cpu: 100m
+       memory: 128Mi
+     requests:
+       cpu: 100m
+       memory: 128Mi
 
   # -- If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default.
   priorityClassName: ""
@@ -2066,9 +2038,6 @@ notifications:
 
   # -- Notifications controller name string
   name: notifications-controller
-
-  # -- Assign custom [affinity] rules
-  affinity: {}
 
   # -- Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates
   argocdUrl:
@@ -2190,13 +2159,13 @@ notifications:
   containerSecurityContext: {}
 
   # -- Resource limits and requests for the controller
-  resources: {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  resources:
+     limits:
+       cpu: 100m
+       memory: 128Mi
+     requests:
+       cpu: 100m
+       memory: 128Mi
 
   serviceAccount:
     # -- Specifies whether a service account should be created
@@ -2424,11 +2393,6 @@ notifications:
     #   slack:
     #     attachments: "[{\n  \"title\": \"{{ .app.metadata.name}}\",\n  \"title_link\":\"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}\",\n  \"color\": \"#18be52\",\n  \"fields\": [\n  {\n    \"title\": \"Sync Status\",\n    \"value\": \"{{.app.status.sync.status}}\",\n    \"short\": true\n  },\n  {\n    \"title\": \"Repository\",\n    \"value\": \"{{.app.spec.source.repoURL}}\",\n    \"short\": true\n  }\n  {{range $index, $c := .app.status.conditions}}\n  {{if not $index}},{{end}}\n  {{if $index}},{{end}}\n  {\n    \"title\": \"{{$c.type}}\",\n    \"value\": \"{{$c.message}}\",\n    \"short\": true\n  }\n  {{end}}\n  ]\n}]    "
 
-  # -- [Tolerations] for use with node taints
-  tolerations:
-    - key: is_cpu_compute
-      operator: Exists
-
   # -- The trigger defines the condition when the notification should be sent
   ## For more information: https://argocd-notifications.readthedocs.io/en/stable/triggers/
   triggers: {}
@@ -2528,15 +2492,3 @@ notifications:
       # requests:
       #   cpu: 100m
       #   memory: 128Mi
-
-      # -- Assign custom [affinity] rules
-      affinity: {}
-
-      # -- [Tolerations] for use with node taints
-      tolerations:
-        - key: is_cpu_compute
-          operator: Exists
-
-      # -- [Node selector]
-      nodeSelector:
-        node.coreweave.cloud/class: cpu
