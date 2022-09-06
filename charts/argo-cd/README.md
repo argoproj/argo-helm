@@ -960,6 +960,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.notifiers | object | See [values.yaml] | Configures notification services such as slack, email or custom webhook |
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the controller Pods |
 | notifications.podLabels | object | `{}` | Labels to be applied to the controller Pods |
+| notifications.priorityClassName | string | `""` | Priority class for the controller pods |
 | notifications.resources | object | `{}` | Resource limits and requests for the controller |
 | notifications.secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
 | notifications.secret.create | bool | `true` | Whether helm chart creates controller secret |
