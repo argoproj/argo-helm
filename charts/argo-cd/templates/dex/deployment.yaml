@@ -47,6 +47,9 @@ spec:
         volumeMounts:
         - mountPath: /shared
           name: static-files
+      {{- if .Values.dex.initContainers }}
+      {{- toYaml .Values.dex.initContainers | nindent 6 }}
+      {{- end }}
       containers:
       - name: {{ .Values.dex.name }}
         image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
@@ -145,10 +148,6 @@ spec:
       {{- end }}
       {{- if .Values.dex.extraVolumes }}
       {{- toYaml .Values.dex.extraVolumes | nindent 6 }}
-      {{- end }}
-      {{- if .Values.dex.initContainers }}
-      initContainers:
-      {{- toYaml .Values.dex.initContainers | nindent 6 }}
       {{- end }}
 {{- if .Values.dex.priorityClassName }}
       priorityClassName: {{ .Values.dex.priorityClassName }}
