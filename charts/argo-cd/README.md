@@ -852,6 +852,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | externalRedis.password | string | `""` | External Redis password |
 | externalRedis.port | int | `6379` | External Redis server port |
 | externalRedis.secretAnnotations | object | `{}` | External Redis Secret annotations |
+| externalRedis.username | string | `""` | External Redis username |
 
 ## ApplicationSet
 
