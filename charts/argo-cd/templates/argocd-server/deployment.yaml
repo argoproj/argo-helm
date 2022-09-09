@@ -67,9 +67,9 @@ spec:
         {{- if .Values.server.containerSecurityContext }}
         securityContext: {{- toYaml .Values.server.containerSecurityContext | nindent 10 }}
         {{- end }}
-        {{- if or .Values.server.env .Values.externalRedis.password .Values.externalRedis.existingSecret }}
+        {{- if or .Values.server.env .Values.externalRedis.username .Values.externalRedis.password .Values.externalRedis.existingSecret }}
         env:
-          {{- include "argo-cd.redisPasswordEnv" . | nindent 8 }}
+          {{- include "argo-cd.externalRedisEnv" . | nindent 8 }}
           {{- with .Values.server.env }}
           {{- toYaml . | nindent 8 }}
           {{- end }}

@@ -67,7 +67,7 @@ spec:
           value: /helm-working-dir
         - name: HELM_DATA_HOME
           value: /helm-working-dir
-          {{- include "argo-cd.redisPasswordEnv" . | nindent 8 }}
+          {{- include "argo-cd.externalRedisEnv" . | nindent 8 }}
           {{- with .Values.repoServer.env }}
           {{- toYaml . | nindent 8 }}
           {{- end }}

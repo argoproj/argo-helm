@@ -264,7 +264,14 @@ Return the default Argo CD app version
   {{- default .Chart.AppVersion .Values.global.image.tag }}
 {{- end -}}
 
-{{- define "argo-cd.redisPasswordEnv" -}}
+{{- define "argo-cd.externalRedisEnv" -}}
+{{- if or .Values.externalRedis.username .Values.externalRedis.existingSecret -}}
+- name: REDIS_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+      key: redis-username
+{{- end -}}
 {{- if or .Values.externalRedis.password .Values.externalRedis.existingSecret -}}
 - name: REDIS_PASSWORD
   valueFrom:
