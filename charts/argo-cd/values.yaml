@@ -1007,6 +1007,9 @@ server:
     duration: ""
     # -- How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration
     renewBefore: ""
+    # -- The private key algorithm to use in the Certificate spec.
+    privateKey:
+      algorithm: ""
     issuer:
       # -- Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io`
       group: ""
