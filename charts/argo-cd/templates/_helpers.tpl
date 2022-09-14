@@ -188,6 +188,8 @@ app.kubernetes.io/managed-by: {{ .context.Release.Service }}
 app.kubernetes.io/part-of: argocd
 {{- with .context.Values.global.additionalLabels }}
 {{ toYaml . }}
+{{- if .Values.commonLabels}}
+{{ toYaml .Values.commonLabels }}
 {{- end }}
 {{- end }}
 

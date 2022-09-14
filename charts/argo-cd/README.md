@@ -324,6 +324,7 @@ NAME: my-release
 | apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling rendered by this helm chart |
 | apiVersionOverrides.certmanager | string | `""` | String to override apiVersion of certmanager resources rendered by this helm chart |
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
+| commonLabels | object | `{}` | Labels to apply to all resources |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
