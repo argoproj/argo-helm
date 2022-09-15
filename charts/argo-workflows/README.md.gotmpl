@@ -42,7 +42,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}
-  {{- if not (or (hasPrefix "workflow" .Key) (hasPrefix "controller" .Key) (hasPrefix "executor" .Key) (hasPrefix "server" .Key) (hasPrefix "artifactRepository" .Key) (hasPrefix "use" .Key) (hasPrefix "mainContainer" .Key) ) }}
+  {{- if not (or (hasPrefix "workflow" .Key) (hasPrefix "controller" .Key) (hasPrefix "executor" .Key) (hasPrefix "server" .Key) (hasPrefix "artifactRepository" .Key) (hasPrefix "customArtifact" .Key) (hasPrefix "use" .Key) (hasPrefix "mainContainer" .Key) ) }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
@@ -102,7 +102,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}
-  {{- if or (hasPrefix "artifactRepository" .Key) (hasPrefix "use" .Key) }}
+  {{- if or (hasPrefix "artifactRepository" .Key) (hasPrefix "use" .Key) (hasPrefix "customArtifact" .Key) }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}

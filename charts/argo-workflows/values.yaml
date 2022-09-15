@@ -602,3 +602,17 @@ artifactRepository:
   # accountKeySecret:
   #  name: my-azure-storage-credentials
   #  key: account-access-key
+
+# -- The section of custom artifact repository.
+# Will be added to the config in case useDefaultArtifactRepo is set to false
+customArtifactRepository: {}
+# customArtifactRepository:
+#   archiveLogs: true
+#   artifactory:
+#     repoUrl: https://artifactory.example.com/raw
+#     usernameSecret:
+#       name: artifactory-creds
+#       key: username
+#     passwordSecret:
+#       name: artifactory-creds
+#       key: password
