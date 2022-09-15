@@ -87,7 +87,7 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.images.pullSecrets }}
-        {{- include "argo-workflows.renderImagePullSecrets" (dict "context" $ "imagePullSecrets" .) | nindent 6 }}
+        {{- include "argo-workflows.renderImagePullSecrets" (dict "context" $ "imagePullSecrets" .) | trim | nindent 6 }}
       {{- end }}
       {{- with .Values.controller.volumes }}
       volumes:
