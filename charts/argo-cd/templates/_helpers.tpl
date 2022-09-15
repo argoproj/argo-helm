@@ -39,6 +39,16 @@ Create dex name and version as used by the chart label.
 {{- define "argo-cd.dex.fullname" -}}
 {{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.dex.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+{{/*
+Create dex server host and schema.
+*/}}
+{{- define "argo-cd.dex.serverUrl" -}}
+{{- if .Values.dex.tls.enabled -}}
+{{- printf "https://%s:%s" (include "argo-cd.dex.fullname" .) .Values.dex.servicePortHttp -}}
+{{- else -}}
+{{- printf "http://%s:%s" (include "argo-cd.dex.fullname" .) .Values.dex.servicePortHttp -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
 Create redis name and version as used by the chart label.

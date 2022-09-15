@@ -48,7 +48,7 @@ spec:
         - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
         {{- if .Values.dex.enabled }}
         - --dex-server
-        - http://{{ template "argo-cd.dex.fullname" . }}:{{ .Values.dex.servicePortHttp }}
+        - {{ template "argo-cd.dex.serverUrl" . }}
         {{- end }}
         - --logformat
         - {{default .Values.global.logging.format .Values.server.logFormat }}

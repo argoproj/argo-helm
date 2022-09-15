@@ -388,6 +388,12 @@ dex:
   # -- Additional command line arguments to pass to the Dex server
   extraArgs: []
 
+  tls:
+    # -- Use TLS to expose dex server to ArgoCD
+    enabled: false
+    # -- Use this secret as a certificate source
+    secretName: ""
+
   metrics:
     # -- Deploy metrics service
     enabled: false
