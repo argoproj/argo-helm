@@ -87,10 +87,7 @@ spec:
         {{- with .Values.server.extraContainers }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.images.pullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "argo-workflows.renderImagePullSecrets" (dict "context" . "imagePullSecrets" .Values.images.pullSecrets) | trim | nindent 6 }}
       volumes:
       - name: tmp
         emptyDir: {}

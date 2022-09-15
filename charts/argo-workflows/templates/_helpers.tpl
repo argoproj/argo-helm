@@ -127,3 +127,33 @@ Return the default Argo Workflows app version
 {{- define "argo-workflows.defaultTag" -}}
   {{- default .Chart.AppVersion .Values.images.tag }}
 {{- end -}}
+
+{{/*
+Renders an image pull secret. Supports both object and string format
+*/}}
+{{- define "argo-workflows.renderImagePullSecret" -}}
+  {{- if typeIs "string" .value }}
+    {{- tpl (dict "name" .value | toYaml) .context }}
+  {{- else }}
+    {{- tpl (.value | toYaml) .context }}
+  {{- end }}
+{{- end -}}
+
+{{/*
+Renders a list of image pull secrets. Supports both object and string format
+*/}}
+{{- define "argo-workflows.renderImagePullSecrets" -}}
+  {{- $pullSecrets := list }}
+  {{- $context := .context }}
+
+  {{- range .imagePullSecrets -}}    
+    {{- $pullSecrets = append $pullSecrets (include "argo-workflows.renderImagePullSecret" (dict "context" $context "value" .)) -}}
+  {{- end -}}
+
+  {{- if (not (empty $pullSecrets)) }}
+imagePullSecrets:
+    {{- range $pullSecrets }}
+  - {{ . }}
+    {{- end }}
+  {{- end }}
+{{- end -}}
