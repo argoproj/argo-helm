@@ -31,10 +31,10 @@ spec:
     {{- end }}
     kind: {{ .Values.server.certificate.issuer.kind | quote }}
     name: {{ .Values.server.certificate.issuer.name | quote }}
+  {{- with .Values.server.certificate.privateKey }}
   privateKey:
-    {{- with .Values.server.certificate.privateKey.algorithm }}
-      algorithm: {{ . | quote }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with .Values.server.certificate.renewBefore }}
   renewBefore: {{ . | quote }}
   {{- end }}
