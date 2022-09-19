@@ -687,7 +687,7 @@ NAME: my-release
 | dex.extraVolumes | list | `[]` | Extra volumes to the dex pod |
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
-| dex.image.tag | string | `"v2.30.2"` | Dex image tag |
+| dex.image.tag | string | `"v2.32.0"` | Dex image tag |
 | dex.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
