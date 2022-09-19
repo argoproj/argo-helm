@@ -82,6 +82,12 @@ controller:
     path: /metrics
     # -- Port is the port where metrics are emitted
     port: 9090
+    # -- How often custom metrics are cleared from memory
+    metricsTTL: ""
+    # -- Flag that instructs prometheus to ignore metric emission errors.
+    ignoreErrors: false
+    # --  Flag that use a self-signed cert for TLS
+    secure: false
     # -- Container metrics port name
     portName: metrics
     # -- Service metrics port
@@ -142,6 +148,12 @@ controller:
     path: /telemetry
     # -- telemetry container port
     port: 8081
+    # -- How often custom metrics are cleared from memory
+    metricsTTL: ""
+    # -- Flag that instructs prometheus to ignore metric emission errors.
+    ignoreErrors: false
+    # --  Flag that use a self-signed cert for TLS
+    secure: false
     # -- telemetry service port
     servicePort: 8081
     # -- telemetry service port name
@@ -170,15 +182,6 @@ controller:
   workflowNamespaces:
     - default
 
-  # -- Specifies the container runtime interface to use (one of: `docker`, `kubelet`, `k8sapi`, `pns`, `emissary`)
-  ## Ref: https://argoproj.github.io/argo-workflows/workflow-executors/
-  containerRuntimeExecutor: emissary
-  # -- Specifies the executor to use. This has precedence over `controller.containerRuntimeExecutor`.
-  containerRuntimeExecutors: []
-    # - name: emissary
-    #   selector:
-    #     matchLabels:
-    #       workflows.argoproj.io/container-runtime-executor: emissary
   instanceID:
     # -- Configures the controller to filter workflow submissions
     # to only those which have a matching instanceID attribute.
