@@ -84,7 +84,7 @@ Fields to note:
 | controller.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | controller.metricsConfig.enabled | bool | `false` | Enables prometheus metrics server |
 | controller.metricsConfig.ignoreErrors | bool | `false` | Flag that instructs prometheus to ignore metric emission errors. |
-| controller.metricsConfig.metricsTTL | string | `"0"` | How often custom metrics are cleared from memory |
+| controller.metricsConfig.metricsTTL | string | `""` | How often custom metrics are cleared from memory |
 | controller.metricsConfig.path | string | `"/metrics"` | Path is the path where metrics are emitted. Must start with a "/". |
 | controller.metricsConfig.port | int | `9090` | Port is the port where metrics are emitted |
 | controller.metricsConfig.portName | string | `"metrics"` | Container metrics port name |
@@ -118,7 +118,7 @@ Fields to note:
 | controller.serviceType | string | `"ClusterIP"` | Service type of the controller Service |
 | controller.telemetryConfig.enabled | bool | `false` | Enables prometheus telemetry server |
 | controller.telemetryConfig.ignoreErrors | bool | `false` | Flag that instructs prometheus to ignore metric emission errors. |
-| controller.telemetryConfig.metricsTTL | string | `"0"` | How often custom metrics are cleared from memory |
+| controller.telemetryConfig.metricsTTL | string | `""` | How often custom metrics are cleared from memory |
 | controller.telemetryConfig.path | string | `"/telemetry"` | telemetry path |
 | controller.telemetryConfig.port | int | `8081` | telemetry container port |
 | controller.telemetryConfig.secure | bool | `false` | Flag that use a self-signed cert for TLS |

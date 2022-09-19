@@ -95,7 +95,9 @@ data:
       enabled: {{ .Values.controller.metricsConfig.enabled }}
       path: {{ .Values.controller.metricsConfig.path }}
       port: {{ .Values.controller.metricsConfig.port }}
+      {{- if .Values.controller.metricsConfig.metricsTTL }}
       metricsTTL: {{ .Values.controller.metricsConfig.metricsTTL }}
+      {{- end }}
       ignoreErrors: {{ .Values.controller.metricsConfig.ignoreErrors }}
       secure: {{ .Values.controller.metricsConfig.secure }}
     {{- end }}
@@ -104,7 +106,9 @@ data:
       enabled: {{ .Values.controller.telemetryConfig.enabled }}
       path: {{ .Values.controller.telemetryConfig.path }}
       port: {{ .Values.controller.telemetryConfig.port }}
+      {{- if .Values.controller.telemetryConfig.metricsTTL }}
       metricsTTL: {{ .Values.controller.telemetryConfig.metricsTTL }}
+      {{- end }}
       ignoreErrors: {{ .Values.controller.telemetryConfig.ignoreErrors }}
       secure: {{ .Values.controller.telemetryConfig.secure }}
     {{- end }}
