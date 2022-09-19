@@ -1588,6 +1588,33 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Update Dex image to v2.32.0"
+    apiVersion: v2
+    appVersion: v2.4.12
+    created: "2022-09-19T12:57:10.627276969Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 244f3eb5defadfb55f338d08e171257fc385c955acf2510e01f45a5d4ef8631b
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.4.6/argo-cd-5.4.6.tgz
+    version: 5.4.6
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Update redis-ha to 4.22.2"
     apiVersion: v2
     appVersion: v2.4.12
@@ -16042,4 +16069,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-09-19T11:44:58.218094868Z"
+generated: "2022-09-19T12:57:10.633504251Z"
