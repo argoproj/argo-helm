@@ -414,8 +414,8 @@ NAME: my-release
 | configs.ssh.extraKnownHosts | string | `""` | Add extra known hosts to the known hosts list |
 | configs.ssh.knownHosts | string | See [values.yaml] | Known hosts to be added to the known host list by default. |
 | configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |
-| configs.tlsCerts | object | See [values.yaml] | TLS certificate |
-| configs.tlsCertsAnnotations | object | `{}` | TLS certificate configmap annotations |
+| configs.tls.annotations | object | `{}` | Annotations to be added to argocd-tls-certs-cm configmap |
+| configs.tls.certs | object | `{}` | TLS certificate |
 
 ## Argo CD Controller
 
