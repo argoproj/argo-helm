@@ -254,7 +254,7 @@ Return the target Kubernetes version
 {{/*
 Argo Configuration Preset Values (Incluenced by Values configuration)
 */}}
-{{- define "argo-cd.config.presets" -}}
+{{- define "argo-cd.config.cm.presets" -}}
   {{- if .Values.configs.styles }}
 ui.cssurl: "./custom/custom.styles.css"
   {{- end }}
@@ -263,10 +263,10 @@ ui.cssurl: "./custom/custom.styles.css"
 {{/*
 Merge Argo Configuration with Preset Configuration
 */}}
-{{- define "argo-cd.config" -}}
-  {{- if .Values.server.configEnabled -}}
-{{- toYaml (mergeOverwrite (default dict (fromYaml (include "argo-cd.config.presets" $))) .Values.server.config) }}
-  {{- end -}}
+{{- define "argo-cd.config.cm" -}}
+{{- $config := omit .Values.configs.cm "create" "annotations" }}
+{{- $preset := include "argo-cd.config.cm.presets" . | fromYaml | default dict -}}
+{{- mergeOverwrite $preset $config | toYaml }}
 {{- end -}}
 
 {{/*

@@ -9,7 +9,7 @@ In order to access the server UI you have the following options:
       - Add the `--insecure` flag to `server.extraArgs` in the values file and terminate SSL at your ingress: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/ingress.md#option-2-multiple-ingress-objects-and-hosts
 
 
-{{ if eq (index .Values.server.config "admin.enabled") "true" -}}
+{{ if eq (index .Values.configs.cm "admin.enabled") "true" -}}
 After reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:
 
 kubectl -n {{ .Release.Namespace }} get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d

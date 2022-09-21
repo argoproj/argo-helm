@@ -78,6 +78,67 @@ global:
 
 ## Argo Configs
 configs:
+  # General Argo CD configuration
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+  cm:
+    # -- Create the argocd-cm configmap for [Declarative setup]
+    create: true
+
+    # -- Annotations to be added to argocd-cm configmap
+    annotations: {}
+
+    # -- Argo CD's externally facing base URL (optional). Required when configuring SSO
+    url: ""
+
+    # The metadata.label key name where Argo CD injects the app name as a tracking label (optional).
+    # Tracking labels are used to determine which resources need to be deleted when pruning.
+    # If omitted, Argo CD injects the app name into the label: 'app.kubernetes.io/instance'
+    application.instanceLabelKey: argocd.argoproj.io/instance
+
+    # Enable logs RBAC enforcement
+    # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.3-2.4/#enable-logs-rbac-enforcement
+    server.rbac.log.enforce.enable: "false"
+
+    # exec.enabled indicates whether the UI exec feature is enabled. It is disabled by default.
+    # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/rbac/#exec-resource
+    exec.enabled: "false"
+
+    # admin.enabled indicates whether the admin user is enabled. It is enabled by default.
+    # https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
+    admin.enabled: "true"
+
+    # Application reconciliation timeout is the max amount of time required to discover if a new manifests version got
+    # published to the repository. Reconciliation by timeout is disabled if timeout is set to 0. Three minutes by default.
+    timeout.reconciliation: 180s
+
+    # Dex configuration
+    # dex.config: |
+    #   connectors:
+    #     # GitHub example
+    #     - type: github
+    #       id: github
+    #       name: GitHub
+    #       config:
+    #         clientID: aabbccddeeff00112233
+    #         clientSecret: $dex.github.clientSecret # Alternatively $<some_K8S_secret>:dex.github.clientSecret
+    #         orgs:
+    #         - name: your-github-org
+
+    # OIDC configuration as an alternative to dex (optional).
+    # oidc.config: |
+    #   name: AzureAD
+    #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
+    #   clientID: CLIENT_ID
+    #   clientSecret: $oidc.azuread.clientSecret
+    #   requestedIDTokenClaims:
+    #     groups:
+    #       essential: true
+    #   requestedScopes:
+    #     - openid
+    #     - profile
+    #     - email
+
+
   # -- Provide one or multiple [external cluster credentials]
   # @default -- `[]` (See [values.yaml])
   ## Ref:
@@ -1462,57 +1523,6 @@ server:
     termination_type: passthrough
     # -- Termination policy of Openshift Route
     termination_policy: None
-
-  # -- Manage Argo CD configmap (Declarative Setup)
-  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
-  configEnabled: true
-  # -- [General Argo CD configuration]
-  # @default -- See [values.yaml]
-  config:
-    # Argo CD's externally facing base URL (optional). Required when configuring SSO
-    url: ""
-    # Argo CD instance label key
-    application.instanceLabelKey: argocd.argoproj.io/instance
-
-    # Enable logs RBAC enforcement
-    # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.3-2.4/#enable-logs-rbac-enforcement
-    server.rbac.log.enforce.enable: "false"
-
-    # exec.enabled indicates whether the UI exec feature is enabled. It is disabled by default.
-    # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/rbac/#exec-resource
-    exec.enabled: "false"
-
-    # admin.enabled indicates whether the admin user is enabled. It is enabled by default.
-    # https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
-    admin.enabled: "true"
-
-    # dex.config: |
-    #   connectors:
-    #     # GitHub example
-    #     - type: github
-    #       id: github
-    #       name: GitHub
-    #       config:
-    #         clientID: aabbccddeeff00112233
-    #         clientSecret: $dex.github.clientSecret # Alternatively $<some_K8S_secret>:dex.github.clientSecret
-    #         orgs:
-    #         - name: your-github-org
-
-    # oidc.config: |
-    #   name: AzureAD
-    #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
-    #   clientID: CLIENT_ID
-    #   clientSecret: $oidc.azuread.clientSecret
-    #   requestedIDTokenClaims:
-    #     groups:
-    #       essential: true
-    #   requestedScopes:
-    #     - openid
-    #     - profile
-    #     - email
-
-  # -- Annotations to be added to Argo CD ConfigMap
-  configAnnotations: {}
 
   # -- Argo CD rbac config ([Argo CD RBAC policy])
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md

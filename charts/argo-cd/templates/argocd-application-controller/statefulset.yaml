@@ -14,6 +14,9 @@ spec:
   template:
     metadata:
       annotations:
+        {{- if .Values.configs.cm.create }}
+        checksum/cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | sha256sum }}
+        {{- end }}
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.controller.podAnnotations) }}
         {{- range $key, $value := . }}

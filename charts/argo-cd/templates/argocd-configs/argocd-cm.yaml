@@ -1,16 +1,16 @@
-{{- if .Values.server.configEnabled }}
+{{- if .Values.configs.cm.create }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-cm
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" "cm") | nindent 4 }}
-  {{- with .Values.server.configAnnotations }}
+  {{- with .Values.configs.cm.annotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
 data:
-  {{- include "argo-cd.config" $ | nindent 2 }}
+  {{- include "argo-cd.config.cm" . | nindent 2 }}
 {{- end }}

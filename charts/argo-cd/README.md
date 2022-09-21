@@ -363,6 +363,14 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
+| configs.cm."admin.enabled" | string | `"true"` |  |
+| configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` |  |
+| configs.cm."exec.enabled" | string | `"false"` |  |
+| configs.cm."server.rbac.log.enforce.enable" | string | `"false"` |  |
+| configs.cm."timeout.reconciliation" | string | `"180s"` |  |
+| configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
+| configs.cm.create | bool | `true` | Create the argocd-cm configmap for [Declarative setup] |
+| configs.cm.url | string | `""` | Argo CD's externally facing base URL (optional). Required when configuring SSO |
 | configs.credentialTemplates | object | `{}` | Repository credentials to be used as Templates for other repos |
 | configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
 | configs.gpgKeys | object | `{}` (See [values.yaml]) | [GnuPG](https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/) keys to add to the key ring |
@@ -579,9 +587,6 @@ NAME: my-release
 | server.certificate.renewBefore | string | `""` | How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration |
 | server.certificate.secretName | string | `"argocd-server-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
 | server.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
-| server.config | object | See [values.yaml] | [General Argo CD configuration] |
-| server.configAnnotations | object | `{}` | Annotations to be added to Argo CD ConfigMap |
-| server.configEnabled | bool | `true` | Manage Argo CD configmap (Declarative Setup) |
 | server.containerPort | int | `8080` | Configures the server port |
 | server.containerSecurityContext | object | `{}` | Servers container-level security context |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
