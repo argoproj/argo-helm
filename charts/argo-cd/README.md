@@ -373,7 +373,7 @@ NAME: my-release
 | configs.params."server.disable.auth" | bool | `false` | Disable Argo CD RBAC for user authentication |
 | configs.params."server.enable.gzip" | bool | `false` | Enable GZIP compression |
 | configs.params."server.insecure" | bool | `false` | Run server without TLS |
-| configs.params."server.rootpath" | string | `"/"` | Used if Argo CD is running behind reverse proxy under subpath different from / |
+| configs.params."server.rootpath" | string | `""` | Used if Argo CD is running behind reverse proxy under subpath different from / |
 | configs.params."server.staticassets" | string | `"/shared/app"` | Directory path that contains additional static assets |
 | configs.params."server.x.frame.options" | string | `"sameorigin"` | Set X-Frame-Options header in HTTP responses to value. To disable, set to "". |
 | configs.params."timeout.hard.reconciliation" | int | `0` | Time period in seconds for application hard resync |
