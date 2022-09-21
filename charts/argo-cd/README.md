@@ -356,7 +356,7 @@ NAME: my-release
 | global.securityContext | object | `{}` | Toggle and define securityContext. See [values.yaml] |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
-| openshift.enabled | bool | `false` | enables using arbitrary uid for argo repo server |
+| openshift | bool | `false` | Enable RedHat OpenShift cluster capabilities |
 
 ## Argo CD Configs
 

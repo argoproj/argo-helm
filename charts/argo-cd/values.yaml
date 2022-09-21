@@ -23,9 +23,8 @@ apiVersionOverrides:
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
 createAggregateRoles: false
 
-openshift:
-  # -- enables using arbitrary uid for argo repo server
-  enabled: false
+# -- Enable RedHat OpenShift cluster capabilities
+openshift: false
 
 ## Custom resource configuration
 crds:
