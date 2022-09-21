@@ -182,10 +182,8 @@ spec:
           name: gpg-keys
         - mountPath: /app/config/gpg/keys
           name: gpg-keyring
-        {{- if .Values.configs.knownHosts }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
-        {{- end }}
         - mountPath: /app/config/tls
           name: tls-certs
         - mountPath: /app/config/reposerver/tls
@@ -265,11 +263,9 @@ spec:
           name: argocd-gpg-keys-cm
       - emptyDir: {}
         name: gpg-keyring
-      {{- if .Values.configs.knownHosts }}
       - configMap:
           name: argocd-ssh-known-hosts-cm
         name: ssh-known-hosts
-      {{- end }}
       - configMap:
           name: argocd-tls-certs-cm
         name: tls-certs

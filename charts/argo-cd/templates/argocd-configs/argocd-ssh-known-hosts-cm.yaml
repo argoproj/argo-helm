@@ -4,10 +4,15 @@ metadata:
   name: argocd-ssh-known-hosts-cm
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" "ssh-known-hosts-cm") | nindent 4 }}
-  {{- with .Values.configs.knownHostsAnnotations }}
+  {{- with .Values.configs.ssh.annotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-{{- toYaml .Values.configs.knownHosts | nindent 0 }}
+data:
+  ssh_known_hosts: |
+    {{- .Values.configs.ssh.knownHosts | nindent 4 -}}
+    {{- if .Values.configs.ssh.createExtraKnownHosts }}
+    {{- .Values.configs.ssh.extraKnownHosts | nindent 4 }}
+    {{- end }}
