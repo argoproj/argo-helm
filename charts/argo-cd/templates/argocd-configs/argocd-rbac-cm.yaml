@@ -5,14 +5,14 @@ metadata:
   name: argocd-rbac-cm
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" "rbac-cm") | nindent 4 }}
-  {{- if .Values.server.rbacConfigAnnotations }}
+  {{- with .Values.server.rbacConfigAnnotations }}
   annotations:
-  {{- range $key, $value := .Values.server.rbacConfigAnnotations }}
+    {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
+    {{- end }}
   {{- end }}
-  {{- end }}
-{{- if .Values.server.rbacConfig }}
+{{- with .Values.server.rbacConfig }}
 data:
-{{- toYaml .Values.server.rbacConfig | nindent 4 }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- end }}
