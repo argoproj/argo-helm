@@ -101,6 +101,11 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVer
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
 
+### 6.0.0
+
+- All configuration sections have been merged and refactored under `configs` section.
+- Deprecated configuration options were removed.
+
 ### 5.5.0
 
 This version introduces new `configs.params` section that replaces command line arguments for containers.
@@ -402,7 +407,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
-| controller.args | object | `{}` | DEPRECATED - Application controller commandline flags |
+| controller.args | list | `[]` | Application controller commandline flags |
 | controller.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
 | controller.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the application controller's ClusterRole resource |
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |

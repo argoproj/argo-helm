@@ -41,14 +41,6 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         command:
         - argocd-server
-        {{- with .Values.server.logFormat }}
-        - --logformat
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.server.logLevel }}
-        - --loglevel
-        - {{ . | quote }}
-        {{- end }}
         {{- with .Values.server.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}

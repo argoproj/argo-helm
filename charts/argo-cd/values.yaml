@@ -382,30 +382,8 @@ controller:
   # Additional replicas will cause sharding of managed clusters across number of replicas.
   replicas: 1
 
-  # -- DEPRECATED - Application controller commandline flags
-  args: {}
-  # DEPRECATED - Use configs.params to override
-  #  # -- define the application controller `--status-processors`
-  #  statusProcessors: "20"
-  #  # -- define the application controller `--operation-processors`
-  #  operationProcessors: "10"
-  #  # -- define the application controller `--app-hard-resync`
-  #  appHardResyncPeriod: "0"
-  #  # -- define the application controller `--app-resync`
-  #  appResyncPeriod: "180"
-  #  # -- define the application controller `--self-heal-timeout-seconds`
-  #  selfHealTimeout: "5"
-  #  # -- define the application controller `--repo-server-timeout-seconds`
-  #  repoServerTimeoutSeconds: "60"
-
-
-  # DEPRECATED - Use configs.params to override
-  # -- Application controller log format. Either `text` or `json`
-  # @default -- `""` (defaults to global.logging.format)
-  # logFormat: ""
-  # -- Application controller log level. One of: `debug`, `info`, `warn` or `error`
-  # @default -- `""` (defaults to global.logging.level)
-  # logLevel: ""
+  # -- Application controller commandline flags
+  args: []
 
   # -- Additional command line arguments to pass to application controller
   extraArgs: []
@@ -1165,14 +1143,6 @@ server:
   # -- Specify postStart and preStop lifecycle hooks for your argo-cd-server container
   lifecycle: {}
 
-  # DEPRECATED - Use configs.params to override
-  # -- Argo CD server log format: Either `text` or `json`
-  # @default -- `""` (defaults to global.logging.format)
-  # logFormat: ""
-  # -- Argo CD server log level. One of: `debug`, `info`, `warn` or `error`
-  # @default -- `""` (defaults to global.logging.level)
-  # logLevel: ""
-
   # -- Annotations to be added to server pods
   podAnnotations: {}
 
@@ -1756,14 +1726,6 @@ repoServer:
   #     name: config-map-name
   # - secretRef:
   #     name: secret-name
-
-  # DEPRECATED - Use configs.params to override
-  # -- Repo server log format: Either `text` or `json`
-  # @default -- `""` (defaults to global.logging.level)
-  # logFormat: ""
-  # -- Repo server log level. One of: `debug`, `info`, `warn` or `error`
-  # @default -- `""` (defaults to global.logging.format)
-  # logLevel: ""
 
   # -- Annotations to be added to repo server pods
   podAnnotations: {}

@@ -37,38 +37,6 @@ spec:
       containers:
       - command:
         - argocd-application-controller
-        {{- with .Values.controller.args.statusProcessors }}
-        - --status-processors
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.operationProcessors }}
-        - --operation-processors
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.appResyncPeriod }}
-        - --app-resync
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.appHardResyncPeriod }}
-        - --app-hard-resync
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.selfHealTimeout }}
-        - --self-heal-timeout-seconds
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.repoServerTimeoutSeconds }}
-        - --repo-server-timeout-seconds
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.logFormat }}
-        - --logformat
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.logLevel }}
-        - --loglevel
-        - {{ . | quote }}
-        {{- end }}
         {{- if .Values.controller.metrics.applicationLabels.enabled }}
         {{- range .Values.controller.metrics.applicationLabels.labels }}
         - --metrics-application-labels

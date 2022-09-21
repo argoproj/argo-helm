@@ -44,14 +44,6 @@ spec:
         - entrypoint.sh
         args:
         - argocd-repo-server
-        {{- with .Values.repoServer.logFormat }}
-        - --logformat
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.repoServer.logLevel }}
-        - --loglevel
-        - {{ . | quote }}
-        {{- end }}
         {{- with .Values.repoServer.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}

@@ -100,6 +100,11 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVer
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
 
+### 6.0.0
+
+- All configuration sections have been merged and refactored under `configs` section.
+- Deprecated configuration options were removed.
+
 ### 5.5.0
 
 This version introduces new `configs.params` section that replaces command line arguments for containers.
