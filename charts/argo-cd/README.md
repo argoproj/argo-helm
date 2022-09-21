@@ -373,8 +373,8 @@ NAME: my-release
 | configs.cm.url | string | `""` | Argo CD's externally facing base URL (optional). Required when configuring SSO |
 | configs.credentialTemplates | object | `{}` | Repository credentials to be used as Templates for other repos |
 | configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
-| configs.gpgKeys | object | `{}` (See [values.yaml]) | [GnuPG](https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/) keys to add to the key ring |
-| configs.gpgKeysAnnotations | object | `{}` | GnuPG key ring annotations |
+| configs.gpg.annotations | object | `{}` | Annotations to be added to argocd-gpg-keys-cm configmap |
+| configs.gpg.keys | object | `{}` | GnuPG keys to add to the key ring |
 | configs.knownHosts.data.ssh_known_hosts | string | See [values.yaml] | Known Hosts |
 | configs.knownHostsAnnotations | object | `{}` | Known Hosts configmap annotations |
 | configs.params."controller.operation.processors" | int | `10` | Number of application operation processors |
