@@ -138,6 +138,39 @@ configs:
     #     - profile
     #     - email
 
+  # Argo CD RBAC policy config
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
+  rbac:
+    # -- Create the argocd-rbac-cm configmap with ([Argo CD RBAC policy]) definitions.
+    # If false, it is expected the configmap will be created by something else.
+    # Argo CD will not work if there is no configmap created with the name above.
+    create: true
+
+    # -- Annotations to be added to argocd-rbac-cm configmap
+    annotations: {}
+
+    # -- The name of the default role which Argo CD will falls back to, when authorizing API requests (optional).
+    # If omitted or empty, users may be still be able to login, but will see no apps, projects, etc...
+    policy.default: ''
+
+    # -- File containing user-defined policies and role definitions.
+    ## Example:
+    ## Policy rules are in the form:
+    ##  p, subject, resource, action, object, effect
+    ## Role definitions and bindings are in the form:
+    ##  g, subject, inherited-subject
+    ## policy.csv |
+    ##   p, role:org-admin, applications, *, */*, allow
+    ##   p, role:org-admin, clusters, get, *, allow
+    ##   p, role:org-admin, repositories, *, *, allow
+    ##   p, role:org-admin, logs, get, *, allow
+    ##   p, role:org-admin, exec, create, */*, allow
+    ##   g, your-github-org:your-team, role:org-admin
+    policy.csv: ''
+
+    # -- OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
+    # The scope value can be a string, or a list of strings.
+    scopes: "[groups]"
 
   # -- Provide one or multiple [external cluster credentials]
   # @default -- `[]` (See [values.yaml])
@@ -1523,36 +1556,6 @@ server:
     termination_type: passthrough
     # -- Termination policy of Openshift Route
     termination_policy: None
-
-  # -- Argo CD rbac config ([Argo CD RBAC policy])
-  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
-  rbacConfig:
-    {}
-    # policy.csv is a file containing user-defined RBAC policies and role definitions (optional).
-    # Policy rules are in the form:
-    #   p, subject, resource, action, object, effect
-    # Role definitions and bindings are in the form:
-    #   g, subject, inherited-subject
-    # See https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md for additional information.
-    # policy.csv: |
-    #   # Grant all members of the group 'my-org:team-alpha; the ability to sync apps in 'my-project'
-    #   p, my-org:team-alpha, applications, sync, my-project/*, allow
-    #   # Grant all members of 'my-org:team-beta' admins
-    #   g, my-org:team-beta, role:admin
-    # policy.default is the name of the default role which Argo CD will falls back to, when
-    # authorizing API requests (optional). If omitted or empty, users may be still be able to login,
-    # but will see no apps, projects, etc...
-    # policy.default: role:readonly
-    # scopes controls which OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
-    # If omitted, defaults to: '[groups]'. The scope value can be a string, or a list of strings.
-    # scopes: '[cognito:groups, email]'
-
-  # -- Annotations to be added to Argo CD rbac ConfigMap
-  rbacConfigAnnotations: {}
-
-  # -- Whether or not to create the configmap. If false, it is expected the configmap will be created
-  # by something else. Argo CD will not work if there is no configMap created with the name above.
-  rbacConfigCreate: true
 
   ## Enable Admin ClusterRole resources.
   ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.

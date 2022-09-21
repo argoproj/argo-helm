@@ -393,6 +393,11 @@ NAME: my-release
 | configs.params."timeout.hard.reconciliation" | int | `0` | Time period in seconds for application hard resync |
 | configs.params."timeout.reconciliation" | int | `180` | Time period in seconds for application resync |
 | configs.params.annotations | object | `{}` | Annotations to be added to the argocd-cmd-params-cm ConfigMap |
+| configs.rbac."policy.csv" | string | `""` | File containing user-defined policies and role definitions. |
+| configs.rbac."policy.default" | string | `""` | The name of the default role which Argo CD will falls back to, when authorizing API requests (optional). If omitted or empty, users may be still be able to login, but will see no apps, projects, etc... |
+| configs.rbac.annotations | object | `{}` | Annotations to be added to argocd-rbac-cm configmap |
+| configs.rbac.create | bool | `true` | Create the argocd-rbac-cm configmap with ([Argo CD RBAC policy]) definitions. If false, it is expected the configmap will be created by something else. Argo CD will not work if there is no configmap created with the name above. |
+| configs.rbac.scopes | string | `"[groups]"` | OIDC scopes to examine during rbac enforcement (in addition to `sub` scope). The scope value can be a string, or a list of strings. |
 | configs.repositories | object | `{}` | Repositories list to be used by applications |
 | configs.repositoriesAnnotations | object | `{}` | Annotations to be added to `configs.repositories` Secret |
 | configs.secret.annotations | object | `{}` | Annotations to be added to argocd-secret |
@@ -655,9 +660,6 @@ NAME: my-release
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
 | server.priorityClassName | string | `""` | Priority class for the Argo CD server |
-| server.rbacConfig | object | `{}` | Argo CD rbac config ([Argo CD RBAC policy]) |
-| server.rbacConfigAnnotations | object | `{}` | Annotations to be added to Argo CD rbac ConfigMap |
-| server.rbacConfigCreate | bool | `true` | Whether or not to create the configmap. If false, it is expected the configmap will be created by something else. Argo CD will not work if there is no configMap created with the name above. |
 | server.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | server.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
