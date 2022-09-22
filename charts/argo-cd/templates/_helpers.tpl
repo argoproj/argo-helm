@@ -298,6 +298,28 @@ Merge Argo Params Configuration with Preset Configuration
 {{- end -}}
 
 {{/*
+Argo Secret Default Configuration Presets
+*/}}
+{{- define "argo-cd.config.secret.presets" -}}
+{{- if index .Values.configs.secret "admin.password" }}
+admin.passwordMtime: {{ dateInZone "2006-01-02T15:04:05Z" (now) "UTC" }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Merge Argo Secret Configuration with Preset Configuration
+*/}}
+{{- define "argo-cd.config.secret" -}}
+{{- $config := omit .Values.configs.secret "create" "annotations" }}
+{{- $preset := include "argo-cd.config.secret.presets" . | fromYaml | default dict }}
+{{- range $key, $value := mergeOverwrite $preset $config }}
+{{- if $value }}
+{{ $key }}: {{ b64enc $value }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Return the default Argo CD app version
 */}}
 {{- define "argo-cd.defaultTag" -}}

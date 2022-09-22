@@ -409,14 +409,11 @@ NAME: my-release
 | configs.rbac.annotations | object | `{}` | Annotations to be added to argocd-rbac-cm configmap |
 | configs.rbac.create | bool | `true` | Create the argocd-rbac-cm configmap with ([Argo CD RBAC policy]) definitions. If false, it is expected the configmap will be created by something else. Argo CD will not work if there is no configmap created with the name above. |
 | configs.rbac.scopes | string | `"[groups]"` | OIDC scopes to examine during rbac enforcement (in addition to `sub` scope). The scope value can be a string, or a list of strings. |
+| configs.secret."admin.password" | string | `""` | Bcrypt hashed admin password |
 | configs.secret.annotations | object | `{}` | Annotations to be added to argocd-secret |
-| configs.secret.argocdServerAdminPassword | string | `""` | Bcrypt hashed admin password |
-| configs.secret.argocdServerAdminPasswordMtime | string | `""` (defaults to current time) | Admin password modification time. Eg. `"2006-01-02T15:04:05Z"` |
-| configs.secret.argocdServerTlsConfig | object | `{}` | Argo TLS Data |
 | configs.secret.bitbucketServerSecret | string | `""` | Shared secret for authenticating BitbucketServer webhook events |
 | configs.secret.bitbucketUUID | string | `""` | UUID for authenticating Bitbucket webhook events |
-| configs.secret.createSecret | bool | `true` | Create the argocd-secret |
-| configs.secret.extra | object | `{}` | add additional secrets to be added to argocd-secret |
+| configs.secret.create | bool | `true` | Create the argocd-secret |
 | configs.secret.githubSecret | string | `""` | Shared secret for authenticating GitHub webhook events |
 | configs.secret.gitlabSecret | string | `""` | Shared secret for authenticating GitLab webhook events |
 | configs.secret.gogsSecret | string | `""` | Shared secret for authenticating Gogs webhook events |
@@ -591,10 +588,10 @@ NAME: my-release
 | server.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Argo CD server [HPA] |
 | server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the Argo CD server [HPA] |
 | server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo CD server [HPA] |
-| server.certificate.additionalHosts | list | `[]` | Certificate manager additional hosts |
+| server.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
 | server.certificate.domain | string | `"argocd.example.com"` | Certificate primary domain (commonName) |
 | server.certificate.duration | string | `""` | The requested 'duration' (i.e. lifetime) of the Certificate. Value must be in units accepted by Go time.ParseDuration |
-| server.certificate.enabled | bool | `false` | Deploy a Certificate resource (requires cert-manager) |
+| server.certificate.enabled | bool | `false` | Deploy a Certificate resource |
 | server.certificate.issuer.group | string | `""` | Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io` |
 | server.certificate.issuer.kind | string | `""` | Certificate issuer kind. Either `Issuer` or `ClusterIssuer` |
 | server.certificate.issuer.name | string | `""` | Certificate isser name. Eg. `letsencrypt` |
@@ -603,7 +600,10 @@ NAME: my-release
 | server.certificate.privateKey.rotationPolicy | string | `"Never"` | Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always` |
 | server.certificate.privateKey.size | int | `2048` | Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored. |
 | server.certificate.renewBefore | string | `""` | How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration |
-| server.certificate.secretName | string | `"argocd-server-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
+| server.certificateSecret.annotations | object | `{}` | Annotations to be added to argocd-server-tls secret |
+| server.certificateSecret.crt | string | `""` | Certificate data |
+| server.certificateSecret.enabled | bool | `false` | Create argocd-server-tls secret |
+| server.certificateSecret.key | string | `""` | Private Key of the certificate |
 | server.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
 | server.containerPort | int | `8080` | Configures the server port |
 | server.containerSecurityContext | object | `{}` | Servers container-level security context |

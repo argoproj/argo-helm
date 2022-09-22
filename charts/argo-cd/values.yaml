@@ -314,9 +314,12 @@ configs:
     #     (...)
     #     -----END CERTIFICATE-----
 
+  # Secrets for Argo CD
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#sensitive-data-and-sso-client-secrets
+  ## Note: Additional secrets are provided as key / value pairs
   secret:
     # -- Create the argocd-secret
-    createSecret: true
+    create: true
     # -- Annotations to be added to argocd-secret
     annotations: {}
 
@@ -331,33 +334,11 @@ configs:
     # -- Shared secret for authenticating Gogs webhook events
     gogsSecret: ""
 
-    # -- add additional secrets to be added to argocd-secret
-    ## Custom secrets. Useful for injecting SSO secrets into environment variables.
-    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#sensitive-data-and-sso-client-secrets
-    ## Note that all values must be non-empty.
-    extra:
-      {}
-      # LDAP_PASSWORD: "mypassword"
-
-    # -- Argo TLS Data
-    argocdServerTlsConfig:
-      {}
-      # key:
-      # crt: |
-      #   -----BEGIN CERTIFICATE-----
-      #   <cert data>
-      #   -----END CERTIFICATE-----
-      #   -----BEGIN CERTIFICATE-----
-      #   <ca cert data>
-      #   -----END CERTIFICATE-----
-
     # -- Bcrypt hashed admin password
     ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
     ## `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
-    argocdServerAdminPassword: ""
-    # -- Admin password modification time. Eg. `"2006-01-02T15:04:05Z"`
-    # @default -- `""` (defaults to current time)
-    argocdServerAdminPasswordMtime: ""
+    admin.password: ''
+
 
   # -- Define custom [CSS styles] for your argo instance.
   # This setting will automatically mount the provided CSS and reference it in the argo configuration.
@@ -1194,6 +1175,7 @@ server:
       #   - type: Pods
       #     value: 2
       #     periodSeconds: 60
+
   image:
     # -- Repository to use for the Argo CD server
     # @default -- `""` (defaults to global.image.repository)
@@ -1298,16 +1280,25 @@ server:
   #    cpu: 50m
   #    memory: 64Mi
 
-  ## Certificate configuration
+  ## TLS certificate configuration via cert-manager
   certificate:
-    # -- Deploy a Certificate resource (requires cert-manager)
+    # -- Deploy a Certificate resource
     enabled: false
     # -- Certificate primary domain (commonName)
     domain: argocd.example.com
+    # -- Certificate Subject Alternate Names (SANs)
+    additionalHosts: []
     # -- The requested 'duration' (i.e. lifetime) of the Certificate. Value must be in units accepted by Go time.ParseDuration
     duration: ""
     # -- How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration
     renewBefore: ""
+    issuer:
+      # -- Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io`
+      group: ""
+      # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
+      kind: ""
+      # -- Certificate isser name. Eg. `letsencrypt`
+      name: ""
     # Private key of the certificate
     privateKey:
       # -- Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always`
@@ -1318,17 +1309,24 @@ server:
       algorithm: RSA
       # -- Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored.
       size: 2048
-    issuer:
-      # -- Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io`
-      group: ""
-      # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
-      kind: ""
-      # -- Certificate isser name. Eg. `letsencrypt`
-      name: ""
-    # -- Certificate manager additional hosts
-    additionalHosts: []
-    # -- The name of the Secret that will be automatically created and managed by this Certificate resource
-    secretName: argocd-server-tls
+
+  ## TLS certificate configuration via Secret
+  certificateSecret:
+    # -- Create argocd-server-tls secret
+    enabled: false
+    # -- Annotations to be added to argocd-server-tls secret
+    annotations: {}
+    # -- Private Key of the certificate
+    key: ''
+    # -- Certificate data
+    crt: ''
+    # crt: |
+    #   -----BEGIN CERTIFICATE-----
+    #   <cert data>
+    #   -----END CERTIFICATE-----
+    #   -----BEGIN CERTIFICATE-----
+    #   <ca cert data>
+    #   -----END CERTIFICATE-----
 
   ## Server service configuration
   service:
