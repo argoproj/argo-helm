@@ -387,7 +387,7 @@ NAME: my-release
 | configs.creds.repositories | object | `{}` (See [values.yaml]) | Credentials to be used by a single repository |
 | configs.creds.templates | object | `{}` (See [values.yaml]) | Credentials to be used as a template for multiple repositories |
 | configs.gpg.annotations | object | `{}` | Annotations to be added to argocd-gpg-keys-cm configmap |
-| configs.gpg.keys | object | `{}` | GnuPG keys to add to the key ring |
+| configs.gpg.keys | object | `{}` (See [values.yaml]) | GnuPG keys to add to the key ring |
 | configs.params."controller.operation.processors" | int | `10` | Number of application operation processors |
 | configs.params."controller.repo.server.timeout.seconds" | int | `60` | Repo server RPC call timeout seconds. |
 | configs.params."controller.self.heal.timeout.seconds" | int | `5` | Specifies timeout between application self heal attempts |
@@ -404,7 +404,7 @@ NAME: my-release
 | configs.params."timeout.hard.reconciliation" | int | `0` | Time period in seconds for application hard resync |
 | configs.params."timeout.reconciliation" | int | `180` | Time period in seconds for application resync |
 | configs.params.annotations | object | `{}` | Annotations to be added to the argocd-cmd-params-cm ConfigMap |
-| configs.rbac."policy.csv" | string | `""` | File containing user-defined policies and role definitions. |
+| configs.rbac."policy.csv" | string | `''` (See [values.yaml]) | File containing user-defined policies and role definitions. |
 | configs.rbac."policy.default" | string | `""` | The name of the default role which Argo CD will falls back to, when authorizing API requests (optional). If omitted or empty, users may be still be able to login, but will see no apps, projects, etc... |
 | configs.rbac.annotations | object | `{}` | Annotations to be added to argocd-rbac-cm configmap |
 | configs.rbac.create | bool | `true` | Create the argocd-rbac-cm configmap with ([Argo CD RBAC policy]) definitions. If false, it is expected the configmap will be created by something else. Argo CD will not work if there is no configmap created with the name above. |
@@ -422,11 +422,11 @@ NAME: my-release
 | configs.secret.gogsSecret | string | `""` | Shared secret for authenticating Gogs webhook events |
 | configs.ssh.annotations | object | `{}` | Annotations to be added to argocd-ssh-known-hosts-cm configmap |
 | configs.ssh.createExtraKnownHosts | bool | `true` | Add extra known hosts to the argocd-ssh-known-hosts-cm configmap |
-| configs.ssh.extraKnownHosts | string | `""` | Add extra known hosts to the known hosts list |
+| configs.ssh.extraKnownHosts | string | `""` (See [values.yaml]) | Add extra known hosts to the known hosts list |
 | configs.ssh.knownHosts | string | See [values.yaml] | Known hosts to be added to the known host list by default. |
 | configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |
 | configs.tls.annotations | object | `{}` | Annotations to be added to argocd-tls-certs-cm configmap |
-| configs.tls.certs | object | `{}` | TLS certificate |
+| configs.tls.certs | object | `""` (See [values.yaml]) | TLS certificates |
 
 ## Argo CD Controller
 

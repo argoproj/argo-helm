@@ -237,19 +237,19 @@ configs:
     policy.default: ''
 
     # -- File containing user-defined policies and role definitions.
-    ## Example:
-    ## Policy rules are in the form:
-    ##  p, subject, resource, action, object, effect
-    ## Role definitions and bindings are in the form:
-    ##  g, subject, inherited-subject
-    ## policy.csv |
-    ##   p, role:org-admin, applications, *, */*, allow
-    ##   p, role:org-admin, clusters, get, *, allow
-    ##   p, role:org-admin, repositories, *, *, allow
-    ##   p, role:org-admin, logs, get, *, allow
-    ##   p, role:org-admin, exec, create, */*, allow
-    ##   g, your-github-org:your-team, role:org-admin
+    # @default -- `''` (See [values.yaml])
     policy.csv: ''
+    # Policy rules are in the form:
+    #  p, subject, resource, action, object, effect
+    # Role definitions and bindings are in the form:
+    #  g, subject, inherited-subject
+    # policy.csv |
+    #   p, role:org-admin, applications, *, */*, allow
+    #   p, role:org-admin, clusters, get, *, allow
+    #   p, role:org-admin, repositories, *, *, allow
+    #   p, role:org-admin, logs, get, *, allow
+    #   p, role:org-admin, exec, create, */*, allow
+    #   g, your-github-org:your-team, role:org-admin
 
     # -- OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
     # The scope value can be a string, or a list of strings.
@@ -262,13 +262,13 @@ configs:
     annotations: {}
 
     # -- GnuPG keys to add to the key ring
-    ## Example:
-    ## keys:
-    ##   4AEE18F83AFDEB23: |
-    ##     -----BEGIN PGP PUBLIC KEY BLOCK-----
-    ##     (...)
-    ##     -----END PGP PUBLIC KEY BLOCK-----
+    # @default -- `{}` (See [values.yaml])
     keys: {}
+    # keys:
+    #  4AEE18F83AFDEB23: |
+    #    -----BEGIN PGP PUBLIC KEY BLOCK-----
+    #    (...)
+    #    -----END PGP PUBLIC KEY BLOCK-----
 
   # SSH known hosts public keys config
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#ssh-known-host-public-keys
@@ -293,11 +293,11 @@ configs:
     createExtraKnownHosts: true
 
     # -- Add extra known hosts to the known hosts list
-    ## Example:
-    ## extraKnownHosts: |
-    ##   gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
-    ##   gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
+    # @default -- `""` (See [values.yaml])
     extraKnownHosts: ''
+    # extraKnownHosts: |
+    #   gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
+    #   gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
 
   # TLS certificates for repositories
   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repositories-using-self-signed-tls-certificates-or-are-signed-by-custom-ca
@@ -305,14 +305,14 @@ configs:
     # -- Annotations to be added to argocd-tls-certs-cm configmap
     annotations: {}
 
-    # -- TLS certificate
-    ## Example:
-    ## certs:
-    ##   argocd.example.com: |
-    ##     -----BEGIN CERTIFICATE-----
-    ##     (...)
-    ##     -----END CERTIFICATE-----
+    # -- TLS certificates
+    # @default -- `""` (See [values.yaml])
     certs: {}
+    # certs:
+    #   argocd.example.com: |
+    #     -----BEGIN CERTIFICATE-----
+    #     (...)
+    #     -----END CERTIFICATE-----
 
   secret:
     # -- Create the argocd-secret
