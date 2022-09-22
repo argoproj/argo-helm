@@ -482,6 +482,11 @@ server:
     # redirectUrl: https://argo/oauth2/callback
     # rbac:
     #   enabled: true
+    ## When present, restricts secrets the server can read to a given list.
+    ## You can use it to restrict the server to only be able to access the
+    ## service account token secrets that are associated with service accounts
+    ## used for authorization.
+    #   secretWhitelist: []
     ## Scopes requested from the SSO ID provider.  The 'groups' scope requests
     ## group membership information, which is usually used for authorization
     ## decisions.

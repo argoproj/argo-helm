@@ -119,7 +119,38 @@ data:
     workflowDefaults:
 {{ toYaml .Values.controller.workflowDefaults | indent 6 }}{{- end }}
     {{- with .Values.server.sso }}
-    sso: {{- toYaml . | nindent 6 }}
+    sso:
+      issuer: {{ .issuer }}
+      clientId:
+        name: {{ .clientId.name }}
+        key: {{ .clientId.key }}
+      clientSecret:
+        name: {{ .clientSecret.name }}
+        key: {{ .clientSecret.key }}
+      redirectUrl: {{ .redirectUrl }}
+      {{- if and (.rbac) (.rbac.enabled) }}
+      rbac:
+        enabled: {{ .rbac.enabled }}
+      {{- end }}
+      {{- if .scopes }}
+      scopes: {{ toYaml .scopes | nindent 8 }}
+      {{- end }}
+      {{- if .issuerAlias }}
+      issuerAlias: {{ .issuerAlias }}
+      {{- end }}
+      {{- if and (.sessionExpiry) (.sessionExpiry.duration) }}
+      sessionExpiry:
+       duration: {{ .sessionExpiry.duration }}
+      {{- end }}
+      {{- if .customGroupClaimName }}
+      customGroupClaimName: {{ .customGroupClaimName }}
+      {{- end }}
+      {{- if .userInfoPath }}
+      userInfoPath: {{ .userInfoPath }}
+      {{- end }}
+      {{- if .insecureSkipVerify }}
+      insecureSkipVerify: {{ .insecureSkipVerify }}
+      {{- end }}
     {{- end }}
     {{- with .Values.controller.workflowRestrictions }}
     workflowRestrictions: {{- toYaml . | nindent 6 }}
