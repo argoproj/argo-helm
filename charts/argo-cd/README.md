@@ -444,7 +444,7 @@ NAME: my-release
 | controller.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the application controller's ClusterRole resource |
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
 | controller.containerPort | int | `8082` | Application controller listening port |
-| controller.containerSecurityContext | object | `{}` | Application controller container-level security context |
+| controller.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to application controller |
@@ -961,60 +961,66 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| notifications.affinity | object | `{}` | Assign custom [affinity] rules |
-| notifications.bots.slack.affinity | object | `{}` | Assign custom [affinity] rules |
-| notifications.bots.slack.containerSecurityContext | object | `{}` | Container Security Context |
-| notifications.bots.slack.enabled | bool | `false` | Enable slack bot |
+| notifications.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| notifications.args | list | `[]` | Additional command line arguments to pass to notifications controller |
+| notifications.bots.slack.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| notifications.bots.slack.containerSecurityContext | object | See [values.yaml] | Slack bot container-level security Context |
+| notifications.bots.slack.enabled | bool | `false` | Enable Slack bot |
 | notifications.bots.slack.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Slack bot |
 | notifications.bots.slack.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Slack bot |
 | notifications.bots.slack.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Slack bot |
 | notifications.bots.slack.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
+| notifications.bots.slack.name | string | `"argocd-notifications-slack-bot"` | Slack bot name string |
 | notifications.bots.slack.nodeSelector | object | `{}` | [Node selector] |
+| notifications.bots.slack.podAnnotations | object | `{}` | Annotations to be applied to the notification controller pods |
+| notifications.bots.slack.podLabels | object | `{}` | Labels to be applied to the notification controller pods |
+| notifications.bots.slack.priorityClassName | string | `""` | Priority class for the Slack bot |
 | notifications.bots.slack.resources | object | `{}` | Resource limits and requests for the Slack bot |
-| notifications.bots.slack.securityContext | object | `{"runAsNonRoot":true}` | Pod Security Context |
 | notifications.bots.slack.service.annotations | object | `{}` | Service annotations for Slack bot |
 | notifications.bots.slack.service.port | int | `80` | Service port for Slack bot |
 | notifications.bots.slack.service.type | string | `"LoadBalancer"` | Service type for Slack bot |
 | notifications.bots.slack.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
+| notifications.bots.slack.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | notifications.bots.slack.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| notifications.bots.slack.serviceAccount.name | string | `"argocd-notifications-bot"` | The name of the service account to use. |
+| notifications.bots.slack.serviceAccount.name | string | `"argocd-notifications-slack-bot"` | The name of the service account to use. |
 | notifications.bots.slack.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| notifications.bots.slack.updateStrategy | object | `{"type":"Recreate"}` | The deployment strategy to use to replace existing pods with new ones |
-| notifications.containerSecurityContext | object | `{}` | Container Security Context |
+| notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.enabled | bool | `true` | Enable Notifications controller |
-| notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
-| notifications.extraEnv | list | `[]` | Additional container environment variables |
-| notifications.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
-| notifications.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
-| notifications.extraVolumes | list | `[]` | List of extra volumes to add |
+| notifications.env | list | `[]` | Environment variables to pass to notifications controller |
+| notifications.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to notification controller |
 | notifications.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the notifications controller |
 | notifications.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the notifications controller |
 | notifications.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the notifications controller |
 | notifications.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | notifications.logFormat | string | `""` (defaults to global.logging.format) | Application controller log format. Either `text` or `json` |
 | notifications.logLevel | string | `""` (defaults to global.logging.level) | Application controller log level. One of: `debug`, `info`, `warn`, `error` |
-| notifications.metrics.enabled | bool | `false` | Enables prometheus metrics server |
-| notifications.metrics.port | int | `9001` | Metrics port |
+| notifications.metrics.enabled | bool | `false` | Deploy metrics service |
 | notifications.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | notifications.metrics.service.labels | object | `{}` | Metrics service labels |
 | notifications.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
+| notifications.metrics.service.servicePort | int | `9001` | Metrics service port |
 | notifications.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | notifications.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
+| notifications.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
+| notifications.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
+| notifications.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
+| notifications.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
 | notifications.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | notifications.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | notifications.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
 | notifications.nodeSelector | object | `{}` | [Node selector] |
-| notifications.podAnnotations | object | `{}` | Annotations to be applied to the controller Pods |
-| notifications.podLabels | object | `{}` | Labels to be applied to the controller Pods |
-| notifications.priorityClassName | string | `""` | Priority class for the controller pods |
-| notifications.resources | object | `{}` | Resource limits and requests for the controller |
-| notifications.securityContext | object | `{"runAsNonRoot":true}` | Pod Security Context |
+| notifications.podAnnotations | object | `{}` | Annotations to be applied to the notification controller pods |
+| notifications.podLabels | object | `{}` | Labels to be applied to the notification controller pods |
+| notifications.priorityClassName | string | `""` | Priority class for the notification controller pods |
+| notifications.resources | object | `{}` | Resource limits and requests for the notification controller pods |
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
-| notifications.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| notifications.serviceAccount.name | string | `"argocd-notifications-controller"` | The name of the service account to use. |
+| notifications.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| notifications.serviceAccount.create | bool | `true` | Create a service account for the notification controller |
+| notifications.serviceAccount.name | string | `"argocd-notifications-controller"` | Service account to use |
 | notifications.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| notifications.updateStrategy | object | `{"type":"Recreate"}` | The deployment strategy to use to replace existing pods with new ones |
+| notifications.volumeMounts | list | `[]` | Additional volume mounts to the notifications controller pod |
+| notifications.volumes | list | `[]` | Additional volumes to the notifications controller main container |
 
 ### Using AWS ALB Ingress Controller With GRPC
 

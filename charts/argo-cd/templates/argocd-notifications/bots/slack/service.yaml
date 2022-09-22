@@ -2,12 +2,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "argo-cd.notifications.fullname" . }}-bot
-  {{- if .Values.notifications.bots.slack.service.annotations }}
+  name: {{ include "argo-cd.notifications.fullname" . }}-slack-bot
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" .Values.notifications.bots.slack.name) | nindent 4 }}
+  {{- with .Values.notifications.bots.slack.service.annotations }}
   annotations:
-    {{- toYaml .Values.notifications.bots.slack.service.annotations | nindent 4 }}
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
   {{- end }}
 spec:
+  type: {{ .Values.notifications.bots.slack.service.type }}
   ports:
   - name: http
     port: {{ .Values.notifications.bots.slack.service.port }}
@@ -15,5 +20,4 @@ spec:
     targetPort: http
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" "metrics") | nindent 6 }}
-  type: {{ .Values.notifications.bots.slack.service.type }}
 {{ end }}

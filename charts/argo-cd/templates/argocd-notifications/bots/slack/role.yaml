@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ template "argo-cd.notifications.fullname" . }}-bot
+  name: {{ include "argo-cd.notifications.fullname" . }}-slack-bot
 rules:
 - apiGroups:
   - ""

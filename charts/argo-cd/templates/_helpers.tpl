@@ -164,7 +164,7 @@ Create the name of the application set service account to use
 {{/*
 Create the name of the notifications service account to use
 */}}
-{{- define "argo-cd.notificationsServiceAccountName" -}}
+{{- define "argo-cd.notifications.serviceAccountName" -}}
 {{- if .Values.notifications.serviceAccount.create -}}
     {{ default (include "argo-cd.notifications.fullname" .) .Values.notifications.serviceAccount.name }}
 {{- else -}}
@@ -175,7 +175,7 @@ Create the name of the notifications service account to use
 {{/*
 Create the name of the notifications bots slack service account to use
 */}}
-{{- define "argo-cd.notificationsBotsSlackServiceAccountName" -}}
+{{- define "argo-cd.notifications.bots.slack.serviceAccountName" -}}
 {{- if .Values.notifications.bots.slack.serviceAccount.create -}}
     {{ default (include "argo-cd.notifications.fullname" .) .Values.notifications.bots.slack.serviceAccount.name }}
 {{- else -}}

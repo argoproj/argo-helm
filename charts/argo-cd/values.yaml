@@ -787,13 +787,14 @@ controller:
   podLabels: {}
 
   # -- Application controller container-level security context
+  # @default -- See [values.yaml]
   containerSecurityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #     - all
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
 
   # -- Application controller listening port
   containerPort: 8082
@@ -2499,77 +2500,53 @@ notifications:
   # @default -- `""` (defaults to global.logging.level)
   logLevel: ""
 
-  # -- Extra arguments to provide to the controller
-  extraArgs: []
+  # -- Additional command line arguments to pass to notifications controller
+  args: []
 
-  # -- Additional container environment variables
-  extraEnv: []
+  # -- Environment variables to pass to notifications controller
+  env: []
+
+  # -- envFrom to pass to notification controller
+  # @default -- `[]` (See [values.yaml])
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-nam
+
+  # -- Annotations to be applied to the notification controller pods
+  podAnnotations: {}
+
+  # -- Labels to be applied to the notification controller pods
+  podLabels: {}
+
+  # -- Notification controller container-level security Context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+
+  # -- Additional volumes to the notifications controller main container
+  volumes: []
+
+  # -- Additional volume mounts to the notifications controller pod
+  volumeMounts: []
 
   # -- [Node selector]
   nodeSelector: {}
-
-    # -- Assign custom [affinity] rules
+  # -- [Tolerations] for use with node taints
+  tolerations: []
+  # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 
-  # -- The deployment strategy to use to replace existing pods with new ones
-  updateStrategy:
-    type: Recreate
-
-  # -- List of extra mounts to add (normally used with extraVolumes)
-  extraVolumeMounts: []
-    # - mountPath: /tmp/foobar
-    #   name: foobar
-
-  # -- List of extra volumes to add
-  extraVolumes: []
-    # - name: foobar
-    #   emptyDir: {}
-
-  metrics:
-    # -- Enables prometheus metrics server
-    enabled: false
-    # -- Metrics port
-    port: 9001
-    service:
-      # -- Metrics service annotations
-      annotations: {}
-      # -- Metrics service labels
-      labels: {}
-      # -- Metrics service port name
-      portName: http-metrics
-    serviceMonitor:
-      # -- Enable a prometheus ServiceMonitor
-      enabled: false
-      # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
-      # -- Prometheus ServiceMonitor labels
-      additionalLabels: {}
-      # namespace: monitoring
-      # interval: 30s
-      # scrapeTimeout: 10s
-      # -- Prometheus ServiceMonitor scheme
-      scheme: ""
-      # -- Prometheus ServiceMonitor tlsConfig
-      tlsConfig: {}
-
-  # -- Annotations to be applied to the controller Pods
-  podAnnotations: {}
-
-  # -- Labels to be applied to the controller Pods
-  podLabels: {}
-
-  # -- Pod Security Context
-  securityContext:
-    runAsNonRoot: true
-
-  # -- Container Security Context
-  containerSecurityContext: {}
-
-  # -- Priority class for the controller pods
+  # -- Priority class for the notification controller pods
   priorityClassName: ""
 
-  # -- Resource limits and requests for the controller
+  # -- Resource limits and requests for the notification controller pods
   resources: {}
     # limits:
     #   cpu: 100m
@@ -2579,30 +2556,61 @@ notifications:
     #   memory: 128Mi
 
   serviceAccount:
-    # -- Specifies whether a service account should be created
+    # -- Create a service account for the notification controller
     create: true
-
-    # -- The name of the service account to use.
-    ## If not set and create is true, a name is generated using the fullname template
+    # -- Service account to use
     name: argocd-notifications-controller
-
     # -- Annotations applied to created service account
     annotations: {}
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
-  # -- [Tolerations] for use with node taints
-  tolerations: []
+  ## Notification controller metrics configuration
+  metrics:
+    # -- Deploy metrics service
+    enabled: false
+    service:
+      # -- Metrics service annotations
+      annotations: {}
+      # -- Metrics service labels
+      labels: {}
+      # -- Metrics service port
+      servicePort: 9001
+      # -- Metrics service port name
+      portName: http-metrics
+    serviceMonitor:
+      # -- Enable a prometheus ServiceMonitor
+      enabled: false
+      # -- Prometheus ServiceMonitor interval
+      interval: 30s
+      # -- Prometheus [RelabelConfigs] to apply to samples before scraping
+      relabelings: []
+      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
+      metricRelabelings: []
+      # -- Prometheus ServiceMonitor selector
+      selector: {}
+        # prometheus: kube-prometheus
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: {}
+      # -- Prometheus ServiceMonitor namespace
+      namespace: ''
+      # -- Prometheus ServiceMonitor labels
+      additionalLabels: {}
 
-  ## The optional bot component simplifies managing subscriptions
-  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/bots/overview/
+  # The optional bot component simplifies managing subscriptions
+  ## Ref: https://argocd-notifications.readthedocs.io/en/stable/bots/overview/
   bots:
+    # Bot allows to view existing channel subscriptions and subscibe or unsubscribe channels
+    # Ref: https://argocd-notifications.readthedocs.io/en/stable/bots/slack-bot/
     slack:
-      # -- Enable slack bot
-      ## You have to set secret.notifiers.slack.signingSecret
+      # -- Enable Slack bot
+      ## You have to set configs.notifications.secret.notifiers.slack.signingSecret
       enabled: false
 
-      # -- The deployment strategy to use to replace existing pods with new ones
-      updateStrategy:
-        type: Recreate
+      # -- Slack bot name string
+      name: argocd-notifications-slack-bot
 
       image:
         # -- Repository to use for the Slack bot
@@ -2619,30 +2627,43 @@ notifications:
       imagePullSecrets: []
 
       service:
+        # -- Service type for Slack bot
+        type: LoadBalancer
         # -- Service annotations for Slack bot
         annotations: {}
         # -- Service port for Slack bot
         port: 80
-        # -- Service type for Slack bot
-        type: LoadBalancer
 
       serviceAccount:
         # -- Specifies whether a service account should be created
         create: true
-
         # -- The name of the service account to use.
-        ## If not set and create is true, a name is generated using the fullname template
-        name: argocd-notifications-bot
-
+        name: argocd-notifications-slack-bot
         # -- Annotations applied to created service account
         annotations: {}
+        # -- Automount API credentials for the Service Account
+        automountServiceAccountToken: true
 
-      # -- Pod Security Context
-      securityContext:
+      # -- Annotations to be applied to the notification controller pods
+      podAnnotations: {}
+
+      # -- Labels to be applied to the notification controller pods
+      podLabels: {}
+
+      # -- Slack bot container-level security Context
+      # @default -- See [values.yaml]
+      containerSecurityContext:
         runAsNonRoot: true
 
-      # -- Container Security Context
-      containerSecurityContext: {}
+      # -- [Node selector]
+      nodeSelector: {}
+      # -- [Tolerations] for use with node taints
+      tolerations: []
+      # -- Assign custom [affinity] rules to the deployment
+      affinity: {}
+
+      # -- Priority class for the Slack bot
+      priorityClassName: ""
 
       # -- Resource limits and requests for the Slack bot
       resources: {}
@@ -2652,12 +2673,3 @@ notifications:
       # requests:
       #   cpu: 100m
       #   memory: 128Mi
-
-      # -- Assign custom [affinity] rules
-      affinity: {}
-
-      # -- [Tolerations] for use with node taints
-      tolerations: []
-
-      # -- [Node selector]
-      nodeSelector: {}
