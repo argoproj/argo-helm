@@ -116,6 +116,7 @@ Config categories:
   - gpg - GnuPG keyring configuration for commit signing
   - ssh - SSH known hosts configuration
   - tls - TLS certificate configuration
+  - notifications - Notifications services configuration
 
 All deprecated features and duplicit configuration options were removed.
 
@@ -366,7 +367,7 @@ NAME: my-release
 | global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
 | global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
-| global.securityContext | object | `{}` | Toggle and define securityContext. See [values.yaml] |
+| global.securityContext | object | `{}` | Toggle and define securityContext. |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
 | openshift | bool | `false` | Enable RedHat OpenShift cluster capabilities |
@@ -382,12 +383,20 @@ NAME: my-release
 | configs.cm."timeout.reconciliation" | string | `"180s"` |  |
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
 | configs.cm.create | bool | `true` | Create the argocd-cm configmap for [Declarative setup] |
-| configs.cm.url | string | `""` | Argo CD's externally facing base URL (optional). Required when configuring SSO |
+| configs.cm.url | string | `""` | Argo CD's externally facing base URL (optional). Required when configuring SSO or notifications |
 | configs.creds.clusters | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.creds.repositories | object | `{}` (See [values.yaml]) | Credentials to be used by a single repository |
 | configs.creds.templates | object | `{}` (See [values.yaml]) | Credentials to be used as a template for multiple repositories |
 | configs.gpg.annotations | object | `{}` | Annotations to be added to argocd-gpg-keys-cm configmap |
 | configs.gpg.keys | object | `{}` (See [values.yaml]) | GnuPG keys to add to the key ring |
+| configs.notifications.annotations | object | `{}` | Annotations to be added into argocd-notifications-cm and argocd-notifications-secret |
+| configs.notifications.context | object | `{}` | Define user-defined context |
+| configs.notifications.create | bool | `true` | Create argocd-notifications-cm and argocd-notifications-secret |
+| configs.notifications.notifiers | object | `{}` (See [values.yaml]) | Configures notification services such as slack, email or custom webhooks |
+| configs.notifications.secret | string | `{}` (See [values.yaml]) | Generic key:value pairs to be inserted into the secret |
+| configs.notifications.subscriptions | list | `[]` (See [values.yaml]) | Centrally managed global application subscriptions |
+| configs.notifications.templates | object | `{}` (See [values.yaml]) | The notification template is used to generate the notification content |
+| configs.notifications.triggers | object | `{}` (See [values.yaml]) | The trigger defines the condition when the notification should be sent |
 | configs.params."controller.operation.processors" | int | `10` | Number of application operation processors |
 | configs.params."controller.repo.server.timeout.seconds" | int | `60` | Repo server RPC call timeout seconds. |
 | configs.params."controller.self.heal.timeout.seconds" | int | `5` | Specifies timeout between application self heal attempts |
@@ -953,7 +962,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | notifications.affinity | object | `{}` | Assign custom [affinity] rules |
-| notifications.argocdUrl | string | `nil` | Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates |
 | notifications.bots.slack.affinity | object | `{}` | Assign custom [affinity] rules |
 | notifications.bots.slack.containerSecurityContext | object | `{}` | Container Security Context |
 | notifications.bots.slack.enabled | bool | `false` | Enable slack bot |
@@ -972,9 +980,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.serviceAccount.name | string | `"argocd-notifications-bot"` | The name of the service account to use. |
 | notifications.bots.slack.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.bots.slack.updateStrategy | object | `{"type":"Recreate"}` | The deployment strategy to use to replace existing pods with new ones |
-| notifications.cm.create | bool | `true` | Whether helm chart creates controller config map |
 | notifications.containerSecurityContext | object | `{}` | Container Security Context |
-| notifications.context | object | `{}` | Define user-defined context |
 | notifications.enabled | bool | `true` | Enable Notifications controller |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
@@ -999,22 +1005,15 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
 | notifications.nodeSelector | object | `{}` | [Node selector] |
-| notifications.notifiers | object | See [values.yaml] | Configures notification services such as slack, email or custom webhook |
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the controller Pods |
 | notifications.podLabels | object | `{}` | Labels to be applied to the controller Pods |
 | notifications.priorityClassName | string | `""` | Priority class for the controller pods |
 | notifications.resources | object | `{}` | Resource limits and requests for the controller |
-| notifications.secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
-| notifications.secret.create | bool | `true` | Whether helm chart creates controller secret |
-| notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the secret |
 | notifications.securityContext | object | `{"runAsNonRoot":true}` | Pod Security Context |
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | notifications.serviceAccount.name | string | `"argocd-notifications-controller"` | The name of the service account to use. |
-| notifications.subscriptions | list | `[]` | Contains centrally managed global application subscriptions |
-| notifications.templates | object | `{}` | The notification template is used to generate the notification content |
 | notifications.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| notifications.triggers | object | `{}` | The trigger defines the condition when the notification should be sent |
 | notifications.updateStrategy | object | `{"type":"Recreate"}` | The deployment strategy to use to replace existing pods with new ones |
 
 ### Using AWS ALB Ingress Controller With GRPC

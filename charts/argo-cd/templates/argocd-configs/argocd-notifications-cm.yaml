@@ -1,4 +1,4 @@
-{{- if and .Values.notifications.enabled .Values.notifications.cm.create }}
+{{- if and .Values.notifications.enabled .Values.configs.notifications.create }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,21 +7,21 @@ metadata:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
 data:
   context: |
-    argocdUrl: {{ .Values.notifications.argocdUrl | quote }}
-    {{- with .Values.notifications.context }}
+    argocdUrl: {{ .Values.configs.cm.url | quote }}
+    {{- with .Values.configs.notifications.context }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.notifications.notifiers }}
+  {{- with .Values.configs.notifications.notifiers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- with .Values.notifications.subscriptions }}
+  {{- with .Values.configs.notifications.subscriptions }}
   subscriptions: |
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.notifications.templates }}
+  {{- with .Values.configs.notifications.triggers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- with .Values.notifications.triggers }}
+  {{- with .Values.configs.notifications.templates }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
 {{- end }}
