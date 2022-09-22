@@ -138,7 +138,85 @@ configs:
     #     - profile
     #     - email
 
-  # Credentials config
+  # Argo CD configuration parameters
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml
+  params:
+    # -- Annotations to be added to the argocd-cmd-params-cm ConfigMap
+    annotations: {}
+
+    ## Generic parameters
+    # -- Open-Telemetry collector address: (e.g. "otel-collector:4317")
+    otlp.address: ''
+    # -- Time period in seconds for application resync
+    timeout.reconciliation: 180
+    # -- Time period in seconds for application hard resync
+    timeout.hard.reconciliation: 0
+
+    ## Controller Properties
+    # -- Number of application status processors
+    controller.status.processors: 20
+    # -- Number of application operation processors
+    controller.operation.processors: 10
+    # -- Specifies timeout between application self heal attempts
+    controller.self.heal.timeout.seconds: 5
+    # -- Repo server RPC call timeout seconds.
+    controller.repo.server.timeout.seconds: 60
+
+    ## Server properties
+    # -- Run server without TLS
+    server.insecure: false
+    # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
+    server.basehref: /
+    # -- Used if Argo CD is running behind reverse proxy under subpath different from /
+    server.rootpath: ''
+    # -- Directory path that contains additional static assets
+    server.staticassets: /shared/app
+    # -- Disable Argo CD RBAC for user authentication
+    server.disable.auth: false
+    # -- Enable GZIP compression
+    server.enable.gzip: false
+    # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
+    server.x.frame.options: sameorigin
+
+    ## Repo-server properties
+    # -- Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit.
+    reposerver.parallelism.limit: 0
+
+  # Argo CD RBAC policy configuration
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
+  rbac:
+    # -- Create the argocd-rbac-cm configmap with ([Argo CD RBAC policy]) definitions.
+    # If false, it is expected the configmap will be created by something else.
+    # Argo CD will not work if there is no configmap created with the name above.
+    create: true
+
+    # -- Annotations to be added to argocd-rbac-cm configmap
+    annotations: {}
+
+    # -- The name of the default role which Argo CD will falls back to, when authorizing API requests (optional).
+    # If omitted or empty, users may be still be able to login, but will see no apps, projects, etc...
+    policy.default: ''
+
+    # -- File containing user-defined policies and role definitions.
+    # @default -- `''` (See [values.yaml])
+    policy.csv: ''
+    # Policy rules are in the form:
+    #  p, subject, resource, action, object, effect
+    # Role definitions and bindings are in the form:
+    #  g, subject, inherited-subject
+    # policy.csv |
+    #   p, role:org-admin, applications, *, */*, allow
+    #   p, role:org-admin, clusters, get, *, allow
+    #   p, role:org-admin, repositories, *, *, allow
+    #   p, role:org-admin, logs, get, *, allow
+    #   p, role:org-admin, exec, create, */*, allow
+    #   g, your-github-org:your-team, role:org-admin
+
+    # -- OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
+    # The scope value can be a string, or a list of strings.
+    scopes: "[groups]"
+
+  # Argo CD credentials configuration
   creds:
     # -- Provide one or multiple [external cluster credentials]
     # @default -- `[]` (See [values.yaml])
@@ -221,39 +299,31 @@ configs:
       #    ...
       #    -----END OPENSSH PRIVATE KEY-----
 
-  # Argo CD RBAC policy config
-  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
-  rbac:
-    # -- Create the argocd-rbac-cm configmap with ([Argo CD RBAC policy]) definitions.
-    # If false, it is expected the configmap will be created by something else.
-    # Argo CD will not work if there is no configmap created with the name above.
+  # Additional secrets used by Argo CD
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#sensitive-data-and-sso-client-secrets
+  ## Note: Additional secrets are provided as key / value pairs
+  secret:
+    # -- Create the argocd-secret
     create: true
 
-    # -- Annotations to be added to argocd-rbac-cm configmap
+    # -- Annotations to be added to argocd-secret
     annotations: {}
 
-    # -- The name of the default role which Argo CD will falls back to, when authorizing API requests (optional).
-    # If omitted or empty, users may be still be able to login, but will see no apps, projects, etc...
-    policy.default: ''
+    # -- Shared secret for authenticating GitHub webhook events
+    githubSecret: ""
+    # -- Shared secret for authenticating GitLab webhook events
+    gitlabSecret: ""
+    # -- Shared secret for authenticating BitbucketServer webhook events
+    bitbucketServerSecret: ""
+    # -- UUID for authenticating Bitbucket webhook events
+    bitbucketUUID: ""
+    # -- Shared secret for authenticating Gogs webhook events
+    gogsSecret: ""
 
-    # -- File containing user-defined policies and role definitions.
-    # @default -- `''` (See [values.yaml])
-    policy.csv: ''
-    # Policy rules are in the form:
-    #  p, subject, resource, action, object, effect
-    # Role definitions and bindings are in the form:
-    #  g, subject, inherited-subject
-    # policy.csv |
-    #   p, role:org-admin, applications, *, */*, allow
-    #   p, role:org-admin, clusters, get, *, allow
-    #   p, role:org-admin, repositories, *, *, allow
-    #   p, role:org-admin, logs, get, *, allow
-    #   p, role:org-admin, exec, create, */*, allow
-    #   g, your-github-org:your-team, role:org-admin
-
-    # -- OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
-    # The scope value can be a string, or a list of strings.
-    scopes: "[groups]"
+    # -- Bcrypt hashed admin password
+    ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
+    ## `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
+    admin.password: ''
 
   # GnuPG commit signature verification
   # Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/
@@ -264,11 +334,11 @@ configs:
     # -- GnuPG keys to add to the key ring
     # @default -- `{}` (See [values.yaml])
     keys: {}
-    # keys:
-    #  4AEE18F83AFDEB23: |
-    #    -----BEGIN PGP PUBLIC KEY BLOCK-----
-    #    (...)
-    #    -----END PGP PUBLIC KEY BLOCK-----
+      # keys:
+      #  4AEE18F83AFDEB23: |
+      #    -----BEGIN PGP PUBLIC KEY BLOCK-----
+      #    (...)
+      #    -----END PGP PUBLIC KEY BLOCK-----
 
   # SSH known hosts public keys config
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#ssh-known-host-public-keys
@@ -295,9 +365,9 @@ configs:
     # -- Add extra known hosts to the known hosts list
     # @default -- `""` (See [values.yaml])
     extraKnownHosts: ''
-    # extraKnownHosts: |
-    #   gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
-    #   gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
+      # extraKnownHosts: |
+      #   gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
+      #   gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
 
   # TLS certificates for repositories
   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repositories-using-self-signed-tls-certificates-or-are-signed-by-custom-ca
@@ -308,91 +378,21 @@ configs:
     # -- TLS certificates
     # @default -- `""` (See [values.yaml])
     certs: {}
-    # certs:
-    #   argocd.example.com: |
-    #     -----BEGIN CERTIFICATE-----
-    #     (...)
-    #     -----END CERTIFICATE-----
-
-  # Secrets for Argo CD
-  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#sensitive-data-and-sso-client-secrets
-  ## Note: Additional secrets are provided as key / value pairs
-  secret:
-    # -- Create the argocd-secret
-    create: true
-    # -- Annotations to be added to argocd-secret
-    annotations: {}
-
-    # -- Shared secret for authenticating GitHub webhook events
-    githubSecret: ""
-    # -- Shared secret for authenticating GitLab webhook events
-    gitlabSecret: ""
-    # -- Shared secret for authenticating BitbucketServer webhook events
-    bitbucketServerSecret: ""
-    # -- UUID for authenticating Bitbucket webhook events
-    bitbucketUUID: ""
-    # -- Shared secret for authenticating Gogs webhook events
-    gogsSecret: ""
-
-    # -- Bcrypt hashed admin password
-    ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
-    ## `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
-    admin.password: ''
-
+      # certs:
+      #   argocd.example.com: |
+      #     -----BEGIN CERTIFICATE-----
+      #     (...)
+      #     -----END CERTIFICATE-----
 
   # -- Define custom [CSS styles] for your argo instance.
   # This setting will automatically mount the provided CSS and reference it in the argo configuration.
   # @default -- `""` (See [values.yaml])
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
   styles: ""
-  # styles: |
-  #  .nav-bar {
-  #    background: linear-gradient(to bottom, #999, #777, #333, #222, #111);
-  #  }
-
-  # Argo CD configuration parameters
-  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml
-  params:
-    # -- Annotations to be added to the argocd-cmd-params-cm ConfigMap
-    annotations: {}
-
-    ## Generic parameters
-    # -- Open-Telemetry collector address: (e.g. "otel-collector:4317")
-    otlp.address: ''
-    # -- Time period in seconds for application resync
-    timeout.reconciliation: 180
-    # -- Time period in seconds for application hard resync
-    timeout.hard.reconciliation: 0
-
-    ## Controller Properties
-    # -- Number of application status processors
-    controller.status.processors: 20
-    # -- Number of application operation processors
-    controller.operation.processors: 10
-    # -- Specifies timeout between application self heal attempts
-    controller.self.heal.timeout.seconds: 5
-    # -- Repo server RPC call timeout seconds.
-    controller.repo.server.timeout.seconds: 60
-
-    ## Server properties
-    # -- Run server without TLS
-    server.insecure: false
-    # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
-    server.basehref: /
-    # -- Used if Argo CD is running behind reverse proxy under subpath different from /
-    server.rootpath: ''
-    # -- Directory path that contains additional static assets
-    server.staticassets: /shared/app
-    # -- Disable Argo CD RBAC for user authentication
-    server.disable.auth: false
-    # -- Enable GZIP compression
-    server.enable.gzip: false
-    # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
-    server.x.frame.options: sameorigin
-
-    ## Repo-server properties
-    # -- Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit.
-    reposerver.parallelism.limit: 0
+    # styles: |
+    #  .nav-bar {
+    #    background: linear-gradient(to bottom, #999, #777, #333, #222, #111);
+    #  }
 
 # -- Array of extra K8s manifests to deploy
 extraObjects: []
