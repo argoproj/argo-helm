@@ -1588,6 +1588,33 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Node selector for repoServer was not rendered correctly"
+    apiVersion: v2
+    appVersion: v2.4.12
+    created: "2022-09-22T08:53:09.170010354Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 5a5cd004730d76e2161d46d4cc690a92000976cc0e2b0d72de7d16f0adea5ee2
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.5.3/argo-cd-5.5.3.tgz
+    version: 5.5.3
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Argo CD server returns 404 due to invalid default value"
     apiVersion: v2
     appVersion: v2.4.12
@@ -16290,4 +16317,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-09-21T19:06:28.78901977Z"
+generated: "2022-09-22T08:53:09.177442584Z"
