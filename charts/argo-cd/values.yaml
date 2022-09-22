@@ -138,6 +138,89 @@ configs:
     #     - profile
     #     - email
 
+  # Credentials config
+  creds:
+    # -- Provide one or multiple [external cluster credentials]
+    # @default -- `[]` (See [values.yaml])
+    ## Ref:
+    ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
+    ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/security/#external-cluster-credentials
+    clusters: []
+      # - name: mycluster
+      #   server: https://mycluster.com
+      #   labels: {}
+      #   annotations: {}
+      #   config:
+      #     bearerToken: "<authentication token>"
+      #     tlsClientConfig:
+      #       insecure: false
+      #       caData: "<base64 encoded certificate>"
+      # - name: mycluster2
+      #   server: https://mycluster2.com
+      #   labels: {}
+      #   annotations: {}
+      #   namespaces: namespace1,namespace2
+      #   clusterResources: true
+      #   config:
+      #     bearerToken: "<authentication token>"
+      #     tlsClientConfig:
+      #       insecure: false
+      #       caData: "<base64 encoded certificate>"
+
+    # -- Credentials to be used by a single repository
+    # @default -- `{}` (See [values.yaml])
+    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repository-credentials
+    ## Note: the last example in the list would use a `https-creds` credential template, configured under "configs.credentials.templates".
+    repositories: {}
+      # istio-helm-repo:
+      #   annotations: {}
+      #   labels: {}
+      #   type: helm
+      #   url: https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts
+      #   name: istio.io
+      # private-helm-repo:
+      #   annotations: {}
+      #   labels: {}
+      #   url: https://my-private-chart-repo.internal
+      #   name: private-repo
+      #   type: helm
+      #   password: my-password
+      #   username: my-username
+      # private-git-repo:
+      #   annotations: {}
+      #   labels: {}
+      #   url: https://github.com/argoproj/private-repo
+
+    # -- Credentials to be used as a template for multiple repositories
+    # @default -- `{}` (See [values.yaml])
+    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repository-credentials
+    templates: {}
+      # github-enterprise:
+      #   annotations: {}
+      #   url: https://github.com/argoproj
+      #   type: helm
+      #   githubAppID: 1
+      #   githubAppInstallationID: 2
+      #   githubAppEnterpriseBaseUrl: https://ghe.example.com/api/v3
+      #   githubAppPrivateKey: |
+      #     -----BEGIN OPENSSH PRIVATE KEY-----
+      #     ...
+      #     -----END OPENSSH PRIVATE KEY-----
+      # https:
+      #   annotations: {}
+      #   url: https://github.com/argoproj
+      #   type: helm
+      #   password: my-password
+      #   username: my-username
+      # ssh:
+      #  annotations: {}
+      #  url: git@github.com:argoproj-labs
+      #  type: helm
+      #  sshPrivateKey: |
+      #    -----BEGIN OPENSSH PRIVATE KEY-----
+      #    ...
+      #    -----END OPENSSH PRIVATE KEY-----
+
   # Argo CD RBAC policy config
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
   rbac:
@@ -230,80 +313,6 @@ configs:
     ##     (...)
     ##     -----END CERTIFICATE-----
     certs: {}
-
-  # -- Provide one or multiple [external cluster credentials]
-  # @default -- `[]` (See [values.yaml])
-  ## Ref:
-  ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
-  ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/security/#external-cluster-credentials
-  clusterCredentials: []
-    # - name: mycluster
-    #   server: https://mycluster.com
-    #   labels: {}
-    #   annotations: {}
-    #   config:
-    #     bearerToken: "<authentication token>"
-    #     tlsClientConfig:
-    #       insecure: false
-    #       caData: "<base64 encoded certificate>"
-    # - name: mycluster2
-    #   server: https://mycluster2.com
-    #   labels: {}
-    #   annotations: {}
-    #   namespaces: namespace1,namespace2
-    #   clusterResources: true
-    #   config:
-    #     bearerToken: "<authentication token>"
-    #     tlsClientConfig:
-    #       insecure: false
-    #       caData: "<base64 encoded certificate>"
-
-
-  # -- Repository credentials to be used as Templates for other repos
-  ## Creates a secret for each key/value specified below to create repository credentials
-  credentialTemplates: {}
-    # github-enterprise-creds-1:
-    #   url: https://github.com/argoproj
-    #   githubAppID: 1
-    #   githubAppInstallationID: 2
-    #   githubAppEnterpriseBaseUrl: https://ghe.example.com/api/v3
-    #   githubAppPrivateKey: |
-    #     -----BEGIN OPENSSH PRIVATE KEY-----
-    #     ...
-    #     -----END OPENSSH PRIVATE KEY-----
-    # https-creds:
-    #   url: https://github.com/argoproj
-    #   password: my-password
-    #   username: my-username
-    # ssh-creds:
-    #  url: git@github.com:argoproj-labs
-    #  sshPrivateKey: |
-    #    -----BEGIN OPENSSH PRIVATE KEY-----
-    #    ...
-    #    -----END OPENSSH PRIVATE KEY-----
-
-  # -- Annotations to be added to `configs.credentialTemplates` Secret
-  credentialTemplatesAnnotations: {}
-
-  # -- Repositories list to be used by applications
-  ## Creates a secret for each key/value specified below to create repositories
-  ## Note: the last example in the list would use a repository credential template, configured under "configs.repositoryCredentials".
-  repositories: {}
-    # istio-helm-repo:
-    #   url: https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts
-    #   name: istio.io
-    #   type: helm
-    # private-helm-repo:
-    #   url: https://my-private-chart-repo.internal
-    #   name: private-repo
-    #   type: helm
-    #   password: my-password
-    #   username: my-username
-    # private-repo:
-    #   url: https://github.com/argoproj/private-repo
-
-  # -- Annotations to be added to `configs.repositories` Secret
-  repositoriesAnnotations: {}
 
   secret:
     # -- Create the argocd-secret

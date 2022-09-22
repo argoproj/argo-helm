@@ -102,8 +102,21 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 
 ### 6.0.0
 
-- All configuration sections have been merged and refactored under `configs` section.
-- Deprecated configuration options were removed.
+This version contains major refactoring and consolidation of all configuration options
+that were scattered on multiple places under `configs` section. Please revise your
+values.yaml and align your configuration to newly introduced config sections.
+
+Config categories:
+  - cm - General Argo CD config
+  - params - Arguments passed to controllers
+  - rbac - Argo CD RBAC definitions
+  - creds - Cluster and repository credentials
+  - secret - Additional secrets for third-party integrations
+  - gpg - GnuPG keyring configuration for commit signing
+  - ssh - SSH known hosts configuration
+  - tls - TLS certificate configuration
+
+All deprecated features and duplicit configuration options were removed.
 
 ### 5.5.0
 

@@ -103,8 +103,21 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 
 ### 6.0.0
 
-- All configuration sections have been merged and refactored under `configs` section.
-- Deprecated configuration options were removed.
+This version contains major refactoring and consolidation of all configuration options
+that were scattered on multiple places under `configs` section. Please revise your
+values.yaml and align your configuration to newly introduced config sections.
+
+Config categories:
+  - cm - General Argo CD config
+  - params - Arguments passed to controllers
+  - rbac - Argo CD RBAC definitions
+  - creds - Cluster and repository credentials
+  - secret - Additional secrets for third-party integrations
+  - gpg - GnuPG keyring configuration for commit signing
+  - ssh - SSH known hosts configuration
+  - tls - TLS certificate configuration
+
+All deprecated features and duplicit configuration options were removed.
 
 ### 5.5.0
 
@@ -362,7 +375,6 @@ NAME: my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.cm."admin.enabled" | string | `"true"` |  |
 | configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` |  |
 | configs.cm."exec.enabled" | string | `"false"` |  |
@@ -371,8 +383,9 @@ NAME: my-release
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
 | configs.cm.create | bool | `true` | Create the argocd-cm configmap for [Declarative setup] |
 | configs.cm.url | string | `""` | Argo CD's externally facing base URL (optional). Required when configuring SSO |
-| configs.credentialTemplates | object | `{}` | Repository credentials to be used as Templates for other repos |
-| configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
+| configs.creds.clusters | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
+| configs.creds.repositories | object | `{}` (See [values.yaml]) | Credentials to be used by a single repository |
+| configs.creds.templates | object | `{}` (See [values.yaml]) | Credentials to be used as a template for multiple repositories |
 | configs.gpg.annotations | object | `{}` | Annotations to be added to argocd-gpg-keys-cm configmap |
 | configs.gpg.keys | object | `{}` | GnuPG keys to add to the key ring |
 | configs.params."controller.operation.processors" | int | `10` | Number of application operation processors |
@@ -396,8 +409,6 @@ NAME: my-release
 | configs.rbac.annotations | object | `{}` | Annotations to be added to argocd-rbac-cm configmap |
 | configs.rbac.create | bool | `true` | Create the argocd-rbac-cm configmap with ([Argo CD RBAC policy]) definitions. If false, it is expected the configmap will be created by something else. Argo CD will not work if there is no configmap created with the name above. |
 | configs.rbac.scopes | string | `"[groups]"` | OIDC scopes to examine during rbac enforcement (in addition to `sub` scope). The scope value can be a string, or a list of strings. |
-| configs.repositories | object | `{}` | Repositories list to be used by applications |
-| configs.repositoriesAnnotations | object | `{}` | Annotations to be added to `configs.repositories` Secret |
 | configs.secret.annotations | object | `{}` | Annotations to be added to argocd-secret |
 | configs.secret.argocdServerAdminPassword | string | `""` | Bcrypt hashed admin password |
 | configs.secret.argocdServerAdminPasswordMtime | string | `""` (defaults to current time) | Admin password modification time. Eg. `"2006-01-02T15:04:05Z"` |
