@@ -1,4 +1,3 @@
-{{- $redisHa := (index .Values "redis-ha") -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -14,12 +13,13 @@ spec:
   replicas: {{ .Values.controller.replicas }}
   template:
     metadata:
-      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.controller.podAnnotations) }}
       annotations:
+        checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.controller.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-      {{- end }}
+        {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.controller.podLabels) }}
@@ -30,42 +30,50 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.global.securityContext }}
-      securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
+      {{- with .Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
       - command:
         - argocd-application-controller
+        {{- with .Values.controller.args.statusProcessors }}
         - --status-processors
-        - {{ .Values.controller.args.statusProcessors | quote }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.args.operationProcessors }}
         - --operation-processors
-        - {{ .Values.controller.args.operationProcessors | quote }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.args.appResyncPeriod }}
         - --app-resync
-        - {{ .Values.controller.args.appResyncPeriod | quote }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.args.appHardResyncPeriod }}
         - --app-hard-resync
-        - {{ .Values.controller.args.appHardResyncPeriod | quote }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.args.selfHealTimeout }}
         - --self-heal-timeout-seconds
-        - {{ .Values.controller.args.selfHealTimeout | quote }}
-        - --repo-server
-        - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.args.repoServerTimeoutSeconds }}
         - --repo-server-timeout-seconds
-        - {{ .Values.controller.args.repoServerTimeoutSeconds | quote }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.logFormat }}
         - --logformat
-        - {{ default .Values.global.logging.format .Values.controller.logFormat }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.logLevel }}
         - --loglevel
-        - {{ default .Values.global.logging.level .Values.controller.logLevel }}
+        - {{ . | quote }}
+        {{- end }}
         {{- if .Values.controller.metrics.applicationLabels.enabled }}
         {{- range .Values.controller.metrics.applicationLabels.labels }}
         - --metrics-application-labels
         - {{ . }}
         {{- end }}
-        {{- end }}
-        {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
-        - --redis
-        - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
-        {{- else if and .Values.externalRedis.host .Values.externalRedis.port }}
-        - --redis
-        - {{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}
         {{- end }}
         {{- with .Values.controller.extraArgs }}
           {{- toYaml . | nindent 8 }}
@@ -83,7 +91,120 @@ spec:
           {{- end }}
           - name: ARGOCD_CONTROLLER_REPLICAS
             value: {{ .Values.controller.replicas | quote }}
-          {{- include "argo-cd.redisPasswordEnv" . | nindent 10 }}
+          - name: ARGOCD_RECONCILIATION_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cm
+                key: timeout.reconciliation
+                optional: true
+          - name: ARGOCD_HARD_RECONCILIATION_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cm
+                key: timeout.hard.reconciliation
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: repo.server
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_TIMEOUT_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.repo.server.timeout.seconds
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_STATUS_PROCESSORS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.status.processors
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_OPERATION_PROCESSORS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.operation.processors
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_LOGFORMAT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.log.format
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_LOGLEVEL
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.log.level
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_METRICS_CACHE_EXPIRATION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.metrics.cache.expiration
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_TIMEOUT_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.self.heal.timeout.seconds
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_PLAINTEXT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.repo.server.plaintext
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_STRICT_TLS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.repo.server.strict.tls
+                optional: true
+          - name: ARGOCD_APP_STATE_CACHE_EXPIRATION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.app.state.cache.expiration
+                optional: true
+          - name: REDIS_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.server
+                optional: true
+          - name: REDISDB
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.db
+                optional: true
+          - name: REDIS_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                key: redis-username
+                optional: true
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                key: redis-password
+                optional: true
+          - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.default.cache.expiration
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_OTLP_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.address
+                optional: true
         {{- with .Values.controller.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}

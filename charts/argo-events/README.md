@@ -52,8 +52,12 @@ done
 | configs.jetstream.streamConfig.maxBytes | string | `"1GB"` |  |
 | configs.jetstream.streamConfig.maxMsgs | int | `1000000` | Maximum number of messages before expiring oldest message |
 | configs.jetstream.streamConfig.replicas | int | `3` | Number of replicas, defaults to 3 and requires minimal 3 |
-| configs.jetstream.versions | list | `[]` |  |
-| configs.nats.versions | list | `[]` (See [values.yaml]) | Supported versions of NATS event bus |
+| configs.jetstream.versions[0].configReloaderImage | string | `"natsio/nats-server-config-reloader:latest"` |  |
+| configs.jetstream.versions[0].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:latest"` |  |
+| configs.jetstream.versions[0].natsImage | string | `"nats:latest"` |  |
+| configs.jetstream.versions[0].startCommand | string | `"/nats-server"` |  |
+| configs.jetstream.versions[0].version | string | `"latest"` |  |
+| configs.nats.versions | list | `[{"metricsExporterImage":"natsio/prometheus-nats-exporter:latest","natsStreamingImage":"nats-streaming:latest","version":"latest"}]` | Supported versions of NATS event bus |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |

@@ -8,6 +8,15 @@ images:
   # - name: argo-pull-secret
   # - argo-pull-secret
 
+## Custom resource configuration
+crds:
+  # -- Install and upgrade CRDs
+  install: true
+  # -- Keep CRDs on chart uninstall
+  keep: true
+  # -- Annotations to be added to all CRDs
+  annotations: {}
+
 # -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
 createAggregateRoles: true
@@ -474,11 +483,6 @@ server:
     # redirectUrl: https://argo/oauth2/callback
     # rbac:
     #   enabled: true
-    ## When present, restricts secrets the server can read to a given list.
-    ## You can use it to restrict the server to only be able to access the
-    ## service account token secrets that are associated with service accounts
-    ## used for authorization.
-    #   secretWhitelist: []
     ## Scopes requested from the SSO ID provider.  The 'groups' scope requests
     ## group membership information, which is usually used for authorization
     ## decisions.
