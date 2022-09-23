@@ -447,7 +447,6 @@ NAME: my-release
 | controller.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
-| controller.extraArgs | list | `[]` | Additional command line arguments to pass to application controller |
 | controller.extraContainers | list | `[]` | Additional containers to be added to the application controller pod |
 | controller.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application controller |
 | controller.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application controller |
@@ -511,6 +510,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | repoServer.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| repoServer.args | list | `[]` | Additional command line arguments to pass to repo server |
 | repoServer.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. This is only available on HPA apiVersion `autoscaling/v2beta2` and newer |
 | repoServer.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the repo server |
 | repoServer.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the repo server [HPA] |
@@ -525,7 +525,6 @@ NAME: my-release
 | repoServer.copyutil.resources | object | `{}` | Resource limits and requests for the copyutil initContainer |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
 | repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
-| repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to repo server |
 | repoServer.extraContainers | list | `[]` | Additional containers to be added to the repo server pod |
 | repoServer.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the repo server |
 | repoServer.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the repo server |
@@ -591,6 +590,7 @@ NAME: my-release
 | server.GKEmanagedCertificate.domains | list | `["argocd.example.com"]` | Domains for the Google Managed Certificate |
 | server.GKEmanagedCertificate.enabled | bool | `false` | Enable ManagedCertificate custom resource for Google Kubernetes Engine. |
 | server.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| server.args | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. This is only available on HPA apiVersion `autoscaling/v2beta2` and newer |
 | server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo CD server |
 | server.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the Argo CD server [HPA] |
@@ -624,7 +624,6 @@ NAME: my-release
 | server.extensions.image.repository | string | `"ghcr.io/argoproj-labs/argocd-extensions"` | Repository to use for extensions image |
 | server.extensions.image.tag | string | `"v0.1.0"` | Tag to use for extensions image |
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
-| server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
 | server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Argo CD server |
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
@@ -724,6 +723,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | dex.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| dex.args | list | `[]` | Additional command line arguments to pass to the Dex server |
 | dex.containerPortGrpc | int | `5557` | Container port for gRPC access |
 | dex.containerPortHttp | int | `5556` | Container port for HTTP access |
 | dex.containerPortMetrics | int | `5558` | Container port for metrics access |
@@ -731,7 +731,6 @@ NAME: my-release
 | dex.enabled | bool | `true` | Enable dex |
 | dex.env | list | `[]` | Environment variables to pass to the Dex server |
 | dex.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Dex server |
-| dex.extraArgs | list | `[]` | Additional command line arguments to pass to the Dex server |
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
@@ -796,12 +795,12 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redis.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| redis.args | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.containerPort | int | `6379` | Redis container port |
 | redis.containerSecurityContext | object | `{}` | Redis container-level security context |
 | redis.enabled | bool | `true` | Enable redis |
 | redis.env | list | `[]` | Environment variables to pass to the Redis server |
 | redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
-| redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
 | redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |

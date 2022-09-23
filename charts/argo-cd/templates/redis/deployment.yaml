@@ -40,8 +40,8 @@ spec:
         - ""
         - --appendonly
         - "no"
-        {{- with .Values.redis.extraArgs }}
-        {{- . | toYaml | nindent 8 }}
+        {{- with .Values.redis.args }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
         imagePullPolicy: {{ .Values.redis.image.imagePullPolicy}}

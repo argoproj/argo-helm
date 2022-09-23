@@ -766,9 +766,6 @@ controller:
   # -- Application controller commandline flags
   args: []
 
-  # -- Additional command line arguments to pass to application controller
-  extraArgs: []
-
   # -- Environment variables to pass to application controller
   env: []
 
@@ -1011,7 +1008,7 @@ dex:
   name: dex-server
 
   # -- Additional command line arguments to pass to the Dex server
-  extraArgs: []
+  args: []
 
   metrics:
     # -- Deploy metrics service
@@ -1227,7 +1224,7 @@ redis:
     imagePullPolicy: IfNotPresent
 
   # -- Additional command line arguments to pass to redis-server
-  extraArgs: []
+  args: []
   # - --bind
   # - "0.0.0.0"
 
@@ -1510,7 +1507,7 @@ server:
     imagePullPolicy: "" # IfNotPresent
 
   # -- Additional command line arguments to pass to Argo CD server
-  extraArgs: []
+  args: []
 
   # -- Environment variables to pass to Argo CD server
   env: []
@@ -2031,7 +2028,7 @@ repoServer:
     imagePullPolicy: "" # IfNotPresent
 
   # -- Additional command line arguments to pass to repo server
-  extraArgs: []
+  args: []
 
   # -- Environment variables to pass to repo server
   env: []

@@ -47,7 +47,7 @@ spec:
         - entrypoint.sh
         args:
         - argocd-repo-server
-        {{- with .Values.repoServer.extraArgs }}
+        {{- with .Values.repoServer.args }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- with .Values.repoServer.containerSecurityContext }}

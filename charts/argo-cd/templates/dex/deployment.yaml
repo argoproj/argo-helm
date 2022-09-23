@@ -63,7 +63,7 @@ spec:
         - /shared/argocd-dex
         args:
         - rundex
-        {{- with .Values.dex.extraArgs }}
+        {{- with .Values.dex.args }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- if .Values.dex.containerSecurityContext }}
