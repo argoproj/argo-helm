@@ -18,6 +18,8 @@ apiVersionOverrides:
   ingress: "" # networking.k8s.io/v1beta1
   # -- String to override apiVersion of autoscaling rendered by this helm chart
   autoscaling: "" # autoscaling/v2
+  # -- String to override apiVersion of cloud.google.com resources rendered by this helm chart
+  cloudgooglecom: "" # cloud.google.com/v1beta1
 
 # -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
