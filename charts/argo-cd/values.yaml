@@ -872,7 +872,7 @@ controller:
   serviceAccount:
     # -- Create a service account for the application controller
     create: true
-    # -- Service account name
+    # -- The name of the service account to use.
     name: argocd-application-controller
     # -- Annotations applied to created service account
     annotations: {}
@@ -2253,14 +2253,14 @@ repoServer:
   imagePullSecrets: []
 
 applicationSet:
-  # -- Enable Application Set controller
+  # -- Enable application set controller
   enabled: true
 
-  # -- Application Set controller name string
+  # -- Application set controller name string
   name: applicationset-controller
 
-  # -- The number of controller pods to run
-  replicaCount: 1
+  # -- The number of application set controller pods to run.
+  replicas: 1
 
   image:
     # -- Repository to use for the application set controller
@@ -2273,31 +2273,45 @@ applicationSet:
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
 
-  args:
-    # -- The default metric address
-    metricsAddr: :8080
-    # -- The default health check port
-    probeBindAddr: :8081
-    # -- The default leader election setting
-    enableLeaderElection: false
-    # -- How application is synced between the generator and the cluster
-    policy: sync
-    # -- Print debug logs
-    debug: false
-    # -- Enable dry run mode
-    dryRun: false
+  # -- Secrets with credentials to pull images from a private registry
+  imagePullSecrets: []
 
-  # -- ApplicationSet controller log format. Either `text` or `json`
+  # -- Prevent application set to modify any generated resources
+  dryRun: false
+
+  # -- Application set policy for managing generated resources. One of: `sync`, `create-only`, `create-update`
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Controlling-Resource-Modification/
+  policy: sync
+
+  # -- Application set controller log format. Either `text` or `json`
   # @default -- `""` (defaults to global.logging.format)
   logFormat: ""
-  # -- ApplicationSet controller log level. One of: `debug`, `info`, `warn`, `error`
+
+  # -- Application set controller log level. One of: `debug`, `info`, `warn`, `error`
   # @default -- `""` (defaults to global.logging.level)
   logLevel: ""
 
-  # -- Additional containers to be added to the applicationset controller pod
-  extraContainers: []
+  # -- Additional command line arguments to pass to application set controller
+  args: []
 
-  ## Metrics service configuration
+  # -- Environment variables to pass to application set controller
+  env: []
+
+  # -- envFrom to pass to application set controller
+  # @default -- `[]` (See [values.yaml])
+  envFrom: []
+    # - configMapRef:
+    #     name: config-map-name
+    # - secretRef:
+    #     name: secret-name
+
+  # -- Annotations to be added to application set controller pods
+  podAnnotations: {}
+
+  # -- Labels to be added to application set controller pods
+  podLabels: {}
+
+  ## Application set service configuration
   metrics:
     # -- Deploy metrics service
     enabled: false
@@ -2322,7 +2336,6 @@ applicationSet:
       # -- Prometheus ServiceMonitor selector
       selector: {}
         # prometheus: kube-prometheus
-
       # -- Prometheus ServiceMonitor scheme
       scheme: ""
       # -- Prometheus ServiceMonitor tlsConfig
@@ -2332,10 +2345,54 @@ applicationSet:
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
 
-  # -- If defined, uses a Secret to pull an image from a private Docker registry or repository.
-  imagePullSecrets: []
+  # -- Application set controller container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
 
-  ## Application set service configuration
+  # -- Additional sidecar containers to be added into the application set controller pod
+  extraContainers: []
+
+  volumes: []
+  # -- Additional volumeMounts to the application set main container
+  volumes: []
+
+  # -- Additional volumes to the application set controller pod
+  volumeMounts: []
+
+  # -- [Node selector]
+  nodeSelector: {}
+  # -- [Tolerations] for use with node taints
+  tolerations: []
+  # -- Assign custom [affinity] rules to the deployment
+  affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the application set controller
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
+  # -- Priority class for the application set controller pods
+  priorityClassName: ""
+
+  # -- Resource limits and requests for the application set controller pods
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  # Application set service configuration
   service:
     # -- Application set service annotations
     annotations: {}
@@ -2347,130 +2404,64 @@ applicationSet:
     portName: webhook
 
   serviceAccount:
-    # -- Specifies whether a service account should be created
+    # -- Create a service account for the applicationset controller
     create: true
+    # -- The name of the service account to use.
+    name: ""
     # -- Annotations to add to the service account
     annotations: {}
     # -- Labels applied to created service account
     labels: {}
-    # -- The name of the service account to use.
-    # If not set and create is true, a name is generated using the fullname template
-    name: ""
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
-  # -- Annotations for the controller pods
-  podAnnotations: {}
-
-  # -- Labels for the controller pods
-  podLabels: {}
-
-  # -- Pod Security Context
-  podSecurityContext: {}
-    # fsGroup: 2000
-
-  # -- Security Context
-  securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
-
-  # -- Resource limits and requests for the controller pods.
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-
-  # -- [Node selector]
-  nodeSelector: {}
-
-  # -- [Tolerations] for use with node taints
-  tolerations: []
-
-  # -- Assign custom [affinity] rules
-  affinity: {}
-
-  # -- If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default.
-  priorityClassName: ""
-
-  # -- List of extra mounts to add (normally used with extraVolumes)
-  extraVolumeMounts: []
-    # - mountPath: /tmp/foobar
-    #   name: foobar
-
-  # -- List of extra volumes to add
-  extraVolumes: []
-    # - name: foobar
-    #   emptyDir: {}
-
-  # -- List of extra cli args to add
-  extraArgs: []
-
-  # -- Environment variables to pass to the controller
-  extraEnv: []
-    # - name: "MY_VAR"
-    #   value: "value"
-
-  # -- envFrom to pass to the controller
-  # @default -- `[]` (See [values.yaml])
-  extraEnvFrom: []
-    # - configMapRef:
-    #     name: config-map-name
-    # - secretRef:
-    #     name: secret-name
-
-  ## Webhook for the Git Generator
+  ## Webhook ingress for the Git Generator
   ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
-  webhook:
-    ingress:
-      # -- Enable an ingress resource for Webhooks
-      enabled: false
-      # -- Additional ingress annotations
-      annotations: {}
-      # -- Additional ingress labels
-      labels: {}
-      # -- Defines which ingress controller will implement the resource
-      ingressClassName: ""
+  ingressWebhook:
+    # -- Enable an ingress resource for Webhooks
+    enabled: true
+    # -- Additional ingress annotations
+    annotations: {}
+    # -- Additional ingress labels
+    labels: {}
 
-      # -- List of ingress hosts
-      ## Hostnames must be provided if Ingress is enabled.
-      ## Secrets must be manually created in the namespace
-      hosts: []
-        # - argocd-applicationset.example.com
+    # -- Defines which ingress controller will implement the resource
+    ingressClassName: ""
 
-      # -- List of ingress paths
-      paths:
-        - /api/webhook
-      # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
-      pathType: Prefix
-      # -- Additional ingress paths
-      extraPaths: []
-        # - path: /*
-        #   backend:
-        #     serviceName: ssl-redirect
-        #     servicePort: use-annotation
-        ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
-        # - path: /*
-        #   pathType: Prefix
-        #   backend:
-        #     service:
-        #       name: ssl-redirect
-        #       port:
-        #         name: use-annotation
+    # -- List of webhook ingress hosts
+    ## Hostnames must be provided if Ingress is enabled.
+    ## Secrets must be manually created in the namespace
+    hosts: []
+      #  - argocd-applicationset.example.com
 
-      # -- Ingress TLS configuration
-      tls: []
-        # - secretName: argocd-applicationset-tls
-        #   hosts:
-        #     - argocd-applicationset.example.com
+    # -- List of ingress paths
+    # @default -- See [values.yaml]
+    paths:
+      - /api/webhook
+
+    # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
+    pathType: Prefix
+
+    # -- Additional ingress paths for webhook
+    extraPaths: []
+      # - path: /*
+      #   backend:
+      #     serviceName: ssl-redirect
+      #     servicePort: use-annotation
+      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
+
+    # -- Ingress TLS configuration
+    tls: []
+      # - secretName: argocd-applicationset-tls
+      #   hosts:
+      #     - argocd-applicationset.example.com
 
 notifications:
   # -- Enable Notifications controller
@@ -2558,8 +2549,8 @@ notifications:
   serviceAccount:
     # -- Create a service account for the notification controller
     create: true
-    # -- Service account to use
-    name: argocd-notifications-controller
+    # -- The name of the service account to use.
+    name: ""
     # -- Annotations applied to created service account
     annotations: {}
     # -- Automount API credentials for the Service Account
@@ -2638,7 +2629,7 @@ notifications:
         # -- Specifies whether a service account should be created
         create: true
         # -- The name of the service account to use.
-        name: argocd-notifications-slack-bot
+        name: ""
         # -- Annotations applied to created service account
         annotations: {}
         # -- Automount API credentials for the Service Account

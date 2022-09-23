@@ -89,6 +89,17 @@ Create argocd application set name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create the name of the application set service account to use
+*/}}
+{{- define "argo-cd.applicationSet.serviceAccountName" -}}
+{{- if .Values.applicationSet.serviceAccount.create -}}
+    {{ default (include "argo-cd.applicationSet.fullname" .) .Values.applicationSet.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.applicationSet.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create argocd notifications name and version as used by the chart label.
 */}}
 {{- define "argo-cd.notifications.fullname" -}}
@@ -147,17 +158,6 @@ Create the name of the repo-server service account to use
     {{ default (include "argo-cd.repoServer.fullname" .) .Values.repoServer.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.repoServer.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the application set service account to use
-*/}}
-{{- define "argo-cd.applicationSetServiceAccountName" -}}
-{{- if .Values.applicationSet.serviceAccount.create -}}
-    {{ default (include "argo-cd.applicationSet.fullname" .) .Values.applicationSet.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.applicationSet.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 

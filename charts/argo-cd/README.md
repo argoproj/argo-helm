@@ -895,26 +895,29 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| applicationSet.affinity | object | `{}` | Assign custom [affinity] rules |
-| applicationSet.args.debug | bool | `false` | Print debug logs |
-| applicationSet.args.dryRun | bool | `false` | Enable dry run mode |
-| applicationSet.args.enableLeaderElection | bool | `false` | The default leader election setting |
-| applicationSet.args.metricsAddr | string | `":8080"` | The default metric address |
-| applicationSet.args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
-| applicationSet.args.probeBindAddr | string | `":8081"` | The default health check port |
-| applicationSet.enabled | bool | `true` | Enable Application Set controller |
-| applicationSet.extraArgs | list | `[]` | List of extra cli args to add |
-| applicationSet.extraContainers | list | `[]` | Additional containers to be added to the applicationset controller pod |
-| applicationSet.extraEnv | list | `[]` | Environment variables to pass to the controller |
-| applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
-| applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
-| applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
+| applicationSet.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| applicationSet.args | list | `[]` | Additional command line arguments to pass to application set controller |
+| applicationSet.containerSecurityContext | object | See [values.yaml] | Application set controller container-level security context |
+| applicationSet.dryRun | bool | `false` | Prevent application set to modify any generated resources |
+| applicationSet.enabled | bool | `true` | Enable application set controller |
+| applicationSet.env | list | `[]` | Environment variables to pass to application set controller |
+| applicationSet.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application set controller |
+| applicationSet.extraContainers | list | `[]` | Additional sidecar containers to be added into the application set controller pod |
 | applicationSet.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application set controller |
 | applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application set controller |
 | applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application set controller |
-| applicationSet.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
-| applicationSet.logFormat | string | `""` (defaults to global.logging.format) | ApplicationSet controller log format. Either `text` or `json` |
-| applicationSet.logLevel | string | `""` (defaults to global.logging.level) | ApplicationSet controller log level. One of: `debug`, `info`, `warn`, `error` |
+| applicationSet.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
+| applicationSet.ingressWebhook.annotations | object | `{}` | Additional ingress annotations |
+| applicationSet.ingressWebhook.enabled | bool | `true` | Enable an ingress resource for Webhooks |
+| applicationSet.ingressWebhook.extraPaths | list | `[]` | Additional ingress paths for webhook |
+| applicationSet.ingressWebhook.hosts | list | `[]` | List of webhook ingress hosts |
+| applicationSet.ingressWebhook.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
+| applicationSet.ingressWebhook.labels | object | `{}` | Additional ingress labels |
+| applicationSet.ingressWebhook.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
+| applicationSet.ingressWebhook.paths | list | See [values.yaml] | List of ingress paths |
+| applicationSet.ingressWebhook.tls | list | `[]` | Ingress TLS configuration |
+| applicationSet.logFormat | string | `""` (defaults to global.logging.format) | Application set controller log format. Either `text` or `json` |
+| applicationSet.logLevel | string | `""` (defaults to global.logging.level) | Application set controller log level. One of: `debug`, `info`, `warn`, `error` |
 | applicationSet.metrics.enabled | bool | `false` | Deploy metrics service |
 | applicationSet.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | applicationSet.metrics.service.labels | object | `{}` | Metrics service labels |
@@ -929,15 +932,14 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | applicationSet.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
-| applicationSet.name | string | `"applicationset-controller"` | Application Set controller name string |
+| applicationSet.name | string | `"applicationset-controller"` | Application set controller name string |
 | applicationSet.nodeSelector | object | `{}` | [Node selector] |
-| applicationSet.podAnnotations | object | `{}` | Annotations for the controller pods |
-| applicationSet.podLabels | object | `{}` | Labels for the controller pods |
-| applicationSet.podSecurityContext | object | `{}` | Pod Security Context |
-| applicationSet.priorityClassName | string | `""` | If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default. |
-| applicationSet.replicaCount | int | `1` | The number of controller pods to run |
-| applicationSet.resources | object | `{}` | Resource limits and requests for the controller pods. |
-| applicationSet.securityContext | object | `{}` | Security Context |
+| applicationSet.podAnnotations | object | `{}` | Annotations to be added to application set controller pods |
+| applicationSet.podLabels | object | `{}` | Labels to be added to application set controller pods |
+| applicationSet.policy | string | `"sync"` | Application set policy for managing generated resources. One of: `sync`, `create-only`, `create-update` |
+| applicationSet.priorityClassName | string | `""` | Priority class for the application set controller pods |
+| applicationSet.replicas | int | `1` | The number of application set controller pods to run. |
+| applicationSet.resources | object | `{}` | Resource limits and requests for the application set controller pods |
 | applicationSet.service.annotations | object | `{}` | Application set service annotations |
 | applicationSet.service.labels | object | `{}` | Application set service labels |
 | applicationSet.service.port | int | `7000` | Application set service port |
@@ -947,15 +949,9 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | applicationSet.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | applicationSet.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| applicationSet.webhook.ingress.annotations | object | `{}` | Additional ingress annotations |
-| applicationSet.webhook.ingress.enabled | bool | `false` | Enable an ingress resource for Webhooks |
-| applicationSet.webhook.ingress.extraPaths | list | `[]` | Additional ingress paths |
-| applicationSet.webhook.ingress.hosts | list | `[]` | List of ingress hosts |
-| applicationSet.webhook.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
-| applicationSet.webhook.ingress.labels | object | `{}` | Additional ingress labels |
-| applicationSet.webhook.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
-| applicationSet.webhook.ingress.paths | list | `["/api/webhook"]` | List of ingress paths |
-| applicationSet.webhook.ingress.tls | list | `[]` | Ingress TLS configuration |
+| applicationSet.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the application set controller |
+| applicationSet.volumeMounts | list | `[]` | Additional volumes to the application set controller pod |
+| applicationSet.volumes | list | `[]` | Additional volumeMounts to the application set main container |
 
 ## Notifications
 
@@ -982,7 +978,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.bots.slack.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | notifications.bots.slack.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| notifications.bots.slack.serviceAccount.name | string | `"argocd-notifications-slack-bot"` | The name of the service account to use. |
+| notifications.bots.slack.serviceAccount.name | string | `""` | The name of the service account to use. |
 | notifications.bots.slack.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.enabled | bool | `true` | Enable Notifications controller |
@@ -1017,7 +1013,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | notifications.serviceAccount.create | bool | `true` | Create a service account for the notification controller |
-| notifications.serviceAccount.name | string | `"argocd-notifications-controller"` | Service account to use |
+| notifications.serviceAccount.name | string | `""` | The name of the service account to use. |
 | notifications.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.volumeMounts | list | `[]` | Additional volume mounts to the notifications controller pod |
 | notifications.volumes | list | `[]` | Additional volumes to the notifications controller main container |
