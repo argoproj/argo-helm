@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "argo-cd.dex.fullname" . }}
+  name: {{ include "argo-cd.dex.fullname" . }}
   {{- with .Values.dex.metrics.serviceMonitor.namespace }}
   namespace: {{ . }}
   {{- end }}

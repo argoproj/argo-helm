@@ -2208,43 +2208,12 @@ notifications:
 dex:
   # -- Enable dex
   enabled: true
+
   # -- Dex name
   name: dex-server
 
   # -- Additional command line arguments to pass to the Dex server
   args: []
-
-  metrics:
-    # -- Deploy metrics service
-    enabled: false
-    service:
-      # -- Metrics service annotations
-      annotations: {}
-      # -- Metrics service labels
-      labels: {}
-      # -- Metrics service port name
-      portName: http-metrics
-    serviceMonitor:
-      # -- Enable a prometheus ServiceMonitor
-      enabled: false
-      # -- Prometheus ServiceMonitor interval
-      interval: 30s
-      # -- Prometheus [RelabelConfigs] to apply to samples before scraping
-      relabelings: []
-      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
-      metricRelabelings: []
-      # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
-
-      # -- Prometheus ServiceMonitor scheme
-      scheme: ""
-      # -- Prometheus ServiceMonitor tlsConfig
-      tlsConfig: {}
-      # -- Prometheus ServiceMonitor namespace
-      namespace: "" # "monitoring"
-      # -- Prometheus ServiceMonitor labels
-      additionalLabels: {}
 
   image:
     # -- Dex image repository
@@ -2254,6 +2223,8 @@ dex:
     # -- Dex imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
+
+  # Argo CD init image that crates Dex config
   initImage:
     # -- Argo CD init image repository
     # @default -- `""` (defaults to global.image.repository)
@@ -2264,6 +2235,9 @@ dex:
     # -- Argo CD init image imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
+
+  # -- Secrets with credentials to pull images from a private registry
+  imagePullSecrets: []
 
   # -- Environment variables to pass to the Dex server
   env: []
@@ -2281,6 +2255,16 @@ dex:
 
   # -- Labels to be added to the Dex server pods
   podLabels: {}
+
+  pdb:
+    # -- Labels to be added to Dex server pdb
+    labels: {}
+    # -- Annotations to be added to Dex server pdb
+    annotations: {}
+    # -- Deploy a [PodDisruptionBudget] for the Dex server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
 
   ## Probes for Dex server
   ## Supported from Dex >= 2.28.0
@@ -2311,38 +2295,39 @@ dex:
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
 
-  serviceAccount:
-    # -- Create dex service account
-    create: true
-    # -- Dex service account name
-    name: argocd-dex-server
-    # -- Annotations applied to created service account
-    annotations: {}
-    # -- Automount API credentials for the Service Account
-    automountServiceAccountToken: true
+  # -- Resource limits and requests for dex
+  resources: {}
+  #  limits:
+  #    cpu: 50m
+  #    memory: 64Mi
+  #  requests:
+  #    cpu: 10m
+  #    memory: 32Mi
 
-  # -- Additional volumeMounts to the dex main container
-  volumeMounts: []
+  # -- Init containers to add to the dex pod
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+  #        mv linux-amd64/helm /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+  #  volumeMounts:
+  #  - mountPath: /usr/local/bin/helm
+  #    name: custom-tools
+  #    subPath: helm
+
+  # -- Additional containers to be added to the dex pod
+  extraContainers: []
 
   # -- Additional volumes to the dex pod
   volumes: []
 
-  # -- Container port for HTTP access
-  containerPortHttp: 5556
-  # -- Service port for HTTP access
-  servicePortHttp: 5556
-  # -- Service port name for HTTP access
-  servicePortHttpName: http
-  # -- Container port for gRPC access
-  containerPortGrpc: 5557
-  # -- Service port for gRPC access
-  servicePortGrpc: 5557
-  # -- Service port name for gRPC access
-  servicePortGrpcName: grpc
-  # -- Container port for metrics access
-  containerPortMetrics: 5558
-  # -- Service port for metrics access
-  servicePortMetrics: 5558
+  # -- Additional volumeMounts to the dex main container
+  volumeMounts: []
 
   # -- [Node selector]
   nodeSelector: {}
@@ -2363,54 +2348,77 @@ dex:
   priorityClassName: ""
 
   # -- Dex container-level security context
+  # @default -- See [values.yaml]
   containerSecurityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #     - all
-    # readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
 
-  # -- Resource limits and requests for dex
-  resources: {}
-  #  limits:
-  #    cpu: 50m
-  #    memory: 64Mi
-  #  requests:
-  #    cpu: 10m
-  #    memory: 32Mi
-
-  # -- Additional containers to be added to the dex pod
-  extraContainers: []
-
-  # -- Init containers to add to the dex pod
-  initContainers: []
-  #  - name: download-tools
-  #    image: alpine:3.8
-  #    command: [sh, -c]
-  #    args:
-  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
-  #        mv linux-amd64/helm /custom-tools/
-  #    volumeMounts:
-  #      - mountPath: /custom-tools
-  #        name: custom-tools
-  #  volumeMounts:
-  #  - mountPath: /usr/local/bin/helm
-  #    name: custom-tools
-  #    subPath: helm
-
-  pdb:
-    # -- Labels to be added to Dex server pdb
-    labels: {}
-    # -- Annotations to be added to Dex server pdb
-    annotations: {}
-
-    # -- Deploy a Poddisruptionbudget for the Dex server
+  metrics:
+    # -- Deploy metrics service
     enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
+    service:
+      # -- Metrics service annotations
+      annotations: {}
+      # -- Metrics service labels
+      labels: {}
+      # -- Metrics service port
+      servicePort: 5558
+      # -- Metrics service port name
+      portName: http-metrics
+    serviceMonitor:
+      # -- Enable a prometheus ServiceMonitor
+      enabled: false
+      # -- Prometheus ServiceMonitor interval
+      interval: 30s
+      # -- Prometheus [RelabelConfigs] to apply to samples before scraping
+      relabelings: []
+      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
+      metricRelabelings: []
+      # -- Prometheus ServiceMonitor selector
+      selector: {}
+        # prometheus: kube-prometheus
 
-  # -- Secrets with credentials to pull images from a private registry
-  imagePullSecrets: []
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: {}
+      # -- Prometheus ServiceMonitor namespace
+      namespace: "" # "monitoring"
+      # -- Prometheus ServiceMonitor labels
+      additionalLabels: {}
+
+  # Dex service configuration
+  service:
+    # -- Dex service annotations
+    annotations: {}
+    # Additional dex service labels
+    labels: {}
+    # HTTP access
+    http:
+      # -- Service port for HTTP access
+      port: 5556
+      # -- Service port name for HTTP access
+      name: http
+    # gRPC access
+    grpc:
+      # -- Service port for gRPC access
+      port: 5557
+      # -- Service port name for gRPC access
+      name: grpc
+
+  serviceAccount:
+    # -- Create dex service account
+    create: true
+    # -- Dex service account name
+    name: ""
+    # -- Annotations applied to created service account
+    annotations: {}
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
 ## Redis
 redis:

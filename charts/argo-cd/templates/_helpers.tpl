@@ -175,9 +175,21 @@ Create dex name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Return Dex server endpoint
+*/}}
+{{- define "argo-cd.dex.server" -}}
+{{- $disable := index .Values.configs.params "dexserver.disable.tls" | toString }}
+{{- $scheme := (eq $disable "true") | ternary "http" "https" }}
+{{- $host := include "argo-cd.dex.fullname" . }}
+{{- $port := int .Values.dex.service.http.port }}
+{{/* Use scheme in Argo CD 2.5.x */}}
+{{- printf "http://%s:%d" $host $port }}
+{{- end }}
+
+{{/*
 Create the name of the dex service account to use
 */}}
-{{- define "argo-cd.dexServiceAccountName" -}}
+{{- define "argo-cd.dex.serviceAccountName" -}}
 {{- if .Values.dex.serviceAccount.create }}
     {{- default (include "argo-cd.dex.fullname" .) .Values.dex.serviceAccount.name }}
 {{- else }}
@@ -250,7 +262,7 @@ repo.server: "{{ include "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServe
 redis.server: {{ . | quote }}
 {{- end }}
 {{- if .Values.dex.enabled }}
-server.dex.server: "http://{{ include "argo-cd.dex.fullname" . }}:{{ .Values.dex.servicePortHttp }}"
+server.dex.server: "{{ include "argo-cd.dex.server" . }}"
 {{- end }}
 {{- range $component := tuple "controller" "server" "reposerver" }}
 {{ $component }}.log.format: {{ $.Values.global.logging.format | quote }}

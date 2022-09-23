@@ -11,6 +11,6 @@ roleRef:
   name: {{ template "argo-cd.dex.fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "argo-cd.dexServiceAccountName" . }}
+  name: {{ template "argo-cd.dex.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 {{- end }}
