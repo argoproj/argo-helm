@@ -1,7 +1,7 @@
 {{- if and .Values.applicationSet.enabled .Values.applicationSet.ingressWebhook.enabled .Values.applicationSet.ingressWebhook.hosts }}
 {{- $serviceName := include "argo-cd.applicationSet.fullname" . -}}
 {{- $servicePort := .Values.applicationSet.service.portName -}}
-apiVersion: {{ include "argo-cd.ingress.apiVersion" . }}
+apiVersion: {{ include "argo-cd.apiVersion.ingress" . }}
 kind: Ingress
 metadata:
   name: {{ include "argo-cd.applicationSet.fullname" . }}-webhook
@@ -17,7 +17,7 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+  {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
   {{- with .Values.applicationSet.ingressWebhook.ingressClassName }}
   ingressClassName: {{ . }}
   {{- end }}
@@ -32,11 +32,11 @@ spec:
           {{- end }}
           {{- range $.Values.applicationSet.ingressWebhook.paths }}
           - path: {{ . }}
-            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
             pathType: {{ $.Values.applicationSet.ingressWebhook.pathType }}
             {{- end }}
             backend:
-              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
               service:
                 name: {{ $serviceName }}
                 port:

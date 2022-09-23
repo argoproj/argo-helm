@@ -1,5 +1,5 @@
 {{- if .Values.server.autoscaling.enabled }}
-apiVersion: {{ include "argo-cd.autoscaling.apiVersion" . }}
+apiVersion: {{ include "argo-cd.apiVersion.autoscaling" . }}
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
@@ -17,7 +17,7 @@ spec:
     - type: Resource
       resource:
         name: memory
-        {{- if eq (include "argo-cd.autoscaling.apiVersion" $) "autoscaling/v2beta1" }}
+        {{- if eq (include "argo-cd.apiVersion.autoscaling" $) "autoscaling/v2beta1" }}
         targetAverageUtilization: {{ . }}
         {{- else }}
         target:
@@ -29,7 +29,7 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        {{- if eq (include "argo-cd.autoscaling.apiVersion" $) "autoscaling/v2beta1" }}
+        {{- if eq (include "argo-cd.apiVersion.autoscaling" $) "autoscaling/v2beta1" }}
         targetAverageUtilization: {{ . }}
         {{- else }}
         target:
