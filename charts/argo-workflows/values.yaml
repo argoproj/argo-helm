@@ -539,3 +539,21 @@ artifactRepository:
   # serviceAccountKeySecret:
   # name: my-gcs-credentials
   # key: serviceAccountKey
+  # -- Store artifact in Azure Blob Storage
+  # @default -- `{}` (See [values.yaml])
+  azure: {}
+  # endpoint: https://mystorageaccountname.blob.core.windows.net
+  # container: my-container-name
+  # blob: path/in/container
+  ## accountKeySecret is a secret selector.
+  ## It references the k8s secret named 'my-azure-storage-credentials'.
+  ## This secret is expected to have have the key 'account-access-key',
+  ## containing the base64 encoded credentials to the storage account.
+  ## If a managed identity has been assigned to the machines running the
+  ## workflow (e.g., https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
+  ## then accountKeySecret is not needed, and useSDKCreds should be
+  ## set to true instead:
+  # useSDKCreds: true
+  # accountKeySecret:
+  #  name: my-azure-storage-credentials
+  #  key: account-access-key

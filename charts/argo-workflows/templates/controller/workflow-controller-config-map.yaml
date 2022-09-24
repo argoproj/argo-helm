@@ -59,6 +59,9 @@ data:
       {{- if .Values.artifactRepository.gcs }}
       gcs:
 {{ toYaml .Values.artifactRepository.gcs | indent 8}}
+      {{- else if .Values.artifactRepository.azure }}
+      azure:
+{{ toYaml .Values.artifactRepository.azure | indent 8}}
       {{- else }}
       s3:
         {{- if .Values.useStaticCredentials }}
