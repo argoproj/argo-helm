@@ -11,6 +11,9 @@ metadata:
   name: {{ template "argo-cd.applicationSet.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
+{{- with .Values.applicationSet.service.labels }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
 spec:
   ports:
   - name: {{ .Values.applicationSet.service.portName }}

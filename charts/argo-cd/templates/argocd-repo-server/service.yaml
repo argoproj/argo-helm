@@ -9,6 +9,9 @@ metadata:
 {{- end }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
+{{- with .Values.repoServer.service.labels }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
   name: {{ template "argo-cd.repoServer.fullname" . }}
 spec:
   ports:
