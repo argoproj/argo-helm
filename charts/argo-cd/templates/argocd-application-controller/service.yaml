@@ -10,8 +10,8 @@ metadata:
   name: {{ template "argo-cd.controller.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-{{- if .Values.controller.service.labels }}
-{{- toYaml .Values.controller.service.labels | nindent 4 }}
+{{- with .Values.controller.service.labels }}
+{{- toYaml . | nindent 4 }}
 {{- end }}
 spec:
   ports:
