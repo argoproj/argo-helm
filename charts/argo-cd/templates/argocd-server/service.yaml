@@ -1,52 +1,52 @@
 apiVersion: v1
 kind: Service
 metadata:
-{{- if .Values.server.service.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.server.service.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-{{- end }}
   name: {{ template "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
-{{- if .Values.server.service.labels }}
-{{- toYaml .Values.server.service.labels | nindent 4 }}
-{{- end }}
+    {{- with .Values.server.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.server.service.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
 spec:
   type: {{ .Values.server.service.type }}
   ports:
   - name: {{ .Values.server.service.servicePortHttpName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttp }}
-    targetPort: {{- if .Values.server.service.namedTargetPort }} {{ .Values.server.name }} {{- else }} {{ .Values.server.containerPort }} {{- end }}
+    targetPort: {{ .Values.server.service.namedTargetPort | ternary .Values.server.name .Values.server.containerPort }}
     {{- if eq .Values.server.service.type "NodePort" }}
     nodePort: {{ .Values.server.service.nodePortHttp }}
     {{- end }}
   - name: {{ .Values.server.service.servicePortHttpsName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttps }}
-    targetPort: {{- if .Values.server.service.namedTargetPort }} {{ .Values.server.name }} {{- else }} {{ .Values.server.containerPort }} {{- end }}
+    targetPort: {{ .Values.server.service.namedTargetPort | ternary .Values.server.name .Values.server.containerPort }}
     {{- if eq .Values.server.service.type "NodePort" }}
     nodePort: {{ .Values.server.service.nodePortHttps }}
     {{- end }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
-{{- if eq .Values.server.service.type "LoadBalancer" }}
-{{- if .Values.server.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.server.service.loadBalancerIP | quote }}
-{{- end }}
-{{- if .Values.server.service.externalIPs }}
-  externalIPs: {{ .Values.server.service.externalIPs }}
-{{- end }}
-{{- if .Values.server.service.loadBalancerSourceRanges }}
+  {{- if eq .Values.server.service.type "LoadBalancer" }}
+  {{- with .Values.server.service.loadBalancerIP }}
+  loadBalancerIP: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.server.service.externalIPs }}
+  externalIPs: {{ . }}
+  {{- end }}
+  {{- with .Values.server.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
-{{ toYaml .Values.server.service.loadBalancerSourceRanges | indent 4 }}
-{{- end }}
-{{- end -}}
-{{- with .Values.server.service.externalTrafficPolicy }}
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- end }}
+  {{- with .Values.server.service.externalTrafficPolicy }}
   externalTrafficPolicy: {{ . }}
-{{- end }}
-{{- with .Values.server.service.sessionAffinity }}
+  {{- end }}
+  {{- with .Values.server.service.sessionAffinity }}
   sessionAffinity: {{ . }}
-{{- end }}
+  {{- end }}

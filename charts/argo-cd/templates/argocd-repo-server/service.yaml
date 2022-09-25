@@ -1,18 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-{{- if .Values.repoServer.service.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.repoServer.service.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-{{- end }}
+  name: {{ template "argo-cd.repoServer.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
-{{- with .Values.repoServer.service.labels }}
-{{- toYaml . | nindent 4 }}
-{{- end }}
-  name: {{ template "argo-cd.repoServer.fullname" . }}
+    {{- with .Values.repoServer.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.repoServer.service.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
 spec:
   ports:
   - name: {{ .Values.repoServer.service.portName }}
