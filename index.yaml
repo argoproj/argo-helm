@@ -13114,6 +13114,26 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Change default type of `.mainContainer.env` and `.executor.env` from object to array"
+    apiVersion: v2
+    appVersion: v3.4.0
+    created: "2022-09-26T01:49:56.880583177Z"
+    description: A Helm chart for Argo Workflows
+    digest: 09edb6c72cf5d540ee8f22efde967f47809a7e1f82c9d6353d58167766db43c0
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.19.3/argo-workflows-0.19.3.tgz
+    version: 0.19.3
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Set only used values on SSO configuration"
     apiVersion: v2
     appVersion: v3.4.0
@@ -16391,4 +16411,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-09-25T17:03:02.443114452Z"
+generated: "2022-09-26T01:49:56.889133012Z"
