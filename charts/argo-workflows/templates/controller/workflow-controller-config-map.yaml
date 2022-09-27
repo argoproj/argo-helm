@@ -142,7 +142,7 @@ data:
       issuerAlias: {{ .issuerAlias }}
       {{- end }}
       {{- if .sessionExpiry }}
-      sessionExpiry: .sessionExpiry
+      sessionExpiry: {{ .sessionExpiry }}
       {{- end }}
       {{- if .customGroupClaimName }}
       customGroupClaimName: {{ .customGroupClaimName }}
