@@ -7,8 +7,10 @@ metadata:
     {{- if .Values.customExternalDnsName }}
     kubernetes.io/ingress.class: {{ .Values.customIngressControllerClassAnnotation }}
     {{- end }}
+    {{- if .Values.server.certificate.enabled }}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     traefik.ingress.kubernetes.io/redirect-entry-point: https
+    {{- end }}
     ingress.kubernetes.io/force-ssl-redirect: "false"
     ingress.kubernetes.io/ssl-redirect: "false"
   name: {{ template "argo-cd.server.fullname" . }}
@@ -37,7 +39,9 @@ spec:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
               {{- end }}
+  {{- if .Values.server.certificate.enabled }}
   tls:
     - hosts:
       - {{ include "coreweave.externalDnsName" . }}
       secretName: {{ include "coreweave.certSecretName" . }}
+  {{- end }}
