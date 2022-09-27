@@ -131,9 +131,9 @@ data:
         name: {{ .clientSecret.name }}
         key: {{ .clientSecret.key }}
       redirectUrl: {{ .redirectUrl }}
-      {{- if and (.rbac) (.rbac.enabled) }}
+      {{- with .rbac }}
       rbac:
-        enabled: {{ .rbac.enabled }}
+        enabled: {{ .enabled }}
       {{- end }}
       {{- if .scopes }}
       scopes: {{ toYaml .scopes | nindent 8 }}
@@ -141,9 +141,8 @@ data:
       {{- if .issuerAlias }}
       issuerAlias: {{ .issuerAlias }}
       {{- end }}
-      {{- if and (.sessionExpiry) (.sessionExpiry.duration) }}
-      sessionExpiry:
-       duration: {{ .sessionExpiry.duration }}
+      {{- if .sessionExpiry }}
+      sessionExpiry: .sessionExpiry
       {{- end }}
       {{- if .customGroupClaimName }}
       customGroupClaimName: {{ .customGroupClaimName }}
