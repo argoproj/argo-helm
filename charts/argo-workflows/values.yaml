@@ -284,7 +284,7 @@ mainContainer:
   # -- Resource limits and requests for the Workflow main container
   resources: {}
   # -- Adds environment variables for the Workflow main container
-  env: {}
+  env: []
   # -- sets security context for the Workflow main container
   securityContext: {}
 
@@ -300,7 +300,7 @@ executor:
   # -- Resource limits and requests for the Workflow Executors
   resources: {}
   # -- Adds environment variables for the executor.
-  env: {}
+  env: []
   # -- sets security context for the executor container
   securityContext: {}
 
@@ -483,6 +483,11 @@ server:
     # redirectUrl: https://argo/oauth2/callback
     # rbac:
     #   enabled: true
+    ## When present, restricts secrets the server can read to a given list.
+    ## You can use it to restrict the server to only be able to access the
+    ## service account token secrets that are associated with service accounts
+    ## used for authorization.
+    #   secretWhitelist: []
     ## Scopes requested from the SSO ID provider.  The 'groups' scope requests
     ## group membership information, which is usually used for authorization
     ## decisions.
@@ -535,3 +540,21 @@ artifactRepository:
   # serviceAccountKeySecret:
   # name: my-gcs-credentials
   # key: serviceAccountKey
+  # -- Store artifact in Azure Blob Storage
+  # @default -- `{}` (See [values.yaml])
+  azure: {}
+  # endpoint: https://mystorageaccountname.blob.core.windows.net
+  # container: my-container-name
+  # blob: path/in/container
+  ## accountKeySecret is a secret selector.
+  ## It references the k8s secret named 'my-azure-storage-credentials'.
+  ## This secret is expected to have have the key 'account-access-key',
+  ## containing the base64 encoded credentials to the storage account.
+  ## If a managed identity has been assigned to the machines running the
+  ## workflow (e.g., https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
+  ## then accountKeySecret is not needed, and useSDKCreds should be
+  ## set to true instead:
+  # useSDKCreds: true
+  # accountKeySecret:
+  #  name: my-azure-storage-credentials
+  #  key: account-access-key

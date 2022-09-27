@@ -89,9 +89,9 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
 
-Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations).
+Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations). Starting with 5.2.0, the CRDs have been moved to `<chart>/templates` to address this design decision.
 
-Please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
+If you are using Argo CD chart version prior to 5.2.0 or have elected to manage the Argo CD CRDs outside of the chart, please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
 
 ```bash
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVersion>"
