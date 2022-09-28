@@ -2,9 +2,10 @@
 
 A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 
-Source code can be found [here](https://argo-cd.readthedocs.io/en/stable/)
+Source code can be found here:
 
-## Additional Information
+* <https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd>
+* <https://github.com/argoproj/argo-cd>
 
 This is a **community maintained** chart. This chart installs [argo-cd](https://argo-cd.readthedocs.io/en/stable/), a declarative, GitOps continuous delivery tool for Kubernetes.
 
