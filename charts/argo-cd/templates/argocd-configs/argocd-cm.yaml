@@ -5,11 +5,12 @@ metadata:
   name: argocd-cm
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" "cm") | nindent 4 }}
-  {{- if .Values.server.configAnnotations }}
+  {{- with .Values.server.configAnnotations }}
   annotations:
-  {{- range $key, $value := .Values.server.configAnnotations }}
+    {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
+    {{- end }}
   {{- end }}
-  {{- end }}
-data: {{- include "argo-cd.config" $ | nindent 4 }}
+data:
+  {{- include "argo-cd.config" $ | nindent 2 }}
 {{- end }}

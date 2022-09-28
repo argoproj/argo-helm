@@ -7,6 +7,15 @@ images:
   pullSecrets: []
   # - name: argo-pull-secret
 
+## Custom resource configuration
+crds:
+  # -- Install and upgrade CRDs
+  install: true
+  # -- Keep CRDs on chart uninstall
+  keep: true
+  # -- Annotations to be added to all CRDs
+  annotations: {}
+
 # -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
 createAggregateRoles: true
@@ -82,6 +91,12 @@ controller:
     path: /metrics
     # -- Port is the port where metrics are emitted
     port: 9090
+    # -- How often custom metrics are cleared from memory
+    metricsTTL: ""
+    # -- Flag that instructs prometheus to ignore metric emission errors.
+    ignoreErrors: false
+    # --  Flag that use a self-signed cert for TLS
+    secure: false
     # -- Container metrics port name
     portName: metrics
     # -- Service metrics port
@@ -142,6 +157,12 @@ controller:
     path: /telemetry
     # -- telemetry container port
     port: 8081
+    # -- How often custom metrics are cleared from memory
+    metricsTTL: ""
+    # -- Flag that instructs prometheus to ignore metric emission errors.
+    ignoreErrors: false
+    # --  Flag that use a self-signed cert for TLS
+    secure: false
     # -- telemetry service port
     servicePort: 8081
     # -- telemetry service port name
@@ -170,15 +191,6 @@ controller:
   workflowNamespaces:
     - default
 
-  # -- Specifies the container runtime interface to use (one of: `docker`, `kubelet`, `k8sapi`, `pns`, `emissary`)
-  ## Ref: https://argoproj.github.io/argo-workflows/workflow-executors/
-  containerRuntimeExecutor: emissary
-  # -- Specifies the executor to use. This has precedence over `controller.containerRuntimeExecutor`.
-  containerRuntimeExecutors: []
-    # - name: emissary
-    #   selector:
-    #     matchLabels:
-    #       workflows.argoproj.io/container-runtime-executor: emissary
   instanceID:
     # -- Configures the controller to filter workflow submissions
     # to only those which have a matching instanceID attribute.
@@ -271,7 +283,7 @@ mainContainer:
   # -- Resource limits and requests for the Workflow main container
   resources: {}
   # -- Adds environment variables for the Workflow main container
-  env: {}
+  env: []
   # -- sets security context for the Workflow main container
   securityContext: {}
 
@@ -287,7 +299,7 @@ executor:
   # -- Resource limits and requests for the Workflow Executors
   resources: {}
   # -- Adds environment variables for the executor.
-  env: {}
+  env: []
   # -- sets security context for the executor container
   securityContext: {}
 
@@ -527,3 +539,21 @@ artifactRepository:
   # serviceAccountKeySecret:
   # name: my-gcs-credentials
   # key: serviceAccountKey
+  # -- Store artifact in Azure Blob Storage
+  # @default -- `{}` (See [values.yaml])
+  azure: {}
+  # endpoint: https://mystorageaccountname.blob.core.windows.net
+  # container: my-container-name
+  # blob: path/in/container
+  ## accountKeySecret is a secret selector.
+  ## It references the k8s secret named 'my-azure-storage-credentials'.
+  ## This secret is expected to have have the key 'account-access-key',
+  ## containing the base64 encoded credentials to the storage account.
+  ## If a managed identity has been assigned to the machines running the
+  ## workflow (e.g., https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
+  ## then accountKeySecret is not needed, and useSDKCreds should be
+  ## set to true instead:
+  # useSDKCreds: true
+  # accountKeySecret:
+  #  name: my-azure-storage-credentials
+  #  key: account-access-key

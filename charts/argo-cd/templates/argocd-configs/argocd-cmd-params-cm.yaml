@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" "cmd-params-cm") | nindent 4 }}
+  {{- if .Values.configs.params.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.configs.params.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
+data:
+  {{- include "argo-cd.config.params" . | trim | nindent 2 }}

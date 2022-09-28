@@ -13,11 +13,6 @@ data:
     instanceID: {{ .Values.controller.instanceID.explicitID }}
       {{- end }}
     {{- end }}
-    containerRuntimeExecutor: {{ .Values.controller.containerRuntimeExecutor }}
-    {{- with .Values.controller.containerRuntimeExecutors }}
-    containerRuntimeExecutors:
-    {{- toYaml . | nindent 6 }}
-    {{- end }}
     {{- if .Values.controller.parallelism }}
     parallelism: {{ .Values.controller.parallelism }}
     {{- end }}
@@ -61,10 +56,13 @@ data:
       {{- if .Values.artifactRepository.archiveLogs }}
       archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
       {{- end }}
-      {{- if .Values.artifactRepository.gcs }}
-      gcs:
-{{ toYaml .Values.artifactRepository.gcs | indent 8}}
-      {{- else }}
+      {{- with .Values.artifactRepository.gcs }}
+      gcs: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.artifactRepository.azure }}
+      azure: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if and  (not .Values.artifactRepository.gcs) (not .Values.artifactRepository.azure) }}
       s3:
         {{- if .Values.useStaticCredentials }}
         accessKeySecret:
@@ -94,13 +92,29 @@ data:
           {{- toYaml . | nindent 10 }}
         {{- end }}
       {{- end }}
-    {{- end}}
+    {{- end }}
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:
-{{ toYaml .Values.controller.metricsConfig | indent 6}}{{- end }}
+      enabled: {{ .Values.controller.metricsConfig.enabled }}
+      path: {{ .Values.controller.metricsConfig.path }}
+      port: {{ .Values.controller.metricsConfig.port }}
+      {{- if .Values.controller.metricsConfig.metricsTTL }}
+      metricsTTL: {{ .Values.controller.metricsConfig.metricsTTL }}
+      {{- end }}
+      ignoreErrors: {{ .Values.controller.metricsConfig.ignoreErrors }}
+      secure: {{ .Values.controller.metricsConfig.secure }}
+    {{- end }}
     {{- if .Values.controller.telemetryConfig.enabled }}
     telemetryConfig:
-{{ toYaml .Values.controller.telemetryConfig | indent 6}}{{- end }}
+      enabled: {{ .Values.controller.telemetryConfig.enabled }}
+      path: {{ .Values.controller.telemetryConfig.path }}
+      port: {{ .Values.controller.telemetryConfig.port }}
+      {{- if .Values.controller.telemetryConfig.metricsTTL }}
+      metricsTTL: {{ .Values.controller.telemetryConfig.metricsTTL }}
+      {{- end }}
+      ignoreErrors: {{ .Values.controller.telemetryConfig.ignoreErrors }}
+      secure: {{ .Values.controller.telemetryConfig.secure }}
+    {{- end }}
     {{- if .Values.controller.persistence }}
     persistence:
 {{ toYaml .Values.controller.persistence | indent 6 }}{{- end }}
@@ -108,7 +122,37 @@ data:
     workflowDefaults:
 {{ toYaml .Values.controller.workflowDefaults | indent 6 }}{{- end }}
     {{- with .Values.server.sso }}
-    sso: {{- toYaml . | nindent 6 }}
+    sso:
+      issuer: {{ .issuer }}
+      clientId:
+        name: {{ .clientId.name }}
+        key: {{ .clientId.key }}
+      clientSecret:
+        name: {{ .clientSecret.name }}
+        key: {{ .clientSecret.key }}
+      redirectUrl: {{ .redirectUrl }}
+      {{- with .rbac }}
+      rbac:
+        enabled: {{ .enabled }}
+      {{- end }}
+      {{- if .scopes }}
+      scopes: {{ toYaml .scopes | nindent 8 }}
+      {{- end }}
+      {{- if .issuerAlias }}
+      issuerAlias: {{ .issuerAlias }}
+      {{- end }}
+      {{- if .sessionExpiry }}
+      sessionExpiry: {{ .sessionExpiry }}
+      {{- end }}
+      {{- if .customGroupClaimName }}
+      customGroupClaimName: {{ .customGroupClaimName }}
+      {{- end }}
+      {{- if .userInfoPath }}
+      userInfoPath: {{ .userInfoPath }}
+      {{- end }}
+      {{- if .insecureSkipVerify }}
+      insecureSkipVerify: {{ .insecureSkipVerify }}
+      {{- end }}
     {{- end }}
     {{- with .Values.controller.workflowRestrictions }}
     workflowRestrictions: {{- toYaml . | nindent 6 }}
