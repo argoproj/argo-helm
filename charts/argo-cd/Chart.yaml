@@ -2,9 +2,12 @@ apiVersion: v2
 appVersion: v2.4.12
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.4.7
+version: 5.5.6
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+sources:
+  - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+  - https://github.com/argoproj/argo-cd
 keywords:
   - argoproj
   - argocd
@@ -19,4 +22,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Add privateKey spec handling from CertificatePrivateKey"
+    - "[Added]: Source code section inside chart README"

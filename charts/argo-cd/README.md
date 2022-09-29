@@ -2,9 +2,10 @@
 
 A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 
-Source code can be found [here](https://argo-cd.readthedocs.io/en/stable/)
+Source code can be found here:
 
-## Additional Information
+* <https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd>
+* <https://github.com/argoproj/argo-cd>
 
 This is a **community maintained** chart. This chart installs [argo-cd](https://argo-cd.readthedocs.io/en/stable/), a declarative, GitOps continuous delivery tool for Kubernetes.
 
@@ -89,9 +90,9 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
 
-Helm cannot upgrade custom resource definitions [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations).
+Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations). Starting with 5.2.0, the CRDs have been moved to `<chart>/templates` to address this design decision.
 
-Please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
+If you are using Argo CD chart version prior to 5.2.0 or have elected to manage the Argo CD CRDs outside of the chart, please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
 
 ```bash
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVersion>"
@@ -99,6 +100,11 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVer
 # Eg. version v2.4.9
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
+
+### 5.4.0
+
+This version introduces new `configs.params` section that replaces command line arguments for containers.
+Please refer to documentation in values.yaml for migrating the configuration.
 
 ### 5.2.0
 
@@ -358,6 +364,22 @@ NAME: my-release
 | configs.gpgKeysAnnotations | object | `{}` | GnuPG key ring annotations |
 | configs.knownHosts.data.ssh_known_hosts | string | See [values.yaml] | Known Hosts |
 | configs.knownHostsAnnotations | object | `{}` | Known Hosts configmap annotations |
+| configs.params."controller.operation.processors" | int | `10` | Number of application operation processors |
+| configs.params."controller.repo.server.timeout.seconds" | int | `60` | Repo server RPC call timeout seconds. |
+| configs.params."controller.self.heal.timeout.seconds" | int | `5` | Specifies timeout between application self heal attempts |
+| configs.params."controller.status.processors" | int | `20` | Number of application status processors |
+| configs.params."otlp.address" | string | `""` | Open-Telemetry collector address: (e.g. "otel-collector:4317") |
+| configs.params."reposerver.parallelism.limit" | int | `0` | Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit. |
+| configs.params."server.basehref" | string | `"/"` | Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from / |
+| configs.params."server.disable.auth" | bool | `false` | Disable Argo CD RBAC for user authentication |
+| configs.params."server.enable.gzip" | bool | `false` | Enable GZIP compression |
+| configs.params."server.insecure" | bool | `false` | Run server without TLS |
+| configs.params."server.rootpath" | string | `""` | Used if Argo CD is running behind reverse proxy under subpath different from / |
+| configs.params."server.staticassets" | string | `"/shared/app"` | Directory path that contains additional static assets |
+| configs.params."server.x.frame.options" | string | `"sameorigin"` | Set X-Frame-Options header in HTTP responses to value. To disable, set to "". |
+| configs.params."timeout.hard.reconciliation" | int | `0` | Time period in seconds for application hard resync |
+| configs.params."timeout.reconciliation" | int | `180` | Time period in seconds for application resync |
+| configs.params.annotations | object | `{}` | Annotations to be added to the argocd-cmd-params-cm ConfigMap |
 | configs.repositories | object | `{}` | Repositories list to be used by applications |
 | configs.repositoriesAnnotations | object | `{}` | Annotations to be added to `configs.repositories` Secret |
 | configs.secret.annotations | object | `{}` | Annotations to be added to argocd-secret |
@@ -380,12 +402,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
-| controller.args.appHardResyncPeriod | string | `"0"` | define the application controller `--app-hard-resync` |
-| controller.args.appResyncPeriod | string | `"180"` | define the application controller `--app-resync` |
-| controller.args.operationProcessors | string | `"10"` | define the application controller `--operation-processors` |
-| controller.args.repoServerTimeoutSeconds | string | `"60"` | define the application controller `--repo-server-timeout-seconds` |
-| controller.args.selfHealTimeout | string | `"5"` | define the application controller `--self-heal-timeout-seconds` |
-| controller.args.statusProcessors | string | `"20"` | define the application controller `--status-processors` |
+| controller.args | object | `{}` | DEPRECATED - Application controller commandline flags |
 | controller.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
 | controller.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the application controller's ClusterRole resource |
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
@@ -405,8 +422,6 @@ NAME: my-release
 | controller.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | controller.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | controller.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| controller.logFormat | string | `""` (defaults to global.logging.format) | Application controller log format. Either `text` or `json` |
-| controller.logLevel | string | `""` (defaults to global.logging.level) | Application controller log level. One of: `debug`, `info`, `warn` or `error` |
 | controller.metrics.applicationLabels.enabled | bool | `false` | Enables additional labels in argocd_app_labels metric |
 | controller.metrics.applicationLabels.labels | list | `[]` | Additional labels |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
@@ -484,8 +499,6 @@ NAME: my-release
 | repoServer.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | repoServer.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | repoServer.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| repoServer.logFormat | string | `""` (defaults to global.logging.level) | Repo server log format: Either `text` or `json` |
-| repoServer.logLevel | string | `""` (defaults to global.logging.format) | Repo server log level. One of: `debug`, `info`, `warn` or `error` |
 | repoServer.metrics.enabled | bool | `false` | Deploy metrics service |
 | repoServer.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | repoServer.metrics.service.labels | object | `{}` | Metrics service labels |
@@ -609,8 +622,6 @@ NAME: my-release
 | server.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | server.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | server.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| server.logFormat | string | `""` (defaults to global.logging.format) | Argo CD server log format: Either `text` or `json` |
-| server.logLevel | string | `""` (defaults to global.logging.level) | Argo CD server log level. One of: `debug`, `info`, `warn` or `error` |
 | server.metrics.enabled | bool | `false` | Deploy metrics service |
 | server.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | server.metrics.service.labels | object | `{}` | Metrics service labels |
@@ -667,7 +678,6 @@ NAME: my-release
 | server.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | server.serviceAccount.create | bool | `true` | Create server service account |
 | server.serviceAccount.name | string | `"argocd-server"` | Server service account name |
-| server.staticAssets.enabled | bool | `true` | Disable deprecated flag `--staticassets` |
 | server.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | server.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the Argo CD server |
 | server.volumeMounts | list | `[]` | Additional volumeMounts to the server main container |
@@ -687,8 +697,6 @@ NAME: my-release
 | dex.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Dex server |
 | dex.extraArgs | list | `[]` | Additional command line arguments to pass to the Dex server |
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
-| dex.extraVolumeMounts | list | `[]` | Extra volumeMounts to the dex pod |
-| dex.extraVolumes | list | `[]` | Extra volumes to the dex pod |
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
 | dex.image.tag | string | `"v2.32.0"` | Dex image tag |
@@ -742,8 +750,8 @@ NAME: my-release
 | dex.servicePortMetrics | int | `5558` | Service port for metrics access |
 | dex.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | dex.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to dex |
-| dex.volumeMounts | list | `[{"mountPath":"/shared","name":"static-files"}]` | Additional volumeMounts to the dex main container |
-| dex.volumes | list | `[{"emptyDir":{},"name":"static-files"}]` | Additional volumes to the dex pod |
+| dex.volumeMounts | list | `[]` | Additional volumeMounts to the dex main container |
+| dex.volumes | list | `[]` | Additional volumes to the dex pod |
 
 ## Redis
 
@@ -845,6 +853,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | externalRedis.password | string | `""` | External Redis password |
 | externalRedis.port | int | `6379` | External Redis server port |
 | externalRedis.secretAnnotations | object | `{}` | External Redis Secret annotations |
+| externalRedis.username | string | `""` | External Redis username |
 
 ## ApplicationSet
 

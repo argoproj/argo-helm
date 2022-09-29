@@ -41,7 +41,11 @@ Fields to note:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| crds.annotations | object | `{}` | Annotations to be added to all CRDs |
+| crds.install | bool | `true` | Install and upgrade CRDs |
+| crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `true` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
+| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `nil` | String to fully override "argo-workflows.fullname" template |
 | images.pullPolicy | string | `"Always"` | imagePullPolicy to apply to all containers |
 | images.pullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
@@ -136,7 +140,7 @@ Fields to note:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| mainContainer.env | object | `{}` | Adds environment variables for the Workflow main container |
+| mainContainer.env | list | `[]` | Adds environment variables for the Workflow main container |
 | mainContainer.imagePullPolicy | string | `"Always"` | imagePullPolicy to apply to Workflow main container |
 | mainContainer.resources | object | `{}` | Resource limits and requests for the Workflow main container |
 | mainContainer.securityContext | object | `{}` | sets security context for the Workflow main container |
@@ -145,7 +149,7 @@ Fields to note:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| executor.env | object | `{}` | Adds environment variables for the executor. |
+| executor.env | list | `[]` | Adds environment variables for the executor. |
 | executor.image.registry | string | `"quay.io"` | Registry to use for the Workflow Executors |
 | executor.image.repository | string | `"argoproj/argoexec"` | Repository to use for the Workflow Executors |
 | executor.image.tag | string | `""` | Image tag for the workflow executor. Defaults to `.Values.images.tag`. |
@@ -210,6 +214,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | artifactRepository.archiveLogs | bool | `false` | Archive the main container logs as an artifact |
+| artifactRepository.azure | object | `{}` (See [values.yaml]) | Store artifact in Azure Blob Storage |
 | artifactRepository.gcs | object | `{}` (See [values.yaml]) | Store artifact in a GCS object store |
 | artifactRepository.s3 | object | See [values.yaml] | Store artifact in a S3-compliant object store |
 | useDefaultArtifactRepo | bool | `false` | Influences the creation of the ConfigMap for the workflow-controller itself. |

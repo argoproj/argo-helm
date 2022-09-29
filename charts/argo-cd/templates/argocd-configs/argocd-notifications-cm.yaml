@@ -8,9 +8,9 @@ metadata:
 data:
   context: |
     argocdUrl: {{ .Values.notifications.argocdUrl | quote }}
-  {{- with .Values.notifications.context }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- with .Values.notifications.context }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.notifications.notifiers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}

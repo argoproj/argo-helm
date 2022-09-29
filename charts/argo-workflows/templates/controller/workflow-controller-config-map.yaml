@@ -56,10 +56,13 @@ data:
       {{- if .Values.artifactRepository.archiveLogs }}
       archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
       {{- end }}
-      {{- if .Values.artifactRepository.gcs }}
-      gcs:
-{{ toYaml .Values.artifactRepository.gcs | indent 8}}
-      {{- else }}
+      {{- with .Values.artifactRepository.gcs }}
+      gcs: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.artifactRepository.azure }}
+      azure: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if and  (not .Values.artifactRepository.gcs) (not .Values.artifactRepository.azure) }}
       s3:
         {{- if .Values.useStaticCredentials }}
         accessKeySecret:
@@ -89,7 +92,7 @@ data:
           {{- toYaml . | nindent 10 }}
         {{- end }}
       {{- end }}
-    {{- end}}
+    {{- end }}
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:
       enabled: {{ .Values.controller.metricsConfig.enabled }}
@@ -119,7 +122,37 @@ data:
     workflowDefaults:
 {{ toYaml .Values.controller.workflowDefaults | indent 6 }}{{- end }}
     {{- with .Values.server.sso }}
-    sso: {{- toYaml . | nindent 6 }}
+    sso:
+      issuer: {{ .issuer }}
+      clientId:
+        name: {{ .clientId.name }}
+        key: {{ .clientId.key }}
+      clientSecret:
+        name: {{ .clientSecret.name }}
+        key: {{ .clientSecret.key }}
+      redirectUrl: {{ .redirectUrl }}
+      {{- with .rbac }}
+      rbac:
+        enabled: {{ .enabled }}
+      {{- end }}
+      {{- if .scopes }}
+      scopes: {{ toYaml .scopes | nindent 8 }}
+      {{- end }}
+      {{- if .issuerAlias }}
+      issuerAlias: {{ .issuerAlias }}
+      {{- end }}
+      {{- if .sessionExpiry }}
+      sessionExpiry: {{ .sessionExpiry }}
+      {{- end }}
+      {{- if .customGroupClaimName }}
+      customGroupClaimName: {{ .customGroupClaimName }}
+      {{- end }}
+      {{- if .userInfoPath }}
+      userInfoPath: {{ .userInfoPath }}
+      {{- end }}
+      {{- if .insecureSkipVerify }}
+      insecureSkipVerify: {{ .insecureSkipVerify }}
+      {{- end }}
     {{- end }}
     {{- with .Values.controller.workflowRestrictions }}
     workflowRestrictions: {{- toYaml . | nindent 6 }}

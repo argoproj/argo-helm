@@ -11,12 +11,13 @@ spec:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.dex.name) | nindent 6 }}
   template:
     metadata:
-      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.dex.podAnnotations) }}
       annotations:
+        checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.dex.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-      {{- end }}
+        {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 8 }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.dex.podLabels) }}
@@ -27,17 +28,19 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.global.securityContext }}
-      securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
+      {{- with.Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
       - name: copyutil
         image: {{ default .Values.global.image.repository .Values.dex.initImage.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.dex.initImage.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.initImage.imagePullPolicy }}
         resources:
-{{- toYaml .Values.dex.resources | nindent 10 }}
-        {{- if .Values.dex.containerSecurityContext }}
-        securityContext: {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
+          {{- toYaml .Values.dex.resources | nindent 10 }}
+        {{- with .Values.dex.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
         {{- end }}
         command:
         - cp
@@ -47,8 +50,10 @@ spec:
         volumeMounts:
         - mountPath: /shared
           name: static-files
-      {{- if .Values.dex.initContainers }}
-      {{- toYaml .Values.dex.initContainers | nindent 6 }}
+        - mountPath: /tmp
+          name: dexconfig
+      {{- with .Values.dex.initContainers }}
+        {{- toYaml . | nindent 6 }}
       {{- end }}
       containers:
       - name: {{ .Values.dex.name }}
@@ -56,19 +61,27 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.image.imagePullPolicy }}
         command:
         - /shared/argocd-dex
+        args:
         - rundex
         {{- with .Values.dex.extraArgs }}
-        {{- . | toYaml | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- if .Values.dex.containerSecurityContext }}
         securityContext: {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
         {{- end }}
-        {{- if .Values.dex.env }}
         env:
-{{- toYaml .Values.dex.env | nindent 8 }}
-        {{- end }}
+          {{- with .Values.dex.env }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          - name: ARGOCD_DEX_SERVER_DISABLE_TLS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: dexserver.disable.tls
+                optional: true
         {{- with .Values.dex.envFrom }}
-        envFrom: {{- toYaml . | nindent 8 }}
+        envFrom:
+          {{- toYaml . | nindent 10 }}
         {{- end }}
         ports:
         - name: http
@@ -99,57 +112,68 @@ spec:
           {{- end }}
         {{- end }}
         volumeMounts:
-        - mountPath: /tmp
-          name: tmp-dir
-        {{- if .Values.dex.volumeMounts }}
-        {{- toYaml .Values.dex.volumeMounts | nindent 8 }}
-        {{- end }}
-        {{- if .Values.dex.extraVolumeMounts }}
-        {{- toYaml .Values.dex.extraVolumeMounts | nindent 8 }}
+        - name: static-files
+          mountPath: /shared
+        - name: dexconfig
+          mountPath: /tmp
+        - name: argocd-dex-server-tls
+          mountPath: /tls
+        {{- with .Values.dex.volumeMounts }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         resources:
           {{- toYaml .Values.dex.resources | nindent 10 }}
       {{- with .Values.dex.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
-    {{- if .Values.dex.nodeSelector }}
+      {{- with .Values.dex.nodeSelector }}
       nodeSelector:
-{{- toYaml .Values.dex.nodeSelector | nindent 8 }}
-    {{- end }}
-    {{- if .Values.dex.tolerations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dex.tolerations }}
       tolerations:
-{{- toYaml .Values.dex.tolerations | nindent 8 }}
-    {{- end }}
-    {{- if .Values.dex.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dex.affinity }}
       affinity:
-{{- toYaml .Values.dex.affinity | nindent 8 }}
-    {{- end }}
-    {{- with .Values.dex.topologySpreadConstraints }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dex.topologySpreadConstraints }}
       topologySpreadConstraints:
-      {{- range $constraint := . }}
+        {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
-        {{- if not $constraint.labelSelector }}
+          {{- if not $constraint.labelSelector }}
         labelSelector:
           matchLabels:
             {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.dex.name) | nindent 12 }}
+          {{- end }}
         {{- end }}
       {{- end }}
-    {{- end }}
       serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
       {{- with .Values.global.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:
-      - emptyDir: {}
-        name: tmp-dir
-      {{- if .Values.dex.volumes }}
-      {{- toYaml .Values.dex.volumes | nindent 6 }}
+      - name: static-files
+        emptyDir: {}
+      - name: dexconfig
+        emptyDir: {}
+      - name: argocd-dex-server-tls
+        secret:
+          secretName: argocd-dex-server-tls
+          optional: true
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+      {{- with .Values.dex.volumes }}
+        {{- toYaml . | nindent 6 }}
       {{- end }}
-      {{- if .Values.dex.extraVolumes }}
-      {{- toYaml .Values.dex.extraVolumes | nindent 6 }}
+      {{- with .Values.dex.priorityClassName }}
+      priorityClassName: {{ . }}
       {{- end }}
-{{- if .Values.dex.priorityClassName }}
-      priorityClassName: {{ .Values.dex.priorityClassName }}
-{{- end }}
 {{- end }}

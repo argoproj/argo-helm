@@ -7,6 +7,15 @@ images:
   pullSecrets: []
   # - name: argo-pull-secret
 
+## Custom resource configuration
+crds:
+  # -- Install and upgrade CRDs
+  install: true
+  # -- Keep CRDs on chart uninstall
+  keep: true
+  # -- Annotations to be added to all CRDs
+  annotations: {}
+
 # -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
 createAggregateRoles: true
@@ -274,7 +283,7 @@ mainContainer:
   # -- Resource limits and requests for the Workflow main container
   resources: {}
   # -- Adds environment variables for the Workflow main container
-  env: {}
+  env: []
   # -- sets security context for the Workflow main container
   securityContext: {}
 
@@ -290,7 +299,7 @@ executor:
   # -- Resource limits and requests for the Workflow Executors
   resources: {}
   # -- Adds environment variables for the executor.
-  env: {}
+  env: []
   # -- sets security context for the executor container
   securityContext: {}
 
@@ -487,6 +496,32 @@ server:
   # -- Extra containers to be added to the server deployment
   extraContainers: []
 
+# -- Array of extra K8s manifests to deploy
+extraObjects: []
+  # - apiVersion: secrets-store.csi.x-k8s.io/v1
+  #   kind: SecretProviderClass
+  #   metadata:
+  #     name: argo-server-sso
+  #   spec:
+  #     provider: aws
+  #     parameters:
+  #       objects: |
+  #         - objectName: "argo/server/sso"
+  #           objectType: "secretsmanager"
+  #           jmesPath:
+  #               - path: "client_id"
+  #                 objectAlias: "client_id"
+  #               - path: "client_secret"
+  #                 objectAlias: "client_secret"
+  #     secretObjects:
+  #     - data:
+  #       - key: client_id
+  #         objectName: client_id
+  #       - key: client_secret
+  #         objectName: client_secret
+  #       secretName: argo-server-sso-secrets-store
+  #       type: Opaque
+
 # -- Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false
 # -- Use static credentials for S3 (eg. when not using AWS IRSA)
@@ -530,3 +565,21 @@ artifactRepository:
   # serviceAccountKeySecret:
   # name: my-gcs-credentials
   # key: serviceAccountKey
+  # -- Store artifact in Azure Blob Storage
+  # @default -- `{}` (See [values.yaml])
+  azure: {}
+  # endpoint: https://mystorageaccountname.blob.core.windows.net
+  # container: my-container-name
+  # blob: path/in/container
+  ## accountKeySecret is a secret selector.
+  ## It references the k8s secret named 'my-azure-storage-credentials'.
+  ## This secret is expected to have have the key 'account-access-key',
+  ## containing the base64 encoded credentials to the storage account.
+  ## If a managed identity has been assigned to the machines running the
+  ## workflow (e.g., https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
+  ## then accountKeySecret is not needed, and useSDKCreds should be
+  ## set to true instead:
+  # useSDKCreds: true
+  # accountKeySecret:
+  #  name: my-azure-storage-credentials
+  #  key: account-access-key
