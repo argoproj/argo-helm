@@ -367,7 +367,7 @@ NAME: my-release
 | global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
 | global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
-| global.securityContext | object | `{}` | Toggle and define securityContext. |
+| global.securityContext | object | `{}` | Toggle and define pod-level security context. |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
 | openshift | bool | `false` | Enable RedHat OpenShift cluster capabilities |
@@ -796,22 +796,23 @@ NAME: my-release
 | redis.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | redis.args | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.containerPort | int | `6379` | Redis container port |
-| redis.containerSecurityContext | object | `{}` | Redis container-level security context |
+| redis.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}}` | Redis container-level security context |
 | redis.enabled | bool | `true` | Enable redis |
 | redis.env | list | `[]` | Environment variables to pass to the Redis server |
 | redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
-| redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
+| redis.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis |
 | redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
 | redis.image.tag | string | `"7.0.4-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
-| redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
-| redis.metrics.image.imagePullPolicy | string | `"IfNotPresent"` | redis-exporter image PullPolicy |
-| redis.metrics.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
-| redis.metrics.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
-| redis.metrics.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
+| redis.metrics.exporter.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
+| redis.metrics.exporter.containerSecurityContext | object | `{}` | Container security context for redis-exporter sidecar |
+| redis.metrics.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis exporter |
+| redis.metrics.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
+| redis.metrics.exporter.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
+| redis.metrics.exporter.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | redis.metrics.service.clusterIP | string | `"None"` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
 | redis.metrics.service.labels | object | `{}` | Metrics service labels |
@@ -839,11 +840,11 @@ NAME: my-release
 | redis.securityContext | object | `{"runAsNonRoot":true,"runAsUser":999}` | Redis pod-level security context |
 | redis.service.annotations | object | `{}` | Redis service annotations |
 | redis.service.labels | object | `{}` | Additional redis service labels |
+| redis.service.servicePort | int | `6379` | Redis service port |
 | redis.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | redis.serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account |
-| redis.serviceAccount.create | bool | `false` | Create a service account for the redis pod |
+| redis.serviceAccount.create | bool | `true` | Create a service account for the redis pod |
 | redis.serviceAccount.name | string | `""` | Service account name for redis pod |
-| redis.servicePort | int | `6379` | Redis service port |
 | redis.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | redis.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to redis |
 | redis.volumeMounts | list | `[]` | Additional volumeMounts to the redis container |

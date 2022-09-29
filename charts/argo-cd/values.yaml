@@ -71,7 +71,7 @@ global:
   #   hostnames:
   #   - git.myhostname
 
-  # -- Toggle and define securityContext.
+  # -- Toggle and define pod-level security context.
   securityContext: {}
   #  runAsUser: 999
   #  runAsGroup: 999
@@ -2060,22 +2060,6 @@ notifications:
       drop:
         - ALL
 
-  # -- Additional volumes to the notifications controller main container
-  volumes: []
-
-  # -- Additional volume mounts to the notifications controller pod
-  volumeMounts: []
-
-  # -- [Node selector]
-  nodeSelector: {}
-  # -- [Tolerations] for use with node taints
-  tolerations: []
-  # -- Assign custom [affinity] rules to the deployment
-  affinity: {}
-
-  # -- Priority class for the notification controller pods
-  priorityClassName: ""
-
   # -- Resource limits and requests for the notification controller pods
   resources: {}
     # limits:
@@ -2084,6 +2068,22 @@ notifications:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
+
+  # -- Additional volumes to the notifications controller main container
+  volumes: []
+
+  # -- Additional volume mounts to the notifications controller pod
+  volumeMounts: []
+
+  # -- Priority class for the notification controller pods
+  priorityClassName: ""
+
+  # -- [Node selector]
+  nodeSelector: {}
+  # -- [Tolerations] for use with node taints
+  tolerations: []
+  # -- Assign custom [affinity] rules to the deployment
+  affinity: {}
 
   serviceAccount:
     # -- Create a service account for the notification controller
@@ -2185,16 +2185,6 @@ notifications:
       containerSecurityContext:
         runAsNonRoot: true
 
-      # -- [Node selector]
-      nodeSelector: {}
-      # -- [Tolerations] for use with node taints
-      tolerations: []
-      # -- Assign custom [affinity] rules to the deployment
-      affinity: {}
-
-      # -- Priority class for the Slack bot
-      priorityClassName: ""
-
       # -- Resource limits and requests for the Slack bot
       resources: {}
       # limits:
@@ -2204,6 +2194,18 @@ notifications:
       #   cpu: 100m
       #   memory: 128Mi
 
+      # -- Priority class for the Slack bot
+      priorityClassName: ""
+
+      # -- [Node selector]
+      nodeSelector: {}
+
+      # -- [Tolerations] for use with node taints
+      tolerations: []
+
+      # -- Assign custom [affinity] rules to the deployment
+      affinity: {}
+
 ## Dex
 dex:
   # -- Enable dex
@@ -2211,9 +2213,6 @@ dex:
 
   # -- Dex name
   name: dex-server
-
-  # -- Additional command line arguments to pass to the Dex server
-  args: []
 
   image:
     # -- Dex image repository
@@ -2239,6 +2238,9 @@ dex:
   # -- Secrets with credentials to pull images from a private registry
   imagePullSecrets: []
 
+  # -- Additional command line arguments to pass to the Dex server
+  args: []
+
   # -- Environment variables to pass to the Dex server
   env: []
 
@@ -2250,12 +2252,6 @@ dex:
   # - secretRef:
   #     name: secret-name
 
-  # -- Annotations to be added to the Dex server pods
-  podAnnotations: {}
-
-  # -- Labels to be added to the Dex server pods
-  podLabels: {}
-
   pdb:
     # -- Labels to be added to Dex server pdb
     labels: {}
@@ -2265,6 +2261,12 @@ dex:
     enabled: false
     # minAvailable: 1
     # maxUnavailable: 0
+
+  # -- Annotations to be added to the Dex server pods
+  podAnnotations: {}
+
+  # -- Labels to be added to the Dex server pods
+  podLabels: {}
 
   ## Probes for Dex server
   ## Supported from Dex >= 2.28.0
@@ -2281,6 +2283,7 @@ dex:
     successThreshold: 1
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
+
   readinessProbe:
     # -- Enable Kubernetes readiness probe for Dex >= 2.28.0
     enabled: false
@@ -2329,6 +2332,9 @@ dex:
   # -- Additional volumeMounts to the dex main container
   volumeMounts: []
 
+  # -- Priority class for dex
+  priorityClassName: ""
+
   # -- [Node selector]
   nodeSelector: {}
   # -- [Tolerations] for use with node taints
@@ -2343,9 +2349,6 @@ dex:
   # - maxSkew: 1
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
-
-  # -- Priority class for dex
-  priorityClassName: ""
 
   # -- Dex container-level security context
   # @default -- See [values.yaml]
@@ -2424,26 +2427,27 @@ dex:
 redis:
   # -- Enable redis
   enabled: true
+
   # -- Redis name
   name: redis
 
+  # Redis image
   image:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
     tag: 7.0.4-alpine
-    # -- Redis imagePullPolicy
-    imagePullPolicy: IfNotPresent
+    # -- Image pull policy for the Redis
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: ""
+
+  # -- Secrets with credentials to pull images from a private registry
+  imagePullSecrets: []
 
   # -- Additional command line arguments to pass to redis-server
   args: []
   # - --bind
   # - "0.0.0.0"
-
-  # -- Redis container port
-  containerPort: 6379
-  # -- Redis service port
-  servicePort: 6379
 
   # -- Environment variables to pass to the Redis server
   env: []
@@ -2456,52 +2460,37 @@ redis:
   # - secretRef:
   #     name: secret-name
 
+  pdb:
+    # -- Labels to be added to Redis server pdb
+    labels: {}
+    # -- Annotations to be added to Redis server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the Redis server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
   # -- Annotations to be added to the Redis server pods
   podAnnotations: {}
 
   # -- Labels to be added to the Redis server pods
   podLabels: {}
 
-  # -- [Node selector]
-  nodeSelector: {}
-  # -- [Tolerations] for use with node taints
-  tolerations: []
-  # -- Assign custom [affinity] rules to the deployment
-  affinity: {}
-
-  # -- Assign custom [TopologySpreadConstraints] rules to redis
-  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
-  topologySpreadConstraints: []
-  # - maxSkew: 1
-  #   topologyKey: topology.kubernetes.io/zone
-  #   whenUnsatisfiable: DoNotSchedule
-
-  # -- Priority class for redis
-  priorityClassName: ""
-
-  # -- Redis container-level security context
-  containerSecurityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #     - all
-    # readOnlyRootFilesystem: true
-
   # -- Redis pod-level security context
   securityContext:
     runAsNonRoot: true
     runAsUser: 999
 
-  serviceAccount:
-    # -- Create a service account for the redis pod
-    create: false
-    # -- Service account name for redis pod
-    name: ""
-    # -- Annotations applied to created service account
-    annotations: {}
-    # -- Automount API credentials for the Service Account
-    automountServiceAccountToken: false
+  # -- Redis container port
+  containerPort: 6379
+
+  # -- Redis container-level security context
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
 
   # -- Resource limits and requests for redis
   resources: {}
@@ -2512,13 +2501,11 @@ redis:
   #    cpu: 100m
   #    memory: 64Mi
 
-  # -- Additional volumeMounts to the redis container
-  volumeMounts: []
   # -- Additional volumes to the redis pod
   volumes: []
 
-  # -- Additional containers to be added to the redis pod
-  extraContainers: []
+  # -- Additional volumeMounts to the redis container
+  volumeMounts: []
 
   # -- Init containers to add to the redis pod
   initContainers: []
@@ -2536,32 +2523,54 @@ redis:
   #    name: custom-tools
   #    subPath: helm
 
-  service:
-    # -- Redis service annotations
-    annotations: {}
-    # -- Additional redis service labels
-    labels: {}
+  # -- Additional containers to be added to the redis pod
+  extraContainers: []
 
+  # -- Priority class for redis
+  priorityClassName: ""
+
+  # -- [Node selector]
+  nodeSelector: {}
+
+  # -- [Tolerations] for use with node taints
+  tolerations: []
+
+  # -- Assign custom [affinity] rules to the deployment
+  affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to redis
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
+  # Redis metrics configuration
   metrics:
     # -- Deploy metrics service and redis-exporter sidecar
     enabled: false
-    image:
-      # -- redis-exporter image repository
-      repository: public.ecr.aws/bitnami/redis-exporter
-      # -- redis-exporter image tag
-      tag: 1.26.0-debian-10-r2
-      # -- redis-exporter image PullPolicy
-      imagePullPolicy: IfNotPresent
-    # -- Port to use for redis-exporter sidecar
-    containerPort: 9121
-    # -- Resource limits and requests for redis-exporter sidecar
-    resources: {}
-      # limits:
-      #   cpu: 50m
-      #   memory: 64Mi
-      # requests:
-      #   cpu: 10m
-      #   memory: 32Mi
+    exporter:
+      image:
+        # -- redis-exporter image repository
+        repository: public.ecr.aws/bitnami/redis-exporter
+        # -- redis-exporter image tag
+        tag: 1.26.0-debian-10-r2
+        # -- Image pull policy for the Redis exporter
+        # @default -- `""` (defaults to global.image.imagePullPolicy)
+        imagePullPolicy: ""
+      # -- Port to use for redis-exporter sidecar
+      containerPort: 9121
+      # -- Container security context for redis-exporter sidecar
+      containerSecurityContext: {}
+      # -- Resource limits and requests for redis-exporter sidecar
+      resources: {}
+        # limits:
+        #   cpu: 50m
+        #   memory: 64Mi
+        # requests:
+        #   cpu: 10m
+        #   memory: 32Mi
     service:
       # -- Metrics service type
       type: ClusterIP
@@ -2597,19 +2606,24 @@ redis:
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
 
-  pdb:
-    # -- Labels to be added to Redis server pdb
-    labels: {}
-    # -- Annotations to be added to Redis server pdb
+  # Redis service configuration
+  service:
+    # -- Redis service annotations
     annotations: {}
+    # -- Additional redis service labels
+    labels: {}
+    # -- Redis service port
+    servicePort: 6379
 
-    # -- Deploy a Poddisruptionbudget for the Redis server
-    enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
-
-  # -- Secrets with credentials to pull images from a private registry
-  imagePullSecrets: []
+  serviceAccount:
+    # -- Create a service account for the redis pod
+    create: true
+    # -- Service account name for redis pod
+    name: ""
+    # -- Annotations applied to created service account
+    annotations: {}
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: false
 
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted

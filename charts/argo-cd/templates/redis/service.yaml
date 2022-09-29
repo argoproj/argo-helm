@@ -1,9 +1,9 @@
-{{- $redisHa := (index .Values "redis-ha") -}}
-{{- if and .Values.redis.enabled (not $redisHa.enabled) -}}
+{{- $redisHa := index .Values "redis-ha" -}}
+{{- if and .Values.redis.enabled (not $redisHa.enabled) }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "argo-cd.redis.fullname" . }}
+  name: {{ include "argo-cd.redis.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
     {{- with .Values.redis.service.labels }}
@@ -18,8 +18,8 @@ metadata:
 spec:
   ports:
   - name: redis
-    port: {{ .Values.redis.servicePort }}
-    targetPort: {{ .Values.redis.containerPort }}
+    port: {{ .Values.redis.service.servicePort }}
+    targetPort: redis
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.redis.name) | nindent 4 }}
 {{- end }}

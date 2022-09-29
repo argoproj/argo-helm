@@ -1,16 +1,19 @@
-{{- if .Values.redis.pdb.enabled }}
+{{- $redisHa := index .Values "redis-ha" -}}
+{{- if and .Values.redis.enabled (not $redisHa.enabled) .Values.redis.pdb.enabled }}
 apiVersion: {{ include "argo-cd.apiVersion.podDisruptionBudget" . }}
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "argo-cd.redis.fullname" . }}
+  name: {{ include "argo-cd.redis.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
-  {{- with .Values.redis.pdb.labels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- with .Values.redis.pdb.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.redis.pdb.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
   {{- end }}
 spec:
   {{- if .Values.redis.pdb.minAvailable }}

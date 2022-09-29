@@ -1,9 +1,9 @@
-{{- $redisHa := (index .Values "redis-ha") -}}
+{{- $redisHa := index .Values "redis-ha" -}}
 {{- if and .Values.redis.enabled (not $redisHa.enabled) .Values.redis.metrics.enabled .Values.redis.metrics.serviceMonitor.enabled -}}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "argo-cd.redis.fullname" . }}
+  name: {{ include "argo-cd.redis.fullname" . }}
   {{- with .Values.redis.metrics.serviceMonitor.namespace }}
   namespace: {{ . }}
   {{- end }}

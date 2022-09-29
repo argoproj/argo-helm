@@ -218,16 +218,16 @@ Return Redis server endpoint
 {{- define "argo-cd.redis.server" -}}
 {{- $redisHa := (index .Values "redis-ha") }}
 {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
-    {{- printf "%s:%s" (include "argo-cd.redis.fullname" .)  (toString .Values.redis.servicePort) }}
+    {{- printf "%s:%d" (include "argo-cd.redis.fullname" .)  (int .Values.redis.service.servicePort) }}
 {{- else if and .Values.externalRedis.host .Values.externalRedis.port }}
-    {{- printf "%s:%s" .Values.externalRedis.host (toString .Values.externalRedis.port) }}
+    {{- printf "%s:%d" .Values.externalRedis.host (int .Values.externalRedis.port) }}
 {{- end }}
 {{- end }}
 
 {{/*
 Create the name of the redis service account to use
 */}}
-{{- define "argo-cd.redisServiceAccountName" -}}
+{{- define "argo-cd.redis.serviceAccountName" -}}
 {{- if .Values.redis.serviceAccount.create }}
     {{- default (include "argo-cd.redis.fullname" .) .Values.redis.serviceAccount.name }}
 {{- else }}
