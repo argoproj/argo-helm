@@ -1,0 +1,12 @@
+{{- if .Values.repoServer.rbac.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: {{ ternary "ClusterRole" "Role" .Values.rbac.clusterAdmin }}
+metadata:
+  name: {{ include "argo-cd.repoServer.fullname" . }}:custom
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
+{{- with .Values.repoServer.rbac.rules }}
+rules:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}

@@ -76,7 +76,7 @@ to 63 chars and it includes 10 chars of hash and a separating '-'.
 {{/*
 Create the name of the controller service account to use
 */}}
-{{- define "argo-cd.controllerServiceAccountName" -}}
+{{- define "argo-cd.controller.serviceAccountName" -}}
 {{- if .Values.controller.serviceAccount.create }}
     {{- default (include "argo-cd.controller.fullname" .) .Values.controller.serviceAccount.name }}
 {{- else }}
@@ -94,7 +94,7 @@ Create argocd server name and version as used by the chart label.
 {{/*
 Create the name of the Argo CD server service account to use
 */}}
-{{- define "argo-cd.serverServiceAccountName" -}}
+{{- define "argo-cd.server.serviceAccountName" -}}
 {{- if .Values.server.serviceAccount.create }}
     {{- default (include "argo-cd.server.fullname" .) .Values.server.serviceAccount.name }}
 {{- else }}
@@ -112,7 +112,7 @@ Create argocd repo-server name and version as used by the chart label.
 {{/*
 Create the name of the repo-server service account to use
 */}}
-{{- define "argo-cd.repoServerServiceAccountName" -}}
+{{- define "argo-cd.repoServer.serviceAccountName" -}}
 {{- if .Values.repoServer.serviceAccount.create }}
     {{- default (include "argo-cd.repoServer.fullname" .) .Values.repoServer.serviceAccount.name }}
 {{- else }}

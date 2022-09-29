@@ -1,38 +1,46 @@
-{{- if .Values.server.clusterAdminAccess.enabled }}
+{{- if .Values.rbac.clusterAdmin }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "argo-cd.server.fullname" . }}
+  name: {{ include "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 rules:
-  - apiGroups:
-      - '*'
-    resources:
-      - '*'
-    verbs:
-      - delete
-      - get
-      - patch
-  - apiGroups:
-      - ""
-    resources:
-      - events
-    verbs:
-      - list
-  - apiGroups:
-      - ""
-    resources:
-      - pods
-      - pods/log
-    verbs:
-      - get
-  {{- if eq (index .Values.configs.cm "exec.enabled") "true" }}
-  - apiGroups:
-    - ""
-    resources:
-    - pods/exec
-    verbs:
-    - create
-  {{- end }}
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - delete
+  - get
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  verbs:
+  - get
+{{- if eq (index .Values.configs.cm "exec.enabled") "true" }}
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+{{- end }}
+- apiGroups:
+  - "argoproj.io"
+  resources:
+  - "applications"
+  verbs:
+  - get
+  - list
+  - watch
 {{- end }}

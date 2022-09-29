@@ -352,7 +352,6 @@ NAME: my-release
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
-| createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
 | global.additionalLabels | object | `{}` | Additional labels to add to all resources |
@@ -371,6 +370,8 @@ NAME: my-release
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
 | openshift | bool | `false` | Enable RedHat OpenShift cluster capabilities |
+| rbac.aggregateRoles | bool | `false` | Create agggregate roles that extend existing clusterroles to interact with argo-cd crds |
+| rbac.clusterAdmin | bool | `true` | Create cluster admin roles for cluster-wide installation. |
 
 ## Argo CD Configs
 
@@ -440,9 +441,6 @@ NAME: my-release
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | controller.args | list | `[]` | Application controller commandline flags |
-| controller.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
-| controller.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the application controller's ClusterRole resource |
-| controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
 | controller.containerPort | int | `8082` | Application controller listening port |
 | controller.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
@@ -484,6 +482,8 @@ NAME: my-release
 | controller.podAnnotations | object | `{}` | Annotations to be added to application controller pods |
 | controller.podLabels | object | `{}` | Labels to be added to application controller pods |
 | controller.priorityClassName | string | `""` | Priority class for the application controller pods |
+| controller.rbac.create | bool | `false` | Create additional rbac rules for the application controller |
+| controller.rbac.rules | list | `[]` | Additional rbac rules for the application controller |
 | controller.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | controller.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | controller.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -499,7 +499,7 @@ NAME: my-release
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the application controller |
 | controller.serviceAccount.labels | object | `{}` | Labels applied to created service account |
-| controller.serviceAccount.name | string | `"argocd-application-controller"` | Service account name |
+| controller.serviceAccount.name | string | `""` | The name of the service account to use. |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to the application controller main container |
@@ -517,9 +517,6 @@ NAME: my-release
 | repoServer.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the repo server [HPA] |
 | repoServer.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the repo server [HPA] |
 | repoServer.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the repo server [HPA] |
-| repoServer.clusterAdminAccess.enabled | bool | `false` | Enable RBAC for local cluster deployments |
-| repoServer.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the Repo server's Cluster Role resource |
-| repoServer.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
 | repoServer.containerPort | int | `8081` | Configures the repo server port |
 | repoServer.containerSecurityContext | object | `{}` | Repo server container-level security context |
 | repoServer.copyutil.resources | object | `{}` | Resource limits and requests for the copyutil initContainer |
@@ -558,7 +555,8 @@ NAME: my-release
 | repoServer.podAnnotations | object | `{}` | Annotations to be added to repo server pods |
 | repoServer.podLabels | object | `{}` | Labels to be added to repo server pods |
 | repoServer.priorityClassName | string | `""` | Priority class for the repo server |
-| repoServer.rbac | list | `[]` | Repo server rbac rules |
+| repoServer.rbac.create | bool | `false` | Create custom rules for the repo server |
+| repoServer.rbac.rules | list | `[]` | List of custom rules for the repo server role |
 | repoServer.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | repoServer.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | repoServer.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -613,7 +611,6 @@ NAME: my-release
 | server.certificateSecret.crt | string | `""` | Certificate data |
 | server.certificateSecret.enabled | bool | `false` | Create argocd-server-tls secret |
 | server.certificateSecret.key | string | `""` | Private Key of the certificate |
-| server.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
 | server.containerPort | int | `8080` | Configures the server port |
 | server.containerSecurityContext | object | `{}` | Servers container-level security context |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
@@ -681,6 +678,8 @@ NAME: my-release
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
 | server.priorityClassName | string | `""` | Priority class for the Argo CD server |
+| server.rbac.create | bool | `false` | Create custom rules for the repo server |
+| server.rbac.rules | list | `[]` | List of custom rules for the repo server role |
 | server.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | server.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -711,7 +710,6 @@ NAME: my-release
 | server.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | server.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | server.serviceAccount.create | bool | `true` | Create server service account |
-| server.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | server.serviceAccount.name | string | `"argocd-server"` | Server service account name |
 | server.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | server.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the Argo CD server |

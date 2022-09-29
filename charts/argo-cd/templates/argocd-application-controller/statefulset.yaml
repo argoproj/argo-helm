@@ -238,7 +238,7 @@ spec:
           {{- end }}
         {{- end }}
       {{- end }}
-      serviceAccountName: {{ template "argo-cd.controllerServiceAccountName" . }}
+      serviceAccountName: {{ template "argo-cd.controller.serviceAccountName" . }}
       {{- with .Values.global.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 6 }}

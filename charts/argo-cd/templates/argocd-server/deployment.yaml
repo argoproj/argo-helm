@@ -35,6 +35,7 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      serviceAccountName: {{ template "argo-cd.server.serviceAccountName" . }}
       containers:
       - name: {{ .Values.server.name }}
         image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.server.image.tag }}
@@ -328,7 +329,6 @@ spec:
         {{- end }}
         {{- end }}
       {{- end }}
-      serviceAccountName: {{ template "argo-cd.serverServiceAccountName" . }}
       {{- with .Values.global.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 6 }}

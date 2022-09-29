@@ -1,14 +1,11 @@
-{{- if .Values.controller.clusterAdminAccess.enabled }}
+{{- if .Values.rbac.clusterAdmin }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "argo-cd.controller.fullname" . }}
+  name: {{ include "argo-cd.controller.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 rules:
-  {{- if .Values.controller.clusterRoleRules.enabled }}
-  {{- toYaml .Values.controller.clusterRoleRules.rules | nindent 0 }}
-  {{- else }}
 - apiGroups:
   - '*'
   resources:
@@ -19,5 +16,4 @@ rules:
   - '*'
   verbs:
   - '*'
-  {{- end }}
 {{- end }}

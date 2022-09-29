@@ -1,14 +1,14 @@
-{{- if .Values.rbac.clusterAdmin }}
+{{- if .Values.controller.rbac.create }}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: {{ ternary "ClusterRoleBinding" "RoleBinding" .Values.rbac.clusterAdmin }}
 metadata:
-  name: {{ include "argo-cd.controller.fullname" . }}
+  name: {{ include "argo-cd.controller.fullname" . }}:custom
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: {{ include "argo-cd.controller.fullname" . }}
+  kind: {{ ternary "ClusterRole" "Role" .Values.rbac.clusterAdmin }}
+  name: {{ include "argo-cd.controller.fullname" . }}:custom
 subjects:
 - kind: ServiceAccount
   name: {{ include "argo-cd.controller.serviceAccountName" . }}

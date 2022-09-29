@@ -6,8 +6,10 @@
 nameOverride: argocd
 # -- String to fully override `"argo-cd.fullname"`
 fullnameOverride: ""
+
 # -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
+
 # Override APIVersions
 # If you want to template helm charts but cannot access k8s API server
 # you can set api versions here
@@ -18,10 +20,6 @@ apiVersionOverrides:
   ingress: "" # networking.k8s.io/v1beta1
   # -- String to override apiVersion of autoscaling rendered by this helm chart
   autoscaling: "" # autoscaling/v2
-
-# -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
-## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
-createAggregateRoles: false
 
 # -- Enable RedHat OpenShift cluster capabilities
 openshift: false
@@ -82,6 +80,14 @@ crds:
   keep: true
   # -- Annotations to be added to all CRDs
   annotations: {}
+
+## Custom RBAC configuration
+rbac:
+  # -- Create cluster admin roles for cluster-wide installation.
+  clusterAdmin: true
+  # -- Create agggregate roles that extend existing clusterroles to interact with argo-cd crds
+  ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
+  aggregateRoles: false
 
 ## Argo Configs
 configs:
@@ -975,6 +981,23 @@ controller:
     # -- Application controller service port name
     portName: https-controller
 
+  ## Controller custom RBAC configuration
+  ## NOTE: Creates ClusterRole rules when rbac.clusterAdmin is `true`
+  rbac:
+    # -- Create additional rbac rules for the application controller
+    create: false
+    # -- Additional rbac rules for the application controller
+    rules: []
+      # - apiGroups:
+      #   - argoproj.io
+      #   resources:
+      #   - applications
+      #   verbs:
+      #   - get
+      #   - list
+      #   - watch
+
+  ## Controller service account
   serviceAccount:
     # -- Create a service account for the application controller
     create: true
@@ -986,19 +1009,6 @@ controller:
     labels: {}
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
-
-  ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.
-  clusterAdminAccess:
-    # -- Enable RBAC for local cluster deployments
-    enabled: true
-
-  ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
-  ## Defaults to off
-  clusterRoleRules:
-    # -- Enable custom rules for the application controller's ClusterRole resource
-    enabled: false
-    # -- List of custom rules for the application controller's ClusterRole resource
-    rules: []
 
 ## Server
 server:
@@ -1558,6 +1568,22 @@ server:
     # -- Used to maintain session affinity. Supports `ClientIP` and `None`
     sessionAffinity: ""
 
+  ## Server custom RBAC configuration
+  ## NOTE: Creates ClusterRole rules when rbac.clusterAdmin is `true`
+  rbac:
+    # -- Create custom rules for the repo server
+    create: false
+    # -- List of custom rules for the repo server role
+    rules: []
+      # - apiGroups:
+      #   - argoproj.io
+      #   resources:
+      #   - applications
+      #   verbs:
+      #   - get
+      #   - list
+      #   - watch
+
   ## Server service account configuration
   serviceAccount:
     # -- Create server service account
@@ -1568,12 +1594,6 @@ server:
     annotations: {}
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
-
-  ## Enable Admin ClusterRole resources.
-  ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.
-  clusterAdminAccess:
-    # -- Enable RBAC for local cluster deployments
-    enabled: true
 
   ## Server UI extensions
   ## Ref: https://github.com/argoproj-labs/argocd-extensions
@@ -1826,43 +1846,33 @@ repoServer:
     # -- Repo server service port name
     portName: https-repo-server
 
+  ## Repo server custom RBAC configuration
+  ## NOTE: Creates ClusterRole rules when rbac.clusterAdmin is `true`
+  rbac:
+    # -- Create custom rules for the repo server
+    create: false
+    # -- List of custom rules for the repo server role
+    rules: []
+      # - apiGroups:
+      #   - argoproj.io
+      #   resources:
+      #   - applications
+      #   verbs:
+      #   - get
+      #   - list
+      #   - watch
+
   ## Repo server service account
   ## If create is set to true, make sure to uncomment the name and update the rbac section below
   serviceAccount:
     # -- Create repo server service account
     create: true
     # -- Repo server service account name
-    name: "" # "argocd-repo-server"
+    name: ""
     # -- Annotations applied to created service account
     annotations: {}
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
-
-  ## Enable Admin ClusterRole resources.
-  ## Enable if you would like to grant cluster rights to Argo CD repo server.
-  clusterAdminAccess:
-    # -- Enable RBAC for local cluster deployments
-    enabled: false
-
-  ## Enable Custom Rules for the Repo server's Cluster Role resource
-  ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
-  ## Defaults to off
-  clusterRoleRules:
-    # -- Enable custom rules for the Repo server's Cluster Role resource
-    enabled: false
-    # -- List of custom rules for the Repo server's Cluster Role resource
-    rules: []
-
-  # -- Repo server rbac rules
-  rbac: []
-  #   - apiGroups:
-  #     - argoproj.io
-  #     resources:
-  #     - applications
-  #     verbs:
-  #     - get
-  #     - list
-  #     - watch
 
   # Init container to copy argocd binary
   copyutil:
@@ -2771,6 +2781,7 @@ redis:
 redis-ha:
   # -- Enables the Redis HA subchart and disables the custom Redis single node deployment
   enabled: false
+  # Redis Prometheus metrics exporter
   exporter:
     # -- If `true`, the prometheus exporter sidecar is enabled
     enabled: true
