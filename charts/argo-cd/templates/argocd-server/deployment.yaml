@@ -300,6 +300,10 @@ spec:
       - name: argocd-extensions
         image: {{ .Values.server.extensions.image.repository }}:{{ .Values.server.extensions.image.tag }}
         imagePullPolicy: {{ .Values.server.extensions.image.imagePullPolicy }}
+        {{- with .Values.server.extensions.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         volumeMounts:
           - name: extensions
             mountPath: /tmp/extensions/

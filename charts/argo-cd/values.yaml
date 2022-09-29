@@ -1096,13 +1096,15 @@ server:
   # -- Configures the server port
   containerPort: 8080
 
-  # -- Servers container-level security context
+  # -- Server container-level security context
+  # @default -- See [values.yaml]
   containerSecurityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #     - all
-    # readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
 
   ## Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
@@ -1384,7 +1386,7 @@ server:
     # -- Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp`
     https: false
 
-  # dedicated ingress for gRPC as documented at
+  # Dedicated ingress for gRPC as documented at
   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
   ingressGrpc:
     # -- Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress]
@@ -1617,6 +1619,14 @@ server:
     # - name: argo-rollouts
     #   url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.1.0/extension.tar
 
+    # -- Server UI extensions container-level security context
+    # @default -- See [values.yaml]
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - "ALL"
+
     # -- Resource limits and requests for the argocd-extensions container
     resources: {}
     #  limits:
@@ -1710,12 +1720,14 @@ repoServer:
   containerPort: 8081
 
   # -- Repo server container-level security context
+  # @default -- See [values.yaml]
   containerSecurityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #     - all
-    # readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
 
   ## Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
@@ -1966,7 +1978,7 @@ applicationSet:
     allowPrivilegeEscalation: false
     capabilities:
       drop:
-        - ALL
+      - ALL
 
   # -- Resource limits and requests for the application set controller pods
   resources: {}
@@ -2202,7 +2214,7 @@ notifications:
     allowPrivilegeEscalation: false
     capabilities:
       drop:
-        - ALL
+      - ALL
 
   # -- Resource limits and requests for the notification controller pods
   resources: {}
@@ -2423,7 +2435,7 @@ dex:
     allowPrivilegeEscalation: false
     capabilities:
       drop:
-        - ALL
+      - ALL
 
   ## Probes for Dex server
   ## Supported from Dex >= 2.28.0
