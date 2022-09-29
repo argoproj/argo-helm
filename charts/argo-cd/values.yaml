@@ -1466,37 +1466,39 @@ server:
     # -- Termination policy of Openshift Route
     termination_policy: None
 
-  GKEbackendConfig:
-    # -- Enable BackendConfig custom resource for Google Kubernetes Engine
-    enabled: false
-    # -- [BackendConfigSpec]
-    spec: {}
-  #  spec:
-  #    iap:
-  #      enabled: true
-  #      oauthclientCredentials:
-  #        secretName: argocd-secret
+  # Ingress for Google Kubernetes Engine (GKE)
+  gke:
+    ## Create a Google [BackendConfigSpec] Custom Resource, for use with the GKE Ingress Controller
+    ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+    backendConfig:
+      # -- Enable BackendConfig custom resource for Google Kubernetes Engine
+      enabled: false
+      # -- [BackendConfigSpec]
+      spec: {}
+      #  iap:
+      #    enabled: true
+      #    oauthclientCredentials:
+      #      secretName: argocd-secret
 
-  ## Create a Google Managed Certificate for use with the GKE Ingress Controller
-  ## https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
-  GKEmanagedCertificate:
-    # -- Enable ManagedCertificate custom resource for Google Kubernetes Engine.
-    enabled: false
-    # -- Domains for the Google Managed Certificate
-    domains:
-    - argocd.example.com
+    ## Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
+    ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+    frontendConfig:
+      # -- Enable FrontendConfig custom resource
+      enabled: false
+      # -- [FrontendConfigSpec]
+      spec: {}
+        #  redirectToHttps:
+        #    enabled: true
+        #    responseCodeName: RESPONSE_CODE
 
-  ## Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
-  ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
-  GKEfrontendConfig:
-    # -- Enable FrontConfig custom resource for Google Kubernetes Engine
-    enabled: false
-    # -- [FrontendConfigSpec]
-    spec: {}
-  # spec:
-  #   redirectToHttps:
-  #     enabled: true
-  #     responseCodeName: RESPONSE_CODE
+    ## Create a Google Managed Certificate for use with the GKE Ingress Controller
+    ## https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
+    managedCertificate:
+      # -- Enable ManagedCertificate custom resource for Google Kubernetes Engine.
+      enabled: false
+      # -- Domains for the Google Managed Certificate
+      domains:
+        - argocd.example.com
 
   ## Server metrics service configuration
   metrics:

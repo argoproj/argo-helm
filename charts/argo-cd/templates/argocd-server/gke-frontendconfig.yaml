@@ -1,10 +1,10 @@
-{{- if .Values.server.GKEfrontendConfig.enabled }}
+{{- if .Values.server.gke.frontendConfig.enabled }}
 apiVersion: networking.gke.io/v1beta1
 kind: FrontendConfig
 metadata:
-  name: {{ template "argo-cd.server.fullname" . }}
+  name: {{ include "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
-  {{- toYaml .Values.server.GKEfrontendConfig.spec | nindent 2 }}
+  {{- toYaml .Values.server.gke.frontendConfig.spec | nindent 2 }}
 {{- end }}
