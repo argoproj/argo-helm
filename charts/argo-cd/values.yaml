@@ -1843,6 +1843,17 @@ applicationSet:
     # - secretRef:
     #     name: secret-name
 
+  pdb:
+    # -- Labels to be added to Repo server pdb
+    labels: {}
+    # -- Annotations to be added to Repo server pdb
+    annotations: {}
+
+    # -- Deploy a Poddisruptionbudget for the Repo server
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 0
+
   # -- Annotations to be added to application set controller pods
   podAnnotations: {}
 

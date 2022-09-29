@@ -933,6 +933,9 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | applicationSet.name | string | `"applicationset-controller"` | Application set controller name string |
 | applicationSet.nodeSelector | object | `{}` | [Node selector] |
+| applicationSet.pdb.annotations | object | `{}` | Annotations to be added to Repo server pdb |
+| applicationSet.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the Repo server |
+| applicationSet.pdb.labels | object | `{}` | Labels to be added to Repo server pdb |
 | applicationSet.podAnnotations | object | `{}` | Annotations to be added to application set controller pods |
 | applicationSet.podLabels | object | `{}` | Labels to be added to application set controller pods |
 | applicationSet.policy | string | `"sync"` | Application set policy for managing generated resources. One of: `sync`, `create-only`, `create-update` |
