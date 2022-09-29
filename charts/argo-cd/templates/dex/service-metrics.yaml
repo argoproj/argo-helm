@@ -1,14 +1,14 @@
-{{- if .Values.dex.enabled }}
+{{- if and .Values.dex.enabled .Values.dex.metrics.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "argo-cd.dex.fullname" . }}
+  name: {{ template "argo-cd.dex.fullname" . }}-metrics
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
-    {{- with .Values.dex.service.labels }}
+    {{- with .Values.dex.metrics.service.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.dex.service.annotations }}
+  {{- with .Values.dex.metrics.service.annotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
@@ -16,14 +16,10 @@ metadata:
   {{- end }}
 spec:
   ports:
-  - name: {{ .Values.dex.service.http.name }}
+  - name: {{ .Values.dex.metrics.service.portName }}
     protocol: TCP
-    port: {{ .Values.dex.service.http.port }}
-    targetPort: http
-  - name: {{ .Values.dex.service.grpc.name }}
-    protocol: TCP
-    port: {{ .Values.dex.service.grpc.port }}
-    targetPort: grpc
+    port: {{ .Values.dex.metrics.service.servicePort }}
+    targetPort: metrics
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.dex.name) | nindent 4 }}
 {{- end }}
