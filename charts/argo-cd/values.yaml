@@ -1470,17 +1470,17 @@ server:
 
   # Ingress for Google Kubernetes Engine (GKE)
   gke:
-    ## Create a Google [BackendConfigSpec] Custom Resource, for use with the GKE Ingress Controller
+    ## Create a Google BackendConfig Custom Resource, for use with the GKE Ingress Controller
     ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
     backendConfig:
       # -- Enable BackendConfig custom resource for Google Kubernetes Engine
       enabled: false
       # -- [BackendConfigSpec]
       spec: {}
-      #  iap:
-      #    enabled: true
-      #    oauthclientCredentials:
-      #      secretName: argocd-secret
+        # iap:
+        #  enabled: true
+        #    oauthclientCredentials:
+        #      secretName: argocd-secret
 
     ## Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
     ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters

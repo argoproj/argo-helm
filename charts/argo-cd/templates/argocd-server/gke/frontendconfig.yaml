@@ -1,10 +1,11 @@
-{{- if .Values.server.gke.backendConfig.enabled }}
-apiVersion: cloud.google.com/v1beta1
-kind: BackendConfig
+{{- if .Values.server.gke.frontendConfig.enabled }}
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
 metadata:
   name: {{ include "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+{{- toYaml .Values.server.gke.frontendConfig.spec }}
 spec:
-  {{- toYaml .Values.server.gke.backendConfig.spec | nindent 2 }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
