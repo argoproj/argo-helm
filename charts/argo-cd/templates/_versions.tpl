@@ -52,6 +52,19 @@ Return the appropriate apiVersion for ingress
 {{- end -}}
 
 {{/*
+Return the appropriate apiVersion for GKE resources
+*/}}
+{{- define "argo-cd.apiVersions.cloud-google" -}}
+{{- if .Values.apiVersionOverrides.cloudgoogle -}}
+{{- print .Values.apiVersionOverrides.certmanager }}
+{{- else if .Capabilities.APIVersions.Has "cloud.google.com/v1" }}
+{{- print "cloud.google.com/v1" }}
+{{- else }}
+{{- print "cloud.google.com/v1beta1" }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Return the appropriate apiVersion for pod disruption budget
 */}}
 {{- define "argo-cd.apiVersion.podDisruptionBudget" -}}

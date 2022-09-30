@@ -347,7 +347,8 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling rendered by this helm chart |
-| apiVersionOverrides.certmanager | string | `""` | String to override apiVersion of certmanager resources rendered by this helm chart |
+| apiVersionOverrides.certmanager | string | `""` | String to override apiVersion of cert-manager resources rendered by this helm chart |
+| apiVersionOverrides.cloudgoogle | string | `""` | String to override apiVersion of google cloud resources rendered by this Helm chart |
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |

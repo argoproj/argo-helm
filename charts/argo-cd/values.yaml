@@ -14,12 +14,14 @@ kubeVersionOverride: ""
 # If you want to template helm charts but cannot access k8s API server
 # you can set api versions here
 apiVersionOverrides:
-  # -- String to override apiVersion of certmanager resources rendered by this helm chart
+  # -- String to override apiVersion of cert-manager resources rendered by this helm chart
   certmanager: "" # cert-manager.io/v1
-  # -- String to override apiVersion of ingresses rendered by this helm chart
-  ingress: "" # networking.k8s.io/v1beta1
+  # -- String to override apiVersion of google cloud resources rendered by this Helm chart
+  cloudgoogle: "" # cloud.google.com/v1
   # -- String to override apiVersion of autoscaling rendered by this helm chart
   autoscaling: "" # autoscaling/v2
+  # -- String to override apiVersion of ingresses rendered by this helm chart
+  ingress: "" # networking.k8s.io/v1beta1
 
 # -- Enable RedHat OpenShift cluster capabilities
 openshift: false
@@ -2492,7 +2494,7 @@ dex:
   ## Supported from Dex >= 2.28.0
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
   readinessProbe:
-    # -- Enable Kubernetes liveness probe for Dex >= 2.28.0
+    # -- Enable Kubernetes readiness probe for Dex >= 2.28.0
     enabled: false
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 10
