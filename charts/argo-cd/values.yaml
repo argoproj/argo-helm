@@ -1001,7 +1001,7 @@ controller:
   serviceAccount:
     # -- Create a service account for the application controller
     create: true
-    # -- The name of the service account to use.
+    # -- Controller service account name
     name: ""
     # -- Annotations applied to created service account
     annotations: {}
@@ -1608,16 +1608,16 @@ server:
 
     image:
       # -- Repository to use for extensions image
-      repository: "ghcr.io/argoproj-labs/argocd-extensions"
+      repository: ghcr.io/argoproj-labs/argocd-extensions
       # -- Tag to use for extensions image
-      tag: "v0.1.0"
+      tag: v0.1.0
       # -- Image pull policy for extensions
       imagePullPolicy: IfNotPresent
 
     # -- Extensions to be loaded into the server
     contents: []
     # - name: argo-rollouts
-    #   url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.1.0/extension.tar
+    #   url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.2.1/extension.tar
 
     # -- Server UI extensions container-level security context
     # @default -- See [values.yaml]
@@ -2149,7 +2149,7 @@ applicationSet:
   serviceAccount:
     # -- Create a service account for the applicationset controller
     create: true
-    # -- The name of the service account to use.
+    # -- Application set service account name
     name: ""
     # -- Annotations to add to the service account
     annotations: {}
@@ -2313,7 +2313,7 @@ notifications:
       serviceAccount:
         # -- Specifies whether a service account should be created
         create: true
-        # -- The name of the service account to use.
+        # -- Slack bot service account name
         name: ""
         # -- Annotations applied to created service account
         annotations: {}
@@ -2358,7 +2358,7 @@ notifications:
   serviceAccount:
     # -- Create a service account for the notification controller
     create: true
-    # -- The name of the service account to use.
+    # -- Notification controller service account name
     name: ""
     # -- Annotations applied to created service account
     annotations: {}
@@ -2783,7 +2783,7 @@ redis:
   serviceAccount:
     # -- Create a service account for the redis pod
     create: true
-    # -- Service account name for redis pod
+    # -- Redis service account name
     name: ""
     # -- Annotations applied to created service account
     annotations: {}

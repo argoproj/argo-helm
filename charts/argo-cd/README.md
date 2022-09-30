@@ -499,7 +499,7 @@ NAME: my-release
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the application controller |
 | controller.serviceAccount.labels | object | `{}` | Labels applied to created service account |
-| controller.serviceAccount.name | string | `""` | The name of the service account to use. |
+| controller.serviceAccount.name | string | `""` | Controller service account name |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to the application controller main container |
@@ -843,7 +843,7 @@ NAME: my-release
 | redis.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | redis.serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account |
 | redis.serviceAccount.create | bool | `true` | Create a service account for the redis pod |
-| redis.serviceAccount.name | string | `""` | Service account name for redis pod |
+| redis.serviceAccount.name | string | `""` | Redis service account name |
 | redis.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | redis.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to redis |
 | redis.volumeMounts | list | `[]` | Additional volumeMounts to the redis container |
@@ -946,9 +946,9 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.service.port | int | `7000` | Application set service port |
 | applicationSet.service.portName | string | `"webhook"` | Application set service port name |
 | applicationSet.serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
-| applicationSet.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| applicationSet.serviceAccount.labels | object | `{}` | Labels applied to created service account |
-| applicationSet.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| applicationSet.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| applicationSet.serviceAccount.create | bool | `true` | Create a service account for the applicationset controller |
+| applicationSet.serviceAccount.name | string | `""` | The name of the service account to use. |
 | applicationSet.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | applicationSet.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the application set controller |
 | applicationSet.volumeMounts | list | `[]` | Additional volumes to the application set controller pod |
@@ -979,7 +979,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.bots.slack.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | notifications.bots.slack.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| notifications.bots.slack.serviceAccount.name | string | `""` | The name of the service account to use. |
+| notifications.bots.slack.serviceAccount.name | string | `""` | Slack bot service account name |
 | notifications.bots.slack.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.enabled | bool | `true` | Enable Notifications controller |
@@ -1014,7 +1014,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | notifications.serviceAccount.create | bool | `true` | Create a service account for the notification controller |
-| notifications.serviceAccount.name | string | `""` | The name of the service account to use. |
+| notifications.serviceAccount.name | string | `""` | Notification controller service account name |
 | notifications.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.volumeMounts | list | `[]` | Additional volume mounts to the notifications controller pod |
 | notifications.volumes | list | `[]` | Additional volumes to the notifications controller main container |
