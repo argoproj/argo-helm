@@ -43,13 +43,13 @@ spec:
           imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.notifications.image.imagePullPolicy }}
           command:
             - argocd-notifications
+          args:
             - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
             - --loglevel={{ default .Values.global.logging.level .Values.notifications.logLevel }}
             - --logformat={{ default .Values.global.logging.format .Values.notifications.logFormat }}
             {{- range .Values.notifications.args }}
             - {{ . | squote }}
             {{- end }}
-          workingDir: /app
           {{- with .Values.notifications.env }}
           env:
             {{- toYaml . | nindent 12 }}
@@ -62,6 +62,23 @@ spec:
             - name: metrics
               protocol: TCP
               containerPort: 9001
+          livenessProbe:
+            tcpSocket:
+              port: metrics
+            initialDelaySeconds: {{ .Values.notifications.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.notifications.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.notifications.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.notifications.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.notifications.livenessProbe.failureThreshold }}
+          readinessProbe:
+            tcpSocket:
+              port: metrics
+            initialDelaySeconds: {{ .Values.notifications.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.notifications.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.notifications.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.notifications.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.notifications.readinessProbe.failureThreshold }}
+          workingDir: /app
           volumeMounts:
             - name: tls-certs
               mountPath: /app/config/tls
@@ -80,7 +97,26 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      {{- with .Values.notifications.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
       volumes:
+        {{- with .Values.notifications.volumes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         - name: tls-certs
           configMap:
             name: argocd-tls-certs-cm
@@ -95,19 +131,4 @@ spec:
               path: tls.key
             - key: ca.crt
               path: ca.crt
-        {{- with .Values.notifications.volumes }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
-      {{- with .Values.notifications.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.notifications.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.notifications.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
 {{- end }}
