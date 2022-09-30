@@ -13,7 +13,6 @@ metadata:
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-
 spec:
   ports:
   - name: {{ .Values.controller.service.portName }}

@@ -20,6 +20,23 @@ Return the appropriate apiVersion for autoscaling
 {{- end -}}
 
 {{/*
+Return the appropriate apiVersion for cert-manager
+*/}}
+{{- define "argo-cd.apiVersion.cert-manager" -}}
+{{- if .Values.apiVersionOverrides.certmanager -}}
+apiVersion: {{ .Values.apiVersionOverrides.certmanager }}
+{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1" }}
+apiVersion: cert-manager.io/v1
+{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha3" }}
+apiVersion: cert-manager.io/v1alpha3
+{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha2" }}
+apiVersion: cert-manager.io/v1alpha2
+{{- else }}
+apiVersion: certmanager.k8s.io/v1alpha1
+{{- end }}
+{{- end -}}
+
+{{/*
 Return the appropriate apiVersion for ingress
 */}}
 {{- define "argo-cd.apiVersion.ingress" -}}

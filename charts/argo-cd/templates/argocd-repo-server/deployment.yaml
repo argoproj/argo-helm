@@ -14,6 +14,11 @@ spec:
   {{- end }}
   template:
     metadata:
+      labels:
+        {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 8 }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.repoServer.podLabels) }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       annotations:
         {{- if .Values.configs.cm.create }}
         checksum/cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | sha256sum }}
@@ -24,11 +29,6 @@ spec:
         {{ $key }}: {{ $value | quote }}
         {{- end }}
         {{- end }}
-      labels:
-        {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 8 }}
-        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.repoServer.podLabels) }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
     spec:
       {{- with .Values.repoServer.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
@@ -37,6 +37,9 @@ spec:
       {{- with .Values.global.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.repoServer.priorityClassName }}
+      priorityClassName: {{ . }}
       {{- end }}
       serviceAccountName: {{ template "argo-cd.repoServer.serviceAccountName" . }}
       containers:
@@ -49,10 +52,6 @@ spec:
         - argocd-repo-server
         {{- with .Values.repoServer.args }}
           {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.repoServer.containerSecurityContext }}
-        securityContext:
-          {{- toYaml . | nindent 10 }}
         {{- end }}
         env:
           {{- with .Values.repoServer.env }}
@@ -174,56 +173,83 @@ spec:
         envFrom:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        volumeMounts:
-        {{- if .Values.repoServer.volumeMounts }}
-          {{- toYaml .Values.repoServer.volumeMounts | nindent 8 }}
-        {{- end }}
-        - mountPath: /app/config/gpg/source
-          name: gpg-keys
-        - mountPath: /app/config/gpg/keys
-          name: gpg-keyring
-        - mountPath: /app/config/ssh
-          name: ssh-known-hosts
-        - mountPath: /app/config/tls
-          name: tls-certs
-        - mountPath: /app/config/reposerver/tls
-          name: argocd-repo-server-tls
-        - mountPath: /tmp
-          name: tmp-dir
-        - mountPath: /helm-working-dir
-          name: helm-working-dir
-        - mountPath: /home/argocd/cmp-server/plugins
-          name: plugins
         ports:
         - name: repo-server
           containerPort: {{ .Values.repoServer.containerPort }}
           protocol: TCP
-        {{ if .Values.repoServer.metrics.enabled }}
         - name: metrics
           containerPort: 8084
           protocol: TCP
-        {{- end }}
         livenessProbe:
-          tcpSocket:
-            port: {{ .Values.repoServer.containerPort }}
+          httpGet:
+            path: /healthz?full=true
+            port: metrics
           initialDelaySeconds: {{ .Values.repoServer.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.repoServer.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.repoServer.livenessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.repoServer.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.livenessProbe.failureThreshold }}
         readinessProbe:
-          tcpSocket:
-            port: {{ .Values.repoServer.containerPort }}
+          httpGet:
+            path: /healthz
+            port: metrics
           initialDelaySeconds: {{ .Values.repoServer.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.repoServer.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.repoServer.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.repoServer.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.readinessProbe.failureThreshold }}
+        {{- with .Values.repoServer.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+          {{- if .Values.repoServer.volumeMounts }}
+            {{- toYaml .Values.repoServer.volumeMounts | nindent 10 }}
+          {{- end }}
+          - mountPath: /app/config/gpg/source
+            name: gpg-keys
+          - mountPath: /app/config/gpg/keys
+            name: gpg-keyring
+          - mountPath: /app/config/ssh
+            name: ssh-known-hosts
+          - mountPath: /app/config/tls
+            name: tls-certs
+          - mountPath: /app/config/reposerver/tls
+            name: argocd-repo-server-tls
+          - mountPath: /tmp
+            name: tmp
+          - mountPath: /helm-working-dir
+            name: helm-working-dir
+          - mountPath: /home/argocd/cmp-server/plugins
+            name: plugins
         {{- with .Values.repoServer.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
       {{- with .Values.repoServer.extraContainers }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      initContainers:
+      - name: copyutil
+        image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}
+        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
+        command:
+        - cp
+        - -n
+        - /usr/local/bin/argocd
+        - /var/run/argocd/argocd-cmp-server
+        {{- with .Values.repoServer.copyutil.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.repoServer.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+        - mountPath: /var/run/argocd
+          name: var-files
+      {{- with .Values.repoServer.initContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
       {{- with .Values.repoServer.nodeSelector }}
@@ -257,21 +283,25 @@ spec:
       {{- with .Values.repoServer.volumes }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+      - name: ssh-known-hosts
+        configMap:
+          name: argocd-ssh-known-hosts-cm
+      - name: tls-certs
+        configMap:
+          name: argocd-tls-certs-cm
       - name: gpg-keys
         configMap:
           name: argocd-gpg-keys-cm
-      - emptyDir: {}
-        name: gpg-keyring
-      - configMap:
-          name: argocd-ssh-known-hosts-cm
-        name: ssh-known-hosts
-      - configMap:
-          name: argocd-tls-certs-cm
-        name: tls-certs
+      - name: gpg-keyring
+        emptyDir: {}
       - name: helm-working-dir
+        emptyDir: {}
+      - name: tmp
         emptyDir: {}
       - name: argocd-repo-server-tls
         secret:
+          secretName: argocd-repo-server-tls
+          optional: true
           items:
           - key: tls.crt
             path: tls.crt
@@ -279,37 +309,7 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-          optional: true
-          secretName: argocd-repo-server-tls
-      - emptyDir: {}
-        name: tmp-dir
-      - emptyDir: {}
-        name: var-files
-      - emptyDir: {}
-        name: plugins
-      initContainers:
-      - command:
-        - cp
-        - -n
-        - /usr/local/bin/argocd
-        - /var/run/argocd/argocd-cmp-server
-        image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}
-        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
-        name: copyutil
-        {{- with .Values.repoServer.copyutil.resources }}
-        resources:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
-        {{- with .Values.repoServer.containerSecurityContext }}
-        securityContext:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
-        volumeMounts:
-        - mountPath: /var/run/argocd
-          name: var-files
-      {{- with .Values.repoServer.initContainers }}
-        {{- toYaml . | nindent 6 }}
-      {{- end }}
-      {{- with .Values.repoServer.priorityClassName }}
-      priorityClassName: {{ . }}
-      {{- end }}
+      - name: plugins
+        emptyDir: {}
+      - name: var-files
+        emptyDir: {}

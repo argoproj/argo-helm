@@ -19,14 +19,14 @@ spec:
   - name: {{ .Values.server.service.servicePortHttpName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttp }}
-    targetPort: {{ .Values.server.service.namedTargetPort | ternary .Values.server.name .Values.server.containerPort }}
+    targetPort: {{ .Values.server.service.namedTargetPort | ternary "server" .Values.server.containerPort }}
     {{- if eq .Values.server.service.type "NodePort" }}
     nodePort: {{ .Values.server.service.nodePortHttp }}
     {{- end }}
   - name: {{ .Values.server.service.servicePortHttpsName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttps }}
-    targetPort: {{ .Values.server.service.namedTargetPort | ternary .Values.server.name .Values.server.containerPort }}
+    targetPort: {{ .Values.server.service.namedTargetPort | ternary "server" .Values.server.containerPort }}
     {{- if eq .Values.server.service.type "NodePort" }}
     nodePort: {{ .Values.server.service.nodePortHttps }}
     {{- end }}

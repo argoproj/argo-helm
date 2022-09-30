@@ -4,7 +4,7 @@ kind: NetworkPolicy
 metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-  name: {{ template "argo-cd.controller.fullname" . }}
+  name: {{ include "argo-cd.controller.fullname" . }}
 spec:
   ingress:
   - from:

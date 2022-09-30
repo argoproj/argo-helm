@@ -14,17 +14,17 @@ spec:
   {{- end }}
   template:
     metadata:
+      labels:
+        {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 8 }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.server.podLabels) }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       annotations:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.server.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-        {{- end }}
-      labels:
-        {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 8 }}
-        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.server.podLabels) }}
-          {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       {{- with .Values.server.imagePullSecrets | default .Values.global.imagePullSecrets }}
@@ -35,6 +35,9 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.server.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       serviceAccountName: {{ template "argo-cd.server.serviceAccountName" . }}
       containers:
       - name: {{ .Values.server.name }}
@@ -44,10 +47,6 @@ spec:
         - argocd-server
         {{- with .Values.server.args }}
           {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.server.containerSecurityContext }}
-        securityContext:
-          {{- toYaml . | nindent 10 }}
         {{- end }}
         env:
           {{- with .Values.server.env }}
@@ -231,35 +230,8 @@ spec:
         envFrom:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        volumeMounts:
-        {{- with .Values.server.volumeMounts }}
-          {{- toYaml . | nindent 8}}
-        {{- end }}
-        {{- if .Values.server.extensions.enabled }}
-        - name: extensions
-          mountPath: /tmp/extensions/
-        {{- end }}
-        - mountPath: /app/config/ssh
-          name: ssh-known-hosts
-        - mountPath: /app/config/tls
-          name: tls-certs
-        - mountPath: /app/config/server/tls
-          name: argocd-repo-server-tls
-        {{- if .Values.configs.styles }}
-        - mountPath: "/shared/app/custom/custom.styles.css"
-          subPath: "custom.styles.css"
-          name: custom-styles
-        {{- end }}
-        {{- if .Values.server.containerSecurityContext.readOnlyRootFilesystem }}
-        - mountPath: /home/argocd/.aws
-          name: aws-config
-        {{- end }}
-        - mountPath: /home/argocd
-          name: plugins-home
-        - mountPath: /tmp
-          name: tmp-dir
         ports:
-        - name: {{ .Values.server.name }}
+        - name: server
           containerPort: {{ .Values.server.containerPort }}
           protocol: TCP
         - name: metrics
@@ -267,8 +239,8 @@ spec:
           protocol: TCP
         livenessProbe:
           httpGet:
-            path: /healthz
-            port: {{ .Values.server.containerPort }}
+            path: /healthz?full=true
+            port: server
           initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.server.livenessProbe.timeoutSeconds }}
@@ -277,18 +249,46 @@ spec:
         readinessProbe:
           httpGet:
             path: /healthz
-            port: {{ .Values.server.containerPort }}
+            port: server
           initialDelaySeconds: {{ .Values.server.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.server.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
-        {{- with .Values.server.resources }}
-        resources:
+        {{- with .Values.server.containerSecurityContext }}
+        securityContext:
           {{- toYaml . | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+        {{- with .Values.server.volumeMounts }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - mountPath: /app/config/ssh
+          name: ssh-known-hosts
+        - mountPath: /app/config/tls
+          name: tls-certs
+        - mountPath: /app/config/server/tls
+          name: argocd-repo-server-tls
+        - mountPath: /app/config/dex/tls
+          name: argocd-dex-server-tls
+        - mountPath: /home/argocd
+          name: plugins-home
+        - mountPath: /home/argocd/.aws
+          name: aws-home
+        - mountPath: /shared/app/custom/
+          name: argocd-styles-cm
+        - mountPath: /tmp
+          name: tmp
+        {{- if .Values.server.extensions.enabled }}
+        - mountPath: /tmp/extensions/
+          name: extensions
         {{- end }}
         {{- with .Values.server.lifecycle }}
         lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.server.resources }}
+        resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
       {{- with .Values.server.extraContainers }}
@@ -303,10 +303,16 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
-          - name: extensions
-            mountPath: /tmp/extensions/
+          - mountPath: /tmp/extensions/
+            name: extensions
+        {{- with .Values.server.extensions.resources }}
         resources:
-          {{- toYaml .Values.server.extensions.resources | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.server.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 6 }}
       {{- end }}
       {{- with .Values.server.nodeSelector }}
       nodeSelector:
@@ -337,31 +343,32 @@ spec:
       {{- end }}
       volumes:
       {{- with .Values.server.volumes }}
-        {{- toYaml . | nindent 6}}
+        {{- toYaml . | nindent 6 }}
       {{- end }}
+      - name: aws-home
+        emptyDir: {}
+      - name: plugins-home
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
       {{- if .Values.server.extensions.enabled }}
       - name: extensions
         emptyDir: {}
       {{- end }}
-      - emptyDir: {}
-        name: tmp-dir
-      {{- if .Values.server.containerSecurityContext.readOnlyRootFilesystem }}
-      - emptyDir: {}
-        name: aws-config
-      {{- end }}
-      {{- if .Values.configs.styles }}
-      - configMap:
-          name: argocd-custom-styles
-        name: custom-styles
-      {{- end }}
-      - configMap:
+      - name: ssh-known-hosts
+        configMap:
           name: argocd-ssh-known-hosts-cm
-        name: ssh-known-hosts
-      - configMap:
+      - name: tls-certs
+        configMap:
           name: argocd-tls-certs-cm
-        name: tls-certs
+      - name: argocd-styles-cm
+        configMap:
+          name: argocd-styles-cm
+          optional: true
       - name: argocd-repo-server-tls
         secret:
+          secretName: argocd-repo-server-tls
+          optional: true
           items:
           - key: tls.crt
             path: tls.crt
@@ -369,14 +376,12 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
+      - name: argocd-dex-server-tls
+        secret:
+          secretName: argocd-dex-server-tls
           optional: true
-          secretName: argocd-repo-server-tls
-      - emptyDir: {}
-        name: plugins-home
-      {{- with .Values.server.initContainers }}
-      initContainers:
-        {{- toYaml . | nindent 6 }}
-      {{- end }}
-      {{- with .Values.server.priorityClassName }}
-      priorityClassName: {{ . }}
-      {{- end }}
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: ca.crt
+            path: ca.crt

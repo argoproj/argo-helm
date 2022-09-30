@@ -2,18 +2,18 @@
 apiVersion: {{ include "argo-cd.apiVersion.autoscaling" . }}
 kind: HorizontalPodAutoscaler
 metadata:
+  name: {{ include "argo-cd.repoServer.fullname" . }}-hpa
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" (printf "%s-hpa" .Values.repoServer.name)) | nindent 4 }}
-  name: {{ template "argo-cd.repoServer.fullname" . }}-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ template "argo-cd.repoServer.fullname" . }}
+    name: {{ include "argo-cd.repoServer.fullname" . }}
   minReplicas: {{ .Values.repoServer.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.repoServer.autoscaling.maxReplicas }}
   metrics:
-  {{- with .Values.repoServer.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- with .Values.repoServer.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
@@ -24,8 +24,8 @@ spec:
           averageUtilization: {{ . }}
           type: Utilization
         {{- end }}
-  {{- end }}
-  {{- with .Values.repoServer.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- with .Values.repoServer.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu

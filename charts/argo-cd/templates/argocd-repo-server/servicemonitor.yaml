@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "argo-cd.repoServer.fullname" . }}
+  name: {{ include "argo-cd.repoServer.fullname" . }}
   {{- with .Values.repoServer.metrics.serviceMonitor.namespace }}
   namespace: {{ . }}
   {{- end }}
