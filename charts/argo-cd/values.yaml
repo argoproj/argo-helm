@@ -912,7 +912,7 @@ controller:
       # -- Metrics service labels
       labels: {}
       # -- Metrics service port
-      servicePort: 8082
+      port: 8082
       # -- Metrics service port name
       portName: http-metrics
     serviceMonitor:
@@ -1512,7 +1512,7 @@ server:
       # -- Metrics service labels
       labels: {}
       # -- Metrics service port
-      servicePort: 8083
+      port: 8083
       # -- Metrics service port name
       portName: http-metrics
     serviceMonitor:
@@ -1824,7 +1824,7 @@ repoServer:
       # -- Metrics service labels
       labels: {}
       # -- Metrics service port
-      servicePort: 8084
+      port: 8084
       # -- Metrics service port name
       portName: http-metrics
     serviceMonitor:
@@ -2110,7 +2110,7 @@ applicationSet:
       # -- Metrics service labels
       labels: {}
       # -- Metrics service port
-      servicePort: 8085
+      port: 8085
       # -- Metrics service port name
       portName: http-metrics
     serviceMonitor:
@@ -2330,7 +2330,7 @@ notifications:
       # -- Metrics service labels
       labels: {}
       # -- Metrics service port
-      servicePort: 9001
+      port: 9001
       # -- Metrics service port name
       portName: http-metrics
     serviceMonitor:
@@ -2531,7 +2531,7 @@ dex:
       # -- Metrics service labels
       labels: {}
       # -- Metrics service port
-      servicePort: 5558
+      port: 5558
       # -- Metrics service port name
       portName: http-metrics
     serviceMonitor:
@@ -2713,6 +2713,7 @@ redis:
   metrics:
     # -- Deploy metrics service and redis-exporter sidecar
     enabled: false
+
     exporter:
       image:
         # -- redis-exporter image repository
@@ -2744,7 +2745,7 @@ redis:
       # -- Metrics service labels
       labels: {}
       # -- Metrics service port
-      servicePort: 9121
+      port: 9121
       # -- Metrics service port name
       portName: http-metrics
     serviceMonitor:

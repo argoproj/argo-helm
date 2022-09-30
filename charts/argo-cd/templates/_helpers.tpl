@@ -43,7 +43,7 @@ Common labels
 */}}
 {{- define "argo-cd.labels" -}}
 helm.sh/chart: {{ include "argo-cd.chart" .context }}
-{{- include "argo-cd.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
+{{ include "argo-cd.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
 app.kubernetes.io/managed-by: {{ .context.Release.Service }}
 app.kubernetes.io/part-of: argocd
 {{- with .context.Values.global.additionalLabels }}
@@ -55,7 +55,7 @@ app.kubernetes.io/part-of: argocd
 Selector labels
 */}}
 {{- define "argo-cd.selectorLabels" -}}
-{{- if .name }}
+{{- if .name -}}
 app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .name }}
 {{- end }}
 app.kubernetes.io/instance: {{ .context.Release.Name }}
