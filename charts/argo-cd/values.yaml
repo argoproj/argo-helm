@@ -127,6 +127,9 @@ configs:
     # published to the repository. Reconciliation by timeout is disabled if timeout is set to 0. Three minutes by default.
     timeout.reconciliation: 180s
 
+    # Timeout to refresh application data as well as target manifests cache
+    timeout.hard.reconciliation: "0"
+
     # Dex configuration
     # dex.config: |
     #   connectors:
@@ -163,10 +166,6 @@ configs:
     ## Generic parameters
     # -- Open-Telemetry collector address: (e.g. "otel-collector:4317")
     otlp.address: ''
-    # -- Time period in seconds for application resync
-    timeout.reconciliation: 180
-    # -- Time period in seconds for application hard resync
-    timeout.hard.reconciliation: 0
 
     ## Controller Properties
     # -- Number of application status processors

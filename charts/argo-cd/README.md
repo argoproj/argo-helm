@@ -394,6 +394,7 @@ NAME: my-release
 | configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` |  |
 | configs.cm."exec.enabled" | string | `"false"` |  |
 | configs.cm."server.rbac.log.enforce.enable" | string | `"false"` |  |
+| configs.cm."timeout.hard.reconciliation" | int | `0` |  |
 | configs.cm."timeout.reconciliation" | string | `"180s"` |  |
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
 | configs.cm.create | bool | `true` | Create the argocd-cm configmap for [Declarative setup] |
@@ -423,8 +424,6 @@ NAME: my-release
 | configs.params."server.rootpath" | string | `""` | Used if Argo CD is running behind reverse proxy under subpath different from / |
 | configs.params."server.staticassets" | string | `"/shared/app"` | Directory path that contains additional static assets |
 | configs.params."server.x.frame.options" | string | `"sameorigin"` | Set X-Frame-Options header in HTTP responses to value. To disable, set to "". |
-| configs.params."timeout.hard.reconciliation" | int | `0` | Time period in seconds for application hard resync |
-| configs.params."timeout.reconciliation" | int | `180` | Time period in seconds for application resync |
 | configs.params.annotations | object | `{}` | Annotations to be added to the argocd-cmd-params-cm ConfigMap |
 | configs.rbac."policy.csv" | string | `''` (See [values.yaml]) | File containing user-defined policies and role definitions. |
 | configs.rbac."policy.default" | string | `""` | The name of the default role which Argo CD will falls back to, when authorizing API requests (optional). If omitted or empty, users may be still be able to login, but will see no apps, projects, etc... |
