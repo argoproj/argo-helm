@@ -65,6 +65,25 @@ app.kubernetes.io/component: {{ .component }}
 {{- end }}
 
 {{/*
+Common ingress backend defintion
+*/}}
+{{- define "argo-cd.ingressBackend" -}}
+{{- if eq (include "argo-cd.apiVersion.ingress" .context) "networking.k8s.io/v1" -}}
+service:
+  name: {{ .service }}
+  port:
+    {{- if kindIs "float64" .port }}
+    number: {{ .port }}
+    {{- else }}
+    name: {{ .port }}
+    {{- end }}
+{{- else }}
+serviceName: {{ .service }}
+servicePort: {{ .port }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Create controller name and version as used by the chart label.
 Truncated at 52 chars because StatefulSet label 'controller-revision-hash' is limited
 to 63 chars and it includes 10 chars of hash and a separating '-'.
@@ -101,6 +120,25 @@ Create the name of the Argo CD server service account to use
     {{- default "default" .Values.server.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Creates ingress annoattions for Argo CD server
+to properly route traffic on various cloud providers
+*/}}
+{{- define "argo-cd.server.ingress.annotations" -}}
+{{- if .Values.server.ingress.alb.enabled -}}
+alb.ingress.kubernetes.io/backend-protocol: HTTPS
+alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+alb.ingress.kubernetes.io/conditions.{{ include "argo-cd.server.fullname" . }}-grpc: |
+  [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "Content-Type", "values":["application/grpc"]}}]
+{{- end }}
+{{- if .Values.server.ingress.gke.enabled -}}
+networking.gke.io/v1beta1.FrontendConfig: {{ include "argo-cd.server.fullname" . }}
+{{- end }}
+{{- range $key, $value := .Values.server.ingress.annotations -}}
+{{ $key }}: {{ $value | quote }}
+{{- end }}
+{{- end -}}
 
 {{/*
 Create argocd repo-server name and version as used by the chart label.
@@ -239,6 +277,7 @@ Create the name of the redis service account to use
 Argo Configuration Preset Values (Incluenced by Values configuration)
 */}}
 {{- define "argo-cd.config.cm.presets" -}}
+url: {{ .Values.global.domain | quote }}
 {{- if .Values.configs.styles }}
 ui.cssurl: "./custom/custom.styles.css"
 {{- end }}

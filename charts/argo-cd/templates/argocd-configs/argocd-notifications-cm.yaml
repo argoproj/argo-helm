@@ -7,7 +7,7 @@ metadata:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
 data:
   context: |
-    argocdUrl: {{ .Values.configs.cm.url | quote }}
+    argocdUrl: {{ (default .Values.global.domain .Values.configs.cm.url) | quote }}
     {{- with .Values.configs.notifications.context }}
       {{- toYaml . | nindent 4 }}
     {{- end }}

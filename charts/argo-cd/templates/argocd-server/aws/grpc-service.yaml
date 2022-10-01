@@ -1,0 +1,24 @@
+{{- if and .Values.server.ingress.enabled .Values.server.ingress.alb.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "argo-cd.server.fullname" . }}-grpc
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" (print .Values.server.name "-grpc")) | nindent 4 }}
+  annotations:
+    alb.ingress.kubernetes.io/backend-protocol-version: {{ .Values.server.ingress.alb.backendProtocolVersion }}
+spec:
+  type: {{ .Values.server.ingress.alb.serviceType }}
+  sessionAffinity: None
+  ports:
+  - name: {{ .Values.server.service.servicePortHttpName }}
+    protocol: TCP
+    port: {{ .Values.server.service.servicePortHttp }}
+    targetPort: {{ .Values.server.service.namedTargetPort | ternary .Values.server.name .Values.server.containerPort }}
+  - name: {{ .Values.server.service.servicePortHttpsName }}
+    protocol: TCP
+    port: {{ .Values.server.service.servicePortHttps }}
+    targetPort: {{ .Values.server.service.namedTargetPort | ternary .Values.server.name .Values.server.containerPort }}
+  selector:
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
+{{- end -}}

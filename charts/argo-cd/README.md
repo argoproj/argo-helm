@@ -103,9 +103,9 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 
 ### 6.0.0
 
-This version contains major refactoring and consolidation of all configuration options
-that were scattered on multiple places under `configs` section. Please revise your
-values.yaml and align your configuration to newly introduced config sections.
+This version contains **major** refactoring that consolidates all the components and configs
+for the sake of ease of use and further maintainability. Plase review thoroughly new [values.yaml]
+structure to align your configuration during the upgrade.
 
 Config categories:
   - cm - General Argo CD config
@@ -115,10 +115,21 @@ Config categories:
   - secret - Additional secrets for third-party integrations
   - gpg - GnuPG keyring configuration for commit signing
   - ssh - SSH known hosts configuration
-  - tls - TLS certificate configuration
+  - tls - TLS certificates configuration
   - notifications - Notifications services configuration
 
-All deprecated features and duplicit configuration options were removed.
+Naming conventions:
+  - Components now use same names for the same things across whole chart
+  - The `args` and `extraArgs` renamed to `args`
+  - The `env` and `extraEnv` renamed to `env`
+
+Enhacements and fixes:
+  - Chart should be fully aligned with upstream Argo CD manifests
+  - New `global.domain` options acts as a default through all components
+  - Reworked ingress to provide above capability and automatic annotations for ingress controllers
+  - Cluster-wide installation now properly watches Application resources in other namespaces
+  - ApplicationSet and Notification controllers are now first-class citizens along other components
+  - Service account API tokens can be properly mounted in all deployments
 
 ### 5.5.0
 
@@ -356,6 +367,7 @@ NAME: my-release
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
 | global.additionalLabels | object | `{}` | Additional labels to add to all resources |
+| global.domain | string | `"argocd.server.local"` | Default domain used for all components |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
 | global.image.repository | string | `"quay.io/argoproj/argocd"` | If defined, a repository applied to all Argo CD deployments |
@@ -385,7 +397,6 @@ NAME: my-release
 | configs.cm."timeout.reconciliation" | string | `"180s"` |  |
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
 | configs.cm.create | bool | `true` | Create the argocd-cm configmap for [Declarative setup] |
-| configs.cm.url | string | `""` | Argo CD's externally facing base URL (optional). Required when configuring SSO or notifications |
 | configs.creds.clusters | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.creds.repositories | object | `{}` (See [values.yaml]) | Credentials to be used by a single repository |
 | configs.creds.templates | object | `{}` (See [values.yaml]) | Credentials to be used as a template for multiple repositories |
@@ -591,7 +602,7 @@ NAME: my-release
 | server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the Argo CD server [HPA] |
 | server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo CD server [HPA] |
 | server.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
-| server.certificate.domain | string | `"argocd.example.com"` | Certificate primary domain (commonName) |
+| server.certificate.domain | string | `""` (defaults to `global.domain`) | Certificate primary domain (commonName) |
 | server.certificate.duration | string | `""` | The requested 'duration' (i.e. lifetime) of the Certificate. Value must be in units accepted by Go time.ParseDuration |
 | server.certificate.enabled | bool | `false` | Deploy a Certificate resource |
 | server.certificate.issuer.group | string | `""` | Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io` |
@@ -618,39 +629,33 @@ NAME: my-release
 | server.extensions.image.tag | string | `"v0.1.0"` | Tag to use for extensions image |
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
-| server.gke.backendConfig.enabled | bool | `false` | Enable BackendConfig custom resource for Google Kubernetes Engine |
-| server.gke.backendConfig.spec | object | `{}` | [BackendConfigSpec] |
-| server.gke.frontendConfig.enabled | bool | `false` | Enable FrontendConfig custom resource |
-| server.gke.frontendConfig.spec | object | `{}` | [FrontendConfigSpec] |
-| server.gke.managedCertificate.domains | list | `["argocd.example.com"]` | Domains for the Google Managed Certificate |
-| server.gke.managedCertificate.enabled | bool | `false` | Enable ManagedCertificate custom resource for Google Kubernetes Engine. |
 | server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Argo CD server |
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
 | server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Argo CD server |
 | server.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
+| server.ingress.alb.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB gRPC service |
+| server.ingress.alb.enabled | bool | `false` | Enable Amazon Load Balancer features |
+| server.ingress.alb.serviceType | string | `"NodePort"` | Service type for the AWS ALB gRPC service |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
-| server.ingress.extraPaths | list | `[]` | Additional ingress paths |
-| server.ingress.hosts | list | `[]` | List of ingress hosts |
-| server.ingress.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
+| server.ingress.extraHosts | list | `[]` (See [values.yaml]) | List of additional hosts |
+| server.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
+| server.ingress.extraTls | list | `[]` (See [values.yaml]) | Additional TLS configuration for additional hosts |
+| server.ingress.gke.backendConfig | string | `nil` | [BackendConfigSpec] |
+| server.ingress.gke.domains | list | `[]` | Additional domains for Google Managed Certificate |
+| server.ingress.gke.enabled | bool | `false` | Enable Google Load Balancer features |
+| server.ingress.gke.frontendConfig | string | `nil` | [FrontendConfigSpec] |
+| server.ingress.grpc.annotations | object | `{}` | Annotations for gRPC ingress |
+| server.ingress.grpc.enabled | bool | `false` | Enable dedicated gRCPC ingress |
+| server.ingress.grpc.hostname | string | `""` (Defaults to `grpc.<server.ingress.hostname>`) | Hostname for dedicated  gRPC ingress |
+| server.ingress.hostname | string | `""` (defaults to `global.domain`) | When ingress is enabled, a host pointing to this will be created |
 | server.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
 | server.ingress.labels | object | `{}` | Additional ingress labels |
+| server.ingress.passthrough | bool | `true` | SSL - Passthrough to Argo CD Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough |
+| server.ingress.path | string | `"/"` | The path to Argo CD server |
 | server.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
-| server.ingress.paths | list | `["/"]` | List of ingress paths |
-| server.ingress.tls | list | `[]` | Ingress TLS configuration |
-| server.ingressGrpc.annotations | object | `{}` | Additional ingress annotations for dedicated [gRPC-ingress] |
-| server.ingressGrpc.awsALB.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB gRPC service |
-| server.ingressGrpc.awsALB.serviceType | string | `"NodePort"` | Service type for the AWS ALB gRPC service |
-| server.ingressGrpc.enabled | bool | `false` | Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress] |
-| server.ingressGrpc.extraPaths | list | `[]` | Additional ingress paths for dedicated [gRPC-ingress] |
-| server.ingressGrpc.hosts | list | `[]` | List of ingress hosts for dedicated [gRPC-ingress] |
-| server.ingressGrpc.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
-| server.ingressGrpc.ingressClassName | string | `""` | Defines which ingress controller will implement the resource [gRPC-ingress] |
-| server.ingressGrpc.isAWSALB | bool | `false` | Setup up gRPC ingress to work with an AWS ALB |
-| server.ingressGrpc.labels | object | `{}` | Additional ingress labels for dedicated [gRPC-ingress] |
-| server.ingressGrpc.pathType | string | `"Prefix"` | Ingress path type for dedicated [gRPC-ingress]. One of `Exact`, `Prefix` or `ImplementationSpecific` |
-| server.ingressGrpc.paths | list | `["/"]` | List of ingress paths for dedicated [gRPC-ingress] |
-| server.ingressGrpc.tls | list | `[]` | Ingress TLS configuration for dedicated [gRPC-ingress] |
+| server.ingress.tls.enabled | bool | `true` | Enable TLS for hostname defined in `server.ingress.hostname` |
+| server.ingress.tls.secretName | string | `"argocd-secret"` | The name of secret to use for TLS certificate |
 | server.initContainers | list | `[]` | Init containers to add to the server pod |
 | server.lifecycle | object | `{}` | Specify postStart and preStop lifecycle hooks for your argo-cd-server container |
 | server.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
@@ -906,15 +911,18 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application set controller |
 | applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application set controller |
 | applicationSet.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
-| applicationSet.ingressWebhook.annotations | object | `{}` | Additional ingress annotations |
-| applicationSet.ingressWebhook.enabled | bool | `true` | Enable an ingress resource for Webhooks |
-| applicationSet.ingressWebhook.extraPaths | list | `[]` | Additional ingress paths for webhook |
-| applicationSet.ingressWebhook.hosts | list | `[]` | List of webhook ingress hosts |
-| applicationSet.ingressWebhook.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
-| applicationSet.ingressWebhook.labels | object | `{}` | Additional ingress labels |
-| applicationSet.ingressWebhook.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
-| applicationSet.ingressWebhook.paths | list | See [values.yaml] | List of ingress paths |
-| applicationSet.ingressWebhook.tls | list | `[]` | Ingress TLS configuration |
+| applicationSet.ingress.annotations | object | `{}` | Additional ingress annotations |
+| applicationSet.ingress.enabled | bool | `false` | Enable an webhook ingress |
+| applicationSet.ingress.extraHosts | list | `[]` (See [values.yaml]) | List of additional hosts |
+| applicationSet.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths for webhook |
+| applicationSet.ingress.extraTls | list | `[]` (See [values.yaml]) | Additional TLS configuration for additional hosts |
+| applicationSet.ingress.hostname | string | `""` (defaults to `global.domain`) | When ingress is enabled, a host pointing to this will be created |
+| applicationSet.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
+| applicationSet.ingress.labels | object | `{}` | Additional ingress labels |
+| applicationSet.ingress.path | string | `"/api/webhook"` | The path to ApplicationSet webhook |
+| applicationSet.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
+| applicationSet.ingress.tls.enabled | bool | `true` | Enable TLS for hostname defined in `server.ingress.hostname` |
+| applicationSet.ingress.tls.secretName | string | `"argocd-secret"` | The name of secret to use for TLS certificate |
 | applicationSet.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | applicationSet.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | applicationSet.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |

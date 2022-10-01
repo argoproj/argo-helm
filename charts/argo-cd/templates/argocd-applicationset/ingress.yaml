@@ -1,0 +1,59 @@
+{{- $hostname := default .Values.global.domain .Values.applicationSet.ingress.hostname -}}
+{{- $serviceName := include "argo-cd.applicationSet.fullname" . -}}
+{{- $servicePort := .Values.applicationSet.service.portName -}}
+{{- if and .Values.applicationSet.enabled .Values.applicationSet.ingress.enabled }}
+apiVersion: {{ include "argo-cd.apiVersion.ingress" . }}
+kind: Ingress
+metadata:
+  name: {{ $serviceName }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
+    {{- with .Values.applicationSet.ingress.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.applicationSet.ingress.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
+  {{- with .Values.applicationSet.ingress.ingressClassName }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  {{- end }}
+  rules:
+    - host: {{ $hostname }}
+      http:
+        paths:
+          {{- with .Values.applicationSet.ingress.extraPaths }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          - path: {{ .Values.applicationSet.ingress.path }}
+            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
+            pathType: {{ .Values.applicationSet.ingress.pathType }}
+            {{- end }}
+            backend:
+              {{- include "argo-cd.ingressBackend" (dict "context" . "service" $serviceName "port" $servicePort) | nindent 12 }}
+    {{- range .Values.applicationSet.ingress.extraHosts }}
+    - host: {{ .name | quote }}
+      http:
+        paths:
+          - path: {{ default "/api/webhook" .path }}
+            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
+            pathType: {{ default "ImplementationSpecific" .pathType }}
+            {{- end }}
+            backend:
+              {{- include "argo-cd.ingressBackend" (dict "context" $ "service" $serviceName "port" $servicePort) | nindent 12 }}
+    {{- end }}
+  {{- if .Values.applicationSet.ingress.tls.enabled }}
+  tls:
+    {{- with .Values.applicationSet.ingress.extraTls }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    - secretName: {{ .Values.applicationSet.ingress.tls.secretName }}
+      hosts:
+        - {{ $hostname }}
+  {{- end }}
+{{- end }}

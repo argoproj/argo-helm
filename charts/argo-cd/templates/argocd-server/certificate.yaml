@@ -7,9 +7,9 @@ metadata:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
   secretName: argocd-server-tls
-  commonName: {{ .Values.server.certificate.domain | quote }}
+  commonName: {{ default .Values.global.domain .Values.server.certificate.domain | quote }}
   dnsNames:
-    - {{ .Values.server.certificate.domain | quote }}
+    - {{ default .Values.global.domain .Values.server.certificate.domain | quote }}
     {{- range .Values.server.certificate.additionalHosts }}
     - {{ . | quote }}
     {{- end }}

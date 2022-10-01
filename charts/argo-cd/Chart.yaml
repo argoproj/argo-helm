@@ -23,9 +23,12 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - "[Fixed]: Automount tokens for notification controller"
-    - "[Fixed]: Redis resources are not created when redis-ha is enabled"
-    - "[Fixed]: Cluster-wide installation now properly watches Argo CD resources in other namespaces"
+    - "[Fixed]: Some Redis resources were improperly created when redis-ha is enabled"
+    - "[Fixed]: Cluster-wide installation now properly watches Application resources in other namespaces"
+    - "[Added]: The `global.domain` option used on various places such as ingress, certs, SSO, notifications"
     - "[Added]: Missing labels, annotations, pod distrubtion budgets, topology contrainsts"
+    - "[Changed]: Reworked ingress to support `global.domain` and more seamless integration with cloud providers"
     - "[Changed]: Configuration sections have been refactored and unified"
-    - "[Changed]: Aligned deployments for notification and applicationset controller with upstream"
+    - "[Changed]: Manifests have been fully aligned with upstream repository"
+    - "[Changed]: ApplicationSet and Notification controllers are now tightly integrated"
     - "[Removed]: Deprecated configuration options"

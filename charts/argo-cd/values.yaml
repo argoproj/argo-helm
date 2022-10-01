@@ -27,6 +27,10 @@ apiVersionOverrides:
 openshift: false
 
 global:
+  # -- Default domain used for all components
+  ## Used for ingresses, certificates, SSO, notifications, etc.
+  domain: argocd.server.local
+
   # Default image used by all components
   image:
     # -- If defined, a repository applied to all Argo CD deployments
@@ -101,10 +105,6 @@ configs:
 
     # -- Annotations to be added to argocd-cm configmap
     annotations: {}
-
-    # -- Argo CD's externally facing base URL (optional).
-    # Required when configuring SSO or notifications
-    url: ""
 
     # The metadata.label key name where Argo CD injects the app name as a tracking label (optional).
     # Tracking labels are used to determine which resources need to be deleted when pruning.
@@ -1217,7 +1217,8 @@ server:
     # -- Deploy a Certificate resource
     enabled: false
     # -- Certificate primary domain (commonName)
-    domain: argocd.example.com
+    # @default -- `""` (defaults to `global.domain`)
+    domain: ""
     # -- Certificate Subject Alternate Names (SANs)
     additionalHosts: []
     # -- The requested 'duration' (i.e. lifetime) of the Certificate. Value must be in units accepted by Go time.ParseDuration
@@ -1260,112 +1261,49 @@ server:
     #   <ca cert data>
     #   -----END CERTIFICATE-----
 
-  ## Server service configuration
-  service:
-    # -- Server service annotations
-    annotations: {}
-    # -- Server service labels
-    labels: {}
-    # -- Server service type
-    type: ClusterIP
-    # -- Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort")
-    nodePortHttp: 30080
-    # -- Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort")
-    nodePortHttps: 30443
-    # -- Server service http port
-    servicePortHttp: 80
-    # -- Server service https port
-    servicePortHttps: 443
-    # -- Server service http port name, can be used to route traffic via istio
-    servicePortHttpName: http
-    # -- Server service https port name, can be used to route traffic via istio
-    servicePortHttpsName: https
-    # -- Use named target port for argocd
-    ## Named target ports are not supported by GCE health checks, so when deploying argocd on GKE
-    ## and exposing it via GCE ingress, the health checks fail and the load balancer returns a 502.
-    namedTargetPort: true
-    # -- LoadBalancer will get created with the IP specified in this field
-    loadBalancerIP: ""
-    # -- Source IP ranges to allow access to service from
-    loadBalancerSourceRanges: []
-    # -- Server service external IPs
-    externalIPs: []
-    # -- Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints
-    externalTrafficPolicy: ""
-    # -- Used to maintain session affinity. Supports `ClientIP` and `None`
-    sessionAffinity: ""
-
-  ## Server metrics service configuration
-  metrics:
-    # -- Deploy metrics service
-    enabled: false
-    service:
-      # -- Metrics service annotations
-      annotations: {}
-      # -- Metrics service labels
-      labels: {}
-      # -- Metrics service port
-      servicePort: 8083
-      # -- Metrics service port name
-      portName: http-metrics
-    serviceMonitor:
-      # -- Enable a prometheus ServiceMonitor
-      enabled: false
-      # -- Prometheus ServiceMonitor interval
-      interval: 30s
-      # -- Prometheus [RelabelConfigs] to apply to samples before scraping
-      relabelings: []
-      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
-      metricRelabelings: []
-      # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
-
-      # -- Prometheus ServiceMonitor scheme
-      scheme: ""
-      # -- Prometheus ServiceMonitor tlsConfig
-      tlsConfig: {}
-      # -- Prometheus ServiceMonitor namespace
-      namespace: ""  # monitoring
-      # -- Prometheus ServiceMonitor labels
-      additionalLabels: {}
-
-  serviceAccount:
-    # -- Create server service account
-    create: true
-    # -- Server service account name
-    name: argocd-server
-    # -- Annotations applied to created service account
-    annotations: {}
-    # -- Automount API credentials for the Service Account
-    automountServiceAccountToken: true
-
+  ## Argo CD server ingress configuration
   ingress:
     # -- Enable an ingress resource for the Argo CD server
     enabled: false
-    # -- Additional ingress annotations
-    annotations: {}
     # -- Additional ingress labels
     labels: {}
+    # -- Additional ingress annotations
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+
+    # -- When ingress is enabled, a host pointing to this will be created
+    # @default -- `""` (defaults to `global.domain`)
+    hostname: ""
+
     # -- Defines which ingress controller will implement the resource
     ingressClassName: ""
 
-    # -- List of ingress hosts
-    ## Argo Ingress.
-    ## Hostnames must be provided if Ingress is enabled.
-    ## Secrets must be manually created in the namespace
-    hosts:
-      []
-      # - argocd.example.com
+    # -- The path to Argo CD server
+    ## NOTE: YOu may need to set this to `/*` in order to use this with ALB ingress controller
+    path: /
 
-    # -- List of ingress paths
-    paths:
-      - /
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
+
+    # TLS options
+    tls:
+      # -- Enable TLS for hostname defined in `server.ingress.hostname`
+      enabled: true
+      # -- The name of secret to use for TLS certificate
+      ## NOTE: Set to argocd-tls-secret if using `certificate` or `certificateSecret`
+      secretName: argocd-secret
+
+    # -- List of additional hosts
+    # @default -- `[]` (See [values.yaml])
+    extraHosts: []
+      #  - name: argocd.server.local
+      #    path: /
+
     # -- Additional ingress paths
-    extraPaths:
-      []
+    # @default -- `[]` (See [values.yaml])
+    extraPaths: []
       # - path: /*
       #   backend:
       #     serviceName: ssl-redirect
@@ -1379,33 +1317,20 @@ server:
       #       port:
       #         name: use-annotation
 
-    # -- Ingress TLS configuration
-    tls:
-      []
+    # -- Additional TLS configuration for additional hosts
+    # @default -- `[]` (See [values.yaml])
+    ## NOTE: Secrets must be created manually before
+    extraTls: []
       # - secretName: argocd-tls-certificate
       #   hosts:
       #     - argocd.example.com
 
-    # -- Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp`
-    https: false
-
-  # Dedicated ingress for gRPC as documented at
-  # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
-  ingressGrpc:
-    # -- Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress]
-    enabled: false
-    # -- Setup up gRPC ingress to work with an AWS ALB
-    isAWSALB: false
-    # -- Additional ingress annotations for dedicated [gRPC-ingress]
-    annotations: {}
-    # -- Additional ingress labels for dedicated [gRPC-ingress]
-    labels: {}
-    # -- Defines which ingress controller will implement the resource [gRPC-ingress]
-    ingressClassName: ""
-
-    awsALB:
+    ## Amazon Load Balancer configuration
+    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#aws-application-load-balancers-albs-and-classic-elb-http-mode
+    alb:
+      # -- Enable Amazon Load Balancer features
+      enabled: false
       # -- Service type for the AWS ALB gRPC service
-      ## Service Type if isAWSALB is set to true
       ## Can be of type NodePort or ClusterIP depending on which mode you are
       ## are running. Instance mode needs type NodePort, IP mode needs type
       ## ClusterIP
@@ -1415,45 +1340,50 @@ server:
       ## This tells AWS to send traffic from the ALB using HTTP2. Can use gRPC as well if you want to leverage gRPC specific features
       backendProtocolVersion: HTTP2
 
-    # -- List of ingress hosts for dedicated [gRPC-ingress]
-    ## Argo Ingress.
-    ## Hostnames must be provided if Ingress is enabled.
-    ## Secrets must be manually created in the namespace
-    ##
-    hosts:
-      []
-      # - argocd.example.com
+    ## Google Load Balancer config
+    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#google-cloud-load-balancers-with-kubernetes-ingress
+    gke:
+      # -- Enable Google Load Balancer features
+      enabled: false
 
-    # -- List of ingress paths for dedicated [gRPC-ingress]
-    paths:
-      - /
-    # -- Ingress path type for dedicated [gRPC-ingress]. One of `Exact`, `Prefix` or `ImplementationSpecific`
-    pathType: Prefix
-    # -- Additional ingress paths for dedicated [gRPC-ingress]
-    extraPaths:
-      []
-      # - path: /*
-      #   backend:
-      #     serviceName: ssl-redirect
-      #     servicePort: use-annotation
-      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
-      # - path: /*
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: ssl-redirect
-      #       port:
-      #         name: use-annotation
+      # -- [BackendConfigSpec]
+      ## Create a Google BackendConfig Custom Resource, for use with the GKE Ingress Controller
+      ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+      backendConfig:
+        # iap:
+        #  enabled: true
+        #    oauthclientCredentials:
+        #      secretName: argocd-secret
 
-    # -- Ingress TLS configuration for dedicated [gRPC-ingress]
-    tls:
-      []
-      # - secretName: argocd-tls-certificate
-      #   hosts:
-      #     - argocd.example.com
+      ## Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
+      ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+      # -- [FrontendConfigSpec]
+      frontendConfig:
+        #  redirectToHttps:
+        #    enabled: true
+        #    responseCodeName: RESPONSE_CODE
 
-    # -- Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp`
-    https: false
+      # -- Additional domains for Google Managed Certificate
+      ## Create a Google Managed Certificate for use with the GKE Ingress Controller
+      ## https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
+      domains: []
+
+    # -- SSL - Passthrough to Argo CD
+    # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
+    passthrough: true
+
+    ## Dedicated gRPC ingress configuration
+    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-multiple-ingress-objects-and-hosts
+    grpc:
+      # -- Enable dedicated gRCPC ingress
+      enabled: false
+      # -- Hostname for dedicated  gRPC ingress
+      # @default -- `""` (Defaults to `grpc.<server.ingress.hostname>`)
+      hostname: ""
+      # -- Annotations for gRPC ingress
+      annotations: {}
+        # nginx.ingress.kubernetes.io/backend-protocol: GRPC
+        # traefik.ingress.kubernetes.io/service.serversscheme: h2c
 
   # Create a OpenShift Route with SSL passthrough for UI and CLI
   # Consider setting 'hostname' e.g. https://argocd.apps-crc.testing/ using your Default Ingress Controller Domain
@@ -1470,40 +1400,6 @@ server:
     termination_type: passthrough
     # -- Termination policy of Openshift Route
     termination_policy: None
-
-  # Ingress for Google Kubernetes Engine (GKE)
-  gke:
-    ## Create a Google BackendConfig Custom Resource, for use with the GKE Ingress Controller
-    ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
-    backendConfig:
-      # -- Enable BackendConfig custom resource for Google Kubernetes Engine
-      enabled: false
-      # -- [BackendConfigSpec]
-      spec: {}
-        # iap:
-        #  enabled: true
-        #    oauthclientCredentials:
-        #      secretName: argocd-secret
-
-    ## Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
-    ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
-    frontendConfig:
-      # -- Enable FrontendConfig custom resource
-      enabled: false
-      # -- [FrontendConfigSpec]
-      spec: {}
-        #  redirectToHttps:
-        #    enabled: true
-        #    responseCodeName: RESPONSE_CODE
-
-    ## Create a Google Managed Certificate for use with the GKE Ingress Controller
-    ## https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
-    managedCertificate:
-      # -- Enable ManagedCertificate custom resource for Google Kubernetes Engine.
-      enabled: false
-      # -- Domains for the Google Managed Certificate
-      domains:
-        - argocd.example.com
 
   ## Server metrics service configuration
   metrics:
@@ -2046,67 +1942,45 @@ applicationSet:
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
-  # -- Priority class for the application set controller pods
-  priorityClassName: ""
-
-  # -- Resource limits and requests for the application set controller pods
-  resources: {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-
-  # Application set service configuration
-  service:
-    # -- Application set service annotations
-    annotations: {}
-    # -- Application set service labels
-    labels: {}
-    # -- Application set service port
-    port: 7000
-    # -- Application set service port name
-    portName: webhook
-
-  serviceAccount:
-    # -- Create a service account for the applicationset controller
-    create: true
-    # -- The name of the service account to use.
-    name: ""
-    # -- Annotations to add to the service account
-    annotations: {}
-    # -- Automount API credentials for the Service Account
-    automountServiceAccountToken: true
-
-  ## Webhook ingress for the Git Generator
+  ## Ingress for the Git Generator webhook
   ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
-  ingressWebhook:
-    # -- Enable an ingress resource for Webhooks
-    enabled: true
+  ingress:
+    # -- Enable an webhook ingress
+    enabled: false
     # -- Additional ingress annotations
     annotations: {}
     # -- Additional ingress labels
     labels: {}
 
+    # -- When ingress is enabled, a host pointing to this will be created
+    # @default -- `""` (defaults to `global.domain`)
+    hostname: ""
+
     # -- Defines which ingress controller will implement the resource
     ingressClassName: ""
 
-    # -- List of webhook ingress hosts
-    ## Hostnames must be provided if Ingress is enabled.
-    ## Secrets must be manually created in the namespace
-    hosts: []
-      #  - argocd-applicationset.example.com
-
-    # -- List of ingress paths
-    # @default -- See [values.yaml]
-    paths:
-      - /api/webhook
+    # -- The path to ApplicationSet webhook
+    path: /api/webhook
 
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
 
+    # TLS options
+    tls:
+      # -- Enable TLS for hostname defined in `server.ingress.hostname`
+      enabled: true
+      # -- The name of secret to use for TLS certificate
+      ## NOTE: Set to argocd-tls-secret if using `certificate` or `certificateSecret`
+      secretName: argocd-secret
+
+    # -- List of additional hosts
+    # @default -- `[]` (See [values.yaml])
+    extraHosts: []
+      #  - name: argocd.server.local
+      #    path: /
+
     # -- Additional ingress paths for webhook
+    # @default -- `[]` (See [values.yaml])
     extraPaths: []
       # - path: /*
       #   backend:
@@ -2121,11 +1995,13 @@ applicationSet:
       #       port:
       #         name: use-annotation
 
-    # -- Ingress TLS configuration
-    tls: []
-      # - secretName: argocd-applicationset-tls
+    # -- Additional TLS configuration for additional hosts
+    # @default -- `[]` (See [values.yaml])
+    ## NOTE: Secrets must be created manually before
+    extraTls: []
+      # - secretName: argocd-tls-certificate
       #   hosts:
-      #     - argocd-applicationset.example.com
+      #     - argocd.example.com
 
   ## Application set service configuration
   metrics:

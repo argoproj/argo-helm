@@ -102,9 +102,9 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 
 ### 6.0.0
 
-This version contains major refactoring and consolidation of all configuration options
-that were scattered on multiple places under `configs` section. Please revise your
-values.yaml and align your configuration to newly introduced config sections.
+This version contains **major** refactoring that consolidates all the components and configs
+for the sake of ease of use and further maintainability. Plase review thoroughly new [values.yaml]
+structure to align your configuration during the upgrade.
 
 Config categories:
   - cm - General Argo CD config
@@ -114,10 +114,21 @@ Config categories:
   - secret - Additional secrets for third-party integrations
   - gpg - GnuPG keyring configuration for commit signing
   - ssh - SSH known hosts configuration
-  - tls - TLS certificate configuration
+  - tls - TLS certificates configuration
   - notifications - Notifications services configuration
 
-All deprecated features and duplicit configuration options were removed.
+Naming conventions:
+  - Components now use same names for the same things across whole chart
+  - The `args` and `extraArgs` renamed to `args`
+  - The `env` and `extraEnv` renamed to `env`
+
+Enhacements and fixes:
+  - Chart should be fully aligned with upstream Argo CD manifests
+  - New `global.domain` options acts as a default through all components
+  - Reworked ingress to provide above capability and automatic annotations for ingress controllers
+  - Cluster-wide installation now properly watches Application resources in other namespaces
+  - ApplicationSet and Notification controllers are now first-class citizens along other components
+  - Service account API tokens can be properly mounted in all deployments
 
 ### 5.5.0
 

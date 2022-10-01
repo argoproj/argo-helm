@@ -1,28 +1,23 @@
-{{- if .Values.server.ingress.enabled -}}
+{{- $hostname := default .Values.global.domain .Values.server.ingress.hostname -}}
+{{- $httpPort := .Values.server.service.namedTargetPort | ternary .Values.server.service.servicePortHttpName .Values.server.service.servicePortHttp -}}
+{{- $httpsPort := .Values.server.service.namedTargetPort | ternary .Values.server.service.servicePortHttpsName .Values.server.service.servicePortHttps -}}
+{{- $insecure := index .Values.configs.params "server.insecure" | toString }}
 {{- $serviceName := include "argo-cd.server.fullname" . -}}
-{{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingress.https -}}
-{{- $paths := .Values.server.ingress.paths -}}
-{{- $extraPaths := .Values.server.ingress.extraPaths -}}
-{{- $pathType := .Values.server.ingress.pathType -}}
+{{- $servicePort := (and .Values.server.ingress.tls.enabled (eq $insecure "true")) | ternary $httpPort $httpsPort }}
+---
 apiVersion: {{ include "argo-cd.apiVersion.ingress" . }}
 kind: Ingress
 metadata:
-{{- if .Values.server.ingress.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.server.ingress.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-  {{- if and .Values.server.ingressGrpc.isAWSALB .Values.server.ingressGrpc.enabled }}
-    alb.ingress.kubernetes.io/conditions.{{ template "argo-cd.server.fullname" . }}-grpc: |
-      [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "Content-Type", "values":["application/grpc"]}}]
-  {{- end }}
-{{- end }}
-  name: {{ template "argo-cd.server.fullname" . }}
+  name: {{ $serviceName }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
-    {{- if .Values.server.ingress.labels }}
-    {{- toYaml .Values.server.ingress.labels | nindent 4 }}
+    {{- with .Values.server.ingress.labels }}
+      {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with include "argo-cd.server.ingress.annotations" . }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
 spec:
   {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
   {{- with .Values.server.ingress.ingressClassName }}
@@ -30,84 +25,56 @@ spec:
   {{- end }}
   {{- end }}
   rules:
-  {{- if .Values.server.ingress.hosts }}
-    {{- range $host := .Values.server.ingress.hosts }}
-    - host: {{ $host }}
+    {{- if .Values.server.ingress.alb.enabled }}
+    - host: {{ $hostname }}
       http:
         paths:
-          {{- if $extraPaths }}
-          {{- toYaml $extraPaths | nindent 10 }}
-          {{- end }}
-          {{- range $p := $paths }}
-          {{- if and $.Values.server.ingressGrpc.isAWSALB $.Values.server.ingressGrpc.enabled }}
-          - path: {{ $p }}
-            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
-            pathType: Prefix
-            {{- end }}
-            backend:
-              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
-              service:
-                name: {{ template "argo-cd.server.fullname" $ }}-grpc
-                port:
-                  {{- if kindIs "float64" $servicePort }}
-                  number: {{ $servicePort }}
-                  {{- else }}
-                  name: {{ $servicePort }}
-                  {{- end }}
-              {{- else }}
-              serviceName: {{ template "argo-cd.server.fullname" $ }}-grpc
-              servicePort: {{ $servicePort }}
-              {{- end }}
-            {{- end }}
-          - path: {{ $p }}
-            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
-            pathType: {{ $pathType }}
-            {{- end }}
-            backend:
-              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
-              service:
-                name: {{ $serviceName }}
-                port:
-                  {{- if kindIs "float64" $servicePort }}
-                  number: {{ $servicePort }}
-                  {{- else }}
-                  name: {{ $servicePort }}
-                  {{- end }}
-              {{- else }}
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
-              {{- end }}
-          {{- end -}}
-    {{- end -}}
-  {{- else }}
-    - http:
+        {{- with .Values.server.ingress.extraPaths }}
+          {{- toYaml . | nindent 6 }}
+        {{- end }}
+        - path: {{ .Values.server.ingress.path }}
+          pathType: {{ .Values.server.ingress.pathType }}
+          backend:
+            {{- include "argo-cd.ingressBackend" (dict "context" . "service" $serviceName "port" $httpPort) | nindent 12 }}
+    - host: {{ $hostname }}
+      http:
         paths:
-          {{- if $extraPaths }}
-          {{- toYaml $extraPaths | nindent 10 }}
-          {{- end }}
-          {{- range $p := $paths }}
-          - path: {{ $p }}
+        {{- with .Values.server.ingress.extraPaths }}
+          {{- toYaml . | nindent 6 }}
+        {{- end }}
+        - path: {{ .Values.server.ingress.path }}
+          pathType: {{ .Values.server.ingress.pathType }}
+          backend:
+            {{- include "argo-cd.ingressBackend" (dict "context" . "service" (printf "%s-grpc" $serviceName) "port" $httpsPort) | nindent 12 }}
+    {{- else }}
+    - host: {{ $hostname }}
+      http:
+        paths:
+        {{- with .Values.server.ingress.extraPaths }}
+          {{- toYaml . | nindent 6 }}
+        {{- end }}
+        - path: {{ .Values.server.ingress.path }}
+          pathType: {{ .Values.server.ingress.pathType }}
+          backend:
+            {{- include "argo-cd.ingressBackend" (dict "context" . "service" $serviceName "port" $servicePort) | nindent 12 }}
+    {{- end }}
+    {{- range .Values.server.ingress.extraHosts }}
+    - host: {{ .name | quote }}
+      http:
+        paths:
+          - path: {{ default "/" .path }}
             {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
-            pathType: {{ $pathType }}
+            pathType: {{ default "ImplementationSpecific" .pathType }}
             {{- end }}
             backend:
-              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
-              service:
-                name: {{ $serviceName }}
-                port:
-                  {{- if kindIs "float64" $servicePort }}
-                  number: {{ $servicePort }}
-                  {{- else }}
-                  name: {{ $servicePort }}
-                  {{- end }}
-              {{- else }}
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
-              {{- end }}
-          {{- end -}}
-  {{- end -}}
-  {{- if .Values.server.ingress.tls }}
+              {{- include "argo-cd.ingressBackend" (dict "context" $ "service" $serviceName "port" $servicePort) | nindent 12 }}
+    {{- end }}
+  {{- if .Values.server.ingress.tls.enabled }}
   tls:
-    {{- toYaml .Values.server.ingress.tls | nindent 4 }}
-  {{- end -}}
-{{- end -}}
+    {{- with .Values.server.ingress.extraTls }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    - secretName: {{ .Values.server.ingress.tls.secretName }}
+      hosts:
+        - {{ $hostname }}
+  {{- end }}
