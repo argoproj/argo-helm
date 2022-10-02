@@ -62,7 +62,7 @@ spec:
         {{- end }}
         ports:
         - name: redis
-          containerPort: {{ .Values.redis.containerPort }}
+          containerPort: {{ .Values.redis.containerPorts.redis }}
         resources:
           {{- toYaml .Values.redis.resources | nindent 10 }}
         {{- with .Values.redis.containerSecurityContext }}
@@ -73,24 +73,26 @@ spec:
         volumeMounts:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-      {{- if .Values.redis.metrics.enabled }}
+      {{- if .Values.redis.exporter.enabled }}
       - name: metrics
-        image: {{ .Values.redis.metrics.exporter.image.repository }}:{{ .Values.redis.metrics.exporter.image.tag }}
-        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.redis.metrics.image.imagePullPolicy }}
+        image: {{ .Values.redis.exporter.image.repository }}:{{ .Values.redis.exporter.image.tag }}
+        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.redis.exporter.image.imagePullPolicy }}
+        {{- with .Values.redis.exporter.resources }}
         resources:
-          {{- toYaml .Values.redis.metrics.exporter.resources | nindent 10 }}
-        {{- with .Values.redis.metrics.exporter.containerSecurityContext }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.redis.exporter.containerSecurityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         env:
         - name: REDIS_ADDR
-          value: {{ printf "redis://localhost:%v" .Values.redis.containerPort }}
+          value: {{ printf "redis://localhost:%v" .Values.redis.containerPorts.redis }}
         - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS
-          value: {{ printf "0.0.0.0:%v" .Values.redis.metrics.containerPort }}
+          value: {{ printf "0.0.0.0:%v" .Values.redis.containerPorts.metrics }}
         ports:
         - name: metrics
-          containerPort: {{ .Values.redis.metrics.exporter.containerPort }}
+          containerPort: {{ .Values.redis.containerPorts.metrics }}
           protocol: TCP
       {{- end }}
       {{- with .Values.redis.extraContainers }}

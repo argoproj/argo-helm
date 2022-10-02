@@ -16,8 +16,8 @@ metadata:
   {{- end }}
 spec:
   ports:
-  - name: {{ .Values.applicationSet.service.portName }}
-    port: {{ .Values.applicationSet.service.port }}
+  - name: http-webhook
+    port: {{ .Values.applicationSet.service.ports.webhook }}
     targetPort: webhook
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 4 }}

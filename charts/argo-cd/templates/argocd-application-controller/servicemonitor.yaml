@@ -8,19 +8,16 @@ metadata:
   {{- end }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-    {{- with .Values.controller.metrics.serviceMonitor.selector }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
-    {{- with .Values.controller.metrics.serviceMonitor.additionalLabels }}
+    {{- with .Values.controller.metrics.serviceMonitor.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
   endpoints:
     - port: {{ .Values.controller.metrics.service.portName }}
+      path: /metrics
       {{- with .Values.controller.metrics.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}
-      path: /metrics
       {{- with .Values.controller.metrics.serviceMonitor.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}

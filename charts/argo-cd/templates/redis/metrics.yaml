@@ -1,5 +1,5 @@
 {{- $redisHa := (index .Values "redis-ha") -}}
-{{- if and .Values.redis.enabled (not $redisHa.enabled) .Values.redis.metrics.enabled -}}
+{{- if and .Values.redis.enabled (not $redisHa.enabled) .Values.redis.exporter.enabled .Values.redis.metrics.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:

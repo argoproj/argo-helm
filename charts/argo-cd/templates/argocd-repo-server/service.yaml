@@ -15,9 +15,9 @@ metadata:
   {{- end }}
 spec:
   ports:
-  - name: {{ .Values.repoServer.service.portName }}
+  - name: tcp-server
     protocol: TCP
-    port: {{ .Values.repoServer.service.port }}
-    targetPort: repo-server
+    port: {{ .Values.repoServer.service.ports.server }}
+    targetPort: server
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 4 }}

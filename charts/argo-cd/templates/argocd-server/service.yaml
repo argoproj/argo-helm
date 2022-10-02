@@ -15,38 +15,40 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.server.service.type }}
-  ports:
-  - name: {{ .Values.server.service.servicePortHttpName }}
-    protocol: TCP
-    port: {{ .Values.server.service.servicePortHttp }}
-    targetPort: {{ .Values.server.service.namedTargetPort | ternary "server" .Values.server.containerPort }}
-    {{- if eq .Values.server.service.type "NodePort" }}
-    nodePort: {{ .Values.server.service.nodePortHttp }}
-    {{- end }}
-  - name: {{ .Values.server.service.servicePortHttpsName }}
-    protocol: TCP
-    port: {{ .Values.server.service.servicePortHttps }}
-    targetPort: {{ .Values.server.service.namedTargetPort | ternary "server" .Values.server.containerPort }}
-    {{- if eq .Values.server.service.type "NodePort" }}
-    nodePort: {{ .Values.server.service.nodePortHttps }}
-    {{- end }}
-  selector:
-    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
+  sessionAffinity: {{ .Values.server.service.sessionAffinity }}
+  {{- if and (eq .Values.server.service.type "ClusterIP") .Values.server.service.clusterIP -}}
+  clusterIP: {{ .Values.server.service.clusterIP }}
+  {{- end }}
   {{- if eq .Values.server.service.type "LoadBalancer" }}
   {{- with .Values.server.service.loadBalancerIP }}
-  loadBalancerIP: {{ . | quote }}
-  {{- end }}
-  {{- with .Values.server.service.externalIPs }}
-  externalIPs: {{ . }}
+  loadBalancerIP: {{ . }}
   {{- end }}
   {{- with .Values.server.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
-    {{ toYaml . | indent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- end }}
-  {{- with .Values.server.service.externalTrafficPolicy }}
-  externalTrafficPolicy: {{ . }}
+  {{- if or (eq .Values.server.service.type "LoadBalancer") (eq .Values.server.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.server.service.externalTrafficPolicy }}
+  {{- with .Values.server.service.externalIPs }}
+  externalIPs:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.server.service.sessionAffinity }}
-  sessionAffinity: {{ . }}
   {{- end }}
+  ports:
+  - name: http
+    protocol: TCP
+    port: {{ .Values.server.service.ports.http }}
+    {{- if eq .Values.server.service.type "NodePort" }}
+    nodePort: {{ .Values.server.service.nodePorts.http }}
+    {{- end }}
+    targetPort: {{ .Values.server.containerPorts.server }}
+  - name: https
+    protocol: TCP
+    port: {{ .Values.server.service.ports.https }}
+    {{- if eq .Values.server.service.type "NodePort" }}
+    nodePort: {{ .Values.server.service.nodePorts.https }}
+    {{- end }}
+    targetPort: {{ .Values.server.containerPorts.server }}
+  selector:
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}

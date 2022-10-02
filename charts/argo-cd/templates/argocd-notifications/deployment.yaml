@@ -44,7 +44,8 @@ spec:
           command:
             - argocd-notifications
           args:
-            - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
+            - --argocd-repo-server={{ include "argo-cd.repoServer.server" . }}
+            - --metrics-port={{ .Values.notifications.containerPorts.metrics }}
             - --loglevel={{ default .Values.global.logging.level .Values.notifications.logLevel }}
             - --logformat={{ default .Values.global.logging.format .Values.notifications.logFormat }}
             {{- range .Values.notifications.args }}
@@ -61,7 +62,7 @@ spec:
           ports:
             - name: metrics
               protocol: TCP
-              containerPort: 9001
+              containerPort: {{ .Values.notifications.containerPorts.metrics }}
           livenessProbe:
             tcpSocket:
               port: metrics

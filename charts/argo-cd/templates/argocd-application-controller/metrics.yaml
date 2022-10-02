@@ -19,7 +19,7 @@ spec:
   - name: {{ .Values.controller.metrics.service.portName }}
     protocol: TCP
     port: {{ .Values.controller.metrics.service.port }}
-    targetPort: controller
+    targetPort: metrics
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 4 }}
 {{- end }}

@@ -77,7 +77,7 @@ service:
     {{- else }}
     name: {{ .port }}
     {{- end }}
-{{- else }}
+{{- else -}}
 serviceName: {{ .service }}
 servicePort: {{ .port }}
 {{- end }}
@@ -148,6 +148,15 @@ Create argocd repo-server name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Create repo-server endpoint
+*/}}
+{{- define "argo-cd.repoServer.server" -}}
+{{- $host := include "argo-cd.repoServer.fullname" . -}}
+{{- $port := int .Values.repoServer.service.ports.server }}
+{{- printf "%s:%d" $host $port }}
+{{- end }}
+
+{{/*
 Create the name of the repo-server service account to use
 */}}
 {{- define "argo-cd.repoServer.serviceAccountName" -}}
@@ -213,13 +222,13 @@ Create dex name and version as used by the chart label.
 {{- end }}
 
 {{/*
-Return Dex server endpoint
+Create Dex server endpoint
 */}}
 {{- define "argo-cd.dex.server" -}}
 {{- $disable := index .Values.configs.params "dexserver.disable.tls" | toString }}
 {{- $scheme := (eq $disable "true") | ternary "http" "https" }}
 {{- $host := include "argo-cd.dex.fullname" . }}
-{{- $port := int .Values.dex.service.http.port }}
+{{- $port := int .Values.dex.service.ports.http }}
 {{/* Use scheme in Argo CD 2.5.x */}}
 {{- printf "http://%s:%d" $host $port }}
 {{- end }}
@@ -256,7 +265,7 @@ Return Redis server endpoint
 {{- define "argo-cd.redis.server" -}}
 {{- $redisHa := (index .Values "redis-ha") }}
 {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
-    {{- printf "%s:%d" (include "argo-cd.redis.fullname" .)  (int .Values.redis.service.servicePort) }}
+    {{- printf "%s:%d" (include "argo-cd.redis.fullname" .)  (int .Values.redis.service.ports.redis) }}
 {{- else if and .Values.externalRedis.host .Values.externalRedis.port }}
     {{- printf "%s:%d" .Values.externalRedis.host (int .Values.externalRedis.port) }}
 {{- end }}
@@ -277,7 +286,9 @@ Create the name of the redis service account to use
 Argo Configuration Preset Values (Incluenced by Values configuration)
 */}}
 {{- define "argo-cd.config.cm.presets" -}}
-url: {{ .Values.global.domain | quote }}
+{{- $insecure := index .Values.configs.params "server.insecure" | toString -}}
+{{- $scheme := (eq $insecure "true") | ternary "http" "https" -}}
+url: {{ printf "%s://%s" $scheme .Values.global.domain }}
 {{- if .Values.configs.styles }}
 ui.cssurl: "./custom/custom.styles.css"
 {{- end }}
@@ -296,7 +307,7 @@ Merge Argo Configuration with Preset Configuration
 Argo Params Default Configuration Presets
 */}}
 {{- define "argo-cd.config.params.presets" -}}
-repo.server: "{{ include "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}"
+repo.server: {{ include "argo-cd.repoServer.server" . }}
 {{- with include "argo-cd.redis.server" . }}
 redis.server: {{ . | quote }}
 {{- end }}

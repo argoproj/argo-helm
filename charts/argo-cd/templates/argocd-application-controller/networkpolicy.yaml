@@ -2,15 +2,15 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  name: {{ include "argo-cd.controller.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-  name: {{ include "argo-cd.controller.fullname" . }}
 spec:
   ingress:
   - from:
     - namespaceSelector: {}
     ports:
-    - port: controller
+    - port: metrics
   podSelector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}

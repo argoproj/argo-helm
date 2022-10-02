@@ -43,7 +43,10 @@ spec:
           command:
             - entrypoint.sh
             - argocd-applicationset-controller
-            - --argocd-repo-server={{ include "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
+            - --argocd-repo-server={{ include "argo-cd.repoServer.server" . }}
+            - --probe-addr=:{{ .Values.applicationSet.containerPorts.probe }}
+            - --metrics-addr=:{{ .Values.applicationSet.containerPorts.metrics }}
+            - --webhook-addr=:{{ .Values.applicationSet.containerPorts.webhook }}
             - --policy={{ .Values.applicationSet.policy }}
             - --dry-run={{ .Values.applicationSet.dryRun }}
             - --logformat
@@ -69,18 +72,18 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           ports:
-            - name: http
-              containerPort: 8081
-              protocol: TCP
             - name: metrics
-              containerPort: 8080
+              containerPort: {{ .Values.applicationSet.containerPorts.metrics }}
+              protocol: TCP
+            - name: probe
+              containerPort: {{ .Values.applicationSet.containerPorts.probe }}
               protocol: TCP
             - name: webhook
-              containerPort: 7000
+              containerPort: {{ .Values.applicationSet.containerPorts.webhook }}
               protocol: TCP
           livenessProbe:
             tcpSocket:
-              port: metrics
+              port: probe
             initialDelaySeconds: {{ .Values.applicationSet.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.applicationSet.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.applicationSet.livenessProbe.timeoutSeconds }}
@@ -88,7 +91,7 @@ spec:
             failureThreshold: {{ .Values.applicationSet.livenessProbe.failureThreshold }}
           readinessProbe:
             tcpSocket:
-              port: metrics
+              port: probe
             initialDelaySeconds: {{ .Values.applicationSet.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.applicationSet.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.applicationSet.readinessProbe.timeoutSeconds }}

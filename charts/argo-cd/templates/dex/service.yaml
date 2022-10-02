@@ -16,13 +16,13 @@ metadata:
   {{- end }}
 spec:
   ports:
-  - name: {{ .Values.dex.service.http.name }}
+  - name: http
     protocol: TCP
-    port: {{ .Values.dex.service.http.port }}
+    port: {{ .Values.dex.service.ports.http }}
     targetPort: http
-  - name: {{ .Values.dex.service.grpc.name }}
+  - name: grpc
     protocol: TCP
-    port: {{ .Values.dex.service.grpc.port }}
+    port: {{ .Values.dex.service.ports.grpc }}
     targetPort: grpc
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.dex.name) | nindent 4 }}

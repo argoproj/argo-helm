@@ -29,7 +29,7 @@ spec:
         - path: {{ .Values.server.ingress.path }}
           pathType: {{ .Values.server.ingress.pathType }}
           backend:
-            {{- include "argo-cd.ingressBackend" (dict "context" . "service" $service "port" .Values.server.service.servicePortHttps) | nindent 12 }}
+            {{- include "argo-cd.ingressBackend" (dict "context" . "service" $service "port" "https") | nindent 12 }}
   tls:
     # Do not change, this is provided by Argo CD
     - secretName: argocd-secret

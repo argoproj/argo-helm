@@ -51,6 +51,7 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
         command:
         - argocd-application-controller
+        - --metrics-port={{ .Values.controller.containerPorts.metrics }}
         {{- if .Values.controller.metrics.applicationLabels.enabled }}
         {{- range .Values.controller.metrics.applicationLabels.labels }}
         - --metrics-application-labels
@@ -138,6 +139,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: controller.repo.server.strict.tls
                 optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_PERSIST_RESOURCE_HEALTH
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.resource.health.persist
+                optional: true
           - name: ARGOCD_APP_STATE_CACHE_EXPIRATION
             valueFrom:
               configMapKeyRef:
@@ -149,6 +156,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: redis.server
+                optional: true
+          - name: REDIS_COMPRESSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.compression
                 optional: true
           - name: REDISDB
             valueFrom:
@@ -180,18 +193,24 @@ spec:
                 name: argocd-cmd-params-cm
                 key: otlp.address
                 optional: true
+          - name: ARGOCD_APPLICATION_NAMESPACES
+            valueFrom:
+                configMapKeyRef:
+                  name: argocd-cmd-params-cm
+                  key: application.namespaces
+                  optional: true
         {{- with .Values.controller.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         ports:
-        - name: controller
-          containerPort: {{ .Values.controller.containerPort }}
+        - name: metrics
+          containerPort: {{ .Values.controller.containerPorts.metrics }}
           protocol: TCP
         livenessProbe:
           httpGet:
             path: /healthz?full=true
-            port: controller
+            port: metrics
           initialDelaySeconds: {{ .Values.controller.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.controller.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.controller.livenessProbe.timeoutSeconds }}
@@ -200,7 +219,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /healthz
-            port: controller
+            port: metrics
           initialDelaySeconds: {{ .Values.controller.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.controller.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.controller.readinessProbe.timeoutSeconds }}

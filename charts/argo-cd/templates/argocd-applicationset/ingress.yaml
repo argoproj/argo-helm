@@ -1,6 +1,5 @@
 {{- $hostname := default .Values.global.domain .Values.applicationSet.ingress.hostname -}}
 {{- $serviceName := include "argo-cd.applicationSet.fullname" . -}}
-{{- $servicePort := .Values.applicationSet.service.portName -}}
 {{- if and .Values.applicationSet.enabled .Values.applicationSet.ingress.enabled }}
 apiVersion: {{ include "argo-cd.apiVersion.ingress" . }}
 kind: Ingress
@@ -35,7 +34,7 @@ spec:
             pathType: {{ .Values.applicationSet.ingress.pathType }}
             {{- end }}
             backend:
-              {{- include "argo-cd.ingressBackend" (dict "context" . "service" $serviceName "port" $servicePort) | nindent 12 }}
+              {{- include "argo-cd.ingressBackend" (dict "context" . "service" $serviceName "port" "http-webhook") | nindent 12 }}
     {{- range .Values.applicationSet.ingress.extraHosts }}
     - host: {{ .name | quote }}
       http:
@@ -45,7 +44,7 @@ spec:
             pathType: {{ default "ImplementationSpecific" .pathType }}
             {{- end }}
             backend:
-              {{- include "argo-cd.ingressBackend" (dict "context" $ "service" $serviceName "port" $servicePort) | nindent 12 }}
+              {{- include "argo-cd.ingressBackend" (dict "context" $ "service" $serviceName "port" "http-webhook") | nindent 12 }}
     {{- end }}
   {{- if .Values.applicationSet.ingress.tls.enabled }}
   tls:

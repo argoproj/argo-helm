@@ -50,6 +50,8 @@ spec:
         - entrypoint.sh
         args:
         - argocd-repo-server
+        - --port={{ .Values.repoServer.containerPorts.server }}
+        - --metrics-port={{ .Values.repoServer.containerPorts.metrics }}
         {{- with .Values.repoServer.args }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -121,6 +123,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: redis.server
                 optional: true
+          - name: REDIS_COMPRESSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.compression
+                optional: true
           - name: REDISDB
             valueFrom:
               configMapKeyRef:
@@ -163,6 +171,24 @@ spec:
                 name: argocd-cmd-params-cm
                 key: reposerver.plugin.tar.exclusions
                 optional: true
+          - name: ARGOCD_REPO_SERVER_ALLOW_OUT_OF_BOUNDS_SYMLINKS
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.allow.oob.symlinks
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_REPO_SERVER_STREAMED_MANIFEST_MAX_TAR_SIZE
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.streamed.manifest.max.tar.size
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_REPO_SERVER_STREAMED_MANIFEST_MAX_EXTRACTED_SIZE
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.streamed.manifest.max.extracted.size
+                name: argocd-cmd-params-cm
+                optional: true
           - name: HELM_CACHE_HOME
             value: /helm-working-dir
           - name: HELM_CONFIG_HOME
@@ -174,11 +200,11 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         ports:
-        - name: repo-server
-          containerPort: {{ .Values.repoServer.containerPort }}
+        - name: server
+          containerPort: {{ .Values.repoServer.containerPorts.server }}
           protocol: TCP
         - name: metrics
-          containerPort: 8084
+          containerPort: {{ .Values.repoServer.containerPorts.metrics }}
           protocol: TCP
         livenessProbe:
           httpGet:

@@ -803,8 +803,10 @@ controller:
   # -- Labels to be added to application controller pods
   podLabels: {}
 
-  # -- Application controller listening port
-  containerPort: 8082
+  # Application controller container ports
+  containerPorts:
+    # -- Metrics container port
+    metrics: 8082
 
   # -- Application controller container-level security context
   # @default -- See [values.yaml]
@@ -816,7 +818,7 @@ controller:
       drop:
       - ALL
 
-  ## Readiness and liveness probes for default backend
+  # Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
   readinessProbe:
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -898,16 +900,21 @@ controller:
   # - maxSkew: 1
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
-    
-  ## Application controller metrics configuration
+
+  # Application controller metrics configuration
   metrics:
     # -- Deploy metrics service
     enabled: false
+
+    # Expose application labels as Prometheus metric
+    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/metrics/#exposing-application-labels-as-prometheus-metrics
     applicationLabels:
       # -- Enables additional labels in argocd_app_labels metric
       enabled: false
       # -- Additional labels
       labels: []
+
+    # Application controller metrics service configuration
     service:
       # -- Metrics service annotations
       annotations: {}
@@ -917,27 +924,26 @@ controller:
       port: 8082
       # -- Metrics service port name
       portName: http-metrics
+
+    # Prometheus ServiceMonitor configuration
     serviceMonitor:
-      # -- Enable a prometheus ServiceMonitor
+      # -- Enable a ServiceMonitor
       enabled: false
-      # -- Prometheus ServiceMonitor interval
+      # -- Labels to be added to the ServiceMonitor
+      labels: {}
+      # -- Namespace where to deploy ServiceMonitor
+      namespace: ""
+      # -- Interval at which are Prometheus metrics scraped
       interval: 30s
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
       metricRelabelings: []
-      # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
-
-      # -- Prometheus ServiceMonitor scheme
+      # -- ServiceMonitor HTTP scheme used for scraping
       scheme: ""
-      # -- Prometheus ServiceMonitor tlsConfig
+      # -- ServiceMonitor tlsConfig for scraping the endpoint
       tlsConfig: {}
-      # -- Prometheus ServiceMonitor namespace
-      namespace: "" # "monitoring"
-      # -- Prometheus ServiceMonitor labels
-      additionalLabels: {}
+
     rules:
       # -- Deploy a PrometheusRule for the application controller
       enabled: false
@@ -967,23 +973,8 @@ controller:
       #       The application [{{`{{$labels.name}}`}} has not been synchronized for over
       #       12 hours which means that the state of this cloud has drifted away from the
       #       state inside Git.
-    #   selector:
-    #     prometheus: kube-prometheus
-    #   namespace: monitoring
-    #   additionalLabels: {}
 
-  ## Controller service configuration
-  service:
-    # -- Application controller service annotations
-    annotations: {}
-    # -- Application controller service labels
-    labels: {}
-    # -- Application controller service port
-    port: 8082
-    # -- Application controller service port name
-    portName: https-controller
-
-  ## Controller custom RBAC configuration
+  # Controller custom RBAC configuration
   ## NOTE: Creates ClusterRole rules when rbac.clusterAdmin is `true`
   rbac:
     # -- Create additional rbac rules for the application controller
@@ -999,7 +990,7 @@ controller:
       #   - list
       #   - watch
 
-  ## Controller service account
+  # Controller service account
   serviceAccount:
     # -- Create a service account for the application controller
     create: true
@@ -1095,8 +1086,12 @@ server:
   # -- Labels to be added to server pods
   podLabels: {}
 
-  # -- Configures the server port
-  containerPort: 8080
+  # Server container ports
+  containerPorts:
+    # -- Server container port
+    server: 8080
+    # -- Metrics container port
+    metrics: 8082
 
   # -- Server container-level security context
   # @default -- See [values.yaml]
@@ -1108,7 +1103,7 @@ server:
       drop:
       - ALL
 
-  ## Readiness and liveness probes for default backend
+  # Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
   readinessProbe:
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -1211,7 +1206,7 @@ server:
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
-  ## TLS certificate configuration via cert-manager
+  # TLS certificate configuration via cert-manager
   certificate:
     # -- Deploy a Certificate resource
     enabled: false
@@ -1242,7 +1237,7 @@ server:
       # -- Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored.
       size: 2048
 
-  ## TLS certificate configuration via Secret
+  # TLS certificate configuration via Secret
   certificateSecret:
     # -- Create argocd-server-tls secret
     enabled: false
@@ -1260,13 +1255,14 @@ server:
     #   <ca cert data>
     #   -----END CERTIFICATE-----
 
-  ## Argo CD server ingress configuration
+  # Argo CD server ingress configuration
   ingress:
     # -- Enable an ingress resource for the Argo CD server
     enabled: false
     # -- Additional ingress labels
     labels: {}
     # -- Additional ingress annotations
+    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
     annotations: {}
       # kubernetes.io/ingress.class: nginx
       # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -1280,7 +1276,7 @@ server:
     ingressClassName: ""
 
     # -- The path to Argo CD server
-    ## NOTE: YOu may need to set this to `/*` in order to use this with ALB ingress controller
+    ## NOTE: You may need to set this to `/*` in order to use this with ALB ingress controller
     path: /
 
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
@@ -1324,57 +1320,48 @@ server:
       #   hosts:
       #     - argocd.example.com
 
-    ## Amazon Load Balancer configuration
+    # Amazon Load Balancer configuration
     ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#aws-application-load-balancers-albs-and-classic-elb-http-mode
     alb:
       # -- Enable Amazon Load Balancer features
       enabled: false
       # -- Service type for the AWS ALB gRPC service
-      ## Can be of type NodePort or ClusterIP depending on which mode you are
-      ## are running. Instance mode needs type NodePort, IP mode needs type
-      ## ClusterIP
+      ## Can be of type `ClusterIP` or `NodePort``depending on which mode you are
+      ## are running. Instance mode needs NodePort, IP mode needs ClusterIP
       ## Ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/how-it-works/#ingress-traffic
-      serviceType: NodePort
+      serviceType: ClusterIP
       # -- Backend protocol version for the AWS ALB gRPC service
       ## This tells AWS to send traffic from the ALB using HTTP2. Can use gRPC as well if you want to leverage gRPC specific features
       backendProtocolVersion: HTTP2
 
-    ## Google Load Balancer config
+    # Google Load Balancer config
     ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#google-cloud-load-balancers-with-kubernetes-ingress
     gke:
       # -- Enable Google Load Balancer features
       enabled: false
-
-      # -- [BackendConfigSpec]
-      ## Create a Google BackendConfig Custom Resource, for use with the GKE Ingress Controller
-      ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
-      backendConfig:
+      # -- Google [BackendConfig] resource, for use with the GKE Ingress Controller
+      # @default -- `{}` (See [values.yaml])
+      ## Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+      backendConfig: {}
         # iap:
         #  enabled: true
         #    oauthclientCredentials:
         #      secretName: argocd-secret
-
-      ## Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
-      ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
-      # -- [FrontendConfigSpec]
-      frontendConfig:
+      # -- Google [FrontendConfig] resource, for use with the GKE Ingress Controller
+      # @default -- `{}` (See [values.yaml])
+      ## Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+      frontendConfig: {}
         #  redirectToHttps:
         #    enabled: true
         #    responseCodeName: RESPONSE_CODE
-
-      # -- Additional domains for Google Managed Certificate
-      ## Create a Google Managed Certificate for use with the GKE Ingress Controller
-      ## https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
+      # -- Additional domains for Google ManagedCertificate resource
+      ## Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
       domains: []
 
-    # -- SSL - Passthrough to Argo CD
-    # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
-    passthrough: true
-
-    ## Dedicated gRPC ingress configuration
+    # Dedicated gRPC ingress configuration
     ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-multiple-ingress-objects-and-hosts
     grpc:
-      # -- Enable dedicated gRCPC ingress
+      # -- Enable dedicated gRPC ingress
       enabled: false
       # -- Hostname for dedicated  gRPC ingress
       # @default -- `""` (Defaults to `grpc.<server.ingress.hostname>`)
@@ -1400,10 +1387,12 @@ server:
     # -- Termination policy of Openshift Route
     termination_policy: None
 
-  ## Server metrics service configuration
+  # Server metrics configuration
   metrics:
     # -- Deploy metrics service
     enabled: false
+
+    # Server metrics service configuration
     service:
       # -- Metrics service annotations
       annotations: {}
@@ -1413,64 +1402,64 @@ server:
       port: 8083
       # -- Metrics service port name
       portName: http-metrics
+
+    # Prometheus ServiceMonitor configuration
     serviceMonitor:
-      # -- Enable a prometheus ServiceMonitor
+      # -- Enable a ServiceMonitor
       enabled: false
-      # -- Prometheus ServiceMonitor interval
+      # -- Labels to be added to the ServiceMonitor
+      labels: {}
+      # -- Namespace where to deploy ServiceMonitor
+      namespace: ""
+      # -- Interval at which are Prometheus metrics scraped
       interval: 30s
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
       metricRelabelings: []
-      # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
-
-      # -- Prometheus ServiceMonitor scheme
+      # -- ServiceMonitor HTTP scheme used for scraping
       scheme: ""
-      # -- Prometheus ServiceMonitor tlsConfig
+      # -- ServiceMonitor tlsConfig for scraping the endpoint
       tlsConfig: {}
-      # -- Prometheus ServiceMonitor namespace
-      namespace: ""  # monitoring
-      # -- Prometheus ServiceMonitor labels
-      additionalLabels: {}
 
-  ## Server service configuration
+  # Server service configuration
   service:
+    # -- Server service type
+    type: ClusterIP
     # -- Server service annotations
     annotations: {}
     # -- Server service labels
     labels: {}
-    # -- Server service type
-    type: ClusterIP
-    # -- Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort")
-    nodePortHttp: 30080
-    # -- Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort")
-    nodePortHttps: 30443
-    # -- Server service http port
-    servicePortHttp: 80
-    # -- Server service https port
-    servicePortHttps: 443
-    # -- Server service http port name, can be used to route traffic via istio
-    servicePortHttpName: http
-    # -- Server service https port name, can be used to route traffic via istio
-    servicePortHttpsName: https
-    # -- Use named target port for argocd
-    ## Named target ports are not supported by GCE health checks, so when deploying argocd on GKE
-    ## and exposing it via GCE ingress, the health checks fail and the load balancer returns a 502.
-    namedTargetPort: true
+    # Server service ports
+    ports:
+      # -- Server service http port
+      http: 80
+      # -- Server service https port
+      https: 443
+    # Server service node ports if if `server.service.type` is set to "NodePort"
+    nodePorts:
+      # -- Server service http port for NodePort service type
+      http: 30080
+      # -- Server service https port for NodePort service type
+      https: 30443
+    # -- Server service cluster IP
+    clusterIP: ""
     # -- LoadBalancer will get created with the IP specified in this field
+    ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
     loadBalancerIP: ""
     # -- Source IP ranges to allow access to service from
+    ## Ref: https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
     loadBalancerSourceRanges: []
     # -- Server service external IPs
     externalIPs: []
     # -- Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints
-    externalTrafficPolicy: ""
+    ## Ref: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+    externalTrafficPolicy: Cluster
     # -- Used to maintain session affinity. Supports `ClientIP` and `None`
-    sessionAffinity: ""
+    # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+    sessionAffinity: None
 
-  ## Server custom RBAC configuration
+  # Server custom RBAC configuration
   ## NOTE: Creates ClusterRole rules when rbac.clusterAdmin is `true`
   rbac:
     # -- Create custom rules for the repo server
@@ -1486,7 +1475,7 @@ server:
       #   - list
       #   - watch
 
-  ## Server service account configuration
+  # Server service account configuration
   serviceAccount:
     # -- Create server service account
     create: true
@@ -1497,7 +1486,7 @@ server:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
-  ## Server UI extensions
+  # Server UI extensions
   ## Ref: https://github.com/argoproj-labs/argocd-extensions
   extensions:
     # -- Enable support for extensions
@@ -1614,8 +1603,12 @@ repoServer:
   # -- Labels to be added to repo server pods
   podLabels: {}
 
-  # -- Configures the repo server port
-  containerPort: 8081
+  # Repo server container ports
+  containerPorts:
+    # -- Server container port
+    server: 8081
+    # -- Metrics container port
+    metrics: 8084
 
   # -- Repo server container-level security context
   # @default -- See [values.yaml]
@@ -1627,7 +1620,7 @@ repoServer:
       drop:
       - ALL
 
-  ## Readiness and liveness probes for default backend
+  # Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
   readinessProbe:
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -1711,10 +1704,12 @@ repoServer:
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
-  ## Repo server metrics service configuration
+  # Repo server metrics service configuration
   metrics:
     # -- Deploy metrics service
     enabled: false
+
+    # Repo server metrics service configuration
     service:
       # -- Metrics service annotations
       annotations: {}
@@ -1724,40 +1719,38 @@ repoServer:
       port: 8084
       # -- Metrics service port name
       portName: http-metrics
+
+    # Prometheus ServiceMonitor configuration
     serviceMonitor:
-      # -- Enable a prometheus ServiceMonitor
+      # -- Enable a ServiceMonitor
       enabled: false
-      # -- Prometheus ServiceMonitor interval
+      # -- Labels to be added to the ServiceMonitor
+      labels: {}
+      # -- Namespace where to deploy ServiceMonitor
+      namespace: ""
+      # -- Interval at which are Prometheus metrics scraped
       interval: 30s
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
       metricRelabelings: []
-      # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
-
-      # -- Prometheus ServiceMonitor scheme
+      # -- ServiceMonitor HTTP scheme used for scraping
       scheme: ""
-      # -- Prometheus ServiceMonitor tlsConfig
+      # -- ServiceMonitor tlsConfig for scraping the endpoint
       tlsConfig: {}
-      # -- Prometheus ServiceMonitor namespace
-      namespace: "" # "monitoring"
-      # -- Prometheus ServiceMonitor labels
-      additionalLabels: {}
 
-  ## Repo server service configuration
+  # Repo server service configuration
   service:
     # -- Repo server service annotations
     annotations: {}
     # -- Repo server service labels
     labels: {}
-    # -- Repo server service port
-    port: 8081
-    # -- Repo server service port name
-    portName: https-repo-server
+    # Repo server service ports
+    ports:
+      # -- Repo server service port
+      server: 8081
 
-  ## Repo server custom RBAC configuration
+  # Repo server custom RBAC configuration
   ## NOTE: Creates ClusterRole rules when rbac.clusterAdmin is `true`
   rbac:
     # -- Create custom rules for the repo server
@@ -1773,7 +1766,7 @@ repoServer:
       #   - list
       #   - watch
 
-  ## Repo server service account
+  # Repo server service account
   ## If create is set to true, make sure to uncomment the name and update the rbac section below
   serviceAccount:
     # -- Create repo server service account
@@ -1867,6 +1860,15 @@ applicationSet:
   # -- Labels to be added to application set controller pods
   podLabels: {}
 
+  # Application set controller container ports
+  containerPorts:
+    # -- Metrics container port
+    metrics: 8080
+    # -- Probe container port
+    probe: 8081
+    # -- Webhook container port
+    webhook: 7000
+
   # -- Application set controller container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
@@ -1877,7 +1879,7 @@ applicationSet:
       drop:
       - ALL
 
-  ## Readiness and liveness probes for default backend
+  # Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
   readinessProbe:
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -1941,7 +1943,7 @@ applicationSet:
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
-  ## Ingress for the Git Generator webhook
+  # Ingress for the Git Generator webhook
   ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
   ingress:
     # -- Enable an webhook ingress
@@ -2002,10 +2004,12 @@ applicationSet:
       #   hosts:
       #     - argocd.example.com
 
-  ## Application set service configuration
+  # Application set metrics configuration
   metrics:
     # -- Deploy metrics service
     enabled: false
+
+    # Application set metrics service configuration
     service:
       # -- Metrics service annotations
       annotations: {}
@@ -2015,39 +2019,38 @@ applicationSet:
       port: 8085
       # -- Metrics service port name
       portName: http-metrics
+
+    # Prometheus ServiceMonitor configuration
     serviceMonitor:
-      # -- Enable a prometheus ServiceMonitor
+      # -- Enable a ServiceMonitor
       enabled: false
-      # -- Prometheus ServiceMonitor interval
+      # -- Labels to be added to the ServiceMonitor
+      labels: {}
+      # -- Namespace where to deploy ServiceMonitor
+      namespace: ""
+      # -- Interval at which are Prometheus metrics scraped
       interval: 30s
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
       metricRelabelings: []
-      # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
-      # -- Prometheus ServiceMonitor scheme
+      # -- ServiceMonitor HTTP scheme used for scraping
       scheme: ""
-      # -- Prometheus ServiceMonitor tlsConfig
+      # -- ServiceMonitor tlsConfig for scraping the endpoint
       tlsConfig: {}
-      # -- Prometheus ServiceMonitor namespace
-      namespace: ""  # monitoring
-      # -- Prometheus ServiceMonitor labels
-      additionalLabels: {}
 
-  ## Application set service configuration
+  # Application set service configuration
   service:
     # -- Application set service annotations
     annotations: {}
     # -- Application set service labels
     labels: {}
-    # -- Application set service port
-    port: 7000
-    # -- Application set service port name
-    portName: webhook
+    # Application set service ports
+    ports:
+      # -- Git webhook service port
+      webhook: 7000
 
-  ## Application set service account configuration
+  # Application set service account configuration
   serviceAccount:
     # -- Create a service account for the applicationset controller
     create: true
@@ -2108,6 +2111,11 @@ notifications:
   # -- Labels to be applied to the notification controller pods
   podLabels: {}
 
+  # Notification controller container ports
+  containerPorts:
+    # -- Metrics container port
+    metrics: 9001
+
   # -- Notification controller container-level security Context
   # @default -- See [values.yaml]
   containerSecurityContext:
@@ -2118,7 +2126,7 @@ notifications:
       drop:
       - ALL
 
-  ## Readiness and liveness probes for default backend
+  # Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
   readinessProbe:
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -2178,7 +2186,7 @@ notifications:
     # Ref: https://argocd-notifications.readthedocs.io/en/stable/bots/slack-bot/
     slack:
       # -- Enable Slack bot
-      ## You have to set configs.notifications.secret.notifiers.slack.signingSecret
+      ## NOTE: You have to set configs.notifications.secret.notifiers.slack.signingSecret
       enabled: false
 
       # -- Slack bot name string
@@ -2248,10 +2256,12 @@ notifications:
         # -- Automount API credentials for the Service Account
         automountServiceAccountToken: true
 
-  ## Notification controller metrics configuration
+  # Notification controller metrics configuration
   metrics:
     # -- Deploy metrics service
     enabled: false
+
+    # Notification controller metrics service configuration
     service:
       # -- Metrics service annotations
       annotations: {}
@@ -2261,28 +2271,27 @@ notifications:
       port: 9001
       # -- Metrics service port name
       portName: http-metrics
+
+    # Prometheus ServiceMonitor configuration
     serviceMonitor:
-      # -- Enable a prometheus ServiceMonitor
+      # -- Enable a ServiceMonitor
       enabled: false
-      # -- Prometheus ServiceMonitor interval
+      # -- Labels to be added to the ServiceMonitor
+      labels: {}
+      # -- Namespace where to deploy ServiceMonitor
+      namespace: ""
+      # -- Interval at which are Prometheus metrics scraped
       interval: 30s
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
       metricRelabelings: []
-      # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
-      # -- Prometheus ServiceMonitor scheme
+      # -- ServiceMonitor HTTP scheme used for scraping
       scheme: ""
-      # -- Prometheus ServiceMonitor tlsConfig
+      # -- ServiceMonitor tlsConfig for scraping the endpoint
       tlsConfig: {}
-      # -- Prometheus ServiceMonitor namespace
-      namespace: ''
-      # -- Prometheus ServiceMonitor labels
-      additionalLabels: {}
 
-  ## Notification controller service account configuration
+  # Notification controller service account configuration
   serviceAccount:
     # -- Create a service account for the notification controller
     create: true
@@ -2365,7 +2374,7 @@ dex:
       drop:
       - ALL
 
-  ## Probes for Dex server
+  # Probes for Dex server
   ## Supported from Dex >= 2.28.0
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
   readinessProbe:
@@ -2451,10 +2460,12 @@ dex:
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
-  # Dex metrics
+  # Dex metrics configuration
   metrics:
     # -- Deploy metrics service
     enabled: false
+
+    # Dex metrics service configuration
     service:
       # -- Metrics service annotations
       annotations: {}
@@ -2464,27 +2475,25 @@ dex:
       port: 5558
       # -- Metrics service port name
       portName: http-metrics
+
+    # Prometheus ServiceMonitor configuration
     serviceMonitor:
-      # -- Enable a prometheus ServiceMonitor
+      # -- Enable a ServiceMonitor
       enabled: false
-      # -- Prometheus ServiceMonitor interval
+      # -- Labels to be added to the ServiceMonitor
+      labels: {}
+      # -- Namespace where to deploy ServiceMonitor
+      namespace: ""
+      # -- Interval at which are Prometheus metrics scraped
       interval: 30s
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
       metricRelabelings: []
-      # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
-
-      # -- Prometheus ServiceMonitor scheme
+      # -- ServiceMonitor HTTP scheme used for scraping
       scheme: ""
-      # -- Prometheus ServiceMonitor tlsConfig
+      # -- ServiceMonitor tlsConfig for scraping the endpoint
       tlsConfig: {}
-      # -- Prometheus ServiceMonitor namespace
-      namespace: "" # "monitoring"
-      # -- Prometheus ServiceMonitor labels
-      additionalLabels: {}
 
   # Dex service configuration
   service:
@@ -2492,18 +2501,12 @@ dex:
     annotations: {}
     # Additional dex service labels
     labels: {}
-    # HTTP access
-    http:
+    # Dex service ports
+    ports:
       # -- Service port for HTTP access
-      port: 5556
-      # -- Service port name for HTTP access
-      name: http
-    # gRPC access
-    grpc:
+      http: 5556
       # -- Service port for gRPC access
-      port: 5557
-      # -- Service port name for gRPC access
-      name: grpc
+      grpc: 5557
 
   # Dex service account configuration
   serviceAccount:
@@ -2545,6 +2548,32 @@ redis:
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
 
+  # Prometheus redis-exporter sidecar
+  exporter:
+    # -- Enable Prometheus redis-exporter sidecar
+    enabled: true
+    # Prometheus redis-exporter image
+    image:
+      # -- redis-exporter image repository
+      repository: public.ecr.aws/bitnami/redis-exporter
+      # -- redis-exporter image tag
+      tag: 1.26.0-debian-10-r2
+      # -- Image pull policy for the Redis exporter
+      # @default -- `""` (defaults to global.image.imagePullPolicy)
+      imagePullPolicy: ""
+
+    # -- Container security context for redis-exporter sidecar
+    containerSecurityContext: {}
+
+    # -- Resource limits and requests for redis-exporter sidecar
+    resources: {}
+      # limits:
+      #   cpu: 50m
+      #   memory: 64Mi
+      # requests:
+      #   cpu: 10m
+      #   memory: 32Mi
+
   # -- Secrets with credentials to pull images from a private registry
   imagePullSecrets: []
 
@@ -2575,8 +2604,12 @@ redis:
     runAsNonRoot: true
     runAsUser: 999
 
-  # -- Redis container port
-  containerPort: 6379
+  # Redis container ports
+  containerPorts:
+    # -- Redis container port
+    redis: 6379
+    # -- Metrics container port
+    metrics: 9121
 
   # -- Redis container-level security context
   containerSecurityContext:
@@ -2640,31 +2673,12 @@ redis:
   #   whenUnsatisfiable: DoNotSchedule
 
   # Redis metrics configuration
+  ## NOTE: Metrics are available only when `exporter.enabled` is set
   metrics:
-    # -- Deploy metrics service and redis-exporter sidecar
+    # -- Deploy metrics service
     enabled: false
 
-    exporter:
-      image:
-        # -- redis-exporter image repository
-        repository: public.ecr.aws/bitnami/redis-exporter
-        # -- redis-exporter image tag
-        tag: 1.26.0-debian-10-r2
-        # -- Image pull policy for the Redis exporter
-        # @default -- `""` (defaults to global.image.imagePullPolicy)
-        imagePullPolicy: ""
-      # -- Port to use for redis-exporter sidecar
-      containerPort: 9121
-      # -- Container security context for redis-exporter sidecar
-      containerSecurityContext: {}
-      # -- Resource limits and requests for redis-exporter sidecar
-      resources: {}
-        # limits:
-        #   cpu: 50m
-        #   memory: 64Mi
-        # requests:
-        #   cpu: 10m
-        #   memory: 32Mi
+    # Redis metrics service configuration
     service:
       # -- Metrics service type
       type: ClusterIP
@@ -2678,27 +2692,25 @@ redis:
       port: 9121
       # -- Metrics service port name
       portName: http-metrics
+
+    # Prometheus ServiceMonitor configuration
     serviceMonitor:
-      # -- Enable a prometheus ServiceMonitor
+      # -- Enable a ServiceMonitor
       enabled: false
-      # -- Interval at which metrics should be scraped
+      # -- Labels to be added to the ServiceMonitor
+      labels: {}
+      # -- Namespace where to deploy ServiceMonitor
+      namespace: ""
+      # -- Interval at which are Prometheus metrics scraped
       interval: 30s
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
       metricRelabelings: []
-      # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
-
-      # -- Prometheus ServiceMonitor scheme
+      # -- ServiceMonitor HTTP scheme used for scraping
       scheme: ""
-      # -- Prometheus ServiceMonitor tlsConfig
+      # -- ServiceMonitor tlsConfig for scraping the endpoint
       tlsConfig: {}
-      # -- Prometheus ServiceMonitor namespace
-      namespace: "" # "monitoring"
-      # -- Prometheus ServiceMonitor labels
-      additionalLabels: {}
 
   # Redis service configuration
   service:
@@ -2706,8 +2718,10 @@ redis:
     annotations: {}
     # -- Additional redis service labels
     labels: {}
-    # -- Redis service port
-    servicePort: 6379
+    # Redis service ports
+    ports:
+      # -- Redis service port
+      redis: 6379
 
   # Redis service account configuration
   serviceAccount:
@@ -2726,6 +2740,10 @@ redis:
 redis-ha:
   # -- Enables the Redis HA subchart and disables the custom Redis single node deployment
   enabled: false
+  # Redis image
+  image:
+    # -- Redis tag
+    tag: 7.0.4-alpine
   # Redis Prometheus metrics exporter
   exporter:
     # -- If `true`, the prometheus exporter sidecar is enabled
@@ -2748,10 +2766,8 @@ redis-ha:
     metrics:
       # -- HAProxy enable prometheus metric scraping
       enabled: true
-  image:
-    # -- Redis tag
-    tag: 7.0.4-alpine
 
+  # -- Redis HA TopologySpreadConstraints
   ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints:
     # -- Enable Redis HA topology spread constraints

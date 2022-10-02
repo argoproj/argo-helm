@@ -2,25 +2,22 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "argo-cd.server.fullname" . }}
-  {{- if .Values.server.metrics.serviceMonitor.namespace }}
-  namespace: {{ .Values.server.metrics.serviceMonitor.namespace }}
+  name: {{ include "argo-cd.server.fullname" . }}
+  {{- with .Values.server.metrics.serviceMonitor.namespace }}
+  namespace: {{ . }}
   {{- end }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
-    {{- with .Values.server.metrics.serviceMonitor.selector }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
-    {{- with .Values.server.metrics.serviceMonitor.additionalLabels }}
+    {{- with .Values.server.metrics.serviceMonitor.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
   endpoints:
     - port: {{ .Values.server.metrics.service.portName }}
+      path: /metrics
       {{- with .Values.server.metrics.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}
-      path: /metrics
       {{- with .Values.server.metrics.serviceMonitor.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}

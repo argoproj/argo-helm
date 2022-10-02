@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "argo-cd.server.fullname" . }}
+  name: {{ include "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
@@ -38,13 +38,16 @@ spec:
       {{- with .Values.server.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
-      serviceAccountName: {{ template "argo-cd.server.serviceAccountName" . }}
+      serviceAccountName: {{ include "argo-cd.server.serviceAccountName" . }}
       containers:
       - name: {{ .Values.server.name }}
         image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.server.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         command:
         - argocd-server
+        args:
+        - --port={{ .Values.server.containerPorts.server }}
+        - --metrics-port={{ .Values.server.containerPorts.metrics }}
         {{- with .Values.server.args }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -76,7 +79,7 @@ spec:
                 name: argocd-cmd-params-cm
                 key: server.log.format
                 optional: true
-          - name: ARGOCD_REPO_SERVER_LOGLEVEL
+          - name: ARGOCD_SERVER_LOG_LEVEL
             valueFrom:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
@@ -136,6 +139,18 @@ spec:
                 name: argocd-cmd-params-cm
                 key: server.repo.server.strict.tls
                 optional: true
+          - name: ARGOCD_SERVER_DEX_SERVER_PLAINTEXT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.dex.server.plaintext
+                optional: true
+          - name: ARGOCD_SERVER_DEX_SERVER_STRICT_TLS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.dex.server.strict.tls
+                optional: true
           - name: ARGOCD_TLS_MIN_VERSION
             valueFrom:
               configMapKeyRef:
@@ -190,6 +205,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: redis.server
                 optional: true
+          - name: REDIS_COMPRESSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.compression
+                optional: true
           - name: REDISDB
             valueFrom:
               configMapKeyRef:
@@ -226,16 +247,22 @@ spec:
                 name: argocd-cmd-params-cm
                 key: otlp.address
                 optional: true
+          - name: ARGOCD_APPLICATION_NAMESPACES
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: application.namespaces
+                optional: true
         {{- with .Values.server.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         ports:
         - name: server
-          containerPort: {{ .Values.server.containerPort }}
+          containerPort: {{ .Values.server.containerPorts.server }}
           protocol: TCP
         - name: metrics
-          containerPort: 8083
+          containerPort: {{ .Values.server.containerPorts.metrics }}
           protocol: TCP
         livenessProbe:
           httpGet:

@@ -394,7 +394,7 @@ NAME: my-release
 | configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` |  |
 | configs.cm."exec.enabled" | string | `"false"` |  |
 | configs.cm."server.rbac.log.enforce.enable" | string | `"false"` |  |
-| configs.cm."timeout.hard.reconciliation" | int | `0` |  |
+| configs.cm."timeout.hard.reconciliation" | string | `"0"` |  |
 | configs.cm."timeout.reconciliation" | string | `"180s"` |  |
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
 | configs.cm.create | bool | `true` | Create the argocd-cm configmap for [Declarative setup] |
@@ -452,7 +452,7 @@ NAME: my-release
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | controller.args | list | `[]` | Application controller commandline flags |
-| controller.containerPort | int | `8082` | Application controller listening port |
+| controller.containerPorts.metrics | int | `8082` | Metrics container port |
 | controller.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
@@ -476,15 +476,14 @@ NAME: my-release
 | controller.metrics.service.labels | object | `{}` | Metrics service labels |
 | controller.metrics.service.port | int | `8082` | Metrics service port |
 | controller.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
-| controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
-| controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
-| controller.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
+| controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a ServiceMonitor |
+| controller.metrics.serviceMonitor.interval | string | `"30s"` | Interval at which are Prometheus metrics scraped |
+| controller.metrics.serviceMonitor.labels | object | `{}` | Labels to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
-| controller.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
+| controller.metrics.serviceMonitor.namespace | string | `""` | Namespace where to deploy ServiceMonitor |
 | controller.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| controller.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
-| controller.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
-| controller.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
+| controller.metrics.serviceMonitor.scheme | string | `""` | ServiceMonitor HTTP scheme used for scraping |
+| controller.metrics.serviceMonitor.tlsConfig | object | `{}` | ServiceMonitor tlsConfig for scraping the endpoint |
 | controller.name | string | `"application-controller"` | Application controller name string |
 | controller.nodeSelector | object | `{}` | [Node selector] |
 | controller.pdb.annotations | object | `{}` | Annotations to be added to application controller pdb |
@@ -502,10 +501,6 @@ NAME: my-release
 | controller.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | controller.replicas | int | `1` | The number of application controller pods to run. Additional replicas will cause sharding of managed clusters across number of replicas. |
 | controller.resources | object | `{}` | Resource limits and requests for the application controller pods |
-| controller.service.annotations | object | `{}` | Application controller service annotations |
-| controller.service.labels | object | `{}` | Application controller service labels |
-| controller.service.port | int | `8082` | Application controller service port |
-| controller.service.portName | string | `"https-controller"` | Application controller service port name |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the application controller |
@@ -528,7 +523,8 @@ NAME: my-release
 | repoServer.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the repo server [HPA] |
 | repoServer.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the repo server [HPA] |
 | repoServer.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the repo server [HPA] |
-| repoServer.containerPort | int | `8081` | Configures the repo server port |
+| repoServer.containerPorts.metrics | int | `8084` | Metrics container port |
+| repoServer.containerPorts.server | int | `8081` | Server container port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
 | repoServer.copyutil.resources | object | `{}` | Resource limits and requests for the copyutil initContainer |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
@@ -549,15 +545,14 @@ NAME: my-release
 | repoServer.metrics.service.labels | object | `{}` | Metrics service labels |
 | repoServer.metrics.service.port | int | `8084` | Metrics service port |
 | repoServer.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
-| repoServer.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
-| repoServer.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
-| repoServer.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
+| repoServer.metrics.serviceMonitor.enabled | bool | `false` | Enable a ServiceMonitor |
+| repoServer.metrics.serviceMonitor.interval | string | `"30s"` | Interval at which are Prometheus metrics scraped |
+| repoServer.metrics.serviceMonitor.labels | object | `{}` | Labels to be added to the ServiceMonitor |
 | repoServer.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
-| repoServer.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
+| repoServer.metrics.serviceMonitor.namespace | string | `""` | Namespace where to deploy ServiceMonitor |
 | repoServer.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| repoServer.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
-| repoServer.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
-| repoServer.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
+| repoServer.metrics.serviceMonitor.scheme | string | `""` | ServiceMonitor HTTP scheme used for scraping |
+| repoServer.metrics.serviceMonitor.tlsConfig | object | `{}` | ServiceMonitor tlsConfig for scraping the endpoint |
 | repoServer.name | string | `"repo-server"` | Repo server name |
 | repoServer.nodeSelector | object | `{}` | [Node selector] |
 | repoServer.pdb.annotations | object | `{}` | Annotations to be added to Repo server pdb |
@@ -577,8 +572,7 @@ NAME: my-release
 | repoServer.resources | object | `{}` | Resource limits and requests for the repo server pods |
 | repoServer.service.annotations | object | `{}` | Repo server service annotations |
 | repoServer.service.labels | object | `{}` | Repo server service labels |
-| repoServer.service.port | int | `8081` | Repo server service port |
-| repoServer.service.portName | string | `"https-repo-server"` | Repo server service port name |
+| repoServer.service.ports.server | int | `8081` | Repo server service port |
 | repoServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | repoServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | repoServer.serviceAccount.create | bool | `true` | Create repo server service account |
@@ -616,7 +610,8 @@ NAME: my-release
 | server.certificateSecret.crt | string | `""` | Certificate data |
 | server.certificateSecret.enabled | bool | `false` | Create argocd-server-tls secret |
 | server.certificateSecret.key | string | `""` | Private Key of the certificate |
-| server.containerPort | int | `8080` | Configures the server port |
+| server.containerPorts.metrics | int | `8082` | Metrics container port |
+| server.containerPorts.server | int | `8080` | Server container port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
 | server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
@@ -634,23 +629,22 @@ NAME: my-release
 | server.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | server.ingress.alb.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB gRPC service |
 | server.ingress.alb.enabled | bool | `false` | Enable Amazon Load Balancer features |
-| server.ingress.alb.serviceType | string | `"NodePort"` | Service type for the AWS ALB gRPC service |
+| server.ingress.alb.serviceType | string | `"ClusterIP"` | Service type for the AWS ALB gRPC service |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
 | server.ingress.extraHosts | list | `[]` (See [values.yaml]) | List of additional hosts |
 | server.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | server.ingress.extraTls | list | `[]` (See [values.yaml]) | Additional TLS configuration for additional hosts |
-| server.ingress.gke.backendConfig | string | `nil` | [BackendConfigSpec] |
-| server.ingress.gke.domains | list | `[]` | Additional domains for Google Managed Certificate |
+| server.ingress.gke.backendConfig | object | `{}` (See [values.yaml]) | Google [BackendConfig] resource, for use with the GKE Ingress Controller |
+| server.ingress.gke.domains | list | `[]` | Additional domains for Google ManagedCertificate resource |
 | server.ingress.gke.enabled | bool | `false` | Enable Google Load Balancer features |
-| server.ingress.gke.frontendConfig | string | `nil` | [FrontendConfigSpec] |
+| server.ingress.gke.frontendConfig | object | `{}` (See [values.yaml]) | Google [FrontendConfig] resource, for use with the GKE Ingress Controller |
 | server.ingress.grpc.annotations | object | `{}` | Annotations for gRPC ingress |
-| server.ingress.grpc.enabled | bool | `false` | Enable dedicated gRCPC ingress |
+| server.ingress.grpc.enabled | bool | `false` | Enable dedicated gRPC ingress |
 | server.ingress.grpc.hostname | string | `""` (Defaults to `grpc.<server.ingress.hostname>`) | Hostname for dedicated  gRPC ingress |
 | server.ingress.hostname | string | `""` (defaults to `global.domain`) | When ingress is enabled, a host pointing to this will be created |
 | server.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
 | server.ingress.labels | object | `{}` | Additional ingress labels |
-| server.ingress.passthrough | bool | `true` | SSL - Passthrough to Argo CD Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough |
 | server.ingress.path | string | `"/"` | The path to Argo CD server |
 | server.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
 | server.ingress.tls.enabled | bool | `true` | Enable TLS for hostname defined in `server.ingress.hostname` |
@@ -667,15 +661,14 @@ NAME: my-release
 | server.metrics.service.labels | object | `{}` | Metrics service labels |
 | server.metrics.service.port | int | `8083` | Metrics service port |
 | server.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
-| server.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
-| server.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
-| server.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
+| server.metrics.serviceMonitor.enabled | bool | `false` | Enable a ServiceMonitor |
+| server.metrics.serviceMonitor.interval | string | `"30s"` | Interval at which are Prometheus metrics scraped |
+| server.metrics.serviceMonitor.labels | object | `{}` | Labels to be added to the ServiceMonitor |
 | server.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
-| server.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
+| server.metrics.serviceMonitor.namespace | string | `""` | Namespace where to deploy ServiceMonitor |
 | server.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| server.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
-| server.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
-| server.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
+| server.metrics.serviceMonitor.scheme | string | `""` | ServiceMonitor HTTP scheme used for scraping |
+| server.metrics.serviceMonitor.tlsConfig | object | `{}` | ServiceMonitor tlsConfig for scraping the endpoint |
 | server.name | string | `"server"` | Argo CD server name |
 | server.nodeSelector | object | `{}` | [Node selector] |
 | server.pdb.annotations | object | `{}` | Annotations to be added to server pdb |
@@ -699,19 +692,17 @@ NAME: my-release
 | server.route.termination_policy | string | `"None"` | Termination policy of Openshift Route |
 | server.route.termination_type | string | `"passthrough"` | Termination type of Openshift Route |
 | server.service.annotations | object | `{}` | Server service annotations |
+| server.service.clusterIP | string | `""` | Server service cluster IP |
 | server.service.externalIPs | list | `[]` | Server service external IPs |
-| server.service.externalTrafficPolicy | string | `""` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
+| server.service.externalTrafficPolicy | string | `"Cluster"` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
 | server.service.labels | object | `{}` | Server service labels |
 | server.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | server.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
-| server.service.namedTargetPort | bool | `true` | Use named target port for argocd |
-| server.service.nodePortHttp | int | `30080` | Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort") |
-| server.service.nodePortHttps | int | `30443` | Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort") |
-| server.service.servicePortHttp | int | `80` | Server service http port |
-| server.service.servicePortHttpName | string | `"http"` | Server service http port name, can be used to route traffic via istio |
-| server.service.servicePortHttps | int | `443` | Server service https port |
-| server.service.servicePortHttpsName | string | `"https"` | Server service https port name, can be used to route traffic via istio |
-| server.service.sessionAffinity | string | `""` | Used to maintain session affinity. Supports `ClientIP` and `None` |
+| server.service.nodePorts.http | int | `30080` | Server service http port for NodePort service type |
+| server.service.nodePorts.https | int | `30443` | Server service https port for NodePort service type |
+| server.service.ports.http | int | `80` | Server service http port |
+| server.service.ports.https | int | `443` | Server service https port |
+| server.service.sessionAffinity | string | `"None"` | Used to maintain session affinity. Supports `ClientIP` and `None` Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies |
 | server.service.type | string | `"ClusterIP"` | Server service type |
 | server.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | server.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
@@ -752,15 +743,14 @@ NAME: my-release
 | dex.metrics.service.labels | object | `{}` | Metrics service labels |
 | dex.metrics.service.port | int | `5558` | Metrics service port |
 | dex.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
-| dex.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
-| dex.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
-| dex.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
+| dex.metrics.serviceMonitor.enabled | bool | `false` | Enable a ServiceMonitor |
+| dex.metrics.serviceMonitor.interval | string | `"30s"` | Interval at which are Prometheus metrics scraped |
+| dex.metrics.serviceMonitor.labels | object | `{}` | Labels to be added to the ServiceMonitor |
 | dex.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
-| dex.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
+| dex.metrics.serviceMonitor.namespace | string | `""` | Namespace where to deploy ServiceMonitor |
 | dex.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| dex.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
-| dex.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
-| dex.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
+| dex.metrics.serviceMonitor.scheme | string | `""` | ServiceMonitor HTTP scheme used for scraping |
+| dex.metrics.serviceMonitor.tlsConfig | object | `{}` | ServiceMonitor tlsConfig for scraping the endpoint |
 | dex.name | string | `"dex-server"` | Dex name |
 | dex.nodeSelector | object | `{}` | [Node selector] |
 | dex.pdb.annotations | object | `{}` | Annotations to be added to Dex server pdb |
@@ -777,11 +767,9 @@ NAME: my-release
 | dex.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | dex.resources | object | `{}` | Resource limits and requests for dex |
 | dex.service.annotations | object | `{}` | Dex service annotations |
-| dex.service.grpc.name | string | `"grpc"` | Service port name for gRPC access |
-| dex.service.grpc.port | int | `5557` | Service port for gRPC access |
-| dex.service.http.name | string | `"http"` | Service port name for HTTP access |
-| dex.service.http.port | int | `5556` | Service port for HTTP access |
 | dex.service.labels | object | `{}` |  |
+| dex.service.ports.grpc | int | `5557` | Service port for gRPC access |
+| dex.service.ports.http | int | `5556` | Service port for HTTP access |
 | dex.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | dex.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | dex.serviceAccount.create | bool | `true` | Create dex service account |
@@ -799,39 +787,39 @@ NAME: my-release
 |-----|------|---------|-------------|
 | redis.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | redis.args | list | `[]` | Additional command line arguments to pass to redis-server |
-| redis.containerPort | int | `6379` | Redis container port |
+| redis.containerPorts.metrics | int | `9121` | Metrics container port |
+| redis.containerPorts.redis | int | `6379` | Redis container port |
 | redis.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}}` | Redis container-level security context |
 | redis.enabled | bool | `true` | Enable redis |
 | redis.env | list | `[]` | Environment variables to pass to the Redis server |
 | redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
+| redis.exporter.containerSecurityContext | object | `{}` | Container security context for redis-exporter sidecar |
+| redis.exporter.enabled | bool | `true` | Enable Prometheus redis-exporter sidecar |
+| redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis exporter |
+| redis.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
+| redis.exporter.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
+| redis.exporter.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis |
 | redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
 | redis.image.tag | string | `"7.0.4-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
-| redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
-| redis.metrics.exporter.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
-| redis.metrics.exporter.containerSecurityContext | object | `{}` | Container security context for redis-exporter sidecar |
-| redis.metrics.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis exporter |
-| redis.metrics.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
-| redis.metrics.exporter.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
-| redis.metrics.exporter.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
+| redis.metrics.enabled | bool | `false` | Deploy metrics service |
 | redis.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | redis.metrics.service.clusterIP | string | `"None"` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
 | redis.metrics.service.labels | object | `{}` | Metrics service labels |
 | redis.metrics.service.port | int | `9121` | Metrics service port |
 | redis.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | redis.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
-| redis.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
-| redis.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
-| redis.metrics.serviceMonitor.interval | string | `"30s"` | Interval at which metrics should be scraped |
+| redis.metrics.serviceMonitor.enabled | bool | `false` | Enable a ServiceMonitor |
+| redis.metrics.serviceMonitor.interval | string | `"30s"` | Interval at which are Prometheus metrics scraped |
+| redis.metrics.serviceMonitor.labels | object | `{}` | Labels to be added to the ServiceMonitor |
 | redis.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
-| redis.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
+| redis.metrics.serviceMonitor.namespace | string | `""` | Namespace where to deploy ServiceMonitor |
 | redis.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| redis.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
-| redis.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
-| redis.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
+| redis.metrics.serviceMonitor.scheme | string | `""` | ServiceMonitor HTTP scheme used for scraping |
+| redis.metrics.serviceMonitor.tlsConfig | object | `{}` | ServiceMonitor tlsConfig for scraping the endpoint |
 | redis.name | string | `"redis"` | Redis name |
 | redis.nodeSelector | object | `{}` | [Node selector] |
 | redis.pdb.annotations | object | `{}` | Annotations to be added to Redis server pdb |
@@ -844,7 +832,7 @@ NAME: my-release
 | redis.securityContext | object | `{"runAsNonRoot":true,"runAsUser":999}` | Redis pod-level security context |
 | redis.service.annotations | object | `{}` | Redis service annotations |
 | redis.service.labels | object | `{}` | Additional redis service labels |
-| redis.service.servicePort | int | `6379` | Redis service port |
+| redis.service.ports.redis | int | `6379` | Redis service port |
 | redis.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | redis.serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account |
 | redis.serviceAccount.create | bool | `true` | Create a service account for the redis pod |
@@ -871,6 +859,7 @@ The main options are listed here:
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
 | redis-ha.redis.masterGroupName | string | `"argocd"` | Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated |
+| redis-ha.topologySpreadConstraints | object | `{"enabled":false,"maxSkew":"","topologyKey":"","whenUnsatisfiable":""}` | Redis HA TopologySpreadConstraints |
 | redis-ha.topologySpreadConstraints.enabled | bool | `false` | Enable Redis HA topology spread constraints |
 | redis-ha.topologySpreadConstraints.maxSkew | string | `""` (defaults to `1`) | Max skew of pods tolerated |
 | redis-ha.topologySpreadConstraints.topologyKey | string | `""` (defaults to `topology.kubernetes.io/zone`) | Topology key for spread |
@@ -900,6 +889,9 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 |-----|------|---------|-------------|
 | applicationSet.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | applicationSet.args | list | `[]` | Additional command line arguments to pass to application set controller |
+| applicationSet.containerPorts.metrics | int | `8080` | Metrics container port |
+| applicationSet.containerPorts.probe | int | `8081` | Probe container port |
+| applicationSet.containerPorts.webhook | int | `7000` | Webhook container port |
 | applicationSet.containerSecurityContext | object | See [values.yaml] | Application set controller container-level security context |
 | applicationSet.dryRun | bool | `false` | Prevent application set to modify any generated resources |
 | applicationSet.enabled | bool | `true` | Enable application set controller |
@@ -934,15 +926,14 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.metrics.service.labels | object | `{}` | Metrics service labels |
 | applicationSet.metrics.service.port | int | `8085` | Metrics service port |
 | applicationSet.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
-| applicationSet.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
-| applicationSet.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
-| applicationSet.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
+| applicationSet.metrics.serviceMonitor.enabled | bool | `false` | Enable a ServiceMonitor |
+| applicationSet.metrics.serviceMonitor.interval | string | `"30s"` | Interval at which are Prometheus metrics scraped |
+| applicationSet.metrics.serviceMonitor.labels | object | `{}` | Labels to be added to the ServiceMonitor |
 | applicationSet.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
-| applicationSet.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
+| applicationSet.metrics.serviceMonitor.namespace | string | `""` | Namespace where to deploy ServiceMonitor |
 | applicationSet.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| applicationSet.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
-| applicationSet.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
-| applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
+| applicationSet.metrics.serviceMonitor.scheme | string | `""` | ServiceMonitor HTTP scheme used for scraping |
+| applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | ServiceMonitor tlsConfig for scraping the endpoint |
 | applicationSet.name | string | `"applicationset-controller"` | Application set controller name string |
 | applicationSet.nodeSelector | object | `{}` | [Node selector] |
 | applicationSet.pdb.annotations | object | `{}` | Annotations to be added to Repo server pdb |
@@ -961,8 +952,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.resources | object | `{}` | Resource limits and requests for the application set controller pods |
 | applicationSet.service.annotations | object | `{}` | Application set service annotations |
 | applicationSet.service.labels | object | `{}` | Application set service labels |
-| applicationSet.service.port | int | `7000` | Application set service port |
-| applicationSet.service.portName | string | `"webhook"` | Application set service port name |
+| applicationSet.service.ports.webhook | int | `7000` | Git webhook service port |
 | applicationSet.serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | applicationSet.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | applicationSet.serviceAccount.create | bool | `true` | Create a service account for the applicationset controller |
@@ -999,6 +989,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | notifications.bots.slack.serviceAccount.name | string | `""` | Slack bot service account name |
 | notifications.bots.slack.tolerations | list | `[]` | [Tolerations] for use with node taints |
+| notifications.containerPorts.metrics | int | `9001` | Metrics container port |
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.enabled | bool | `true` | Enable Notifications controller |
 | notifications.env | list | `[]` | Environment variables to pass to notifications controller |
@@ -1019,15 +1010,14 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.metrics.service.labels | object | `{}` | Metrics service labels |
 | notifications.metrics.service.port | int | `9001` | Metrics service port |
 | notifications.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
-| notifications.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
-| notifications.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
-| notifications.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
+| notifications.metrics.serviceMonitor.enabled | bool | `false` | Enable a ServiceMonitor |
+| notifications.metrics.serviceMonitor.interval | string | `"30s"` | Interval at which are Prometheus metrics scraped |
+| notifications.metrics.serviceMonitor.labels | object | `{}` | Labels to be added to the ServiceMonitor |
 | notifications.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
-| notifications.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
+| notifications.metrics.serviceMonitor.namespace | string | `""` | Namespace where to deploy ServiceMonitor |
 | notifications.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| notifications.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
-| notifications.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
-| notifications.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
+| notifications.metrics.serviceMonitor.scheme | string | `""` | ServiceMonitor HTTP scheme used for scraping |
+| notifications.metrics.serviceMonitor.tlsConfig | object | `{}` | ServiceMonitor tlsConfig for scraping the endpoint |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
 | notifications.nodeSelector | object | `{}` | [Node selector] |
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the notification controller pods |
@@ -1058,16 +1048,11 @@ server:
   ingress:
     enabled: true
     annotations:
-      alb.ingress.kubernetes.io/backend-protocol: HTTPS
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
       alb.ingress.kubernetes.io/scheme: internal
       alb.ingress.kubernetes.io/target-type: ip
-  ingressGrpc:
-    enabled: true
-    isAWSALB: true
-    awsALB:
+    alb:
+      enabled: true
       serviceType: ClusterIP
-
 ```
 
 ----------------------------------------------
@@ -1075,10 +1060,10 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 
 [Argo CD RBAC policy]: https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/
 [affinity]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-[BackendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/concepts/backendconfig#backendconfigspec_v1beta1_cloudgooglecom
+[BackendConfig]: https://cloud.google.com/kubernetes-engine/docs/concepts/backendconfig#backendconfigspec_v1beta1_cloudgooglecom
 [CSS styles]: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
 [external cluster credentials]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
-[FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+[FrontendConfig]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
 [Declarative setup]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup
 [gRPC-ingress]: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
 [HPA]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
@@ -1086,6 +1071,7 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [Node selector]: https://kubernetes.io/docs/user-guide/node-selection/
 [PodDisruptionBudget]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets
 [probe]: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+[PrometheusRuleSpec]: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#monitoring.coreos.com/v1.PrometheusRule
 [RelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
 [Tolerations]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 [TopologySpreadConstraints]: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/

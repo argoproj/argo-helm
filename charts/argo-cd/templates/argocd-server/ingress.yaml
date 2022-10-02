@@ -1,10 +1,8 @@
 {{- $hostname := default .Values.global.domain .Values.server.ingress.hostname -}}
-{{- $httpPort := .Values.server.service.namedTargetPort | ternary .Values.server.service.servicePortHttpName .Values.server.service.servicePortHttp -}}
-{{- $httpsPort := .Values.server.service.namedTargetPort | ternary .Values.server.service.servicePortHttpsName .Values.server.service.servicePortHttps -}}
-{{- $insecure := index .Values.configs.params "server.insecure" | toString }}
+{{- $insecure := index .Values.configs.params "server.insecure" | toString -}}
 {{- $serviceName := include "argo-cd.server.fullname" . -}}
-{{- $servicePort := (and .Values.server.ingress.tls.enabled (eq $insecure "true")) | ternary $httpPort $httpsPort }}
----
+{{- $servicePort := (and .Values.server.ingress.tls.enabled (eq $insecure "true")) | ternary "http" "https" -}}
+{{- if .Values.server.ingress.enabled }}
 apiVersion: {{ include "argo-cd.apiVersion.ingress" . }}
 kind: Ingress
 metadata:
@@ -35,7 +33,7 @@ spec:
         - path: {{ .Values.server.ingress.path }}
           pathType: {{ .Values.server.ingress.pathType }}
           backend:
-            {{- include "argo-cd.ingressBackend" (dict "context" . "service" $serviceName "port" $httpPort) | nindent 12 }}
+            {{- include "argo-cd.ingressBackend" (dict "context" . "service" $serviceName "port" "http") | nindent 12 }}
     - host: {{ $hostname }}
       http:
         paths:
@@ -45,7 +43,7 @@ spec:
         - path: {{ .Values.server.ingress.path }}
           pathType: {{ .Values.server.ingress.pathType }}
           backend:
-            {{- include "argo-cd.ingressBackend" (dict "context" . "service" (printf "%s-grpc" $serviceName) "port" $httpsPort) | nindent 12 }}
+            {{- include "argo-cd.ingressBackend" (dict "context" . "service" (printf "%s-grpc" $serviceName) "port" "https") | nindent 12 }}
     {{- else }}
     - host: {{ $hostname }}
       http:
@@ -78,3 +76,4 @@ spec:
       hosts:
         - {{ $hostname }}
   {{- end }}
+{{- end }}
