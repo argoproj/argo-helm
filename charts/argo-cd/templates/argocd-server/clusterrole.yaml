@@ -6,6 +6,9 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 rules:
+{{- if and .Values.server.clusterAdminRbac.enabled .Values.server.clusterAdminRbac.rules }}
+  {{- toYaml .Values.server.clusterAdminRbac.rules }}
+{{- end }}
 - apiGroups:
   - '*'
   resources:

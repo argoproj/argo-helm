@@ -452,6 +452,8 @@ NAME: my-release
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | controller.args | list | `[]` | Application controller commandline flags |
+| controller.clusterAdminRbac.enabled | bool | `false` | Enable custom RBAC rules when `rbac.clusterAdmin` is enabled |
+| controller.clusterAdminRbac.rules | list | `[]` | List of custom ClusterRole rules for controller |
 | controller.containerPorts.metrics | int | `8082` | Metrics container port |
 | controller.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
@@ -492,8 +494,6 @@ NAME: my-release
 | controller.podAnnotations | object | `{}` | Annotations to be added to application controller pods |
 | controller.podLabels | object | `{}` | Labels to be added to application controller pods |
 | controller.priorityClassName | string | `""` | Priority class for the application controller pods |
-| controller.rbac.create | bool | `false` | Create additional rbac rules for the application controller |
-| controller.rbac.rules | list | `[]` | Additional rbac rules for the application controller |
 | controller.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | controller.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | controller.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -523,6 +523,8 @@ NAME: my-release
 | repoServer.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the repo server [HPA] |
 | repoServer.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the repo server [HPA] |
 | repoServer.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the repo server [HPA] |
+| repoServer.clusterAdminRbac.enabled | bool | `false` | Enable custom RBAC rules when `rbac.clusterAdmin` is enabled |
+| repoServer.clusterAdminRbac.rules | list | `[]` | List of custom ClusterRole rules for repo-server |
 | repoServer.containerPorts.metrics | int | `8084` | Metrics container port |
 | repoServer.containerPorts.server | int | `8081` | Server container port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
@@ -561,8 +563,6 @@ NAME: my-release
 | repoServer.podAnnotations | object | `{}` | Annotations to be added to repo server pods |
 | repoServer.podLabels | object | `{}` | Labels to be added to repo server pods |
 | repoServer.priorityClassName | string | `""` | Priority class for the repo server |
-| repoServer.rbac.create | bool | `false` | Create custom rules for the repo server |
-| repoServer.rbac.rules | list | `[]` | List of custom rules for the repo server role |
 | repoServer.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | repoServer.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | repoServer.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -610,6 +610,8 @@ NAME: my-release
 | server.certificateSecret.crt | string | `""` | Certificate data |
 | server.certificateSecret.enabled | bool | `false` | Create argocd-server-tls secret |
 | server.certificateSecret.key | string | `""` | Private Key of the certificate |
+| server.clusterAdminRbac.enabled | bool | `false` | Enable custom RBAC rules when `rbac.clusterAdmin` is enabled |
+| server.clusterAdminRbac.rules | list | `[]` | List of custom ClusterRole rules for server |
 | server.containerPorts.metrics | int | `8082` | Metrics container port |
 | server.containerPorts.server | int | `8080` | Server container port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
@@ -677,8 +679,6 @@ NAME: my-release
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
 | server.priorityClassName | string | `""` | Priority class for the Argo CD server |
-| server.rbac.create | bool | `false` | Create custom rules for the repo server |
-| server.rbac.rules | list | `[]` | List of custom rules for the repo server role |
 | server.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | server.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |

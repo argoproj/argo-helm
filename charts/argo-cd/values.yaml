@@ -89,11 +89,11 @@ crds:
 
 ## Custom RBAC configuration
 rbac:
-  # -- Create cluster admin roles for cluster-wide installation.
-  clusterAdmin: true
   # -- Create agggregate roles that extend existing clusterroles to interact with argo-cd crds
   ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
   aggregateRoles: false
+  # -- Create cluster admin roles for cluster-wide installation.
+  clusterAdmin:  true
 
 ## Argo Configs
 configs:
@@ -901,6 +901,14 @@ controller:
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
+  # Controller custom RBAC configuration
+  ## Use this to grant additional permissions
+  clusterAdminRbac:
+    # -- Enable custom RBAC rules when `rbac.clusterAdmin` is enabled
+    enabled: false
+    # -- List of custom ClusterRole rules for controller
+    rules: []
+
   # Application controller metrics configuration
   metrics:
     # -- Deploy metrics service
@@ -973,22 +981,6 @@ controller:
       #       The application [{{`{{$labels.name}}`}} has not been synchronized for over
       #       12 hours which means that the state of this cloud has drifted away from the
       #       state inside Git.
-
-  # Controller custom RBAC configuration
-  ## NOTE: Creates ClusterRole rules when rbac.clusterAdmin is `true`
-  rbac:
-    # -- Create additional rbac rules for the application controller
-    create: false
-    # -- Additional rbac rules for the application controller
-    rules: []
-      # - apiGroups:
-      #   - argoproj.io
-      #   resources:
-      #   - applications
-      #   verbs:
-      #   - get
-      #   - list
-      #   - watch
 
   # Controller service account
   serviceAccount:
@@ -1205,6 +1197,14 @@ server:
   # - maxSkew: 1
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
+
+  # Server custom RBAC configuration
+  ## Use this to grant additional permissions
+  clusterAdminRbac:
+    # -- Enable custom RBAC rules when `rbac.clusterAdmin` is enabled
+    enabled: false
+    # -- List of custom ClusterRole rules for server
+    rules: []
 
   # TLS certificate configuration via cert-manager
   certificate:
@@ -1459,22 +1459,6 @@ server:
     # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
     sessionAffinity: None
 
-  # Server custom RBAC configuration
-  ## NOTE: Creates ClusterRole rules when rbac.clusterAdmin is `true`
-  rbac:
-    # -- Create custom rules for the repo server
-    create: false
-    # -- List of custom rules for the repo server role
-    rules: []
-      # - apiGroups:
-      #   - argoproj.io
-      #   resources:
-      #   - applications
-      #   verbs:
-      #   - get
-      #   - list
-      #   - watch
-
   # Server service account configuration
   serviceAccount:
     # -- Create server service account
@@ -1704,6 +1688,14 @@ repoServer:
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
+  # Repo server custom RBAC configuration
+  ## Use this to grant additional permissions
+  clusterAdminRbac:
+    # -- Enable custom RBAC rules when `rbac.clusterAdmin` is enabled
+    enabled: false
+    # -- List of custom ClusterRole rules for repo-server
+    rules: []
+
   # Repo server metrics service configuration
   metrics:
     # -- Deploy metrics service
@@ -1749,22 +1741,6 @@ repoServer:
     ports:
       # -- Repo server service port
       server: 8081
-
-  # Repo server custom RBAC configuration
-  ## NOTE: Creates ClusterRole rules when rbac.clusterAdmin is `true`
-  rbac:
-    # -- Create custom rules for the repo server
-    create: false
-    # -- List of custom rules for the repo server role
-    rules: []
-      # - apiGroups:
-      #   - argoproj.io
-      #   resources:
-      #   - applications
-      #   verbs:
-      #   - get
-      #   - list
-      #   - watch
 
   # Repo server service account
   ## If create is set to true, make sure to uncomment the name and update the rbac section below

@@ -24,6 +24,9 @@ rules:
   - applications
   - appprojects
   - applicationsets
+  {{- if .Values.server.extensions.enabled }}
+  - argocdextensions
+  {{- end }}
   verbs:
   - create
   - get
