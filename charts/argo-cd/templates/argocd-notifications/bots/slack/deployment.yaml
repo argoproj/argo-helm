@@ -36,7 +36,7 @@ spec:
       serviceAccountName: {{ include "argo-cd.notifications.bots.slack.serviceAccountName" . }}
       containers:
         - name: {{ .Values.notifications.bots.slack.name }}
-          image: {{ default .Values.global.image.repository .Values.notifications.bots.slack.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.notifications.bots.slack.image.tag }}
+          image: {{ default .Values.global.image.repository .Values.notifications.bots.slack.image.repository }}:{{ default (include "argo-cd.tag" .) .Values.notifications.bots.slack.image.tag }}
           imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.notifications.bots.slack.image.imagePullPolicy }}
           command:
             - argocd-notifications
@@ -45,8 +45,10 @@ spec:
           ports:
             - name: http
               containerPort: 8080
+          {{- with .Values.notifications.bots.slack.resources }}
           resources:
-            {{- toYaml .Values.notifications.bots.slack.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.global.hostAliases }}
           hostAliases:
             {{- toYaml . | nindent 6 }}

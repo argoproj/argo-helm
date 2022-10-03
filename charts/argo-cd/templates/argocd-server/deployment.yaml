@@ -41,7 +41,7 @@ spec:
       serviceAccountName: {{ include "argo-cd.server.serviceAccountName" . }}
       containers:
       - name: {{ .Values.server.name }}
-        image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.server.image.tag }}
+        image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default (include "argo-cd.tag" .) .Values.server.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         command:
         - argocd-server
@@ -324,7 +324,7 @@ spec:
       {{- if .Values.server.extensions.enabled }}
       - name: argocd-extensions
         image: {{ .Values.server.extensions.image.repository }}:{{ .Values.server.extensions.image.tag }}
-        imagePullPolicy: {{ .Values.server.extensions.image.imagePullPolicy }}
+        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.extensions.image.imagePullPolicy }}
         {{- with .Values.server.extensions.containerSecurityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}

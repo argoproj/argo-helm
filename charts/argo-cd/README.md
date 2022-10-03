@@ -366,25 +366,25 @@ NAME: my-release
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
-| global.additionalLabels | object | `{}` | Additional labels to add to all resources |
 | global.domain | string | `"argocd.server.local"` | Default domain used for all components |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
 | global.image.repository | string | `"quay.io/argoproj/argocd"` | If defined, a repository applied to all Argo CD deployments |
 | global.image.tag | string | `""` | Overrides the global Argo CD image tag whose default is the chart appVersion |
 | global.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository |
+| global.labels | object | `{}` | Common labels for the all resources |
 | global.logging.format | string | `"text"` | Set the global logging format. Either: `text` or `json` |
 | global.logging.level | string | `"info"` | Set the global logging level. One of: `debug`, `info`, `warn` or `error` |
 | global.networkPolicy.create | bool | `false` | Create NetworkPolicy objects for all components |
 | global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
 | global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
+| global.rbac.aggregateRoles | bool | `true` | Create agggregate roles that extend existing clusterroles to interact with argo-cd crds |
+| global.rbac.clusterAdmin | bool | `true` | Create cluster admin roles for cluster-wide installation. |
 | global.securityContext | object | `{}` | Toggle and define pod-level security context. |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
-| openshift | bool | `false` | Enable RedHat OpenShift cluster capabilities |
-| rbac.aggregateRoles | bool | `false` | Create agggregate roles that extend existing clusterroles to interact with argo-cd crds |
-| rbac.clusterAdmin | bool | `true` | Create cluster admin roles for cluster-wide installation. |
+| openshift | bool | `false` | Enable RedHat OpenShift capabilities |
 
 ## Argo CD Configs
 
@@ -528,7 +528,6 @@ NAME: my-release
 | repoServer.containerPorts.metrics | int | `8084` | Metrics container port |
 | repoServer.containerPorts.server | int | `8081` | Server container port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
-| repoServer.copyutil.resources | object | `{}` | Resource limits and requests for the copyutil initContainer |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
 | repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
 | repoServer.extraContainers | list | `[]` | Additional containers to be added to the repo server pod |
@@ -620,7 +619,7 @@ NAME: my-release
 | server.extensions.containerSecurityContext | object | See [values.yaml] | Server UI extensions container-level security context |
 | server.extensions.contents | list | `[]` | Extensions to be loaded into the server |
 | server.extensions.enabled | bool | `false` | Enable support for extensions |
-| server.extensions.image.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy for extensions |
+| server.extensions.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for extensions |
 | server.extensions.image.repository | string | `"ghcr.io/argoproj-labs/argocd-extensions"` | Repository to use for extensions image |
 | server.extensions.image.tag | string | `"v0.1.0"` | Tag to use for extensions image |
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |

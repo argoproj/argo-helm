@@ -1,15 +1,16 @@
-## Argo CD configuration
+# Default configuration values for Argo CD
 ## Ref: https://github.com/argoproj/argo-cd
-##
 
 # -- Provide a name in place of `argocd`
 nameOverride: argocd
 # -- String to fully override `"argo-cd.fullname"`
 fullnameOverride: ""
 
+# -- Enable RedHat OpenShift capabilities
+openshift: false
+
 # -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
-
 # Override APIVersions
 # If you want to template helm charts but cannot access k8s API server
 # you can set api versions here
@@ -23,9 +24,16 @@ apiVersionOverrides:
   # -- String to override apiVersion of ingresses rendered by this helm chart
   ingress: "" # networking.k8s.io/v1beta1
 
-# -- Enable RedHat OpenShift cluster capabilities
-openshift: false
+## Custom resource configuration
+crds:
+  # -- Install and upgrade CRDs
+  install: true
+  # -- Keep CRDs on chart uninstall
+  keep: true
+  # -- Annotations to be added to all CRDs
+  annotations: {}
 
+# Globally shared configuration
 global:
   # -- Default domain used for all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
@@ -43,15 +51,8 @@ global:
   # -- If defined, uses a Secret to pull an image from a private Docker registry or repository
   imagePullSecrets: []
 
-  # Default logging options used by all components
-  logging:
-    # -- Set the global logging format. Either: `text` or `json`
-    format: text
-    # -- Set the global logging level. One of: `debug`, `info`, `warn` or `error`
-    level: info
-
-  # -- Additional labels to add to all resources
-  additionalLabels: {}
+  # -- Common labels for the all resources
+  labels: {}
     # app: argo-cd
 
   # -- Annotations for the all deployed pods
@@ -59,6 +60,29 @@ global:
 
   # -- Labels for the all deployed pods
   podLabels: {}
+
+  # Default logging options used by all components
+  logging:
+    # -- Set the global logging format. Either: `text` or `json`
+    format: text
+    # -- Set the global logging level. One of: `debug`, `info`, `warn` or `error`
+    level: info
+
+  # Default RBAC configuration
+  rbac:
+    # -- Create agggregate roles that extend existing clusterroles to interact with argo-cd crds
+    ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
+    aggregateRoles: true
+    # -- Create cluster admin roles for cluster-wide installation.
+    ## Used when you manage applications in the same cluster where Argo CD runs
+    clusterAdmin: true
+
+  # Default network policy rules used by all components
+  networkPolicy:
+    # -- Create NetworkPolicy objects for all components
+    create: false
+    # -- Default deny all ingress traffic
+    defaultDenyIngress: false
 
   # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
   hostAliases: []
@@ -72,28 +96,33 @@ global:
   #  runAsGroup: 999
   #  fsGroup: 999
 
-  networkPolicy:
-    # -- Create NetworkPolicy objects for all components
-    create: false
-    # -- Default deny all ingress traffic
-    defaultDenyIngress: false
-
-## Custom resource configuration
-crds:
-  # -- Install and upgrade CRDs
-  install: true
-  # -- Keep CRDs on chart uninstall
-  keep: true
-  # -- Annotations to be added to all CRDs
-  annotations: {}
-
-## Custom RBAC configuration
-rbac:
-  # -- Create agggregate roles that extend existing clusterroles to interact with argo-cd crds
-  ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
-  aggregateRoles: false
-  # -- Create cluster admin roles for cluster-wide installation.
-  clusterAdmin:  true
+# -- Array of extra K8s manifests to deploy
+extraObjects: []
+  # - apiVersion: secrets-store.csi.x-k8s.io/v1
+  #   kind: SecretProviderClass
+  #   metadata:
+  #     name: argocd-secrets-store
+  #   spec:
+  #     provider: aws
+  #     parameters:
+  #       objects: |
+  #         - objectName: "argocd"
+  #           objectType: "secretsmanager"
+  #           jmesPath:
+  #               - path: "client_id"
+  #                 objectAlias: "client_id"
+  #               - path: "client_secret"
+  #                 objectAlias: "client_secret"
+  #     secretObjects:
+  #     - data:
+  #       - key: client_id
+  #         objectName: client_id
+  #       - key: client_secret
+  #         objectName: client_secret
+  #       secretName: argocd-secrets-store
+  #       type: Opaque
+  #       labels:
+  #         app.kubernetes.io/part-of: argocd
 
 ## Argo Configs
 configs:
@@ -721,34 +750,6 @@ configs:
     #    background: linear-gradient(to bottom, #999, #777, #333, #222, #111);
     #  }
 
-# -- Array of extra K8s manifests to deploy
-extraObjects: []
-  # - apiVersion: secrets-store.csi.x-k8s.io/v1
-  #   kind: SecretProviderClass
-  #   metadata:
-  #     name: argocd-secrets-store
-  #   spec:
-  #     provider: aws
-  #     parameters:
-  #       objects: |
-  #         - objectName: "argocd"
-  #           objectType: "secretsmanager"
-  #           jmesPath:
-  #               - path: "client_id"
-  #                 objectAlias: "client_id"
-  #               - path: "client_secret"
-  #                 objectAlias: "client_secret"
-  #     secretObjects:
-  #     - data:
-  #       - key: client_id
-  #         objectName: client_id
-  #       - key: client_secret
-  #         objectName: client_secret
-  #       secretName: argocd-secrets-store
-  #       type: Opaque
-  #       labels:
-  #         app.kubernetes.io/part-of: argocd
-
 ## Controller
 controller:
   # -- Application controller name string
@@ -1178,6 +1179,44 @@ server:
   #   - name: copy-portal-skins
   #     mountPath: /srv/var/lib/lemonldap-ng/portal/skins
 
+  # Server UI extensions
+  ## Ref: https://github.com/argoproj-labs/argocd-extensions
+  extensions:
+    # -- Enable support for extensions
+    ## This function in tech preview stage, do expect unstability or breaking changes in newer versions. Bump image.tag if necessary.
+    enabled: false
+
+    image:
+      # -- Repository to use for extensions image
+      repository: ghcr.io/argoproj-labs/argocd-extensions
+      # -- Tag to use for extensions image
+      tag: v0.1.0
+      # -- Image pull policy for extensions
+      # @default -- `""` (defaults to global.image.imagePullPolicy)
+      imagePullPolicy: ""
+
+    # -- Extensions to be loaded into the server
+    contents: []
+    # - name: argo-rollouts
+    #   url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.2.1/extension.tar
+
+    # -- Server UI extensions container-level security context
+    # @default -- See [values.yaml]
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - "ALL"
+
+    # -- Resource limits and requests for the argocd-extensions container
+    resources: {}
+    #  limits:
+    #    cpu: 50m
+    #    memory: 128Mi
+    #  requests:
+    #    cpu: 10m
+    #    memory: 64Mi
+
   # -- Priority class for the Argo CD server
   priorityClassName: ""
 
@@ -1470,42 +1509,6 @@ server:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
-  # Server UI extensions
-  ## Ref: https://github.com/argoproj-labs/argocd-extensions
-  extensions:
-    # -- Enable support for extensions
-    ## This function in tech preview stage, do expect unstability or breaking changes in newer versions. Bump image.tag if necessary.
-    enabled: false
-
-    image:
-      # -- Repository to use for extensions image
-      repository: ghcr.io/argoproj-labs/argocd-extensions
-      # -- Tag to use for extensions image
-      tag: v0.1.0
-      # -- Image pull policy for extensions
-      imagePullPolicy: IfNotPresent
-
-    # -- Extensions to be loaded into the server
-    contents: []
-    # - name: argo-rollouts
-    #   url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.2.1/extension.tar
-
-    # -- Server UI extensions container-level security context
-    # @default -- See [values.yaml]
-    containerSecurityContext:
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop:
-          - "ALL"
-
-    # -- Resource limits and requests for the argocd-extensions container
-    resources: {}
-    #  limits:
-    #    cpu: 50m
-    #    memory: 128Mi
-    #  requests:
-    #    cpu: 10m
-    #    memory: 64Mi
 
 ## Repo Server
 repoServer:
@@ -1754,17 +1757,6 @@ repoServer:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
-  # Init container to copy argocd binary
-  copyutil:
-    # -- Resource limits and requests for the copyutil initContainer
-    resources: {}
-    #  limits:
-    #    cpu: 50m
-    #    memory: 64Mi
-    #  requests:
-    #    cpu: 10m
-    #    memory: 32Mi
-
 ## ApplicationSet controller
 applicationSet:
   # -- Enable application set controller
@@ -1880,6 +1872,7 @@ applicationSet:
     successThreshold: 1
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+
   # -- Resource limits and requests for the application set controller pods
   resources: {}
     # limits:
