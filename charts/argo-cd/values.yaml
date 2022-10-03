@@ -211,12 +211,6 @@ configs:
     ## Server properties
     # -- Run server without TLS
     server.insecure: false
-    # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
-    server.basehref: /
-    # -- Used if Argo CD is running behind reverse proxy under subpath different from /
-    server.rootpath: ''
-    # -- Directory path that contains additional static assets
-    server.staticassets: /shared/app
     # -- Disable Argo CD RBAC for user authentication
     server.disable.auth: false
     # -- Enable GZIP compression
@@ -742,7 +736,7 @@ configs:
       #         ]
       #       }]
 
-  # -- Define custom [CSS styles] for your argo instance.
+  # -- Define custom [CSS styles] for your Argo instance.
   # This setting will automatically mount the provided CSS and reference it in the argo configuration.
   # @default -- `""` (See [values.yaml])
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
@@ -1518,7 +1512,6 @@ server:
     annotations: {}
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
-
 
 ## Repo Server
 repoServer:
@@ -2792,19 +2785,3 @@ redis-ha:
     # -- Enforcement policy, hard or soft
     # @default -- `""` (defaults to `ScheduleAnyway`)
     whenUnsatisfiable: ""
-
-# External Redis parameters
-externalRedis:
-  # -- External Redis server host
-  host: ""
-  # -- External Redis username
-  username: ""
-  # -- External Redis password
-  password: ""
-  # -- External Redis server port
-  port: 6379
-  # -- The name of an existing secret with Redis credentials (must contain key `redis-password`).
-  # When it's set, the `externalRedis.password` parameter is ignored
-  existingSecret: ""
-  # -- External Redis Secret annotations
-  secretAnnotations: {}

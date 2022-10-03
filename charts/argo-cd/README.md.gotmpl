@@ -106,29 +106,34 @@ This version contains **major** refactoring that consolidates all the components
 for the sake of ease of use and further maintainability. Plase review thoroughly new [values.yaml]
 structure to align your configuration during the upgrade.
 
-Config categories:
-  - cm - General Argo CD config
-  - params - Arguments passed to controllers
-  - rbac - Argo CD RBAC definitions
-  - creds - Cluster and repository credentials
-  - secret - Additional secrets for third-party integrations
-  - gpg - GnuPG keyring configuration for commit signing
-  - ssh - SSH known hosts configuration
-  - tls - TLS certificates configuration
-  - notifications - Notifications services configuration
+#### Config categories
 
-Naming conventions:
-  - Components now use same names for the same things across whole chart
-  - The `args` and `extraArgs` renamed to `args`
-  - The `env` and `extraEnv` renamed to `env`
+* cm - General Argo CD config
+* params - Arguments passed to controllers
+* rbac - Argo CD RBAC definitions
+* creds - Cluster and repository credentials
+* secret - Additional secrets for third-party integrations
+* gpg - GnuPG keyring configuration for commit signing
+* ssh - SSH known hosts configuration
+* tls - TLS certificates configuration
+* notifications - Notifications services configuration
+* styles - Custom CSS styles for Argo instance
 
-Enhacements and fixes:
-  - Chart should be fully aligned with upstream Argo CD manifests
-  - New `global.domain` options acts as a default through all components
-  - Reworked ingress to provide above capability and automatic annotations for ingress controllers
-  - Cluster-wide installation now properly watches Application resources in other namespaces
-  - ApplicationSet and Notification controllers are now first-class citizens along other components
-  - Service account API tokens can be properly mounted in all deployments
+#### Naming conventions
+
+* Components now use same names for the same things across whole chart
+* The `args` and `extraArgs` renamed to `args`
+* The `env` and `extraEnv` renamed to `env`
+* The `additionalLabels` renamed to `labels`
+
+#### Enhancements and fixes
+
+* Chart should be fully aligned with upstream Argo CD manifests
+* New `global.domain` options acts as a default through all components
+* Reworked ingress to provide above capability and automatic annotations for ingress controllers
+* Cluster-wide installation now properly watches Application resources in other namespaces
+* ApplicationSet and Notification controllers are now first-class citizens along other components
+* Service account API tokens can be properly mounted in all deployments
 
 ### 5.5.0
 
@@ -358,10 +363,17 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}
-  {{- if not (or  (hasPrefix "configs" .Key) (hasPrefix "controller" .Key) (hasPrefix "repoServer" .Key) (hasPrefix "server" .Key) (hasPrefix "dex" .Key) (hasPrefix "redis" .Key) (hasPrefix "externalRedis" .Key) (hasPrefix "applicationSet" .Key) (hasPrefix "notifications" .Key) ) }}
+  {{- if not (or  (hasPrefix "global" .Key) (hasPrefix "configs" .Key) (hasPrefix "controller" .Key) (hasPrefix "server" .Key) (hasPrefix "repoServer" .Key) (hasPrefix "applicationSet" .Key) (hasPrefix "notifications" .Key) (hasPrefix "dex" .Key) (hasPrefix "redis" .Key) ) }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
-  {{- if hasPrefix "server.additional" .Key }}
+{{- end }}
+
+## Global Configs
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "global" .Key }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
@@ -386,6 +398,34 @@ NAME: my-release
   {{- end }}
 {{- end }}
 
+## Argo Server
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if and (hasPrefix "server" .Key) (not (hasPrefix "server.additional" .Key)) }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+### Using AWS ALB Ingress Controller With GRPC
+
+If you are using an AWS ALB Ingress controller, you will need to set `server.ingressGrpc.isAWSALB` to `true`. This will create a second service with the annotation `alb.ingress.kubernetes.io/backend-protocol-version: HTTP2` and modify the server ingress to add a condition annotation to route GRPC traffic to the new service.
+
+Example:
+
+```yaml
+server:
+  ingress:
+    enabled: true
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internal
+      alb.ingress.kubernetes.io/target-type: ip
+    alb:
+      enabled: true
+      serviceType: ClusterIP
+```
+
 ## Argo Repo Server
 
 | Key | Type | Default | Description |
@@ -396,12 +436,22 @@ NAME: my-release
   {{- end }}
 {{- end }}
 
-## Argo Server
+## ApplicationSet
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}
-  {{- if and (hasPrefix "server" .Key) (not (hasPrefix "server.additional" .Key)) }}
+  {{- if hasPrefix "applicationSet" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+## Notifications
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "notifications" .Key }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
@@ -449,53 +499,57 @@ The main options are listed here:
 
 ### Option 3 - External Redis
 
-If you want to use an existing Redis (eg. a managed service from a cloud provider), you can use these parameters:
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-{{- range .Values }}
-  {{- if hasPrefix "externalRedis" .Key }}
-| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
-  {{- end }}
-{{- end }}
-
-## ApplicationSet
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-{{- range .Values }}
-  {{- if hasPrefix "applicationSet" .Key }}
-| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
-  {{- end }}
-{{- end }}
-
-## Notifications
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-{{- range .Values }}
-  {{- if hasPrefix "notifications" .Key }}
-| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
-  {{- end }}
-{{- end }}
-
-
-### Using AWS ALB Ingress Controller With GRPC
-
-If you are using an AWS ALB Ingress controller, you will need to set `server.ingressGrpc.isAWSALB` to `true`. This will create a second service with the annotation `alb.ingress.kubernetes.io/backend-protocol-version: HTTP2` and modify the server ingress to add a condition annotation to route GRPC traffic to the new service.
-
-Example:
+If you want to use an existing Redis (eg. a managed service from a cloud provider), you can use following configuration:
 
 ```yaml
+configs:
+  params:
+    redis.server: external-redis:6379
+  secrets:
+    redis.username: admin
+    redis.password: admin
+
+redis:
+  enabled: false
+
+controller:
+  env:
+    - name: REDIS_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: argocd-secret
+          key: redis.username
+    - name: REDIS_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: argocd-secret
+          key: redis.password
+
 server:
-  ingress:
-    enabled: true
-    annotations:
-      alb.ingress.kubernetes.io/scheme: internal
-      alb.ingress.kubernetes.io/target-type: ip
-    alb:
-      enabled: true
-      serviceType: ClusterIP
+  env:
+    - name: REDIS_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: argocd-secret
+          key: redis.username
+    - name: REDIS_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: argocd-secret
+          key: redis.password
+
+repoServer:
+  env:
+    - name: REDIS_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: argocd-secret
+          key: redis.username
+    - name: REDIS_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: argocd-secret
+          key: redis.password
 ```
 
 ----------------------------------------------

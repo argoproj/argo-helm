@@ -266,8 +266,6 @@ Return Redis server endpoint
 {{- $redisHa := (index .Values "redis-ha") }}
 {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
     {{- printf "%s:%d" (include "argo-cd.redis.fullname" .)  (int .Values.redis.service.ports.redis) }}
-{{- else if and .Values.externalRedis.host .Values.externalRedis.port }}
-    {{- printf "%s:%d" .Values.externalRedis.host (int .Values.externalRedis.port) }}
 {{- end }}
 {{- end }}
 
@@ -308,11 +306,9 @@ Argo Params Default Configuration Presets
 */}}
 {{- define "argo-cd.config.params.presets" -}}
 repo.server: {{ include "argo-cd.repoServer.server" . }}
-{{- with include "argo-cd.redis.server" . }}
-redis.server: {{ . | quote }}
-{{- end }}
+redis.server: {{ include "argo-cd.redis.server" . | quote }}
 {{- if .Values.dex.enabled }}
-server.dex.server: "{{ include "argo-cd.dex.server" . }}"
+server.dex.server: {{ include "argo-cd.dex.server" . | quote }}
 {{- end }}
 {{- range $component := tuple "controller" "server" "reposerver" }}
 {{ $component }}.log.format: {{ $.Values.global.logging.format | quote }}
