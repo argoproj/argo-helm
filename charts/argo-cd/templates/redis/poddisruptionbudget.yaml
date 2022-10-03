@@ -1,6 +1,6 @@
 {{- $redisHa := index .Values "redis-ha" -}}
 {{- if and .Values.redis.enabled (not $redisHa.enabled) .Values.redis.pdb.enabled }}
-apiVersion: {{ include "argo-cd.apiVersion.podDisruptionBudget" . }}
+apiVersion: {{ include "argo-cd.apiVersion.pdb" . }}
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "argo-cd.redis.fullname" . }}

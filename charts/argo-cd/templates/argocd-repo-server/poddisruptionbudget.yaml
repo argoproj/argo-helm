@@ -1,5 +1,5 @@
 {{- if .Values.repoServer.pdb.enabled }}
-apiVersion: {{ include "argo-cd.apiVersion.podDisruptionBudget" . }}
+apiVersion: {{ include "argo-cd.apiVersion.pdb" . }}
 kind: PodDisruptionBudget
 metadata:
   name: {{ template "argo-cd.repoServer.fullname" . }}
