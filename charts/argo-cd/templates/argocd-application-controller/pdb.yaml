@@ -15,12 +15,10 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- if .Values.controller.pdb.minAvailable }}
-  minAvailable: {{ .Values.controller.pdb.minAvailable }}
-  {{- else if .Values.controller.pdb.maxUnavailable }}
+  {{- if .Values.controller.pdb.maxUnavailable }}
   maxUnavailable: {{ .Values.controller.pdb.maxUnavailable }}
   {{- else }}
-  minAvailable: 0
+  minAvailable: {{ .Values.controller.pdb.minAvailable | default 0 }}
   {{- end }}
   selector:
     matchLabels:

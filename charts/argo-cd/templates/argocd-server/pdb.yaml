@@ -2,23 +2,23 @@
 apiVersion: {{ include "argo-cd.apiVersion.pdb" . }}
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "argo-cd.server.fullname" . }}
+  name: {{ include "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
-  {{- with .Values.server.pdb.labels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- with .Values.server.pdb.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.server.pdb.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
   {{- end }}
 spec:
-  {{- if .Values.server.pdb.minAvailable }}
-  minAvailable: {{ .Values.server.pdb.minAvailable }}
-  {{- else if .Values.server.pdb.maxUnavailable }}
+  {{- if .Values.server.pdb.maxUnavailable }}
   maxUnavailable: {{ .Values.server.pdb.maxUnavailable }}
   {{- else }}
-  minAvailable: 0
+  minAvailable: {{ .Values.server.pdb.minAvailable | default 0 }}
   {{- end }}
   selector:
     matchLabels:

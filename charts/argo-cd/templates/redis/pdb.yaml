@@ -17,11 +17,9 @@ metadata:
   {{- end }}
 spec:
   {{- if .Values.redis.pdb.minAvailable }}
-  minAvailable: {{ .Values.redis.pdb.minAvailable }}
-  {{- else if .Values.redis.pdb.maxUnavailable }}
   maxUnavailable: {{ .Values.redis.pdb.maxUnavailable }}
   {{- else }}
-  minAvailable: 0
+  minAvailable: {{ .Values.redis.pdb.minAvailable | default 0 }}
   {{- end }}
   selector:
     matchLabels:

@@ -761,16 +761,20 @@ controller:
   # Additional replicas will cause sharding of managed clusters across number of replicas.
   replicas: 1
 
+  # Pod Disruption Budget configuration
   pdb:
+    # -- Deploy a [PodDisruptionBudget] for the application controller
+    enabled: false
     # -- Labels to be added to application controller pdb
     labels: {}
     # -- Annotations to be added to application controller pdb
     annotations: {}
-
-    # -- Deploy a Poddisruptionbudget for the application controller
-    enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # Takes higher precedence than `controller.pdb.minAvailable`
+    maxUnavailable: ""
 
   image:
     # -- Repository to use for the application controller
@@ -1033,16 +1037,20 @@ server:
       #     value: 2
       #     periodSeconds: 60
 
+  # Pod Disruption Budget configuration
   pdb:
+    # -- Deploy a [PodDisruptionBudget] for the server
+    enabled: false
     # -- Labels to be added to server pdb
     labels: {}
     # -- Annotations to be added to server pdb
     annotations: {}
-
-    # -- Deploy a Poddisruptionbudget for the server
-    enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # Takes higher precedence than `server.pdb.minAvailable`
+    maxUnavailable: ""
 
   image:
     # -- Repository to use for the Argo CD server
@@ -1547,16 +1555,20 @@ repoServer:
       #     value: 2
       #     periodSeconds: 60
 
+  # Pod Disruption Budget configuration
   pdb:
-    # -- Labels to be added to Repo server pdb
-    labels: {}
-    # -- Annotations to be added to Repo server pdb
-    annotations: {}
-
-    # -- Deploy a Poddisruptionbudget for the Repo server
+    # -- Deploy a [PodDisruptionBudget] for the repo server
     enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
+    # -- Labels to be added to repo server pdb
+    labels: {}
+    # -- Annotations to be added to repo server pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # Takes higher precedence than `repoServer.pdb.minAvailable`
+    maxUnavailable: ""
 
   image:
     # -- Repository to use for the repo server
@@ -1770,16 +1782,20 @@ applicationSet:
   # -- The number of application set controller pods to run.
   replicas: 1
 
+  # Pod Disruption Budget configuration
   pdb:
-    # -- Labels to be added to Repo server pdb
-    labels: {}
-    # -- Annotations to be added to Repo server pdb
-    annotations: {}
-
-    # -- Deploy a Poddisruptionbudget for the Repo server
+    # -- Deploy a [PodDisruptionBudget] for the application set controller
     enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
+    # -- Labels to be added to application set controller pdb
+    labels: {}
+    # -- Annotations to be added to application set controller pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # Takes higher precedence than `applicationSet.pdb.minAvailable`
+    maxUnavailable: ""
 
   image:
     # -- Repository to use for the application set controller
@@ -2040,6 +2056,21 @@ notifications:
   # -- Notifications controller name string
   name: notifications-controller
 
+  # Pod Disruption Budget configuration
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the application set controller
+    enabled: false
+    # -- Labels to be added to application set controller pdb
+    labels: {}
+    # -- Annotations to be added to application set controller pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # Takes higher precedence than `dex.pdb.minAvailable`
+    maxUnavailable: ""
+
   image:
     # -- Repository to use for the notifications controller
     # @default -- `""` (defaults to global.image.repository)
@@ -2281,15 +2312,20 @@ dex:
   # -- Dex name
   name: dex-server
 
+  # Pod Disruption Budget configuration
   pdb:
-    # -- Labels to be added to Dex server pdb
-    labels: {}
-    # -- Annotations to be added to Dex server pdb
-    annotations: {}
-    # -- Deploy a [PodDisruptionBudget] for the Dex server
+    # -- Deploy a [PodDisruptionBudget] for the application set controller
     enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
+    # -- Labels to be added to application set controller pdb
+    labels: {}
+    # -- Annotations to be added to application set controller pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # Takes higher precedence than `dex.pdb.minAvailable`
+    maxUnavailable: ""
 
   image:
     # -- Dex image repository
@@ -2498,16 +2534,20 @@ redis:
   # -- Redis name
   name: redis
 
+  # Pod Disruption Budget configuration
   pdb:
-    # -- Labels to be added to Redis server pdb
+    # -- Deploy a [PodDisruptionBudget] for the Redis
+    enabled: true
+    # -- Labels to be added to redis pdb
     labels: {}
-    # -- Annotations to be added to Redis server pdb
+    # -- Annotations to be added to redis pdb
     annotations: {}
-
-    # -- Deploy a Poddisruptionbudget for the Redis server
-    enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # Takes higher precedence than `dex.pdb.minAvailable`
+    maxUnavailable: ""
 
   # Redis image
   image:
