@@ -130,7 +130,8 @@ structure to align your configuration during the upgrade.
 #### Enhancements and fixes
 
 * Chart should be fully aligned with upstream Argo CD manifests
-* New `global.domain` options acts as a default through all components
+* New `global.domain` option acts as a default through all components
+* New `global.affinity` option to set default affinity rules
 * Reworked ingress to provide above capability and automatic annotations for ingress controllers
 * Cluster-wide installation now properly watches Application resources in other namespaces
 * ApplicationSet and Notification controllers are now first-class citizens along other components
@@ -380,6 +381,9 @@ NAME: my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| global.affinity.nodeAffinity.matchExpressions | list | `[]` | Default match expressions for node affinity |
+| global.affinity.nodeAffinity.type | string | `"hard"` | Default node affinity rules. Either: `soft` or `hard` |
+| global.affinity.podAntiAffinity | string | `"soft"` | Default pod anti-affinity rules. Either: `soft` or `hard` |
 | global.domain | string | `"argocd.server.local"` | Default domain used for all components |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
@@ -458,7 +462,7 @@ NAME: my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| controller.affinity | object | `{}` (defaults to `global.affinity` presets) | Assign custom [affinity] rules to the deployment |
 | controller.args | list | `[]` | Application controller commandline flags |
 | controller.clusterAdminRbac.enabled | bool | `false` | Enable custom RBAC rules when `rbac.clusterAdmin` is enabled |
 | controller.clusterAdminRbac.rules | list | `[]` | List of custom ClusterRole rules for controller |
@@ -525,7 +529,7 @@ NAME: my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| server.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| server.affinity | object | `{}` (defaults to `global.affinity` presets) | Assign custom [affinity] rules to the deployment |
 | server.args | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. This is only available on HPA apiVersion `autoscaling/v2beta2` and newer |
 | server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo CD server |
@@ -676,7 +680,7 @@ server:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| repoServer.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| repoServer.affinity | object | `{}` (defaults to `global.affinity` presets) | Assign custom [affinity] rules to the deployment |
 | repoServer.args | list | `[]` | Additional command line arguments to pass to repo server |
 | repoServer.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. This is only available on HPA apiVersion `autoscaling/v2beta2` and newer |
 | repoServer.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the repo server |
@@ -748,7 +752,7 @@ server:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| applicationSet.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| applicationSet.affinity | object | `{}` (defaults to `global.affinity` presets) | Assign custom [affinity] rules to the deployment |
 | applicationSet.args | list | `[]` | Additional command line arguments to pass to application set controller |
 | applicationSet.containerPorts.metrics | int | `8080` | Metrics container port |
 | applicationSet.containerPorts.probe | int | `8081` | Probe container port |
@@ -830,9 +834,9 @@ server:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| notifications.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| notifications.affinity | object | `{}` (defaults to `global.affinity` presets) | Assign custom [affinity] rules to the deployment |
 | notifications.args | list | `[]` | Additional command line arguments to pass to notifications controller |
-| notifications.bots.slack.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| notifications.bots.slack.affinity | object | `{}` (defaults to `global.affinity` presets) | Assign custom [affinity] rules to the deployment |
 | notifications.bots.slack.containerSecurityContext | object | See [values.yaml] | Slack bot container-level security Context |
 | notifications.bots.slack.enabled | bool | `false` | Enable Slack bot |
 | notifications.bots.slack.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Slack bot |
@@ -910,7 +914,7 @@ server:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| dex.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| dex.affinity | object | `{}` (defaults to `global.affinity` presets) | Assign custom [affinity] rules to the deployment |
 | dex.args | list | `[]` | Additional command line arguments to pass to the Dex server |
 | dex.containerSecurityContext | object | See [values.yaml] | Dex container-level security context |
 | dex.enabled | bool | `true` | Enable dex |
@@ -980,7 +984,7 @@ server:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| redis.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| redis.affinity | object | `{}` (defaults to `global.affinity` presets) | Assign custom [affinity] rules to the deployment |
 | redis.args | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.containerPorts.metrics | int | `9121` | Metrics container port |
 | redis.containerPorts.redis | int | `6379` | Redis container port |

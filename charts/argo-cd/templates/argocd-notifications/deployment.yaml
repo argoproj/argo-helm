@@ -102,10 +102,8 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.notifications.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- include "argo-cd.affinity" (dict "context" . "component" .Values.notifications) | nindent 8 }}
       {{- with .Values.notifications.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}

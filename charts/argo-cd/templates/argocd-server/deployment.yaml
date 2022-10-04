@@ -337,10 +337,8 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- include "argo-cd.affinity" (dict "context" . "component" .Values.server) | nindent 8 }}
       {{- with .Values.server.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}

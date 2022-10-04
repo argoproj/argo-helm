@@ -128,10 +128,8 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.applicationSet.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- include "argo-cd.affinity" (dict "context" . "component" .Values.applicationSet) | nindent 8 }}
       {{- with .Values.applicationSet.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}

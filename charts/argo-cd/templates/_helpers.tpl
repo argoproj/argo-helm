@@ -65,6 +65,57 @@ app.kubernetes.io/component: {{ .component }}
 {{- end }}
 
 {{/*
+Common affinity definition
+*/}}
+{{- define "argo-cd.affinity" -}}
+{{- with .component.affinity -}}
+  {{- toYaml . }}
+{{- else -}}
+{{- $affinityPreset := .context.Values.global.affinity -}}
+podAntiAffinity:
+  preferredDuringSchedulingIgnoredDuringExecution:
+  - weight: 5
+    podAffinityTerm:
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/part-of: argocd
+      topologyKey: kubernetes.io/hostname
+  {{- if (eq $affinityPreset.podAntiAffinity "soft") }}
+  - weight: 100
+    podAffinityTerm:
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .component.name }}
+          app.kubernetes.io/component: {{ .component.name }}
+      topologyKey: kubernetes.io/hostname
+  {{- end }}
+  {{- if (eq $affinityPreset.podAntiAffinity "hard") }}
+  requiredDuringSchedulingIgnoredDuringExecution:
+  - labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .component.name }}
+        app.kubernetes.io/component: {{ .component.name }}
+      topologyKey: kubernetes.io/hostname
+  {{- end }}
+{{- with $affinityPreset.nodeAffinity.matchExpressions }}
+nodeAffinity:
+  {{- if (eq $affinityPreset.nodeAffinity.type "soft") }}
+  preferredDuringSchedulingIgnoredDuringExecution:
+  - weight: 1
+    preference:
+      matchExpressions:
+      {{- toYaml . | nindent 6 }}
+  {{- else }}
+  requiredDuringSchedulingIgnoredDuringExecution:
+    nodeSelectorTerms:
+    - matchExpressions:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
+{{- end }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Common ingress backend defintion
 */}}
 {{- define "argo-cd.ingressBackend" -}}

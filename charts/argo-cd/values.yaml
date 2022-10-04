@@ -41,6 +41,10 @@ global:
   ## Used for ingresses, certificates, SSO, notifications, etc.
   domain: argocd.server.local
 
+  # -- Common labels for the all resources
+  labels: {}
+    # app: argo-cd
+
   # Default image used by all components
   image:
     # -- If defined, a repository applied to all Argo CD deployments
@@ -52,10 +56,6 @@ global:
 
   # -- If defined, uses a Secret to pull an image from a private Docker registry or repository
   imagePullSecrets: []
-
-  # -- Common labels for the all resources
-  labels: {}
-    # app: argo-cd
 
   # -- Annotations for the all deployed pods
   podAnnotations: {}
@@ -85,6 +85,22 @@ global:
     create: false
     # -- Default deny all ingress traffic
     defaultDenyIngress: false
+
+  # Affinity for all components
+  affinity:
+    # -- Default pod anti-affinity rules. Either: `soft` or `hard`
+    podAntiAffinity: soft
+    # Node affinity rules
+    nodeAffinity:
+      # -- Default node affinity rules. Either: `soft` or `hard`
+      type: hard
+      # -- Default match expressions for node affinity
+      matchExpressions: []
+      # - key: topology.kubernetes.io/zone
+      #   operator: In
+      #   values:
+      #    - antarctica-east1
+      #    - antarctica-west1
 
   # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
   hostAliases: []
@@ -892,6 +908,7 @@ controller:
   tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to `global.affinity` presets)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the application controller
@@ -1231,6 +1248,7 @@ server:
   tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to `global.affinity` presets)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the Argo CD server
@@ -1688,6 +1706,7 @@ repoServer:
   tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to `global.affinity` presets)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the repo server
@@ -1913,6 +1932,7 @@ applicationSet:
   tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to `global.affinity` presets)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the application set controller
@@ -2172,6 +2192,7 @@ notifications:
   tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to `global.affinity` presets)
   affinity: {}
 
   # The optional bot component simplifies managing subscriptions
@@ -2231,6 +2252,7 @@ notifications:
       tolerations: []
 
       # -- Assign custom [affinity] rules to the deployment
+      # @default -- `{}` (defaults to `global.affinity` presets)
       affinity: {}
 
       service:
@@ -2450,6 +2472,7 @@ dex:
   tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to `global.affinity` presets)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to dex
@@ -2666,6 +2689,7 @@ redis:
   tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to `global.affinity` presets)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to redis
