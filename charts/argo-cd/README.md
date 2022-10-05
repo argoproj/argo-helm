@@ -101,7 +101,7 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVer
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
 
-### 5.4.0
+### 5.5.0
 
 This version introduces new `configs.params` section that replaces command line arguments for containers.
 Please refer to documentation in values.yaml for migrating the configuration.
@@ -699,7 +699,7 @@ NAME: my-release
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
-| dex.image.tag | string | `"v2.32.0"` | Dex image tag |
+| dex.image.tag | string | `"v2.35.0-distroless"` | Dex image tag |
 | dex.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
