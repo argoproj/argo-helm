@@ -12,3 +12,7 @@ helm repo add argo https://argoproj.github.io/argo-helm
 ## Contributing
 
 We'd love to have you contribute! Please refer to our [contribution guidelines](CONTRIBUTING.md) for details.
+
+## Security Policy
+
+If you have a security concern relating to either this project repo or an individual helm chart, please [open an issue](https://github.com/argoproj/argo-helm/issues/new/choose) or [start a discussion](https://github.com/argoproj/argo-helm/discussions/new).
