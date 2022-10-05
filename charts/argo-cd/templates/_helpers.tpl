@@ -276,10 +276,10 @@ Create dex name and version as used by the chart label.
 Create Dex server endpoint
 */}}
 {{- define "argo-cd.dex.server" -}}
-{{- $disable := index .Values.configs.params "dexserver.disable.tls" | toString }}
-{{- $scheme := (eq $disable "true") | ternary "http" "https" }}
-{{- $host := include "argo-cd.dex.fullname" . }}
-{{- $port := int .Values.dex.service.ports.http }}
+{{- $disable := index .Values.configs.params "dexserver.disable.tls" | toString -}}
+{{- $scheme := (eq $disable "true") | ternary "http" "https" -}}
+{{- $host := include "argo-cd.dex.fullname" . -}}
+{{- $port := int .Values.dex.service.ports.http -}}
 {{/* Use scheme in Argo CD 2.5.x */}}
 {{- printf "http://%s:%d" $host $port }}
 {{- end }}
