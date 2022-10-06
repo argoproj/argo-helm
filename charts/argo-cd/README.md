@@ -953,6 +953,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.enabled | bool | `true` | Enable Notifications controller |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
+| notifications.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
 | notifications.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | notifications.extraVolumes | list | `[]` | List of extra volumes to add |
 | notifications.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the notifications controller |

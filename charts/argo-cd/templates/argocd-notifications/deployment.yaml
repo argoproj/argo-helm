@@ -60,7 +60,12 @@ spec:
           securityContext: {{- toYaml .Values.notifications.containerSecurityContext | nindent 12 }}
           {{- end }}
           {{- with .Values.notifications.extraEnv }}
-          env: {{ toYaml . | nindent 12 }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.notifications.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
             - name: tls-certs
