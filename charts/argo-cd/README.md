@@ -829,9 +829,8 @@ server:
 | applicationSet.serviceAccount.name | string | `""` | Application set service account name |
 | applicationSet.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | applicationSet.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the application set controller |
-| applicationSet.volumeMounts | list | `[]` | Additional volumes to the application set controller pod |
-| applicationSet.volumes | list | `[]` | Additional volumeMounts to the application set main container |
-| applicationSet.volumes | list | `[]` |  |
+| applicationSet.volumeMounts | list | `[]` | Additional volumeMounts to the application set main container |
+| applicationSet.volumes | list | `[]` | Additional volumes to the application set controller pod |
 
 ## Notifications
 
