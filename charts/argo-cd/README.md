@@ -462,6 +462,7 @@ NAME: my-release
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the application controller |
+| controller.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | controller.serviceAccount.name | string | `"argocd-application-controller"` | Service account name |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the application controller |
@@ -677,6 +678,7 @@ NAME: my-release
 | server.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | server.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | server.serviceAccount.create | bool | `true` | Create server service account |
+| server.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | server.serviceAccount.name | string | `"argocd-server"` | Server service account name |
 | server.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | server.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the Argo CD server |
@@ -908,6 +910,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.service.portName | string | `"webhook"` | Application set service port name |
 | applicationSet.serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | applicationSet.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| applicationSet.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | applicationSet.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | applicationSet.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | applicationSet.webhook.ingress.annotations | object | `{}` | Additional ingress annotations |

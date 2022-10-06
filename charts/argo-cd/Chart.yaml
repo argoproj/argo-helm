@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v2.4.13
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.5.8
+version: 5.5.9
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -22,4 +22,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Fixed]: Upgrade Dex to v2.35.0 to avoid CVE-2022-39222 and update app version to v2.4.13"
+    - "[Added]: Allow labels to be set on service accounts"
