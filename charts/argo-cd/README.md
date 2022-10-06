@@ -652,6 +652,7 @@ NAME: my-release
 | server.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | server.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | server.serviceAccount.create | bool | `true` | Create server service account |
+| server.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | server.serviceAccount.name | string | `""` | Server service account name |
 | server.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | server.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the Argo CD server |
@@ -742,6 +743,7 @@ server:
 | repoServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | repoServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | repoServer.serviceAccount.create | bool | `true` | Create repo server service account |
+| repoServer.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | repoServer.serviceAccount.name | string | `""` | Repo server service account name |
 | repoServer.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | repoServer.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the repo server |
@@ -823,12 +825,13 @@ server:
 | applicationSet.serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | applicationSet.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | applicationSet.serviceAccount.create | bool | `true` | Create a service account for the applicationset controller |
+| applicationSet.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | applicationSet.serviceAccount.name | string | `""` | Application set service account name |
 | applicationSet.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | applicationSet.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the application set controller |
 | applicationSet.volumeMounts | list | `[]` | Additional volumes to the application set controller pod |
-| applicationSet.volumes | list | `[]` |  |
 | applicationSet.volumes | list | `[]` | Additional volumeMounts to the application set main container |
+| applicationSet.volumes | list | `[]` |  |
 
 ## Notifications
 
@@ -855,6 +858,7 @@ server:
 | notifications.bots.slack.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.bots.slack.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | notifications.bots.slack.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| notifications.bots.slack.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | notifications.bots.slack.serviceAccount.name | string | `""` | Slack bot service account name |
 | notifications.bots.slack.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.containerPorts.metrics | int | `9001` | Metrics container port |
@@ -905,6 +909,7 @@ server:
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | notifications.serviceAccount.create | bool | `true` | Create a service account for the notification controller |
+| notifications.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | notifications.serviceAccount.name | string | `""` | Notification controller service account name |
 | notifications.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.volumeMounts | list | `[]` | Additional volume mounts to the notifications controller pod |
@@ -972,6 +977,7 @@ server:
 | dex.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | dex.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | dex.serviceAccount.create | bool | `true` | Create dex service account |
+| dex.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | dex.serviceAccount.name | string | `""` | Dex service account name |
 | dex.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | dex.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to dex |
@@ -1037,6 +1043,7 @@ server:
 | redis.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | redis.serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account |
 | redis.serviceAccount.create | bool | `true` | Create a service account for the redis pod |
+| redis.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | redis.serviceAccount.name | string | `""` | Redis service account name |
 | redis.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | redis.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to redis |
