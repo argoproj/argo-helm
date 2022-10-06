@@ -567,7 +567,7 @@ controller:
       spec: []
       # - alert: ArgoAppMissing
       #   expr: |
-      #     absent(argocd_app_info)
+      #     absent(argocd_app_info) == 1
       #   for: 15m
       #   labels:
       #     severity: critical
