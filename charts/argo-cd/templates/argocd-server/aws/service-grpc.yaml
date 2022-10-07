@@ -11,14 +11,14 @@ spec:
   type: {{ .Values.server.ingress.alb.serviceType }}
   sessionAffinity: None
   ports:
-  - name: {{ .Values.server.service.servicePortHttpName }}
+  - name: http
     protocol: TCP
-    port: {{ .Values.server.service.servicePortHttp }}
-    targetPort: {{ .Values.server.service.namedTargetPort | ternary .Values.server.name .Values.server.containerPort }}
-  - name: {{ .Values.server.service.servicePortHttpsName }}
+    port: {{ .Values.server.service.ports.http }}
+    targetPort: {{ .Values.server.containerPorts.server }}
+  - name: https
     protocol: TCP
-    port: {{ .Values.server.service.servicePortHttps }}
-    targetPort: {{ .Values.server.service.namedTargetPort | ternary .Values.server.name .Values.server.containerPort }}
+    port: {{ .Values.server.service.ports.https }}
+    targetPort: {{ .Values.server.containerPorts.server }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
 {{- end -}}

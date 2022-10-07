@@ -1390,7 +1390,7 @@ server:
       ## Can be of type `ClusterIP` or `NodePort``depending on which mode you are
       ## are running. Instance mode needs NodePort, IP mode needs ClusterIP
       ## Ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/how-it-works/#ingress-traffic
-      serviceType: ClusterIP
+      serviceType: NodePort
       # -- Backend protocol version for the AWS ALB gRPC service
       ## This tells AWS to send traffic from the ALB using HTTP2. Can use gRPC as well if you want to leverage gRPC specific features
       backendProtocolVersion: HTTP2

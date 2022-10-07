@@ -574,7 +574,7 @@ NAME: my-release
 | server.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | server.ingress.alb.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB gRPC service |
 | server.ingress.alb.enabled | bool | `false` | Enable Amazon Load Balancer features |
-| server.ingress.alb.serviceType | string | `"ClusterIP"` | Service type for the AWS ALB gRPC service |
+| server.ingress.alb.serviceType | string | `"NodePort"` | Service type for the AWS ALB gRPC service |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
 | server.ingress.extraHosts | list | `[]` (See [values.yaml]) | List of additional hosts |
