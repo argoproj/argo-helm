@@ -5,10 +5,10 @@ DEPRECATED option controller.args.statusProcessors - Use configs.params.controll
 DEPRECATED option controller.args.operationProcessors - Use configs.params.controller.operation.processors
 {{- end }}
 {{- if .Values.controller.args.appResyncPeriod }}
-DEPRECATED option controller.args.appResyncPeriod - Use configs.params.timeout.reconciliation
+DEPRECATED option controller.args.appResyncPeriod - Use server.config.timeout.reconciliation
 {{- end }}
 {{- if .Values.controller.args.appHardResyncPeriod }}
-DEPRECATED option controller.args.appHardResyncPeriod - Use configs.params.timeout.hard.reconciliation
+DEPRECATED option controller.args.appHardResyncPeriod - Use server.config.timeout.hard.reconciliation
 {{- end }}
 {{- if .Values.controller.args.selfHealTimeout }}
 DEPRECATED option controller.args.selfHealTimeout -  Use configs.params.controller.self.heal.timeout.seconds

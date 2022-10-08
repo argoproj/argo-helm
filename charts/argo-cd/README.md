@@ -377,8 +377,6 @@ NAME: my-release
 | configs.params."server.rootpath" | string | `""` | Used if Argo CD is running behind reverse proxy under subpath different from / |
 | configs.params."server.staticassets" | string | `"/shared/app"` | Directory path that contains additional static assets |
 | configs.params."server.x.frame.options" | string | `"sameorigin"` | Set X-Frame-Options header in HTTP responses to value. To disable, set to "". |
-| configs.params."timeout.hard.reconciliation" | int | `0` | Time period in seconds for application hard resync |
-| configs.params."timeout.reconciliation" | int | `180` | Time period in seconds for application resync |
 | configs.params.annotations | object | `{}` | Annotations to be added to the argocd-cmd-params-cm ConfigMap |
 | configs.repositories | object | `{}` | Repositories list to be used by applications |
 | configs.repositoriesAnnotations | object | `{}` | Annotations to be added to `configs.repositories` Secret |

@@ -299,10 +299,6 @@ configs:
     ## Generic parameters
     # -- Open-Telemetry collector address: (e.g. "otel-collector:4317")
     otlp.address: ''
-    # -- Time period in seconds for application resync
-    timeout.reconciliation: 180
-    # -- Time period in seconds for application hard resync
-    timeout.hard.reconciliation: 0
 
     ## Controller Properties
     # -- Number of application status processors
@@ -1502,6 +1498,7 @@ server:
   config:
     # Argo CD's externally facing base URL (optional). Required when configuring SSO
     url: ""
+
     # Argo CD instance label key
     application.instanceLabelKey: argocd.argoproj.io/instance
 
@@ -1517,6 +1514,14 @@ server:
     # https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
     admin.enabled: "true"
 
+    # Application reconciliation timeout is the max amount of time required to discover if a new manifests version got
+    # published to the repository. Reconciliation by timeout is disabled if timeout is set to 0. Three minutes by default.
+    timeout.reconciliation: 180s
+
+    # Timeout to refresh application data as well as target manifests cache
+    timeout.hard.reconciliation: "0"
+
+    # Dex configuration
     # dex.config: |
     #   connectors:
     #     # GitHub example
@@ -1529,6 +1534,7 @@ server:
     #         orgs:
     #         - name: your-github-org
 
+    # OIDC configuration as an alternative to dex (optional).
     # oidc.config: |
     #   name: AzureAD
     #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
