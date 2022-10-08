@@ -1588,6 +1588,36 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Updated Redis to 7.0.5 for fixing CVE-2022-35951."
+    apiVersion: v2
+    appVersion: v2.4.14
+    created: "2022-10-08T11:28:44.024677428Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 208d46a102913fb4246981ff560a97a6bef451b4b2a6adb322e3f0b47ccf7230
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.5.13/argo-cd-5.5.13.tgz
+    version: 5.5.13
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Added `envFrom` field to the notifications-controller."
         - "[Changed]: Templating the `env` field in the same way as in the argocd-server."
     apiVersion: v2
@@ -16789,4 +16819,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-10-07T10:52:39.251994081Z"
+generated: "2022-10-08T11:28:44.031609558Z"
