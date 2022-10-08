@@ -20,7 +20,10 @@ jobs:
           fetch-depth: 0
 
       - name: Install Helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
+        with:
+          version: latest # stable
+          token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
 
       - name: Add dependency chart repos
         run: |
@@ -30,15 +33,15 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"  
-          
+
       ## This is required to consider the old Circle-CI Index and to stay compatible with all the old releases.
-      - name: Fetch current Chart Index 
+      - name: Fetch current Chart Index
         run: |
           git checkout origin/gh-pages index.yaml
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.0
-        with: 
+        with:
           config: "./.github/configs/cr.yaml"
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
