@@ -370,6 +370,14 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
+| configs.cm."admin.enabled" | string | `"true"` | Enable local admin user |
+| configs.cm."application.instanceLabelKey" | string | Defaults to app.kubernetes.io/instance | The name of tracking label used by Argo CD for resource pruning |
+| configs.cm."exec.enabled" | string | `"false"` | Enable exec feature in Argo UI |
+| configs.cm."server.rbac.log.enforce.enable" | string | `"false"` | Enable logs RBAC enforcement |
+| configs.cm."timeout.hard.reconciliation" | string | `"0"` | Timeout to refresh application data as well as target manifests cache |
+| configs.cm."timeout.reconciliation" | string | `"180s"` | Timeout to discover if a new manifests version got published to the repository |
+| configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
+| configs.cm.create | bool | `true` | Create the argocd-cm configmap for [Declarative setup] |
 | configs.credentialTemplates | object | `{}` | Repository credentials to be used as Templates for other repos |
 | configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
 | configs.gpgKeys | object | `{}` (See [values.yaml]) | [GnuPG](https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/) keys to add to the key ring |
@@ -390,6 +398,11 @@ NAME: my-release
 | configs.params."server.staticassets" | string | `"/shared/app"` | Directory path that contains additional static assets |
 | configs.params."server.x.frame.options" | string | `"sameorigin"` | Set X-Frame-Options header in HTTP responses to value. To disable, set to "". |
 | configs.params.annotations | object | `{}` | Annotations to be added to the argocd-cmd-params-cm ConfigMap |
+| configs.rbac."policy.csv" | string | `''` (See [values.yaml]) | File containing user-defined policies and role definitions. |
+| configs.rbac."policy.default" | string | `""` | The name of the default role which Argo CD will falls back to, when authorizing API requests (optional). If omitted or empty, users may be still be able to login, but will see no apps, projects, etc... |
+| configs.rbac.annotations | object | `{}` | Annotations to be added to argocd-rbac-cm configmap |
+| configs.rbac.create | bool | `true` | Create the argocd-rbac-cm configmap with ([Argo CD RBAC policy]) definitions. If false, it is expected the configmap will be created by something else. Argo CD will not work if there is no configmap created with the name above. |
+| configs.rbac.scopes | string | `"[groups]"` | OIDC scopes to examine during rbac enforcement (in addition to `sub` scope). The scope value can be a string, or a list of strings. |
 | configs.repositories | object | `{}` | Repositories list to be used by applications |
 | configs.repositoriesAnnotations | object | `{}` | Annotations to be added to `configs.repositories` Secret |
 | configs.secret.annotations | object | `{}` | Annotations to be added to argocd-secret |
@@ -586,9 +599,6 @@ NAME: my-release
 | server.certificate.renewBefore | string | `""` | How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration |
 | server.certificate.secretName | string | `"argocd-server-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
 | server.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
-| server.config | object | See [values.yaml] | [General Argo CD configuration] |
-| server.configAnnotations | object | `{}` | Annotations to be added to Argo CD ConfigMap |
-| server.configEnabled | bool | `true` | Manage Argo CD configmap (Declarative Setup) |
 | server.containerPort | int | `8080` | Configures the server port |
 | server.containerSecurityContext | object | `{}` | Servers container-level security context |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
@@ -659,9 +669,6 @@ NAME: my-release
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
 | server.priorityClassName | string | `""` | Priority class for the Argo CD server |
-| server.rbacConfig | object | `{}` | Argo CD rbac config ([Argo CD RBAC policy]) |
-| server.rbacConfigAnnotations | object | `{}` | Annotations to be added to Argo CD rbac ConfigMap |
-| server.rbacConfigCreate | bool | `true` | Whether or not to create the configmap. If false, it is expected the configmap will be created by something else. Argo CD will not work if there is no configMap created with the name above. |
 | server.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | server.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |

@@ -85,6 +85,138 @@ global:
 
 ## Argo Configs
 configs:
+  # General Argo CD configuration
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+  cm:
+    # -- Create the argocd-cm configmap for [Declarative setup]
+    create: true
+
+    # -- Annotations to be added to argocd-cm configmap
+    annotations: {}
+
+    # -- The name of tracking label used by Argo CD for resource pruning
+    # @default -- Defaults to app.kubernetes.io/instance
+    application.instanceLabelKey: argocd.argoproj.io/instance
+
+    # -- Enable logs RBAC enforcement
+    ## Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.3-2.4/#enable-logs-rbac-enforcement
+    server.rbac.log.enforce.enable: "false"
+
+    # -- Enable exec feature in Argo UI
+    ## Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/rbac/#exec-resource
+    exec.enabled: "false"
+
+    # -- Enable local admin user
+    ## Ref: https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
+    admin.enabled: "true"
+
+    # -- Timeout to discover if a new manifests version got published to the repository
+    timeout.reconciliation: 180s
+
+    # -- Timeout to refresh application data as well as target manifests cache
+    timeout.hard.reconciliation: "0"
+
+    # Dex configuration
+    # dex.config: |
+    #   connectors:
+    #     # GitHub example
+    #     - type: github
+    #       id: github
+    #       name: GitHub
+    #       config:
+    #         clientID: aabbccddeeff00112233
+    #         clientSecret: $dex.github.clientSecret # Alternatively $<some_K8S_secret>:dex.github.clientSecret
+    #         orgs:
+    #         - name: your-github-org
+
+    # OIDC configuration as an alternative to dex (optional).
+    # oidc.config: |
+    #   name: AzureAD
+    #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
+    #   clientID: CLIENT_ID
+    #   clientSecret: $oidc.azuread.clientSecret
+    #   requestedIDTokenClaims:
+    #     groups:
+    #       essential: true
+    #   requestedScopes:
+    #     - openid
+    #     - profile
+    #     - email
+
+  # Argo CD configuration parameters
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml
+  params:
+    # -- Annotations to be added to the argocd-cmd-params-cm ConfigMap
+    annotations: {}
+
+    ## Generic parameters
+    # -- Open-Telemetry collector address: (e.g. "otel-collector:4317")
+    otlp.address: ''
+
+    ## Controller Properties
+    # -- Number of application status processors
+    controller.status.processors: 20
+    # -- Number of application operation processors
+    controller.operation.processors: 10
+    # -- Specifies timeout between application self heal attempts
+    controller.self.heal.timeout.seconds: 5
+    # -- Repo server RPC call timeout seconds.
+    controller.repo.server.timeout.seconds: 60
+
+    ## Server properties
+    # -- Run server without TLS
+    server.insecure: false
+    # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
+    server.basehref: /
+    # -- Used if Argo CD is running behind reverse proxy under subpath different from /
+    server.rootpath: ''
+    # -- Directory path that contains additional static assets
+    server.staticassets: /shared/app
+    # -- Disable Argo CD RBAC for user authentication
+    server.disable.auth: false
+    # -- Enable GZIP compression
+    server.enable.gzip: false
+    # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
+    server.x.frame.options: sameorigin
+
+    ## Repo-server properties
+    # -- Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit.
+    reposerver.parallelism.limit: 0
+
+  # Argo CD RBAC policy configuration
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
+  rbac:
+    # -- Create the argocd-rbac-cm configmap with ([Argo CD RBAC policy]) definitions.
+    # If false, it is expected the configmap will be created by something else.
+    # Argo CD will not work if there is no configmap created with the name above.
+    create: true
+
+    # -- Annotations to be added to argocd-rbac-cm configmap
+    annotations: {}
+
+    # -- The name of the default role which Argo CD will falls back to, when authorizing API requests (optional).
+    # If omitted or empty, users may be still be able to login, but will see no apps, projects, etc...
+    policy.default: ''
+
+    # -- File containing user-defined policies and role definitions.
+    # @default -- `''` (See [values.yaml])
+    policy.csv: ''
+    # Policy rules are in the form:
+    #  p, subject, resource, action, object, effect
+    # Role definitions and bindings are in the form:
+    #  g, subject, inherited-subject
+    # policy.csv |
+    #   p, role:org-admin, applications, *, */*, allow
+    #   p, role:org-admin, clusters, get, *, allow
+    #   p, role:org-admin, repositories, *, *, allow
+    #   p, role:org-admin, logs, get, *, allow
+    #   p, role:org-admin, exec, create, */*, allow
+    #   g, your-github-org:your-team, role:org-admin
+
+    # -- OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
+    # The scope value can be a string, or a list of strings.
+    scopes: "[groups]"
+
   # -- Provide one or multiple [external cluster credentials]
   # @default -- `[]` (See [values.yaml])
   ## Ref:
@@ -295,46 +427,6 @@ configs:
   #  .nav-bar {
   #    background: linear-gradient(to bottom, #999, #777, #333, #222, #111);
   #  }
-
-  # Argo CD configuration parameters
-  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml
-  params:
-    # -- Annotations to be added to the argocd-cmd-params-cm ConfigMap
-    annotations: {}
-
-    ## Generic parameters
-    # -- Open-Telemetry collector address: (e.g. "otel-collector:4317")
-    otlp.address: ''
-
-    ## Controller Properties
-    # -- Number of application status processors
-    controller.status.processors: 20
-    # -- Number of application operation processors
-    controller.operation.processors: 10
-    # -- Specifies timeout between application self heal attempts
-    controller.self.heal.timeout.seconds: 5
-    # -- Repo server RPC call timeout seconds.
-    controller.repo.server.timeout.seconds: 60
-
-    ## Server properties
-    # -- Run server without TLS
-    server.insecure: false
-    # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
-    server.basehref: /
-    # -- Used if Argo CD is running behind reverse proxy under subpath different from /
-    server.rootpath: ''
-    # -- Directory path that contains additional static assets
-    server.staticassets: /shared/app
-    # -- Disable Argo CD RBAC for user authentication
-    server.disable.auth: false
-    # -- Enable GZIP compression
-    server.enable.gzip: false
-    # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
-    server.x.frame.options: sameorigin
-
-    ## Repo-server properties
-    # -- Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit.
-    reposerver.parallelism.limit: 0
 
 # -- Array of extra K8s manifests to deploy
 extraObjects: []
@@ -1539,97 +1631,6 @@ server:
     termination_type: passthrough
     # -- Termination policy of Openshift Route
     termination_policy: None
-
-  # -- Manage Argo CD configmap (Declarative Setup)
-  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
-  configEnabled: true
-  # -- [General Argo CD configuration]
-  # @default -- See [values.yaml]
-  config:
-    # Argo CD's externally facing base URL (optional). Required when configuring SSO
-    url: ""
-
-    # Argo CD instance label key
-    application.instanceLabelKey: argocd.argoproj.io/instance
-
-    # Enable logs RBAC enforcement
-    # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.3-2.4/#enable-logs-rbac-enforcement
-    server.rbac.log.enforce.enable: "false"
-
-    # exec.enabled indicates whether the UI exec feature is enabled. It is disabled by default.
-    # Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/rbac/#exec-resource
-    exec.enabled: "false"
-
-    # admin.enabled indicates whether the admin user is enabled. It is enabled by default.
-    # https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
-    admin.enabled: "true"
-
-    # Application reconciliation timeout is the max amount of time required to discover if a new manifests version got
-    # published to the repository. Reconciliation by timeout is disabled if timeout is set to 0. Three minutes by default.
-    timeout.reconciliation: 180s
-
-    # Timeout to refresh application data as well as target manifests cache
-    timeout.hard.reconciliation: "0"
-
-    # Dex configuration
-    # dex.config: |
-    #   connectors:
-    #     # GitHub example
-    #     - type: github
-    #       id: github
-    #       name: GitHub
-    #       config:
-    #         clientID: aabbccddeeff00112233
-    #         clientSecret: $dex.github.clientSecret # Alternatively $<some_K8S_secret>:dex.github.clientSecret
-    #         orgs:
-    #         - name: your-github-org
-
-    # OIDC configuration as an alternative to dex (optional).
-    # oidc.config: |
-    #   name: AzureAD
-    #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
-    #   clientID: CLIENT_ID
-    #   clientSecret: $oidc.azuread.clientSecret
-    #   requestedIDTokenClaims:
-    #     groups:
-    #       essential: true
-    #   requestedScopes:
-    #     - openid
-    #     - profile
-    #     - email
-
-  # -- Annotations to be added to Argo CD ConfigMap
-  configAnnotations: {}
-
-  # -- Argo CD rbac config ([Argo CD RBAC policy])
-  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
-  rbacConfig:
-    {}
-    # policy.csv is a file containing user-defined RBAC policies and role definitions (optional).
-    # Policy rules are in the form:
-    #   p, subject, resource, action, object, effect
-    # Role definitions and bindings are in the form:
-    #   g, subject, inherited-subject
-    # See https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md for additional information.
-    # policy.csv: |
-    #   # Grant all members of the group 'my-org:team-alpha; the ability to sync apps in 'my-project'
-    #   p, my-org:team-alpha, applications, sync, my-project/*, allow
-    #   # Grant all members of 'my-org:team-beta' admins
-    #   g, my-org:team-beta, role:admin
-    # policy.default is the name of the default role which Argo CD will falls back to, when
-    # authorizing API requests (optional). If omitted or empty, users may be still be able to login,
-    # but will see no apps, projects, etc...
-    # policy.default: role:readonly
-    # scopes controls which OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
-    # If omitted, defaults to: '[groups]'. The scope value can be a string, or a list of strings.
-    # scopes: '[cognito:groups, email]'
-
-  # -- Annotations to be added to Argo CD rbac ConfigMap
-  rbacConfigAnnotations: {}
-
-  # -- Whether or not to create the configmap. If false, it is expected the configmap will be created
-  # by something else. Argo CD will not work if there is no configMap created with the name above.
-  rbacConfigCreate: true
 
   ## Enable Admin ClusterRole resources.
   ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.

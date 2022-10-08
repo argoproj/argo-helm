@@ -34,6 +34,12 @@ DEPRECATED option repoServer.logFormat - Use configs.params.repoServer.log.forma
 {{- if .Values.repoServer.logLevel }}
 DEPRECATED option repoServer.logLevel - Use configs.params.repoServer.log.level
 {{- end }}
+{{- if or .Values.server.config .Values.server.configEnabled .Values.server.configAnnotations }}
+DEPRECATED option server.config - Use configs.cm
+{{- end }}
+{{- if or .Values.server.rbacConfig .Values.server.rbacConfigCreate .Values.server.rbacConfigAnnotations }}
+DEPRECATED option server.rbacConfig - Use configs.rbac
+{{- end }}
 {{- if .Values.controller.service }}
 REMOVED option controller.service - Use controller.metrics
 {{- end }}
@@ -52,7 +58,7 @@ In order to access the server UI you have the following options:
       - Set the `configs.params."server.insecure"` in the values file and terminate SSL at your ingress: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-multiple-ingress-objects-and-hosts
 
 
-{{ if eq (index .Values.server.config "admin.enabled") "true" -}}
+{{ if eq (index (coalesce .Values.server.config .Values.configs.cm) "admin.enabled") "true" -}}
 After reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:
 
 kubectl -n {{ .Release.Namespace }} get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
