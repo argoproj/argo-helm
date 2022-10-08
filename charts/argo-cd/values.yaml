@@ -1921,6 +1921,8 @@ repoServer:
     name: "" # "argocd-repo-server"
     # -- Annotations applied to created service account
     annotations: {}
+    # -- Labels applied to created service account
+    labels: {}
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
@@ -2364,6 +2366,8 @@ notifications:
     # -- Annotations applied to created service account
     annotations: {}
 
+    # -- Labels applied to created service account
+    labels: {}
   cm:
     # -- Whether helm chart creates controller config map
     create: true
