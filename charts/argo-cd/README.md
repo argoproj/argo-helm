@@ -535,6 +535,7 @@ NAME: my-release
 | repoServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | repoServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | repoServer.serviceAccount.create | bool | `true` | Create repo server service account |
+| repoServer.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | repoServer.serviceAccount.name | string | `""` | Repo server service account name |
 | repoServer.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | repoServer.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the repo server |
@@ -983,6 +984,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.securityContext | object | `{"runAsNonRoot":true}` | Pod Security Context |
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| notifications.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | notifications.serviceAccount.name | string | `"argocd-notifications-controller"` | The name of the service account to use. |
 | notifications.subscriptions | list | `[]` | Contains centrally managed global application subscriptions |
 | notifications.templates | object | `{}` | The notification template is used to generate the notification content |
