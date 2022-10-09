@@ -2231,10 +2231,6 @@ notifications:
   # -- [Node selector]
   nodeSelector: {}
 
-  # -- The deployment strategy to use to replace existing pods with new ones
-  updateStrategy:
-    type: Recreate
-
   # -- Define user-defined context
   ## For more information: https://argocd-notifications.readthedocs.io/en/stable/templates/#defining-user-defined-context
   context: {}
@@ -2335,10 +2331,6 @@ notifications:
 
   # -- Labels to be applied to the controller Pods
   podLabels: {}
-
-  # -- Pod Security Context
-  securityContext:
-    runAsNonRoot: true
 
   # -- Container Security Context
   containerSecurityContext: {}
