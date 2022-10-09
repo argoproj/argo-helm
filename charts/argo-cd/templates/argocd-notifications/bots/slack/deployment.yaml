@@ -16,10 +16,10 @@ spec:
       labels:
         {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" "metrics") | nindent 8 }}
     spec:
-    {{- with .Values.notifications.bots.slack.imagePullSecrets | default .Values.global.imagePullSecrets }}
+      {{- with .Values.notifications.bots.slack.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
       serviceAccountName: {{ template "argo-cd.notificationsBotsSlackServiceAccountName" . }}
       securityContext: {{- toYaml (mergeOverwrite (deepCopy .Values.global.securityContext) .Values.notifications.securityContext) | nindent 8 }}
       containers:
