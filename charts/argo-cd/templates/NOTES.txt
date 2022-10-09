@@ -40,6 +40,9 @@ DEPRECATED option server.config - Use configs.cm
 {{- if or .Values.server.rbacConfig (hasKey .Values.server "rbacConfigCreate") .Values.server.rbacConfigAnnotations }}
 DEPRECATED option server.rbacConfig - Use configs.rbac
 {{- end }}
+{{- if .Values.configs.secret.argocdServerTlsConfig }}
+DEPRECATED option config.secret.argocdServerTlsConfig - Use server.certificate or server.certificateSecret
+{{- end }}
 {{- if .Values.controller.service }}
 REMOVED option controller.service - Use controller.metrics
 {{- end }}
