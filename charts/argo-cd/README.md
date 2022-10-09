@@ -981,7 +981,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
 | notifications.secret.create | bool | `true` | Whether helm chart creates controller secret |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the secret |
-| notifications.securityContext | object | `{"runAsNonRoot":true}` | Pod Security Context |
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | notifications.serviceAccount.labels | object | `{}` | Labels applied to created service account |
@@ -990,7 +989,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.templates | object | `{}` | The notification template is used to generate the notification content |
 | notifications.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.triggers | object | `{}` | The trigger defines the condition when the notification should be sent |
-| notifications.updateStrategy | object | `{"type":"Recreate"}` | The deployment strategy to use to replace existing pods with new ones |
 
 ### Using AWS ALB Ingress Controller With GRPC
 
