@@ -76,6 +76,26 @@ spec:
             - name: webhook
               containerPort: 7000
               protocol: TCP
+          {{- if .Values.applicationSet.livenessProbe.enabled }}
+          livenessProbe:
+            tcpSocket:
+              port: probe
+            initialDelaySeconds: {{ .Values.applicationSet.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.applicationSet.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.applicationSet.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.applicationSet.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.applicationSet.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.applicationSet.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: probe
+            initialDelaySeconds: {{ .Values.applicationSet.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.applicationSet.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.applicationSet.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.applicationSet.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.applicationSet.readinessProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.applicationSet.resources | nindent 12 }}
           securityContext:
