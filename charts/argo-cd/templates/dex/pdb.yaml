@@ -1,24 +1,24 @@
-{{- if .Values.dex.pdb.enabled }}
+{{- if and .Values.dex.enabled .Values.dex.pdb.enabled }}
 apiVersion: {{ include "argo-cd.apiVersion.pdb" . }}
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "argo-cd.dex.fullname" . }}
+  name: {{ include "argo-cd.dex.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
-  {{- with .Values.dex.pdb.labels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- with .Values.dex.pdb.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.dex.pdb.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
   {{- end }}
 spec:
-  {{- if .Values.dex.pdb.minAvailable }}
-  minAvailable: {{ .Values.dex.pdb.minAvailable }}
-  {{- else if .Values.dex.pdb.maxUnavailable }}
-  maxUnavailable: {{ .Values.dex.pdb.maxUnavailable }}
+  {{- with .Values.dex.pdb.maxUnavailable }}
+  maxUnavailable: {{ . }}
   {{- else }}
-  minAvailable: 0
+  minAvailable: {{ .Values.dex.pdb.minAvailable | default 0 }}
   {{- end }}
   selector:
     matchLabels:

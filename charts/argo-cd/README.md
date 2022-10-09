@@ -448,8 +448,10 @@ NAME: my-release
 | controller.name | string | `"application-controller"` | Application controller name string |
 | controller.nodeSelector | object | `{}` | [Node selector] |
 | controller.pdb.annotations | object | `{}` | Annotations to be added to application controller pdb |
-| controller.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the application controller |
+| controller.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the application controller |
 | controller.pdb.labels | object | `{}` | Labels to be added to application controller pdb |
+| controller.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| controller.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | controller.podAnnotations | object | `{}` | Annotations to be added to application controller pods |
 | controller.podLabels | object | `{}` | Labels to be added to application controller pods |
 | controller.priorityClassName | string | `""` | Priority class for the application controller pods |
@@ -520,9 +522,11 @@ NAME: my-release
 | repoServer.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | repoServer.name | string | `"repo-server"` | Repo server name |
 | repoServer.nodeSelector | object | `{}` | [Node selector] |
-| repoServer.pdb.annotations | object | `{}` | Annotations to be added to Repo server pdb |
-| repoServer.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the Repo server |
-| repoServer.pdb.labels | object | `{}` | Labels to be added to Repo server pdb |
+| repoServer.pdb.annotations | object | `{}` | Annotations to be added to repo server pdb |
+| repoServer.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the repo server |
+| repoServer.pdb.labels | object | `{}` | Labels to be added to repo server pdb |
+| repoServer.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| repoServer.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | repoServer.podAnnotations | object | `{}` | Annotations to be added to repo server pods |
 | repoServer.podLabels | object | `{}` | Labels to be added to repo server pods |
 | repoServer.priorityClassName | string | `""` | Priority class for the repo server |
@@ -644,9 +648,11 @@ NAME: my-release
 | server.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | server.name | string | `"server"` | Argo CD server name |
 | server.nodeSelector | object | `{}` | [Node selector] |
-| server.pdb.annotations | object | `{}` | Annotations to be added to server pdb |
-| server.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the server |
-| server.pdb.labels | object | `{}` | Labels to be added to server pdb |
+| server.pdb.annotations | object | `{}` | Annotations to be added to Argo CD server pdb |
+| server.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Argo CD server |
+| server.pdb.labels | object | `{}` | Labels to be added to Argo CD server pdb |
+| server.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| server.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
 | server.priorityClassName | string | `""` | Priority class for the Argo CD server |
@@ -734,8 +740,10 @@ NAME: my-release
 | dex.name | string | `"dex-server"` | Dex name |
 | dex.nodeSelector | object | `{}` | [Node selector] |
 | dex.pdb.annotations | object | `{}` | Annotations to be added to Dex server pdb |
-| dex.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the Dex server |
+| dex.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Dex server |
 | dex.pdb.labels | object | `{}` | Labels to be added to Dex server pdb |
+| dex.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| dex.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | dex.podAnnotations | object | `{}` | Annotations to be added to the Dex server pods |
 | dex.podLabels | object | `{}` | Labels to be added to the Dex server pods |
 | dex.priorityClassName | string | `""` | Priority class for dex |
@@ -802,9 +810,11 @@ NAME: my-release
 | redis.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | redis.name | string | `"redis"` | Redis name |
 | redis.nodeSelector | object | `{}` | [Node selector] |
-| redis.pdb.annotations | object | `{}` | Annotations to be added to Redis server pdb |
-| redis.pdb.enabled | bool | `false` | Deploy a Poddisruptionbudget for the Redis server |
-| redis.pdb.labels | object | `{}` | Labels to be added to Redis server pdb |
+| redis.pdb.annotations | object | `{}` | Annotations to be added to Redis pdb |
+| redis.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Redis |
+| redis.pdb.labels | object | `{}` | Labels to be added to Redis pdb |
+| redis.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| redis.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | redis.podAnnotations | object | `{}` | Annotations to be added to the Redis server pods |
 | redis.podLabels | object | `{}` | Labels to be added to the Redis server pods |
 | redis.priorityClassName | string | `""` | Priority class for redis |
@@ -873,7 +883,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.args.metricsAddr | string | `":8080"` | The default metric address |
 | applicationSet.args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
 | applicationSet.args.probeBindAddr | string | `":8081"` | The default health check port |
-| applicationSet.enabled | bool | `true` | Enable Application Set controller |
+| applicationSet.enabled | bool | `true` | Enable ApplicationSet controller |
 | applicationSet.extraArgs | list | `[]` | List of extra cli args to add |
 | applicationSet.extraContainers | list | `[]` | Additional containers to be added to the applicationset controller pod |
 | applicationSet.extraEnv | list | `[]` | Environment variables to pass to the controller |
@@ -902,11 +912,16 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | applicationSet.name | string | `"applicationset-controller"` | Application Set controller name string |
 | applicationSet.nodeSelector | object | `{}` | [Node selector] |
+| applicationSet.pdb.annotations | object | `{}` | Annotations to be added to ApplicationSet controller pdb |
+| applicationSet.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the ApplicationSet controller |
+| applicationSet.pdb.labels | object | `{}` | Labels to be added to ApplicationSet controller pdb |
+| applicationSet.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| applicationSet.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | applicationSet.podAnnotations | object | `{}` | Annotations for the controller pods |
 | applicationSet.podLabels | object | `{}` | Labels for the controller pods |
 | applicationSet.podSecurityContext | object | `{}` | Pod Security Context |
 | applicationSet.priorityClassName | string | `""` | If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default. |
-| applicationSet.replicaCount | int | `1` | The number of controller pods to run |
+| applicationSet.replicaCount | int | `1` | The number of ApplicationSet controller pods to run |
 | applicationSet.resources | object | `{}` | Resource limits and requests for the controller pods. |
 | applicationSet.securityContext | object | `{}` | Security Context |
 | applicationSet.service.annotations | object | `{}` | Application set service annotations |
@@ -942,6 +957,11 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Slack bot |
 | notifications.bots.slack.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | notifications.bots.slack.nodeSelector | object | `{}` | [Node selector] |
+| notifications.bots.slack.pdb.annotations | object | `{}` | Annotations to be added to Slack bot pdb |
+| notifications.bots.slack.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Slack bot |
+| notifications.bots.slack.pdb.labels | object | `{}` | Labels to be added to Slack bot pdb |
+| notifications.bots.slack.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| notifications.bots.slack.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | notifications.bots.slack.resources | object | `{}` | Resource limits and requests for the Slack bot |
 | notifications.bots.slack.securityContext | object | `{"runAsNonRoot":true}` | Pod Security Context |
 | notifications.bots.slack.service.annotations | object | `{}` | Service annotations for Slack bot |
@@ -955,7 +975,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.cm.create | bool | `true` | Whether helm chart creates controller config map |
 | notifications.containerSecurityContext | object | `{}` | Container Security Context |
 | notifications.context | object | `{}` | Define user-defined context |
-| notifications.enabled | bool | `true` | Enable Notifications controller |
+| notifications.enabled | bool | `true` | Enable notifications controller |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
 | notifications.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
@@ -980,6 +1000,11 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
 | notifications.nodeSelector | object | `{}` | [Node selector] |
 | notifications.notifiers | object | See [values.yaml] | Configures notification services such as slack, email or custom webhook |
+| notifications.pdb.annotations | object | `{}` | Annotations to be added to notifications controller pdb |
+| notifications.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the notifications controller |
+| notifications.pdb.labels | object | `{}` | Labels to be added to notifications controller pdb |
+| notifications.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| notifications.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the controller Pods |
 | notifications.podLabels | object | `{}` | Labels to be applied to the controller Pods |
 | notifications.priorityClassName | string | `""` | Priority class for the controller pods |
@@ -1033,6 +1058,7 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [HPA]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 [MetricRelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 [Node selector]: https://kubernetes.io/docs/user-guide/node-selection/
+[PodDisruptionBudget]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets
 [probe]: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
 [RelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
 [Tolerations]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/

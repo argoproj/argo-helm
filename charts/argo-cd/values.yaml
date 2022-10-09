@@ -364,11 +364,32 @@ extraObjects: []
   #       labels:
   #         app.kubernetes.io/part-of: argocd
 
-## Controller
+## Application controller
 controller:
   # -- Application controller name string
   name: application-controller
 
+  # -- The number of application controller pods to run.
+  # Additional replicas will cause sharding of managed clusters across number of replicas.
+  replicas: 1
+
+  ## Application controller Pod Disruption Budget
+  ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the application controller
+    enabled: false
+    # -- Labels to be added to application controller pdb
+    labels: {}
+    # -- Annotations to be added to application controller pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    ## Has higher precedence over `controller.pdb.minAvailable`
+    maxUnavailable: ""
+
+  ## Application controller image
   image:
     # -- Repository to use for the application controller
     # @default -- `""` (defaults to global.image.repository)
@@ -383,10 +404,6 @@ controller:
   # -- Secrets with credentials to pull images from a private registry
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
-
-  # -- The number of application controller pods to run.
-  # Additional replicas will cause sharding of managed clusters across number of replicas.
-  replicas: 1
 
   # -- DEPRECATED - Application controller commandline flags
   args: {}
@@ -403,7 +420,6 @@ controller:
   #  selfHealTimeout: "5"
   #  # -- define the application controller `--repo-server-timeout-seconds`
   #  repoServerTimeoutSeconds: "60"
-
 
   # DEPRECATED - Use configs.params to override
   # -- Application controller log format. Either `text` or `json`
@@ -635,18 +651,6 @@ controller:
   #    name: custom-tools
   #    subPath: helm
 
-  pdb:
-    # -- Labels to be added to application controller pdb
-    labels: {}
-    # -- Annotations to be added to application controller pdb
-    annotations: {}
-
-    # -- Deploy a Poddisruptionbudget for the application controller
-    enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
-
-
 ## Dex
 dex:
   # -- Enable dex
@@ -689,6 +693,23 @@ dex:
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
 
+  ## Dex Pod Disruption Budget
+  ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the Dex server
+    enabled: false
+    # -- Labels to be added to Dex server pdb
+    labels: {}
+    # -- Annotations to be added to Dex server pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    ## Has higher precedence over `dex.pdb.minAvailable`
+    maxUnavailable: ""
+
+  ## Dex image
   image:
     # -- Dex image repository
     repository: ghcr.io/dexidp/dex
@@ -846,17 +867,6 @@ dex:
   #    name: custom-tools
   #    subPath: helm
 
-  pdb:
-    # -- Labels to be added to Dex server pdb
-    labels: {}
-    # -- Annotations to be added to Dex server pdb
-    annotations: {}
-
-    # -- Deploy a Poddisruptionbudget for the Dex server
-    enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
-
 ## Redis
 redis:
   # -- Enable redis
@@ -864,6 +874,23 @@ redis:
   # -- Redis name
   name: redis
 
+  ## Redis Pod Disruption Budget
+  ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the Redis
+    enabled: false
+    # -- Labels to be added to Redis pdb
+    labels: {}
+    # -- Annotations to be added to Redis pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    ## Has higher precedence over `redis.pdb.minAvailable`
+    maxUnavailable: ""
+
+  ## Redis image
   image:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
@@ -1038,16 +1065,6 @@ redis:
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
 
-  pdb:
-    # -- Labels to be added to Redis server pdb
-    labels: {}
-    # -- Annotations to be added to Redis server pdb
-    annotations: {}
-
-    # -- Deploy a Poddisruptionbudget for the Redis server
-    enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
 
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
@@ -1118,6 +1135,7 @@ server:
   # -- The number of server pods to run
   replicas: 1
 
+  ## Argo CD server Horizontal Pod Autoscaler
   autoscaling:
     # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Argo CD server
     enabled: false
@@ -1144,6 +1162,24 @@ server:
       #   - type: Pods
       #     value: 2
       #     periodSeconds: 60
+
+  ## Argo CD server Pod Disruption Budget
+  ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the Argo CD server
+    enabled: false
+    # -- Labels to be added to Argo CD server pdb
+    labels: {}
+    # -- Annotations to be added to Argo CD server pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    ## Has higher precedence over `server.pdb.minAvailable`
+    maxUnavailable: ""
+
+  ## Argo CD server image
   image:
     # -- Repository to use for the Argo CD server
     # @default -- `""` (defaults to global.image.repository)
@@ -1704,18 +1740,6 @@ server:
     # - name: argo-rollouts
     #   url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.1.0/extension.tar
 
-  pdb:
-    # -- Labels to be added to server pdb
-    labels: {}
-    # -- Annotations to be added to server pdb
-    annotations: {}
-
-    # -- Deploy a Poddisruptionbudget for the server
-    enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
-
-
 ## Repo Server
 repoServer:
   # -- Repo server name
@@ -1724,6 +1748,7 @@ repoServer:
   # -- The number of repo server pods to run
   replicas: 1
 
+  ## Repo server Horizontal Pod Autoscaler
   autoscaling:
     # -- Enable Horizontal Pod Autoscaler ([HPA]) for the repo server
     enabled: false
@@ -1751,6 +1776,23 @@ repoServer:
       #     value: 2
       #     periodSeconds: 60
 
+  ## Repo server Pod Disruption Budget
+  ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the repo server
+    enabled: false
+    # -- Labels to be added to repo server pdb
+    labels: {}
+    # -- Annotations to be added to repo server pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    ## Has higher precedence over `repoServer.pdb.minAvailable`
+    maxUnavailable: ""
+
+  ## Repo server image
   image:
     # -- Repository to use for the repo server
     # @default -- `""` (defaults to global.image.repository)
@@ -1973,27 +2015,34 @@ repoServer:
   #    name: custom-tools
   #    subPath: helm
 
-  pdb:
-    # -- Labels to be added to Repo server pdb
-    labels: {}
-    # -- Annotations to be added to Repo server pdb
-    annotations: {}
-
-    # -- Deploy a Poddisruptionbudget for the Repo server
-    enabled: false
-    # minAvailable: 1
-    # maxUnavailable: 0
-
+## ApplicationSet controller
 applicationSet:
-  # -- Enable Application Set controller
+  # -- Enable ApplicationSet controller
   enabled: true
 
   # -- Application Set controller name string
   name: applicationset-controller
 
-  # -- The number of controller pods to run
+  # -- The number of ApplicationSet controller pods to run
   replicaCount: 1
 
+  ## ApplicationSet controller Pod Disruption Budget
+  ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the ApplicationSet controller
+    enabled: false
+    # -- Labels to be added to ApplicationSet controller pdb
+    labels: {}
+    # -- Annotations to be added to ApplicationSet controller pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    ## Has higher precedence over `applicationSet.pdb.minAvailable`
+    maxUnavailable: ""
+
+  ## ApplicationSet controller image
   image:
     # -- Repository to use for the application set controller
     # @default -- `""` (defaults to global.image.repository)
@@ -2205,8 +2254,9 @@ applicationSet:
         #   hosts:
         #     - argocd-applicationset.example.com
 
+## Notifications controller
 notifications:
-  # -- Enable Notifications controller
+  # -- Enable notifications controller
   enabled: true
 
   # -- Notifications controller name string
@@ -2218,6 +2268,23 @@ notifications:
   # -- Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates
   argocdUrl:
 
+  ## Notifications controller Pod Disruption Budget
+  ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the notifications controller
+    enabled: false
+    # -- Labels to be added to notifications controller pdb
+    labels: {}
+    # -- Annotations to be added to notifications controller pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    ## Has higher precedence over `notifications.pdb.minAvailable`
+    maxUnavailable: ""
+
+  ## Notifications controller image
   image:
     # -- Repository to use for the notifications controller
     # @default -- `""` (defaults to global.image.repository)
@@ -2656,6 +2723,23 @@ notifications:
       updateStrategy:
         type: Recreate
 
+      ## Slack bot Pod Disruption Budget
+      ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+      pdb:
+        # -- Deploy a [PodDisruptionBudget] for the Slack bot
+        enabled: false
+        # -- Labels to be added to Slack bot pdb
+        labels: {}
+        # -- Annotations to be added to Slack bot pdb
+        annotations: {}
+        # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+        # @default -- `""` (defaults to 0 if not specified)
+        minAvailable: ""
+        # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+        ## Has higher precedence over `notifications.bots.slack.pdb.minAvailable`
+        maxUnavailable: ""
+
+      ## Slack bot imabe
       image:
         # -- Repository to use for the Slack bot
         # @default -- `""` (defaults to global.image.repository)
