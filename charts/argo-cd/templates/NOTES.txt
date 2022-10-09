@@ -34,6 +34,9 @@ DEPRECATED option repoServer.logFormat - Use configs.params.repoServer.log.forma
 {{- if .Values.repoServer.logLevel }}
 DEPRECATED option repoServer.logLevel - Use configs.params.repoServer.log.level
 {{- end }}
+{{- if .Values.repoServer.copyutil }}
+REMOVED option repoSever.copyutil.resources - Use repoServer.resources
+{{- end }}
 
 In order to access the server UI you have the following options:
 

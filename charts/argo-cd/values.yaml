@@ -1953,17 +1953,6 @@ repoServer:
   #     - list
   #     - watch
 
-  # Init container to copy argocd binary
-  copyutil:
-    # -- Resource limits and requests for the copyutil initContainer
-    resources: {}
-    #  limits:
-    #    cpu: 50m
-    #    memory: 64Mi
-    #  requests:
-    #    cpu: 10m
-    #    memory: 32Mi
-
   # -- Init containers to add to the repo server pods
   initContainers: []
   #  - name: download-tools
