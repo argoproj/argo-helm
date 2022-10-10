@@ -1588,6 +1588,36 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Documented defaults for imagePullSecrets"
+    apiVersion: v2
+    appVersion: v2.4.14
+    created: "2022-10-10T20:46:30.585460018Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 9f0fc5a8f02241b01303ba966d15d6b9ea79492e0da18dd35541f5eeab1a24d6
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.5.18/argo-cd-5.5.18.tgz
+    version: 5.5.18
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Renamed PodDistruptionBudget templates to pdb.yaml"
     apiVersion: v2
     appVersion: v2.4.14
@@ -16940,4 +16970,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-10-10T19:09:28.340416339Z"
+generated: "2022-10-10T20:46:30.592747419Z"
