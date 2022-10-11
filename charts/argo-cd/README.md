@@ -490,7 +490,6 @@ NAME: my-release
 | repoServer.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
 | repoServer.containerPort | int | `8081` | Configures the repo server port |
 | repoServer.containerSecurityContext | object | `{}` | Repo server container-level security context |
-| repoServer.copyutil.resources | object | `{}` | Resource limits and requests for the copyutil initContainer |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
 | repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
 | repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to repo server |
