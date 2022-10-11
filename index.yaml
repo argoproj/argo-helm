@@ -1588,6 +1588,36 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Moved specific cloud provider resources to sub-folders"
+    apiVersion: v2
+    appVersion: v2.4.14
+    created: "2022-10-11T12:29:08.151530116Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 5f05520fc293dd067d6f98109778fbb0b3ece3b16375d59b4ad799cc52c594d0
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.5.19/argo-cd-5.5.19.tgz
+    version: 5.5.19
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Documented defaults for imagePullSecrets"
     apiVersion: v2
     appVersion: v2.4.14
@@ -16970,4 +17000,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-10-10T20:46:30.592747419Z"
+generated: "2022-10-11T12:29:08.159430275Z"
