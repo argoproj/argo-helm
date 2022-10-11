@@ -64,7 +64,9 @@ jobs:
         if: |
           contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater')
         run: |
-          kubectl apply -f charts/argo-cd/templates/crds
+          helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
+          helm dependency build charts/argo-cd/
+          helm template charts/argo-cd/ -s templates/crds/* | kubectl apply -f -
 
       - name: Skip HPA tests of ArgoCD
         if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')

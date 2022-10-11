@@ -138,6 +138,9 @@ spec:
           - mountPath: /scripts
             name: authscripts
           {{- end }}
+          {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 10}}
+          {{- end }}
       volumes:
       - configMap:
           items:
@@ -164,6 +167,9 @@ spec:
           name: argocd-image-updater-ssh-config
           optional: true
         name: ssh-config
+      {{- with .Values.volumes }}
+        {{- toYaml . | nindent 6}}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -175,4 +181,8 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 6 }}
       {{- end }}
