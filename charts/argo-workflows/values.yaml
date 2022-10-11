@@ -261,6 +261,15 @@ controller:
   tolerations: []
   # -- Assign custom [affinity] rules
   affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the workflow controller
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   # -- Leverage a PriorityClass to ensure your pods survive resource shortages.
   ## ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   priorityClassName: ""
@@ -383,6 +392,14 @@ server:
 
   # -- Assign custom [affinity] rules
   affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the argo server
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
 
   # -- Leverage a PriorityClass to ensure your pods survive resource shortages
   ## ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
