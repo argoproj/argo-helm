@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Init container for repo-server should use main container resources"
+        - "[Removed]: Section repoServer.copyutil that is no longer needed"
+    apiVersion: v2
+    appVersion: v2.4.14
+    created: "2022-10-11T14:12:07.139059377Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: e90dcfd8af4c02cee26902330712631726b0706f90b3b8990a5bb1df3441ca43
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.5.21/argo-cd-5.5.21.tgz
+    version: 5.5.21
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: API version override for PDB and Google Cloud."
         - "[Changed]: Moved all API versions in dedicated helper."
     apiVersion: v2
@@ -17031,4 +17062,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-10-11T14:00:12.423896266Z"
+generated: "2022-10-11T14:12:07.146450203Z"
