@@ -1,5 +1,5 @@
 {{- if .Values.dex.pdb.enabled }}
-apiVersion: {{ include "argo-cd.podDisruptionBudget.apiVersion" . }}
+apiVersion: {{ include "argo-cd.apiVersion.pdb" . }}
 kind: PodDisruptionBudget
 metadata:
   name: {{ template "argo-cd.dex.fullname" . }}
