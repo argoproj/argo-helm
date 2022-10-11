@@ -4,7 +4,7 @@
 {{- $paths := .Values.applicationSet.webhook.ingress.paths -}}
 {{- $extraPaths := .Values.applicationSet.webhook.ingress.extraPaths -}}
 {{- $pathType := .Values.applicationSet.webhook.ingress.pathType -}}
-apiVersion: {{ include "argo-cd.ingress.apiVersion" . }}
+apiVersion: {{ include "argo-cd.apiVersion.ingress" . }}
 kind: Ingress
 metadata:
 {{- if .Values.applicationSet.webhook.ingress.annotations }}
@@ -20,7 +20,7 @@ metadata:
     {{- toYaml .Values.applicationSet.webhook.ingress.labels | nindent 4 }}
     {{- end }}
 spec:
-  {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+  {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
   {{- with .Values.applicationSet.webhook.ingress.ingressClassName }}
   ingressClassName: {{ . }}
   {{- end }}
@@ -36,11 +36,11 @@ spec:
           {{- end }}
           {{- range $p := $paths }}
           - path: {{ $p }}
-            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
             pathType: {{ $pathType }}
             {{- end }}
             backend:
-              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
               service:
                 name: {{ $serviceName }}
                 port:
@@ -63,11 +63,11 @@ spec:
           {{- end }}
           {{- range $p := $paths }}
           - path: {{ $p }}
-            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
             pathType: {{ $pathType }}
             {{- end }}
             backend:
-              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
               service:
                 name: {{ $serviceName }}
                 port:

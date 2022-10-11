@@ -100,6 +100,11 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVer
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
 
+### 5.5.20
+
+This version moved API version templates into dedicated helper. If you are using these in your umbrella
+chart please migrate your templates to pattern `argo-cd.apiVersion.<component>`.
+
 ### 5.5.0
 
 This version introduces new `configs.params` section that replaces command line arguments for containers.
