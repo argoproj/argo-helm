@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v2.4.14
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.5.23
+version: 5.5.24
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -22,4 +22,8 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Fixed]: Fix missed apiVersion pattern change
+    - "[Added]: PDB for Application Set controller"
+    - "[Added]: PDB for Notifications controller"
+    - "[Added]: PDB for Slack bot"
+    - "[Fixed]: PDB for Redis is not created if redis-ha is enabled"
+    - "[Changed]: Documentation for PDB usage"
