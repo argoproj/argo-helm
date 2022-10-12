@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "argo-cd.applicationSet.fullname" . }}
+  name: {{ include "argo-cd.applicationSet.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
 spec:
@@ -28,13 +28,13 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "argo-cd.applicationSetServiceAccountName" . }}
       securityContext:
         {{- toYaml (mergeOverwrite (deepCopy .Values.global.securityContext) .Values.applicationSet.podSecurityContext) | nindent 8 }}
+      serviceAccountName: {{ include "argo-cd.applicationSetServiceAccountName" . }}
       containers:
         - name: {{ .Values.applicationSet.name }}
-          securityContext:
-            {{- toYaml .Values.applicationSet.securityContext | nindent 12 }}
+          image: {{ default .Values.global.image.repository .Values.applicationSet.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.applicationSet.image.tag }}
+          imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.applicationSet.image.imagePullPolicy }}
           command:
             - entrypoint.sh
             - argocd-applicationset-controller
@@ -47,7 +47,6 @@ spec:
             {{- if or (gt ( .Values.applicationSet.replicaCount | int64) 1) .Values.applicationSet.args.enableLeaderElection }}
             - --enable-leader-election=true
             {{- end }}
-            - --namespace={{ .Release.Namespace }}
             - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
             - --policy={{ .Values.applicationSet.args.policy }}
             - --debug={{ .Values.applicationSet.args.debug }}
@@ -55,66 +54,49 @@ spec:
             {{- with .Values.applicationSet.extraArgs }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
-          image: {{ default .Values.global.image.repository .Values.applicationSet.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.applicationSet.image.tag }}
-          imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.applicationSet.image.imagePullPolicy }}
-          ports:
-            - name: http
-              containerPort: {{ (split ":" .Values.applicationSet.args.probeBindAddr)._1 }}
-              protocol: TCP
-            - name: metrics
-              containerPort: {{ (split ":" .Values.applicationSet.args.metricsAddr)._1 }}
-              protocol: TCP
-            - name: webhook
-              containerPort: 7000
-              protocol: TCP
-          {{- with .Values.applicationSet.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- with .Values.applicationSet.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
           {{- with .Values.applicationSet.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          ports:
+            - name: metrics
+              containerPort: {{ (split ":" .Values.applicationSet.args.metricsAddr)._1 }}
+              protocol: TCP
+            - name: probe
+              containerPort: {{ (split ":" .Values.applicationSet.args.probeBindAddr)._1 }}
+              protocol: TCP
+            - name: webhook
+              containerPort: 7000
+              protocol: TCP
           resources:
             {{- toYaml .Values.applicationSet.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.applicationSet.securityContext | nindent 12 }}
           volumeMounts:
-            - mountPath: /tmp
-              name: tmp-dir
-            {{- if .Values.configs.knownHosts }}
+            {{- with .Values.applicationSet.extraVolumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
             - mountPath: /app/config/ssh
               name: ssh-known-hosts
-            {{- end }}
             - mountPath: /app/config/tls
               name: tls-certs
             - mountPath: /app/config/gpg/source
               name: gpg-keys
             - mountPath: /app/config/gpg/keys
               name: gpg-keyring
-            {{- with .Values.applicationSet.extraVolumeMounts }}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
+            - mountPath: /tmp
+              name: tmp
         {{- with .Values.applicationSet.extraContainers }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      volumes:
-      - emptyDir: {}
-        name: tmp-dir
-      {{- if .Values.configs.knownHosts }}
-      - configMap:
-          name: argocd-ssh-known-hosts-cm
-        name: ssh-known-hosts
-      {{- end }}
-      - configMap:
-          name: argocd-tls-certs-cm
-        name: tls-certs
-      - configMap:
-          name: argocd-gpg-keys-cm
-        name: gpg-keys
-      - emptyDir: {}
-        name: gpg-keyring
-      {{- with .Values.applicationSet.extraVolumes }}
-        {{- toYaml . | nindent 6 }}
-      {{- end }}
       {{- with .Values.applicationSet.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -130,4 +112,21 @@ spec:
       {{- with .Values.applicationSet.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      volumes:
+        {{- with .Values.applicationSet.extraVolumes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: ssh-known-hosts
+          configMap:
+            name: argocd-ssh-known-hosts-cm
+        - name: tls-certs
+          configMap:
+            name: argocd-tls-certs-cm
+        - name: gpg-keys
+          configMap:
+            name: argocd-gpg-keys-cm
+        - name: gpg-keyring
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
 {{- end }}
