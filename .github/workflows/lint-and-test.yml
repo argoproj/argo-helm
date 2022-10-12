@@ -59,10 +59,11 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         with:
           config: .github/configs/kind-config.yaml
-
+          
       - name: Deploy latest ArgoCD CRDs when testing ArgoCD extensions
         if: |
-          contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater')
+          contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater') ||
+          contains(steps.list-changed.outputs.changed_charts, 'argocd-apps')
         run: |
           helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
           helm dependency build charts/argo-cd/
