@@ -36,11 +36,11 @@ spec:
           {{- end -}}
           {{- range $p := $paths }}
           - path: {{ $p }}
-            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
             pathType: {{ $pathType }}
             {{- end }}
             backend:
-              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
               service:
                 name: {{ $serviceName }}
                 port:
