@@ -66,9 +66,8 @@ jobs:
           contains(steps.list-changed.outputs.changed_charts, 'argocd-apps')
         run: |
           helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
-          helm dependency build .
-          ls templates/crds/* | xargs -r -L 1 helm template . -s ${@} | kubectl apply -f -
-        working-directory: ./charts/argo-cd
+          helm dependency build charts/argo-cd/
+          helm template charts/argo-cd/ -s templates/crds/* | kubectl apply -f -
 
       - name: Skip HPA tests of ArgoCD
         if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')

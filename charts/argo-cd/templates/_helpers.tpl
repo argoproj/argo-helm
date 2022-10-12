@@ -217,41 +217,6 @@ app.kubernetes.io/component: {{ .component }}
 {{- end }}
 
 {{/*
-Return the appropriate apiVersion for ingress
-*/}}
-{{- define "argo-cd.ingress.apiVersion" -}}
-{{- if .Values.apiVersionOverrides.ingress -}}
-{{- print .Values.apiVersionOverrides.ingress -}}
-{{- else if semverCompare "<1.14-0" (include "argo-cd.kubeVersion" $) -}}
-{{- print "extensions/v1beta1" -}}
-{{- else if semverCompare "<1.19-0" (include "argo-cd.kubeVersion" $) -}}
-{{- print "networking.k8s.io/v1beta1" -}}
-{{- else -}}
-{{- print "networking.k8s.io/v1" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return the appropriate apiVersion for autoscaling
-*/}}
-{{- define "argo-cd.autoscaling.apiVersion" -}}
-{{- if .Values.apiVersionOverrides.autoscaling -}}
-{{- print .Values.apiVersionOverrides.autoscaling -}}
-{{- else if semverCompare "<1.23-0" (include "argo-cd.kubeVersion" $) -}}
-{{- print "autoscaling/v2beta1" -}}
-{{- else -}}
-{{- print "autoscaling/v2" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return the target Kubernetes version
-*/}}
-{{- define "argo-cd.kubeVersion" -}}
-  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
-{{- end -}}
-
-{{/*
 Argo Configuration Preset Values (Incluenced by Values configuration)
 */}}
 {{- define "argo-cd.config.presets" -}}
@@ -302,15 +267,4 @@ Return the default Argo CD app version
 */}}
 {{- define "argo-cd.defaultTag" -}}
   {{- default .Chart.AppVersion .Values.global.image.tag }}
-{{- end -}}
-
-{{/*
-Return the appropriate apiVersion for pod disruption budget
-*/}}
-{{- define "argo-cd.podDisruptionBudget.apiVersion" -}}
-{{- if semverCompare "<1.21-0" (include "argo-cd.kubeVersion" $) -}}
-{{- print "policy/v1beta1" -}}
-{{- else -}}
-{{- print "policy/v1" -}}
-{{- end -}}
 {{- end -}}

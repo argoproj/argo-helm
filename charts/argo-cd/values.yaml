@@ -14,10 +14,14 @@ kubeVersionOverride: ""
 apiVersionOverrides:
   # -- String to override apiVersion of certmanager resources rendered by this helm chart
   certmanager: "" # cert-manager.io/v1
-  # -- String to override apiVersion of ingresses rendered by this helm chart
-  ingress: "" # networking.k8s.io/v1beta1
+  # -- String to override apiVersion of GKE resources rendered by this helm chart
+  cloudgoogle: "" # cloud.google.com/v1
   # -- String to override apiVersion of autoscaling rendered by this helm chart
   autoscaling: "" # autoscaling/v2
+  # -- String to override apiVersion of ingresses rendered by this helm chart
+  ingress: "" # networking.k8s.io/v1beta1
+  # -- String to override apiVersion of pod disruption budgets rendered by this helm chart
+  pdb: "" # policy/v1
 
 # -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -44,6 +48,10 @@ global:
     tag: ""
     # -- If defined, a imagePullPolicy applied to all Argo CD deployments
     imagePullPolicy: IfNotPresent
+
+  # -- Secrets with credentials to pull images from a private registry
+  imagePullSecrets: []
+
   logging:
     # -- Set the global logging format. Either: `text` or `json`
     format: text
@@ -59,8 +67,6 @@ global:
   #  runAsGroup: 999
   #  fsGroup: 999
 
-  # -- If defined, uses a Secret to pull an image from a private Docker registry or repository
-  imagePullSecrets: []
   # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
   hostAliases: []
   # - ip: 10.20.30.40
@@ -374,6 +380,10 @@ controller:
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
 
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
+
   # -- The number of application controller pods to run.
   # Additional replicas will cause sharding of managed clusters across number of replicas.
   replicas: 1
@@ -636,8 +646,6 @@ controller:
     # minAvailable: 1
     # maxUnavailable: 0
 
-  # -- Secrets with credentials to pull images from a private registry
-  imagePullSecrets: []
 
 ## Dex
 dex:
@@ -689,6 +697,11 @@ dex:
     # -- Dex imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
+
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
+
   initImage:
     # -- Argo CD init image repository
     # @default -- `""` (defaults to global.image.repository)
@@ -844,9 +857,6 @@ dex:
     # minAvailable: 1
     # maxUnavailable: 0
 
-  # -- Secrets with credentials to pull images from a private registry
-  imagePullSecrets: []
-
 ## Redis
 redis:
   # -- Enable redis
@@ -861,6 +871,10 @@ redis:
     tag: 7.0.5-alpine
     # -- Redis imagePullPolicy
     imagePullPolicy: IfNotPresent
+
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
 
   # -- Additional command line arguments to pass to redis-server
   extraArgs: []
@@ -1035,9 +1049,6 @@ redis:
     # minAvailable: 1
     # maxUnavailable: 0
 
-  # -- Secrets with credentials to pull images from a private registry
-  imagePullSecrets: []
-
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
 # Check the redis-ha chart for more properties
@@ -1143,6 +1154,10 @@ server:
     # -- Image pull policy for the Argo CD server
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: "" # IfNotPresent
+
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
 
   # -- Additional command line arguments to pass to Argo CD server
   extraArgs: []
@@ -1700,8 +1715,6 @@ server:
     # minAvailable: 1
     # maxUnavailable: 0
 
-  # -- Secrets with credentials to pull images from a private registry
-  imagePullSecrets: []
 
 ## Repo Server
 repoServer:
@@ -1748,6 +1761,10 @@ repoServer:
     # -- Image pull policy for the repo server
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: "" # IfNotPresent
+
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
 
   # -- Additional command line arguments to pass to repo server
   extraArgs: []
@@ -1940,17 +1957,6 @@ repoServer:
   #     - list
   #     - watch
 
-  # Init container to copy argocd binary
-  copyutil:
-    # -- Resource limits and requests for the copyutil initContainer
-    resources: {}
-    #  limits:
-    #    cpu: 50m
-    #    memory: 64Mi
-    #  requests:
-    #    cpu: 10m
-    #    memory: 32Mi
-
   # -- Init containers to add to the repo server pods
   initContainers: []
   #  - name: download-tools
@@ -1978,9 +1984,6 @@ repoServer:
     # minAvailable: 1
     # maxUnavailable: 0
 
-  # -- Secrets with credentials to pull images from a private registry
-  imagePullSecrets: []
-
 applicationSet:
   # -- Enable Application Set controller
   enabled: true
@@ -2001,6 +2004,10 @@ applicationSet:
     # -- Image pull policy for the application set controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
+
+  # -- If defined, uses a Secret to pull an image from a private Docker registry or repository.
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
 
   args:
     # -- The default metric address
@@ -2060,9 +2067,6 @@ applicationSet:
       namespace: ""  # monitoring
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
-
-  # -- If defined, uses a Secret to pull an image from a private Docker registry or repository.
-  imagePullSecrets: []
 
   ## Application set service configuration
   service:
@@ -2226,6 +2230,7 @@ notifications:
     imagePullPolicy: ""
 
   # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
 
   # -- [Node selector]
@@ -2663,6 +2668,7 @@ notifications:
         imagePullPolicy: ""
 
       # -- Secrets with credentials to pull images from a private registry
+      # @default -- `[]` (defaults to global.imagePullSecrets)
       imagePullSecrets: []
 
       service:
