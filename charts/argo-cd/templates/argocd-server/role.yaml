@@ -23,6 +23,9 @@ rules:
   resources:
   - applications
   - appprojects
+  {{- if .Values.server.extensions.enabled }}
+  - argocdextensions
+  {{- end }}
   verbs:
   - create
   - get
