@@ -1588,6 +1588,36 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Leader election permissions for ApplicationSet controller"
+    apiVersion: v2
+    appVersion: v2.4.14
+    created: "2022-10-13T16:17:43.52670083Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: bcbd3812702cd03d569ee0447df5ca93bee9a9725773e3556641505b134dbacc
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.5.25/argo-cd-5.5.25.tgz
+    version: 5.5.25
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: PDB for Application Set controller"
         - "[Added]: PDB for Notifications controller"
         - "[Added]: PDB for Slack bot"
@@ -17200,4 +17230,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-10-12T12:55:55.360035442Z"
+generated: "2022-10-13T16:17:43.534729869Z"
