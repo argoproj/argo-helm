@@ -62,6 +62,16 @@ rules:
     - get
     - list
     - watch
+  # Leader election
+  - apiGroups:
+    - ""
+    resources:
+    - configmaps
+    verbs:
+    - create
+    - update
+    - delete
+    - patch
   - apiGroups:
     - coordination.k8s.io
     resources:
