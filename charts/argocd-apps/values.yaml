@@ -121,3 +121,18 @@ applicationsets: []
 #   syncPolicy:
 #     # Set Application finalizer
 #     preserveResourcesOnDeletion: false
+
+# -- Deploy Argo UI Extensions within this helm release
+# @default -- `[]` (See [values.yaml])
+## This function in tech preview stage, do expect unstability or breaking changes in newer versions. Bump image.tag if necessary.
+## Ref: https://github.com/argoproj-labs/argocd-extensions
+extensions: []
+  # - name: example
+  #   namespace: argocd
+  #   additionalLabels: {}
+  #   additionalAnnotations: {}
+  #   sources:
+  #     - git:
+  #         url: https://github.com/argoproj-labs/argocd-example-extension.git
+  #     - web:
+  #         url: https://github.com/argoproj-labs/argocd-example-extension/releases/download/v0.1.0/extension.tar
