@@ -3,19 +3,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "argo-cd.redis.fullname" . }}-metrics
+  name: {{ include "argo-cd.redis.fullname" . }}-metrics
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
+    {{- with .Values.redis.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.redis.metrics.service.annotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-  labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
-    {{- with .Values.redis.metrics.service.labels }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
 spec:
+  type: {{ .Values.redis.metrics.service.type }}
   {{- with .Values.redis.metrics.service.clusterIP }}
   clusterIP: {{ . }}
   {{- end }}
@@ -26,5 +27,4 @@ spec:
       targetPort: metrics
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
-  type: {{ .Values.redis.metrics.service.type }}
 {{- end }}

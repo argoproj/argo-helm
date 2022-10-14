@@ -1,19 +1,19 @@
-{{- if .Values.repoServer.metrics.enabled}}
+{{- if .Values.repoServer.metrics.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-{{- if .Values.repoServer.metrics.service.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.repoServer.metrics.service.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-{{- end }}
+  name: {{ include "argo-cd.repoServer.fullname" . }}-metrics
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" (printf "%s-metrics" .Values.repoServer.name)) | nindent 4 }}
-{{- if .Values.repoServer.metrics.service.labels }}
-{{- toYaml .Values.repoServer.metrics.service.labels | nindent 4 }}
-{{- end }}
-  name: {{ template "argo-cd.repoServer.fullname" . }}-metrics
+    {{- with .Values.repoServer.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.repoServer.metrics.service.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
 spec:
   ports:
   - name: {{ .Values.repoServer.metrics.service.portName }}

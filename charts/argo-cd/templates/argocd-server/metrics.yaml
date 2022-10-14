@@ -2,18 +2,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  {{- if .Values.server.metrics.service.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.server.metrics.service.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-{{- end }}
+  name: {{ include "argo-cd.server.fullname" . }}-metrics
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" (printf "%s-metrics" .Values.server.name)) | nindent 4 }}
-{{- if .Values.server.metrics.service.labels }}
-{{- toYaml .Values.server.metrics.service.labels | nindent 4 }}
-{{- end }}
-  name: {{ template "argo-cd.server.fullname" . }}-metrics
+    {{- with .Values.server.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.server.metrics.service.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
 spec:
   ports:
   - name: {{ .Values.server.metrics.service.portName }}
