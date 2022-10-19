@@ -437,6 +437,7 @@ NAME: my-release
 | controller.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | controller.metrics.service.servicePort | int | `8082` | Metrics service port |
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
+| controller.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | controller.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
 | controller.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
@@ -512,6 +513,7 @@ NAME: my-release
 | repoServer.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | repoServer.metrics.service.servicePort | int | `8084` | Metrics service port |
 | repoServer.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
+| repoServer.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | repoServer.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | repoServer.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
 | repoServer.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
@@ -637,6 +639,7 @@ NAME: my-release
 | server.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | server.metrics.service.servicePort | int | `8083` | Metrics service port |
 | server.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
+| server.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | server.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | server.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
 | server.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
@@ -728,6 +731,7 @@ NAME: my-release
 | dex.metrics.service.labels | object | `{}` | Metrics service labels |
 | dex.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | dex.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
+| dex.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | dex.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | dex.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
 | dex.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
@@ -799,6 +803,7 @@ NAME: my-release
 | redis.metrics.service.servicePort | int | `9121` | Metrics service port |
 | redis.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | redis.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
+| redis.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | redis.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | redis.metrics.serviceMonitor.interval | string | `"30s"` | Interval at which metrics should be scraped |
 | redis.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
@@ -901,6 +906,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | applicationSet.metrics.service.servicePort | int | `8085` | Metrics service port |
 | applicationSet.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
+| applicationSet.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | applicationSet.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | applicationSet.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
 | applicationSet.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
@@ -992,6 +998,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.metrics.service.labels | object | `{}` | Metrics service labels |
 | notifications.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | notifications.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
+| notifications.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | notifications.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | notifications.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | notifications.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
