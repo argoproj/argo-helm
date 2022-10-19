@@ -15,6 +15,10 @@ metadata:
     {{- with .Values.redis.metrics.serviceMonitor.additionalLabels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
+  annotations:
+    {{- range $key, $value := .Values.redis.metrics.serviceMonitor.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
   endpoints:
     - port: {{ .Values.redis.metrics.service.portName }}
