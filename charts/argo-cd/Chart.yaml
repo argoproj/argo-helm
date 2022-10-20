@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: v2.4.14
+appVersion: v2.4.15
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.6.0
+version: 5.6.1
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -22,4 +22,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: Moved Argo Extension resource to argocd-apps chart"
+    - "[Changed]: Update to app version 2.4.15"

@@ -711,7 +711,7 @@ NAME: my-release
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
-| dex.image.tag | string | `"v2.35.1-distroless"` | Dex image tag |
+| dex.image.tag | string | `"v2.35.3-distroless"` | Dex image tag |
 | dex.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
