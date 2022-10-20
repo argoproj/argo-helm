@@ -14,10 +14,10 @@ metadata:
     {{- with .Values.controller.metrics.serviceMonitor.additionalLabels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.controller.metrics.serviceMonitor.annotations }}
   annotations:
-    {{- range $key, $value := .Values.controller.metrics.serviceMonitor.annotations }}
-    {{ $key }}: {{ $value | quote }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   endpoints:
     - port: {{ .Values.controller.metrics.service.portName }}

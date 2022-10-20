@@ -15,10 +15,10 @@ metadata:
     {{- with .Values.applicationSet.metrics.serviceMonitor.additionalLabels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.applicationSet.metrics.serviceMonitor.annotations }}
   annotations:
-    {{- range $key, $value := .Values.applicationSet.metrics.serviceMonitor.annotations }}
-    {{ $key }}: {{ $value | quote }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   endpoints:
     - port: {{ .Values.applicationSet.metrics.service.portName }}
