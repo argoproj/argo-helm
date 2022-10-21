@@ -582,6 +582,8 @@ controller:
       namespace: "" # "monitoring"
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
+      # -- Prometheus ServiceMonitor annotations
+      annotations: {}
     rules:
       # -- Deploy a PrometheusRule for the application controller
       enabled: false
@@ -692,6 +694,8 @@ dex:
       namespace: "" # "monitoring"
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
+      # -- Prometheus ServiceMonitor annotations
+      annotations: {}
 
   ## Dex Pod Disruption Budget
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
@@ -1064,6 +1068,8 @@ redis:
       namespace: "" # "monitoring"
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
+      # -- Prometheus ServiceMonitor annotations
+      annotations: {}
 
 
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
@@ -1397,6 +1403,8 @@ server:
       namespace: ""  # monitoring
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
+      # -- Prometheus ServiceMonitor annotations
+      annotations: {}
 
   serviceAccount:
     # -- Create server service account
@@ -1954,6 +1962,8 @@ repoServer:
       namespace: "" # "monitoring"
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
+      # -- Prometheus ServiceMonitor annotations
+      annotations: {}
 
   ## Enable Admin ClusterRole resources.
   ## Enable if you would like to grant cluster rights to Argo CD repo server.
@@ -2114,6 +2124,8 @@ applicationSet:
       namespace: ""  # monitoring
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
+      # -- Prometheus ServiceMonitor annotations
+      annotations: {}
 
   ## Application set service configuration
   service:
@@ -2381,6 +2393,8 @@ notifications:
         # prometheus: kube-prometheus
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
+      # -- Prometheus ServiceMonitor annotations
+      annotations: {}
       # namespace: monitoring
       # interval: 30s
       # scrapeTimeout: 10s
