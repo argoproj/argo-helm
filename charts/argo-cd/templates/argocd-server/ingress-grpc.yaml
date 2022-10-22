@@ -4,7 +4,7 @@
 {{- $paths := .Values.server.ingressGrpc.paths -}}
 {{- $extraPaths := .Values.server.ingressGrpc.extraPaths -}}
 {{- $pathType := .Values.server.ingressGrpc.pathType -}}
-apiVersion: {{ include "argo-cd.ingress.apiVersion" . }}
+apiVersion: {{ include "argo-cd.apiVersion.ingress" . }}
 kind: Ingress
 metadata:
 {{- if .Values.server.ingressGrpc.annotations }}
@@ -20,7 +20,7 @@ metadata:
     {{- toYaml .Values.server.ingressGrpc.labels | nindent 4 }}
     {{- end }}
 spec:
-  {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+  {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
   {{- with .Values.server.ingressGrpc.ingressClassName }}
   ingressClassName: {{ . }}
   {{- end }}
@@ -36,11 +36,11 @@ spec:
           {{- end -}}
           {{- range $p := $paths }}
           - path: {{ $p }}
-            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
             pathType: {{ $pathType }}
             {{- end }}
             backend:
-              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
               service:
                 name: {{ $serviceName }}
                 port:
@@ -63,11 +63,11 @@ spec:
           {{- end -}}
           {{- range $p := $paths }}
           - path: {{ $p }}
-            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
             pathType: {{ $pathType }}
             {{- end }}
             backend:
-              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
               service:
                 name: {{ $serviceName }}
                 port:

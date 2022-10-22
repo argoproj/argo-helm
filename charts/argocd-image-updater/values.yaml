@@ -42,6 +42,29 @@ extraEnv: []
   # - name: AWS_REGION
   #   value: "us-west-1"
 
+# -- Init containers to add to the image updater pod
+initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
+  #        mv linux-amd64/helm /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+
+# -- Additional volumeMounts to the image updater main container
+volumeMounts: []
+
+# -- Additional volumes to the image updater pod
+volumes: []
+  ## Use init containers to configure custom tooling
+  ## https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/
+  ## When using the volumes & volumeMounts section bellow, please comment out those above.
+  #  - name: custom-tools
+  #    emptyDir: {}
+
 config:
   # -- API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`)
   applicationsAPIKind: ""

@@ -14,6 +14,10 @@ metadata:
     {{- if .Values.notifications.metrics.serviceMonitor.additionalLabels }}
       {{- toYaml .Values.notifications.metrics.serviceMonitor.additionalLabels | nindent 4 }}
     {{- end }}
+  {{- with .Values.notifications.metrics.serviceMonitor.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   endpoints:
     - port: {{ .Values.notifications.metrics.service.portName }}
