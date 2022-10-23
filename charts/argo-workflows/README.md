@@ -142,7 +142,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | mainContainer.env | list | `[]` | Adds environment variables for the Workflow main container |
-| mainContainer.imagePullPolicy | string | `"Always"` | imagePullPolicy to apply to Workflow main container |
+| mainContainer.imagePullPolicy | string | `""` | imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`. |
 | mainContainer.resources | object | `{}` | Resource limits and requests for the Workflow main container |
 | mainContainer.securityContext | object | `{}` | sets security context for the Workflow main container |
 
@@ -151,6 +151,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | executor.env | list | `[]` | Adds environment variables for the executor. |
+| executor.image.pullPolicy | string | `""` | Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`. |
 | executor.image.registry | string | `"quay.io"` | Registry to use for the Workflow Executors |
 | executor.image.repository | string | `"argoproj/argoexec"` | Repository to use for the Workflow Executors |
 | executor.image.tag | string | `""` | Image tag for the workflow executor. Defaults to `.Values.images.tag`. |
