@@ -1,25 +1,25 @@
-{{- if .Values.controller.metrics.enabled}}
+{{- if .Values.controller.metrics.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-{{- if .Values.controller.metrics.service.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.controller.metrics.service.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-{{- end }}
+  name: {{ include "argo-cd.controller.fullname" . }}-metrics
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" "metrics") | nindent 4 }}
-{{- if .Values.controller.metrics.service.labels }}
-{{- toYaml .Values.controller.metrics.service.labels | nindent 4 }}
-{{- end }}
-  name: {{ template "argo-cd.controller.fullname" . }}-metrics
+    {{- with .Values.controller.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.controller.metrics.service.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
 spec:
   ports:
   - name: {{ .Values.controller.metrics.service.portName }}
     protocol: TCP
     port: {{ .Values.controller.metrics.service.servicePort }}
-    targetPort: controller
+    targetPort: metrics
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 4 }}
 {{- end }}

@@ -493,21 +493,12 @@ controller:
   # -- Additional volumes to the application controller pod
   volumes: []
 
-  ## Controller service configuration
-  service:
-    # -- Application controller service annotations
-    annotations: {}
-    # -- Application controller service labels
-    labels: {}
-    # -- Application controller service port
-    port: 8082
-    # -- Application controller service port name
-    portName: https-controller
-
   # -- [Node selector]
   nodeSelector: {}
+
   # -- [Tolerations] for use with node taints
   tolerations: []
+
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 

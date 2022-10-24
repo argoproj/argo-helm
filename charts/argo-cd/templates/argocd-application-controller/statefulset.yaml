@@ -210,7 +210,7 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         ports:
-        - name: controller
+        - name: metrics
           containerPort: {{ .Values.controller.containerPort }}
           protocol: TCP
         livenessProbe:
