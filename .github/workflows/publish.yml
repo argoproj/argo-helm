@@ -22,8 +22,7 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
         with:
-          version: latest # stable
-          token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+          version: v3.10.1 # Also update in lint-and-test.yaml
 
       - name: Add dependency chart repos
         run: |
@@ -32,7 +31,7 @@ jobs:
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"  
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       ## This is required to consider the old Circle-CI Index and to stay compatible with all the old releases.
       - name: Fetch current Chart Index
