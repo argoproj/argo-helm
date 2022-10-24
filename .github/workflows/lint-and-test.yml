@@ -15,7 +15,9 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.1 # Also update in publish.yaml
 
       - name: Set up python
         uses: actions/setup-python@v4
@@ -59,7 +61,7 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         with:
           config: .github/configs/kind-config.yaml
-          
+
       - name: Deploy latest ArgoCD CRDs when testing ArgoCD extensions
         if: |
           contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater') ||
