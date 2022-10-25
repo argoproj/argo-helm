@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Created dedicated docs section for Argo CD configs"
+        - "[Fixed]: Documentation how to run server as insecure"
+    apiVersion: v2
+    appVersion: v2.4.15
+    created: "2022-10-25T13:30:22.081107016Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: faff4bd5a384f65fee35029cbb4994091afbfbe9c5a0ad03ef11793d38306cc3
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.6.7/argo-cd-5.6.7.tgz
+    version: 5.6.7
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Grouped common template helpers together"
     apiVersion: v2
     appVersion: v2.4.15
@@ -17521,4 +17552,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-10-25T06:42:18.817386542Z"
+generated: "2022-10-25T13:30:22.088844141Z"
