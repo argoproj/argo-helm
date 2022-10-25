@@ -287,8 +287,8 @@ controller:
 
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
-  # -- imagePullPolicy to apply to Workflow main container
-  imagePullPolicy: Always
+  # -- imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`.
+  imagePullPolicy: ""
   # -- Resource limits and requests for the Workflow main container
   resources: {}
   # -- Adds environment variables for the Workflow main container
@@ -305,6 +305,8 @@ executor:
     repository: argoproj/argoexec
     # -- Image tag for the workflow executor. Defaults to `.Values.images.tag`.
     tag: ""
+    # -- Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`.
+    pullPolicy: ""
   # -- Resource limits and requests for the Workflow Executors
   resources: {}
   # -- Adds environment variables for the executor.
