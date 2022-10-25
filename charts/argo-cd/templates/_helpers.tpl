@@ -16,6 +16,17 @@ Create dex name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create Dex server endpoint
+*/}}
+{{- define "argo-cd.dex.server" -}}
+{{- $insecure := index .Values.configs.params "dexserver.disable.tls" | toString -}}
+{{- $scheme := (eq $insecure "true") | ternary "http" "https" -}}
+{{- $host := include "argo-cd.dex.fullname" . -}}
+{{- $port := int .Values.dex.servicePortHttp -}}
+{{- printf "%s://%s:%d" $scheme $host $port }}
+{{- end }}
+
+{{/*
 Create redis name and version as used by the chart label.
 */}}
 {{- define "argo-cd.redis.fullname" -}}
@@ -185,7 +196,7 @@ repo.server: "{{ include "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServe
 redis.server: {{ . | quote }}
 {{- end }}
 {{- if .Values.dex.enabled }}
-server.dex.server: "http://{{ include "argo-cd.dex.fullname" . }}:{{ .Values.dex.servicePortHttp }}"
+server.dex.server: {{ include "argo-cd.dex.server" . }}
 {{- end }}
 {{- range $component := tuple "controller" "server" "reposerver" }}
 {{ $component }}.log.format: {{ $.Values.global.logging.format | quote }}

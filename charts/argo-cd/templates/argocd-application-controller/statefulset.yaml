@@ -163,6 +163,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: controller.repo.server.strict.tls
                 optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_PERSIST_RESOURCE_HEALTH
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.resource.health.persist
+                optional: true
           - name: ARGOCD_APP_STATE_CACHE_EXPIRATION
             valueFrom:
               configMapKeyRef:
@@ -174,6 +180,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: redis.server
+                optional: true
+          - name: REDIS_COMPRESSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.compression
                 optional: true
           - name: REDISDB
             valueFrom:
@@ -205,6 +217,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: otlp.address
                 optional: true
+          - name: ARGOCD_APPLICATION_NAMESPACES
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: application.namespaces
+                optional: true
         {{- with .Values.controller.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
@@ -216,31 +234,32 @@ spec:
         livenessProbe:
           httpGet:
             path: /healthz
-            port: {{ .Values.controller.containerPort }}
+            port: metrics
           initialDelaySeconds: {{ .Values.controller.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.controller.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.controller.livenessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.controller.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.controller.livenessProbe.failureThreshold }}
         readinessProbe:
-          tcpSocket:
-            port: {{ .Values.controller.containerPort }}
+          httpGet:
+            path: /healthz
+            port: metrics
           initialDelaySeconds: {{ .Values.controller.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.controller.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.controller.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.controller.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
-        workingDir: /home/argocd
-        volumeMounts:
-        - name: argocd-home
-          mountPath: /home/argocd
-        - mountPath: /app/config/controller/tls
-          name: argocd-repo-server-tls
-        {{- with .Values.controller.volumeMounts }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
+        workingDir: /home/argocd
+        volumeMounts:
+        {{- with .Values.controller.volumeMounts }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - mountPath: /app/config/controller/tls
+          name: argocd-repo-server-tls
+        - mountPath: /home/argocd
+          name: argocd-home
       {{- with .Values.controller.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
@@ -273,10 +292,15 @@ spec:
         {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:
-      - emptyDir: {}
-        name: argocd-home
+      {{- with .Values.controller.volumes }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      - name: argocd-home
+        emptyDir: {}
       - name: argocd-repo-server-tls
         secret:
+          secretName: argocd-repo-server-tls
+          optional: true
           items:
           - key: tls.crt
             path: tls.crt
@@ -284,11 +308,6 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-          optional: true
-          secretName: argocd-repo-server-tls
-      {{- with .Values.controller.volumes }}
-        {{- toYaml . | nindent 6 }}
-      {{- end }}
       {{- with .Values.controller.initContainers }}
       initContainers:
         {{- toYaml . | nindent 6 }}
