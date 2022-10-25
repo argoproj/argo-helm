@@ -27,7 +27,7 @@ data:
     {{- end }}
     {{- if or .Values.mainContainer.resources .Values.mainContainer.env .Values.mainContainer.securityContext}}
     mainContainer:
-      imagePullPolicy: {{ .Values.images.pullPolicy }}
+      imagePullPolicy: {{ default (.Values.images.pullPolicy) .Values.mainContainer.imagePullPolicy }}
       {{- with .Values.mainContainer.resources }}
       resources: {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -40,7 +40,7 @@ data:
     {{- end }}
     {{- if or .Values.executor.resources .Values.executor.env .Values.executor.securityContext}}
     executor:
-      imagePullPolicy: {{ .Values.images.pullPolicy }}
+      imagePullPolicy: {{ default (.Values.images.pullPolicy) .Values.executor.image.pullPolicy }}
       {{- with .Values.executor.resources }}
       resources: {{- toYaml . | nindent 8 }}
       {{- end }}
