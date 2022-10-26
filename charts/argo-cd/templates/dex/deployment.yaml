@@ -98,18 +98,22 @@ spec:
           httpGet:
             path: /healthz/live
             port: metrics
-          {{- with .Values.dex.livenessProbe }}
-            {{- omit . "enabled" | toYaml | nindent 10 }}
-          {{- end }}
+          initialDelaySeconds: {{ .Values.dex.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.dex.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.dex.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.dex.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.dex.livenessProbe.failureThreshold }}
         {{- end }}
         {{- if .Values.dex.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
             path: /healthz/ready
             port: metrics
-          {{- with .Values.dex.readinessProbe }}
-            {{- omit . "enabled" | toYaml | nindent 10 }}
-          {{- end }}
+          initialDelaySeconds: {{ .Values.dex.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.dex.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.dex.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.dex.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.dex.readinessProbe.failureThreshold }}
         {{- end }}
         volumeMounts:
         - name: static-files
