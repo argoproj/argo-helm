@@ -12,7 +12,7 @@ kubeVersionOverride: ""
 # If you want to template helm charts but cannot access k8s API server
 # you can set api versions here
 apiVersionOverrides:
-  # -- String to override apiVersion of certmanager resources rendered by this helm chart
+  # -- String to override apiVersion of cert-manager resources rendered by this helm chart
   certmanager: "" # cert-manager.io/v1
   # -- String to override apiVersion of GKE resources rendered by this helm chart
   cloudgoogle: "" # cloud.google.com/v1
@@ -40,7 +40,13 @@ crds:
   # -- Annotations to be added to all CRDs
   annotations: {}
 
+## Globally shared configuration
 global:
+  # -- Common labels for the all resources
+  additionalLabels: {}
+    # app: argo-cd
+
+  # Default image used by all components
   image:
     # -- If defined, a repository applied to all Argo CD deployments
     repository: quay.io/argoproj/argocd
@@ -52,16 +58,21 @@ global:
   # -- Secrets with credentials to pull images from a private registry
   imagePullSecrets: []
 
+  # Default logging options used by all components
   logging:
     # -- Set the global logging format. Either: `text` or `json`
     format: text
     # -- Set the global logging level. One of: `debug`, `info`, `warn` or `error`
     level: info
+
   # -- Annotations for the all deployed pods
   podAnnotations: {}
+
   # -- Labels for the all deployed pods
   podLabels: {}
-  # -- Toggle and define securityContext. See [values.yaml]
+
+  # -- Toggle and define pod-level security context.
+  # @default -- `{}` (See [values.yaml])
   securityContext: {}
   #  runAsUser: 999
   #  runAsGroup: 999
@@ -72,10 +83,6 @@ global:
   # - ip: 10.20.30.40
   #   hostnames:
   #   - git.myhostname
-
-  # -- Additional labels to add to all resources
-  additionalLabels: {}
-    # app: argo-cd
 
   networkPolicy:
     # -- Create NetworkPolicy objects for all components
@@ -93,6 +100,9 @@ configs:
 
     # -- Annotations to be added to argocd-cm configmap
     annotations: {}
+
+    # -- Argo CD's externally facing base URL (optional). Required when configuring SSO
+    url: ""
 
     # -- The name of tracking label used by Argo CD for resource pruning
     # @default -- Defaults to app.kubernetes.io/instance
@@ -135,6 +145,10 @@ configs:
     #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
     #   clientID: CLIENT_ID
     #   clientSecret: $oidc.azuread.clientSecret
+    #   rootCA: |
+    #     -----BEGIN CERTIFICATE-----
+    #     ... encoded certificate data here ...
+    #     -----END CERTIFICATE-----
     #   requestedIDTokenClaims:
     #     groups:
     #       essential: true
@@ -373,6 +387,8 @@ configs:
   # -- Annotations to be added to `configs.repositories` Secret
   repositoriesAnnotations: {}
 
+  # Argo CD sensitive data
+  # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#sensitive-data-and-sso-client-secrets
   secret:
     # -- Create the argocd-secret
     createSecret: true
@@ -555,7 +571,6 @@ controller:
 
   ## Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
-  ##
   readinessProbe:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
@@ -1320,7 +1335,6 @@ server:
 
   ## Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
-  ##
   readinessProbe:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
@@ -1839,7 +1853,6 @@ repoServer:
 
   ## Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
-  ##
   readinessProbe:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
