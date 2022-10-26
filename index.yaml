@@ -1588,6 +1588,36 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Chart NOTES invalid yaml references"
+    apiVersion: v2
+    appVersion: v2.5.0
+    created: "2022-10-26T11:11:42.138310004Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 13965f15cff90eefbf0288976564e797355a654f4f110fda7e259e471abfcce2
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.8.1/argo-cd-5.8.1.tgz
+    version: 5.8.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Upgraded Argo CD to 2.5.0"
     apiVersion: v2
     appVersion: v2.5.0
@@ -17644,4 +17674,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-10-25T21:22:43.707362184Z"
+generated: "2022-10-26T11:11:42.140098119Z"
