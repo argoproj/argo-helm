@@ -100,6 +100,11 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVer
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
 
+### 5.10.0
+
+This version hardens security by configuring default container security contexts.
+The change aligns chart with [supported versions](https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/#supported-versions) by upstream and adds requirement for minimum Kubernetes version >= 1.22.
+
 ### 5.5.20
 
 This version moved API version templates into dedicated helper. If you are using these in your umbrella
@@ -312,7 +317,7 @@ server:
 
 ## Prerequisites
 
-- Kubernetes 1.7+
+- {{ template "chart.kubeVersionLine" . }}
 - Helm v3.0.0+
 
 ## Installing the Chart
