@@ -1,4 +1,4 @@
-{{- if (coalesce .Values.server.rbacConfigCreate .Values.configs.rbac.create) }}
+{{- if (hasKey .Values.server "rbacConfigCreate") | ternary .Values.server.rbacConfigCreate .Values.configs.rbac.create }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
