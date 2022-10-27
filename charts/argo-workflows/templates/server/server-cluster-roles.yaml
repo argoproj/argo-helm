@@ -30,7 +30,7 @@ rules:
   - list
   - watch
   - delete
-  {{- if .Values.server.sso }}
+{{- if .Values.server.sso }}
 - apiGroups:
   - ""
   resources:
@@ -46,7 +46,7 @@ rules:
   - secrets
   verbs:
   - create
-    {{- if .Values.server.sso.rbac }}
+  {{- if .Values.server.sso.rbac }}
 - apiGroups:
   - ""
   resources:
@@ -55,8 +55,8 @@ rules:
   - get
   - list
   - watch
-    {{- end }}
   {{- end }}
+{{- end }}
 - apiGroups:
   - ""
   resources:
