@@ -1055,6 +1055,22 @@ server:
   config:
     resource.inclusions: |
       - apiGroups:
+        - "kubeflow.org"
+        kinds:
+        - mpijobs
+        - tfjobs
+        - mxjobs
+        - pytorchjobs
+        - xgboostjobs
+        - mpijobs/status
+        - tfjobs/status
+        - pytorchjobs/status
+        - mxjobs/status
+        - xgboostjobs/status
+        clusters:
+        - https://10.135.192.1:443
+        - https://kubernetes.default.svc
+      - apiGroups:
         - "networking.k8s.io"
         kinds:
         - Ingress
