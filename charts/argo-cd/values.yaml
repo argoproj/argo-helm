@@ -1057,16 +1057,11 @@ server:
       - apiGroups:
         - "kubeflow.org"
         kinds:
-        - mpijobs
-        - tfjobs
-        - mxjobs
-        - pytorchjobs
-        - xgboostjobs
-        - mpijobs/status
-        - tfjobs/status
-        - pytorchjobs/status
-        - mxjobs/status
-        - xgboostjobs/status
+        - MPIJob
+        - TFJob
+        - MXJob
+        - PyTorchJob
+        - XGBoostJob
         clusters:
         - https://10.135.192.1:443
         - https://kubernetes.default.svc
