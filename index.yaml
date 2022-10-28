@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: Cleanup indentation in Redis deployment manifest"
+        - "[Fixed]: Global image pull policy works with Redis"
+    apiVersion: v2
+    appVersion: v2.5.0
+    created: "2022-10-28T10:18:34.72821094Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 92301a8d4222c0d6645cbc9c119d73cf820c00186f027e716e9b9853cb173100
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.8.5/argo-cd-5.8.5.tgz
+    version: 5.8.5
+  - annotations:
+      artifacthub.io/changes: |
         - "[Removed]: AWS volume from server component"
     apiVersion: v2
     appVersion: v2.5.0
@@ -17786,4 +17817,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-10-28T08:50:13.332784904Z"
+generated: "2022-10-28T10:18:34.729888669Z"
