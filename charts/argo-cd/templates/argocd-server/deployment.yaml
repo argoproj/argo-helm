@@ -276,8 +276,6 @@ spec:
           name: argocd-dex-server-tls
         - mountPath: /home/argocd
           name: plugins-home
-        - mountPath: /home/argocd/.aws
-          name: aws-config
         - mountPath: /shared/app/custom
           name: styles
         - mountPath: /tmp
@@ -364,8 +362,6 @@ spec:
       {{- with .Values.server.volumes }}
         {{- toYaml . | nindent 6}}
       {{- end }}
-      - name: aws-config
-        emptyDir: {}
       {{- if .Values.server.extensions.enabled }}
       - name: extensions
         emptyDir: {}
