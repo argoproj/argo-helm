@@ -184,7 +184,9 @@ Merge Argo Configuration with Preset Configuration
 {{- define "argo-cd.config.cm" -}}
 {{- $config := coalesce .Values.server.config (omit .Values.configs.cm "create" "annotations") -}}
 {{- $preset := include "argo-cd.config.cm.presets" . | fromYaml | default dict -}}
-{{- mergeOverwrite $preset $config | toYaml }}
+{{- range $key, $value := mergeOverwrite $preset $config }}
+{{ $key }}: {{ toString $value | toYaml }}
+{{- end }}
 {{- end -}}
 
 {{/*
@@ -209,8 +211,8 @@ Merge Argo Params Configuration with Preset Configuration
 */}}
 {{- define "argo-cd.config.params" -}}
 {{- $config := omit .Values.configs.params "annotations" }}
-{{- $preset := include "argo-cd.config.params.presets" $ | fromYaml | default dict -}}
+{{- $preset := include "argo-cd.config.params.presets" . | fromYaml | default dict -}}
 {{- range $key, $value := mergeOverwrite $preset $config }}
-{{ $key }}: {{ $value | quote }}
+{{ $key }}: {{ toString $value | toYaml }}
 {{- end }}
 {{- end -}}
