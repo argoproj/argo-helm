@@ -34,10 +34,10 @@ DEPRECATED option repoServer.logFormat - Use configs.params.repoServer.log.forma
 {{- if .Values.repoServer.logLevel }}
 DEPRECATED option repoServer.logLevel - Use configs.params.repoServer.log.level
 {{- end }}
-{{- if or .Values.server.config .Values.server.configEnabled .Values.server.configAnnotations }}
+{{- if or .Values.server.config (hasKey .Values.server "configEnabled") .Values.server.configAnnotations }}
 DEPRECATED option server.config - Use configs.cm
 {{- end }}
-{{- if or .Values.server.rbacConfig .Values.server.rbacConfigCreate .Values.server.rbacConfigAnnotations }}
+{{- if or .Values.server.rbacConfig (hasKey .Values.server "rbacConfigCreate") .Values.server.rbacConfigAnnotations }}
 DEPRECATED option server.rbacConfig - Use configs.rbac
 {{- end }}
 {{- if .Values.controller.service }}

@@ -1,4 +1,4 @@
-{{- if (coalesce .Values.server.configEnabled .Values.configs.cm.create) }}
+{{- if (hasKey .Values.server "configEnabled") | ternary .Values.server.configEnabled .Values.configs.cm.create }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
