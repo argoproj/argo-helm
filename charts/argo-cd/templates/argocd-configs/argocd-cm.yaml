@@ -12,5 +12,5 @@ metadata:
     {{- end }}
   {{- end }}
 data:
-  {{- include "argo-cd.config.cm" . | nindent 2 }}
+  {{- include "argo-cd.config.cm" . | trim | nindent 2 }}
 {{- end }}
