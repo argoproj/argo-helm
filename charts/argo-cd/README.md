@@ -735,6 +735,12 @@ server:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | dex.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| dex.certificateSecret.annotations | object | `{}` | Annotations to be added to argocd-dex-server-tls secret |
+| dex.certificateSecret.ca | string | `""` | Certificate authority. Required for self-signed certificates. |
+| dex.certificateSecret.crt | string | `""` | Certificate data. Must contain SANs of Dex service (ie: argocd-dex-server, argocd-dex-server.argo-cd.svc) |
+| dex.certificateSecret.enabled | bool | `false` | Create argocd-dex-server-tls secret |
+| dex.certificateSecret.key | string | `""` | Certificate private key |
+| dex.certificateSecret.labels | object | `{}` | Labels to be added to argocd-dex-server-tls secret |
 | dex.containerPortGrpc | int | `5557` | Container port for gRPC access |
 | dex.containerPortHttp | int | `5556` | Container port for HTTP access |
 | dex.containerPortMetrics | int | `5558` | Container port for metrics access |

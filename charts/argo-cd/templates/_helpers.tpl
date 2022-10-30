@@ -198,7 +198,8 @@ repo.server: "{{ include "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServe
 redis.server: {{ . | quote }}
 {{- end }}
 {{- if .Values.dex.enabled }}
-server.dex.server: {{ include "argo-cd.dex.server" . }}
+server.dex.server: {{ include "argo-cd.dex.server" . | quote }}
+server.dex.server.strict.tls: {{ .Values.dex.certificateSecret.enabled | toString }}
 {{- end }}
 {{- range $component := tuple "controller" "server" "reposerver" }}
 {{ $component }}.log.format: {{ $.Values.global.logging.format | quote }}
