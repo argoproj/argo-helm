@@ -110,21 +110,21 @@ configs:
 
     # -- Enable logs RBAC enforcement
     ## Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.3-2.4/#enable-logs-rbac-enforcement
-    server.rbac.log.enforce.enable: "false"
+    server.rbac.log.enforce.enable: false
 
     # -- Enable exec feature in Argo UI
     ## Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/rbac/#exec-resource
-    exec.enabled: "false"
+    exec.enabled: false
 
     # -- Enable local admin user
     ## Ref: https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
-    admin.enabled: "true"
+    admin.enabled: true
 
     # -- Timeout to discover if a new manifests version got published to the repository
     timeout.reconciliation: 180s
 
     # -- Timeout to refresh application data as well as target manifests cache
-    timeout.hard.reconciliation: "0"
+    timeout.hard.reconciliation: 0
 
     # Dex configuration
     # dex.config: |
