@@ -231,15 +231,6 @@ spec:
         - name: metrics
           containerPort: {{ .Values.controller.containerPort }}
           protocol: TCP
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: metrics
-          initialDelaySeconds: {{ .Values.controller.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.controller.livenessProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.controller.livenessProbe.timeoutSeconds }}
-          successThreshold: {{ .Values.controller.livenessProbe.successThreshold }}
-          failureThreshold: {{ .Values.controller.livenessProbe.failureThreshold }}
         readinessProbe:
           httpGet:
             path: /healthz
