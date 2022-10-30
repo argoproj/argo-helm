@@ -36,12 +36,6 @@ spec:
       - name: copyutil
         image: {{ default .Values.global.image.repository .Values.dex.initImage.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.dex.initImage.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.initImage.imagePullPolicy }}
-        resources:
-          {{- toYaml .Values.dex.resources | nindent 10 }}
-        {{- with .Values.dex.containerSecurityContext }}
-        securityContext:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
         command:
         - cp
         - -n
@@ -52,6 +46,10 @@ spec:
           name: static-files
         - mountPath: /tmp
           name: dexconfig
+        resources:
+          {{- toYaml .Values.dex.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
       {{- with .Values.dex.initContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
@@ -64,10 +62,7 @@ spec:
         args:
         - rundex
         {{- with .Values.dex.extraArgs }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- if .Values.dex.containerSecurityContext }}
-        securityContext: {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
           {{- with .Values.dex.env }}
@@ -115,18 +110,20 @@ spec:
           successThreshold: {{ .Values.dex.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.dex.readinessProbe.failureThreshold }}
         {{- end }}
+        resources:
+          {{- toYaml .Values.dex.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
         volumeMounts:
+        {{- with .Values.dex.volumeMounts }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         - name: static-files
           mountPath: /shared
         - name: dexconfig
           mountPath: /tmp
         - name: argocd-dex-server-tls
           mountPath: /tls
-        {{- with .Values.dex.volumeMounts }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        resources:
-          {{- toYaml .Values.dex.resources | nindent 10 }}
       {{- with .Values.dex.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}

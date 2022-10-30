@@ -558,13 +558,16 @@ controller:
   podLabels: {}
 
   # -- Application controller container-level security context
+  # @default -- See [values.yaml]
   containerSecurityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #     - all
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+      - ALL
 
   # -- Application controller listening port
   containerPort: 8082
@@ -814,6 +817,7 @@ dex:
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
 
+  # Argo CD init image that creates Dex config
   initImage:
     # -- Argo CD init image repository
     # @default -- `""` (defaults to global.image.repository)
@@ -841,6 +845,18 @@ dex:
 
   # -- Labels to be added to the Dex server pods
   podLabels: {}
+
+  # -- Dex container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+      - ALL
 
   ## Probes for Dex server
   ## Supported from Dex >= 2.28.0
@@ -921,14 +937,6 @@ dex:
 
   # -- Priority class for dex
   priorityClassName: ""
-
-  # -- Dex container-level security context
-  containerSecurityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #     - all
-    # readOnlyRootFilesystem: true
 
   # -- Resource limits and requests for dex
   resources: {}
@@ -1021,6 +1029,22 @@ redis:
   # -- Labels to be added to the Redis server pods
   podLabels: {}
 
+  # -- Redis pod-level security context
+  # @default -- See [values.yaml]
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 999
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- Redis container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+
   # -- [Node selector]
   nodeSelector: {}
   # -- [Tolerations] for use with node taints
@@ -1038,19 +1062,6 @@ redis:
 
   # -- Priority class for redis
   priorityClassName: ""
-
-  # -- Redis container-level security context
-  containerSecurityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #     - all
-    # readOnlyRootFilesystem: true
-
-  # -- Redis pod-level security context
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 999
 
   serviceAccount:
     # -- Create a service account for the redis pod
@@ -1113,6 +1124,19 @@ redis:
       imagePullPolicy: IfNotPresent
     # -- Port to use for redis-exporter sidecar
     containerPort: 9121
+
+    # -- Redis exporter security context
+    # @default -- See [values.yaml]
+    containerSecurityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+        - ALL
+
     # -- Resource limits and requests for redis-exporter sidecar
     resources: {}
       # limits:
@@ -1371,13 +1395,17 @@ server:
   # -- Priority class for the Argo CD server
   priorityClassName: ""
 
-  # -- Servers container-level security context
+  # -- Server container-level security context
+  # @default -- See [values.yaml]
   containerSecurityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #     - all
-    # readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+      - ALL
 
   # -- Resource limits and requests for the Argo CD server
   resources: {}
@@ -1732,6 +1760,18 @@ server:
       # -- Image pull policy for extensions
       imagePullPolicy: IfNotPresent
 
+    # -- Server UI extensions container-level security context
+    # @default -- See [values.yaml]
+    containerSecurityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+        - ALL
+
     # -- Resource limits and requests for the argocd-extensions container
     resources: {}
     #  limits:
@@ -1895,12 +1935,16 @@ repoServer:
   priorityClassName: ""
 
   # -- Repo server container-level security context
+  # @default -- See [values.yaml]
   containerSecurityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #     - all
-    # readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+      - ALL
 
   # -- Resource limits and requests for the repo server pods
   resources: {}
@@ -2149,18 +2193,17 @@ applicationSet:
   # -- Labels for the controller pods
   podLabels: {}
 
-  # -- Pod Security Context
-  podSecurityContext: {}
-    # fsGroup: 2000
-
-  # -- Security Context
-  securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+  # -- ApplicationSet controller container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+      - ALL
 
   ## Probes for ApplicationSet controller (optional)
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
@@ -2440,8 +2483,17 @@ notifications:
   # -- Labels to be applied to the controller Pods
   podLabels: {}
 
-  # -- Container Security Context
-  containerSecurityContext: {}
+  # -- Notification controller container-level security Context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+      - ALL
 
   # -- Priority class for the controller pods
   priorityClassName: ""
@@ -2810,12 +2862,17 @@ notifications:
         # -- Annotations applied to created service account
         annotations: {}
 
-      # -- Pod Security Context
-      securityContext:
+      # -- Slack bot container-level security Context
+      # @default -- See [values.yaml]
+      containerSecurityContext:
         runAsNonRoot: true
-
-      # -- Container Security Context
-      containerSecurityContext: {}
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        seccompProfile:
+          type: RuntimeDefault
+        capabilities:
+          drop:
+          - ALL
 
       # -- Resource limits and requests for the Slack bot
       resources: {}

@@ -28,8 +28,10 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.securityContext }}
       securityContext:
-        {{- toYaml (mergeOverwrite (deepCopy .Values.global.securityContext) .Values.applicationSet.podSecurityContext) | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "argo-cd.applicationSetServiceAccountName" . }}
       containers:
         - name: {{ .Values.applicationSet.name }}
@@ -99,7 +101,7 @@ spec:
           resources:
             {{- toYaml .Values.applicationSet.resources | nindent 12 }}
           securityContext:
-            {{- toYaml .Values.applicationSet.securityContext | nindent 12 }}
+            {{- toYaml .Values.applicationSet.containerSecurityContext | nindent 12 }}
           volumeMounts:
             {{- with .Values.applicationSet.extraVolumeMounts }}
               {{- toYaml . | nindent 12 }}

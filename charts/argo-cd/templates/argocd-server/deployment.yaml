@@ -52,10 +52,6 @@ spec:
         {{- with .Values.server.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.server.containerSecurityContext }}
-        securityContext:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
         env:
           {{- with .Values.server.env }}
             {{- toYaml . | nindent 10 }}
@@ -309,10 +305,10 @@ spec:
           timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.server.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
-        {{- with .Values.server.resources }}
         resources:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
+          {{- toYaml .Values.server.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.server.containerSecurityContext | nindent 10 }}
         {{- with .Values.server.lifecycle }}
         lifecycle:
           {{- toYaml . | nindent 10 }}
@@ -324,11 +320,13 @@ spec:
       - name: argocd-extensions
         image: {{ .Values.server.extensions.image.repository }}:{{ .Values.server.extensions.image.tag }}
         imagePullPolicy: {{ .Values.server.extensions.image.imagePullPolicy }}
+        resources:
+          {{- toYaml .Values.server.extensions.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.server.extensions.containerSecurityContext | nindent 10 }}
         volumeMounts:
           - name: extensions
             mountPath: /tmp/extensions/
-        resources:
-          {{- toYaml .Values.server.extensions.resources | nindent 10 }}
       {{- end }}
       {{- with .Values.server.nodeSelector }}
       nodeSelector:

@@ -1,8 +1,9 @@
 apiVersion: v2
 appVersion: v2.5.0
+kubeVersion: ">=1.22.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.9.1
+version: 5.10.0
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -22,4 +23,8 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Removed]: Liveness probe for application controller"
+    - "[Security]: Use recommended container security contexts by default"
+    - "[Added]: Container security context for server UI extensions sidecar"
+    - "[Fixed]: Redis metrics sidecar now uses correct configuration option"
+    - "[Removed]: ApplicationSet securityContext in favor of global.securityContext"
+    - "[Removed]: Notification securityContext in favor of global.securityContext"

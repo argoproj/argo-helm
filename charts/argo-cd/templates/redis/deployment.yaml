@@ -63,10 +63,8 @@ spec:
           protocol: TCP
         resources:
           {{- toYaml .Values.redis.resources | nindent 10 }}
-        {{- with .Values.redis.containerSecurityContext }}
         securityContext:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
+          {{- toYaml .Values.redis.containerSecurityContext | nindent 10 }}
         {{- with .Values.redis.volumeMounts }}
         volumeMounts:
           {{- toYaml . | nindent 10 }}
@@ -86,10 +84,8 @@ spec:
           protocol: TCP
         resources:
           {{- toYaml .Values.redis.metrics.resources | nindent 10 }}
-        {{- with .Values.redis.containerSecurityContext }}
         securityContext:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
+          {{- toYaml .Values.redis.metrics.containerSecurityContext | nindent 10 }}
       {{- end }}
       {{- with .Values.redis.extraContainers }}
         {{- toYaml . | nindent 6 }}

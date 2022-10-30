@@ -55,10 +55,6 @@ spec:
         {{- with .Values.repoServer.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.repoServer.containerSecurityContext }}
-        securityContext:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
         env:
           {{- with .Values.repoServer.env }}
             {{- toYaml . | nindent 10 }}
@@ -254,10 +250,10 @@ spec:
           timeoutSeconds: {{ .Values.repoServer.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.repoServer.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.readinessProbe.failureThreshold }}
-        {{- with .Values.repoServer.resources }}
         resources:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
+          {{- toYaml .Values.repoServer.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
       {{- with .Values.repoServer.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}

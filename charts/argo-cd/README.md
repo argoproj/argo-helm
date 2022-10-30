@@ -101,6 +101,11 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVer
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
 
+### 5.10.0
+
+This version hardens security by configuring default container security contexts.
+The change aligns chart with [supported versions](https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/#supported-versions) by upstream and adds requirement for minimum Kubernetes version >= 1.22.
+
 ### 5.5.20
 
 This version moved API version templates into dedicated helper. If you are using these in your umbrella
@@ -312,7 +317,7 @@ server:
 
 ## Prerequisites
 
-- Kubernetes 1.7+
+- Kubernetes: `>=1.22.0-0`
 - Helm v3.0.0+
 
 ## Installing the Chart
@@ -431,7 +436,7 @@ NAME: my-release
 | controller.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the application controller's ClusterRole resource |
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
 | controller.containerPort | int | `8082` | Application controller listening port |
-| controller.containerSecurityContext | object | `{}` | Application controller container-level security context |
+| controller.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to application controller |
@@ -502,7 +507,7 @@ NAME: my-release
 | repoServer.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the Repo server's Cluster Role resource |
 | repoServer.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
 | repoServer.containerPort | int | `8081` | Configures the repo server port |
-| repoServer.containerSecurityContext | object | `{}` | Repo server container-level security context |
+| repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
 | repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
 | repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to repo server |
@@ -596,9 +601,10 @@ NAME: my-release
 | server.certificate.secretName | string | `"argocd-server-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
 | server.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
 | server.containerPort | int | `8080` | Configures the server port |
-| server.containerSecurityContext | object | `{}` | Servers container-level security context |
+| server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
 | server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
+| server.extensions.containerSecurityContext | object | See [values.yaml] | Server UI extensions container-level security context |
 | server.extensions.enabled | bool | `false` | Enable support for Argo UI extensions |
 | server.extensions.image.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy for extensions |
 | server.extensions.image.repository | string | `"ghcr.io/argoproj-labs/argocd-extensions"` | Repository to use for extensions image |
@@ -732,7 +738,7 @@ server:
 | dex.containerPortGrpc | int | `5557` | Container port for gRPC access |
 | dex.containerPortHttp | int | `5556` | Container port for HTTP access |
 | dex.containerPortMetrics | int | `5558` | Container port for metrics access |
-| dex.containerSecurityContext | object | `{}` | Dex container-level security context |
+| dex.containerSecurityContext | object | See [values.yaml] | Dex container-level security context |
 | dex.enabled | bool | `true` | Enable dex |
 | dex.env | list | `[]` | Environment variables to pass to the Dex server |
 | dex.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Dex server |
@@ -805,7 +811,7 @@ server:
 |-----|------|---------|-------------|
 | redis.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | redis.containerPort | int | `6379` | Redis container port |
-| redis.containerSecurityContext | object | `{}` | Redis container-level security context |
+| redis.containerSecurityContext | object | See [values.yaml] | Redis container-level security context |
 | redis.enabled | bool | `true` | Enable redis |
 | redis.env | list | `[]` | Environment variables to pass to the Redis server |
 | redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
@@ -817,6 +823,7 @@ server:
 | redis.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
+| redis.metrics.containerSecurityContext | object | See [values.yaml] | Redis exporter security context |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
 | redis.metrics.image.imagePullPolicy | string | `"IfNotPresent"` | redis-exporter image PullPolicy |
 | redis.metrics.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
@@ -849,7 +856,7 @@ server:
 | redis.podLabels | object | `{}` | Labels to be added to the Redis server pods |
 | redis.priorityClassName | string | `""` | Priority class for redis |
 | redis.resources | object | `{}` | Resource limits and requests for redis |
-| redis.securityContext | object | `{"runAsNonRoot":true,"runAsUser":999}` | Redis pod-level security context |
+| redis.securityContext | object | See [values.yaml] | Redis pod-level security context |
 | redis.service.annotations | object | `{}` | Redis service annotations |
 | redis.service.labels | object | `{}` | Additional redis service labels |
 | redis.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
@@ -913,6 +920,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.args.metricsAddr | string | `":8080"` | The default metric address |
 | applicationSet.args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
 | applicationSet.args.probeBindAddr | string | `":8081"` | The default health check port |
+| applicationSet.containerSecurityContext | object | See [values.yaml] | ApplicationSet controller container-level security context |
 | applicationSet.enabled | bool | `true` | Enable ApplicationSet controller |
 | applicationSet.extraArgs | list | `[]` | List of extra cli args to add |
 | applicationSet.extraContainers | list | `[]` | Additional containers to be added to the applicationset controller pod |
@@ -956,7 +964,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | applicationSet.podAnnotations | object | `{}` | Annotations for the controller pods |
 | applicationSet.podLabels | object | `{}` | Labels for the controller pods |
-| applicationSet.podSecurityContext | object | `{}` | Pod Security Context |
 | applicationSet.priorityClassName | string | `""` | If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default. |
 | applicationSet.readinessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for ApplicationSet controller |
 | applicationSet.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
@@ -966,7 +973,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | applicationSet.replicaCount | int | `1` | The number of ApplicationSet controller pods to run |
 | applicationSet.resources | object | `{}` | Resource limits and requests for the controller pods. |
-| applicationSet.securityContext | object | `{}` | Security Context |
 | applicationSet.service.annotations | object | `{}` | Application set service annotations |
 | applicationSet.service.labels | object | `{}` | Application set service labels |
 | applicationSet.service.port | int | `7000` | Application set service port |
@@ -993,7 +999,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.affinity | object | `{}` | Assign custom [affinity] rules |
 | notifications.argocdUrl | string | `nil` | Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates |
 | notifications.bots.slack.affinity | object | `{}` | Assign custom [affinity] rules |
-| notifications.bots.slack.containerSecurityContext | object | `{}` | Container Security Context |
+| notifications.bots.slack.containerSecurityContext | object | See [values.yaml] | Slack bot container-level security Context |
 | notifications.bots.slack.enabled | bool | `false` | Enable slack bot |
 | notifications.bots.slack.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Slack bot |
 | notifications.bots.slack.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Slack bot |
@@ -1006,7 +1012,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
 | notifications.bots.slack.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | notifications.bots.slack.resources | object | `{}` | Resource limits and requests for the Slack bot |
-| notifications.bots.slack.securityContext | object | `{"runAsNonRoot":true}` | Pod Security Context |
 | notifications.bots.slack.service.annotations | object | `{}` | Service annotations for Slack bot |
 | notifications.bots.slack.service.port | int | `80` | Service port for Slack bot |
 | notifications.bots.slack.service.type | string | `"LoadBalancer"` | Service type for Slack bot |
@@ -1016,7 +1021,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.bots.slack.updateStrategy | object | `{"type":"Recreate"}` | The deployment strategy to use to replace existing pods with new ones |
 | notifications.cm.create | bool | `true` | Whether helm chart creates controller config map |
-| notifications.containerSecurityContext | object | `{}` | Container Security Context |
+| notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.context | object | `{}` | Define user-defined context |
 | notifications.enabled | bool | `true` | Enable notifications controller |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
