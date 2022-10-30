@@ -1588,6 +1588,36 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Removed]: Liveness probe for application controller"
+    apiVersion: v2
+    appVersion: v2.5.0
+    created: "2022-10-30T17:48:17.519954989Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 6819a4aaf4ef0217ab6df124ea6a716bd14606ca341f5d0635fa231d0d48b7b2
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.9.1/argo-cd-5.9.1.tgz
+    version: 5.9.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Optional probes for ApplicationSet controller"
     apiVersion: v2
     appVersion: v2.5.0
@@ -17907,4 +17937,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-10-30T15:38:32.689603681Z"
+generated: "2022-10-30T17:48:17.521563473Z"
