@@ -415,16 +415,10 @@ configs:
       # LDAP_PASSWORD: "mypassword"
 
     # -- Argo TLS Data
-    argocdServerTlsConfig:
-      {}
-      # key:
-      # crt: |
-      #   -----BEGIN CERTIFICATE-----
-      #   <cert data>
-      #   -----END CERTIFICATE-----
-      #   -----BEGIN CERTIFICATE-----
-      #   <ca cert data>
-      #   -----END CERTIFICATE-----
+    # DEPRECATED - Use server.certificate or server.certificateSecret
+    # argocdServerTlsConfig:
+    #  key: ''
+    #  crt: ''
 
     # -- Bcrypt hashed admin password
     ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
@@ -1433,16 +1427,34 @@ server:
   #    cpu: 50m
   #    memory: 64Mi
 
-  ## Certificate configuration
+  # TLS certificate configuration via cert-manager
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
     enabled: false
+    # -- The name of the Secret that will be automatically created and managed by this Certificate resource
+    secretName: argocd-server-tls
     # -- Certificate primary domain (commonName)
     domain: argocd.example.com
-    # -- The requested 'duration' (i.e. lifetime) of the Certificate. Value must be in units accepted by Go time.ParseDuration
+    # -- Certificate Subject Alternate Names (SANs)
+    additionalHosts: []
+    # -- The requested 'duration' (i.e. lifetime) of the certificate.
+    # @default -- `""` (defaults to 2160h = 90d if not specified)
+    ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
     duration: ""
-    # -- How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration
+    # -- How long before the expiry a certificate should be renewed.
+    # @default -- `""` (defaults to 360h = 15d if not specified)
+    ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
     renewBefore: ""
+    # Certificate issuer
+    ## Ref: https://cert-manager.io/docs/concepts/issuer
+    issuer:
+      # -- Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io`
+      group: ""
+      # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
+      kind: ""
+      # -- Certificate isser name. Eg. `letsencrypt`
+      name: ""
     # Private key of the certificate
     privateKey:
       # -- Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always`
@@ -1453,17 +1465,20 @@ server:
       algorithm: RSA
       # -- Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored.
       size: 2048
-    issuer:
-      # -- Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io`
-      group: ""
-      # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
-      kind: ""
-      # -- Certificate isser name. Eg. `letsencrypt`
-      name: ""
-    # -- Certificate manager additional hosts
-    additionalHosts: []
-    # -- The name of the Secret that will be automatically created and managed by this Certificate resource
-    secretName: argocd-server-tls
+
+  # TLS certificate configuration via Secret
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
+  certificateSecret:
+    # -- Create argocd-server-tls secret
+    enabled: false
+    # -- Annotations to be added to argocd-server-tls secret
+    annotations: {}
+    # -- Labels to be added to argocd-server-tls secret
+    labels: {}
+    # -- Private Key of the certificate
+    key: ''
+    # -- Certificate data
+    crt: ''
 
   ## Server service configuration
   service:
@@ -1591,7 +1606,7 @@ server:
     # -- Ingress TLS configuration
     tls:
       []
-      # - secretName: argocd-tls-certificate
+      # - secretName: your-certificate-name
       #   hosts:
       #     - argocd.example.com
 
@@ -1657,7 +1672,7 @@ server:
     # -- Ingress TLS configuration for dedicated [gRPC-ingress]
     tls:
       []
-      # - secretName: argocd-tls-certificate
+      # - secretName: your-certificate-name
       #   hosts:
       #     - argocd.example.com
 
