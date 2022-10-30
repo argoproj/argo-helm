@@ -199,7 +199,7 @@ redis.server: {{ . | quote }}
 {{- end }}
 {{- if .Values.dex.enabled }}
 server.dex.server: {{ include "argo-cd.dex.server" . | quote }}
-server.dex.server.strict.tls: {{ (or .Values.dex.certificate.enabled .Values.dex.certificateSecret.enabled) | toString }}
+server.dex.server.strict.tls: {{ .Values.dex.certificateSecret.enabled | toString }}
 {{- end }}
 {{- range $component := tuple "controller" "server" "reposerver" }}
 {{ $component }}.log.format: {{ $.Values.global.logging.format | quote }}

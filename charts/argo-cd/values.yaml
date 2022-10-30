@@ -840,46 +840,11 @@ dex:
   # - secretRef:
   #     name: secret-name
 
-  # TLS certificate configuration via cert-manager
-  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#configuring-tls-to-argocd-dex-server
-  certificate:
-    # -- Deploy a Certificate resource (requires cert-manager)
-    ## Note: Dex server must be restarted after certificate change, consider solutions like [Roloader] to watch for secret changes
-    enabled: false
-    # -- Certificate primary domain (commonName)
-    ## Note: Optional as Argo CD components are using internal K8s domain names
-    domain: ""
-    # -- Certificate Subject Alternate Names (SANs)
-    ## Note: Optional as Argo CD components are using internal K8s domain names
-    additionalHosts: []
-    # -- The requested 'duration' (i.e. lifetime) of the Certificate. Value must be in units accepted by Go time.ParseDuration
-    duration: ""
-    # -- How long before the currently issued certificate's expiry cert-manager should renew the certificate. Value must be in units accepted by Go time.ParseDuration
-    renewBefore: ""
-    # Certificate issuer
-    issuer:
-      # -- Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io`
-      group: ""
-      # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
-      kind: ""
-      # -- Certificate isser name. Eg. `letsencrypt`
-      name: ""
-    # Private key of the certificate
-    privateKey:
-      # -- Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always`
-      rotationPolicy: Never
-      # -- The private key cryptography standards (PKCS) encoding for private key. Either: `PCKS1` or `PKCS8`
-      encoding: PKCS1
-      # -- Algorithm used to generate certificate private key. One of: `RSA`, `Ed25519` or `ECDSA`
-      algorithm: RSA
-      # -- Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored.
-      size: 2048
-
   # TLS certificate configuration via Secret
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#configuring-tls-to-argocd-dex-server
+  ## Note: Issuing certificates via cert-manager in not supported right now because it's not possible to restart Dex automatically without extra controllers.
   certificateSecret:
     # -- Create argocd-dex-server-tls secret
-    ## Note: Certificate must have SANs of Dex service (ie: argocd-dex-server, argocd-dex-server.argo-cd.svc)
     enabled: false
     # -- Labels to be added to argocd-dex-server-tls secret
     labels: {}
@@ -889,7 +854,7 @@ dex:
     ca: ''
     # -- Certificate private key
     key: ''
-    # -- Certificate data
+    # -- Certificate data. Must contain SANs of Dex service (ie: argocd-dex-server, argocd-dex-server.argo-cd.svc)
     crt: ''
 
   # -- Annotations to be added to the Dex server pods
