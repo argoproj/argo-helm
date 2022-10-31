@@ -65,6 +65,12 @@ global:
     # -- Set the global logging level. One of: `debug`, `info`, `warn` or `error`
     level: info
 
+  # -- Annotations for the all deployed Statefulsets
+  statefulsetAnnotations: {}
+
+  # -- Annotations for the all deployed Deployments
+  deploymentAnnotations: {}
+
   # -- Annotations for the all deployed pods
   podAnnotations: {}
 
@@ -545,6 +551,9 @@ controller:
   # - secretRef:
   #     name: secret-name
 
+  # -- Annotations to be added to application controller Deployment
+  deploymentAnnotations: {}
+
   # -- Annotations to be added to application controller pods
   podAnnotations: {}
 
@@ -851,6 +860,9 @@ dex:
     # -- Certificate data. Must contain SANs of Dex service (ie: argocd-dex-server, argocd-dex-server.argo-cd.svc)
     crt: ''
 
+  # -- Annotations to be added to the Dex server Deployment
+  deploymentAnnotations: {}
+
   # -- Annotations to be added to the Dex server pods
   podAnnotations: {}
 
@@ -1033,6 +1045,9 @@ redis:
   #     name: config-map-name
   # - secretRef:
   #     name: secret-name
+
+  # -- Annotations to be added to the Redis server Deployment
+  deploymentAnnotations: {}
 
   # -- Annotations to be added to the Redis server pods
   podAnnotations: {}
@@ -1347,6 +1362,9 @@ server:
   # -- Argo CD server log level. One of: `debug`, `info`, `warn` or `error`
   # @default -- `""` (defaults to global.logging.level)
   # logLevel: ""
+
+  # -- Annotations to be added to server Deployment
+  deploymentAnnotations: {}
 
   # -- Annotations to be added to server pods
   podAnnotations: {}
@@ -1903,6 +1921,9 @@ repoServer:
   # @default -- `""` (defaults to global.logging.format)
   # logLevel: ""
 
+  # -- Annotations to be added to repo server Deployment
+  deploymentAnnotations: {}
+
   # -- Annotations to be added to repo server pods
   podAnnotations: {}
 
@@ -2219,6 +2240,9 @@ applicationSet:
     # If not set and create is true, a name is generated using the fullname template
     name: ""
 
+  # -- Annotations for the controller StatefulSet
+  statefulsetAnnotations: {}
+
   # -- Annotations for the controller pods
   podAnnotations: {}
 
@@ -2508,6 +2532,9 @@ notifications:
   notifiers: {}
     # service.slack: |
     #   token: $slack-token
+
+  # -- Annotations to be applied to the controller Deployments
+  deploymentAnnotations: {}
 
   # -- Annotations to be applied to the controller Pods
   podAnnotations: {}

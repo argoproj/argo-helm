@@ -10,7 +10,7 @@ spec:
   - from:
     - namespaceSelector: {}
     ports:
-    - port: controller
+    - port: metrics
   podSelector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
