@@ -43,6 +43,12 @@ DEPRECATED option server.rbacConfig - Use configs.rbac
 {{- if .Values.configs.secret.argocdServerTlsConfig }}
 DEPRECATED option config.secret.argocdServerTlsConfig - Use server.certificate or server.certificateSecret
 {{- end }}
+{{- if .Values.configs.gpgKeys }}
+DEPRECATED option configs.gpgKeys - Use config.gpg.keys
+{{- end }}
+{{- if .Values.configs.gpgKeysAnnotations }}
+DEPRECATED option configs.gpgKeysAnnotations - Use config.gpg.annotations
+{{- end }}
 {{- if .Values.controller.service }}
 REMOVED option controller.service - Use controller.metrics
 {{- end }}
