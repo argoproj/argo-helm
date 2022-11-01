@@ -58,6 +58,12 @@ REMOVED option controller.service - Use controller.metrics
 {{- if .Values.repoServer.copyutil }}
 REMOVED option repoSever.copyutil.resources - Use repoServer.resources
 {{- end }}
+{{- if .Values.applicationSet.args.debug }}
+REMOVED option applicationSet.args.debug - Use applicationSet.logLevel: debug
+{{- end }}
+{{- if .Values.applicationSet.args.enableLeaderElection }}
+REMOVED option applicationSet.args.enableLeaderElection - Value determined based on replicas
+{{- end }}
 
 In order to access the server UI you have the following options:
 

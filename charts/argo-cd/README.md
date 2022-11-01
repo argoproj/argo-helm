@@ -944,9 +944,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | applicationSet.affinity | object | `{}` | Assign custom [affinity] rules |
-| applicationSet.args.debug | bool | `false` | Print debug logs |
 | applicationSet.args.dryRun | bool | `false` | Enable dry run mode |
-| applicationSet.args.enableLeaderElection | bool | `false` | The default leader election setting |
 | applicationSet.args.metricsAddr | string | `":8080"` | The default metric address |
 | applicationSet.args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
 | applicationSet.args.probeBindAddr | string | `":8081"` | The default health check port |
