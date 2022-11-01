@@ -1055,6 +1055,13 @@ server:
   config:
     resource.inclusions: |
       - apiGroups:
+        - "apps.kruise.io"
+        kinds:
+        - CloneSet
+        clusters:
+        - https://10.135.192.1:443
+        - https://kubernetes.default.svc
+      - apiGroups:
         - "kubeflow.org"
         kinds:
         - MPIJob
