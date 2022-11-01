@@ -182,7 +182,7 @@ ui.cssurl: "./custom/custom.styles.css"
 Merge Argo Configuration with Preset Configuration
 */}}
 {{- define "argo-cd.config.cm" -}}
-{{- $config := coalesce .Values.server.config (omit .Values.configs.cm "create" "annotations") -}}
+{{- $config := (mergeOverwrite (deepCopy (omit .Values.configs.cm "create" "annotations")) (.Values.server.config | default dict))  -}}
 {{- $preset := include "argo-cd.config.cm.presets" . | fromYaml | default dict -}}
 {{- range $key, $value := mergeOverwrite $preset $config }}
 {{ $key }}: {{ toString $value | toYaml }}
