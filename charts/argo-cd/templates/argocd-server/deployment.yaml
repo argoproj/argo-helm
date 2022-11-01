@@ -5,13 +5,13 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
+  {{- if not .Values.server.autoscaling.enabled }}
+  replicas: {{ .Values.server.replicas }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}
-  revisionHistoryLimit: 5
-  {{- if (ne .Values.server.autoscaling.enabled true) }}
-  replicas: {{ .Values.server.replicas }}
-  {{- end }}
   template:
     metadata:
       annotations:

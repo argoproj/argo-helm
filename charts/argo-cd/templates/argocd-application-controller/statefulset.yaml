@@ -1,16 +1,17 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "argo-cd.controller.fullname" . }}
+  name: {{ include "argo-cd.controller.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 spec:
+  replicas: {{ .Values.controller.replicas }}
+  # TODO: Remove for breaking release as history limit cannot be patched
+  revisionHistoryLimit: 5
+  serviceName: {{ include "argo-cd.controller.fullname" . }}
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
-  serviceName: {{ template "argo-cd.controller.fullname" . }}
-  revisionHistoryLimit: 5
-  replicas: {{ .Values.controller.replicas }}
   template:
     metadata:
       annotations:
