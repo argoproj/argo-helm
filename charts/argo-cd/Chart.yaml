@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.5.0
+appVersion: v2.5.1
 kubeVersion: ">=1.22.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.13.0
+version: 5.13.1
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -23,5 +23,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Option global.revisionHistoryLimit for deployments"
-    - "[Changed]: Forced Slack bot deployment strategy to Recreate"
+    - "[Security]: Upgrade image tag to include fixes for CVE-2022-3786 and CVE-2022-3602"
