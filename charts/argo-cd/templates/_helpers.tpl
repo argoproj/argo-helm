@@ -9,6 +9,17 @@ to 63 chars and it includes 10 chars of hash and a separating '-'.
 {{- end -}}
 
 {{/*
+Create the name of the controller service account to use
+*/}}
+{{- define "argo-cd.controllerServiceAccountName" -}}
+{{- if .Values.controller.serviceAccount.create -}}
+    {{ default (include "argo-cd.controller.fullname" .) .Values.controller.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.controller.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create dex name and version as used by the chart label.
 */}}
 {{- define "argo-cd.dex.fullname" -}}
@@ -25,6 +36,17 @@ Create Dex server endpoint
 {{- $port := int .Values.dex.servicePortHttp -}}
 {{- printf "%s://%s:%d" $scheme $host $port }}
 {{- end }}
+
+{{/*
+Create the name of the dex service account to use
+*/}}
+{{- define "argo-cd.dexServiceAccountName" -}}
+{{- if .Values.dex.serviceAccount.create -}}
+    {{ default (include "argo-cd.dex.fullname" .) .Values.dex.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.dex.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
 
 {{/*
 Create redis name and version as used by the chart label.
@@ -54,56 +76,6 @@ Return Redis server endpoint
 {{- end -}}
 
 {{/*
-Create argocd server name and version as used by the chart label.
-*/}}
-{{- define "argo-cd.server.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.server.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create argocd repo-server name and version as used by the chart label.
-*/}}
-{{- define "argo-cd.repoServer.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.repoServer.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create argocd application set name and version as used by the chart label.
-*/}}
-{{- define "argo-cd.applicationSet.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.applicationSet.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create argocd notifications name and version as used by the chart label.
-*/}}
-{{- define "argo-cd.notifications.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.notifications.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create the name of the controller service account to use
-*/}}
-{{- define "argo-cd.controllerServiceAccountName" -}}
-{{- if .Values.controller.serviceAccount.create -}}
-    {{ default (include "argo-cd.controller.fullname" .) .Values.controller.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.controller.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the dex service account to use
-*/}}
-{{- define "argo-cd.dexServiceAccountName" -}}
-{{- if .Values.dex.serviceAccount.create -}}
-    {{ default (include "argo-cd.dex.fullname" .) .Values.dex.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.dex.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Create the name of the redis service account to use
 */}}
 {{- define "argo-cd.redisServiceAccountName" -}}
@@ -112,6 +84,13 @@ Create the name of the redis service account to use
 {{- else -}}
     {{ default "default" .Values.redis.serviceAccount.name }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Create argocd server name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.server.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.server.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -126,6 +105,13 @@ Create the name of the Argo CD server service account to use
 {{- end -}}
 
 {{/*
+Create argocd repo-server name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.repoServer.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.repoServer.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create the name of the repo-server service account to use
 */}}
 {{- define "argo-cd.repoServerServiceAccountName" -}}
@@ -137,6 +123,13 @@ Create the name of the repo-server service account to use
 {{- end -}}
 
 {{/*
+Create argocd application set name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.applicationSet.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.applicationSet.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create the name of the application set service account to use
 */}}
 {{- define "argo-cd.applicationSetServiceAccountName" -}}
@@ -145,6 +138,13 @@ Create the name of the application set service account to use
 {{- else -}}
     {{ default "default" .Values.applicationSet.serviceAccount.name }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Create argocd notifications name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.notifications.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.notifications.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
