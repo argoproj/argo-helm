@@ -12,8 +12,10 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" .Values.notifications.bots.slack.name) | nindent 4 }}
 spec:
+  replicas: 1
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   strategy:
-    {{- .Values.notifications.bots.slack.updateStrategy | toYaml | nindent 4 }}
+    type: Recreate
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" "metrics") | nindent 6 }}
@@ -30,9 +32,9 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ template "argo-cd.notificationsBotsSlackServiceAccountName" . }}
+      serviceAccountName: {{ include "argo-cd.notificationsBotsSlackServiceAccountName" . }}
       containers:
-        - name: {{ template "argo-cd.notifications.fullname" . }}-bot
+        - name: {{ include "argo-cd.notifications.fullname" . }}-bot
           image: {{ default .Values.global.image.repository .Values.notifications.bots.slack.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.notifications.bots.slack.image.tag }}
           imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.notifications.bots.slack.image.pullPolicy }}
           command:

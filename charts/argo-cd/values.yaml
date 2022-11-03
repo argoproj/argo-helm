@@ -46,6 +46,9 @@ global:
   additionalLabels: {}
     # app: argo-cd
 
+  # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
+  revisionHistoryLimit: 3
+
   # Default image used by all components
   image:
     # -- If defined, a repository applied to all Argo CD deployments
@@ -2865,10 +2868,6 @@ notifications:
       # -- Enable slack bot
       ## You have to set secret.notifiers.slack.signingSecret
       enabled: false
-
-      # -- The deployment strategy to use to replace existing pods with new ones
-      updateStrategy:
-        type: Recreate
 
       ## Slack bot Pod Disruption Budget
       ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/

@@ -369,6 +369,7 @@ NAME: my-release
 | global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
 | global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
+| global.revisionHistoryLimit | int | `3` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
 | global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
 | global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
 
@@ -1037,7 +1038,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | notifications.bots.slack.serviceAccount.name | string | `"argocd-notifications-bot"` | The name of the service account to use. |
 | notifications.bots.slack.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| notifications.bots.slack.updateStrategy | object | `{"type":"Recreate"}` | The deployment strategy to use to replace existing pods with new ones |
 | notifications.cm.create | bool | `true` | Whether helm chart creates controller config map |
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.context | object | `{}` | Define user-defined context |
