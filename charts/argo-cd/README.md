@@ -369,7 +369,7 @@ NAME: my-release
 | global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
 | global.revisionHistoryLimit | int | `3` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
-| global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
+| global.securityContext | object | See [values.yaml] | Toggle and define pod-level security context. |
 
 ## Argo CD Configs
 

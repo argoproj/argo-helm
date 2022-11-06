@@ -75,11 +75,9 @@ global:
   podLabels: {}
 
   # -- Toggle and define pod-level security context.
-  # @default -- `{}` (See [values.yaml])
-  securityContext: {}
-  #  runAsUser: 999
-  #  runAsGroup: 999
-  #  fsGroup: 999
+  # @default -- See [values.yaml]
+  securityContext:
+    fsGroup: 999
 
   # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
   hostAliases: []
