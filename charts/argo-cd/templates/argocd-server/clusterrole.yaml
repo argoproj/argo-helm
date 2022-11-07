@@ -20,6 +20,7 @@ rules:
       - events
     verbs:
       - list
+      - create
   - apiGroups:
       - ""
     resources:
@@ -43,5 +44,6 @@ rules:
       - get
       - list
       - update
+      - create
       - watch
 {{- end }}
