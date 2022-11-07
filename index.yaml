@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Use regular Dex image to fix permission issues"
+    apiVersion: v2
+    appVersion: v2.5.1
+    created: "2022-11-07T21:55:18.318762673Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.3
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 5f8188d45a48b0d43ab98383d109cfdba89bb8d5a3b9a0bd2d1ca0cec92be46b
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.13.5/argo-cd-5.13.5.tgz
+    version: 5.13.5
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: Add missing ClusterRole permissions to argo-cd-server to manage Application in all namespaces"
     apiVersion: v2
     appVersion: v2.5.1
@@ -18305,4 +18336,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-11-06T21:13:43.033281896Z"
+generated: "2022-11-07T21:55:18.320431717Z"
