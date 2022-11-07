@@ -1,21 +1,12 @@
 {{- if .Values.server.certificate.enabled -}}
-{{- if .Values.apiVersionOverrides.certmanager -}}
-apiVersion: {{ .Values.apiVersionOverrides.certmanager }}
-{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1" }}
-apiVersion: cert-manager.io/v1
-{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha3" }}
-apiVersion: cert-manager.io/v1alpha3
-{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha2" }}
-apiVersion: cert-manager.io/v1alpha2
-{{- else }}
-apiVersion: certmanager.k8s.io/v1alpha1
-{{- end }}
+apiVersion: {{ include "argo-cd.apiVersion.cert-manager" . }}
 kind: Certificate
 metadata:
-  name: {{ template "argo-cd.server.fullname" . }}
+  name: {{ include "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
+  secretName: {{ .Values.server.certificate.secretName }}
   commonName: {{ .Values.server.certificate.domain | quote }}
   dnsNames:
     - {{ .Values.server.certificate.domain | quote }}
@@ -24,6 +15,9 @@ spec:
     {{- end }}
   {{- with .Values.server.certificate.duration }}
   duration: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.server.certificate.renewBefore }}
+  renewBefore: {{ . | quote }}
   {{- end }}
   issuerRef:
     {{- with .Values.server.certificate.issuer.group }}
@@ -35,8 +29,4 @@ spec:
   privateKey:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.server.certificate.renewBefore }}
-  renewBefore: {{ . | quote }}
-  {{- end }}
-  secretName: {{ .Values.server.certificate.secretName | quote }}
 {{- end }}

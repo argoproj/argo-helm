@@ -1,30 +1,5 @@
 {{/* vim: set filetype=mustache: */}}
 {{/*
-Expand the name of the chart.
-*/}}
-{{- define "argo-cd.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "argo-cd.fullname" -}}
-{{- if .Values.fullnameOverride -}}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Create controller name and version as used by the chart label.
 Truncated at 52 chars because StatefulSet label 'controller-revision-hash' is limited
 to 63 chars and it includes 10 chars of hash and a separating '-'.
@@ -39,6 +14,17 @@ Create dex name and version as used by the chart label.
 {{- define "argo-cd.dex.fullname" -}}
 {{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.dex.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Create Dex server endpoint
+*/}}
+{{- define "argo-cd.dex.server" -}}
+{{- $insecure := index .Values.configs.params "dexserver.disable.tls" | toString -}}
+{{- $scheme := (eq $insecure "true") | ternary "http" "https" -}}
+{{- $host := include "argo-cd.dex.fullname" . -}}
+{{- $port := int .Values.dex.servicePortHttp -}}
+{{- printf "%s://%s:%d" $scheme $host $port }}
+{{- end }}
 
 {{/*
 Create redis name and version as used by the chart label.
@@ -184,89 +170,23 @@ Create the name of the notifications bots slack service account to use
 {{- end -}}
 
 {{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "argo-cd.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Common labels
-*/}}
-{{- define "argo-cd.labels" -}}
-helm.sh/chart: {{ include "argo-cd.chart" .context }}
-{{ include "argo-cd.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
-app.kubernetes.io/managed-by: {{ .context.Release.Service }}
-app.kubernetes.io/part-of: argocd
-{{- with .context.Values.global.additionalLabels }}
-{{ toYaml . }}
-{{- end }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "argo-cd.selectorLabels" -}}
-{{- if .name -}}
-app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .name }}
-{{ end -}}
-app.kubernetes.io/instance: {{ .context.Release.Name }}
-{{- if .component }}
-app.kubernetes.io/component: {{ .component }}
-{{- end }}
-{{- end }}
-
-{{/*
-Return the appropriate apiVersion for ingress
-*/}}
-{{- define "argo-cd.ingress.apiVersion" -}}
-{{- if .Values.apiVersionOverrides.ingress -}}
-{{- print .Values.apiVersionOverrides.ingress -}}
-{{- else if semverCompare "<1.14-0" (include "argo-cd.kubeVersion" $) -}}
-{{- print "extensions/v1beta1" -}}
-{{- else if semverCompare "<1.19-0" (include "argo-cd.kubeVersion" $) -}}
-{{- print "networking.k8s.io/v1beta1" -}}
-{{- else -}}
-{{- print "networking.k8s.io/v1" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return the appropriate apiVersion for autoscaling
-*/}}
-{{- define "argo-cd.autoscaling.apiVersion" -}}
-{{- if .Values.apiVersionOverrides.autoscaling -}}
-{{- print .Values.apiVersionOverrides.autoscaling -}}
-{{- else if semverCompare "<1.23-0" (include "argo-cd.kubeVersion" $) -}}
-{{- print "autoscaling/v2beta1" -}}
-{{- else -}}
-{{- print "autoscaling/v2" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return the target Kubernetes version
-*/}}
-{{- define "argo-cd.kubeVersion" -}}
-  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
-{{- end -}}
-
-{{/*
 Argo Configuration Preset Values (Incluenced by Values configuration)
 */}}
-{{- define "argo-cd.config.presets" -}}
-  {{- if .Values.configs.styles }}
+{{- define "argo-cd.config.cm.presets" -}}
+{{- if .Values.configs.styles -}}
 ui.cssurl: "./custom/custom.styles.css"
-  {{- end }}
+{{- end -}}
 {{- end -}}
 
 {{/*
 Merge Argo Configuration with Preset Configuration
 */}}
-{{- define "argo-cd.config" -}}
-  {{- if .Values.server.configEnabled -}}
-{{- toYaml (mergeOverwrite (default dict (fromYaml (include "argo-cd.config.presets" $))) .Values.server.config) }}
-  {{- end -}}
+{{- define "argo-cd.config.cm" -}}
+{{- $config := (mergeOverwrite (deepCopy (omit .Values.configs.cm "create" "annotations")) (.Values.server.config | default dict))  -}}
+{{- $preset := include "argo-cd.config.cm.presets" . | fromYaml | default dict -}}
+{{- range $key, $value := mergeOverwrite $preset $config }}
+{{ $key }}: {{ toString $value | toYaml }}
+{{- end }}
 {{- end -}}
 
 {{/*
@@ -278,7 +198,8 @@ repo.server: "{{ include "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServe
 redis.server: {{ . | quote }}
 {{- end }}
 {{- if .Values.dex.enabled }}
-server.dex.server: "http://{{ include "argo-cd.dex.fullname" . }}:{{ .Values.dex.servicePortHttp }}"
+server.dex.server: {{ include "argo-cd.dex.server" . | quote }}
+server.dex.server.strict.tls: {{ .Values.dex.certificateSecret.enabled | toString }}
 {{- end }}
 {{- range $component := tuple "controller" "server" "reposerver" }}
 {{ $component }}.log.format: {{ $.Values.global.logging.format | quote }}
@@ -291,26 +212,8 @@ Merge Argo Params Configuration with Preset Configuration
 */}}
 {{- define "argo-cd.config.params" -}}
 {{- $config := omit .Values.configs.params "annotations" }}
-{{- $preset := include "argo-cd.config.params.presets" $ | fromYaml | default dict -}}
+{{- $preset := include "argo-cd.config.params.presets" . | fromYaml | default dict -}}
 {{- range $key, $value := mergeOverwrite $preset $config }}
-{{ $key }}: {{ $value | quote }}
+{{ $key }}: {{ toString $value | toYaml }}
 {{- end }}
-{{- end -}}
-
-{{/*
-Return the default Argo CD app version
-*/}}
-{{- define "argo-cd.defaultTag" -}}
-  {{- default .Chart.AppVersion .Values.global.image.tag }}
-{{- end -}}
-
-{{/*
-Return the appropriate apiVersion for pod disruption budget
-*/}}
-{{- define "argo-cd.podDisruptionBudget.apiVersion" -}}
-{{- if semverCompare "<1.21-0" (include "argo-cd.kubeVersion" $) -}}
-{{- print "policy/v1beta1" -}}
-{{- else -}}
-{{- print "policy/v1" -}}
-{{- end -}}
 {{- end -}}

@@ -1,13 +1,18 @@
 apiVersion: v2
-appVersion: "v1.2.2"
+appVersion: v1.3.1
 description: A Helm chart for Argo Rollouts
 name: argo-rollouts
-version: 2.20.0
-icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+version: 2.21.1
 home: https://github.com/argoproj/argo-helm
+icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+keywords:
+  - argoproj
+  - argo-rollouts
+sources:
+  - https://github.com/argoproj/argo-rollouts
 maintainers:
   - name: argoproj
     url: https://argoproj.github.io/
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: initContainer option to controller pod, updated secrets roles"
+    - "[Changed]: Upgrade ArgoRollouts to v1.3.1"

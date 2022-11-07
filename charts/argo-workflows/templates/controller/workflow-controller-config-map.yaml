@@ -27,7 +27,7 @@ data:
     {{- end }}
     {{- if or .Values.mainContainer.resources .Values.mainContainer.env .Values.mainContainer.securityContext}}
     mainContainer:
-      imagePullPolicy: {{ .Values.images.pullPolicy }}
+      imagePullPolicy: {{ default (.Values.images.pullPolicy) .Values.mainContainer.imagePullPolicy }}
       {{- with .Values.mainContainer.resources }}
       resources: {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -40,7 +40,7 @@ data:
     {{- end }}
     {{- if or .Values.executor.resources .Values.executor.env .Values.executor.securityContext}}
     executor:
-      imagePullPolicy: {{ .Values.images.pullPolicy }}
+      imagePullPolicy: {{ default (.Values.images.pullPolicy) .Values.executor.image.pullPolicy }}
       {{- with .Values.executor.resources }}
       resources: {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -131,19 +131,14 @@ data:
         name: {{ .clientSecret.name }}
         key: {{ .clientSecret.key }}
       redirectUrl: {{ .redirectUrl }}
-      {{- if and (.rbac) (.rbac.enabled) }}
-      rbac:
-        enabled: {{ .rbac.enabled }}
-      {{- end }}
       {{- if .scopes }}
       scopes: {{ toYaml .scopes | nindent 8 }}
       {{- end }}
       {{- if .issuerAlias }}
       issuerAlias: {{ .issuerAlias }}
       {{- end }}
-      {{- if and (.sessionExpiry) (.sessionExpiry.duration) }}
-      sessionExpiry:
-       duration: {{ .sessionExpiry.duration }}
+      {{- if .sessionExpiry }}
+      sessionExpiry: {{ .sessionExpiry }}
       {{- end }}
       {{- if .customGroupClaimName }}
       customGroupClaimName: {{ .customGroupClaimName }}

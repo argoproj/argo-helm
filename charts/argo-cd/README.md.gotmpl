@@ -2,9 +2,9 @@
 
 A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 
-Source code can be found [here](https://argo-cd.readthedocs.io/en/stable/)
+Source code can be found here:
 
-## Additional Information
+{{ template "chart.sourcesList" . }}
 
 This is a **community maintained** chart. This chart installs [argo-cd](https://argo-cd.readthedocs.io/en/stable/), a declarative, GitOps continuous delivery tool for Kubernetes.
 
@@ -41,7 +41,7 @@ repoServer:
     minReplicas: 2
 
 applicationSet:
-  replicas: 2
+  replicaCount: 2
 ```
 
 ### HA mode without autoscaling
@@ -60,7 +60,7 @@ repoServer:
   replicas: 2
 
 applicationSet:
-  replicas: 2
+  replicaCount: 2
 ```
 
 ### Synchronizing Changes from Original Repository
@@ -100,7 +100,17 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVer
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 ```
 
-### 5.4.0
+### 5.10.0
+
+This version hardens security by configuring default container security contexts.
+The change aligns chart with [supported versions](https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/#supported-versions) by upstream and adds requirement for minimum Kubernetes version >= 1.22.
+
+### 5.5.20
+
+This version moved API version templates into dedicated helper. If you are using these in your umbrella
+chart please migrate your templates to pattern `argo-cd.apiVersion.<component>`.
+
+### 5.5.0
 
 This version introduces new `configs.params` section that replaces command line arguments for containers.
 Please refer to documentation in values.yaml for migrating the configuration.
@@ -307,7 +317,7 @@ server:
 
 ## Prerequisites
 
-- Kubernetes 1.7+
+- {{ template "chart.kubeVersionLine" . }}
 - Helm v3.0.0+
 
 ## Installing the Chart
@@ -328,10 +338,17 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}
-  {{- if not (or  (hasPrefix "configs" .Key) (hasPrefix "controller" .Key) (hasPrefix "repoServer" .Key) (hasPrefix "server" .Key) (hasPrefix "dex" .Key) (hasPrefix "redis" .Key) (hasPrefix "externalRedis" .Key) (hasPrefix "applicationSet" .Key) (hasPrefix "notifications" .Key) ) }}
+  {{- if not (or  (hasPrefix "global" .Key) (hasPrefix "configs" .Key) (hasPrefix "controller" .Key) (hasPrefix "repoServer" .Key) (hasPrefix "server" .Key) (hasPrefix "applicationSet" .Key) (hasPrefix "notifications" .Key) (hasPrefix "dex" .Key) (hasPrefix "redis" .Key) (hasPrefix "externalRedis" .Key) ) }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
-  {{- if hasPrefix "server.additional" .Key }}
+{{- end }}
+
+## Global Configs
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "global" .Key }}
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
@@ -375,6 +392,28 @@ NAME: my-release
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
+
+### Using AWS ALB Ingress Controller With GRPC
+
+If you are using an AWS ALB Ingress controller, you will need to set `server.ingressGrpc.isAWSALB` to `true`. This will create a second service with the annotation `alb.ingress.kubernetes.io/backend-protocol-version: HTTP2` and modify the server ingress to add a condition annotation to route GRPC traffic to the new service.
+
+Example:
+
+```yaml
+server:
+  ingress:
+    enabled: true
+    annotations:
+      alb.ingress.kubernetes.io/backend-protocol: HTTPS
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+      alb.ingress.kubernetes.io/scheme: internal
+      alb.ingress.kubernetes.io/target-type: ip
+  ingressGrpc:
+    enabled: true
+    isAWSALB: true
+    awsALB:
+      serviceType: ClusterIP
+```
 
 ## Dex
 
@@ -449,30 +488,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
   {{- end }}
 {{- end }}
 
-
-### Using AWS ALB Ingress Controller With GRPC
-
-If you are using an AWS ALB Ingress controller, you will need to set `server.ingressGrpc.isAWSALB` to `true`. This will create a second service with the annotation `alb.ingress.kubernetes.io/backend-protocol-version: HTTP2` and modify the server ingress to add a condition annotation to route GRPC traffic to the new service.
-
-Example:
-
-```yaml
-server:
-  ingress:
-    enabled: true
-    annotations:
-      alb.ingress.kubernetes.io/backend-protocol: HTTPS
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-      alb.ingress.kubernetes.io/scheme: internal
-      alb.ingress.kubernetes.io/target-type: ip
-  ingressGrpc:
-    enabled: true
-    isAWSALB: true
-    awsALB:
-      serviceType: ClusterIP
-
-```
-
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/helm-docs)
 
@@ -487,6 +502,7 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [HPA]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 [MetricRelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 [Node selector]: https://kubernetes.io/docs/user-guide/node-selection/
+[PodDisruptionBudget]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets
 [probe]: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
 [RelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
 [Tolerations]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/

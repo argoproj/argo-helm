@@ -262,6 +262,15 @@ controller:
   tolerations: []
   # -- Assign custom [affinity] rules
   affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the workflow controller
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   # -- Leverage a PriorityClass to ensure your pods survive resource shortages.
   ## ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   priorityClassName: ""
@@ -279,8 +288,8 @@ controller:
 
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
-  # -- imagePullPolicy to apply to Workflow main container
-  imagePullPolicy: Always
+  # -- imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`.
+  imagePullPolicy: ""
   # -- Resource limits and requests for the Workflow main container
   resources: {}
   # -- Adds environment variables for the Workflow main container
@@ -297,6 +306,8 @@ executor:
     repository: argoproj/argoexec
     # -- Image tag for the workflow executor. Defaults to `.Values.images.tag`.
     tag: ""
+    # -- Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`.
+    pullPolicy: ""
   # -- Resource limits and requests for the Workflow Executors
   resources: {}
   # -- Adds environment variables for the executor.
@@ -384,6 +395,14 @@ server:
 
   # -- Assign custom [affinity] rules
   affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the argo server
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
 
   # -- Leverage a PriorityClass to ensure your pods survive resource shortages
   ## ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
@@ -496,6 +515,32 @@ server:
 
   # -- Extra containers to be added to the server deployment
   extraContainers: []
+
+# -- Array of extra K8s manifests to deploy
+extraObjects: []
+  # - apiVersion: secrets-store.csi.x-k8s.io/v1
+  #   kind: SecretProviderClass
+  #   metadata:
+  #     name: argo-server-sso
+  #   spec:
+  #     provider: aws
+  #     parameters:
+  #       objects: |
+  #         - objectName: "argo/server/sso"
+  #           objectType: "secretsmanager"
+  #           jmesPath:
+  #               - path: "client_id"
+  #                 objectAlias: "client_id"
+  #               - path: "client_secret"
+  #                 objectAlias: "client_secret"
+  #     secretObjects:
+  #     - data:
+  #       - key: client_id
+  #         objectName: client_id
+  #       - key: client_secret
+  #         objectName: client_secret
+  #       secretName: argo-server-sso-secrets-store
+  #       type: Opaque
 
 # -- Influences the creation of the ConfigMap for the workflow-controller itself.
 useDefaultArtifactRepo: false

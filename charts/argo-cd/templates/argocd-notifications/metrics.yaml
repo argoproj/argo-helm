@@ -2,18 +2,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "argo-cd.notifications.fullname" . }}-metrics
+  name: {{ include "argo-cd.notifications.fullname" . }}-metrics
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" "metrics") | nindent 4 }}
-{{- if .Values.notifications.metrics.service.labels }}
-{{- toYaml .Values.notifications.metrics.service.labels | nindent 4 }}
-{{- end }}
-{{- if .Values.notifications.metrics.service.annotations }}
+    {{- with .Values.notifications.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.notifications.metrics.service.annotations }}
   annotations:
-  {{- range $key, $value := .Values.notifications.metrics.service.annotations }}
+    {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
+    {{- end }}
   {{- end }}
-{{- end }}
 spec:
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 6 }}

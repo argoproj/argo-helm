@@ -25,6 +25,8 @@ $ helm install my-release argo/argocd-apps
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | applications | list | `[]` (See [values.yaml]) | Deploy Argo CD Applications within this helm release |
+| applicationsets | list | `[]` (See [values.yaml]) | Deploy Argo CD ApplicationSets within this helm release |
+| extensions | list | `[]` (See [values.yaml]) | Deploy Argo UI Extensions within this helm release |
 | projects | list | `[]` (See [values.yaml]) | Deploy Argo CD Projects within this helm release |
 
 ----------------------------------------------

@@ -1,0 +1,21 @@
+# CLOMonitor metadata file
+# This file must be located at the root of the repository
+
+# Checks exemptions
+exemptions:
+  - check: dependency_update_tool
+    reason: "Helm deps are not currently scanned. Maintainers are watching developments to dependabot-core #2237" # Justification of this exemption (mandatory, it will be displayed on the UI)
+  - check: sbom
+    reason: "Tracking Helm dependencies is not yet a stable practice."
+
+# TODO:
+# License scanning information
+# licenseScanning:
+  # URL with the repository's license scanning results
+  #
+  # CLOMonitor can extract license scanning results from FOSSA and Snyk badges
+  # in the repository README.md file automatically. If your repository uses a
+  # different scanning solution, this url can be set to pass the corresponding
+  # check.
+  # url: https://license-scanning-results.url
+

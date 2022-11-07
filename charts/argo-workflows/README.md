@@ -45,6 +45,7 @@ Fields to note:
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `true` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
+| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `nil` | String to fully override "argo-workflows.fullname" template |
 | images.pullPolicy | string | `"Always"` | imagePullPolicy to apply to all containers |
 | images.pullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
@@ -128,6 +129,7 @@ Fields to note:
 | controller.telemetryConfig.servicePort | int | `8081` | telemetry service port |
 | controller.telemetryConfig.servicePortName | string | `"telemetry"` | telemetry service port name |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
+| controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the workflow controller |
 | controller.volumeMounts | list | `[]` | Additional volume mounts to the controller main container |
 | controller.volumes | list | `[]` | Additional volumes to the controller pod |
 | controller.workflowDefaults | object | `{}` | Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level. Only valid for 2.7+ |
@@ -140,7 +142,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | mainContainer.env | list | `[]` | Adds environment variables for the Workflow main container |
-| mainContainer.imagePullPolicy | string | `"Always"` | imagePullPolicy to apply to Workflow main container |
+| mainContainer.imagePullPolicy | string | `""` | imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`. |
 | mainContainer.resources | object | `{}` | Resource limits and requests for the Workflow main container |
 | mainContainer.securityContext | object | `{}` | sets security context for the Workflow main container |
 
@@ -149,6 +151,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | executor.env | list | `[]` | Adds environment variables for the executor. |
+| executor.image.pullPolicy | string | `""` | Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`. |
 | executor.image.registry | string | `"quay.io"` | Registry to use for the Workflow Executors |
 | executor.image.repository | string | `"argoproj/argoexec"` | Repository to use for the Workflow Executors |
 | executor.image.tag | string | `""` | Image tag for the workflow executor. Defaults to `.Values.images.tag`. |
@@ -205,6 +208,7 @@ Fields to note:
 | server.serviceType | string | `"ClusterIP"` | Service type for server pods |
 | server.sso | object | `{}` | SSO configuration when SSO is specified as a server auth mode. |
 | server.tolerations | list | `[]` | [Tolerations] for use with node taints |
+| server.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the argo server |
 | server.volumeMounts | list | `[]` | Additional volume mounts to the server main container. |
 | server.volumes | list | `[]` | Additional volumes to the server pod. |
 
@@ -245,4 +249,5 @@ Fields to note:
 [Pod Disruption Budget]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 [probe]: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
 [Tolerations]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+[TopologySpreadConstraints]: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 [values.yaml]: values.yaml
