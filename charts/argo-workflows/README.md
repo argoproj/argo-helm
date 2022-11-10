@@ -220,6 +220,7 @@ Fields to note:
 | artifactRepository.azure | object | `{}` (See [values.yaml]) | Store artifact in Azure Blob Storage |
 | artifactRepository.gcs | object | `{}` (See [values.yaml]) | Store artifact in a GCS object store |
 | artifactRepository.s3 | object | See [values.yaml] | Store artifact in a S3-compliant object store |
+| customArtifactRepository | object | `{}` | The section of custom artifact repository. Will be added to the config in case useDefaultArtifactRepo is set to false |
 | useDefaultArtifactRepo | bool | `false` | Influences the creation of the ConfigMap for the workflow-controller itself. |
 | useStaticCredentials | bool | `true` | Use static credentials for S3 (eg. when not using AWS IRSA) |
 
