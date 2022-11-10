@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Use raw json format for cluster credentials for Vault plugin compatibility"
+    apiVersion: v2
+    appVersion: v2.5.2
+    created: "2022-11-10T01:56:09.329535759Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.3
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: d3959f902b5e4e01b5af09c6426fbc3b50036ec9d385bc0dd303c10e65f298a6
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.13.7/argo-cd-5.13.7.tgz
+    version: 5.13.7
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Upgrade Argo CD to 2.5.2"
     apiVersion: v2
     appVersion: v2.5.2
@@ -18387,4 +18418,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-11-10T00:36:37.796721639Z"
+generated: "2022-11-10T01:56:09.331829062Z"
