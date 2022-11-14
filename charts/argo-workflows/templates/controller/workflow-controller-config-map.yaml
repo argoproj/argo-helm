@@ -135,6 +135,10 @@ data:
         name: {{ .clientSecret.name }}
         key: {{ .clientSecret.key }}
       redirectUrl: {{ .redirectUrl }}
+      {{- with .rbac }}
+      rbac:
+        enabled: {{ .enabled }}
+      {{- end }}
       {{- if .scopes }}
       scopes: {{ toYaml .scopes | nindent 8 }}
       {{- end }}
