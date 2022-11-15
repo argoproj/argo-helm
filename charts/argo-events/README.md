@@ -23,7 +23,7 @@ To regenerate this document, please run:
 
 Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
 
-You can install the CRDs manually from `templates/crds` folder.
+You can install the only CRDs manually setting using `--set crds.install=true --set controller.install=false`
 
 ### 2.0.*
 
@@ -88,6 +88,7 @@ done
 | controller.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the events controller |
 | controller.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the events controller |
 | controller.initContainers | list | `[]` | Init containers to add to the events controller pods |
+| controller.install | bool | `true` | Install Argo Events controller |
 | controller.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | controller.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | controller.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |

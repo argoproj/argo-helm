@@ -1,3 +1,4 @@
+{{- if .Values.controller.install }}
 {{- if .Values.controller.rbac.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: {{ .Values.controller.rbac.namespaced | ternary "Role" "ClusterRole" }}
@@ -110,4 +111,5 @@ subjects:
 - kind: ServiceAccount
   name: {{ include "argo-events.controller.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
+{{- end }}
 {{- end }}

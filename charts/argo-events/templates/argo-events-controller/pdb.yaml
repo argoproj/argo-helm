@@ -1,3 +1,4 @@
+{{- if .Values.controller.install }}
 {{- if .Values.controller.pdb.enabled }}
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -25,4 +26,5 @@ spec:
   selector:
     matchLabels:
       {{- include "argo-events.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
+{{- end }}
 {{- end }}

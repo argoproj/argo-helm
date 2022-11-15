@@ -1,3 +1,4 @@
+{{- if .Values.controller.install }}
 {{- if and .Values.controller.metrics.enabled .Values.controller.metrics.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -35,4 +36,5 @@ spec:
   selector:
     matchLabels:
       {{- include "argo-events.selectorLabels" (dict "context" . "component" .Values.controller.name "name" (printf "%s-metrics" .Values.controller.name)) | nindent 6 }}
+{{- end }}
 {{- end }}
