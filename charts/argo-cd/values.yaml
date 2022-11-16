@@ -1951,6 +1951,32 @@ repoServer:
   #  - name: custom-tools
   #    emptyDir: {}
 
+  # deploy argocd-repo-server as a statefulset (in this case it is mandatory to have a service account)
+  enableStatefulSet: true
+
+  # create a list of persistent volumes to be created with your deployment or statefulset
+  volumeClaimTemplates: {}
+    # tmp_dir:
+    #   accessModes: [ReadWriteOnce]
+    #   storage: 1Gi
+    #   storageClassName: gp2-topology-aware
+    # gpg_keyring:
+    #   accessModes: [ReadWriteOnce]
+    #   storage: 1Gi
+    #   storageClassName: gp2-topology-aware
+    # helm_working_dir:
+    #   accessModes: [ReadWriteOnce]
+    #   storage: 1Gi
+    #   storageClassName: gp2-topology-aware
+    # var_files:
+    #   accessModes: [ReadWriteOnce]
+    #   storage: 1Gi
+    #   storageClassName: gp2-topology-aware
+    # plugins:
+    #   accessModes: [ReadWriteOnce]
+    #   storage: 1Gi
+    #   storageClassName: gp2-topology-aware
+
   # -- [Node selector]
   nodeSelector: {}
   # -- [Tolerations] for use with node taints

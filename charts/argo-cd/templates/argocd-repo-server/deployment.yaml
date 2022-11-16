@@ -1,10 +1,17 @@
 apiVersion: apps/v1
+{{- if .Values.repoServer.enableStatefulSet }}
+kind: StatefulSet
+{{- else  }}
 kind: Deployment
+{{- end }}
 metadata:
   name: {{ template "argo-cd.repoServer.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
 spec:
+  {{- if .Values.repoServer.enableStatefulSet }}
+  serviceName: {{ template "argo-cd.repoServerServiceAccountName" . }}
+  {{- end }}
   {{- if not .Values.repoServer.autoscaling.enabled }}
   replicas: {{ .Values.repoServer.replicas }}
   {{- end }}
@@ -289,14 +296,22 @@ spec:
       {{- with .Values.repoServer.volumes }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+    {{- if not $.Values.repoServer.volumeClaimTemplates.helm_working_dir }}
       - name: helm-working-dir
         emptyDir: {}
+    {{- end }}
+    {{- if not $.Values.repoServer.volumeClaimTemplates.plugins }}
       - name: plugins
         emptyDir: {}
+    {{- end }}
+    {{- if not $.Values.repoServer.volumeClaimTemplates.var_files }}
       - name: var-files
         emptyDir: {}
-      - name: tmp
+    {{- end }}
+    {{- if not $.Values.repoServer.volumeClaimTemplates.tmp_dir }}
+      - name: tmp-dir
         emptyDir: {}
+    {{- end }}
       - name: ssh-known-hosts
         configMap:
           name: argocd-ssh-known-hosts-cm
@@ -306,8 +321,10 @@ spec:
       - name: gpg-keys
         configMap:
           name: argocd-gpg-keys-cm
+    {{- if not $.Values.repoServer.volumeClaimTemplates.gpg_keyring }}
       - name: gpg-keyring
         emptyDir: {}
+    {{- end }}
       - name: argocd-repo-server-tls
         secret:
           secretName: argocd-repo-server-tls
@@ -345,3 +362,21 @@ spec:
       {{- with .Values.repoServer.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+{{- if .Values.repoServer.volumeClaimTemplates }}
+  volumeClaimTemplates:
+{{- if .Values.repoServer.volumeClaimTemplates.gpg_keyring }}
+{{- include "argo-cd.repoServer.persistentVolumeClaim" (dict "context" .Values.repoServer.volumeClaimTemplates.gpg_keyring "name" "gpg-keyring" ) | nindent 4 }}
+{{- end }}
+{{- if .Values.repoServer.volumeClaimTemplates.helm_working_dir }}
+{{- include "argo-cd.repoServer.persistentVolumeClaim" (dict "context" .Values.repoServer.volumeClaimTemplates.helm_working_dir "name" "helm-working-dir" ) | nindent 4 }}
+{{- end }}
+{{- if .Values.repoServer.volumeClaimTemplates.tmp_dir }}
+{{- include "argo-cd.repoServer.persistentVolumeClaim" (dict "context" .Values.repoServer.volumeClaimTemplates.tmp_dir "name" "tmp-dir" ) | nindent 4 }}
+{{- end }}
+{{- if .Values.repoServer.volumeClaimTemplates.var_files }}
+{{- include "argo-cd.repoServer.persistentVolumeClaim" (dict "context" .Values.repoServer.volumeClaimTemplates.var_files "name" "var-files" ) | nindent 4 }}
+{{- end }}
+{{- if .Values.repoServer.volumeClaimTemplates.plugins }}
+{{- include "argo-cd.repoServer.persistentVolumeClaim" (dict "context" .Values.repoServer.volumeClaimTemplates.plugins "name" "plugins" ) | nindent 4 }}
+{{- end }}
+{{- end }}
