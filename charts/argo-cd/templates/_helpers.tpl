@@ -217,3 +217,20 @@ Merge Argo Params Configuration with Preset Configuration
 {{ $key }}: {{ toString $value | toYaml }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Return a PersistentVolumeClaim structure
+*/}}
+{{- define "argo-cd.repoServer.persistentVolumeClaim" -}}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: {{ .name }}
+  spec:
+    accessModes: {{ .context.accessModes }}
+    resources:
+      requests:
+        storage: {{ .context.storage }}
+    storageClassName: {{ .context.storageClassName }}
+    volumeMode: Filesystem
+{{- end -}}
