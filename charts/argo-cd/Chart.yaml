@@ -3,7 +3,7 @@ appVersion: v2.5.2
 kubeVersion: ">=1.22.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.13.9
+version: 5.14.0
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -23,4 +23,7 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: Document imporatant changes in changelog"
+    - "[Added]: Configuration option configs.gpg"
+    - "[Deprecated]: Configuration option configs.gpgKeys"
+    - "[Deprecated]: Configuration option configs.gpgKeysAnnotations"
+    - "[Fixed]: Documentation for declarative setup"
