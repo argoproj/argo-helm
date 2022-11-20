@@ -1588,6 +1588,40 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Configuration option configs.gpg"
+        - "[Deprecated]: Configuration option configs.gpgKeys"
+        - "[Deprecated]: Configuration option configs.gpgKeysAnnotations"
+        - "[Fixed]: Documentation for declarative setup"
+    apiVersion: v2
+    appVersion: v2.5.2
+    created: "2022-11-20T13:30:07.04427764Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.3
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 9267a89187cfd80000b536f0c89c159439dc53878891cfaf2e24a82abc0f04ab
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.14.0/argo-cd-5.14.0.tgz
+    version: 5.14.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Document imporatant changes in changelog"
     apiVersion: v2
     appVersion: v2.5.2
@@ -18500,4 +18534,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-11-17T15:26:45.072745565Z"
+generated: "2022-11-20T13:30:07.04689671Z"
