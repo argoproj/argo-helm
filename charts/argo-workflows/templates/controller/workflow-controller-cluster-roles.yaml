@@ -164,7 +164,7 @@ rules:
   resourceNames:
   {{/* for HTTP templates */}}
   - argo-workflows-agent-ca-certificates
-{{- if .Values.controller.rbac.secretWhitelist }}
+{{- with .Values.controller.rbac.secretWhitelist }}
 - apiGroups:
   - ""
   resources:
@@ -173,9 +173,7 @@ rules:
   - get
   - list
   - watch
-  {{- with .Values.controller.rbac.secretWhitelist }}
   resourceNames: {{- toYaml . | nindent 4 }}
-  {{- end }}
 {{- end }}
 
 {{- if .Values.controller.clusterWorkflowTemplates.enabled }}
