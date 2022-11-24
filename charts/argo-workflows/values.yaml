@@ -41,6 +41,8 @@ workflow:
   serviceAccount:
     # -- Specifies whether a service account should be created
     create: false
+    # -- Labels applied to created service account
+    labels: {}
     # -- Annotations applied to created service account
     annotations: {}
     # -- Service account which is used to run workflows
@@ -181,6 +183,8 @@ controller:
     create: true
     # -- Service account name
     name: ""
+    # -- Labels applied to created service account
+    labels: {}
     # -- Annotations applied to created service account
     annotations: {}
 
@@ -366,6 +370,8 @@ server:
     create: true
     # -- Service account name
     name: ""
+    # -- Labels applied to created service account
+    labels: {}
     # -- Annotations applied to created service account
     annotations: {}
 
