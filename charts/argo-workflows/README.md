@@ -60,6 +60,7 @@ Fields to note:
 |-----|------|---------|-------------|
 | workflow.namespace | string | `nil` | Deprecated; use controller.workflowNamespaces instead. |
 | workflow.rbac.create | bool | `true` | Adds Role and RoleBinding for the above specified service account to be able to run workflows. A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below) |
+| workflow.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | workflow.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | workflow.serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
 | workflow.serviceAccount.name | string | `"argo-workflow"` | Service account which is used to run workflows |
@@ -112,6 +113,7 @@ Fields to note:
 | controller.resourceRateLimit | object | `{}` | Globally limits the rate at which pods are created. This is intended to mitigate flooding of the Kubernetes API server by workflows with a large amount of parallel nodes. |
 | controller.resources | object | `{}` | Resource limits and requests for the controller |
 | controller.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true}` | the controller container's securityContext |
+| controller.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the controller |
 | controller.serviceAccount.name | string | `""` | Service account name |
@@ -198,6 +200,7 @@ Fields to note:
 | server.resources | object | `{}` | Resource limits and requests for the server |
 | server.secure | bool | `false` | Run the argo server in "secure" mode. Configure this value instead of `--secure` in extraArgs. |
 | server.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":false,"runAsNonRoot":true}` | Servers container-level security context |
+| server.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | server.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | server.serviceAccount.create | bool | `true` | Create a service account for the server |
 | server.serviceAccount.name | string | `""` | Service account name |
