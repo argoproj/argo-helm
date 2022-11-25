@@ -167,3 +167,6 @@ data:
     {{- with .Values.controller.navColor }}
     navColor: {{ . }}
     {{- end }}
+    {{- with .Values.controller.retentionPolicy }}
+    retentionPolicy: {{- toYaml . | nindent 6 }}
+    {{- end }}
