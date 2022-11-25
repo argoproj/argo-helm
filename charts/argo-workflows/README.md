@@ -62,6 +62,7 @@ Fields to note:
 | workflow.rbac.create | bool | `true` | Adds Role and RoleBinding for the above specified service account to be able to run workflows. A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below) |
 | workflow.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | workflow.serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
+| workflow.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | workflow.serviceAccount.name | string | `"argo-workflow"` | Service account which is used to run workflows |
 
 ### Workflow Controller
@@ -114,6 +115,7 @@ Fields to note:
 | controller.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true}` | the controller container's securityContext |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the controller |
+| controller.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | controller.serviceAccount.name | string | `""` | Service account name |
 | controller.serviceAnnotations | object | `{}` | Annotations to be applied to the controller Service |
 | controller.serviceLabels | object | `{}` | Optional labels to add to the controller Service |
@@ -200,6 +202,7 @@ Fields to note:
 | server.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":false,"runAsNonRoot":true}` | Servers container-level security context |
 | server.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | server.serviceAccount.create | bool | `true` | Create a service account for the server |
+| server.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | server.serviceAccount.name | string | `""` | Service account name |
 | server.serviceAnnotations | object | `{}` | Annotations to be applied to the UI Service |
 | server.serviceLabels | object | `{}` | Optional labels to add to the UI Service |

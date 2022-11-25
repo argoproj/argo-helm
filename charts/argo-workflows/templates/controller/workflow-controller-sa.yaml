@@ -5,6 +5,9 @@ metadata:
   name: {{ template "argo-workflows.controllerServiceAccountName" . }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+  {{- with .Values.controller.serviceAccount.labels  }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{ with .Values.controller.serviceAccount.annotations }}
   annotations:
     {{- toYaml .| nindent 4 }}
