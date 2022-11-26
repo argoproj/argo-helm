@@ -28,6 +28,9 @@ DEPRECATED option server.logFormat - Use configs.params.server.log.format
 {{- if .Values.server.logLevel }}
 DEPRECATED option server.logLevel - Use configs.params.server.log.level
 {{- end }}
+{{- if has "--insecure" .Values.server.extraArgs }}
+DEPRECATED option server.extraArgs."--insecure" - Use configs.params.server.insecure
+{{- end }}
 {{- if .Values.repoServer.logFormat }}
 DEPRECATED option repoServer.logFormat - Use configs.params.repoServer.log.format
 {{- end }}
