@@ -291,6 +291,12 @@ controller:
   # -- Extra containers to be added to the controller deployment
   extraContainers: []
 
+  # -- Workflow retention by number of workflows
+  retentionPolicy: {}
+  #  completed: 10
+  #  failed: 3
+  #  errored: 3
+
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
   # -- imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`.
