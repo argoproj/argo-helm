@@ -194,6 +194,7 @@ Argo Params Default Configuration Presets
 */}}
 {{- define "argo-cd.config.params.presets" -}}
 repo.server: "{{ include "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}"
+server.repo.server.strict.tls: {{ .Values.repoServer.certificateSecret.enabled | toString }}
 {{- with include "argo-cd.redis.server" . }}
 redis.server: {{ . | quote }}
 {{- end }}
