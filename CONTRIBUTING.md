@@ -93,7 +93,7 @@ helm dependency update
 Minimally:
 
 ```
-helm install charts/argo-cd --namespace argocd -n argo-cd
+helm install argocd  argo/argo-cd  -n argocd --create-namespace
 kubectl port-forward service/argo-cd-argocd-server -n argocd 8080:443
 ```
 
