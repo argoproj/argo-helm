@@ -1588,6 +1588,39 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: TLS secret name so Dex correctly generates the checksum for argocd-dex-server-tls."
+        - "[Fixed]: Standardise the naming convention of the TLS secret manifests."
+        - "[Added]: Add checksum to Repo-Server for the argocd-repo-server-tls secret."
+    apiVersion: v2
+    appVersion: v2.5.3
+    created: "2022-11-30T21:38:36.76335436Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.3
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: cb79c576b963ab934bd663c8f6aeca7b9008d704db826c40651311a03e90e41e
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.15.1/argo-cd-5.15.1.tgz
+    version: 5.15.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Ability to deploy argocd-repo-server-server-tls secret and configure Strict TLS for Repo Server"
     apiVersion: v2
     appVersion: v2.5.3
@@ -18741,4 +18774,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-11-30T15:26:12.010610673Z"
+generated: "2022-11-30T21:38:36.765142Z"
