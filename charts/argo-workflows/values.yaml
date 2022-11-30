@@ -41,6 +41,8 @@ workflow:
   serviceAccount:
     # -- Specifies whether a service account should be created
     create: false
+    # -- Labels applied to created service account
+    labels: {}
     # -- Annotations applied to created service account
     annotations: {}
     # -- Service account which is used to run workflows
@@ -70,6 +72,8 @@ controller:
   rbac:
     # -- Adds Role and RoleBinding for the controller.
     create: true
+    # -- Allows controller to get, list, and watch certain k8s secrets
+    secretWhitelist: []
 
   # -- Limits the maximum number of incomplete workflows in a namespace
   namespaceParallelism:
@@ -179,6 +183,8 @@ controller:
     create: true
     # -- Service account name
     name: ""
+    # -- Labels applied to created service account
+    labels: {}
     # -- Annotations applied to created service account
     annotations: {}
 
@@ -285,6 +291,12 @@ controller:
   # -- Extra containers to be added to the controller deployment
   extraContainers: []
 
+  # -- Workflow retention by number of workflows
+  retentionPolicy: {}
+  #  completed: 10
+  #  failed: 3
+  #  errored: 3
+
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
   # -- imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`.
@@ -364,6 +376,8 @@ server:
     create: true
     # -- Service account name
     name: ""
+    # -- Labels applied to created service account
+    labels: {}
     # -- Annotations applied to created service account
     annotations: {}
 
@@ -602,3 +616,17 @@ artifactRepository:
   # accountKeySecret:
   #  name: my-azure-storage-credentials
   #  key: account-access-key
+
+# -- The section of custom artifact repository.
+# Will be added to the config in case useDefaultArtifactRepo is set to false
+customArtifactRepository: {}
+# customArtifactRepository:
+#   archiveLogs: true
+#   artifactory:
+#     repoUrl: https://artifactory.example.com/raw
+#     usernameSecret:
+#       name: artifactory-creds
+#       key: username
+#     passwordSecret:
+#       name: artifactory-creds
+#       key: password

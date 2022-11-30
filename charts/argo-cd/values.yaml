@@ -104,7 +104,7 @@ configs:
   # General Argo CD configuration
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
   cm:
-    # -- Create the argocd-cm configmap for [Declarative setup]
+    # -- Create the argocd-cm configmap for [declarative setup]
     create: true
 
     # -- Annotations to be added to argocd-cm configmap
@@ -240,6 +240,22 @@ configs:
     # The scope value can be a string, or a list of strings.
     scopes: "[groups]"
 
+  # GnuPG public keys for commit verification
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/
+  gpg:
+    # -- Annotations to be added to argocd-gpg-keys-cm configmap
+    annotations: {}
+
+    # -- [GnuPG] public keys to add to the keyring
+    # @default -- `{}` (See [values.yaml])
+    ## Note: Public keys should be exported with `gpg --export --armor <KEY>`
+    keys: {}
+      # 4AEE18F83AFDEB23: |
+      #   -----BEGIN PGP PUBLIC KEY BLOCK-----
+      #   ...
+      #   -----END PGP PUBLIC KEY BLOCK-----
+
+
   # -- Provide one or multiple [external cluster credentials]
   # @default -- `[]` (See [values.yaml])
   ## Ref:
@@ -266,30 +282,6 @@ configs:
     #     tlsClientConfig:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
-
-  # -- GnuPG key ring annotations
-  gpgKeysAnnotations: {}
-  # -- [GnuPG](https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/) keys to add to the key ring
-  # @default -- `{}` (See [values.yaml])
-  gpgKeys: {}
-    # 4AEE18F83AFDEB23: |
-    #     -----BEGIN PGP PUBLIC KEY BLOCK-----
-    #
-    #     mQENBFmUaEEBCACzXTDt6ZnyaVtueZASBzgnAmK13q9Urgch+sKYeIhdymjuMQta
-    #     x15OklctmrZtqre5kwPUosG3/B2/ikuPYElcHgGPL4uL5Em6S5C/oozfkYzhwRrT
-    #     SQzvYjsE4I34To4UdE9KA97wrQjGoz2Bx72WDLyWwctD3DKQtYeHXswXXtXwKfjQ
-    #     7Fy4+Bf5IPh76dA8NJ6UtjjLIDlKqdxLW4atHe6xWFaJ+XdLUtsAroZcXBeWDCPa
-    #     buXCDscJcLJRKZVc62gOZXXtPfoHqvUPp3nuLA4YjH9bphbrMWMf810Wxz9JTd3v
-    #     yWgGqNY0zbBqeZoGv+TuExlRHT8ASGFS9SVDABEBAAG0NUdpdEh1YiAod2ViLWZs
-    #     b3cgY29tbWl0IHNpZ25pbmcpIDxub3JlcGx5QGdpdGh1Yi5jb20+iQEiBBMBCAAW
-    #     BQJZlGhBCRBK7hj4Ov3rIwIbAwIZAQAAmQEH/iATWFmi2oxlBh3wAsySNCNV4IPf
-    #     DDMeh6j80WT7cgoX7V7xqJOxrfrqPEthQ3hgHIm7b5MPQlUr2q+UPL22t/I+ESF6
-    #     9b0QWLFSMJbMSk+BXkvSjH9q8jAO0986/pShPV5DU2sMxnx4LfLfHNhTzjXKokws
-    #     +8ptJ8uhMNIDXfXuzkZHIxoXk3rNcjDN5c5X+sK8UBRH092BIJWCOfaQt7v7wig5
-    #     4Ra28pM9GbHKXVNxmdLpCFyzvyMuCmINYYADsC848QQFFwnd4EQnupo6QvhEVx1O
-    #     j7wDwvuH5dCrLuLwtwXaQh0onG4583p0LGms2Mf5F+Ick6o/4peOlBoZz48=
-    #     =Bvzs
-    #     -----END PGP PUBLIC KEY BLOCK-----
 
   # -- Known Hosts configmap annotations
   knownHostsAnnotations: {}
@@ -814,7 +806,7 @@ dex:
     # -- Dex image repository
     repository: ghcr.io/dexidp/dex
     # -- Dex image tag
-    tag: v2.35.3-distroless
+    tag: v2.35.3
     # -- Dex imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -2011,6 +2003,23 @@ repoServer:
   #    cpu: 10m
   #    memory: 64Mi
 
+  # TLS certificate configuration via Secret
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#configuring-tls-to-argocd-repo-server
+  ## Note: Issuing certificates via cert-manager in not supported right now because it's not possible to restart repo server automatically without extra controllers.
+  certificateSecret:
+    # -- Create argocd-repo-server-tls secret
+    enabled: false
+    # -- Annotations to be added to argocd-repo-server-tls secret
+    annotations: {}
+    # -- Labels to be added to argocd-repo-server-tls secret
+    labels: {}
+    # -- Certificate authority. Required for self-signed certificates.
+    ca: ''
+    # -- Certificate private key
+    key: ''
+    # -- Certificate data. Must contain SANs of Repo service (ie: argocd-repo-server, argocd-repo-server.argo-cd.svc)
+    crt: ''
+
   ## Repo server service configuration
   service:
     # -- Repo server service annotations
@@ -2165,12 +2174,8 @@ applicationSet:
     metricsAddr: :8080
     # -- The default health check port
     probeBindAddr: :8081
-    # -- The default leader election setting
-    enableLeaderElection: false
     # -- How application is synced between the generator and the cluster
     policy: sync
-    # -- Print debug logs
-    debug: false
     # -- Enable dry run mode
     dryRun: false
 

@@ -333,6 +333,8 @@ spec:
         volumeMounts:
           - name: extensions
             mountPath: /tmp/extensions/
+          - name: tmp
+            mountPath: /tmp
       {{- end }}
       {{- with .Values.server.nodeSelector }}
       nodeSelector:
