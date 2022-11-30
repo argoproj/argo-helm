@@ -546,8 +546,8 @@ controller:
   # - secretRef:
   #     name: secret-name
 
-  # -- Annotations to be added to application controller Deployment
-  deploymentAnnotations: {}
+  # -- Annotations for the application controller StatefulSet
+  statefulsetAnnotations: {}
 
   # -- Annotations to be added to application controller pods
   podAnnotations: {}
@@ -2248,8 +2248,8 @@ applicationSet:
     # If not set and create is true, a name is generated using the fullname template
     name: ""
 
-  # -- Annotations for the controller StatefulSet
-  statefulsetAnnotations: {}
+  # -- Annotations to be added to ApplicationSet controller Deployment
+  deploymentAnnotations: {}
 
   # -- Annotations for the controller pods
   podAnnotations: {}
@@ -2541,7 +2541,7 @@ notifications:
     # service.slack: |
     #   token: $slack-token
 
-  # -- Annotations to be applied to the controller Deployments
+  # -- Annotations to be applied to the notifications controller Deployment
   deploymentAnnotations: {}
 
   # -- Annotations to be applied to the controller Pods
