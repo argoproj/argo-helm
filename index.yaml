@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Ability to annotate Deployment and Statefulset objects for all components"
+    apiVersion: v2
+    appVersion: v2.5.3
+    created: "2022-11-30T23:28:37.740685107Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.3
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: de99a03547a911c9cedc9aa570822ae5dfbfe30a2efd4a9e476eda0e570e9f40
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.16.0/argo-cd-5.16.0.tgz
+    version: 5.16.0
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: ApplicationSet now automatically detects leader election"
         - "[Changed]: Simplified ApplicationSet RBAC rules"
         - "[Removed]: Configuration option applicationset.args.debug"
@@ -18808,4 +18839,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-11-30T21:58:13.341708308Z"
+generated: "2022-11-30T23:28:37.742722805Z"
