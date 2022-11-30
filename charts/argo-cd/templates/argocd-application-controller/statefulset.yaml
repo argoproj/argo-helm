@@ -1,7 +1,13 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "argo-cd.controller.fullname" . }}
+  {{- with (mergeOverwrite (deepCopy .Values.global.statefulsetAnnotations) .Values.controller.statefulsetAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  name: {{ template "argo-cd.controller.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 spec:

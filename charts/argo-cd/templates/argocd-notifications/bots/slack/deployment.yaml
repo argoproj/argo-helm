@@ -2,7 +2,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "argo-cd.notifications.fullname" . }}-bot
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.notifications.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  name: {{ template "argo-cd.notifications.fullname" . }}-bot
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" .Values.notifications.bots.slack.name) | nindent 4 }}
 spec:

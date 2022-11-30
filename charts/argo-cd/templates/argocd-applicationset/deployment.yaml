@@ -2,6 +2,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.applicationSet.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
   name: {{ include "argo-cd.applicationSet.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}

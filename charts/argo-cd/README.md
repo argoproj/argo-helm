@@ -376,6 +376,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | global.additionalLabels | object | `{}` | Common labels for the all resources |
+| global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
 | global.image.repository | string | `"quay.io/argoproj/argocd"` | If defined, a repository applied to all Argo CD deployments |
@@ -389,6 +390,7 @@ NAME: my-release
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
 | global.revisionHistoryLimit | int | `3` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
 | global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
+| global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
 
 ## Argo CD Configs
 
@@ -506,6 +508,7 @@ NAME: my-release
 | controller.serviceAccount.create | bool | `true` | Create a service account for the application controller |
 | controller.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | controller.serviceAccount.name | string | `"argocd-application-controller"` | Service account name |
+| controller.statefulsetAnnotations | object | `{}` | Annotations for the application controller StatefulSet |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to the application controller main container |
@@ -533,6 +536,7 @@ NAME: my-release
 | repoServer.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
 | repoServer.containerPort | int | `8081` | Configures the repo server port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
+| repoServer.deploymentAnnotations | object | `{}` | Annotations to be added to repo server Deployment |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
 | repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
 | repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to repo server |
@@ -632,6 +636,7 @@ NAME: my-release
 | server.clusterAdminAccess.enabled | bool | `true` | Enable RBAC for local cluster deployments |
 | server.containerPort | int | `8080` | Configures the server port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
+| server.deploymentAnnotations | object | `{}` | Annotations to be added to server Deployment |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
 | server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
 | server.extensions.containerSecurityContext | object | See [values.yaml] | Server UI extensions container-level security context |
@@ -775,6 +780,7 @@ server:
 | dex.containerPortHttp | int | `5556` | Container port for HTTP access |
 | dex.containerPortMetrics | int | `5558` | Container port for metrics access |
 | dex.containerSecurityContext | object | See [values.yaml] | Dex container-level security context |
+| dex.deploymentAnnotations | object | `{}` | Annotations to be added to the Dex server Deployment |
 | dex.enabled | bool | `true` | Enable dex |
 | dex.env | list | `[]` | Environment variables to pass to the Dex server |
 | dex.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Dex server |
@@ -848,6 +854,7 @@ server:
 | redis.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | redis.containerPort | int | `6379` | Redis container port |
 | redis.containerSecurityContext | object | See [values.yaml] | Redis container-level security context |
+| redis.deploymentAnnotations | object | `{}` | Annotations to be added to the Redis server Deployment |
 | redis.enabled | bool | `true` | Enable redis |
 | redis.env | list | `[]` | Environment variables to pass to the Redis server |
 | redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
@@ -955,6 +962,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
 | applicationSet.args.probeBindAddr | string | `":8081"` | The default health check port |
 | applicationSet.containerSecurityContext | object | See [values.yaml] | ApplicationSet controller container-level security context |
+| applicationSet.deploymentAnnotations | object | `{}` | Annotations to be added to ApplicationSet controller Deployment |
 | applicationSet.enabled | bool | `true` | Enable ApplicationSet controller |
 | applicationSet.extraArgs | list | `[]` | List of extra cli args to add |
 | applicationSet.extraContainers | list | `[]` | Additional containers to be added to the applicationset controller pod |
@@ -1056,6 +1064,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.cm.create | bool | `true` | Whether helm chart creates controller config map |
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.context | object | `{}` | Define user-defined context |
+| notifications.deploymentAnnotations | object | `{}` | Annotations to be applied to the notifications controller Deployment |
 | notifications.enabled | bool | `true` | Enable notifications controller |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
