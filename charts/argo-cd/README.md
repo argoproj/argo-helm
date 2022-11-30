@@ -522,6 +522,12 @@ NAME: my-release
 | repoServer.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the repo server [HPA] |
 | repoServer.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the repo server [HPA] |
 | repoServer.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the repo server [HPA] |
+| repoServer.certificateSecret.annotations | object | `{}` | Annotations to be added to argocd-repo-server-tls secret |
+| repoServer.certificateSecret.ca | string | `""` | Certificate authority. Required for self-signed certificates. |
+| repoServer.certificateSecret.crt | string | `""` | Certificate data. Must contain SANs of Repo service (ie: argocd-repo-server, argocd-repo-server.argo-cd.svc) |
+| repoServer.certificateSecret.enabled | bool | `false` | Create argocd-repo-server-tls secret |
+| repoServer.certificateSecret.key | string | `""` | Certificate private key |
+| repoServer.certificateSecret.labels | object | `{}` | Labels to be added to argocd-repo-server-tls secret |
 | repoServer.clusterAdminAccess.enabled | bool | `false` | Enable RBAC for local cluster deployments |
 | repoServer.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the Repo server's Cluster Role resource |
 | repoServer.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
