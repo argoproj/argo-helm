@@ -150,4 +150,15 @@ rules:
   - get
   - update
   - patch
+# traefikservices needed for using trafficRouting with traefik
+- apiGroups:
+  - traefik.containo.us
+  resources:
+  - traefikservices
+  verbs:
+  - list
+  - watch
+  - get
+  - update
+  - patch
 {{- end }}
