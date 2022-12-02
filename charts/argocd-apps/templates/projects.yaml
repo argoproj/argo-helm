@@ -23,10 +23,14 @@ metadata:
   {{- end }}
 spec:
   description: {{ .description }}
+  {{- with .sourceRepos }}
   sourceRepos:
-    {{- toYaml .sourceRepos | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .destinations }}
   destinations:
-    {{- toYaml .destinations | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with .clusterResourceWhitelist }}
   clusterResourceWhitelist:
     {{- toYaml . | nindent 4 }}
