@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v1.7.3
 description: A Helm chart for Argo Events, the event-driven workflow automation framework
 name: argo-events
-version: 2.0.6
+version: 2.0.7
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-events/assets/logo.png
 keywords:
@@ -15,4 +15,5 @@ maintainers:
     url: https://argoproj.github.io/
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: Upgrade Argo events controller to v1.7.3"
+    - "[Fixed]: avoid app.kubernetes.io/version kubernetes label from exceeding maximum length (63)
+    - "[Fixed]: generated value for app.kubernetes.io/version label is now valid even when defining a controller/webhook .image.tag with a SHA digest"
