@@ -1588,6 +1588,39 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Set aggregate roles only for using resources"
+        - "[Added]: Add argocdextensions to aggregate roles"
+        - "[Fixed]: Fix typo of notification.bots.slack.image in values"
+    apiVersion: v2
+    appVersion: v2.5.3
+    created: "2022-12-02T14:48:41.95724145Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.3
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 04d51e6d448ce37ceed6ed2d326083c2c808fd30f9928874d259b2e76810dc10
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.16.1/argo-cd-5.16.1.tgz
+    version: 5.16.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Ability to annotate Deployment and Statefulset objects for all components"
     apiVersion: v2
     appVersion: v2.5.3
@@ -18900,4 +18933,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-12-02T13:51:35.492541761Z"
+generated: "2022-12-02T14:48:41.958905358Z"
