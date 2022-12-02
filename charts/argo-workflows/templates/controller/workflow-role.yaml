@@ -49,8 +49,6 @@ rules:
       - argoproj.io
     resources:
       - workflowtasksets/status
-      {{/* TODO: This resource is for app version <= v3.2, so please remove it when app version v3.2 is no more used. */}}
-      - workflowtasksets
     verbs:
       - patch
   {{- end }}
