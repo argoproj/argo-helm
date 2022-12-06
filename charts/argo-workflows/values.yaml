@@ -325,6 +325,10 @@ executor:
   env: []
   # -- sets security context for the executor container
   securityContext: {}
+  # -- Additional volume mounts for the executor container.
+  volumeMounts: []
+  # -- Additional volumes for the executor.
+  volumes: []
 
 server:
   # -- Deploy the Argo Server

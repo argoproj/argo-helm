@@ -161,6 +161,8 @@ Fields to note:
 | executor.image.tag | string | `""` | Image tag for the workflow executor. Defaults to `.Values.images.tag`. |
 | executor.resources | object | `{}` | Resource limits and requests for the Workflow Executors |
 | executor.securityContext | object | `{}` | sets security context for the executor container |
+| executor.volumeMounts | list | `[]` | Additional volume mounts for the executor container. |
+| executor.volumes | list | `[]` | Additional volumes for the executor. |
 
 ### Workflow Server
 
