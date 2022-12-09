@@ -4,7 +4,7 @@ metadata:
   name: {{ include "argo-events.controller.fullname" . }}
   labels:
     {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default (include "argo-events.defaultTag" .) .Values.controller.image.tag | quote }}
+    app.kubernetes.io/version: {{ include "argo-events.controller_chart_version_label" . }}
 spec:
   selector:
     matchLabels:
@@ -22,7 +22,7 @@ spec:
         {{- end }}
       labels:
         {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ default (include "argo-events.defaultTag" .) .Values.controller.image.tag | quote }}
+        app.kubernetes.io/version: {{ include "argo-events.controller_chart_version_label" . }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.controller.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
