@@ -13143,6 +13143,31 @@ entries:
   argo-events:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: avoid app.kubernetes.io/version kubernetes label from exceeding maximum length (63)
+        - "[Fixed]: generated value for app.kubernetes.io/version label is now valid even when defining a controller/webhook .image.tag with a SHA digest"
+        - "[Fixed]: webhook.image.tag value now overrides the tag in the webhook deployment"
+    apiVersion: v2
+    appVersion: v1.7.3
+    created: "2022-12-09T13:08:10.990533655Z"
+    description: A Helm chart for Argo Events, the event-driven workflow automation
+      framework
+    digest: 200e967793540fd7e8a9ec2f250fd277921b59b95072f25b052555c64dbbdd3b
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-events/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-events
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-events
+    sources:
+    - https://github.com/argoproj/argo-events
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-events-2.0.7/argo-events-2.0.7.tgz
+    version: 2.0.7
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Upgrade Argo events controller to v1.7.3"
     apiVersion: v2
     appVersion: v1.7.3
@@ -18985,4 +19010,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-12-09T06:50:31.098353828Z"
+generated: "2022-12-09T13:08:10.992490692Z"
