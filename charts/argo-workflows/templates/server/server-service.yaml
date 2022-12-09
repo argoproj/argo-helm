@@ -5,7 +5,7 @@ metadata:
   name: {{ template "argo-workflows.server.fullname" . }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default (include "argo-workflows.defaultTag" .) .Values.server.image.tag | trunc 63 | quote }}
+    app.kubernetes.io/version: {{ include "argo-workflows.server_chart_version_label" . }}
   {{- with .Values.server.serviceAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
