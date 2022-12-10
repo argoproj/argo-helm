@@ -63,4 +63,8 @@ spec:
   signatureKeys:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .sourceNamespaces }}
+  sourceNamespaces:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
