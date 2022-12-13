@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: Prevent could not parse 0 warning"
+    apiVersion: v2
+    appVersion: v2.5.4
+    created: "2022-12-13T21:31:31.850751821Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.3
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 3c5e9a43329f71ca8467a6a9fad4ec273113db3b7ff41b0be21e66b13c8e6219
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.16.4/argo-cd-5.16.4.tgz
+    version: 5.16.4
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Add annotations to PrometheusRule"
     apiVersion: v2
     appVersion: v2.5.4
@@ -19062,4 +19093,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-12-13T06:19:40.049439649Z"
+generated: "2022-12-13T21:31:31.853145951Z"
