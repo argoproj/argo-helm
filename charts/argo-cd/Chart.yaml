@@ -3,7 +3,7 @@ appVersion: v2.5.4
 kubeVersion: ">=1.22.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.16.3
+version: 5.16.4
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -23,4 +23,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Add annotations to PrometheusRule"
+    - "[Fixed]: Prevent could not parse 0 warning"
