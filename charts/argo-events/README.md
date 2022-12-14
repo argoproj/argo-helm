@@ -155,6 +155,7 @@ done
 | webhook.pdb.labels | object | `{}` | Labels to be added to admission webhook pdb |
 | webhook.podAnnotations | object | `{}` | Annotations to be added to event controller pods |
 | webhook.podLabels | object | `{}` | Labels to be added to event controller pods |
+| webhook.port | int | `443` | Port to listen on |
 | webhook.priorityClassName | string | `""` | Priority class for the event controller pods |
 | webhook.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | webhook.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
