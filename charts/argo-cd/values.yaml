@@ -2132,7 +2132,7 @@ applicationSet:
   # -- Enable ApplicationSet controller
   enabled: true
 
-  # -- Application Set controller name string
+  # -- ApplicationSet controller name string
   name: applicationset-controller
 
   # -- The number of ApplicationSet controller pods to run
@@ -2156,13 +2156,13 @@ applicationSet:
 
   ## ApplicationSet controller image
   image:
-    # -- Repository to use for the application set controller
+    # -- Repository to use for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.repository)
     repository: ""
-    # -- Tag to use for the application set controller
+    # -- Tag to use for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.tag)
     tag: ""
-    # -- Image pull policy for the application set controller
+    # -- Image pull policy for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
 
@@ -2227,15 +2227,15 @@ applicationSet:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
-  ## Application set service configuration
+  ## ApplicationSet service configuration
   service:
-    # -- Application set service annotations
+    # -- ApplicationSet service annotations
     annotations: {}
-    # -- Application set service labels
+    # -- ApplicationSet service labels
     labels: {}
-    # -- Application set service port
+    # -- ApplicationSet service port
     port: 7000
-    # -- Application set service port name
+    # -- ApplicationSet service port name
     portName: webhook
 
   serviceAccount:
