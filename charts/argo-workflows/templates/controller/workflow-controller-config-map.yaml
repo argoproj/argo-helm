@@ -170,3 +170,6 @@ data:
     {{- with .Values.controller.retentionPolicy }}
     retentionPolicy: {{- toYaml . | nindent 6 }}
     {{- end }}
+    {{- with .Values.emissaryExecutor.images }}
+    images: {{- toYaml . | nindent 6 }}
+    {{- end }}
