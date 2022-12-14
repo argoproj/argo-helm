@@ -965,14 +965,14 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.deploymentAnnotations | object | `{}` | Annotations to be added to ApplicationSet controller Deployment |
 | applicationSet.enabled | bool | `true` | Enable ApplicationSet controller |
 | applicationSet.extraArgs | list | `[]` | List of extra cli args to add |
-| applicationSet.extraContainers | list | `[]` | Additional containers to be added to the applicationset controller pod |
-| applicationSet.extraEnv | list | `[]` | Environment variables to pass to the controller |
-| applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
+| applicationSet.extraContainers | list | `[]` | Additional containers to be added to the ApplicationSet controller pod |
+| applicationSet.extraEnv | list | `[]` | Environment variables to pass to the ApplicationSet controller |
+| applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the ApplicationSet controller |
 | applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
-| applicationSet.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application set controller |
-| applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application set controller |
-| applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application set controller |
+| applicationSet.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the ApplicationSet controller |
+| applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the ApplicationSet controller |
+| applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the ApplicationSet controller |
 | applicationSet.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
 | applicationSet.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for ApplicationSet controller |
 | applicationSet.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
@@ -997,15 +997,15 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | applicationSet.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
-| applicationSet.name | string | `"applicationset-controller"` | Application Set controller name string |
+| applicationSet.name | string | `"applicationset-controller"` | ApplicationSet controller name string |
 | applicationSet.nodeSelector | object | `{}` | [Node selector] |
 | applicationSet.pdb.annotations | object | `{}` | Annotations to be added to ApplicationSet controller pdb |
 | applicationSet.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the ApplicationSet controller |
 | applicationSet.pdb.labels | object | `{}` | Labels to be added to ApplicationSet controller pdb |
 | applicationSet.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
 | applicationSet.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
-| applicationSet.podAnnotations | object | `{}` | Annotations for the controller pods |
-| applicationSet.podLabels | object | `{}` | Labels for the controller pods |
+| applicationSet.podAnnotations | object | `{}` | Annotations for the ApplicationSet controller pods |
+| applicationSet.podLabels | object | `{}` | Labels for the ApplicationSet controller pods |
 | applicationSet.priorityClassName | string | `""` | If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default. |
 | applicationSet.readinessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for ApplicationSet controller |
 | applicationSet.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
@@ -1014,11 +1014,11 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | applicationSet.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | applicationSet.replicaCount | int | `1` | The number of ApplicationSet controller pods to run |
-| applicationSet.resources | object | `{}` | Resource limits and requests for the controller pods. |
-| applicationSet.service.annotations | object | `{}` | Application set service annotations |
-| applicationSet.service.labels | object | `{}` | Application set service labels |
-| applicationSet.service.port | int | `7000` | Application set service port |
-| applicationSet.service.portName | string | `"webhook"` | Application set service port name |
+| applicationSet.resources | object | `{}` | Resource limits and requests for the ApplicationSet controller pods. |
+| applicationSet.service.annotations | object | `{}` | ApplicationSet service annotations |
+| applicationSet.service.labels | object | `{}` | ApplicationSet service labels |
+| applicationSet.service.port | int | `7000` | ApplicationSet service port |
+| applicationSet.service.portName | string | `"webhook"` | ApplicationSet service port name |
 | applicationSet.serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | applicationSet.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | applicationSet.serviceAccount.labels | object | `{}` | Labels applied to created service account |
@@ -1028,7 +1028,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.webhook.ingress.enabled | bool | `false` | Enable an ingress resource for Webhooks |
 | applicationSet.webhook.ingress.extraPaths | list | `[]` | Additional ingress paths |
 | applicationSet.webhook.ingress.hosts | list | `[]` | List of ingress hosts |
-| applicationSet.webhook.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
+| applicationSet.webhook.ingress.ingressClassName | string | `""` | Defines which ingress ApplicationSet controller will implement the resource |
 | applicationSet.webhook.ingress.labels | object | `{}` | Additional ingress labels |
 | applicationSet.webhook.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
 | applicationSet.webhook.ingress.paths | list | `["/api/webhook"]` | List of ingress paths |
@@ -1061,22 +1061,22 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | notifications.bots.slack.serviceAccount.name | string | `"argocd-notifications-bot"` | The name of the service account to use. |
 | notifications.bots.slack.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| notifications.cm.create | bool | `true` | Whether helm chart creates controller config map |
+| notifications.cm.create | bool | `true` | Whether helm chart creates notifications controller config map |
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.context | object | `{}` | Define user-defined context |
 | notifications.deploymentAnnotations | object | `{}` | Annotations to be applied to the notifications controller Deployment |
 | notifications.enabled | bool | `true` | Enable notifications controller |
-| notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
+| notifications.extraArgs | list | `[]` | Extra arguments to provide to the notifications controller |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
-| notifications.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
+| notifications.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the notifications controller |
 | notifications.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | notifications.extraVolumes | list | `[]` | List of extra volumes to add |
 | notifications.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the notifications controller |
 | notifications.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the notifications controller |
 | notifications.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the notifications controller |
 | notifications.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
-| notifications.logFormat | string | `""` (defaults to global.logging.format) | Application controller log format. Either `text` or `json` |
-| notifications.logLevel | string | `""` (defaults to global.logging.level) | Application controller log level. One of: `debug`, `info`, `warn`, `error` |
+| notifications.logFormat | string | `""` (defaults to global.logging.format) | Notifications controller log format. Either `text` or `json` |
+| notifications.logLevel | string | `""` (defaults to global.logging.level) | Notifications controller log level. One of: `debug`, `info`, `warn`, `error` |
 | notifications.metrics.enabled | bool | `false` | Enables prometheus metrics server |
 | notifications.metrics.port | int | `9001` | Metrics port |
 | notifications.metrics.service.annotations | object | `{}` | Metrics service annotations |
@@ -1096,12 +1096,12 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.pdb.labels | object | `{}` | Labels to be added to notifications controller pdb |
 | notifications.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
 | notifications.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
-| notifications.podAnnotations | object | `{}` | Annotations to be applied to the controller Pods |
-| notifications.podLabels | object | `{}` | Labels to be applied to the controller Pods |
-| notifications.priorityClassName | string | `""` | Priority class for the controller pods |
-| notifications.resources | object | `{}` | Resource limits and requests for the controller |
+| notifications.podAnnotations | object | `{}` | Annotations to be applied to the notifications controller Pods |
+| notifications.podLabels | object | `{}` | Labels to be applied to the notifications controller Pods |
+| notifications.priorityClassName | string | `""` | Priority class for the notifications controller pods |
+| notifications.resources | object | `{}` | Resource limits and requests for the notifications controller |
 | notifications.secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
-| notifications.secret.create | bool | `true` | Whether helm chart creates controller secret |
+| notifications.secret.create | bool | `true` | Whether helm chart creates notifications controller secret |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the secret |
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
