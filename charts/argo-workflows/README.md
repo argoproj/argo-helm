@@ -62,6 +62,7 @@ Fields to note:
 | workflow.rbac.create | bool | `true` | Adds Role and RoleBinding for the above specified service account to be able to run workflows. A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below) |
 | workflow.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | workflow.serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
+| workflow.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | workflow.serviceAccount.name | string | `"argo-workflow"` | Service account which is used to run workflows |
 
 ### Workflow Controller
@@ -107,12 +108,15 @@ Fields to note:
 | controller.podSecurityContext | object | `{}` | SecurityContext to set on the controller pods |
 | controller.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages. |
 | controller.rbac.create | bool | `true` | Adds Role and RoleBinding for the controller. |
+| controller.rbac.secretWhitelist | list | `[]` | Allows controller to get, list, and watch certain k8s secrets |
 | controller.replicas | int | `1` | The number of controller pods to run |
 | controller.resourceRateLimit | object | `{}` | Globally limits the rate at which pods are created. This is intended to mitigate flooding of the Kubernetes API server by workflows with a large amount of parallel nodes. |
 | controller.resources | object | `{}` | Resource limits and requests for the controller |
+| controller.retentionPolicy | object | `{}` | Workflow retention by number of workflows |
 | controller.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true}` | the controller container's securityContext |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the controller |
+| controller.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | controller.serviceAccount.name | string | `""` | Service account name |
 | controller.serviceAnnotations | object | `{}` | Annotations to be applied to the controller Service |
 | controller.serviceLabels | object | `{}` | Optional labels to add to the controller Service |
@@ -199,6 +203,7 @@ Fields to note:
 | server.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":false,"runAsNonRoot":true}` | Servers container-level security context |
 | server.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | server.serviceAccount.create | bool | `true` | Create a service account for the server |
+| server.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | server.serviceAccount.name | string | `""` | Service account name |
 | server.serviceAnnotations | object | `{}` | Annotations to be applied to the UI Service |
 | server.serviceLabels | object | `{}` | Optional labels to add to the UI Service |
@@ -220,6 +225,7 @@ Fields to note:
 | artifactRepository.azure | object | `{}` (See [values.yaml]) | Store artifact in Azure Blob Storage |
 | artifactRepository.gcs | object | `{}` (See [values.yaml]) | Store artifact in a GCS object store |
 | artifactRepository.s3 | object | See [values.yaml] | Store artifact in a S3-compliant object store |
+| customArtifactRepository | object | `{}` | The section of custom artifact repository. Will be added to the config in case useDefaultArtifactRepo is set to false |
 | useDefaultArtifactRepo | bool | `false` | Influences the creation of the ConfigMap for the workflow-controller itself. |
 | useStaticCredentials | bool | `true` | Use static credentials for S3 (eg. when not using AWS IRSA) |
 

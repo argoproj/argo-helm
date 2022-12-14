@@ -7,6 +7,9 @@ metadata:
   name: {{ $.Values.workflow.serviceAccount.name }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" $ "component" $.Values.controller.name "name" $.Values.controller.name) | nindent 4 }}
+  {{- with $.Values.workflow.serviceAccount.labels  }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
     {{- with $namespace }}
   namespace: {{ . }}
     {{- end }}

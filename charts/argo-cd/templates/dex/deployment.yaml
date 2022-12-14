@@ -2,6 +2,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.dex.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
   name: {{ template "argo-cd.dex.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
@@ -16,7 +22,7 @@ spec:
       annotations:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
         {{- if .Values.dex.certificateSecret.enabled }}
-        checksum/dex-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-dex-server-tls.yaml") . | sha256sum }}
+        checksum/dex-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-dex-server-tls-secret.yaml") . | sha256sum }}
         {{- end }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.dex.podAnnotations) }}
         {{- range $key, $value := . }}

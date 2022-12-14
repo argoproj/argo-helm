@@ -2,6 +2,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.applicationSet.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
   name: {{ include "argo-cd.applicationSet.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
@@ -41,19 +47,16 @@ spec:
           command:
             - entrypoint.sh
             - argocd-applicationset-controller
+            - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
+            - --enable-leader-election={{ gt ( .Values.applicationSet.replicaCount | int64) 1 }}
+            - --metrics-addr={{ .Values.applicationSet.args.metricsAddr }}
+            - --probe-addr={{ .Values.applicationSet.args.probeBindAddr }}
+            - --policy={{ .Values.applicationSet.args.policy }}
+            - --dry-run={{ .Values.applicationSet.args.dryRun }}
             - --logformat
             - {{ default .Values.global.logging.format .Values.applicationSet.logFormat }}
             - --loglevel
             - {{ default .Values.global.logging.level .Values.applicationSet.logLevel }}
-            - --metrics-addr={{ .Values.applicationSet.args.metricsAddr }}
-            - --probe-addr={{ .Values.applicationSet.args.probeBindAddr }}
-            {{- if or (gt ( .Values.applicationSet.replicaCount | int64) 1) .Values.applicationSet.args.enableLeaderElection }}
-            - --enable-leader-election=true
-            {{- end }}
-            - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
-            - --policy={{ .Values.applicationSet.args.policy }}
-            - --debug={{ .Values.applicationSet.args.debug }}
-            - --dry-run={{ .Values.applicationSet.args.dryRun }}
             {{- with .Values.applicationSet.extraArgs }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
