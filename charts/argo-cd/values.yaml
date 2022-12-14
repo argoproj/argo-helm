@@ -2132,7 +2132,7 @@ applicationSet:
   # -- Enable ApplicationSet controller
   enabled: true
 
-  # -- Application Set controller name string
+  # -- ApplicationSet controller name string
   name: applicationset-controller
 
   # -- The number of ApplicationSet controller pods to run
@@ -2156,13 +2156,13 @@ applicationSet:
 
   ## ApplicationSet controller image
   image:
-    # -- Repository to use for the application set controller
+    # -- Repository to use for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.repository)
     repository: ""
-    # -- Tag to use for the application set controller
+    # -- Tag to use for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.tag)
     tag: ""
-    # -- Image pull policy for the application set controller
+    # -- Image pull policy for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
 
@@ -2187,7 +2187,7 @@ applicationSet:
   # @default -- `""` (defaults to global.logging.level)
   logLevel: ""
 
-  # -- Additional containers to be added to the applicationset controller pod
+  # -- Additional containers to be added to the ApplicationSet controller pod
   extraContainers: []
 
   ## Metrics service configuration
@@ -2227,15 +2227,15 @@ applicationSet:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
-  ## Application set service configuration
+  ## ApplicationSet service configuration
   service:
-    # -- Application set service annotations
+    # -- ApplicationSet service annotations
     annotations: {}
-    # -- Application set service labels
+    # -- ApplicationSet service labels
     labels: {}
-    # -- Application set service port
+    # -- ApplicationSet service port
     port: 7000
-    # -- Application set service port name
+    # -- ApplicationSet service port name
     portName: webhook
 
   serviceAccount:
@@ -2252,10 +2252,10 @@ applicationSet:
   # -- Annotations to be added to ApplicationSet controller Deployment
   deploymentAnnotations: {}
 
-  # -- Annotations for the controller pods
+  # -- Annotations for the ApplicationSet controller pods
   podAnnotations: {}
 
-  # -- Labels for the controller pods
+  # -- Labels for the ApplicationSet controller pods
   podLabels: {}
 
   # -- ApplicationSet controller container-level security context
@@ -2300,7 +2300,7 @@ applicationSet:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
 
-  # -- Resource limits and requests for the controller pods.
+  # -- Resource limits and requests for the ApplicationSet controller pods.
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
@@ -2338,12 +2338,12 @@ applicationSet:
   # -- List of extra cli args to add
   extraArgs: []
 
-  # -- Environment variables to pass to the controller
+  # -- Environment variables to pass to the ApplicationSet controller
   extraEnv: []
     # - name: "MY_VAR"
     #   value: "value"
 
-  # -- envFrom to pass to the controller
+  # -- envFrom to pass to the ApplicationSet controller
   # @default -- `[]` (See [values.yaml])
   extraEnvFrom: []
     # - configMapRef:
@@ -2361,7 +2361,7 @@ applicationSet:
       annotations: {}
       # -- Additional ingress labels
       labels: {}
-      # -- Defines which ingress controller will implement the resource
+      # -- Defines which ingress ApplicationSet controller will implement the resource
       ingressClassName: ""
 
       # -- List of ingress hosts
@@ -2452,7 +2452,7 @@ notifications:
     # environmentName: staging
 
   secret:
-    # -- Whether helm chart creates controller secret
+    # -- Whether helm chart creates notifications controller secret
     create: true
 
     # -- key:value pairs of annotations to be added to the secret
@@ -2474,20 +2474,20 @@ notifications:
       # email-password:
         # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/email/
 
-  # -- Application controller log format. Either `text` or `json`
+  # -- Notifications controller log format. Either `text` or `json`
   # @default -- `""` (defaults to global.logging.format)
   logFormat: ""
-  # -- Application controller log level. One of: `debug`, `info`, `warn`, `error`
+  # -- Notifications controller log level. One of: `debug`, `info`, `warn`, `error`
   # @default -- `""` (defaults to global.logging.level)
   logLevel: ""
 
-  # -- Extra arguments to provide to the controller
+  # -- Extra arguments to provide to the notifications controller
   extraArgs: []
 
   # -- Additional container environment variables
   extraEnv: []
 
-  # -- envFrom to pass to the controller
+  # -- envFrom to pass to the notifications controller
   # @default -- `[]` (See [values.yaml])
   extraEnvFrom: []
     # - configMapRef:
@@ -2545,10 +2545,10 @@ notifications:
   # -- Annotations to be applied to the notifications controller Deployment
   deploymentAnnotations: {}
 
-  # -- Annotations to be applied to the controller Pods
+  # -- Annotations to be applied to the notifications controller Pods
   podAnnotations: {}
 
-  # -- Labels to be applied to the controller Pods
+  # -- Labels to be applied to the notifications controller Pods
   podLabels: {}
 
   # -- Notification controller container-level security Context
@@ -2563,10 +2563,10 @@ notifications:
       drop:
       - ALL
 
-  # -- Priority class for the controller pods
+  # -- Priority class for the notifications controller pods
   priorityClassName: ""
 
-  # -- Resource limits and requests for the controller
+  # -- Resource limits and requests for the notifications controller
   resources: {}
     # limits:
     #   cpu: 100m
@@ -2589,7 +2589,7 @@ notifications:
     # -- Labels applied to created service account
     labels: {}
   cm:
-    # -- Whether helm chart creates controller config map
+    # -- Whether helm chart creates notifications controller config map
     create: true
 
   # -- Contains centrally managed global application subscriptions
