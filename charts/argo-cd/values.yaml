@@ -2452,7 +2452,7 @@ notifications:
     # environmentName: staging
 
   secret:
-    # -- Whether helm chart creates controller secret
+    # -- Whether helm chart creates notifications controller secret
     create: true
 
     # -- key:value pairs of annotations to be added to the secret
@@ -2481,13 +2481,13 @@ notifications:
   # @default -- `""` (defaults to global.logging.level)
   logLevel: ""
 
-  # -- Extra arguments to provide to the controller
+  # -- Extra arguments to provide to the notifications controller
   extraArgs: []
 
   # -- Additional container environment variables
   extraEnv: []
 
-  # -- envFrom to pass to the controller
+  # -- envFrom to pass to the notifications controller
   # @default -- `[]` (See [values.yaml])
   extraEnvFrom: []
     # - configMapRef:
@@ -2545,10 +2545,10 @@ notifications:
   # -- Annotations to be applied to the notifications controller Deployment
   deploymentAnnotations: {}
 
-  # -- Annotations to be applied to the controller Pods
+  # -- Annotations to be applied to the notifications controller Pods
   podAnnotations: {}
 
-  # -- Labels to be applied to the controller Pods
+  # -- Labels to be applied to the notifications controller Pods
   podLabels: {}
 
   # -- Notification controller container-level security Context
@@ -2563,10 +2563,10 @@ notifications:
       drop:
       - ALL
 
-  # -- Priority class for the controller pods
+  # -- Priority class for the notifications controller pods
   priorityClassName: ""
 
-  # -- Resource limits and requests for the controller
+  # -- Resource limits and requests for the notifications controller
   resources: {}
     # limits:
     #   cpu: 100m
@@ -2589,7 +2589,7 @@ notifications:
     # -- Labels applied to created service account
     labels: {}
   cm:
-    # -- Whether helm chart creates controller config map
+    # -- Whether helm chart creates notifications controller config map
     create: true
 
   # -- Contains centrally managed global application subscriptions
