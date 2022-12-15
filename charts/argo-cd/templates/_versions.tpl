@@ -55,6 +55,8 @@ Return the appropriate apiVersion for cert-manager
 {{- print .Values.apiVersionOverrides.certmanager -}}
 {{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1" -}}
 {{- print "cert-manager.io/v1" -}}
+{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1beta1" -}}
+{{- print "cert-manager.io/v1beta1" -}}
 {{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha3" -}}
 {{- print "cert-manager.io/v1alpha3" -}}
 {{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha2" -}}
