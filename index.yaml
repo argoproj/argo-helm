@@ -13268,6 +13268,29 @@ entries:
   argo-events:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: use policy/v1 for poddisruptionbudgets, when available
+    apiVersion: v2
+    appVersion: v1.7.3
+    created: "2022-12-15T08:33:59.057002567Z"
+    description: A Helm chart for Argo Events, the event-driven workflow automation
+      framework
+    digest: 62cf97999cd67b0802e17df52946ca072ac188cf2ac9d6a88b86b98e7d9b9a80
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-events/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-events
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-events
+    sources:
+    - https://github.com/argoproj/argo-events
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-events-2.0.8/argo-events-2.0.8.tgz
+    version: 2.0.8
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: avoid app.kubernetes.io/version kubernetes label from exceeding maximum length (63)
         - "[Fixed]: generated value for app.kubernetes.io/version label is now valid even when defining a controller/webhook .image.tag with a SHA digest"
         - "[Fixed]: webhook.image.tag value now overrides the tag in the webhook deployment"
@@ -19156,4 +19179,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-12-15T06:03:38.025698496Z"
+generated: "2022-12-15T08:33:59.058581295Z"
