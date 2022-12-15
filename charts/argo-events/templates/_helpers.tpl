@@ -125,3 +125,14 @@ Return the default Argo Events app version
 {{- define "argo-events.defaultTag" -}}
   {{- default .Chart.AppVersion .Values.global.image.tag }}
 {{- end -}}
+
+{{/*
+Define Pdb apiVersion
+*/}}
+{{- define "argo-events.pdb.apiVersion" -}}
+{{- if .Capabilities.APIVersions.Has "policy/v1" }}
+{{- printf "policy/v1" -}}
+{{- else }}
+{{- printf "policy/v1beta1" -}}
+{{- end }}
+{{- end }}
