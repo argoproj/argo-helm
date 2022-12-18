@@ -15448,6 +15448,26 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Support images property to workflow-controller-configmap for emissary executor"
+    apiVersion: v2
+    appVersion: v3.4.4
+    created: "2022-12-18T23:42:18.073830266Z"
+    description: A Helm chart for Argo Workflows
+    digest: abae2f9c9b8489f5816f99feab0fc113a1624757bdf2d8d0647cbad27ed36f0e
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.22.2/argo-workflows-0.22.2.tgz
+    version: 0.22.2
+  - annotations:
+      artifacthub.io/changes: |
         - "[Fixed]: avoid app.kubernetes.io/version kubernetes label from exceeding maximum length (63)
         - "[Fixed]: generated value for app.kubernetes.io/version label is now valid even when defining a controller/server/executor.image.tag with a SHA digest"
     apiVersion: v2
@@ -19233,4 +19253,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-12-17T11:36:18.88841338Z"
+generated: "2022-12-18T23:42:18.079414281Z"
