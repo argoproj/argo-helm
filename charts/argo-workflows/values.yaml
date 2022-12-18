@@ -630,3 +630,12 @@ customArtifactRepository: {}
 #     passwordSecret:
 #       name: artifactory-creds
 #       key: password
+
+emissary:
+  # -- The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used.
+  ## See more: https://argoproj.github.io/argo-workflows/workflow-executors/#emissary-emissary
+  images: []
+  #  argoproj/argosay:v2:
+  #    cmd: [/argosay]
+  #  docker/whalesay:latest:
+  #    cmd: [/bin/bash]
