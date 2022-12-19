@@ -83,6 +83,7 @@ Fields to note:
 | controller.instanceID.enabled | bool | `false` | Configures the controller to filter workflow submissions to only those which have a matching instanceID attribute. |
 | controller.instanceID.explicitID | string | `""` | Use a custom instanceID |
 | controller.instanceID.useReleaseName | bool | `false` | Use ReleaseName as instanceID |
+| controller.kubeConfig | object | `{}` (See [values.yaml]) | Configure when workflow controller runs in a different k8s cluster with the workflow workloads, or needs to communicate with the k8s apiserver using an out-of-cluster kubeconfig secret. |
 | controller.links | list | `[]` | Configure Argo Server to show custom [links] |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
 | controller.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
@@ -100,6 +101,7 @@ Fields to note:
 | controller.name | string | `"workflow-controller"` | Workflow controller name string |
 | controller.namespaceParallelism | string | `nil` | Limits the maximum number of incomplete workflows in a namespace |
 | controller.navColor | string | `""` | Set ui navigation bar background color |
+| controller.nodeEvents.enabled | bool | `true` | Enable to emit events on node completion. |
 | controller.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
 | controller.parallelism | string | `nil` | parallelism dictates how many workflows can be running at the same time |
 | controller.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the controller pods |

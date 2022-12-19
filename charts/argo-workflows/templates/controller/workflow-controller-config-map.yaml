@@ -173,3 +173,8 @@ data:
     {{- with .Values.emissary.images }}
     images: {{- toYaml . | nindent 6 }}
     {{- end }}
+    nodeEvents:
+      enabled: {{ .Values.controller.nodeEvents.enabled }}
+    {{- with .Values.controller.kubeConfig }}
+    kubeConfig: {{- toYaml . | nindent 6 }}
+    {{- end }}
