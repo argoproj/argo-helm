@@ -3,7 +3,7 @@ appVersion: v3.4.4
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.22.2
+version: 0.22.3
 icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -13,4 +13,5 @@ maintainers:
     url: https://argoproj.github.io/
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Support images property to workflow-controller-configmap for emissary executor"
+    - "[Added]: Support nodeEvents property to workflow-controller-configmap"
+    - "[Added]: Support kubeConfig property to workflow-controller-configmap"
