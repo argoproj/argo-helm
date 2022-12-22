@@ -13,6 +13,10 @@ A few options are:
 - Manually create a ServiceAccount in the Namespace in which your release will be deployed w/ appropriate bindings to perform this action and set the `serviceAccountName` field in the Workflow spec
 - Augment the `default` ServiceAccount permissions in the Namespace in which your Release is deployed to have the appropriate permissions
 
+## Changelog
+
+For full list of changes, please check ArtifactHub [changelog].
+
 ## Usage Notes
 
 ### Workflow controller
@@ -260,3 +264,4 @@ Fields to note:
 [Tolerations]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 [TopologySpreadConstraints]: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 [values.yaml]: values.yaml
+[changelog]: https://artifacthub.io/packages/helm/argo/argo-workflows?modal=changelog
