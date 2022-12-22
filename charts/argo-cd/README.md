@@ -715,6 +715,7 @@ NAME: my-release
 | server.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | server.replicas | int | `1` | The number of server pods to run |
 | server.resources | object | `{}` | Resource limits and requests for the Argo CD server |
+| server.roleAndRoleBinding.create | bool | `true` | Create a role and role binding for the server |
 | server.route.annotations | object | `{}` | Openshift Route annotations |
 | server.route.enabled | bool | `false` | Enable an OpenShift Route for the Argo CD server |
 | server.route.hostname | string | `""` | Hostname of OpenShift Route |
