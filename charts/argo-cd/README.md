@@ -585,6 +585,7 @@ NAME: my-release
 | repoServer.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | repoServer.replicas | int | `1` | The number of repo server pods to run |
 | repoServer.resources | object | `{}` | Resource limits and requests for the repo server pods |
+| repoServer.roleAndRoleBinding.create | bool | `true` | Create a role and role binding for the repo server |
 | repoServer.service.annotations | object | `{}` | Repo server service annotations |
 | repoServer.service.labels | object | `{}` | Repo server service labels |
 | repoServer.service.port | int | `8081` | Repo server service port |
