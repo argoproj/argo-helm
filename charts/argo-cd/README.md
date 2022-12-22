@@ -1056,6 +1056,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
 | notifications.bots.slack.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | notifications.bots.slack.resources | object | `{}` | Resource limits and requests for the Slack bot |
+| notifications.bots.slack.roleAndRoleBinding.create | bool | `true` | Create a role and role binding for the Slack bot |
 | notifications.bots.slack.service.annotations | object | `{}` | Service annotations for Slack bot |
 | notifications.bots.slack.service.port | int | `80` | Service port for Slack bot |
 | notifications.bots.slack.service.type | string | `"LoadBalancer"` | Service type for Slack bot |
@@ -1104,6 +1105,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.podLabels | object | `{}` | Labels to be applied to the notifications controller Pods |
 | notifications.priorityClassName | string | `""` | Priority class for the notifications controller pods |
 | notifications.resources | object | `{}` | Resource limits and requests for the notifications controller |
+| notifications.roleAndRoleBinding.create | bool | `true` | Create a role and role binding for the notifications controller |
 | notifications.secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
 | notifications.secret.create | bool | `true` | Whether helm chart creates notifications controller secret |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the secret |

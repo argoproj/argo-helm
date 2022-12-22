@@ -2600,6 +2600,11 @@ notifications:
 
     # -- Labels applied to created service account
     labels: {}
+
+  roleAndRoleBinding:
+    # -- Create a role and role binding for the notifications controller
+    create: true
+
   cm:
     # -- Whether helm chart creates notifications controller config map
     create: true
@@ -2937,6 +2942,10 @@ notifications:
 
         # -- Annotations applied to created service account
         annotations: {}
+
+      roleAndRoleBinding:
+        # -- Create a role and role binding for the Slack bot
+        create: true
 
       # -- Slack bot container-level security Context
       # @default -- See [values.yaml]
