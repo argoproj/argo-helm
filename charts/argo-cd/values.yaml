@@ -631,6 +631,10 @@ controller:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
+  roleAndRoleBinding:
+    # -- Create a role and role binding for the application controller
+    create: true
+
   ## Application controller metrics configuration
   metrics:
     # -- Deploy metrics service
@@ -2248,6 +2252,10 @@ applicationSet:
     # -- The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name: ""
+
+  roleAndRoleBinding:
+    # -- Create a role and role binding for the ApplicationSet controller
+    create: true
 
   # -- Annotations to be added to ApplicationSet controller Deployment
   deploymentAnnotations: {}
