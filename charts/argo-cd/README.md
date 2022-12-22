@@ -834,6 +834,7 @@ server:
 | dex.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | dex.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | dex.resources | object | `{}` | Resource limits and requests for dex |
+| dex.roleAndRoleBinding.create | bool | `true` | Create a role and role binding for Dex |
 | dex.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | dex.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | dex.serviceAccount.create | bool | `true` | Create dex service account |

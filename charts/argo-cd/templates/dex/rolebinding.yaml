@@ -1,4 +1,4 @@
-{{- if .Values.dex.enabled }}
+{{- if and .Values.dex.enabled .Values.dex.roleAndRoleBinding.create}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
