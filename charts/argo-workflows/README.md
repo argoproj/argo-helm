@@ -111,6 +111,8 @@ Fields to note:
 | controller.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the controller pods |
 | controller.persistence | object | `{}` | enable persistence using postgres |
 | controller.podAnnotations | object | `{}` | podAnnotations is an optional map of annotations to be applied to the controller Pods |
+| controller.podGCDeleteDelayDuration | string | `5s` (Argo Workflows default) | The duration in seconds before the pods in the GC queue get deleted. A zero value indicates that the pods will be deleted immediately. |
+| controller.podGCGracePeriodSeconds | string | `30` seconds (Kubernetes default) | Specifies the duration in seconds before a terminating pod is forcefully killed. A zero value indicates that the pod will be forcefully terminated immediately. |
 | controller.podLabels | object | `{}` | Optional labels to add to the controller pods |
 | controller.podSecurityContext | object | `{}` | SecurityContext to set on the controller pods |
 | controller.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages. |

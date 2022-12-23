@@ -316,6 +316,14 @@ controller:
     # # volume name when mounting the secret, default to kubeconfig
     # volumeName: kube-config-volume
 
+  # -- Specifies the duration in seconds before a terminating pod is forcefully killed. A zero value indicates that the pod will be forcefully terminated immediately.
+  # @default -- `30` seconds (Kubernetes default)
+  podGCGracePeriodSeconds:
+
+  # -- The duration in seconds before the pods in the GC queue get deleted. A zero value indicates that the pods will be deleted immediately.
+  # @default -- `5s` (Argo Workflows default)
+  podGCDeleteDelayDuration: ""
+
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
   # -- imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`.
