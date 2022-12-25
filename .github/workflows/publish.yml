@@ -3,7 +3,7 @@ name: Chart Publish
 on:
   push:
     branches:
-      - main
+      - argo-cd
 
 permissions:
   contents: read
@@ -42,5 +42,6 @@ jobs:
         uses: helm/chart-releaser-action@v1.4.0
         with:
           config: "./.github/configs/cr.yaml"
+          charts_dir: "charts/argo-cd"
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
