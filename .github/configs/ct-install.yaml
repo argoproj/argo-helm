@@ -2,9 +2,8 @@
 # Don't add the 'debug' attribute, otherwise the workflow won't work anymore
 # Only Used for the CT Install Stage
 remote: origin
-target-branch: main
-chart-dirs:
-  - charts
+charts:
+- charts/argo-cd
 chart-repos:
   - dandydeveloper=https://dandydeveloper.github.io/charts/
 helm-extra-args: "--timeout 600s"  

@@ -35,14 +35,14 @@ jobs:
         id: list-changed
         run: |
           ## If executed with debug this won't work anymore.
-          changed=$(ct --config ./.github/configs/ct-lint.yaml list-changed)
+          changed=$(ct --config ./.github/configs/ct-lint.yaml --target-branch ${{ github.base_ref }} list-changed)
           charts=$(echo "$changed" | tr '\n' ' ' | xargs)
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::true"
             echo "::set-output name=changed_charts::$charts"
           fi
       - name: Run chart-testing (lint)
-        run: ct lint --debug --config ./.github/configs/ct-lint.yaml --lint-conf ./.github/configs/lintconf.yaml
+        run: ct lint --debug --config ./.github/configs/ct-lint.yaml --target-branch ${{ github.base_ref }} --lint-conf ./.github/configs/lintconf.yaml
 
       - name: Run docs-testing (helm-docs)
         id: helm-docs
@@ -62,15 +62,6 @@ jobs:
         with:
           config: .github/configs/kind-config.yaml
 
-      - name: Deploy latest ArgoCD CRDs when testing ArgoCD extensions
-        if: |
-          contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater') ||
-          contains(steps.list-changed.outputs.changed_charts, 'argocd-apps')
-        run: |
-          helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
-          helm dependency build charts/argo-cd/
-          helm template charts/argo-cd/ -s templates/crds/* | kubectl apply -f -
-
       - name: Skip HPA tests of ArgoCD
         if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
         run: |
@@ -85,5 +76,5 @@ jobs:
           helm install redis bitnami/redis --wait --namespace redis --set auth.password=argocd --set architecture=standalone
 
       - name: Run chart-testing (install)
-        run: ct install --config ./.github/configs/ct-install.yaml
+        run: ct install --config ./.github/configs/ct-install.yaml --target-branch ${{ github.base_ref }}
         if: steps.list-changed.outputs.changed == 'true'
