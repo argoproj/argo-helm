@@ -1010,7 +1010,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.cm.create | bool | `true` | Whether helm chart creates controller config map |
 | notifications.containerSecurityContext | object | `{}` | Container Security Context |
 | notifications.context | object | `{}` | Define user-defined context |
-| notifications.enabled | bool | `true` | Enable notifications controller |
+| notifications.enabled | bool | `false` | Enable notifications controller |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the controller |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
 | notifications.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
