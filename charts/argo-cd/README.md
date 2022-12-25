@@ -354,7 +354,7 @@ NAME: my-release
 | global.additionalLabels | object | `{}` | Additional labels to add to all resources |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
-| global.image.repository | string | `"quay.io/argoproj/argocd"` | If defined, a repository applied to all Argo CD deployments |
+| global.image.repository | string | `"quay.io/codefresh/argocd"` | If defined, a repository applied to all Argo CD deployments |
 | global.image.tag | string | `""` | Overrides the global Argo CD image tag whose default is the chart appVersion |
 | global.imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
 | global.logging.format | string | `"text"` | Set the global logging format. Either: `text` or `json` |
@@ -816,8 +816,8 @@ server:
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
-| redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
-| redis.image.tag | string | `"7.0.5-alpine"` | Redis tag |
+| redis.image.repository | string | `"quay.io/codefresh/redis"` | Redis repository |
+| redis.image.tag | string | `"7.0.4-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
