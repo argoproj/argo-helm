@@ -37,7 +37,8 @@ spec:
           imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.applicationSet.image.imagePullPolicy }}
           command:
             - entrypoint.sh
-            - argocd-applicationset-controller
+            {{/* Codefresh - change argocd-applicationset-controller to applicationset-controller*/}}
+            - applicationset-controller
             - --logformat
             - {{ default .Values.global.logging.format .Values.applicationSet.logFormat }}
             - --loglevel
