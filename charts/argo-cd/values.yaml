@@ -43,7 +43,7 @@ crds:
 global:
   image:
     # -- If defined, a repository applied to all Argo CD deployments
-    repository: quay.io/argoproj/argocd
+    repository: quay.io/codefresh/argocd
     # -- Overrides the global Argo CD image tag whose default is the chart appVersion
     tag: ""
     # -- If defined, a imagePullPolicy applied to all Argo CD deployments
@@ -980,9 +980,9 @@ redis:
   ## Redis image
   image:
     # -- Redis repository
-    repository: public.ecr.aws/docker/library/redis
+    repository: quay.io/codefresh/redis
     # -- Redis tag
-    tag: 7.0.5-alpine
+    tag: 7.0.4-alpine
     # -- Redis imagePullPolicy
     imagePullPolicy: IfNotPresent
 
@@ -2046,10 +2046,10 @@ applicationSet:
   image:
     # -- Repository to use for the application set controller
     # @default -- `""` (defaults to global.image.repository)
-    repository: ""
+    repository: "quay.io/codefresh/applicationset"
     # -- Tag to use for the application set controller
     # @default -- `""` (defaults to global.image.tag)
-    tag: ""
+    tag: "v0.4.2-CR-13254-remove-private-logs"
     # -- Image pull policy for the application set controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
