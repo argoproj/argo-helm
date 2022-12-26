@@ -1,0 +1,22 @@
+# Codefresh specific objects that are required for chart insllation to pass
+apiVersion: v1
+data:
+  base-url: https://g.codefresh.io
+  runtime: |
+    apiVersion: codefresh.io/v1alpha1
+    kind: Runtime
+    metadata:
+      name: test
+    spec:
+      test: test
+kind: ConfigMap
+metadata:
+  name: codefresh-cm
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: codefresh-token
+type: Opaque
+stringData:
+  token: "612312312356677888855.612312312356677888855"

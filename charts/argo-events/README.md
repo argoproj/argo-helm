@@ -45,19 +45,41 @@ done
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| configs.jetstream.settings.maxFileStore | int | `-1` | Maximum size of the file storage (e.g. 20G) |
-| configs.jetstream.settings.maxMemoryStore | int | `-1` | Maximum size of the memory storage (e.g. 1G) |
-| configs.jetstream.streamConfig.duplicates | string | `"300s"` | Not documented at the moment |
-| configs.jetstream.streamConfig.maxAge | string | `"72h"` | Maximum age of existing messages, i.e. “72h”, “4h35m” |
-| configs.jetstream.streamConfig.maxBytes | string | `"1GB"` |  |
-| configs.jetstream.streamConfig.maxMsgs | int | `1000000` | Maximum number of messages before expiring oldest message |
-| configs.jetstream.streamConfig.replicas | int | `3` | Number of replicas, defaults to 3 and requires minimal 3 |
-| configs.jetstream.versions[0].configReloaderImage | string | `"natsio/nats-server-config-reloader:latest"` |  |
-| configs.jetstream.versions[0].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:latest"` |  |
-| configs.jetstream.versions[0].natsImage | string | `"nats:latest"` |  |
+| configs.jetstream.settings.max_file_store | string | `"1TB"` |  |
+| configs.jetstream.settings.max_memory_store | int | `-1` |  |
+| configs.jetstream.streamConfig.duplicates | string | `"300s"` |  |
+| configs.jetstream.streamConfig.maxAge | string | `"168h"` |  |
+| configs.jetstream.streamConfig.maxBytes | int | `-1` |  |
+| configs.jetstream.streamConfig.maxMsgs | int | `50000` |  |
+| configs.jetstream.streamConfig.replicas | int | `3` |  |
+| configs.jetstream.versions[0].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[0].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[0].natsImage | string | `"nats:2.8.1"` |  |
 | configs.jetstream.versions[0].startCommand | string | `"/nats-server"` |  |
 | configs.jetstream.versions[0].version | string | `"latest"` |  |
-| configs.nats.versions | list | `[{"metricsExporterImage":"natsio/prometheus-nats-exporter:latest","natsStreamingImage":"nats-streaming:latest","version":"latest"}]` | Supported versions of NATS event bus |
+| configs.jetstream.versions[1].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[1].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[1].natsImage | string | `"nats:2.8.1"` |  |
+| configs.jetstream.versions[1].startCommand | string | `"/nats-server"` |  |
+| configs.jetstream.versions[1].version | string | `"2.8.1"` |  |
+| configs.jetstream.versions[2].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[2].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[2].natsImage | string | `"nats:2.8.1-alpine"` |  |
+| configs.jetstream.versions[2].startCommand | string | `"nats-server"` |  |
+| configs.jetstream.versions[2].version | string | `"2.8.1-alpine"` |  |
+| configs.jetstream.versions[3].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[3].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[3].natsImage | string | `"nats:2.8.2"` |  |
+| configs.jetstream.versions[3].startCommand | string | `"/nats-server"` |  |
+| configs.jetstream.versions[3].version | string | `"2.8.2"` |  |
+| configs.jetstream.versions[4].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[4].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[4].natsImage | string | `"nats:2.8.2-alpine"` |  |
+| configs.jetstream.versions[4].startCommand | string | `"nats-server"` |  |
+| configs.jetstream.versions[4].version | string | `"2.8.2-alpine"` |  |
+| configs.nats.versions[0].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.8.0"` |  |
+| configs.nats.versions[0].natsStreamingImage | string | `"nats-streaming:0.22.1"` |  |
+| configs.nats.versions[0].version | string | `"0.22.1"` |  |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
@@ -66,7 +88,7 @@ done
 | global.additionalLabels | object | `{}` | Additional labels to add to all resources |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo Events deployments |
-| global.image.repository | string | `"quay.io/argoproj/argo-events"` | If defined, a repository applied to all Argo Events deployments |
+| global.image.repository | string | `"quay.io/codefresh/argo-events"` | If defined, a repository applied to all Argo Events deployments |
 | global.image.tag | string | `""` | Overrides the global Argo Events image tag whose default is the chart appVersion |
 | global.imagePullSecrets | list | `[]` | If defined, uses a Secret to pull an image from a private Docker registry or repository |
 | global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
@@ -137,7 +159,7 @@ done
 |-----|------|---------|-------------|
 | webhook.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | webhook.containerSecurityContext | object | `{}` | Event controller container-level security context |
-| webhook.enabled | bool | `false` | Enable admission webhook. Applies only for cluster-wide installation |
+| webhook.enabled | bool | `true` | Enable admission webhook. Applies only for cluster-wide installation |
 | webhook.env | list | `[]` (See [values.yaml]) | Environment variables to pass to event controller |
 | webhook.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to event controller |
 | webhook.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the event controller |
