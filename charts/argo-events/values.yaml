@@ -27,7 +27,7 @@ crds:
 global:
   image:
     # -- If defined, a repository applied to all Argo Events deployments
-    repository: quay.io/argoproj/argo-events
+    repository: quay.io/codefresh/argo-events
     # -- Overrides the global Argo Events image tag whose default is the chart appVersion
     tag: ""
     # -- If defined, a imagePullPolicy applied to all Argo Events deployments
@@ -61,39 +61,46 @@ global:
 configs:
   ## NATS event bus
   nats:
-    # -- Supported versions of NATS event bus
     versions:
-      - version: latest
-        natsStreamingImage: nats-streaming:latest
-        metricsExporterImage: natsio/prometheus-nats-exporter:latest
-
-  ## JetStream event bus
+    - version: 0.22.1
+      natsStreamingImage: nats-streaming:0.22.1
+      metricsExporterImage: natsio/prometheus-nats-exporter:0.8.0
   jetstream:
-    # Default JetStream settings, could be overridden by EventBus JetStream spec
-    # Ref: https://docs.nats.io/running-a-nats-service/configuration#jetstream
     settings:
-      # -- Maximum size of the memory storage (e.g. 1G)
-      maxMemoryStore: -1
-      # -- Maximum size of the file storage (e.g. 20G)
-      maxFileStore: -1
+      max_memory_store: -1
+      max_file_store: 1TB
     streamConfig:
-      # -- Maximum number of messages before expiring oldest message
-      maxMsgs: 1000000
-      # -- Maximum age of existing messages, i.e. “72h”, “4h35m”
-      maxAge: 72h
-      # Total size of messages before expiring oldest message, 0 means unlimited.
-      maxBytes: 1GB
-      # -- Number of replicas, defaults to 3 and requires minimal 3
+      maxMsgs: 50000
+      maxAge: 168h
+      maxBytes: -1
       replicas: 3
-      # -- Not documented at the moment
       duplicates: 300s
-    # Supported versions of JetStream eventbus
     versions:
-      - version: "latest"
-        natsImage: nats:latest
-        metricsExporterImage: natsio/prometheus-nats-exporter:latest
-        configReloaderImage: natsio/nats-server-config-reloader:latest
-        startCommand: /nats-server
+    - version: latest
+      natsImage: nats:2.8.1
+      metricsExporterImage: natsio/prometheus-nats-exporter:0.9.1
+      configReloaderImage: natsio/nats-server-config-reloader:0.7.0
+      startCommand: /nats-server
+    - version: 2.8.1
+      natsImage: nats:2.8.1
+      metricsExporterImage: natsio/prometheus-nats-exporter:0.9.1
+      configReloaderImage: natsio/nats-server-config-reloader:0.7.0
+      startCommand: /nats-server
+    - version: 2.8.1-alpine
+      natsImage: nats:2.8.1-alpine
+      metricsExporterImage: natsio/prometheus-nats-exporter:0.9.1
+      configReloaderImage: natsio/nats-server-config-reloader:0.7.0
+      startCommand: nats-server
+    - version: 2.8.2
+      natsImage: nats:2.8.2
+      metricsExporterImage: natsio/prometheus-nats-exporter:0.9.1
+      configReloaderImage: natsio/nats-server-config-reloader:0.7.0
+      startCommand: /nats-server
+    - version: 2.8.2-alpine
+      natsImage: nats:2.8.2-alpine
+      metricsExporterImage: natsio/prometheus-nats-exporter:0.9.1
+      configReloaderImage: natsio/nats-server-config-reloader:0.7.0
+      startCommand: nats-server
 
 ## Argo Events controller
 controller:
@@ -265,7 +272,7 @@ controller:
 ## Argo Events admission webhook
 webhook:
   # -- Enable admission webhook. Applies only for cluster-wide installation
-  enabled: false
+  enabled: true
 
   # -- Argo Events admission webhook name string
   name: events-webhook
