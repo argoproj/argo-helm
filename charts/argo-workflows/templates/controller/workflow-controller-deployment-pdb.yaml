@@ -1,5 +1,5 @@
 {{- if .Values.controller.pdb.enabled }}
-apiVersion: {{ include "argo-workflows.podDisruptionBudget.apiVersion" . }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
