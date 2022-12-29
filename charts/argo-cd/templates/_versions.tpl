@@ -35,19 +35,6 @@ Return the appropriate apiVersion for ingress
 {{- end -}}
 
 {{/*
-Return the appropriate apiVersion for pod disruption budget
-*/}}
-{{- define "argo-cd.apiVersion.pdb" -}}
-{{- if .Values.apiVersionOverrides.pdb -}}
-{{- print .Values.apiVersionOverrides.pdb -}}
-{{- else if semverCompare "<1.21-0" (include "argo-cd.kubeVersion" .) -}}
-{{- print "policy/v1beta1" -}}
-{{- else -}}
-{{- print "policy/v1" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Return the appropriate apiVersion for cert-manager
 */}}
 {{- define "argo-cd.apiVersion.cert-manager" -}}

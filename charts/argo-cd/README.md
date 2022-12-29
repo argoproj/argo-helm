@@ -360,7 +360,6 @@ NAME: my-release
 | apiVersionOverrides.certmanager | string | `""` | String to override apiVersion of cert-manager resources rendered by this helm chart |
 | apiVersionOverrides.cloudgoogle | string | `""` | String to override apiVersion of GKE resources rendered by this helm chart |
 | apiVersionOverrides.ingress | string | `""` | String to override apiVersion of ingresses rendered by this helm chart |
-| apiVersionOverrides.pdb | string | `""` | String to override apiVersion of pod disruption budgets rendered by this helm chart |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
