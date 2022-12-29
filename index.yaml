@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Removed]: Legacy API versions for Ingresses"
+    apiVersion: v2
+    appVersion: v2.5.5
+    created: "2022-12-29T16:26:57.857853378Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.4
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 6ac642fc6eefa58cbcb29a0533f6d4bba1f538be39ac9afeb3db683672875bb8
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.16.13/argo-cd-5.16.13.tgz
+    version: 5.16.13
+  - annotations:
+      artifacthub.io/changes: |
         - "[Removed]: API override for PDB"
     apiVersion: v2
     appVersion: v2.5.5
@@ -19493,4 +19524,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-12-29T15:47:54.654703149Z"
+generated: "2022-12-29T16:26:57.860066481Z"
