@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Added HostAliases to ApplicationSet Deployment"
+    apiVersion: v2
+    appVersion: v2.5.5
+    created: "2022-12-29T11:49:32.51670312Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.4
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 6e761652311d65cf4a2e9182d5a1c414c6d25030de97e4188364f317a4727409
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.16.11/argo-cd-5.16.11.tgz
+    version: 5.16.11
+  - annotations:
+      artifacthub.io/changes: |
         - "[Changed]: Update redis-ha to v4.22.4"
     apiVersion: v2
     appVersion: v2.5.5
@@ -19431,4 +19462,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2022-12-27T12:12:27.448438568Z"
+generated: "2022-12-29T11:49:32.518530433Z"
