@@ -1,29 +1,26 @@
 {{- if and .Values.server.ingressGrpc.enabled (not .Values.server.ingressGrpc.isAWSALB) -}}
-{{- $serviceName := include "argo-cd.server.fullname" . -}}
 {{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingressGrpc.https -}}
 {{- $paths := .Values.server.ingressGrpc.paths -}}
 {{- $extraPaths := .Values.server.ingressGrpc.extraPaths -}}
 {{- $pathType := .Values.server.ingressGrpc.pathType -}}
-apiVersion: {{ include "argo-cd.apiVersion.ingress" . }}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-{{- if .Values.server.ingressGrpc.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.server.ingressGrpc.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-{{- end }}
-  name: {{ template "argo-cd.server.fullname" . }}-grpc
+  name: {{ include "argo-cd.server.fullname" . }}-grpc
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
-    {{- if .Values.server.ingressGrpc.labels }}
-    {{- toYaml .Values.server.ingressGrpc.labels | nindent 4 }}
+    {{- with .Values.server.ingressGrpc.labels }}
+      {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.server.ingressGrpc.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
 spec:
-  {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
   {{- with .Values.server.ingressGrpc.ingressClassName }}
   ingressClassName: {{ . }}
-  {{- end }}
   {{- end }}
   rules:
   {{- if .Values.server.ingressGrpc.hosts }}
@@ -31,59 +28,45 @@ spec:
     - host: {{ $host }}
       http:
         paths:
-          {{- if $extraPaths }}
-          {{- toYaml $extraPaths | nindent 10 }}
-          {{- end -}}
+          {{- with $extraPaths }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
           {{- range $p := $paths }}
           - path: {{ $p }}
-            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
             pathType: {{ $pathType }}
-            {{- end }}
             backend:
-              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
               service:
-                name: {{ $serviceName }}
+                name: {{ include "argo-cd.server.fullname" $ }}
                 port:
                   {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
                   {{- else }}
                   name: {{ $servicePort }}
                   {{- end }}
-              {{- else }}
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
-              {{- end }}
           {{- end -}}
     {{- end -}}
   {{- else }}
     - http:
         paths:
-          {{- if $extraPaths }}
-          {{- toYaml $extraPaths | nindent 10 }}
-          {{- end -}}
+          {{- with $extraPaths }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
           {{- range $p := $paths }}
           - path: {{ $p }}
-            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
             pathType: {{ $pathType }}
-            {{- end }}
             backend:
-              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
               service:
-                name: {{ $serviceName }}
+                name: {{ include "argo-cd.server.fullname" $ }}
                 port:
                   {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
                   {{- else }}
                   name: {{ $servicePort }}
                   {{- end }}
-              {{- else }}
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
-              {{- end }}
           {{- end -}}
   {{- end -}}
-  {{- if .Values.server.ingressGrpc.tls }}
+  {{- with .Values.server.ingressGrpc.tls }}
   tls:
-    {{- toYaml .Values.server.ingressGrpc.tls | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end -}}
 {{- end -}}
