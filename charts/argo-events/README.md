@@ -57,7 +57,7 @@ done
 | configs.jetstream.versions[0].natsImage | string | `"nats:latest"` |  |
 | configs.jetstream.versions[0].startCommand | string | `"/nats-server"` |  |
 | configs.jetstream.versions[0].version | string | `"latest"` |  |
-| configs.nats.versions | list | `[{"metricsExporterImage":"natsio/prometheus-nats-exporter:latest","natsStreamingImage":"nats-streaming:latest","version":"latest"}]` | Supported versions of NATS event bus |
+| configs.nats.versions | list | See [values.yaml] | Supported versions of NATS event bus |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
