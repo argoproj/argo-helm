@@ -153,6 +153,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | mainContainer.env | list | `[]` | Adds environment variables for the Workflow main container |
+| mainContainer.envFrom | list | `[]` | Adds reference environment variables for the Workflow main container |
 | mainContainer.imagePullPolicy | string | `""` | imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`. |
 | mainContainer.resources | object | `{}` | Resource limits and requests for the Workflow main container |
 | mainContainer.securityContext | object | `{}` | sets security context for the Workflow main container |
