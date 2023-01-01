@@ -1,5 +1,5 @@
 {{- if and .Values.notifications.enabled .Values.notifications.bots.slack.enabled .Values.notifications.bots.slack.pdb.enabled }}
-apiVersion: {{ include "argo-cd.apiVersion.pdb" . }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "argo-cd.notifications.fullname" . }}-bot

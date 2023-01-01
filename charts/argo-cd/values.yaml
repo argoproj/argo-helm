@@ -18,10 +18,6 @@ apiVersionOverrides:
   cloudgoogle: "" # cloud.google.com/v1
   # -- String to override apiVersion of autoscaling rendered by this helm chart
   autoscaling: "" # autoscaling/v2
-  # -- String to override apiVersion of ingresses rendered by this helm chart
-  ingress: "" # networking.k8s.io/v1beta1
-  # -- String to override apiVersion of pod disruption budgets rendered by this helm chart
-  pdb: "" # policy/v1
 
 # -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -1592,8 +1588,7 @@ server:
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
-    hosts:
-      []
+    hosts: []
       # - argocd.example.com
 
     # -- List of ingress paths
@@ -1602,13 +1597,7 @@ server:
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
     # -- Additional ingress paths
-    extraPaths:
-      []
-      # - path: /*
-      #   backend:
-      #     serviceName: ssl-redirect
-      #     servicePort: use-annotation
-      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+    extraPaths: []
       # - path: /*
       #   pathType: Prefix
       #   backend:
@@ -1618,8 +1607,7 @@ server:
       #         name: use-annotation
 
     # -- Ingress TLS configuration
-    tls:
-      []
+    tls: []
       # - secretName: your-certificate-name
       #   hosts:
       #     - argocd.example.com
@@ -1658,8 +1646,7 @@ server:
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
     ##
-    hosts:
-      []
+    hosts: []
       # - argocd.example.com
 
     # -- List of ingress paths for dedicated [gRPC-ingress]
@@ -1668,13 +1655,7 @@ server:
     # -- Ingress path type for dedicated [gRPC-ingress]. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
     # -- Additional ingress paths for dedicated [gRPC-ingress]
-    extraPaths:
-      []
-      # - path: /*
-      #   backend:
-      #     serviceName: ssl-redirect
-      #     servicePort: use-annotation
-      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+    extraPaths: []
       # - path: /*
       #   pathType: Prefix
       #   backend:
@@ -1684,8 +1665,7 @@ server:
       #         name: use-annotation
 
     # -- Ingress TLS configuration for dedicated [gRPC-ingress]
-    tls:
-      []
+    tls: []
       # - secretName: your-certificate-name
       #   hosts:
       #     - argocd.example.com
