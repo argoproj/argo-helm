@@ -181,3 +181,9 @@ data:
     {{- with .Values.controller.kubeConfig }}
     kubeConfig: {{- toYaml . | nindent 6 }}
     {{- end }}
+    {{- with .Values.controller.podGCGracePeriodSeconds }}
+    podGCGracePeriodSeconds: {{ . }}
+    {{- end }}
+    {{- with .Values.controller.podGCDeleteDelayDuration }}
+    podGCDeleteDelayDuration: {{ . }}
+    {{- end }}
