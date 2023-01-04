@@ -1588,6 +1588,39 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Docs]: Added sample how to provide K8s credentials plugin"
+        - "[Docs]: Added sample how to provide Argo config management plugin"
+        - "[Docs]: Removed samples that injects tools into incorrect controllers"
+    apiVersion: v2
+    appVersion: v2.5.5
+    created: "2023-01-04T09:49:59.220039453Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.4
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 3d992377021a98468f5d3a152bcfd56b080b2d3c13a9ee5924f9d10339a0cb53
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.16.14/argo-cd-5.16.14.tgz
+    version: 5.16.14
+  - annotations:
+      artifacthub.io/changes: |
         - "[Removed]: Legacy API versions for Ingresses"
     apiVersion: v2
     appVersion: v2.5.5
@@ -19607,4 +19640,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-01-03T01:46:25.491990768Z"
+generated: "2023-01-04T09:49:59.222458962Z"
