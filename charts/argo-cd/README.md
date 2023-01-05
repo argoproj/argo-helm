@@ -970,6 +970,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the ApplicationSet controller |
 | applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the ApplicationSet controller |
 | applicationSet.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
+| applicationSet.initContainers | list | `[]` | Init containers to add to the ApplicationSet controller pod |
 | applicationSet.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for ApplicationSet controller |
 | applicationSet.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | applicationSet.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
@@ -1063,6 +1064,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.deploymentAnnotations | object | `{}` | Annotations to be applied to the notifications controller Deployment |
 | notifications.enabled | bool | `true` | Enable notifications controller |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the notifications controller |
+| notifications.extraContainers | list | `[]` | Additional containers to be added to the notifications controller pod |
 | notifications.extraEnv | list | `[]` | Additional container environment variables |
 | notifications.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the notifications controller |
 | notifications.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
@@ -1071,6 +1073,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the notifications controller |
 | notifications.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the notifications controller |
 | notifications.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
+| notifications.initContainers | list | `[]` | Init containers to add to the notifications controller pod |
 | notifications.logFormat | string | `""` (defaults to global.logging.format) | Notifications controller log format. Either `text` or `json` |
 | notifications.logLevel | string | `""` (defaults to global.logging.level) | Notifications controller log level. One of: `debug`, `info`, `warn`, `error` |
 | notifications.metrics.enabled | bool | `false` | Enables prometheus metrics server |

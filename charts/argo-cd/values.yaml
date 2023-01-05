@@ -439,6 +439,7 @@ configs:
   #  }
 
 # -- Array of extra K8s manifests to deploy
+## Note: Supports use of custom Helm templates
 extraObjects: []
   # - apiVersion: secrets-store.csi.x-k8s.io/v1
   #   kind: SecretProviderClass
@@ -538,12 +539,14 @@ controller:
   #     name: secret-name
 
   # -- Additional containers to be added to the application controller pod
+  ## Note: Supports use of custom Helm templates
   extraContainers: []
 
   # -- Init containers to add to the application controller pod
   ## If your target Kubernetes cluster(s) require a custom credential (exec) plugin
   ## you could use this (and the same in the server pod) to provide such executable
   ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins
+  ## Note: Supports use of custom Helm templates
   initContainers: []
   #  - name: download-tools
   #    image: alpine:3
@@ -827,9 +830,11 @@ dex:
   #     name: secret-name
 
   # -- Additional containers to be added to the dex pod
+  ## Note: Supports use of custom Helm templates
   extraContainers: []
 
   # -- Init containers to add to the dex pod
+  ## Note: Supports use of custom Helm templates
   initContainers: []
 
   # -- Additional volumeMounts to the dex main container
@@ -1012,9 +1017,11 @@ redis:
   #     name: secret-name
 
   # -- Additional containers to be added to the redis pod
+  ## Note: Supports use of custom Helm templates
   extraContainers: []
 
   # -- Init containers to add to the redis pod
+  ## Note: Supports use of custom Helm templates
   initContainers: []
 
   # -- Additional volumeMounts to the redis container
@@ -1353,7 +1360,7 @@ server:
     #    memory: 64Mi
 
   # -- Additional containers to be added to the server pod
-  ## See https://github.com/lemonldap-ng-controller/lemonldap-ng-controller as example.
+  ## Note: Supports use of custom Helm templates
   extraContainers: []
   # - name: my-sidecar
   #   image: nginx:latest
@@ -1846,11 +1853,13 @@ repoServer:
 
   # -- Additional containers to be added to the repo server pod
   ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
+  ## Note: Supports use of custom Helm templates
   extraContainers: []
   # - name: cmp
   #   # Entrypoint should be Argo CD lightweight CMP server i.e. argocd-cmp-server
   #   command: [/var/run/argocd/argocd-cmp-server]
-  #   image: busybox # This can be off-the-shelf or custom-built image
+  #   # This can be off-the-shelf or custom-built image
+  #   image: busybox
   #   securityContext:
   #     runAsNonRoot: true
   #     runAsUser: 999
@@ -2134,7 +2143,12 @@ applicationSet:
     #     name: secret-name
 
   # -- Additional containers to be added to the ApplicationSet controller pod
+  ## Note: Supports use of custom Helm templates
   extraContainers: []
+
+  # -- Init containers to add to the ApplicationSet controller pod
+  ## Note: Supports use of custom Helm templates
+  initContainers: []
 
   # -- List of extra mounts to add (normally used with extraVolumes)
   extraVolumeMounts: []
@@ -2381,6 +2395,14 @@ notifications:
     #     name: config-map-name
     # - secretRef:
     #     name: secret-name
+
+  # -- Additional containers to be added to the notifications controller pod
+  ## Note: Supports use of custom Helm templates
+  extraContainers: []
+
+  # -- Init containers to add to the notifications controller pod
+  ## Note: Supports use of custom Helm templates
+  initContainers: []
 
   # -- List of extra mounts to add (normally used with extraVolumes)
   extraVolumeMounts: []
