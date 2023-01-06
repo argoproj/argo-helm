@@ -98,12 +98,14 @@ spec:
                 name: argocd-cmd-params-cm
                 key: repo.server
                 optional: true
+          {{- if and .Values.dex.enabled }}
           - name: ARGOCD_SERVER_DEX_SERVER
             valueFrom:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: server.dex.server
                 optional: true
+          {{- end }}
           - name: ARGOCD_SERVER_DISABLE_AUTH
             valueFrom:
               configMapKeyRef:
@@ -146,18 +148,22 @@ spec:
                 name: argocd-cmd-params-cm
                 key: server.repo.server.strict.tls
                 optional: true
+          {{- if and .Values.dex.enabled }}
           - name: ARGOCD_SERVER_DEX_SERVER_PLAINTEXT
             valueFrom:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: server.dex.server.plaintext
                 optional: true
+          {{- end }}
+          {{- if and .Values.dex.enabled .Values.dex.certificateSecret.enabled }}
           - name: ARGOCD_SERVER_DEX_SERVER_STRICT_TLS
             valueFrom:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: server.dex.server.strict.tls
                 optional: true
+          {{- end }}
           - name: ARGOCD_TLS_MIN_VERSION
             valueFrom:
               configMapKeyRef:
@@ -274,8 +280,10 @@ spec:
           name: tls-certs
         - mountPath: /app/config/server/tls
           name: argocd-repo-server-tls
+        {{- if and .Values.dex.enabled .Values.dex.certificateSecret.enabled }}
         - mountPath: /app/config/dex/tls
           name: argocd-dex-server-tls
+        {{- end }}
         - mountPath: /home/argocd
           name: plugins-home
         - mountPath: /shared/app/custom
@@ -397,6 +405,7 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
+      {{- if and .Values.dex.enabled .Values.dex.certificateSecret.enabled }}
       - name: argocd-dex-server-tls
         secret:
           secretName: argocd-dex-server-tls
@@ -406,6 +415,7 @@ spec:
             path: tls.crt
           - key: ca.crt
             path: ca.crt
+      {{- end }}
       {{- with .Values.server.initContainers }}
       initContainers:
         {{- toYaml . | nindent 6 }}
