@@ -125,8 +125,12 @@ spec:
             - mountPath: /tmp
               name: tmp
         {{- with .Values.applicationSet.extraContainers }}
-          {{- toYaml . | nindent 8 }}
+          {{- tpl (toYaml .) $ | nindent 8 }}
         {{- end }}
+      {{- with .Values.applicationSet.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
       {{- with .Values.applicationSet.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
