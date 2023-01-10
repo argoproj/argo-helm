@@ -32,16 +32,6 @@ rules:
   - watch
   - list
 - apiGroups:
-  - ""
-  resources:
-  - persistentvolumeclaims
-  - persistentvolumeclaims/finalizers
-  verbs:
-  - create
-  - update
-  - delete
-  - get
-- apiGroups:
   - argoproj.io
   resources:
   - workflows
@@ -110,6 +100,16 @@ rules:
   - get
   - delete
 {{- if .Values.controller.persistence }}
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  - persistentvolumeclaims/finalizers
+  verbs:
+  - create
+  - update
+  - delete
+  - get
 - apiGroups:
   - ""
   resources:
