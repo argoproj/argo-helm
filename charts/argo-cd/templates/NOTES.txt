@@ -52,6 +52,18 @@ DEPRECATED option configs.gpgKeys - Use config.gpg.keys
 {{- if .Values.configs.gpgKeysAnnotations }}
 DEPRECATED option configs.gpgKeysAnnotations - Use config.gpg.annotations
 {{- end }}
+{{- if hasKey .Values "createAggregateRoles" }}
+DEPRECATED option createAggregateRoles - Use global.rbac.aggregatedRoles
+{{- end }}
+{{- if hasKey (.Values.controller.clusterAdminAccess | default dict) "enabled" }}
+DEPRECATED option .controller.clusterAdminAccess.enabled - Use createClusterRoles
+{{- end }}
+{{- if hasKey (.Values.server.clusterAdminAccess | default dict) "enabled" }}
+DEPRECATED option .server.clusterAdminAccess.enabled - Use createClusterRoles
+{{- end }}
+{{- if hasKey (.Values.repoServer.clusterAdminAccess | default dict) "enabled" }}
+DEPRECATED option .server.clusterAdminAccess.enabled - Use createClusterRoles
+{{- end }}
 {{- if .Values.controller.service }}
 REMOVED option controller.service - Use controller.metrics
 {{- end }}

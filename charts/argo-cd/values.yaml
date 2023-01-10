@@ -19,9 +19,12 @@ apiVersionOverrides:
   # -- String to override apiVersion of autoscaling rendered by this helm chart
   autoscaling: "" # autoscaling/v2
 
-# -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
+# -- Create aggregated roles that extend existing cluster roles to interact with argo-cd resources
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
 createAggregateRoles: false
+# -- Create cluster roles for cluster-wide installation.
+## Used when you manage applications in the same cluster where Argo CD runs
+createClusterRoles: true
 
 openshift:
   # -- enables using arbitrary uid for argo repo server
@@ -717,11 +720,6 @@ controller:
     #   namespace: monitoring
     #   additionalLabels: {}
     #   annotations: {}
-
-  ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.
-  clusterAdminAccess:
-    # -- Enable RBAC for local cluster deployments
-    enabled: true
 
   ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
   ## Defaults to off
@@ -1732,12 +1730,6 @@ server:
     # -- Termination policy of Openshift Route
     termination_policy: None
 
-  ## Enable Admin ClusterRole resources.
-  ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.
-  clusterAdminAccess:
-    # -- Enable RBAC for local cluster deployments
-    enabled: true
-
   GKEbackendConfig:
     # -- Enable BackendConfig custom resource for Google Kubernetes Engine
     enabled: false
@@ -2031,11 +2023,6 @@ repoServer:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
-  ## Enable Admin ClusterRole resources.
-  ## Enable if you would like to grant cluster rights to Argo CD repo server.
-  clusterAdminAccess:
-    # -- Enable RBAC for local cluster deployments
-    enabled: false
   ## Enable Custom Rules for the Repo server's Cluster Role resource
   ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
   ## Defaults to off
