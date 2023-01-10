@@ -1588,6 +1588,40 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Added]: Option createClusterRoles to enable cluster roles from one place"
+        - "[Deprecated]: Option controller.clusterAdminAccess.enabled"
+        - "[Deprecated]: Option server.clusterAdminAccess.enabled"
+        - "[Deprecated]: Option repoServer.clusterAdminAccess.enabled"
+    apiVersion: v2
+    appVersion: v2.5.5
+    created: "2023-01-10T08:59:10.321137361Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.4
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: dd3dc41cb4abfbd71521aeed9608d416f7524ed80ef2919987c861602995d7ed
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.16.15/argo-cd-5.16.15.tgz
+    version: 5.16.15
+  - annotations:
+      artifacthub.io/changes: |
         - "[Docs]: Added sample how to provide K8s credentials plugin"
         - "[Docs]: Added sample how to provide Argo config management plugin"
         - "[Docs]: Removed samples that injects tools into incorrect controllers"
@@ -19660,4 +19694,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-01-10T00:03:49.392345584Z"
+generated: "2023-01-10T08:59:10.323465956Z"
