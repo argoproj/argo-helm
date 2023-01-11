@@ -1,9 +1,8 @@
-## Reference: https://github.com/helm/chart-releaser-action
 name: Chart Publish
 on:
   push:
     branches:
-      - main
+      - argo-workflows
 
 permissions:
   contents: read
@@ -27,20 +26,19 @@ jobs:
       - name: Add dependency chart repos
         run: |
           helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
-
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
-      ## This is required to consider the old Circle-CI Index and to stay compatible with all the old releases.
-      - name: Fetch current Chart Index
+      - name: Package chart
         run: |
-          git checkout origin/gh-pages index.yaml
-
+          rm -rf .cr-release-packages
+          mkdir .cr-release-packages
+          helm package charts/argo-workflows -u -d .cr-release-packages/
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.4.1
+        uses: helm/chart-releaser-action@main
         with:
           config: "./.github/configs/cr.yaml"
+          skip_packaging: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
