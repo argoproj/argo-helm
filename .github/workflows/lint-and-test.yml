@@ -1,12 +1,16 @@
-## Reference: https://github.com/helm/chart-testing-action
-name: Linting and Testing
-on: pull_request
+name: Chart Publish
+on:
+  push:
+    branches:
+      - argo-workflows
 
 permissions:
   contents: read
 
 jobs:
-  chart-test:
+  publish:
+    permissions:
+      contents: write  # for helm/chart-releaser-action to push chart release and create a release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -14,77 +18,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Helm
+      - name: Install Helm
         uses: azure/setup-helm@v3
         with:
-          version: v3.10.1 # Also update in publish.yaml
+          version: v3.10.1 # Also update in lint-and-test.yaml
 
-      - name: Set up python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-
-      - name: Setup Chart Linting
-        id: lint
-        uses: helm/chart-testing-action@v2.3.1
-        with:
-          # Note: Also update in scripts/lint.sh
-          version: v3.7.1
-
-      - name: List changed charts
-        id: list-changed
-        run: |
-          ## If executed with debug this won't work anymore.
-          changed=$(ct --config ./.github/configs/ct-lint.yaml list-changed)
-          charts=$(echo "$changed" | tr '\n' ' ' | xargs)
-          if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
-            echo "::set-output name=changed_charts::$charts"
-          fi
-
-      - name: Run chart-testing (lint)
-        run: ct lint --debug --config ./.github/configs/ct-lint.yaml --lint-conf ./.github/configs/lintconf.yaml
-
-      - name: Run docs-testing (helm-docs)
-        id: helm-docs
-        run: |
-          ./scripts/helm-docs.sh
-          if [[ $(git diff --stat) != '' ]]; then
-            echo -e '\033[0;31mDocumentation outdated!\033[0m ❌'
-            git diff --color
-            exit 1
-          else
-            echo -e '\033[0;32mDocumentation up to date\033[0m ✔'
-          fi
-
-      - name: Create kind cluster
-        uses: helm/kind-action@v1.5.0
-        if: steps.list-changed.outputs.changed == 'true'
-        with:
-          config: .github/configs/kind-config.yaml
-
-      - name: Deploy latest ArgoCD CRDs when testing ArgoCD extensions
-        if: |
-          contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater') ||
-          contains(steps.list-changed.outputs.changed_charts, 'argocd-apps')
+      - name: Add dependency chart repos
         run: |
           helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
-          helm dependency build charts/argo-cd/
-          helm template charts/argo-cd/ --set server.extensions.enabled=true -s templates/crds/* | kubectl apply -f -
-
-      - name: Skip HPA tests of ArgoCD
-        if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
+      - name: Configure Git
         run: |
-          ## Metrics API not available in kind cluster
-          rm charts/argo-cd/ci/ha-autoscaling-values.yaml
-
-      - name: Create an external redis for ArgoCD externalRedis feature
-        if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Package chart
         run: |
-          kubectl create namespace redis
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm install redis bitnami/redis --wait --namespace redis --set auth.password=argocd --set architecture=standalone
-
-      - name: Run chart-testing (install)
-        run: ct install --config ./.github/configs/ct-install.yaml
-        if: steps.list-changed.outputs.changed == 'true'
+          rm -rf .cr-release-packages
+          mkdir .cr-release-packages
+          helm package charts/argo-workflows -u -d .cr-release-packages/
+      
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@main
+        with:
+          config: "./.github/configs/cr.yaml"
+          skip_packaging: true
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
