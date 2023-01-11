@@ -10,7 +10,7 @@ images:
 ## Custom resource configuration
 crds:
   # -- Install and upgrade CRDs
-  install: true
+  install: false
   # -- Keep CRDs on chart uninstall
   keep: true
   # -- Annotations to be added to all CRDs
@@ -57,7 +57,7 @@ controller:
     # -- Registry to use for the controller
     registry: quay.io
     # -- Registry to use for the controller
-    repository: argoproj/workflow-controller
+    repository: codefresh/workflow-controller
     # -- Image tag for the workflow controller. Defaults to `.Values.images.tag`.
     tag: ""
   # -- parallelism dictates how many workflows can be running at the same time
@@ -140,10 +140,17 @@ controller:
   # -- Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level.
   # Only valid for 2.7+
   ## See more: https://argoproj.github.io/argo-workflows/default-workflow-specs/
-  workflowDefaults: {}
-  #  spec:
-  #    ttlStrategy:
-  #      secondsAfterCompletion: 84600
+  workflowDefaults:
+    spec:
+      ttlStrategy:
+        secondsAfterCompletion: 86400
+        secondsAfterSuccess: 86400
+        secondsAfterFailure: 86400
+      podGC:
+        strategy: OnWorkflowCompletion
+        labelSelector:
+          matchLabels:
+            should-be-deleted: "true"
 
   # -- Number of workflow workers
   workflowWorkers: # 32
@@ -343,7 +350,7 @@ executor:
     # -- Registry to use for the Workflow Executors
     registry: quay.io
     # -- Repository to use for the Workflow Executors
-    repository: argoproj/argoexec
+    repository: codefresh/argoexec
     # -- Image tag for the workflow executor. Defaults to `.Values.images.tag`.
     tag: ""
     # -- Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`.
@@ -367,7 +374,7 @@ server:
     # -- Registry to use for the server
     registry: quay.io
     # -- Repository to use for the server
-    repository: argoproj/argocli
+    repository: codefresh/argocli
     # -- Image tag for the Argo Workflows server. Defaults to `.Values.images.tag`.
     tag: ""
   # -- optional map of annotations to be applied to the ui Deployment
@@ -461,7 +468,7 @@ server:
     #   value: "bar"
 
   # -- Extra arguments to provide to the Argo server binary, such as for disabling authentication.
-  extraArgs: []
+  extraArgs: ['--auth-mode=server']
   # If you want to disable authentication for purposes such as:
   #   - local dev-mode without authentication
   #   - gateway authentication through some other service such as KeyCloak

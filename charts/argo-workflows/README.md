@@ -46,7 +46,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
-| crds.install | bool | `true` | Install and upgrade CRDs |
+| crds.install | bool | `false` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `true` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
 | emissary.images | list | `[]` | The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used. |
@@ -81,7 +81,7 @@ Fields to note:
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
 | controller.extraEnv | list | `[]` | Extra environment variables to provide to the controller container |
 | controller.image.registry | string | `"quay.io"` | Registry to use for the controller |
-| controller.image.repository | string | `"argoproj/workflow-controller"` | Registry to use for the controller |
+| controller.image.repository | string | `"codefresh/workflow-controller"` | Registry to use for the controller |
 | controller.image.tag | string | `""` | Image tag for the workflow controller. Defaults to `.Values.images.tag`. |
 | controller.initialDelay | string | `nil` | Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224 |
 | controller.instanceID.enabled | bool | `false` | Configures the controller to filter workflow submissions to only those which have a matching instanceID attribute. |
@@ -145,7 +145,7 @@ Fields to note:
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the workflow controller |
 | controller.volumeMounts | list | `[]` | Additional volume mounts to the controller main container |
 | controller.volumes | list | `[]` | Additional volumes to the controller pod |
-| controller.workflowDefaults | object | `{}` | Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level. Only valid for 2.7+ |
+| controller.workflowDefaults | object | `{"spec":{"podGC":{"labelSelector":{"matchLabels":{"should-be-deleted":"true"}},"strategy":"OnWorkflowCompletion"},"ttlStrategy":{"secondsAfterCompletion":86400,"secondsAfterFailure":86400,"secondsAfterSuccess":86400}}}` | Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level. Only valid for 2.7+ |
 | controller.workflowNamespaces | list | `["default"]` | Specify all namespaces where this workflow controller instance will manage workflows. This controls where the service account and RBAC resources will be created. Only valid when singleNamespace is false. |
 | controller.workflowRestrictions | object | `{}` | Restricts the Workflows that the controller will process. Only valid for 2.9+ |
 | controller.workflowWorkers | string | `nil` | Number of workflow workers |
@@ -167,7 +167,7 @@ Fields to note:
 | executor.env | list | `[]` | Adds environment variables for the executor. |
 | executor.image.pullPolicy | string | `""` | Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`. |
 | executor.image.registry | string | `"quay.io"` | Registry to use for the Workflow Executors |
-| executor.image.repository | string | `"argoproj/argoexec"` | Repository to use for the Workflow Executors |
+| executor.image.repository | string | `"codefresh/argoexec"` | Repository to use for the Workflow Executors |
 | executor.image.tag | string | `""` | Image tag for the workflow executor. Defaults to `.Values.images.tag`. |
 | executor.resources | object | `{}` | Resource limits and requests for the Workflow Executors |
 | executor.securityContext | object | `{}` | sets security context for the executor container |
@@ -182,11 +182,11 @@ Fields to note:
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
 | server.deploymentAnnotations | object | `{}` | optional map of annotations to be applied to the ui Deployment |
 | server.enabled | bool | `true` | Deploy the Argo Server |
-| server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary, such as for disabling authentication. |
+| server.extraArgs | list | `["--auth-mode=server"]` | Extra arguments to provide to the Argo server binary, such as for disabling authentication. |
 | server.extraContainers | list | `[]` | Extra containers to be added to the server deployment |
 | server.extraEnv | list | `[]` | Extra environment variables to provide to the argo-server container |
 | server.image.registry | string | `"quay.io"` | Registry to use for the server |
-| server.image.repository | string | `"argoproj/argocli"` | Repository to use for the server |
+| server.image.repository | string | `"codefresh/argocli"` | Repository to use for the server |
 | server.image.tag | string | `""` | Image tag for the Argo Workflows server. Defaults to `.Values.images.tag`. |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource |
