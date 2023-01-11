@@ -257,7 +257,11 @@ spec:
         - mountPath: /home/argocd
           name: argocd-home
       {{- with .Values.controller.extraContainers }}
-        {{- toYaml . | nindent 6 }}
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
+      {{- with .Values.controller.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
       {{- with .Values.controller.nodeSelector }}
       nodeSelector:
@@ -304,10 +308,6 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-      {{- with .Values.controller.initContainers }}
-      initContainers:
-        {{- toYaml . | nindent 6 }}
-      {{- end }}
       {{- with .Values.controller.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
