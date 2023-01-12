@@ -35,7 +35,7 @@ spec:
       {{- end }}
       containers:
         - name: argo-server
-          image: "{{- include "argo-workflows.image" (dict "context" . "image" .Values.server.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.server.image.tag }}"
+          image: "{{ .Values.server.image.repository }}:{{ default (include "argo-workflows.defaultTag" .) .Values.server.image.tag }}"
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           securityContext:
             {{- toYaml .Values.server.securityContext | nindent 12 }}

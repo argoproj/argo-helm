@@ -54,10 +54,8 @@ workflow:
 
 controller:
   image:
-    # -- Registry to use for the controller
-    registry: quay.io
-    # -- Registry to use for the controller
-    repository: argoproj/workflow-controller
+    # -- Repository to use for the controller
+    repository: quay.io/argoproj/workflow-controller
     # -- Image tag for the workflow controller. Defaults to `.Values.images.tag`.
     tag: ""
   # -- parallelism dictates how many workflows can be running at the same time
@@ -340,10 +338,8 @@ mainContainer:
 # executor controls how the init and wait container should be customized
 executor:
   image:
-    # -- Registry to use for the Workflow Executors
-    registry: quay.io
     # -- Repository to use for the Workflow Executors
-    repository: argoproj/argoexec
+    repository: quay.io/argoproj/argoexec
     # -- Image tag for the workflow executor. Defaults to `.Values.images.tag`.
     tag: ""
     # -- Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`.
@@ -364,10 +360,8 @@ server:
   ## https://github.com/argoproj/argo-workflows/issues/716#issuecomment-433213190
   baseHref: /
   image:
-    # -- Registry to use for the server
-    registry: quay.io
     # -- Repository to use for the server
-    repository: argoproj/argocli
+    repository: quay.io/argoproj/argocli
     # -- Image tag for the Argo Workflows server. Defaults to `.Values.images.tag`.
     tag: ""
   # -- optional map of annotations to be applied to the ui Deployment

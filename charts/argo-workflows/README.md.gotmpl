@@ -115,17 +115,6 @@ Fields to note:
 
 1. the `installCRD` value has been removed. CRDs are now only installed from the conventional crds/ directory
 1. the CRDs were updated to `apiextensions.k8s.io/v1`
-1. the container image registry/project/tag format was changed to be more in line with the more common
-
-   ```yaml
-   image:
-     registry: quay.io
-     repository: argoproj/argocli
-     tag: v3.0.1
-   ```
-
-   this also makes it easier for automatic update tooling (eg. renovate bot) to detect and update images.
-
 1. switched to quay.io as the default registry for all images
 1. removed any included usage of Minio
 1. aligned the configuration of serviceAccounts with the argo-cd chart, ie: what used to be `server.createServiceAccount` is now `server.serviceAccount.create`

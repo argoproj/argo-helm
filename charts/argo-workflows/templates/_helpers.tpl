@@ -142,14 +142,3 @@ Return the default Argo Workflows app version
 {{- define "argo-workflows.defaultTag" -}}
   {{- default .Chart.AppVersion .Values.images.tag }}
 {{- end -}}
-
-{{/*
-Return full image name including or excluding registry based on existence
-*/}}
-{{- define "argo-workflows.image" -}}
-{{- if and .image.registry .image.repository -}}
-  {{ .image.registry }}/{{ .image.repository }}
-{{- else -}}
-  {{ .image.repository }}
-{{- end -}}
-{{- end -}}

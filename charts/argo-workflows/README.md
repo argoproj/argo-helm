@@ -80,8 +80,7 @@ Fields to note:
 | controller.extraArgs | list | `[]` | Extra arguments to be added to the controller |
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
 | controller.extraEnv | list | `[]` | Extra environment variables to provide to the controller container |
-| controller.image.registry | string | `"quay.io"` | Registry to use for the controller |
-| controller.image.repository | string | `"argoproj/workflow-controller"` | Registry to use for the controller |
+| controller.image.repository | string | `"quay.io/argoproj/workflow-controller"` | Repository to use for the controller |
 | controller.image.tag | string | `""` | Image tag for the workflow controller. Defaults to `.Values.images.tag`. |
 | controller.initialDelay | string | `nil` | Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224 |
 | controller.instanceID.enabled | bool | `false` | Configures the controller to filter workflow submissions to only those which have a matching instanceID attribute. |
@@ -166,8 +165,7 @@ Fields to note:
 |-----|------|---------|-------------|
 | executor.env | list | `[]` | Adds environment variables for the executor. |
 | executor.image.pullPolicy | string | `""` | Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`. |
-| executor.image.registry | string | `"quay.io"` | Registry to use for the Workflow Executors |
-| executor.image.repository | string | `"argoproj/argoexec"` | Repository to use for the Workflow Executors |
+| executor.image.repository | string | `"quay.io/argoproj/argoexec"` | Repository to use for the Workflow Executors |
 | executor.image.tag | string | `""` | Image tag for the workflow executor. Defaults to `.Values.images.tag`. |
 | executor.resources | object | `{}` | Resource limits and requests for the Workflow Executors |
 | executor.securityContext | object | `{}` | sets security context for the executor container |
@@ -185,8 +183,7 @@ Fields to note:
 | server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary, such as for disabling authentication. |
 | server.extraContainers | list | `[]` | Extra containers to be added to the server deployment |
 | server.extraEnv | list | `[]` | Extra environment variables to provide to the argo-server container |
-| server.image.registry | string | `"quay.io"` | Registry to use for the server |
-| server.image.repository | string | `"argoproj/argocli"` | Repository to use for the server |
+| server.image.repository | string | `"quay.io/argoproj/argocli"` | Repository to use for the server |
 | server.image.tag | string | `""` | Image tag for the Argo Workflows server. Defaults to `.Values.images.tag`. |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource |
@@ -243,17 +240,6 @@ Fields to note:
 
 1. the `installCRD` value has been removed. CRDs are now only installed from the conventional crds/ directory
 1. the CRDs were updated to `apiextensions.k8s.io/v1`
-1. the container image registry/project/tag format was changed to be more in line with the more common
-
-   ```yaml
-   image:
-     registry: quay.io
-     repository: argoproj/argocli
-     tag: v3.0.1
-   ```
-
-   this also makes it easier for automatic update tooling (eg. renovate bot) to detect and update images.
-
 1. switched to quay.io as the default registry for all images
 1. removed any included usage of Minio
 1. aligned the configuration of serviceAccounts with the argo-cd chart, ie: what used to be `server.createServiceAccount` is now `server.serviceAccount.create`
