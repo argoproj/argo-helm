@@ -121,4 +121,11 @@ spec:
               path: tls.key
             - key: ca.crt
               path: ca.crt
+      {{- with .Values.notifications.dnsConfig }}
+      dnsConfig:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.dnsPolicy }}
+      dnsPolicy: {{ . }}
+      {{- end }}
 {{- end }}

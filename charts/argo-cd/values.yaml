@@ -732,6 +732,11 @@ controller:
     # -- List of custom rules for the application controller's ClusterRole resource
     rules: []
 
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- [DNS configuration]
+  dnsPolicy: {}
+
 ## Dex
 dex:
   # -- Enable dex
@@ -964,6 +969,11 @@ dex:
   # -- Priority class for dex
   priorityClassName: ""
 
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- [DNS configuration]
+  dnsPolicy: {}
+
 ## Redis
 redis:
   # -- Enable redis
@@ -1174,6 +1184,11 @@ redis:
       additionalLabels: {}
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
+
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- [DNS configuration]
+  dnsPolicy: {}
 
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
@@ -1769,6 +1784,11 @@ server:
   #     enabled: true
   #     responseCodeName: RESPONSE_CODE
 
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- [DNS configuration]
+  dnsPolicy: {}
+
 ## Repo Server
 repoServer:
   # -- Repo server name
@@ -2066,6 +2086,11 @@ repoServer:
   #     - list
   #     - watch
 
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- [DNS configuration]
+  dnsPolicy: {}
+
 ## ApplicationSet controller
 applicationSet:
   # -- Enable ApplicationSet controller
@@ -2331,6 +2356,11 @@ applicationSet:
         # - secretName: argocd-applicationset-tls
         #   hosts:
         #     - argocd-applicationset.example.com
+
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- [DNS configuration]
+  dnsPolicy: {}
 
 ## Notifications controller
 notifications:
@@ -2811,6 +2841,11 @@ notifications:
     # defaultTriggers: |
     #   - on-sync-status-unknown
 
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- [DNS configuration]
+  dnsPolicy: {}
+
   ## The optional bot component simplifies managing subscriptions
   ## For more information: https://argocd-notifications.readthedocs.io/en/stable/bots/overview/
   bots:
@@ -2899,3 +2934,8 @@ notifications:
 
       # -- [Node selector]
       nodeSelector: {}
+
+      # -- [DNS configuration]
+      dnsConfig: {}
+      # -- [DNS configuration]
+      dnsPolicy: {}

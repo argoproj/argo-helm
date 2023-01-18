@@ -354,3 +354,10 @@ spec:
       {{- with .Values.repoServer.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      {{- with .Values.repoServer.dnsConfig }}
+      dnsConfig:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.repoServer.dnsPolicy }}
+      dnsPolicy: {{ . }}
+      {{- end }}

@@ -413,3 +413,10 @@ spec:
       {{- with .Values.server.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      {{- with .Values.server.dnsConfig }}
+      dnsConfig:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.dnsPolicy }}
+      dnsPolicy: {{ . }}
+      {{- end }}

@@ -163,4 +163,11 @@ spec:
           emptyDir: {}
         - name: tmp
           emptyDir: {}
+      {{- with .Values.applicationSet.dnsConfig }}
+      dnsConfig:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.applicationSet.dnsPolicy }}
+      dnsPolicy: {{ . }}
+      {{- end }}
 {{- end }}

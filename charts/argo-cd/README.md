@@ -456,6 +456,8 @@ NAME: my-release
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
 | controller.containerPort | int | `8082` | Application controller listening port |
 | controller.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
+| controller.dnsConfig | object | `{}` | [DNS configuration] |
+| controller.dnsPolicy | object | `{}` | [DNS configuration] |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to application controller |
@@ -534,6 +536,8 @@ NAME: my-release
 | repoServer.containerPort | int | `8081` | Configures the repo server port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
 | repoServer.deploymentAnnotations | object | `{}` | Annotations to be added to repo server Deployment |
+| repoServer.dnsConfig | object | `{}` | [DNS configuration] |
+| repoServer.dnsPolicy | object | `{}` | [DNS configuration] |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
 | repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
 | repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to repo server |
@@ -633,6 +637,8 @@ NAME: my-release
 | server.containerPort | int | `8080` | Configures the server port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
 | server.deploymentAnnotations | object | `{}` | Annotations to be added to server Deployment |
+| server.dnsConfig | object | `{}` | [DNS configuration] |
+| server.dnsPolicy | object | `{}` | [DNS configuration] |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
 | server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
 | server.extensions.containerSecurityContext | object | See [values.yaml] | Server UI extensions container-level security context |
@@ -777,6 +783,8 @@ server:
 | dex.containerPortMetrics | int | `5558` | Container port for metrics access |
 | dex.containerSecurityContext | object | See [values.yaml] | Dex container-level security context |
 | dex.deploymentAnnotations | object | `{}` | Annotations to be added to the Dex server Deployment |
+| dex.dnsConfig | object | `{}` | [DNS configuration] |
+| dex.dnsPolicy | object | `{}` | [DNS configuration] |
 | dex.enabled | bool | `true` | Enable dex |
 | dex.env | list | `[]` | Environment variables to pass to the Dex server |
 | dex.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Dex server |
@@ -851,6 +859,8 @@ server:
 | redis.containerPort | int | `6379` | Redis container port |
 | redis.containerSecurityContext | object | See [values.yaml] | Redis container-level security context |
 | redis.deploymentAnnotations | object | `{}` | Annotations to be added to the Redis server Deployment |
+| redis.dnsConfig | object | `{}` | [DNS configuration] |
+| redis.dnsPolicy | object | `{}` | [DNS configuration] |
 | redis.enabled | bool | `true` | Enable redis |
 | redis.env | list | `[]` | Environment variables to pass to the Redis server |
 | redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
@@ -959,6 +969,8 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.args.probeBindAddr | string | `":8081"` | The default health check port |
 | applicationSet.containerSecurityContext | object | See [values.yaml] | ApplicationSet controller container-level security context |
 | applicationSet.deploymentAnnotations | object | `{}` | Annotations to be added to ApplicationSet controller Deployment |
+| applicationSet.dnsConfig | object | `{}` | [DNS configuration] |
+| applicationSet.dnsPolicy | object | `{}` | [DNS configuration] |
 | applicationSet.enabled | bool | `true` | Enable ApplicationSet controller |
 | applicationSet.extraArgs | list | `[]` | List of extra cli args to add |
 | applicationSet.extraContainers | list | `[]` | Additional containers to be added to the ApplicationSet controller pod |
@@ -1039,6 +1051,8 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.argocdUrl | string | `nil` | Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates |
 | notifications.bots.slack.affinity | object | `{}` | Assign custom [affinity] rules |
 | notifications.bots.slack.containerSecurityContext | object | See [values.yaml] | Slack bot container-level security Context |
+| notifications.bots.slack.dnsConfig | object | `{}` | [DNS configuration] |
+| notifications.bots.slack.dnsPolicy | object | `{}` | [DNS configuration] |
 | notifications.bots.slack.enabled | bool | `false` | Enable slack bot |
 | notifications.bots.slack.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Slack bot |
 | notifications.bots.slack.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Slack bot |
@@ -1062,6 +1076,8 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.context | object | `{}` | Define user-defined context |
 | notifications.deploymentAnnotations | object | `{}` | Annotations to be applied to the notifications controller Deployment |
+| notifications.dnsConfig | object | `{}` | [DNS configuration] |
+| notifications.dnsPolicy | object | `{}` | [DNS configuration] |
 | notifications.enabled | bool | `true` | Enable notifications controller |
 | notifications.extraArgs | list | `[]` | Extra arguments to provide to the notifications controller |
 | notifications.extraContainers | list | `[]` | Additional containers to be added to the notifications controller pod |
@@ -1121,6 +1137,7 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [BackendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/concepts/backendconfig#backendconfigspec_v1beta1_cloudgooglecom
 [CSS styles]: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-cd?modal=changelog
+[DNS configuration]: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 [external cluster credentials]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
 [FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
 [declarative setup]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup
