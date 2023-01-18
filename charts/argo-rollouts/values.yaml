@@ -47,6 +47,15 @@ controller:
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the controller
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   # -- [priorityClassName] for the controller
   priorityClassName: ""
   # -- The number of controller pods to run
@@ -194,6 +203,15 @@ dashboard:
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the dashboard server
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   # -- [priorityClassName] for the dashboard server
   priorityClassName: ""
 
