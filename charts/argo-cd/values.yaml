@@ -87,22 +87,13 @@ global:
   #  fsGroup: 999
 
   # -- [Node selector]
-  nodeSelector: 
-    globalkey1 : globalValue1
-    globalkey2 : globalValue2
+  nodeSelector: {}
 
   # -- [Tolerations] for use with node taints
-  tolerations: 
-    - key: globalKey1
-      operator: "Exists"
-      effect: "NoSchedule"
-    - key: globalKey2
-      operator: "NoExists"
-      effect: "NoSchedule"
+  tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
-  affinity: 
-    globalKey: globalAffinity
+  affinity: {}
   # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
   hostAliases: []
   # - ip: 10.20.30.40
@@ -635,17 +626,12 @@ controller:
 
   # -- [Node selector]
   nodeSelector: {}
-   # key1: localValue
 
   # -- [Tolerations] for use with node taints
-  tolerations: 
-    - key1: localValueContoller
-      operator: "Exists"
-      effect: "NoSchedule"
+  tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
-  affinity: 
-    localKey: localValueController
+  affinity: {}
     
 
   # -- Assign custom [TopologySpreadConstraints] rules to the application controller
@@ -970,13 +956,9 @@ dex:
   servicePortMetrics: 5558
 
   # -- [Node selector]
-  nodeSelector: 
-   key : valueDexLocal
+  nodeSelector: {}
   # -- [Tolerations] for use with node taints
-  tolerations:
-    - key: dexValue
-      operator: "Exists"
-      effect: "NoSchedule"
+  tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 
@@ -1100,14 +1082,10 @@ redis:
   nodeSelector: {}
 
   # -- [Tolerations] for use with node taints
-  tolerations: 
-    - key: LOCSLKeyRedis
-      operator: "Exists"
-      effect: "NoSchedule"
+  tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
-  affinity: 
-    key : vLAUEaFFINITY
+  affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to redis
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
@@ -1487,13 +1465,9 @@ server:
     timeoutSeconds: 1
 
   # -- [Node selector]
-  nodeSelector:
-    key: localKeyServerNodeSel
+  nodeSelector: {}
   # -- [Tolerations] for use with node taints
-  tolerations: 
-    - key: globalKeysSERVER
-      operator: "Exists"
-      effect: "NoSchedule"
+  tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 
@@ -1973,16 +1947,11 @@ repoServer:
     timeoutSeconds: 1
 
   # -- [Node selector]
-  nodeSelector: 
-    key : localRepoServerNS
+  nodeSelector: {}
   # -- [Tolerations] for use with node taints
-  tolerations: 
-    - key: localKeyReposSERVER
-      operator: "Exists"
-      effect: "NoSchedule"
+  tolerations: []
   # -- Assign custom [affinity] rules to the deployment
-  affinity: 
-    key : localRepoServerLocalAffinity
+  affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the repo server
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
@@ -2319,8 +2288,7 @@ applicationSet:
   nodeSelector: {}
 
   # -- [Tolerations] for use with node taints
-  tolerations: 
-    - key: applicationSetValue
+  tolerations: []
 
   # -- Assign custom [affinity] rules
   affinity: {}
@@ -2552,17 +2520,13 @@ notifications:
       - ALL
 
   # -- [Node selector]
-  nodeSelector: 
-    key: localRepoServerNS
+  nodeSelector: {}
 
   # -- [Tolerations] for use with node taints
-  tolerations: 
-    - key : localRepoServerNotification
-      operator: nolocal
+  tolerations: []
 
   # -- Assign custom [affinity] rules
-  affinity: 
-    key : NotificationAffinity
+  affinity: {}
 
   # -- Priority class for the notifications controller pods
   priorityClassName: ""
@@ -2943,5 +2907,4 @@ notifications:
       tolerations: []
 
       # -- [Node selector]
-      nodeSelector: 
-        key : localRepoServerSlack
+      nodeSelector: {}
