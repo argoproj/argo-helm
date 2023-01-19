@@ -43,12 +43,6 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | clusterInstall | bool | `true` | `false` runs controller in namespaced mode (does not require cluster RBAC) |
 | crdAnnotations | object | `{}` | Annotations to be added to all CRDs |
 | createClusterAggregateRoles | bool | `true` | flag to enable creation of cluster aggregate roles (requires cluster RBAC) |
-| enabledProviders.ambassador | bool | `true` | Adds RBAC for the Ambassador provider |
-| enabledProviders.awsAppMesh | bool | `true` | Adds RBAC for the AWS App Mesh provider |
-| enabledProviders.awsLoadBalancerController | bool | `true` | Adds RBAC for the AWS Load Balancer Controller provider |
-| enabledProviders.istio | bool | `true` | Adds RBAC for the Istio provider |
-| enabledProviders.smi | bool | `true` | Adds RBAC for the SMI provider |
-| enabledProviders.traefik | bool | `true` | Adds RBAC for the Traefik provider |
 | extraObjects | list | `[]` | Additional manifests to deploy within the chart. A list of objects. |
 | fullnameOverride | string | `nil` | String to fully override "argo-rollouts.fullname" template |
 | imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry. Registry secret names as an array. |
@@ -61,6 +55,13 @@ If dashboard is installed by `--set dashboard.enabled=true`, checkout the argo-r
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the notifications secret |
 | notifications.templates | object | `{}` | Notification templates |
 | notifications.triggers | object | `{}` | The trigger defines the condition when the notification should be sent |
+| providerRBAC.enabled | bool | `true` | Adds provider-specific RBAC rules to the controller Role and ClusterRole |
+| providerRBAC.providers.ambassador | bool | `true` | Adds RBAC rules for the Ambassador provider |
+| providerRBAC.providers.awsAppMesh | bool | `true` | Adds RBAC rules for the AWS App Mesh provider |
+| providerRBAC.providers.awsLoadBalancerController | bool | `true` | Adds RBAC rules for the AWS Load Balancer Controller provider |
+| providerRBAC.providers.istio | bool | `true` | Adds RBAC rules for the Istio provider |
+| providerRBAC.providers.smi | bool | `true` | Adds RBAC rules for the SMI provider |
+| providerRBAC.providers.traefik | bool | `true` | Adds RBAC rules for the Traefik provider |
 
 ### Controller
 
