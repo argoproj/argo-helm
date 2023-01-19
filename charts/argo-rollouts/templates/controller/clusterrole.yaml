@@ -89,7 +89,9 @@ rules:
   - create
   - get
   - update
-# secret access to run analysis templates which reference secrets, allow init containers to manipulate secrets
+# secret read access to run analysis templates which reference secrets
+# secret write access to allow init containers to manipulate secrets
+# configmap access to read notification-engine configuration
 - apiGroups:
   - ""
   resources:
@@ -110,6 +112,7 @@ rules:
   verbs:
   - list
   - update
+  - watch
 # pods eviction needed for restart
 - apiGroups:
   - ""
@@ -151,6 +154,7 @@ rules:
   - update
   - patch
   - delete
+{{- if .Values.enabledProviders.istio }}
 # virtualservice/destinationrule access needed for using the Istio provider
 - apiGroups:
   - networking.istio.io
@@ -163,6 +167,8 @@ rules:
   - update
   - patch
   - list
+{{- end }}
+{{- if .Values.enabledProviders.smi }}
 # trafficsplit access needed for using the SMI provider
 - apiGroups:
   - split.smi-spec.io
@@ -174,6 +180,8 @@ rules:
   - get
   - update
   - patch
+{{- end }}
+{{- if .Values.enabledProviders.ambassador }}
 # ambassador access needed for Ambassador provider
 - apiGroups:
   - getambassador.io
@@ -188,7 +196,9 @@ rules:
   - update
   - list
   - delete
-# Endpoints and TargetGroupBindings needed for ALB target group verification
+{{- end }}
+{{- if .Values.enabledProviders.awsLoadBalancerController }}
+# Endpoints and TargetGroupBindings needed for ALB target group verification when using AWS Load Balancer Controller
 - apiGroups:
   - ""
   resources:
@@ -202,6 +212,8 @@ rules:
   verbs:
   - list
   - get
+{{- end }}
+{{- if .Values.enabledProviders.awsAppMesh }}
 # AppMesh virtualservices/virtualrouter CRD read-only access needed for using the App Mesh provider
 - apiGroups:
   - appmesh.k8s.aws
@@ -223,4 +235,16 @@ rules:
   - list
   - update
   - patch
+{{- end }}
+{{- if .Values.enabledProviders.traefik }}
+# Traefik access needed when using the Traefik provider
+- apiGroups:
+  - traefik.containo.us
+  resources:
+  - traefikservices
+  verbs:
+  - watch
+  - get
+  - update
+{{- end }}
 {{- end }}

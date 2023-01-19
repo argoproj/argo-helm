@@ -190,6 +190,21 @@ podLabels: {}
 imagePullSecrets: []
 # - name: argo-pull-secret
 
+## Adds provider-specific RBAC permissions to the controller role and cluster role
+enabledProviders:
+  # -- Adds RBAC for the Istio provider
+  istio: true
+  # -- Adds RBAC for the SMI provider
+  smi: true
+  # -- Adds RBAC for the Ambassador provider
+  ambassador: true
+  # -- Adds RBAC for the AWS Load Balancer Controller provider
+  awsLoadBalancerController: true
+  # -- Adds RBAC for the AWS App Mesh provider
+  awsAppMesh: true
+  # -- Adds RBAC for the Traefik provider
+  traefik: true
+
 dashboard:
   # -- Deploy dashboard server
   enabled: false

@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v1.3.1
 description: A Helm chart for Argo Rollouts
 name: argo-rollouts
-version: 2.21.2
+version: 2.21.3
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
 keywords:
@@ -15,4 +15,6 @@ maintainers:
     url: https://argoproj.github.io/
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Add support for topologySpreadConstraints"
+    - "[Added]: Flag to toggle provider specific RBAC rules in Role and ClusterRole"
+    - "[Fixed]: Added missing RBAC rules in Role so that it aligns with ClusterRole"
+    - "[Fixed]: Added missing RBAC rules for Traefik provider"
