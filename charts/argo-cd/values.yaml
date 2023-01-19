@@ -86,12 +86,20 @@ global:
   #  runAsGroup: 999
   #  fsGroup: 999
 
+  # -- [Node selector]
+  nodeSelector: {}
+
+  # -- [Tolerations] for use with node taints
+  tolerations: []
+
+  # -- Assign custom [affinity] rules to the deployment
+  affinity: {}
   # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
   hostAliases: []
   # - ip: 10.20.30.40
   #   hostnames:
   #   - git.myhostname
-
+  
   networkPolicy:
     # -- Create NetworkPolicy objects for all components
     create: false
@@ -1333,7 +1341,7 @@ server:
       # -- Repository to use for extensions image
       repository: "ghcr.io/argoproj-labs/argocd-extensions"
       # -- Tag to use for extensions image
-      tag: "v0.2.1"
+      tag: "v0.1.0"
       # -- Image pull policy for extensions
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""

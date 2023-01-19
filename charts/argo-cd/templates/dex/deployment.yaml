@@ -138,17 +138,44 @@ spec:
       {{- with .Values.dex.initContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
+      {{- if or .Values.dex.nodeSelector .Values.global.nodeSelector }}
+      {{- if .Values.dex.nodeSelector }}
       {{- with .Values.dex.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- else }}
+      {{- with .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if or .Values.dex.tolerations .Values.global.tolerations }}
+      {{- if .Values.dex.tolerations }}
       {{- with .Values.dex.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- else }}
+      {{- with .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if or .Values.dex.affinity .Values.global.affinity }}
+      {{- if .Values.dex.affinity }}
       {{- with .Values.dex.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- else }}
+      {{- with .Values.global.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- end }}
       {{- with .Values.dex.topologySpreadConstraints }}
       topologySpreadConstraints:

@@ -340,17 +340,44 @@ spec:
       initContainers:
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
+      {{- if or .Values.server.nodeSelector .Values.global.nodeSelector }}
+      {{- if .Values.server.nodeSelector }}
       {{- with .Values.server.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- else }}
+      {{- with .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if or .Values.server.tolerations .Values.global.tolerations }}
+      {{- if .Values.server.tolerations }}
       {{- with .Values.server.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- else }}
+      {{- with .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if or .Values.server.affinity .Values.global.affinity }}
+      {{- if .Values.server.affinity }}
       {{- with .Values.server.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- else }}
+      {{- with .Values.global.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- end }}
       {{- with .Values.server.topologySpreadConstraints }}
       topologySpreadConstraints:
