@@ -48,16 +48,43 @@ spec:
             {{- toYaml .Values.notifications.bots.slack.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.notifications.bots.slack.containerSecurityContext | nindent 12 }}
+      {{- if or .Values.notifications.bots.slack.nodeSelector .Values.global.nodeSelector }}
+      {{- if .Values.notifications.bots.slack.nodeSelector }}
       {{- with .Values.notifications.bots.slack.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- else }}
+      {{- with .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if or .Values.notifications.bots.slack.affinity .Values.global.affinity }}
+      {{- if .Values.notifications.bots.slack.affinity }}
       {{- with .Values.notifications.bots.slack.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- else }}
+      {{- with .Values.global.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if or .Values.notifications.bots.slack.tolerations .Values.global.tolerations }}
+      {{- if .Values.notifications.bots.slack.tolerations }}
       {{- with .Values.notifications.bots.slack.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- else }}
+      {{- with .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- end }}
 {{ end }}

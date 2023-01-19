@@ -88,17 +88,44 @@ spec:
       initContainers:
         {{- tpl (toYaml . ) $ | nindent 8 }}
       {{- end }}
+      {{- if or .Values.notifications.nodeSelector .Values.global.nodeSelector }}
+      {{- if .Values.notifications.nodeSelector }}
       {{- with .Values.notifications.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- else }}
+      {{- with .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if or .Values.notifications.affinity .Values.global.affinity }}
+      {{- if .Values.notifications.affinity }}
       {{- with .Values.notifications.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- else }}
+      {{- with .Values.global.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if or .Values.notifications.tolerations .Values.global.tolerations }}
+      {{- if .Values.notifications.tolerations }}
       {{- with .Values.notifications.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- else }}
+      {{- with .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- end }}
       {{- with .Values.notifications.priorityClassName }}
       priorityClassName: {{ . }}
