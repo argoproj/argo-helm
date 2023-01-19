@@ -57,7 +57,7 @@ done
 | configs.jetstream.versions[0].natsImage | string | `"nats:latest"` |  |
 | configs.jetstream.versions[0].startCommand | string | `"/nats-server"` |  |
 | configs.jetstream.versions[0].version | string | `"latest"` |  |
-| configs.nats.versions | list | `[{"metricsExporterImage":"natsio/prometheus-nats-exporter:latest","natsStreamingImage":"nats-streaming:latest","version":"latest"}]` | Supported versions of NATS event bus |
+| configs.nats.versions | list | See [values.yaml] | Supported versions of NATS event bus |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
@@ -155,6 +155,7 @@ done
 | webhook.pdb.labels | object | `{}` | Labels to be added to admission webhook pdb |
 | webhook.podAnnotations | object | `{}` | Annotations to be added to event controller pods |
 | webhook.podLabels | object | `{}` | Labels to be added to event controller pods |
+| webhook.port | int | `443` | Port to listen on |
 | webhook.priorityClassName | string | `""` | Priority class for the event controller pods |
 | webhook.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | webhook.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |

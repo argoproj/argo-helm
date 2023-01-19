@@ -32,13 +32,27 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create kubernetes friendly chart version label.
+
+Examples:
+image.tag = v1.3.1
+output    = v1.3.1
+
+image.tag = v1.3.1@sha256:38828e693b02e6f858d89fa22a9d9811d3d7a2430a1d4c7d687b6f509775c6ce
+output    = v1.3.1
+*/}}
+{{- define "argo-rollouts.chart_version_label" -}}
+{{- regexReplaceAll "[^a-zA-Z0-9-_.]+" (regexReplaceAll "@sha256:[a-f0-9]+" (default .Chart.AppVersion $.Values.controller.image.tag) "") "" | trunc 63 | quote -}}
+{{- end -}}
+
+{{/*
 Common labels
 */}}
 {{- define "argo-rollouts.labels" -}}
 helm.sh/chart: {{ include "argo-rollouts.chart" . }}
 {{ include "argo-rollouts.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ default .Chart.AppVersion $.Values.controller.image.tag | quote }}
+app.kubernetes.io/version: {{ include "argo-rollouts.chart_version_label" . }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/part-of: argo-rollouts

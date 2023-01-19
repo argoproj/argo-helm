@@ -1,5 +1,5 @@
 {{- if .Values.controller.pdb.enabled }}
-apiVersion: policy/v1beta1
+apiVersion: {{ template "argo-events.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
   name: {{ template "argo-events.controller.fullname" . }}

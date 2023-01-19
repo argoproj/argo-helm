@@ -18,14 +18,13 @@ apiVersionOverrides:
   cloudgoogle: "" # cloud.google.com/v1
   # -- String to override apiVersion of autoscaling rendered by this helm chart
   autoscaling: "" # autoscaling/v2
-  # -- String to override apiVersion of ingresses rendered by this helm chart
-  ingress: "" # networking.k8s.io/v1beta1
-  # -- String to override apiVersion of pod disruption budgets rendered by this helm chart
-  pdb: "" # policy/v1
 
-# -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
+# -- Create aggregated roles that extend existing cluster roles to interact with argo-cd resources
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
 createAggregateRoles: false
+# -- Create cluster roles for cluster-wide installation.
+## Used when you manage applications in the same cluster where Argo CD runs
+createClusterRoles: true
 
 openshift:
   # -- enables using arbitrary uid for argo repo server
@@ -133,7 +132,7 @@ configs:
     timeout.reconciliation: 180s
 
     # -- Timeout to refresh application data as well as target manifests cache
-    timeout.hard.reconciliation: 0
+    timeout.hard.reconciliation: 0s
 
     # Dex configuration
     # dex.config: |
@@ -440,6 +439,7 @@ configs:
   #  }
 
 # -- Array of extra K8s manifests to deploy
+## Note: Supports use of custom Helm templates
 extraObjects: []
   # - apiVersion: secrets-store.csi.x-k8s.io/v1
   #   kind: SecretProviderClass
@@ -524,14 +524,6 @@ controller:
   #  # -- define the application controller `--repo-server-timeout-seconds`
   #  repoServerTimeoutSeconds: "60"
 
-  # DEPRECATED - Use configs.params to override
-  # -- Application controller log format. Either `text` or `json`
-  # @default -- `""` (defaults to global.logging.format)
-  # logFormat: ""
-  # -- Application controller log level. One of: `debug`, `info`, `warn` or `error`
-  # @default -- `""` (defaults to global.logging.level)
-  # logLevel: ""
-
   # -- Additional command line arguments to pass to application controller
   extraArgs: []
 
@@ -546,6 +538,37 @@ controller:
   # - secretRef:
   #     name: secret-name
 
+  # -- Additional containers to be added to the application controller pod
+  ## Note: Supports use of custom Helm templates
+  extraContainers: []
+
+  # -- Init containers to add to the application controller pod
+  ## If your target Kubernetes cluster(s) require a custom credential (exec) plugin
+  ## you could use this (and the same in the server pod) to provide such executable
+  ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins
+  ## Note: Supports use of custom Helm templates
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO kubelogin.zip https://github.com/Azure/kubelogin/releases/download/v0.0.25/kubelogin-linux-amd64.zip &&
+  #        unzip kubelogin.zip && mv bin/linux_amd64/kubelogin /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+
+  # -- Additional volumeMounts to the application controller main container
+  volumeMounts: []
+  #  - mountPath: /usr/local/bin/kubelogin
+  #    name: custom-tools
+  #    subPath: kubelogin
+
+  # -- Additional volumes to the application controller pod
+  volumes: []
+  #  - name: custom-tools
+  #    emptyDir: {}
+
   # -- Annotations for the application controller StatefulSet
   statefulsetAnnotations: {}
 
@@ -554,6 +577,15 @@ controller:
 
   # -- Labels to be added to application controller pods
   podLabels: {}
+
+  # -- Resource limits and requests for the application controller pods
+  resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 250m
+  #    memory: 256Mi
 
   # -- Application controller container-level security context
   # @default -- See [values.yaml]
@@ -584,12 +616,6 @@ controller:
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
 
-  # -- Additional volumeMounts to the application controller main container
-  volumeMounts: []
-
-  # -- Additional volumes to the application controller pod
-  volumes: []
-
   # -- [Node selector]
   nodeSelector: {}
 
@@ -609,15 +635,6 @@ controller:
 
   # -- Priority class for the application controller pods
   priorityClassName: ""
-
-  # -- Resource limits and requests for the application controller pods
-  resources: {}
-  #  limits:
-  #    cpu: 500m
-  #    memory: 512Mi
-  #  requests:
-  #    cpu: 250m
-  #    memory: 256Mi
 
   serviceAccount:
     # -- Create a service account for the application controller
@@ -705,11 +722,7 @@ controller:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
     #   additionalLabels: {}
-
-  ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.
-  clusterAdminAccess:
-    # -- Enable RBAC for local cluster deployments
-    enabled: true
+    #   annotations: {}
 
   ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
   ## Defaults to off
@@ -718,28 +731,6 @@ controller:
     enabled: false
     # -- List of custom rules for the application controller's ClusterRole resource
     rules: []
-
-  # -- Additional containers to be added to the application controller pod
-  extraContainers: []
-
-  # -- Init containers to add to the application controller pod
-  ## If your target Kubernetes cluster(s) require a custom auth provider executable
-  ## you could use this (and the same in the server pod) to bootstrap
-  ## that executable into your Argo CD container
-  initContainers: []
-  #  - name: download-tools
-  #    image: alpine:3.8
-  #    command: [sh, -c]
-  #    args:
-  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
-  #        mv linux-amd64/helm /custom-tools/
-  #    volumeMounts:
-  #      - mountPath: /custom-tools
-  #        name: custom-tools
-  #  volumeMounts:
-  #  - mountPath: /usr/local/bin/helm
-  #    name: custom-tools
-  #    subPath: helm
 
 ## Dex
 dex:
@@ -838,6 +829,20 @@ dex:
   # - secretRef:
   #     name: secret-name
 
+  # -- Additional containers to be added to the dex pod
+  ## Note: Supports use of custom Helm templates
+  extraContainers: []
+
+  # -- Init containers to add to the dex pod
+  ## Note: Supports use of custom Helm templates
+  initContainers: []
+
+  # -- Additional volumeMounts to the dex main container
+  volumeMounts: []
+
+  # -- Additional volumes to the dex pod
+  volumes: []
+
   # TLS certificate configuration via Secret
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#configuring-tls-to-argocd-dex-server
   ## Note: Issuing certificates via cert-manager in not supported right now because it's not possible to restart Dex automatically without extra controllers.
@@ -863,6 +868,15 @@ dex:
 
   # -- Labels to be added to the Dex server pods
   podLabels: {}
+
+  # -- Resource limits and requests for dex
+  resources: {}
+  #  limits:
+  #    cpu: 50m
+  #    memory: 64Mi
+  #  requests:
+  #    cpu: 10m
+  #    memory: 32Mi
 
   # -- Dex container-level security context
   # @default -- See [values.yaml]
@@ -915,12 +929,6 @@ dex:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
-  # -- Additional volumeMounts to the dex main container
-  volumeMounts: []
-
-  # -- Additional volumes to the dex pod
-  volumes: []
-
   # -- Container port for HTTP access
   containerPortHttp: 5556
   # -- Service port for HTTP access
@@ -955,34 +963,6 @@ dex:
 
   # -- Priority class for dex
   priorityClassName: ""
-
-  # -- Resource limits and requests for dex
-  resources: {}
-  #  limits:
-  #    cpu: 50m
-  #    memory: 64Mi
-  #  requests:
-  #    cpu: 10m
-  #    memory: 32Mi
-
-  # -- Additional containers to be added to the dex pod
-  extraContainers: []
-
-  # -- Init containers to add to the dex pod
-  initContainers: []
-  #  - name: download-tools
-  #    image: alpine:3.8
-  #    command: [sh, -c]
-  #    args:
-  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
-  #        mv linux-amd64/helm /custom-tools/
-  #    volumeMounts:
-  #      - mountPath: /custom-tools
-  #        name: custom-tools
-  #  volumeMounts:
-  #  - mountPath: /usr/local/bin/helm
-  #    name: custom-tools
-  #    subPath: helm
 
 ## Redis
 redis:
@@ -1025,11 +1005,6 @@ redis:
   # - --bind
   # - "0.0.0.0"
 
-  # -- Redis container port
-  containerPort: 6379
-  # -- Redis service port
-  servicePort: 6379
-
   # -- Environment variables to pass to the Redis server
   env: []
 
@@ -1041,6 +1016,20 @@ redis:
   # - secretRef:
   #     name: secret-name
 
+  # -- Additional containers to be added to the redis pod
+  ## Note: Supports use of custom Helm templates
+  extraContainers: []
+
+  # -- Init containers to add to the redis pod
+  ## Note: Supports use of custom Helm templates
+  initContainers: []
+
+  # -- Additional volumeMounts to the redis container
+  volumeMounts: []
+
+  # -- Additional volumes to the redis pod
+  volumes: []
+
   # -- Annotations to be added to the Redis server Deployment
   deploymentAnnotations: {}
 
@@ -1049,6 +1038,15 @@ redis:
 
   # -- Labels to be added to the Redis server pods
   podLabels: {}
+
+  # -- Resource limits and requests for redis
+  resources: {}
+  #  limits:
+  #    cpu: 200m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 64Mi
 
   # -- Redis pod-level security context
   # @default -- See [values.yaml]
@@ -1066,10 +1064,17 @@ redis:
       drop:
       - ALL
 
+  # -- Redis container port
+  containerPort: 6379
+  # -- Redis service port
+  servicePort: 6379
+
   # -- [Node selector]
   nodeSelector: {}
+
   # -- [Tolerations] for use with node taints
   tolerations: []
+
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 
@@ -1093,39 +1098,6 @@ redis:
     annotations: {}
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: false
-
-  # -- Resource limits and requests for redis
-  resources: {}
-  #  limits:
-  #    cpu: 200m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 64Mi
-
-  # -- Additional volumeMounts to the redis container
-  volumeMounts: []
-  # -- Additional volumes to the redis pod
-  volumes: []
-
-  # -- Additional containers to be added to the redis pod
-  extraContainers: []
-
-  # -- Init containers to add to the redis pod
-  initContainers: []
-  #  - name: download-tools
-  #    image: alpine:3.8
-  #    command: [sh, -c]
-  #    args:
-  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
-  #        mv linux-amd64/helm /custom-tools/
-  #    volumeMounts:
-  #      - mountPath: /custom-tools
-  #        name: custom-tools
-  #  volumeMounts:
-  #  - mountPath: /usr/local/bin/helm
-  #    name: custom-tools
-  #    subPath: helm
 
   service:
     # -- Redis service annotations
@@ -1202,7 +1174,6 @@ redis:
       additionalLabels: {}
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
-
 
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
@@ -1350,13 +1321,93 @@ server:
   # -- Specify postStart and preStop lifecycle hooks for your argo-cd-server container
   lifecycle: {}
 
-  # DEPRECATED - Use configs.params to override
-  # -- Argo CD server log format: Either `text` or `json`
-  # @default -- `""` (defaults to global.logging.format)
-  # logFormat: ""
-  # -- Argo CD server log level. One of: `debug`, `info`, `warn` or `error`
-  # @default -- `""` (defaults to global.logging.level)
-  # logLevel: ""
+  ## Argo UI extensions
+  ## This function in tech preview stage, do expect unstability or breaking changes in newer versions.
+  ## Ref: https://github.com/argoproj-labs/argocd-extensions
+  extensions:
+    # -- Enable support for Argo UI extensions
+    enabled: false
+
+    ## Argo UI extensions image
+    image:
+      # -- Repository to use for extensions image
+      repository: "ghcr.io/argoproj-labs/argocd-extensions"
+      # -- Tag to use for extensions image
+      tag: "v0.2.1"
+      # -- Image pull policy for extensions
+      # @default -- `""` (defaults to global.image.imagePullPolicy)
+      imagePullPolicy: ""
+
+    # -- Server UI extensions container-level security context
+    # @default -- See [values.yaml]
+    containerSecurityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+        - ALL
+
+    # -- Resource limits and requests for the argocd-extensions container
+    resources: {}
+    #  limits:
+    #    cpu: 50m
+    #    memory: 128Mi
+    #  requests:
+    #    cpu: 10m
+    #    memory: 64Mi
+
+  # -- Additional containers to be added to the server pod
+  ## Note: Supports use of custom Helm templates
+  extraContainers: []
+  # - name: my-sidecar
+  #   image: nginx:latest
+  # - name: lemonldap-ng-controller
+  #   image: lemonldapng/lemonldap-ng-controller:0.2.0
+  #   args:
+  #     - /lemonldap-ng-controller
+  #     - --alsologtostderr
+  #     - --configmap=$(POD_NAMESPACE)/lemonldap-ng-configuration
+  #   env:
+  #     - name: POD_NAME
+  #       valueFrom:
+  #         fieldRef:
+  #           fieldPath: metadata.name
+  #     - name: POD_NAMESPACE
+  #       valueFrom:
+  #         fieldRef:
+  #           fieldPath: metadata.namespace
+  #   volumeMounts:
+  #   - name: copy-portal-skins
+  #     mountPath: /srv/var/lib/lemonldap-ng/portal/skins
+
+  # -- Init containers to add to the server pod
+  ## If your target Kubernetes cluster(s) require a custom credential (exec) plugin
+  ## you could use this (and the same in the application controller pod) to provide such executable
+  ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO kubelogin.zip https://github.com/Azure/kubelogin/releases/download/v0.0.25/kubelogin-linux-amd64.zip &&
+  #        unzip kubelogin.zip && mv bin/linux_amd64/kubelogin /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+
+  # -- Additional volumeMounts to the server main container
+  volumeMounts: []
+  #  - mountPath: /usr/local/bin/kubelogin
+  #    name: custom-tools
+  #    subPath: kubelogin
+
+  # -- Additional volumes to the server pod
+  volumes: []
+  #  - name: custom-tools
+  #    emptyDir: {}
 
   # -- Annotations to be added to server Deployment
   deploymentAnnotations: {}
@@ -1366,6 +1417,15 @@ server:
 
   # -- Labels to be added to server pods
   podLabels: {}
+
+  # -- Resource limits and requests for the Argo CD server
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 50m
+  #    memory: 64Mi
 
   # -- Configures the server port
   containerPort: 8080
@@ -1394,12 +1454,6 @@ server:
     successThreshold: 1
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
-
-  # -- Additional volumeMounts to the server main container
-  volumeMounts: []
-
-  # -- Additional volumes to the server pod
-  volumes: []
 
   # -- [Node selector]
   nodeSelector: {}
@@ -1430,15 +1484,6 @@ server:
     capabilities:
       drop:
       - ALL
-
-  # -- Resource limits and requests for the Argo CD server
-  resources: {}
-  #  limits:
-  #    cpu: 100m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 50m
-  #    memory: 64Mi
 
   # TLS certificate configuration via cert-manager
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
@@ -1591,8 +1636,7 @@ server:
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
-    hosts:
-      []
+    hosts: []
       # - argocd.example.com
 
     # -- List of ingress paths
@@ -1601,13 +1645,7 @@ server:
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
     # -- Additional ingress paths
-    extraPaths:
-      []
-      # - path: /*
-      #   backend:
-      #     serviceName: ssl-redirect
-      #     servicePort: use-annotation
-      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+    extraPaths: []
       # - path: /*
       #   pathType: Prefix
       #   backend:
@@ -1617,8 +1655,7 @@ server:
       #         name: use-annotation
 
     # -- Ingress TLS configuration
-    tls:
-      []
+    tls: []
       # - secretName: your-certificate-name
       #   hosts:
       #     - argocd.example.com
@@ -1657,8 +1694,7 @@ server:
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
     ##
-    hosts:
-      []
+    hosts: []
       # - argocd.example.com
 
     # -- List of ingress paths for dedicated [gRPC-ingress]
@@ -1667,13 +1703,7 @@ server:
     # -- Ingress path type for dedicated [gRPC-ingress]. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
     # -- Additional ingress paths for dedicated [gRPC-ingress]
-    extraPaths:
-      []
-      # - path: /*
-      #   backend:
-      #     serviceName: ssl-redirect
-      #     servicePort: use-annotation
-      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+    extraPaths: []
       # - path: /*
       #   pathType: Prefix
       #   backend:
@@ -1683,8 +1713,7 @@ server:
       #         name: use-annotation
 
     # -- Ingress TLS configuration for dedicated [gRPC-ingress]
-    tls:
-      []
+    tls: []
       # - secretName: your-certificate-name
       #   hosts:
       #     - argocd.example.com
@@ -1707,12 +1736,6 @@ server:
     termination_type: passthrough
     # -- Termination policy of Openshift Route
     termination_policy: None
-
-  ## Enable Admin ClusterRole resources.
-  ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.
-  clusterAdminAccess:
-    # -- Enable RBAC for local cluster deployments
-    enabled: true
 
   GKEbackendConfig:
     # -- Enable BackendConfig custom resource for Google Kubernetes Engine
@@ -1745,86 +1768,6 @@ server:
   #   redirectToHttps:
   #     enabled: true
   #     responseCodeName: RESPONSE_CODE
-
-  # -- Additional containers to be added to the server pod
-  ## See https://github.com/lemonldap-ng-controller/lemonldap-ng-controller as example.
-  extraContainers: []
-  # - name: my-sidecar
-  #   image: nginx:latest
-  # - name: lemonldap-ng-controller
-  #   image: lemonldapng/lemonldap-ng-controller:0.2.0
-  #   args:
-  #     - /lemonldap-ng-controller
-  #     - --alsologtostderr
-  #     - --configmap=$(POD_NAMESPACE)/lemonldap-ng-configuration
-  #   env:
-  #     - name: POD_NAME
-  #       valueFrom:
-  #         fieldRef:
-  #           fieldPath: metadata.name
-  #     - name: POD_NAMESPACE
-  #       valueFrom:
-  #         fieldRef:
-  #           fieldPath: metadata.namespace
-  #   volumeMounts:
-  #   - name: copy-portal-skins
-  #     mountPath: /srv/var/lib/lemonldap-ng/portal/skins
-
-  # -- Init containers to add to the server pod
-  ## If your target Kubernetes cluster(s) require a custom auth provider executable
-  ## you could use this (and the same in the application controller pod) to bootstrap
-  ## that executable into your Argo CD container
-  initContainers: []
-  #  - name: download-tools
-  #    image: alpine:3.8
-  #    command: [sh, -c]
-  #    args:
-  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
-  #        mv linux-amd64/helm /custom-tools/
-  #    volumeMounts:
-  #      - mountPath: /custom-tools
-  #        name: custom-tools
-  #  volumeMounts:
-  #  - mountPath: /usr/local/bin/helm
-  #    name: custom-tools
-  #    subPath: helm
-
-  ## Argo UI extensions
-  ## This function in tech preview stage, do expect unstability or breaking changes in newer versions.
-  ## Ref: https://github.com/argoproj-labs/argocd-extensions
-  extensions:
-    # -- Enable support for Argo UI extensions
-    enabled: false
-
-    ## Argo UI extensions image
-    image:
-      # -- Repository to use for extensions image
-      repository: "ghcr.io/argoproj-labs/argocd-extensions"
-      # -- Tag to use for extensions image
-      tag: "v0.1.0"
-      # -- Image pull policy for extensions
-      imagePullPolicy: IfNotPresent
-
-    # -- Server UI extensions container-level security context
-    # @default -- See [values.yaml]
-    containerSecurityContext:
-      runAsNonRoot: true
-      readOnlyRootFilesystem: true
-      allowPrivilegeEscalation: false
-      seccompProfile:
-        type: RuntimeDefault
-      capabilities:
-        drop:
-        - ALL
-
-    # -- Resource limits and requests for the argocd-extensions container
-    resources: {}
-    #  limits:
-    #    cpu: 50m
-    #    memory: 128Mi
-    #  requests:
-    #    cpu: 10m
-    #    memory: 64Mi
 
 ## Repo Server
 repoServer:
@@ -1882,13 +1825,13 @@ repoServer:
   image:
     # -- Repository to use for the repo server
     # @default -- `""` (defaults to global.image.repository)
-    repository: "" # defaults to global.image.repository
+    repository: ""
     # -- Tag to use for the repo server
     # @default -- `""` (defaults to global.image.tag)
-    tag: "" # defaults to global.image.tag
+    tag: ""
     # -- Image pull policy for the repo server
     # @default -- `""` (defaults to global.image.imagePullPolicy)
-    imagePullPolicy: "" # IfNotPresent
+    imagePullPolicy: ""
 
   # -- Secrets with credentials to pull images from a private registry
   # @default -- `[]` (defaults to global.imagePullSecrets)
@@ -1908,13 +1851,45 @@ repoServer:
   # - secretRef:
   #     name: secret-name
 
-  # DEPRECATED - Use configs.params to override
-  # -- Repo server log format: Either `text` or `json`
-  # @default -- `""` (defaults to global.logging.level)
-  # logFormat: ""
-  # -- Repo server log level. One of: `debug`, `info`, `warn` or `error`
-  # @default -- `""` (defaults to global.logging.format)
-  # logLevel: ""
+  # -- Additional containers to be added to the repo server pod
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
+  ## Note: Supports use of custom Helm templates
+  extraContainers: []
+  # - name: cmp
+  #   # Entrypoint should be Argo CD lightweight CMP server i.e. argocd-cmp-server
+  #   command: [/var/run/argocd/argocd-cmp-server]
+  #   # This can be off-the-shelf or custom-built image
+  #   image: busybox
+  #   securityContext:
+  #     runAsNonRoot: true
+  #     runAsUser: 999
+  #   volumeMounts:
+  #     - mountPath: /var/run/argocd
+  #       name: var-files
+  #     - mountPath: /home/argocd/cmp-server/plugins
+  #       name: plugins
+  #     # Remove this volumeMount if you've chosen to bake the config file into the sidecar image.
+  #     - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+  #       subPath: plugin.yaml
+  #       name: cmp-plugin
+  #     # Starting with v2.4, do NOT mount the same tmp volume as the repo-server container. The filesystem separation helps
+  #     # mitigate path traversal attacks.
+  #     - mountPath: /tmp
+  #       name: cmp-tmp
+
+  # -- Init containers to add to the repo server pods
+  initContainers: []
+
+  # -- Additional volumeMounts to the repo server main container
+  volumeMounts: []
+
+  # -- Additional volumes to the repo server pod
+  volumes: []
+  #  - name: cmp-plugin
+  #    configMap:
+  #      name: cmp-plugin
+  #  - name: cmp-tmp
+  #    emptyDir: {}
 
   # -- Annotations to be added to repo server Deployment
   deploymentAnnotations: {}
@@ -1924,6 +1899,15 @@ repoServer:
 
   # -- Labels to be added to repo server pods
   podLabels: {}
+
+  # -- Resource limits and requests for the repo server pods
+  resources: {}
+  #  limits:
+  #    cpu: 50m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 10m
+  #    memory: 64Mi
 
   # -- Configures the repo server port
   containerPort: 8081
@@ -1952,17 +1936,6 @@ repoServer:
     successThreshold: 1
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
-
-  # -- Additional volumeMounts to the repo server main container
-  volumeMounts: []
-
-  # -- Additional volumes to the repo server pod
-  volumes: []
-  ## Use init containers to configure custom tooling
-  ## https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/
-  ## When using the volumes & volumeMounts section bellow, please comment out those above.
-  #  - name: custom-tools
-  #    emptyDir: {}
 
   # -- [Node selector]
   nodeSelector: {}
@@ -1993,15 +1966,6 @@ repoServer:
     capabilities:
       drop:
       - ALL
-
-  # -- Resource limits and requests for the repo server pods
-  resources: {}
-  #  limits:
-  #    cpu: 50m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 10m
-  #    memory: 64Mi
 
   # TLS certificate configuration via Secret
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#configuring-tls-to-argocd-repo-server
@@ -2068,11 +2032,6 @@ repoServer:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
-  ## Enable Admin ClusterRole resources.
-  ## Enable if you would like to grant cluster rights to Argo CD repo server.
-  clusterAdminAccess:
-    # -- Enable RBAC for local cluster deployments
-    enabled: false
   ## Enable Custom Rules for the Repo server's Cluster Role resource
   ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
   ## Defaults to off
@@ -2096,9 +2055,6 @@ repoServer:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
-  # -- Additional containers to be added to the repo server pod
-  extraContainers: []
-
   # -- Repo server rbac rules
   rbac: []
   #   - apiGroups:
@@ -2110,28 +2066,12 @@ repoServer:
   #     - list
   #     - watch
 
-  # -- Init containers to add to the repo server pods
-  initContainers: []
-  #  - name: download-tools
-  #    image: alpine:3.8
-  #    command: [sh, -c]
-  #    args:
-  #      - wget -qO- https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xvzf - &&
-  #        mv linux-amd64/helm /custom-tools/
-  #    volumeMounts:
-  #      - mountPath: /custom-tools
-  #        name: custom-tools
-  #  volumeMounts:
-  #  - mountPath: /usr/local/bin/helm
-  #    name: custom-tools
-  #    subPath: helm
-
 ## ApplicationSet controller
 applicationSet:
   # -- Enable ApplicationSet controller
   enabled: true
 
-  # -- Application Set controller name string
+  # -- ApplicationSet controller name string
   name: applicationset-controller
 
   # -- The number of ApplicationSet controller pods to run
@@ -2155,19 +2095,26 @@ applicationSet:
 
   ## ApplicationSet controller image
   image:
-    # -- Repository to use for the application set controller
+    # -- Repository to use for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.repository)
     repository: ""
-    # -- Tag to use for the application set controller
+    # -- Tag to use for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.tag)
     tag: ""
-    # -- Image pull policy for the application set controller
+    # -- Image pull policy for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
 
   # -- If defined, uses a Secret to pull an image from a private Docker registry or repository.
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
+
+  # -- ApplicationSet controller log format. Either `text` or `json`
+  # @default -- `""` (defaults to global.logging.format)
+  logFormat: ""
+  # -- ApplicationSet controller log level. One of: `debug`, `info`, `warn`, `error`
+  # @default -- `""` (defaults to global.logging.level)
+  logLevel: ""
 
   args:
     # -- The default metric address
@@ -2179,15 +2126,35 @@ applicationSet:
     # -- Enable dry run mode
     dryRun: false
 
-  # -- ApplicationSet controller log format. Either `text` or `json`
-  # @default -- `""` (defaults to global.logging.format)
-  logFormat: ""
-  # -- ApplicationSet controller log level. One of: `debug`, `info`, `warn`, `error`
-  # @default -- `""` (defaults to global.logging.level)
-  logLevel: ""
+  # -- List of extra cli args to add
+  extraArgs: []
 
-  # -- Additional containers to be added to the applicationset controller pod
+  # -- Environment variables to pass to the ApplicationSet controller
+  extraEnv: []
+    # - name: "MY_VAR"
+    #   value: "value"
+
+  # -- envFrom to pass to the ApplicationSet controller
+  # @default -- `[]` (See [values.yaml])
+  extraEnvFrom: []
+    # - configMapRef:
+    #     name: config-map-name
+    # - secretRef:
+    #     name: secret-name
+
+  # -- Additional containers to be added to the ApplicationSet controller pod
+  ## Note: Supports use of custom Helm templates
   extraContainers: []
+
+  # -- Init containers to add to the ApplicationSet controller pod
+  ## Note: Supports use of custom Helm templates
+  initContainers: []
+
+  # -- List of extra mounts to add (normally used with extraVolumes)
+  extraVolumeMounts: []
+
+  # -- List of extra volumes to add
+  extraVolumes: []
 
   ## Metrics service configuration
   metrics:
@@ -2226,15 +2193,15 @@ applicationSet:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
-  ## Application set service configuration
+  ## ApplicationSet service configuration
   service:
-    # -- Application set service annotations
+    # -- ApplicationSet service annotations
     annotations: {}
-    # -- Application set service labels
+    # -- ApplicationSet service labels
     labels: {}
-    # -- Application set service port
+    # -- ApplicationSet service port
     port: 7000
-    # -- Application set service port name
+    # -- ApplicationSet service port name
     portName: webhook
 
   serviceAccount:
@@ -2251,11 +2218,20 @@ applicationSet:
   # -- Annotations to be added to ApplicationSet controller Deployment
   deploymentAnnotations: {}
 
-  # -- Annotations for the controller pods
+  # -- Annotations for the ApplicationSet controller pods
   podAnnotations: {}
 
-  # -- Labels for the controller pods
+  # -- Labels for the ApplicationSet controller pods
   podLabels: {}
+
+  # -- Resource limits and requests for the ApplicationSet controller pods.
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
 
   # -- ApplicationSet controller container-level security context
   # @default -- See [values.yaml]
@@ -2299,19 +2275,6 @@ applicationSet:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
 
-  # -- Resource limits and requests for the controller pods.
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-
   # -- [Node selector]
   nodeSelector: {}
 
@@ -2324,32 +2287,6 @@ applicationSet:
   # -- If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default.
   priorityClassName: ""
 
-  # -- List of extra mounts to add (normally used with extraVolumes)
-  extraVolumeMounts: []
-    # - mountPath: /tmp/foobar
-    #   name: foobar
-
-  # -- List of extra volumes to add
-  extraVolumes: []
-    # - name: foobar
-    #   emptyDir: {}
-
-  # -- List of extra cli args to add
-  extraArgs: []
-
-  # -- Environment variables to pass to the controller
-  extraEnv: []
-    # - name: "MY_VAR"
-    #   value: "value"
-
-  # -- envFrom to pass to the controller
-  # @default -- `[]` (See [values.yaml])
-  extraEnvFrom: []
-    # - configMapRef:
-    #     name: config-map-name
-    # - secretRef:
-    #     name: secret-name
-
   ## Webhook for the Git Generator
   ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
   webhook:
@@ -2360,7 +2297,7 @@ applicationSet:
       annotations: {}
       # -- Additional ingress labels
       labels: {}
-      # -- Defines which ingress controller will implement the resource
+      # -- Defines which ingress ApplicationSet controller will implement the resource
       ingressClassName: ""
 
       # -- List of ingress hosts
@@ -2403,9 +2340,6 @@ notifications:
   # -- Notifications controller name string
   name: notifications-controller
 
-  # -- Assign custom [affinity] rules
-  affinity: {}
-
   # -- Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates
   argocdUrl:
 
@@ -2441,8 +2375,40 @@ notifications:
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
 
-  # -- [Node selector]
-  nodeSelector: {}
+  # -- Notifications controller log format. Either `text` or `json`
+  # @default -- `""` (defaults to global.logging.format)
+  logFormat: ""
+  # -- Notifications controller log level. One of: `debug`, `info`, `warn`, `error`
+  # @default -- `""` (defaults to global.logging.level)
+  logLevel: ""
+
+  # -- Extra arguments to provide to the notifications controller
+  extraArgs: []
+
+  # -- Additional container environment variables
+  extraEnv: []
+
+  # -- envFrom to pass to the notifications controller
+  # @default -- `[]` (See [values.yaml])
+  extraEnvFrom: []
+    # - configMapRef:
+    #     name: config-map-name
+    # - secretRef:
+    #     name: secret-name
+
+  # -- Additional containers to be added to the notifications controller pod
+  ## Note: Supports use of custom Helm templates
+  extraContainers: []
+
+  # -- Init containers to add to the notifications controller pod
+  ## Note: Supports use of custom Helm templates
+  initContainers: []
+
+  # -- List of extra mounts to add (normally used with extraVolumes)
+  extraVolumeMounts: []
+
+  # -- List of extra volumes to add
+  extraVolumes: []
 
   # -- Define user-defined context
   ## For more information: https://argocd-notifications.readthedocs.io/en/stable/templates/#defining-user-defined-context
@@ -2451,7 +2417,7 @@ notifications:
     # environmentName: staging
 
   secret:
-    # -- Whether helm chart creates controller secret
+    # -- Whether helm chart creates notifications controller secret
     create: true
 
     # -- key:value pairs of annotations to be added to the secret
@@ -2472,37 +2438,6 @@ notifications:
       # email-username:
       # email-password:
         # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/email/
-
-  # -- Application controller log format. Either `text` or `json`
-  # @default -- `""` (defaults to global.logging.format)
-  logFormat: ""
-  # -- Application controller log level. One of: `debug`, `info`, `warn`, `error`
-  # @default -- `""` (defaults to global.logging.level)
-  logLevel: ""
-
-  # -- Extra arguments to provide to the controller
-  extraArgs: []
-
-  # -- Additional container environment variables
-  extraEnv: []
-
-  # -- envFrom to pass to the controller
-  # @default -- `[]` (See [values.yaml])
-  extraEnvFrom: []
-    # - configMapRef:
-    #     name: config-map-name
-    # - secretRef:
-    #     name: secret-name
-
-  # -- List of extra mounts to add (normally used with extraVolumes)
-  extraVolumeMounts: []
-    # - mountPath: /tmp/foobar
-    #   name: foobar
-
-  # -- List of extra volumes to add
-  extraVolumes: []
-    # - name: foobar
-    #   emptyDir: {}
 
   metrics:
     # -- Enables prometheus metrics server
@@ -2533,6 +2468,10 @@ notifications:
       scheme: ""
       # -- Prometheus ServiceMonitor tlsConfig
       tlsConfig: {}
+      # -- Prometheus [RelabelConfigs] to apply to samples before scraping
+      relabelings: []
+      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
+      metricRelabelings: []
 
   # -- Configures notification services such as slack, email or custom webhook
   # @default -- See [values.yaml]
@@ -2544,11 +2483,20 @@ notifications:
   # -- Annotations to be applied to the notifications controller Deployment
   deploymentAnnotations: {}
 
-  # -- Annotations to be applied to the controller Pods
+  # -- Annotations to be applied to the notifications controller Pods
   podAnnotations: {}
 
-  # -- Labels to be applied to the controller Pods
+  # -- Labels to be applied to the notifications controller Pods
   podLabels: {}
+
+  # -- Resource limits and requests for the notifications controller
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
 
   # -- Notification controller container-level security Context
   # @default -- See [values.yaml]
@@ -2562,17 +2510,17 @@ notifications:
       drop:
       - ALL
 
-  # -- Priority class for the controller pods
-  priorityClassName: ""
+  # -- [Node selector]
+  nodeSelector: {}
 
-  # -- Resource limits and requests for the controller
-  resources: {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  # -- [Tolerations] for use with node taints
+  tolerations: []
+
+  # -- Assign custom [affinity] rules
+  affinity: {}
+
+  # -- Priority class for the notifications controller pods
+  priorityClassName: ""
 
   serviceAccount:
     # -- Specifies whether a service account should be created
@@ -2588,7 +2536,7 @@ notifications:
     # -- Labels applied to created service account
     labels: {}
   cm:
-    # -- Whether helm chart creates controller config map
+    # -- Whether helm chart creates notifications controller config map
     create: true
 
   # -- Contains centrally managed global application subscriptions
@@ -2823,9 +2771,6 @@ notifications:
     #         {{end}}
     #         ]
     #       }]
-
-  # -- [Tolerations] for use with node taints
-  tolerations: []
 
   # -- The trigger defines the condition when the notification should be sent
   ## For more information: https://argocd-notifications.readthedocs.io/en/stable/triggers/
