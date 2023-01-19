@@ -14,6 +14,10 @@ metadata:
     {{- if .Values.controller.metrics.rules.additionalLabels }}
 {{- toYaml .Values.controller.metrics.rules.additionalLabels | nindent 4 }}
     {{- end }}
+  {{- with .Values.controller.metrics.rules.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   groups:
   - name: argocd

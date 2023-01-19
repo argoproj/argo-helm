@@ -41,10 +41,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.redisServiceAccountName" . }}
-      {{- with .Values.redis.initContainers }}
-      initContainers:
-        {{- toYaml . | nindent 6 }}
-      {{- end }}
       containers:
       - name: {{ .Values.redis.name }}
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
@@ -96,7 +92,11 @@ spec:
           {{- toYaml .Values.redis.metrics.containerSecurityContext | nindent 10 }}
       {{- end }}
       {{- with .Values.redis.extraContainers }}
-        {{- toYaml . | nindent 6 }}
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
+      {{- with .Values.redis.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
       {{- with .Values.redis.nodeSelector }}
       nodeSelector:

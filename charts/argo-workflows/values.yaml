@@ -297,6 +297,33 @@ controller:
   #  failed: 3
   #  errored: 3
 
+  nodeEvents:
+    # -- Enable to emit events on node completion.
+    ## This can take up a lot of space in k8s (typically etcd) resulting in errors when trying to create new events:
+    ## "Unable to create audit event: etcdserver: mvcc: database space exceeded"
+    enabled: true
+
+  # -- Configure when workflow controller runs in a different k8s cluster with the workflow workloads,
+  # or needs to communicate with the k8s apiserver using an out-of-cluster kubeconfig secret.
+  # @default -- `{}` (See [values.yaml])
+  kubeConfig: {}
+    # # name of the kubeconfig secret, may not be empty when kubeConfig specified
+    # secretName: kubeconfig-secret
+    # # key of the kubeconfig secret, may not be empty when kubeConfig specified
+    # secretKey: kubeconfig
+    # # mounting path of the kubeconfig secret, default to /kube/config
+    # mountPath: /kubeconfig/mount/path
+    # # volume name when mounting the secret, default to kubeconfig
+    # volumeName: kube-config-volume
+
+  # -- Specifies the duration in seconds before a terminating pod is forcefully killed. A zero value indicates that the pod will be forcefully terminated immediately.
+  # @default -- `30` seconds (Kubernetes default)
+  podGCGracePeriodSeconds:
+
+  # -- The duration in seconds before the pods in the GC queue get deleted. A zero value indicates that the pods will be deleted immediately.
+  # @default -- `5s` (Argo Workflows default)
+  podGCDeleteDelayDuration: ""
+
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
   # -- imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`.
@@ -305,6 +332,8 @@ mainContainer:
   resources: {}
   # -- Adds environment variables for the Workflow main container
   env: []
+  # -- Adds reference environment variables for the Workflow main container
+  envFrom: []
   # -- sets security context for the Workflow main container
   securityContext: {}
 
@@ -630,3 +659,12 @@ customArtifactRepository: {}
 #     passwordSecret:
 #       name: artifactory-creds
 #       key: password
+
+emissary:
+  # -- The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used.
+  ## See more: https://argoproj.github.io/argo-workflows/workflow-executors/#emissary-emissary
+  images: []
+  #  argoproj/argosay:v2:
+  #    cmd: [/argosay]
+  #  docker/whalesay:latest:
+  #    cmd: [/bin/bash]

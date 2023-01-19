@@ -81,12 +81,39 @@ spec:
             {{- with .Values.notifications.extraVolumeMounts }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
+        {{- with .Values.notifications.extraContainers }}
+          {{- tpl (toYaml . ) $ | nindent 8 }}
+        {{- end }}
+      {{- with .Values.notifications.initContainers }}
+      initContainers:
+        {{- tpl (toYaml . ) $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       volumes:
-        - configMap:
+        {{- with .Values.notifications.extraVolumes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: tls-certs
+          configMap:
             name: argocd-tls-certs-cm
-          name: tls-certs
         - name: argocd-repo-server-tls
           secret:
+            secretName: argocd-repo-server-tls
+            optional: true
             items:
             - key: tls.crt
               path: tls.crt
@@ -94,24 +121,4 @@ spec:
               path: tls.key
             - key: ca.crt
               path: ca.crt
-            optional: true
-            secretName: argocd-repo-server-tls
-        {{- with .Values.notifications.extraVolumes }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
-      {{- with .Values.notifications.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.notifications.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.notifications.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.notifications.priorityClassName }}
-      priorityClassName: {{ . }}
-    {{- end }}
 {{- end }}
