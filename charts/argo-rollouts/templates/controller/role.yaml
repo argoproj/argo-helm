@@ -56,7 +56,19 @@ rules:
   - update
   - patch
   - delete
+# deployments and podtemplates read access needed for workload reference support
+- apiGroups:
+  - ""
+  - apps
+  resources:
+  - deployments
+  - podtemplates
+  verbs:
+  - get
+  - list
+  - watch
 # services patch needed to update selector of canary/stable/active/preview services
+# services create needed to create and delete services for experiments
 - apiGroups:
   - ""
   resources:
@@ -66,8 +78,18 @@ rules:
   - list
   - watch
   - patch
-# secret access to run analysis templates which reference secrets
-# configmap access to read notification-engine configuration
+  - create
+  - delete
+# leases create/get/update needed for leader election
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - get
+  - update
+# secret read access to run analysis templates which reference secrets
 - apiGroups:
   - ""
   resources:
@@ -77,9 +99,6 @@ rules:
   - get
   - list
   - watch
-  - create
-  - patch
-  - update
 # pod list/update needed for updating ephemeral data
 - apiGroups:
   - ""
@@ -88,6 +107,7 @@ rules:
   verbs:
   - list
   - update
+  - watch
 # pods eviction needed for restart
 - apiGroups:
   - ""
@@ -129,15 +149,17 @@ rules:
   - update
   - patch
   - delete
-# virtualservice access needed for using the Istio provider
+# virtualservice/destinationrule access needed for using the Istio provider
 - apiGroups:
   - networking.istio.io
   resources:
   - virtualservices
+  - destinationrules
   verbs:
   - watch
   - get
   - update
+  - patch
   - list
 # trafficsplit access needed for using the SMI provider
 - apiGroups:
@@ -150,4 +172,69 @@ rules:
   - get
   - update
   - patch
+# ambassador access needed for Ambassador provider
+- apiGroups:
+  - getambassador.io
+  - x.getambassador.io
+  resources:
+  - mappings
+  - ambassadormappings
+  verbs:
+  - create
+  - watch
+  - get
+  - update
+  - list
+  - delete
+# Endpoints and TargetGroupBindings needed for ALB target group verification
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - get
+- apiGroups:
+  - elbv2.k8s.aws
+  resources:
+  - targetgroupbindings
+  verbs:
+  - list
+  - get
+# AppMesh virtualservices/virtualrouter CRD read-only access needed for using the App Mesh provider
+- apiGroups:
+  - appmesh.k8s.aws
+  resources:
+  - virtualservices
+  verbs:
+  - watch
+  - get
+  - list
+# AppMesh virtualnode CRD r/w access needed for using the App Mesh provider
+- apiGroups:
+  - appmesh.k8s.aws
+  resources:
+  - virtualnodes
+  - virtualrouters
+  verbs:
+  - watch
+  - get
+  - list
+  - update
+  - patch
+- apiGroups:
+  - traefik.containo.us
+  resources:
+  - traefikservices
+  verbs:
+  - watch
+  - get
+  - update
+- apiGroups:
+  - apisix.apache.org
+  resources:
+  - apisixroutes
+  verbs:
+  - watch
+  - get
+  - update
 {{- end }}

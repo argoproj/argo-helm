@@ -89,7 +89,7 @@ rules:
   - create
   - get
   - update
-# secret access to run analysis templates which reference secrets, allow init containers to manipulate secrets
+# secret read access to run analysis templates which reference secrets
 - apiGroups:
   - ""
   resources:
@@ -99,9 +99,6 @@ rules:
   - get
   - list
   - watch
-  - create
-  - patch
-  - update
 # pod list/update needed for updating ephemeral data
 - apiGroups:
   - ""
@@ -110,6 +107,7 @@ rules:
   verbs:
   - list
   - update
+  - watch
 # pods eviction needed for restart
 - apiGroups:
   - ""
@@ -223,4 +221,20 @@ rules:
   - list
   - update
   - patch
+- apiGroups:
+  - traefik.containo.us
+  resources:
+  - traefikservices
+  verbs:
+  - watch
+  - get
+  - update
+- apiGroups:
+  - apisix.apache.org
+  resources:
+  - apisixroutes
+  verbs:
+  - watch
+  - get
+  - update
 {{- end }}
