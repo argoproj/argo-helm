@@ -263,44 +263,17 @@ spec:
       initContainers:
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- if or .Values.controller.nodeSelector .Values.global.nodeSelector }}
-      {{- if .Values.controller.nodeSelector }}
-      {{- with .Values.controller.nodeSelector }}
+      {{- with .Values.controller.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- else }}
-      {{- with .Values.global.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- end }}
-      {{- end }}
-      {{- if or .Values.controller.tolerations .Values.global.tolerations }}
-      {{- if .Values.controller.tolerations }}
-      {{- with .Values.controller.tolerations }}
+      {{- with .Values.controller.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- else }}
-      {{- with .Values.global.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- end }}
-      {{- end }}
-      {{- if or .Values.controller.affinity .Values.global.affinity }}
-      {{- if .Values.controller.affinity }}
-      {{- with .Values.controller.affinity }}
+      {{- with .Values.controller.affinity | default .Values.global.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- else }}
-      {{- with .Values.global.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- end }}
       {{- end }}
       {{- with .Values.controller.topologySpreadConstraints }}
       topologySpreadConstraints:

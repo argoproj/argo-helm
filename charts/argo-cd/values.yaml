@@ -87,13 +87,22 @@ global:
   #  fsGroup: 999
 
   # -- [Node selector]
-  nodeSelector: {}
+  nodeSelector: 
+    globalkey1 : globalValue1
+    globalkey2 : globalValue2
 
   # -- [Tolerations] for use with node taints
-  tolerations: []
+  tolerations: 
+    - key: globalKey1
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: globalKey2
+      operator: "NoExists"
+      effect: "NoSchedule"
 
   # -- Assign custom [affinity] rules to the deployment
-  affinity: {}
+  affinity: 
+    globalKey: globalAffinity
   # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
   hostAliases: []
   # - ip: 10.20.30.40
@@ -626,12 +635,18 @@ controller:
 
   # -- [Node selector]
   nodeSelector: {}
+   # key1: localValue
 
   # -- [Tolerations] for use with node taints
-  tolerations: []
+  tolerations: 
+    - key1: localValueContoller
+      operator: "Exists"
+      effect: "NoSchedule"
 
   # -- Assign custom [affinity] rules to the deployment
-  affinity: {}
+  affinity: 
+    localKey: localValueController
+    
 
   # -- Assign custom [TopologySpreadConstraints] rules to the application controller
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
@@ -955,9 +970,13 @@ dex:
   servicePortMetrics: 5558
 
   # -- [Node selector]
-  nodeSelector: {}
+  nodeSelector: 
+   key : valueDexLocal
   # -- [Tolerations] for use with node taints
-  tolerations: []
+  tolerations:
+    - key: dexValue
+      operator: "Exists"
+      effect: "NoSchedule"
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 
@@ -1081,10 +1100,14 @@ redis:
   nodeSelector: {}
 
   # -- [Tolerations] for use with node taints
-  tolerations: []
+  tolerations: 
+    - key: LOCSLKeyRedis
+      operator: "Exists"
+      effect: "NoSchedule"
 
   # -- Assign custom [affinity] rules to the deployment
-  affinity: {}
+  affinity: 
+    key : vLAUEaFFINITY
 
   # -- Assign custom [TopologySpreadConstraints] rules to redis
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
@@ -1464,9 +1487,13 @@ server:
     timeoutSeconds: 1
 
   # -- [Node selector]
-  nodeSelector: {}
+  nodeSelector:
+    key: localKeyServerNodeSel
   # -- [Tolerations] for use with node taints
-  tolerations: []
+  tolerations: 
+    - key: globalKeysSERVER
+      operator: "Exists"
+      effect: "NoSchedule"
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
 
@@ -1946,11 +1973,16 @@ repoServer:
     timeoutSeconds: 1
 
   # -- [Node selector]
-  nodeSelector: {}
+  nodeSelector: 
+    key : localRepoServerNS
   # -- [Tolerations] for use with node taints
-  tolerations: []
+  tolerations: 
+    - key: localKeyReposSERVER
+      operator: "Exists"
+      effect: "NoSchedule"
   # -- Assign custom [affinity] rules to the deployment
-  affinity: {}
+  affinity: 
+    key : localRepoServerLocalAffinity
 
   # -- Assign custom [TopologySpreadConstraints] rules to the repo server
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
@@ -2287,7 +2319,8 @@ applicationSet:
   nodeSelector: {}
 
   # -- [Tolerations] for use with node taints
-  tolerations: []
+  tolerations: 
+    - key: applicationSetValue
 
   # -- Assign custom [affinity] rules
   affinity: {}
@@ -2519,13 +2552,17 @@ notifications:
       - ALL
 
   # -- [Node selector]
-  nodeSelector: {}
+  nodeSelector: 
+    key: localRepoServerNS
 
   # -- [Tolerations] for use with node taints
-  tolerations: []
+  tolerations: 
+    - key : localRepoServerNotification
+      operator: nolocal
 
   # -- Assign custom [affinity] rules
-  affinity: {}
+  affinity: 
+    key : NotificationAffinity
 
   # -- Priority class for the notifications controller pods
   priorityClassName: ""
@@ -2825,7 +2862,7 @@ notifications:
     slack:
       # -- Enable slack bot
       ## You have to set secret.notifiers.slack.signingSecret
-      enabled: false
+      enabled: true
 
       ## Slack bot Pod Disruption Budget
       ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
@@ -2906,4 +2943,5 @@ notifications:
       tolerations: []
 
       # -- [Node selector]
-      nodeSelector: {}
+      nodeSelector: 
+        key : localRepoServerSlack

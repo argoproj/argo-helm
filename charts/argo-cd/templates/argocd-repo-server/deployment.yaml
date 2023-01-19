@@ -289,44 +289,17 @@ spec:
       {{- with .Values.repoServer.initContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- if or .Values.repoServer.nodeSelector .Values.global.nodeSelector }}
-      {{- if .Values.repoServer.nodeSelector }}
-      {{- with .Values.repoServer.nodeSelector }}
+      {{- with .Values.repoServer.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- else }}
-      {{- with .Values.global.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- end }}
-      {{- end }}
-      {{- if or .Values.repoServer.tolerations .Values.global.tolerations }}
-      {{- if .Values.repoServer.tolerations }}
-      {{- with .Values.repoServer.tolerations }}
+      {{- with .Values.repoServer.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- else }}
-      {{- with .Values.global.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- end }}
-      {{- end }}
-      {{- if or .Values.repoServer.affinity .Values.global.affinity }}
-      {{- if .Values.repoServer.affinity }}
-      {{- with .Values.repoServer.affinity }}
+      {{- with .Values.repoServer.affinity | default .Values.global.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- else }}
-      {{- with .Values.global.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- end }}
       {{- end }}
       {{- with .Values.repoServer.topologySpreadConstraints }}
       topologySpreadConstraints:
