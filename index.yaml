@@ -14829,6 +14829,29 @@ entries:
   argo-rollouts:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: avoid app.kubernetes.io/version kubernetes label from exceeding maximum length (63)"
+        - "[Fixed]: generated value for app.kubernetes.io/version label is now valid even when defining a controller.image.tag with a SHA digest"
+    apiVersion: v2
+    appVersion: v1.3.1
+    created: "2023-01-19T10:37:44.891604835Z"
+    description: A Helm chart for Argo Rollouts
+    digest: 1b309d1749cd66768f16220ce69b26897588387bdbed0fe258e8a11792a32be5
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-rollouts
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-rollouts
+    sources:
+    - https://github.com/argoproj/argo-rollouts
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-rollouts-2.21.3/argo-rollouts-2.21.3.tgz
+    version: 2.21.3
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Add support for topologySpreadConstraints"
     apiVersion: v2
     appVersion: v1.3.1
@@ -19842,4 +19865,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-01-18T13:01:19.871676841Z"
+generated: "2023-01-19T10:37:44.893330395Z"
