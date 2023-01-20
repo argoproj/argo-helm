@@ -442,6 +442,7 @@ NAME: my-release
 | configs.secret.githubSecret | string | `""` | Shared secret for authenticating GitHub webhook events |
 | configs.secret.gitlabSecret | string | `""` | Shared secret for authenticating GitLab webhook events |
 | configs.secret.gogsSecret | string | `""` | Shared secret for authenticating Gogs webhook events |
+| configs.secret.labels | object | `{}` | Labels to be added to argocd-secret |
 | configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |
 | configs.tlsCerts | object | See [values.yaml] | TLS certificate |
 | configs.tlsCertsAnnotations | object | `{}` | TLS certificate configmap annotations |
