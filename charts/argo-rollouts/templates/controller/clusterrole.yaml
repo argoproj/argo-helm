@@ -149,6 +149,8 @@ rules:
   - update
   - patch
   - delete
+{{- if .Values.providerRBAC.enabled }}
+{{- if .Values.providerRBAC.providers.istio }}
 # virtualservice/destinationrule access needed for using the Istio provider
 - apiGroups:
   - networking.istio.io
@@ -161,6 +163,8 @@ rules:
   - update
   - patch
   - list
+{{- end }}
+{{- if .Values.providerRBAC.providers.smi }}
 # trafficsplit access needed for using the SMI provider
 - apiGroups:
   - split.smi-spec.io
@@ -172,6 +176,8 @@ rules:
   - get
   - update
   - patch
+{{- end }}
+{{- if .Values.providerRBAC.providers.ambassador }}
 # ambassador access needed for Ambassador provider
 - apiGroups:
   - getambassador.io
@@ -186,7 +192,9 @@ rules:
   - update
   - list
   - delete
-# Endpoints and TargetGroupBindings needed for ALB target group verification
+{{- end }}
+{{- if .Values.providerRBAC.providers.awsLoadBalancerController }}
+# Endpoints and TargetGroupBindings needed for ALB target group verification when using AWS Load Balancer Controller
 - apiGroups:
   - ""
   resources:
@@ -200,6 +208,8 @@ rules:
   verbs:
   - list
   - get
+{{- end }}
+{{- if .Values.providerRBAC.providers.awsAppMesh }}
 # AppMesh virtualservices/virtualrouter CRD read-only access needed for using the App Mesh provider
 - apiGroups:
   - appmesh.k8s.aws
@@ -221,6 +231,9 @@ rules:
   - list
   - update
   - patch
+{{- end }}
+{{- if .Values.providerRBAC.providers.traefik }}
+# Traefik access needed when using the Traefik provider
 - apiGroups:
   - traefik.containo.us
   resources:
@@ -229,6 +242,9 @@ rules:
   - watch
   - get
   - update
+{{- end }}
+{{- if .Values.providerRBAC.providers.apisix }}
+# Access needed when using the Apisix provider
 - apiGroups:
   - apisix.apache.org
   resources:
@@ -237,4 +253,6 @@ rules:
   - watch
   - get
   - update
+{{- end }}
+{{- end }}
 {{- end }}
