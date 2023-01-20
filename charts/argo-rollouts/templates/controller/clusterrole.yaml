@@ -90,8 +90,6 @@ rules:
   - get
   - update
 # secret read access to run analysis templates which reference secrets
-# secret write access to allow init containers to manipulate secrets
-# configmap access to read notification-engine configuration
 - apiGroups:
   - ""
   resources:
@@ -101,9 +99,6 @@ rules:
   - get
   - list
   - watch
-  - create
-  - patch
-  - update
 # pod list/update needed for updating ephemeral data
 - apiGroups:
   - ""
@@ -243,6 +238,17 @@ rules:
   - traefik.containo.us
   resources:
   - traefikservices
+  verbs:
+  - watch
+  - get
+  - update
+{{- end }}
+{{- if .Values.providerRBAC.providers.apisix }}
+# Traefik access needed when using the Traefik provider
+- apiGroups:
+  - apisix.apache.org
+  resources:
+  - apisixroutes
   verbs:
   - watch
   - get

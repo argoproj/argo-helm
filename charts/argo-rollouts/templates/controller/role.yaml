@@ -90,8 +90,6 @@ rules:
   - get
   - update
 # secret read access to run analysis templates which reference secrets
-# secret write access to allow init containers to manipulate secrets
-# configmap access to read notification-engine configuration
 - apiGroups:
   - ""
   resources:
@@ -101,9 +99,6 @@ rules:
   - get
   - list
   - watch
-  - create
-  - patch
-  - update
 # pod list/update needed for updating ephemeral data
 - apiGroups:
   - ""
@@ -213,7 +208,6 @@ rules:
   verbs:
   - list
   - get
-{{- end }}
 {{- if .Values.providerRBAC.providers.awsAppMesh }}
 # AppMesh virtualservices/virtualrouter CRD read-only access needed for using the App Mesh provider
 - apiGroups:
@@ -238,11 +232,20 @@ rules:
   - patch
 {{- end }}
 {{- if .Values.providerRBAC.providers.traefik }}
-# Traefik access needed when using the Traefik provider
 - apiGroups:
   - traefik.containo.us
   resources:
   - traefikservices
+  verbs:
+  - watch
+  - get
+  - update
+{{- end }}
+{{- if .Values.providerRBAC.providers.apisix }}
+- apiGroups:
+  - apisix.apache.org
+  resources:
+  - apisixroutes
   verbs:
   - watch
   - get
