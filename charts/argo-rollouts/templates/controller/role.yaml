@@ -208,6 +208,7 @@ rules:
   verbs:
   - list
   - get
+{{- end }}
 {{- if .Values.providerRBAC.providers.awsAppMesh }}
 # AppMesh virtualservices/virtualrouter CRD read-only access needed for using the App Mesh provider
 - apiGroups:
