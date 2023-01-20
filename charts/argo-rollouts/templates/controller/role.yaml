@@ -244,7 +244,7 @@ rules:
   - update
 {{- end }}
 {{- if .Values.providerRBAC.providers.apisix }}
-# Traefik access needed when using the Apisix provider
+# Access needed when using the Apisix provider
 - apiGroups:
   - apisix.apache.org
   resources:
