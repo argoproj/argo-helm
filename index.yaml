@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Fixed]: README information about 5.12.0 TLS changes"
+    apiVersion: v2
+    appVersion: v2.5.7
+    created: "2023-01-20T14:34:16.515062724Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.4
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 52e65064c1091a36675c1b7fc867748e730094da377133ce915103c8e5fa5b5b
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.18.1/argo-cd-5.18.1.tgz
+    version: 5.18.1
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Extra secret labels with .Values.configs.secret.labels"
     apiVersion: v2
     appVersion: v2.5.7
@@ -19918,4 +19949,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-01-19T22:15:16.362435751Z"
+generated: "2023-01-20T14:34:16.516857041Z"
