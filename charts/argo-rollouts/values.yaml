@@ -191,7 +191,7 @@ imagePullSecrets: []
 # - name: argo-pull-secret
 
 providerRBAC:
-  # -- Enables addition of provider-specific RBAC rules to the controller Role and ClusterRole
+  # -- Toggles addition of provider-specific RBAC rules to the controller Role and ClusterRole
   enabled: true
   # providerRBAC.enabled must be true in order to toggle the individual providers
   providers:
@@ -207,7 +207,7 @@ providerRBAC:
     awsAppMesh: true
     # -- Adds RBAC rules for the Traefik provider
     traefik: true
-    # -- Adds RBAC rules for the Traefik provider
+    # -- Adds RBAC rules for the Apisix provider
     apisix: true
 
 dashboard:

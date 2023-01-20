@@ -233,6 +233,7 @@ rules:
   - patch
 {{- end }}
 {{- if .Values.providerRBAC.providers.traefik }}
+# Traefik access needed when using the Traefik provider
 - apiGroups:
   - traefik.containo.us
   resources:
@@ -243,6 +244,7 @@ rules:
   - update
 {{- end }}
 {{- if .Values.providerRBAC.providers.apisix }}
+# Traefik access needed when using the Apisix provider
 - apiGroups:
   - apisix.apache.org
   resources:
