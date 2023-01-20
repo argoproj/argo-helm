@@ -6,20 +6,18 @@ Argo Helm is a collection of **community maintained** charts. Therefore we rely 
 
 All submissions, including submissions by project members, require review. We use GitHub pull requests for this purpose. Consult [GitHub Help](https://help.github.com/articles/about-pull-requests/) for more information on using pull requests. See the above stated requirements for PR on this project.
 
-## Versioning
+## Documentation
 
-Each chart's version follows the [semver standard](https://semver.org/).
+The documentation for each chart is generated with [helm-docs](https://github.com/norwoodj/helm-docs). This way we can ensure that values are consistent with the chart documentation.
 
-New charts should start at version `1.0.0`, if it's considered stable. If it isn't considered stable, it must be released as `prerelease`.
+We have a script on the repository which will execute the helm-docs docker container, so that you don't have to worry about downloading the binary etc. Simply execute the script (Bash compatible, might require sudo privileges):
 
-Any breaking changes to a chart (backwards incompatible) require:
+```shell
+./scripts/helm-docs.sh
+```
 
-* Bump of the current Major version of the chart
-* State possible manual changes for this chart version in the `Upgrading` section of the chart's `README.md.gotmpl`
-
-### Chart Versioning
-
-Currently we require a chart version bump for every change to a chart, including updating information for older verions.  This may change in the future.
+> **Note**
+> When creating your own `README.md.gotmpl`, don't forget to add it to your `.helmignore` file.
 
 ### Updating a chart README.md
 
@@ -32,9 +30,37 @@ When updating the `README.md.gotmpl` inside a chart directory you must to run th
 > **Note**
 > If you see changes to unrelated chart `README.md` files you may have accidentally updated a `README.md.gotmpl` file in another chart's folder unintentionally or someone else failed to run this script.  Please revert those changes if you do not intend them to be a part of your pull request.
 
+## Versioning
+
+Each chart's version follows the [semver standard](https://semver.org/).
+
+New charts should start at version `1.0.0`, if it's considered stable. If it isn't considered stable, it must be released as `prerelease`.
+
+Any breaking changes to a chart (backwards incompatible) require:
+
+* Bump of the current Major version of the chart
+* State possible manual changes for this chart version in the `Upgrading` section of the chart's `README.md.gotmpl`
+
+### New Application Versions
+
+When selecting new application versions ensure you make the following changes:
+
+* `values.yaml`: Bump all instances of the container image version
+* `Chart.yaml`: Ensure `appVersion` matches the above container image and bump `version`
+
+Please ensure chart version changes adhere to semantic versioning standards:
+
+* Major: Large chart rewrites, major non-backwards compatible or destructive changes
+* Minor: New chart functionality (sidecars), major application updates or minor non-backwards compatible changes
+* Patch: App version patch updates, backwards compatible optional chart features
+
 ### Immutability
 
 Each release for each chart must be immutable. Any change to a chart (even just documentation) requires a version bump. Trying to release the same version twice will result in an error.
+
+### Chart Versioning
+
+Currently we require a chart version bump for every change to a chart, including updating information for older verions.  This may change in the future.
 
 ### Artifact Hub Annotations
 
@@ -66,18 +92,6 @@ artifacthub.io/changes: |
     - "[Fixed]: Something was fixed"
     - "[Security]: Some Security Patch was included"
 ```
-
-## Documentation
-
-The documentation for each chart is done with [helm-docs](https://github.com/norwoodj/helm-docs). This way we can ensure that values are consistent with the chart documentation.
-
-We have a script on the repository which will execute the helm-docs docker container, so that you don't have to worry about downloading the binary etc. Simply execute the script (Bash compatible, might require sudo privileges):
-
-```shell
-bash scripts/helm-docs.sh
-```
-
-**NOTE**: When creating your own `README.md.gotmpl`, don't forget to add it to your `.helmignore` file.
 
 ## Testing
 
@@ -137,24 +151,11 @@ argocd app create guestbook --dest-namespace default --dest-server https://kuber
 argocd app sync guestbook
 ```
 
-### New Application Versions
-
-When raising application versions ensure you make the following changes:
-
-* `values.yaml`: Bump all instances of the container image version
-* `Chart.yaml`: Ensure `appVersion` matches the above container image and bump `version`
-
-Please ensure chart version changes adhere to semantic versioning standards:
-
-* Patch: App version patch updates, backwards compatible optional chart features
-* Minor: New chart functionality (sidecars), major application updates or minor non-backwards compatible changes
-* Major: Large chart rewrites, major non-backwards compatible or destructive changes
-
 ### Testing Charts
 
 As part of the Continuous Integration system we run Helm's [Chart Testing](https://github.com/helm/chart-testing) tool.
 
-The checks for this tool are stricter than the standard Helm requirements, where fields normally considered optional like `maintainer` are required in the standard spec and must be valid GitHub usernames.
+The checks for Chart Testing are stricter than the standard Helm requirements. For example, fields normally considered optional like `maintainer` are required in the standard spec and must be valid GitHub usernames.
 
 Linting configuration can be found in [ct-lint.yaml](./.github/configs/ct-lint.yaml)
 
@@ -166,4 +167,4 @@ The linting can be invoked manually with the following command:
 
 ## Publishing Changes
 
-Changes are automatically publish whenever a commit is merged to main. The CI job (see `./.github/workflows/publish.yml`).
+Changes are automatically publish whenever a commit is merged to the `main` branch by the CI job (see `./.github/workflows/publish.yml`).
