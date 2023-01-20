@@ -87,7 +87,7 @@ name: argo-cd
 version: 3.4.1
 ...
 annotations:
-artifacthub.io/changes: |
+  artifacthub.io/changes: |
     - "[Added]: Something New was added"
     - "[Changed]: Changed Something within this chart"
     - "[Changed]: Changed Something else within this chart"
@@ -139,10 +139,10 @@ In a new terminal:
 argocd version --server localhost:8080 --insecure
 # reset password to 'Password1!'
 kubectl -n argocd patch secret argocd-secret \
--p '{"stringData": {
-    "admin.password": "$2a$10$hDj12Tw9xVmvybSahN1Y0.f9DZixxN8oybyA32Uy/eqWklFU4Mo8O",
-    "admin.passwordMtime": "'$(date +%FT%T%Z)'"
-}}'
+  -p '{"stringData": {
+      "admin.password": "$2a$10$hDj12Tw9xVmvybSahN1Y0.f9DZixxN8oybyA32Uy/eqWklFU4Mo8O",
+      "admin.passwordMtime": "'$(date +%FT%T%Z)'"
+  }}'
 argocd login localhost:8080 --username admin --password 'Password1!'
 
 # WARNING: server certificate had error: x509: certificate signed by unknown authority. Proceed insecurely (y/n)? y
