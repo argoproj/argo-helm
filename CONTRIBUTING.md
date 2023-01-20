@@ -46,7 +46,11 @@ Since we release our charts on Artifact Hub we encourage making use of the provi
 
 We want to deliver transparent chart releases for our chart consumers. Therefore we require a changelog per new chart release.
 
-Changes on a chart must be documented in a chart specific changelog in the `Chart.yaml` [Annotation Section](https://helm.sh/docs/topics/charts/#the-chartyaml-file). For every new release the entire `artifacthub.io/changes` needs to be rewritten. Each change requires a new bullet point following the pattern `- "[{type}]: {description}"`. You can use the following template:
+Changes on a chart must be documented in a chart specific changelog in the `Chart.yaml` [Annotation Section](https://helm.sh/docs/topics/charts/#the-chartyaml-file).
+
+A new `artifacthub.io/changes` needs to be written covering only the changes since the previous release.
+
+Each change requires a new bullet point following the pattern `- "[{type}]: {description}"`. You can use the following template:
 
 ```yaml
 name: argo-cd
@@ -60,7 +64,7 @@ artifacthub.io/changes: |
     - "[Deprecated]: Something deprecated"
     - "[Removed]: Something was removed"
     - "[Fixed]: Something was fixed"
-    - "[Security]": Some Security Patch was included"
+    - "[Security]: Some Security Patch was included"
 ```
 
 ## Documentation
