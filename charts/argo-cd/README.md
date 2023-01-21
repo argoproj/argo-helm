@@ -1026,10 +1026,11 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.service.labels | object | `{}` | ApplicationSet service labels |
 | applicationSet.service.port | int | `7000` | ApplicationSet service port |
 | applicationSet.service.portName | string | `"webhook"` | ApplicationSet service port name |
-| applicationSet.serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
-| applicationSet.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| applicationSet.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
+| applicationSet.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| applicationSet.serviceAccount.create | bool | `true` | Create ApplicationSet controller service account |
 | applicationSet.serviceAccount.labels | object | `{}` | Labels applied to created service account |
-| applicationSet.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| applicationSet.serviceAccount.name | string | `"argocd-applicationset-controller"` | ApplicationSet controller service account name |
 | applicationSet.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | applicationSet.webhook.ingress.annotations | object | `{}` | Additional ingress annotations |
 | applicationSet.webhook.ingress.enabled | bool | `false` | Enable an ingress resource for Webhooks |
@@ -1116,9 +1117,10 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.secret.create | bool | `true` | Whether helm chart creates notifications controller secret |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the secret |
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
-| notifications.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| notifications.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| notifications.serviceAccount.create | bool | `true` | Create notifications controller service account |
 | notifications.serviceAccount.labels | object | `{}` | Labels applied to created service account |
-| notifications.serviceAccount.name | string | `"argocd-notifications-controller"` | The name of the service account to use. |
+| notifications.serviceAccount.name | string | `"argocd-notifications-controller"` | Notification controller service account name |
 | notifications.subscriptions | list | `[]` | Contains centrally managed global application subscriptions |
 | notifications.templates | object | `{}` | The notification template is used to generate the notification content |
 | notifications.tolerations | list | `[]` | [Tolerations] for use with node taints |
