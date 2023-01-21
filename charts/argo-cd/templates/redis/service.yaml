@@ -19,7 +19,7 @@ spec:
   ports:
   - name: redis
     port: {{ .Values.redis.servicePort }}
-    targetPort: {{ .Values.redis.containerPort }}
+    targetPort: redis
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.redis.name) | nindent 4 }}
 {{- end }}
