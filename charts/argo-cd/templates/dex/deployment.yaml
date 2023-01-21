@@ -70,13 +70,13 @@ spec:
         {{- end }}
         ports:
         - name: http
-          containerPort: {{ .Values.dex.containerPortHttp }}
+          containerPort: {{ .Values.dex.containerPorts.http }}
           protocol: TCP
         - name: grpc
-          containerPort: {{ .Values.dex.containerPortGrpc }}
+          containerPort: {{ .Values.dex.containerPorts.grpc }}
           protocol: TCP
         - name: metrics
-          containerPort: {{ .Values.dex.containerPortMetrics }}
+          containerPort: {{ .Values.dex.containerPorts.metrics }}
           protocol: TCP
         {{- if .Values.dex.livenessProbe.enabled }}
         livenessProbe:

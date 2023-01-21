@@ -44,6 +44,13 @@ spec:
       containers:
       - command:
         - argocd-application-controller
+        - --metrics-port={{ .Values.controller.containerPorts.metrics }}
+        {{- if .Values.controller.metrics.applicationLabels.enabled }}
+        {{- range .Values.controller.metrics.applicationLabels.labels }}
+        - --metrics-application-labels
+        - {{ . }}
+        {{- end }}
+        {{- end }}
         {{- with .Values.controller.args.statusProcessors }}
         - --status-processors
         - {{ . | quote }}
@@ -75,12 +82,6 @@ spec:
         {{- with .Values.controller.logLevel }}
         - --loglevel
         - {{ . | quote }}
-        {{- end }}
-        {{- if .Values.controller.metrics.applicationLabels.enabled }}
-        {{- range .Values.controller.metrics.applicationLabels.labels }}
-        - --metrics-application-labels
-        - {{ . }}
-        {{- end }}
         {{- end }}
         {{- with .Values.controller.extraArgs }}
           {{- toYaml . | nindent 8 }}
@@ -232,7 +233,7 @@ spec:
         {{- end }}
         ports:
         - name: metrics
-          containerPort: {{ .Values.controller.containerPort }}
+          containerPort: {{ .Values.controller.containerPorts.metrics }}
           protocol: TCP
         readinessProbe:
           httpGet:

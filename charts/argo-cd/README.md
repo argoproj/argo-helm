@@ -462,7 +462,7 @@ NAME: my-release
 | controller.args | object | `{}` | DEPRECATED - Application controller commandline flags |
 | controller.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the application controller's ClusterRole resource |
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
-| controller.containerPort | int | `8082` | Application controller listening port |
+| controller.containerPorts.metrics | int | `8082` | Metrics container port |
 | controller.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
@@ -539,7 +539,8 @@ NAME: my-release
 | repoServer.certificateSecret.labels | object | `{}` | Labels to be added to argocd-repo-server-tls secret |
 | repoServer.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the Repo server's Cluster Role resource |
 | repoServer.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
-| repoServer.containerPort | int | `8081` | Configures the repo server port |
+| repoServer.containerPorts.metrics | int | `8084` | Metrics container port |
+| repoServer.containerPorts.server | int | `8081` | Repo server container port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
 | repoServer.deploymentAnnotations | object | `{}` | Annotations to be added to repo server Deployment |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
@@ -638,7 +639,8 @@ NAME: my-release
 | server.certificateSecret.enabled | bool | `false` | Create argocd-server-tls secret |
 | server.certificateSecret.key | string | `""` | Private Key of the certificate |
 | server.certificateSecret.labels | object | `{}` | Labels to be added to argocd-server-tls secret |
-| server.containerPort | int | `8080` | Configures the server port |
+| server.containerPorts.metrics | int | `8082` | Metrics container port |
+| server.containerPorts.server | int | `8080` | Server container port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
 | server.deploymentAnnotations | object | `{}` | Annotations to be added to server Deployment |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
@@ -728,7 +730,6 @@ NAME: my-release
 | server.service.labels | object | `{}` | Server service labels |
 | server.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | server.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
-| server.service.namedTargetPort | bool | `true` | Use named target port for argocd |
 | server.service.nodePortHttp | int | `30080` | Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort") |
 | server.service.nodePortHttps | int | `30443` | Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort") |
 | server.service.servicePortHttp | int | `80` | Server service http port |
@@ -780,9 +781,9 @@ server:
 | dex.certificateSecret.enabled | bool | `false` | Create argocd-dex-server-tls secret |
 | dex.certificateSecret.key | string | `""` | Certificate private key |
 | dex.certificateSecret.labels | object | `{}` | Labels to be added to argocd-dex-server-tls secret |
-| dex.containerPortGrpc | int | `5557` | Container port for gRPC access |
-| dex.containerPortHttp | int | `5556` | Container port for HTTP access |
-| dex.containerPortMetrics | int | `5558` | Container port for metrics access |
+| dex.containerPorts.grpc | int | `5557` | gRPC container port |
+| dex.containerPorts.http | int | `5556` | HTTP container port |
+| dex.containerPorts.metrics | int | `5558` | Metrics container port |
 | dex.containerSecurityContext | object | See [values.yaml] | Dex container-level security context |
 | dex.deploymentAnnotations | object | `{}` | Annotations to be added to the Dex server Deployment |
 | dex.enabled | bool | `true` | Enable dex |
@@ -856,7 +857,8 @@ server:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redis.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
-| redis.containerPort | int | `6379` | Redis container port |
+| redis.containerPorts.metrics | int | `9121` | Metrics container port |
+| redis.containerPorts.redis | int | `6379` | Redis container port |
 | redis.containerSecurityContext | object | See [values.yaml] | Redis container-level security context |
 | redis.deploymentAnnotations | object | `{}` | Annotations to be added to the Redis server Deployment |
 | redis.enabled | bool | `true` | Enable redis |
@@ -869,7 +871,6 @@ server:
 | redis.image.tag | string | `"7.0.5-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
-| redis.metrics.containerPort | int | `9121` | Port to use for redis-exporter sidecar |
 | redis.metrics.containerSecurityContext | object | See [values.yaml] | Redis exporter security context |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
 | redis.metrics.image.imagePullPolicy | string | `"IfNotPresent"` | redis-exporter image PullPolicy |
@@ -962,9 +963,10 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 |-----|------|---------|-------------|
 | applicationSet.affinity | object | `{}` | Assign custom [affinity] rules |
 | applicationSet.args.dryRun | bool | `false` | Enable dry run mode |
-| applicationSet.args.metricsAddr | string | `":8080"` | The default metric address |
 | applicationSet.args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
-| applicationSet.args.probeBindAddr | string | `":8081"` | The default health check port |
+| applicationSet.containerPorts.metrics | int | `8080` | Metrics container port |
+| applicationSet.containerPorts.probe | int | `8081` | Probe container port |
+| applicationSet.containerPorts.webhook | int | `7000` | Webhook container port |
 | applicationSet.containerSecurityContext | object | See [values.yaml] | ApplicationSet controller container-level security context |
 | applicationSet.deploymentAnnotations | object | `{}` | Annotations to be added to ApplicationSet controller Deployment |
 | applicationSet.enabled | bool | `true` | Enable ApplicationSet controller |
@@ -1067,6 +1069,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.serviceAccount.name | string | `"argocd-notifications-bot"` | The name of the service account to use. |
 | notifications.bots.slack.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.cm.create | bool | `true` | Whether helm chart creates notifications controller config map |
+| notifications.containerPorts.metrics | int | `9001` | Metrics container port |
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.context | object | `{}` | Define user-defined context |
 | notifications.deploymentAnnotations | object | `{}` | Annotations to be applied to the notifications controller Deployment |

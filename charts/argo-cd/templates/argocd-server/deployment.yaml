@@ -47,6 +47,8 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         command:
         - argocd-server
+        - --port={{ .Values.server.containerPorts.server }}
+        - --metrics-port={{ .Values.server.containerPorts.metrics }}
         {{- with .Values.server.logFormat }}
         - --logformat
         - {{ . | quote }}
@@ -287,16 +289,16 @@ spec:
           name: extensions
         {{- end }}
         ports:
-        - name: {{ .Values.server.name }}
-          containerPort: {{ .Values.server.containerPort }}
+        - name: server
+          containerPort: {{ .Values.server.containerPorts.server }}
           protocol: TCP
         - name: metrics
-          containerPort: 8083
+          containerPort: {{ .Values.server.containerPorts.metrics }}
           protocol: TCP
         livenessProbe:
           httpGet:
             path: /healthz?full=true
-            port: {{ .Values.server.containerPort }}
+            port: server
           initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.server.livenessProbe.timeoutSeconds }}
@@ -305,7 +307,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /healthz
-            port: {{ .Values.server.containerPort }}
+            port: server
           initialDelaySeconds: {{ .Values.server.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
