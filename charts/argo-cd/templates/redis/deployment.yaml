@@ -73,10 +73,10 @@ spec:
         volumeMounts:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-      {{- if .Values.redis.metrics.enabled }}
+      {{- if .Values.redis.exporter.enabled }}
       - name: metrics
-        image: {{ .Values.redis.metrics.image.repository }}:{{ .Values.redis.metrics.image.tag }}
-        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.redis.metrics.image.imagePullPolicy }}
+        image: {{ .Values.redis.exporter.image.repository }}:{{ .Values.redis.exporter.image.tag }}
+        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.redis.exporter.image.imagePullPolicy }}
         env:
         - name: REDIS_ADDR
           value: {{ printf "redis://localhost:%v" .Values.redis.containerPorts.redis }}
@@ -87,9 +87,9 @@ spec:
           containerPort: {{ .Values.redis.containerPorts.metrics }}
           protocol: TCP
         resources:
-          {{- toYaml .Values.redis.metrics.resources | nindent 10 }}
+          {{- toYaml .Values.redis.exporter.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.redis.metrics.containerSecurityContext | nindent 10 }}
+          {{- toYaml .Values.redis.exporter.containerSecurityContext | nindent 10 }}
       {{- end }}
       {{- with .Values.redis.extraContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}

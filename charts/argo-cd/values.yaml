@@ -991,6 +991,42 @@ redis:
     # -- Redis imagePullPolicy
     imagePullPolicy: IfNotPresent
 
+  # Prometheus redis-exporter sidecar
+  exporter:
+    # -- Enable Prometheus redis-exporter sidecar
+    enabled: true
+
+    # Prometheus redis-exporter image
+    image:
+      # -- redis-exporter image repository
+      repository: public.ecr.aws/bitnami/redis-exporter
+      # -- redis-exporter image tag
+      tag: 1.26.0-debian-10-r2
+      # -- Image pull policy for the Redis exporter
+      # @default -- `""` (defaults to global.image.imagePullPolicy)
+      imagePullPolicy: ""
+
+    # -- Redis exporter security context
+    # @default -- See [values.yaml]
+    containerSecurityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+        - ALL
+
+    # -- Resource limits and requests for redis-exporter sidecar
+    resources: {}
+      # limits:
+      #   cpu: 50m
+      #   memory: 64Mi
+      # requests:
+      #   cpu: 10m
+      #   memory: 32Mi
+
   # -- Secrets with credentials to pull images from a private registry
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
@@ -1106,36 +1142,10 @@ redis:
     labels: {}
 
   metrics:
-    # -- Deploy metrics service and redis-exporter sidecar
+    # -- Deploy metrics service
     enabled: false
-    image:
-      # -- redis-exporter image repository
-      repository: public.ecr.aws/bitnami/redis-exporter
-      # -- redis-exporter image tag
-      tag: 1.26.0-debian-10-r2
-      # -- redis-exporter image PullPolicy
-      imagePullPolicy: IfNotPresent
 
-    # -- Redis exporter security context
-    # @default -- See [values.yaml]
-    containerSecurityContext:
-      runAsNonRoot: true
-      readOnlyRootFilesystem: true
-      allowPrivilegeEscalation: false
-      seccompProfile:
-        type: RuntimeDefault
-      capabilities:
-        drop:
-        - ALL
-
-    # -- Resource limits and requests for redis-exporter sidecar
-    resources: {}
-      # limits:
-      #   cpu: 50m
-      #   memory: 64Mi
-      # requests:
-      #   cpu: 10m
-      #   memory: 32Mi
+    # Redis metrics service configuration
     service:
       # -- Metrics service type
       type: ClusterIP
@@ -1149,6 +1159,7 @@ redis:
       servicePort: 9121
       # -- Metrics service port name
       portName: http-metrics
+
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
