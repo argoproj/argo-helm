@@ -38,7 +38,7 @@ Common labels
 helm.sh/chart: {{ include "argocd-image-updater.chart" . }}
 {{ include "argocd-image-updater.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | trunc 63 | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
