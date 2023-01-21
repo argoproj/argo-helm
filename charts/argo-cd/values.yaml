@@ -2193,15 +2193,16 @@ applicationSet:
     portName: webhook
 
   serviceAccount:
-    # -- Specifies whether a service account should be created
+    # -- Create ApplicationSet controller service account
     create: true
-    # -- Annotations to add to the service account
+    # -- ApplicationSet controller service account name
+    name: argocd-applicationset-controller
+    # -- Annotations applied to created service account
     annotations: {}
     # -- Labels applied to created service account
     labels: {}
-    # -- The name of the service account to use.
-    # If not set and create is true, a name is generated using the fullname template
-    name: ""
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
   # -- Annotations to be added to ApplicationSet controller Deployment
   deploymentAnnotations: {}
@@ -2511,18 +2512,17 @@ notifications:
   priorityClassName: ""
 
   serviceAccount:
-    # -- Specifies whether a service account should be created
+    # -- Create notifications controller service account
     create: true
-
-    # -- The name of the service account to use.
-    ## If not set and create is true, a name is generated using the fullname template
+    # -- Notification controller service account name
     name: argocd-notifications-controller
-
     # -- Annotations applied to created service account
     annotations: {}
-
     # -- Labels applied to created service account
     labels: {}
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
+
   cm:
     # -- Whether helm chart creates notifications controller config map
     create: true

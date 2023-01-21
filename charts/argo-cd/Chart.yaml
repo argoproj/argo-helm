@@ -3,7 +3,7 @@ appVersion: v2.5.7
 kubeVersion: ">=1.22.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.19.0
+version: 5.19.1
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -23,6 +23,4 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Option configs.ssh.extraHosts that allows to keep original SSH known list"
-    - "[Changed]: Option configs.knownHosts deprecated as moved to configs.ssh"
-    - "[Changed]: Option configs.tlsCerts deprecated as moved to configs.tls"
+    - "[Fixed]: Added missing options for automounting service tokens for applicationset and notifications controllers"
