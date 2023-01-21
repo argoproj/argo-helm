@@ -18888,6 +18888,29 @@ entries:
   argocd-image-updater:
   - annotations:
       artifacthub.io/changes: |
+        - "[Changed]: avoid app.kubernetes.io/version kubernetes label from exceeding maximum length (63)"
+    apiVersion: v2
+    appVersion: v0.12.0
+    created: "2023-01-21T11:38:13.910580506Z"
+    description: A Helm chart for Argo CD Image Updater, a tool to automatically update
+      the container images of Kubernetes workloads which are managed by Argo CD
+    digest: 81555a5bdd9f9fea9ebd284a5b1efe76922c5456491bdeb2ea55a339083e14a8
+    home: https://github.com/argoproj-labs/argocd-image-updater
+    icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-image-updater
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-image-updater-0.8.2/argocd-image-updater-0.8.2.tgz
+    version: 0.8.2
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Add support for additional initContainers and additional volume/volumeMounts"
     apiVersion: v2
     appVersion: v0.12.0
@@ -20004,4 +20027,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-01-21T09:25:15.370451224Z"
+generated: "2023-01-21T11:38:13.912286101Z"
