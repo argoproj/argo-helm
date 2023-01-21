@@ -88,6 +88,27 @@ REMOVED option applicationSet.args.debug - Use applicationSet.logLevel: debug
 {{- if .Values.applicationSet.args.enableLeaderElection }}
 REMOVED option applicationSet.args.enableLeaderElection - Value determined based on replicas
 {{- end }}
+{{- if .Values.controller.containerPort }}
+REMOVED option controller.containerPort - Use controller.containerPorts
+{{- end }}
+{{- if .Values.server.containerPort }}
+REMOVED option server.containerPort - Use server.containerPorts
+{{- end }}
+{{- if .Values.repoServer.containerPort }}
+REMOVED option repoServer.containerPort - Use repoServer.containerPorts
+{{- end }}
+{{- if .Values.applicationSet.args.metricsAddr }}
+REMOVED option applicationSet.args.metricsAddr - Use applicationSet.containerPorts
+{{- end }}
+{{- if .Values.applicationSet.args.probeBindAddr }}
+REMOVED option applicationSet.args.probeBindAddr - Use applicationSet.containerPorts
+{{- end }}
+{{- if .Values.redis.containerPort }}
+REMOVED option redis.containerPort - Use redis.containerPorts
+{{- end }}
+{{- if .Values.redis.metrics.containerPort }}
+REMOVED option redis.metrics.containerPort - Use redis.containerPorts
+{{- end }}
 
 In order to access the server UI you have the following options:
 

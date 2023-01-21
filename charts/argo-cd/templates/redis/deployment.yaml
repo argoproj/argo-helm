@@ -63,7 +63,7 @@ spec:
         {{- end }}
         ports:
         - name: redis
-          containerPort: {{ .Values.redis.containerPort }}
+          containerPort: {{ .Values.redis.containerPorts.redis }}
           protocol: TCP
         resources:
           {{- toYaml .Values.redis.resources | nindent 10 }}
@@ -79,12 +79,12 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.redis.metrics.image.imagePullPolicy }}
         env:
         - name: REDIS_ADDR
-          value: {{ printf "redis://localhost:%v" .Values.redis.containerPort }}
+          value: {{ printf "redis://localhost:%v" .Values.redis.containerPorts.redis }}
         - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS
-          value: {{ printf "0.0.0.0:%v" .Values.redis.metrics.containerPort }}
+          value: {{ printf "0.0.0.0:%v" .Values.redis.containerPorts.metrics }}
         ports:
         - name: metrics
-          containerPort: {{ .Values.redis.metrics.containerPort }}
+          containerPort: {{ .Values.redis.containerPorts.metrics }}
           protocol: TCP
         resources:
           {{- toYaml .Values.redis.metrics.resources | nindent 10 }}

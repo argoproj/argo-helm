@@ -575,6 +575,11 @@ controller:
   #    cpu: 250m
   #    memory: 256Mi
 
+  # Application controller container ports
+  containerPorts:
+    # -- Metrics container port
+    metrics: 8082
+
   # -- Application controller container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
@@ -586,9 +591,6 @@ controller:
     capabilities:
       drop:
       - ALL
-
-  # -- Application controller listening port
-  containerPort: 8082
 
   # Rediness probe for application controller
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
@@ -866,6 +868,16 @@ dex:
   #    cpu: 10m
   #    memory: 32Mi
 
+  # Dex container ports
+  # NOTE: These ports are currently hardcoded and cannot be changed
+  containerPorts:
+    # -- HTTP container port
+    http: 5556
+    # -- gRPC container port
+    grpc: 5557
+    # -- Metrics container port
+    metrics: 5558
+
   # -- Dex container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
@@ -893,6 +905,7 @@ dex:
     successThreshold: 1
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
+
   readinessProbe:
     # -- Enable Kubernetes readiness probe for Dex >= 2.28.0
     enabled: false
@@ -917,20 +930,14 @@ dex:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
-  # -- Container port for HTTP access
-  containerPortHttp: 5556
   # -- Service port for HTTP access
   servicePortHttp: 5556
   # -- Service port name for HTTP access
   servicePortHttpName: http
-  # -- Container port for gRPC access
-  containerPortGrpc: 5557
   # -- Service port for gRPC access
   servicePortGrpc: 5557
   # -- Service port name for gRPC access
   servicePortGrpcName: grpc
-  # -- Container port for metrics access
-  containerPortMetrics: 5558
   # -- Service port for metrics access
   servicePortMetrics: 5558
 
@@ -1044,6 +1051,13 @@ redis:
     seccompProfile:
       type: RuntimeDefault
 
+  # Redis container ports
+  containerPorts:
+    # -- Redis container port
+    redis: 6379
+    # -- Metrics container port
+    metrics: 9121
+
   # -- Redis container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
@@ -1052,8 +1066,6 @@ redis:
       drop:
       - ALL
 
-  # -- Redis container port
-  containerPort: 6379
   # -- Redis service port
   servicePort: 6379
 
@@ -1103,8 +1115,6 @@ redis:
       tag: 1.26.0-debian-10-r2
       # -- redis-exporter image PullPolicy
       imagePullPolicy: IfNotPresent
-    # -- Port to use for redis-exporter sidecar
-    containerPort: 9121
 
     # -- Redis exporter security context
     # @default -- See [values.yaml]
@@ -1415,8 +1425,24 @@ server:
   #    cpu: 50m
   #    memory: 64Mi
 
-  # -- Configures the server port
-  containerPort: 8080
+  # Server container ports
+  containerPorts:
+    # -- Server container port
+    server: 8080
+    # -- Metrics container port
+    metrics: 8082
+
+  # -- Server container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+      - ALL
 
   ## Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
@@ -1431,6 +1457,7 @@ server:
     successThreshold: 1
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
+
   livenessProbe:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
@@ -1460,18 +1487,6 @@ server:
 
   # -- Priority class for the Argo CD server
   priorityClassName: ""
-
-  # -- Server container-level security context
-  # @default -- See [values.yaml]
-  containerSecurityContext:
-    runAsNonRoot: true
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    seccompProfile:
-      type: RuntimeDefault
-    capabilities:
-      drop:
-      - ALL
 
   # TLS certificate configuration via cert-manager
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
@@ -1546,10 +1561,6 @@ server:
     servicePortHttpName: http
     # -- Server service https port name, can be used to route traffic via istio
     servicePortHttpsName: https
-    # -- Use named target port for argocd
-    ## Named target ports are not supported by GCE health checks, so when deploying argocd on GKE
-    ## and exposing it via GCE ingress, the health checks fail and the load balancer returns a 502.
-    namedTargetPort: true
     # -- LoadBalancer will get created with the IP specified in this field
     loadBalancerIP: ""
     # -- Source IP ranges to allow access to service from
@@ -1897,8 +1908,24 @@ repoServer:
   #    cpu: 10m
   #    memory: 64Mi
 
-  # -- Configures the repo server port
-  containerPort: 8081
+  # Repo server container ports
+  containerPorts:
+    # -- Repo server container port
+    server: 8081
+    # -- Metrics container port
+    metrics: 8084
+
+  # -- Repo server container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+      - ALL
 
   ## Readiness and liveness probes for default backend
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
@@ -1913,6 +1940,7 @@ repoServer:
     successThreshold: 1
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
+
   livenessProbe:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
@@ -1942,18 +1970,6 @@ repoServer:
 
   # -- Priority class for the repo server
   priorityClassName: ""
-
-  # -- Repo server container-level security context
-  # @default -- See [values.yaml]
-  containerSecurityContext:
-    runAsNonRoot: true
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    seccompProfile:
-      type: RuntimeDefault
-    capabilities:
-      drop:
-      - ALL
 
   # TLS certificate configuration via Secret
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#configuring-tls-to-argocd-repo-server
@@ -2105,10 +2121,6 @@ applicationSet:
   logLevel: ""
 
   args:
-    # -- The default metric address
-    metricsAddr: :8080
-    # -- The default health check port
-    probeBindAddr: :8081
     # -- How application is synced between the generator and the cluster
     policy: sync
     # -- Enable dry run mode
@@ -2221,6 +2233,15 @@ applicationSet:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
+
+  # ApplicationSet controller container ports
+  containerPorts:
+    # -- Metrics container port
+    metrics: 8080
+    # -- Probe container port
+    probe: 8081
+    # -- Webhook container port
+    webhook: 7000
 
   # -- ApplicationSet controller container-level security context
   # @default -- See [values.yaml]
@@ -2486,6 +2507,11 @@ notifications:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
+
+  # Notification controller container ports
+  containerPorts:
+    # -- Metrics container port
+    metrics: 9001
 
   # -- Notification controller container-level security Context
   # @default -- See [values.yaml]
