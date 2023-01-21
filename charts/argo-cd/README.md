@@ -105,14 +105,20 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 5.19.0
+
+This version consolidates config for custom repository TLS certificates and SSH known hosts. If you provide this values please move them into new `configs.ssh` and `configs.tls` sections.
+You can also use new option `configs.ssh.extraHosts` to configure your SSH keys without maintaing / overwritting keys for public Git repositories.
+
 ### 5.13.0
 
 This version reduces history limit for Argo CD deployment replicas to 3 to provide more visibility for Argo CD deployments that manage itself. If you need more deployment revisions for rollbacks set `global.revisionHistoryLimit` parameter.
 
 ### 5.12.0
 
-This version deprecates the `configs.secret.argocdServerTlsConfig` option. Use `server.certificate` or `server.certificateSecret` to provide custom TLS configuration for Argo CD server.
-If you terminate TLS on ingress please use `argocd-server-tls` secret instead of `argocd-secret` secret.
+If Argo CD is managing termination of TLS and you are using `configs.secret.argocdServerTlsConfig` option to provide custom TLS configuration for this chart, please use `server.certificate` or `server.certificateSecret` instead.
+For the secrets for tls termination, please use a secret named `argocd-server-tls` instead of `argocd-secret`.
+For the technical details please check the [Argo CD documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server). When transitioning from the one secret to the other pay attention to `tls.key` and `tls.crt` keys.
 
 ### 5.10.0
 
@@ -409,8 +415,6 @@ NAME: my-release
 | configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
 | configs.gpg.annotations | object | `{}` | Annotations to be added to argocd-gpg-keys-cm configmap |
 | configs.gpg.keys | object | `{}` (See [values.yaml]) | [GnuPG] public keys to add to the keyring |
-| configs.knownHosts.data.ssh_known_hosts | string | See [values.yaml] | Known Hosts |
-| configs.knownHostsAnnotations | object | `{}` | Known Hosts configmap annotations |
 | configs.params."controller.operation.processors" | int | `10` | Number of application operation processors |
 | configs.params."controller.repo.server.timeout.seconds" | int | `60` | Repo server RPC call timeout seconds. |
 | configs.params."controller.self.heal.timeout.seconds" | int | `5` | Specifies timeout between application self heal attempts |
@@ -442,9 +446,13 @@ NAME: my-release
 | configs.secret.githubSecret | string | `""` | Shared secret for authenticating GitHub webhook events |
 | configs.secret.gitlabSecret | string | `""` | Shared secret for authenticating GitLab webhook events |
 | configs.secret.gogsSecret | string | `""` | Shared secret for authenticating Gogs webhook events |
+| configs.secret.labels | object | `{}` | Labels to be added to argocd-secret |
+| configs.ssh.annotations | object | `{}` | Annotations to be added to argocd-ssh-known-hosts-cm configmap |
+| configs.ssh.extraHosts | string | `""` | Additional known hosts for private repositories |
+| configs.ssh.knownHosts | string | See [values.yaml] | Known hosts to be added to the known host list by default. |
 | configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |
-| configs.tlsCerts | object | See [values.yaml] | TLS certificate |
-| configs.tlsCertsAnnotations | object | `{}` | TLS certificate configmap annotations |
+| configs.tls.annotations | object | `{}` | Annotations to be added to argocd-tls-certs-cm configmap |
+| configs.tls.certificates | object | `{}` (See [values.yaml]) | TLS certificates for Git repositories |
 
 ## Argo CD Controller
 
