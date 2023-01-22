@@ -92,11 +92,28 @@ global:
   #   hostnames:
   #   - git.myhostname
 
+  # Default network policy rules used by all components
   networkPolicy:
     # -- Create NetworkPolicy objects for all components
     create: false
     # -- Default deny all ingress traffic
     defaultDenyIngress: false
+
+  # Default affinity preset for all components
+  affinity:
+    # -- Default pod anti-affinity rules. Either: `soft` or `hard`
+    podAntiAffinity: soft
+    # Node affinity rules
+    nodeAffinity:
+      # -- Default node affinity rules. Either: `soft` or `hard`
+      type: hard
+      # -- Default match expressions for node affinity
+      matchExpressions: []
+        # - key: topology.kubernetes.io/zone
+        #   operator: In
+        #   values:
+        #    - antarctica-east1
+        #    - antarctica-west1
 
 ## Argo Configs
 configs:
@@ -627,6 +644,7 @@ controller:
   tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the application controller
@@ -965,6 +983,7 @@ dex:
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to dex
@@ -1136,6 +1155,7 @@ redis:
   tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to redis
@@ -1523,6 +1543,7 @@ server:
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the Argo CD server
@@ -2014,6 +2035,7 @@ repoServer:
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the repo server
@@ -2349,6 +2371,7 @@ applicationSet:
   tolerations: []
 
   # -- Assign custom [affinity] rules
+  # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
   # -- If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default.
@@ -2594,6 +2617,7 @@ notifications:
   tolerations: []
 
   # -- Assign custom [affinity] rules
+  # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
   # -- Priority class for the notifications controller pods
@@ -2983,6 +3007,7 @@ notifications:
       #   memory: 128Mi
 
       # -- Assign custom [affinity] rules
+      # @default -- `{}` (defaults to global.affinity preset)
       affinity: {}
 
       # -- [Tolerations] for use with node taints

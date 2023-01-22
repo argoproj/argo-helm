@@ -291,16 +291,14 @@ spec:
       {{- with .Values.repoServer.initContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
+      affinity:
+        {{- include "argo-cd.affinity" (dict "context" . "component" .Values.repoServer) | nindent 8 }}
       {{- with .Values.repoServer.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.repoServer.tolerations }}
       tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.repoServer.affinity }}
-      affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.repoServer.topologySpreadConstraints }}
