@@ -864,6 +864,12 @@ server:
 | redis.enabled | bool | `true` | Enable redis |
 | redis.env | list | `[]` | Environment variables to pass to the Redis server |
 | redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
+| redis.exporter.containerSecurityContext | object | See [values.yaml] | Redis exporter security context |
+| redis.exporter.enabled | bool | `true` | Enable Prometheus redis-exporter sidecar |
+| redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis exporter |
+| redis.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
+| redis.exporter.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
+| redis.exporter.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
@@ -871,12 +877,7 @@ server:
 | redis.image.tag | string | `"7.0.5-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
-| redis.metrics.containerSecurityContext | object | See [values.yaml] | Redis exporter security context |
-| redis.metrics.enabled | bool | `false` | Deploy metrics service and redis-exporter sidecar |
-| redis.metrics.image.imagePullPolicy | string | `"IfNotPresent"` | redis-exporter image PullPolicy |
-| redis.metrics.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
-| redis.metrics.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
-| redis.metrics.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
+| redis.metrics.enabled | bool | `false` | Deploy metrics service |
 | redis.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | redis.metrics.service.clusterIP | string | `"None"` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
 | redis.metrics.service.labels | object | `{}` | Metrics service labels |
