@@ -868,7 +868,7 @@ server:
 | redis.exporter.enabled | bool | `true` | Enable Prometheus redis-exporter sidecar |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis exporter |
 | redis.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
-| redis.exporter.image.tag | string | `"1.26.0-debian-10-r2"` | redis-exporter image tag |
+| redis.exporter.image.tag | string | `"1.45.0"` | redis-exporter image tag |
 | redis.exporter.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
