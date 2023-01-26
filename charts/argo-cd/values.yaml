@@ -988,21 +988,21 @@ redis:
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
     tag: 7.0.5-alpine
-    # -- Redis imagePullPolicy
-    imagePullPolicy: IfNotPresent
+    # -- Redis image pull policy
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: ""
 
-  # Prometheus redis-exporter sidecar
+  ## Prometheus redis-exporter sidecar
   exporter:
     # -- Enable Prometheus redis-exporter sidecar
-    enabled: true
-
-    # Prometheus redis-exporter image
+    enabled: false
+    ## Prometheus redis-exporter image
     image:
-      # -- redis-exporter image repository
+      # -- Repository to use for the redis-exporter
       repository: public.ecr.aws/bitnami/redis-exporter
-      # -- redis-exporter image tag
+      # -- Tag to use for the redis-exporter
       tag: 1.45.0
-      # -- Image pull policy for the Redis exporter
+      # -- Image pull policy for the redis-exporter
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
 
@@ -1190,9 +1190,14 @@ redis:
 redis-ha:
   # -- Enables the Redis HA subchart and disables the custom Redis single node deployment
   enabled: false
+  ## Prometheus redis-exporter sidecar
   exporter:
-    # -- If `true`, the prometheus exporter sidecar is enabled
-    enabled: true
+    # -- Enable Prometheus redis-exporter sidecar
+    enabled: false
+    # -- Repository to use for the redis-exporter
+    image: public.ecr.aws/bitnami/redis-exporter
+    # -- Tag to use for the redis-exporter
+    tag: 1.45.0
   persistentVolume:
     # -- Configures persistency on Redis nodes
     enabled: false
