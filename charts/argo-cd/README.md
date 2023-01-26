@@ -865,14 +865,14 @@ server:
 | redis.env | list | `[]` | Environment variables to pass to the Redis server |
 | redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
 | redis.exporter.containerSecurityContext | object | See [values.yaml] | Redis exporter security context |
-| redis.exporter.enabled | bool | `true` | Enable Prometheus redis-exporter sidecar |
-| redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis exporter |
-| redis.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | redis-exporter image repository |
-| redis.exporter.image.tag | string | `"1.45.0"` | redis-exporter image tag |
+| redis.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
+| redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
+| redis.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
+| redis.exporter.image.tag | string | `"1.45.0"` | Tag to use for the redis-exporter |
 | redis.exporter.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
-| redis.image.imagePullPolicy | string | `"IfNotPresent"` | Redis imagePullPolicy |
+| redis.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Redis image pull policy |
 | redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
 | redis.image.tag | string | `"7.0.5-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
@@ -927,7 +927,9 @@ The main options are listed here:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
-| redis-ha.exporter.enabled | bool | `true` | If `true`, the prometheus exporter sidecar is enabled |
+| redis-ha.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
+| redis-ha.exporter.image | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
+| redis-ha.exporter.tag | string | `"1.45.0"` | Tag to use for the redis-exporter |
 | redis-ha.haproxy.enabled | bool | `true` | Enabled HAProxy LoadBalancing/Proxy |
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
 | redis-ha.image.tag | string | `"7.0.5-alpine"` | Redis tag |
