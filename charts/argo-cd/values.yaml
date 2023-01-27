@@ -2881,6 +2881,16 @@ notifications:
       # @default -- `[]` (defaults to global.imagePullSecrets)
       imagePullSecrets: []
 
+      # -- Slack bot log format. Either `text` or `json`
+      # @default -- `""` (defaults to global.logging.format)
+      logFormat: ""
+      # -- Slack bot log level. One of: `debug`, `info`, `warn`, `error`
+      # @default -- `""` (defaults to global.logging.level)
+      logLevel: ""
+
+      # -- List of extra cli args to add for Slack bot
+      extraArgs: []
+
       service:
         # -- Service annotations for Slack bot
         annotations: {}

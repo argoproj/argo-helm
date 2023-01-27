@@ -1054,10 +1054,13 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.affinity | object | `{}` | Assign custom [affinity] rules |
 | notifications.bots.slack.containerSecurityContext | object | See [values.yaml] | Slack bot container-level security Context |
 | notifications.bots.slack.enabled | bool | `false` | Enable slack bot |
+| notifications.bots.slack.extraArgs | list | `[]` | List of extra cli args to add for Slack bot |
 | notifications.bots.slack.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Slack bot |
 | notifications.bots.slack.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Slack bot |
 | notifications.bots.slack.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Slack bot |
 | notifications.bots.slack.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
+| notifications.bots.slack.logFormat | string | `""` (defaults to global.logging.format) | Slack bot log format. Either `text` or `json` |
+| notifications.bots.slack.logLevel | string | `""` (defaults to global.logging.level) | Slack bot log level. One of: `debug`, `info`, `warn`, `error` |
 | notifications.bots.slack.nodeSelector | object | `{}` | [Node selector] |
 | notifications.bots.slack.pdb.annotations | object | `{}` | Annotations to be added to Slack bot pdb |
 | notifications.bots.slack.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Slack bot |
