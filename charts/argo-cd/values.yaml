@@ -580,6 +580,12 @@ controller:
     # -- Metrics container port
     metrics: 8082
 
+  # -- Host Network for application controller pods
+  hostNetwork: false
+
+  # -- Alternative DNS policy for application controller pods
+  dnsPolicy: "ClusterFirst"
+
   # -- Application controller container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
@@ -987,7 +993,7 @@ redis:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.0.5-alpine
+    tag: 7.0.7-alpine
     # -- Redis image pull policy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1218,7 +1224,7 @@ redis-ha:
       enabled: true
   image:
     # -- Redis tag
-    tag: 7.0.5-alpine
+    tag: 7.0.7-alpine
 
   ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints:
@@ -1448,6 +1454,12 @@ server:
     # -- Metrics container port
     metrics: 8082
 
+  # -- Host Network for Server pods
+  hostNetwork: false
+
+  # -- Alternative DNS policy for Server pods
+  dnsPolicy: "ClusterFirst"
+
   # -- Server container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
@@ -1654,11 +1666,18 @@ server:
     hosts: []
       # - argocd.example.com
 
-    # -- List of ingress paths
     paths:
-      - /
-    # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
-    pathType: Prefix
+      - path: /
+        # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
+        pathType: Prefix
+        service:
+          # -- Backend service name
+          # @default -- argo-cd server service name 
+          name: ""
+          # -- Backend service port. Can be String or Int value. 
+          # @default -- argo-cd server service port 
+          port: ""
+
     # -- Additional ingress paths
     extraPaths: []
       # - path: /*
@@ -1930,6 +1949,12 @@ repoServer:
     server: 8081
     # -- Metrics container port
     metrics: 8084
+
+  # -- Host Network for Repo server pods
+  hostNetwork: false
+
+  # -- Alternative DNS policy for Repo server pods
+  dnsPolicy: "ClusterFirst"
 
   # -- Repo server container-level security context
   # @default -- See [values.yaml]
@@ -2880,6 +2905,16 @@ notifications:
       # -- Secrets with credentials to pull images from a private registry
       # @default -- `[]` (defaults to global.imagePullSecrets)
       imagePullSecrets: []
+
+      # -- Slack bot log format. Either `text` or `json`
+      # @default -- `""` (defaults to global.logging.format)
+      logFormat: ""
+      # -- Slack bot log level. One of: `debug`, `info`, `warn`, `error`
+      # @default -- `""` (defaults to global.logging.level)
+      logLevel: ""
+
+      # -- List of extra cli args to add for Slack bot
+      extraArgs: []
 
       service:
         # -- Service annotations for Slack bot

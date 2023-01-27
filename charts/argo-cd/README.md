@@ -464,10 +464,12 @@ NAME: my-release
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
 | controller.containerPorts.metrics | int | `8082` | Metrics container port |
 | controller.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
+| controller.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for application controller pods |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to application controller |
 | controller.extraContainers | list | `[]` | Additional containers to be added to the application controller pod |
+| controller.hostNetwork | bool | `false` | Host Network for application controller pods |
 | controller.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application controller |
 | controller.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application controller |
 | controller.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application controller |
@@ -543,10 +545,12 @@ NAME: my-release
 | repoServer.containerPorts.server | int | `8081` | Repo server container port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
 | repoServer.deploymentAnnotations | object | `{}` | Annotations to be added to repo server Deployment |
+| repoServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Repo server pods |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
 | repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
 | repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to repo server |
 | repoServer.extraContainers | list | `[]` | Additional containers to be added to the repo server pod |
+| repoServer.hostNetwork | bool | `false` | Host Network for Repo server pods |
 | repoServer.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the repo server |
 | repoServer.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the repo server |
 | repoServer.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the repo server |
@@ -643,6 +647,7 @@ NAME: my-release
 | server.containerPorts.server | int | `8080` | Server container port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
 | server.deploymentAnnotations | object | `{}` | Annotations to be added to server Deployment |
+| server.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Server pods |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
 | server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
 | server.extensions.containerSecurityContext | object | See [values.yaml] | Server UI extensions container-level security context |
@@ -653,6 +658,7 @@ NAME: my-release
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
+| server.hostNetwork | bool | `false` | Host Network for Server pods |
 | server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Argo CD server |
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
 | server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Argo CD server |
@@ -664,8 +670,10 @@ NAME: my-release
 | server.ingress.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
 | server.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
 | server.ingress.labels | object | `{}` | Additional ingress labels |
-| server.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
-| server.ingress.paths | list | `["/"]` | List of ingress paths |
+| server.ingress.paths[0].path | string | `"/"` |  |
+| server.ingress.paths[0].pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
+| server.ingress.paths[0].service.name | string | argo-cd server service name  | Backend service name |
+| server.ingress.paths[0].service.port | string | argo-cd server service port  | Backend service port. Can be String or Int value.  |
 | server.ingress.tls | list | `[]` | Ingress TLS configuration |
 | server.ingressGrpc.annotations | object | `{}` | Additional ingress annotations for dedicated [gRPC-ingress] |
 | server.ingressGrpc.awsALB.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB gRPC service |
@@ -874,7 +882,7 @@ server:
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Redis image pull policy |
 | redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
-| redis.image.tag | string | `"7.0.5-alpine"` | Redis tag |
+| redis.image.tag | string | `"7.0.7-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service |
@@ -932,7 +940,7 @@ The main options are listed here:
 | redis-ha.exporter.tag | string | `"1.45.0"` | Tag to use for the redis-exporter |
 | redis-ha.haproxy.enabled | bool | `true` | Enabled HAProxy LoadBalancing/Proxy |
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
-| redis-ha.image.tag | string | `"7.0.5-alpine"` | Redis tag |
+| redis-ha.image.tag | string | `"7.0.7-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistency on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
@@ -1054,10 +1062,13 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.bots.slack.affinity | object | `{}` | Assign custom [affinity] rules |
 | notifications.bots.slack.containerSecurityContext | object | See [values.yaml] | Slack bot container-level security Context |
 | notifications.bots.slack.enabled | bool | `false` | Enable slack bot |
+| notifications.bots.slack.extraArgs | list | `[]` | List of extra cli args to add for Slack bot |
 | notifications.bots.slack.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Slack bot |
 | notifications.bots.slack.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Slack bot |
 | notifications.bots.slack.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Slack bot |
 | notifications.bots.slack.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
+| notifications.bots.slack.logFormat | string | `""` (defaults to global.logging.format) | Slack bot log format. Either `text` or `json` |
+| notifications.bots.slack.logLevel | string | `""` (defaults to global.logging.level) | Slack bot log level. One of: `debug`, `info`, `warn`, `error` |
 | notifications.bots.slack.nodeSelector | object | `{}` | [Node selector] |
 | notifications.bots.slack.pdb.annotations | object | `{}` | Annotations to be added to Slack bot pdb |
 | notifications.bots.slack.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Slack bot |

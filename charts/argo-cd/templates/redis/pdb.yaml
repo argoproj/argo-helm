@@ -16,7 +16,7 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- with .Values.dex.pdb.maxUnavailable }}
+  {{- with .Values.redis.pdb.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- else }}
   minAvailable: {{ .Values.redis.pdb.minAvailable | default 0 }}

@@ -312,3 +312,5 @@ spec:
       {{- with .Values.controller.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      hostNetwork: {{ .Values.controller.hostNetwork }}
+      dnsPolicy: {{ .Values.controller.dnsPolicy }}
