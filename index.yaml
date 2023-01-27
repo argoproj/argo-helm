@@ -1588,6 +1588,37 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - "[Security]: Upgrade redis to 7.0.7 to avoid CVE-2022-3996"
+    apiVersion: v2
+    appVersion: v2.5.8
+    created: "2023-01-27T23:20:40.975346698Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.4
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: c81f7f5d0a299c71547fb17c30643a0736fb6fd10830989f1b5594abcfb18456
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.19.10/argo-cd-5.19.10.tgz
+    version: 5.19.10
+  - annotations:
+      artifacthub.io/changes: |
         - "[Added]: Added logFormat, logLevel and extraArgs to Slack bot"
     apiVersion: v2
     appVersion: v2.5.8
@@ -20332,4 +20363,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-01-27T14:47:38.201386328Z"
+generated: "2023-01-27T23:20:40.977390915Z"
