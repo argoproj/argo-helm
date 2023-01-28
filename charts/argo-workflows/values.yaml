@@ -109,7 +109,7 @@ controller:
     servicePortName: metrics
   # -- the controller container's securityContext
   securityContext:
-    readOnlyRootFilesystem: true
+    readOnlyRootFilesystem: false
     runAsNonRoot: true
     allowPrivilegeEscalation: false
     capabilities:
@@ -136,7 +136,20 @@ controller:
   #   passwordSecret:
   #     name: argo-postgres-config
   #     key: password
-
+  #   ssl: true
+  #   sslmode: verify-full|verify-ca|require|disable
+  #   caCertSecret:
+  #     name: argo-postgres-tls
+  #     key: ca.crt
+  #   serverCertSecret:
+  #     name: argo-postgres-tls
+  #     key: tls.crt
+  #   serverKeySecret:
+  #     name: argo-postgres-tls
+  #     key: tls.key
+  # # default path to store postgres certificates if certPath is ot defined: /home/argo/pgcerts
+  #   certPath: ./certs 
+ 
   # -- Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level.
   # Only valid for 2.7+
   ## See more: https://argoproj.github.io/argo-workflows/default-workflow-specs/
