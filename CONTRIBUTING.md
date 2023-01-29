@@ -80,21 +80,35 @@ Changes on a chart must be documented in a chart specific changelog in the `Char
 
 A new `artifacthub.io/changes` needs to be written covering only the changes since the previous release.
 
-Each change requires a new bullet point following the pattern `- "[{type}]: {description}"`. You can use the following template:
+Each change requires a new bullet point following the pattern. See more information [Artifact Hub annotations in Helm Chart.yaml file](https://artifacthub.io/docs/topics/annotations/helm/).
+
+```yaml
+- kind: {type}
+  description: {description}
+```
+
+You can use the following template:
 
 ```yaml
 name: argo-cd
-version: 3.4.1
+version: 5.19.12
 ...
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Something New was added"
-    - "[Changed]: Changed Something within this chart"
-    - "[Changed]: Changed Something else within this chart"
-    - "[Deprecated]: Something deprecated"
-    - "[Removed]: Something was removed"
-    - "[Fixed]: Something was fixed"
-    - "[Security]: Some Security Patch was included"
+    - kind: added
+      description: Something New was added
+    - kind: changed
+      description: Changed Something within this chart
+    - kind: changed
+      description: Changed Something else within this chart
+    - kind: deprecated
+      description: Something deprecated
+    - kind: removed
+      description: Something was removed
+    - kind: fixed
+      description: Something was fixed
+    - kind: security
+      description: Some Security Patch was included
 ```
 
 ## Testing
