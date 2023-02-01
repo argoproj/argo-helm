@@ -109,12 +109,14 @@ controller:
     servicePortName: metrics
   # -- the controller container's securityContext
   securityContext:
-    readOnlyRootFilesystem: false
+    readOnlyRootFilesystem: true
     runAsNonRoot: true
     allowPrivilegeEscalation: false
     capabilities:
       drop:
         - ALL
+  # # readOnlyRootFilesystem should be false SSL when using postgres 
+  #  readOnlyRootFilesystem: false
   # -- enable persistence using postgres
   persistence: {}
   # connectionPool:
@@ -141,10 +143,10 @@ controller:
   #   caCertSecret:
   #     name: argo-postgres-tls
   #     key: ca.crt
-  #   serverCertSecret:
+  #   clientCertSecret:
   #     name: argo-postgres-tls
   #     key: tls.crt
-  #   serverKeySecret:
+  #   clientKeySecret:
   #     name: argo-postgres-tls
   #     key: tls.key
   # # default path to store postgres certificates if certPath is not defined: /home/argo/pgcerts
