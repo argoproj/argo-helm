@@ -19400,6 +19400,30 @@ entries:
   argocd-image-updater:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Update Argo CD Image Updater to v0.12.2
+    apiVersion: v2
+    appVersion: v0.12.2
+    created: "2023-02-01T21:07:42.51537405Z"
+    description: A Helm chart for Argo CD Image Updater, a tool to automatically update
+      the container images of Kubernetes workloads which are managed by Argo CD
+    digest: 8fc56a021dd62c1aeb1743d3b0706b3a3347a666c58fc40ecd6a70c923c9562e
+    home: https://github.com/argoproj-labs/argocd-image-updater
+    icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-image-updater
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-image-updater-0.8.4/argocd-image-updater-0.8.4.tgz
+    version: 0.8.4
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Align changelog structure to show changelogs on Artifact Hub
     apiVersion: v2
@@ -20563,4 +20587,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-01-29T19:17:58.767793345Z"
+generated: "2023-02-01T21:07:42.516754553Z"
