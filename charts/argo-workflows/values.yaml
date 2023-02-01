@@ -115,7 +115,7 @@ controller:
     capabilities:
       drop:
         - ALL
-  # # readOnlyRootFilesystem should be false SSL when using postgres 
+  # # readOnlyRootFilesystem should be false when postgres SSL is enabled and sslmode is one of the require|verify-ca|verify-full value
   #  readOnlyRootFilesystem: false
   # -- enable persistence using postgres
   persistence: {}
