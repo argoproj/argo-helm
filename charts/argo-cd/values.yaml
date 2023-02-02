@@ -580,6 +580,12 @@ controller:
     # -- Metrics container port
     metrics: 8082
 
+  # -- Host Network for application controller pods
+  hostNetwork: false
+
+  # -- Alternative DNS policy for application controller pods
+  dnsPolicy: "ClusterFirst"
+
   # -- Application controller container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
@@ -1448,6 +1454,12 @@ server:
     # -- Metrics container port
     metrics: 8082
 
+  # -- Host Network for Server pods
+  hostNetwork: false
+
+  # -- Alternative DNS policy for Server pods
+  dnsPolicy: "ClusterFirst"
+
   # -- Server container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
@@ -1930,6 +1942,12 @@ repoServer:
     server: 8081
     # -- Metrics container port
     metrics: 8084
+
+  # -- Host Network for Repo server pods
+  hostNetwork: false
+
+  # -- Alternative DNS policy for Repo server pods
+  dnsPolicy: "ClusterFirst"
 
   # -- Repo server container-level security context
   # @default -- See [values.yaml]
