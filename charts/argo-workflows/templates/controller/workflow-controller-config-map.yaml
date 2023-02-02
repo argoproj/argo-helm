@@ -92,6 +92,10 @@ data:
           {{- toYaml . | nindent 10 }}
         {{- end }}
       {{- end }}
+    {{- else }}
+      {{- if .Values.customArtifactRepository }}
+    artifactRepository: {{- toYaml .Values.customArtifactRepository | nindent 6 }}
+      {{- end }}
     {{- end }}
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:
@@ -162,4 +166,7 @@ data:
     {{- end }}
     {{- with .Values.controller.navColor }}
     navColor: {{ . }}
+    {{- end }}
+    {{- with .Values.controller.retentionPolicy }}
+    retentionPolicy: {{- toYaml . | nindent 6 }}
     {{- end }}

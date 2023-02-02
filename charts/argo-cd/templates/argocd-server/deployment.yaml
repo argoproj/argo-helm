@@ -1,17 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.server.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
   name: {{ template "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
+  {{- if not .Values.server.autoscaling.enabled }}
+  replicas: {{ .Values.server.replicas }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}
-  revisionHistoryLimit: 5
-  {{- if (ne .Values.server.autoscaling.enabled true) }}
-  replicas: {{ .Values.server.replicas }}
-  {{- end }}
   template:
     metadata:
       annotations:
@@ -52,10 +58,6 @@ spec:
         {{- with .Values.server.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.server.containerSecurityContext }}
-        securityContext:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
         env:
           {{- with .Values.server.env }}
             {{- toYaml . | nindent 10 }}
@@ -84,7 +86,7 @@ spec:
                 name: argocd-cmd-params-cm
                 key: server.log.format
                 optional: true
-          - name: ARGOCD_REPO_SERVER_LOGLEVEL
+          - name: ARGOCD_SERVER_LOG_LEVEL
             valueFrom:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
@@ -144,6 +146,18 @@ spec:
                 name: argocd-cmd-params-cm
                 key: server.repo.server.strict.tls
                 optional: true
+          - name: ARGOCD_SERVER_DEX_SERVER_PLAINTEXT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.dex.server.plaintext
+                optional: true
+          - name: ARGOCD_SERVER_DEX_SERVER_STRICT_TLS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.dex.server.strict.tls
+                optional: true
           - name: ARGOCD_TLS_MIN_VERSION
             valueFrom:
               configMapKeyRef:
@@ -198,6 +212,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: redis.server
                 optional: true
+          - name: REDIS_COMPRESSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.compression
+                optional: true
           - name: REDISDB
             valueFrom:
               configMapKeyRef:
@@ -234,51 +254,48 @@ spec:
                 name: argocd-cmd-params-cm
                 key: otlp.address
                 optional: true
+          - name: ARGOCD_APPLICATION_NAMESPACES
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: application.namespaces
+                optional: true
         {{- with .Values.server.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
         {{- with .Values.server.volumeMounts }}
-          {{- toYaml . | nindent 8}}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- if .Values.server.extensions.enabled }}
-        - name: extensions
-          mountPath: /tmp/extensions/
-        {{- end }}
-        {{- if .Values.configs.knownHosts }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
-        {{- end }}
         - mountPath: /app/config/tls
           name: tls-certs
         - mountPath: /app/config/server/tls
           name: argocd-repo-server-tls
-        {{- if .Values.configs.styles }}
-        - mountPath: "/shared/app/custom/custom.styles.css"
-          subPath: "custom.styles.css"
-          name: custom-styles
-        {{- end }}
-        {{- if .Values.server.containerSecurityContext.readOnlyRootFilesystem }}
-        - mountPath: /home/argocd/.aws
-          name: aws-config
-        {{- end }}
+        - mountPath: /app/config/dex/tls
+          name: argocd-dex-server-tls
         - mountPath: /home/argocd
           name: plugins-home
+        - mountPath: /shared/app/custom
+          name: styles
         - mountPath: /tmp
-          name: tmp-dir
+          name: tmp
+        {{- if .Values.server.extensions.enabled }}
+        - mountPath: /tmp/extensions
+          name: extensions
+        {{- end }}
         ports:
         - name: {{ .Values.server.name }}
           containerPort: {{ .Values.server.containerPort }}
           protocol: TCP
-        {{ if .Values.server.metrics.enabled }}
         - name: metrics
           containerPort: 8083
           protocol: TCP
-        {{- end }}
         livenessProbe:
           httpGet:
-            path: /healthz
+            path: /healthz?full=true
             port: {{ .Values.server.containerPort }}
           initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
@@ -294,10 +311,10 @@ spec:
           timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.server.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
-        {{- with .Values.server.resources }}
         resources:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
+          {{- toYaml .Values.server.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.server.containerSecurityContext | nindent 10 }}
         {{- with .Values.server.lifecycle }}
         lifecycle:
           {{- toYaml . | nindent 10 }}
@@ -309,11 +326,15 @@ spec:
       - name: argocd-extensions
         image: {{ .Values.server.extensions.image.repository }}:{{ .Values.server.extensions.image.tag }}
         imagePullPolicy: {{ .Values.server.extensions.image.imagePullPolicy }}
+        resources:
+          {{- toYaml .Values.server.extensions.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.server.extensions.containerSecurityContext | nindent 10 }}
         volumeMounts:
           - name: extensions
             mountPath: /tmp/extensions/
-        resources:
-          {{- toYaml .Values.server.extensions.resources | nindent 10 }}
+          - name: tmp
+            mountPath: /tmp
       {{- end }}
       {{- with .Values.server.nodeSelector }}
       nodeSelector:
@@ -351,27 +372,24 @@ spec:
       - name: extensions
         emptyDir: {}
       {{- end }}
-      - emptyDir: {}
-        name: tmp-dir
-      {{- if .Values.server.containerSecurityContext.readOnlyRootFilesystem }}
-      - emptyDir: {}
-        name: aws-config
-      {{- end }}
-      {{- if .Values.configs.styles }}
-      - configMap:
-          name: argocd-custom-styles
-        name: custom-styles
-      {{- end }}
-      {{- if .Values.configs.knownHosts }}
-      - configMap:
+      - name: plugins-home
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+      - name: ssh-known-hosts
+        configMap:
           name: argocd-ssh-known-hosts-cm
-        name: ssh-known-hosts
-      {{- end }}
-      - configMap:
+      - name: tls-certs
+        configMap:
           name: argocd-tls-certs-cm
-        name: tls-certs
+      - name: styles
+        configMap:
+          name: argocd-styles-cm
+          optional: true
       - name: argocd-repo-server-tls
         secret:
+          secretName: argocd-repo-server-tls
+          optional: true
           items:
           - key: tls.crt
             path: tls.crt
@@ -379,10 +397,15 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
+      - name: argocd-dex-server-tls
+        secret:
+          secretName: argocd-dex-server-tls
           optional: true
-          secretName: argocd-repo-server-tls
-      - emptyDir: {}
-        name: plugins-home
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: ca.crt
+            path: ca.crt
       {{- with .Values.server.initContainers }}
       initContainers:
         {{- toYaml . | nindent 6 }}

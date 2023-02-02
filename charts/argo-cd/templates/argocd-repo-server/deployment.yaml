@@ -1,21 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.repoServer.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
   name: {{ template "argo-cd.repoServer.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
 spec:
+  {{- if not .Values.repoServer.autoscaling.enabled }}
+  replicas: {{ .Values.repoServer.replicas }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 6 }}
-  revisionHistoryLimit: 5
-  {{- if (ne .Values.repoServer.autoscaling.enabled true) }}
-  replicas: {{ .Values.repoServer.replicas }}
-  {{- end }}
   template:
     metadata:
       annotations:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- if .Values.repoServer.certificateSecret.enabled }}
+        checksum/repo-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-repo-server-tls-secret.yaml") . | sha256sum }}
+        {{- end }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.repoServer.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
@@ -54,10 +63,6 @@ spec:
         {{- end }}
         {{- with .Values.repoServer.extraArgs }}
           {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.repoServer.containerSecurityContext }}
-        securityContext:
-          {{- toYaml . | nindent 10 }}
         {{- end }}
         env:
           {{- with .Values.repoServer.env }}
@@ -127,6 +132,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: redis.server
                 optional: true
+          - name: REDIS_COMPRESSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.compression
+                optional: true
           - name: REDISDB
             valueFrom:
               configMapKeyRef:
@@ -169,6 +180,30 @@ spec:
                 name: argocd-cmd-params-cm
                 key: reposerver.plugin.tar.exclusions
                 optional: true
+          - name: ARGOCD_REPO_SERVER_ALLOW_OUT_OF_BOUNDS_SYMLINKS
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.allow.oob.symlinks
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_REPO_SERVER_STREAMED_MANIFEST_MAX_TAR_SIZE
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.streamed.manifest.max.tar.size
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_REPO_SERVER_STREAMED_MANIFEST_MAX_EXTRACTED_SIZE
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.streamed.manifest.max.extracted.size
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_GIT_MODULES_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.enable.git.submodule
+                name: argocd-cmd-params-cm
+                optional: true
           - name: HELM_CACHE_HOME
             value: /helm-working-dir
           - name: HELM_CONFIG_HOME
@@ -183,53 +218,51 @@ spec:
         {{- if .Values.repoServer.volumeMounts }}
           {{- toYaml .Values.repoServer.volumeMounts | nindent 8 }}
         {{- end }}
+        - mountPath: /app/config/ssh
+          name: ssh-known-hosts
+        - mountPath: /app/config/tls
+          name: tls-certs
         - mountPath: /app/config/gpg/source
           name: gpg-keys
         - mountPath: /app/config/gpg/keys
           name: gpg-keyring
-        {{- if .Values.configs.knownHosts }}
-        - mountPath: /app/config/ssh
-          name: ssh-known-hosts
-        {{- end }}
-        - mountPath: /app/config/tls
-          name: tls-certs
         - mountPath: /app/config/reposerver/tls
           name: argocd-repo-server-tls
-        - mountPath: /tmp
-          name: tmp-dir
         - mountPath: /helm-working-dir
           name: helm-working-dir
         - mountPath: /home/argocd/cmp-server/plugins
           name: plugins
+        - mountPath: /tmp
+          name: tmp
         ports:
         - name: repo-server
           containerPort: {{ .Values.repoServer.containerPort }}
           protocol: TCP
-        {{ if .Values.repoServer.metrics.enabled }}
         - name: metrics
           containerPort: 8084
           protocol: TCP
-        {{- end }}
         livenessProbe:
-          tcpSocket:
-            port: {{ .Values.repoServer.containerPort }}
+          httpGet:
+            path: /healthz?full=true
+            port: metrics
           initialDelaySeconds: {{ .Values.repoServer.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.repoServer.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.repoServer.livenessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.repoServer.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.livenessProbe.failureThreshold }}
         readinessProbe:
-          tcpSocket:
-            port: {{ .Values.repoServer.containerPort }}
+          httpGet:
+            path: /healthz
+            port: metrics
           initialDelaySeconds: {{ .Values.repoServer.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.repoServer.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.repoServer.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.repoServer.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.readinessProbe.failureThreshold }}
-        {{- with .Values.repoServer.resources }}
         resources:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
+          {{- toYaml .Values.repoServer.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
       {{- with .Values.repoServer.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
@@ -265,23 +298,29 @@ spec:
       {{- with .Values.repoServer.volumes }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+      - name: helm-working-dir
+        emptyDir: {}
+      - name: plugins
+        emptyDir: {}
+      - name: var-files
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+      - name: ssh-known-hosts
+        configMap:
+          name: argocd-ssh-known-hosts-cm
+      - name: tls-certs
+        configMap:
+          name: argocd-tls-certs-cm
       - name: gpg-keys
         configMap:
           name: argocd-gpg-keys-cm
-      - emptyDir: {}
-        name: gpg-keyring
-      {{- if .Values.configs.knownHosts }}
-      - configMap:
-          name: argocd-ssh-known-hosts-cm
-        name: ssh-known-hosts
-      {{- end }}
-      - configMap:
-          name: argocd-tls-certs-cm
-        name: tls-certs
-      - name: helm-working-dir
+      - name: gpg-keyring
         emptyDir: {}
       - name: argocd-repo-server-tls
         secret:
+          secretName: argocd-repo-server-tls
+          optional: true
           items:
           - key: tls.crt
             path: tls.crt
@@ -289,14 +328,6 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-          optional: true
-          secretName: argocd-repo-server-tls
-      - emptyDir: {}
-        name: tmp-dir
-      - emptyDir: {}
-        name: var-files
-      - emptyDir: {}
-        name: plugins
       initContainers:
       - command:
         - cp

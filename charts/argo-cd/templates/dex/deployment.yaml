@@ -2,10 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.dex.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
   name: {{ template "argo-cd.dex.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
 spec:
+  replicas: 1
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.dex.name) | nindent 6 }}
@@ -13,6 +21,9 @@ spec:
     metadata:
       annotations:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- if .Values.dex.certificateSecret.enabled }}
+        checksum/dex-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-dex-server-tls-secret.yaml") . | sha256sum }}
+        {{- end }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.dex.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
@@ -36,12 +47,6 @@ spec:
       - name: copyutil
         image: {{ default .Values.global.image.repository .Values.dex.initImage.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.dex.initImage.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.initImage.imagePullPolicy }}
-        resources:
-          {{- toYaml .Values.dex.resources | nindent 10 }}
-        {{- with .Values.dex.containerSecurityContext }}
-        securityContext:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
         command:
         - cp
         - -n
@@ -52,6 +57,10 @@ spec:
           name: static-files
         - mountPath: /tmp
           name: dexconfig
+        resources:
+          {{- toYaml .Values.dex.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
       {{- with .Values.dex.initContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
@@ -64,10 +73,7 @@ spec:
         args:
         - rundex
         {{- with .Values.dex.extraArgs }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- if .Values.dex.containerSecurityContext }}
-        securityContext: {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
           {{- with .Values.dex.env }}
@@ -98,31 +104,37 @@ spec:
           httpGet:
             path: /healthz/live
             port: metrics
-          {{- with .Values.dex.livenessProbe }}
-            {{- omit . "enabled" | toYaml | nindent 10 }}
-          {{- end }}
+          initialDelaySeconds: {{ .Values.dex.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.dex.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.dex.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.dex.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.dex.livenessProbe.failureThreshold }}
         {{- end }}
         {{- if .Values.dex.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
             path: /healthz/ready
             port: metrics
-          {{- with .Values.dex.readinessProbe }}
-            {{- omit . "enabled" | toYaml | nindent 10 }}
-          {{- end }}
+          initialDelaySeconds: {{ .Values.dex.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.dex.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.dex.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.dex.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.dex.readinessProbe.failureThreshold }}
         {{- end }}
+        resources:
+          {{- toYaml .Values.dex.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
         volumeMounts:
+        {{- with .Values.dex.volumeMounts }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         - name: static-files
           mountPath: /shared
         - name: dexconfig
           mountPath: /tmp
         - name: argocd-dex-server-tls
           mountPath: /tls
-        {{- with .Values.dex.volumeMounts }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        resources:
-          {{- toYaml .Values.dex.resources | nindent 10 }}
       {{- with .Values.dex.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}

@@ -26,10 +26,10 @@ jobs:
 
       - name: Setup Chart Linting
         id: lint
-        uses: helm/chart-testing-action@v2.3.0
+        uses: helm/chart-testing-action@v2.3.1
         with:
           # Note: Also update in scripts/lint.sh
-          version: v3.7.0
+          version: v3.7.1
 
       - name: List changed charts
         id: list-changed
@@ -41,6 +41,7 @@ jobs:
             echo "::set-output name=changed::true"
             echo "::set-output name=changed_charts::$charts"
           fi
+
       - name: Run chart-testing (lint)
         run: ct lint --debug --config ./.github/configs/ct-lint.yaml --target-branch ${{ github.base_ref }} --lint-conf ./.github/configs/lintconf.yaml
 

@@ -2,10 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.notifications.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
   name: {{ include "argo-cd.notifications.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
 spec:
+  replicas: 1
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   strategy:
     type: Recreate
   selector:
@@ -38,30 +46,16 @@ spec:
         - name: {{ .Values.notifications.name }}
           image: {{ default .Values.global.image.repository .Values.notifications.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.notifications.image.tag }}
           imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.notifications.image.imagePullPolicy }}
-          resources:
-            {{- toYaml .Values.notifications.resources | nindent 12 }}
           command:
             - argocd-notifications
             - --loglevel={{ default .Values.global.logging.level .Values.notifications.logLevel }}
             - --logformat={{ default .Values.global.logging.format .Values.notifications.logFormat }}
-            {{- if .Values.notifications.metrics.enabled }}
             - --metrics-port={{ .Values.notifications.metrics.port }}
-            {{- end }}
             - --namespace={{ .Release.Namespace }}
             - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
             {{- range .Values.notifications.extraArgs }}
             - {{ . | squote }}
             {{- end }}
-          workingDir: /app
-          ports:
-          {{- if .Values.notifications.metrics.enabled }}
-          - containerPort: {{ .Values.notifications.metrics.port }}
-            name: metrics
-            protocol: TCP
-          {{- end }}
-          {{- if .Values.notifications.containerSecurityContext }}
-          securityContext: {{- toYaml .Values.notifications.containerSecurityContext | nindent 12 }}
-          {{- end }}
           {{- with .Values.notifications.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
@@ -70,6 +64,15 @@ spec:
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          ports:
+          - name: metrics
+            containerPort: {{ .Values.notifications.metrics.port }}
+            protocol: TCP
+          resources:
+            {{- toYaml .Values.notifications.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.notifications.containerSecurityContext | nindent 12 }}
+          workingDir: /app
           volumeMounts:
             - name: tls-certs
               mountPath: /app/config/tls

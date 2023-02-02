@@ -1,4 +1,4 @@
-{{- if .Values.crds.install }}
+{{- if and .Values.crds.install .Values.server.extensions.enabled }}
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
