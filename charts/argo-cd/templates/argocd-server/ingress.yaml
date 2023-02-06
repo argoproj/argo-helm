@@ -1,8 +1,8 @@
 {{- if .Values.server.ingress.enabled -}}
+{{- $serviceName := include "argo-cd.server.fullname" $ -}}
 {{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingress.https -}}
 {{- $paths := .Values.server.ingress.paths -}}
 {{- $extraPaths := .Values.server.ingress.extraPaths -}}
-{{- $pathType := .Values.server.ingress.pathType -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -29,36 +29,27 @@ spec:
   rules:
   {{- if .Values.server.ingress.hosts }}
     {{- range $host := .Values.server.ingress.hosts }}
+    {{- if and $.Values.server.ingressGrpc.isAWSALB $.Values.server.ingressGrpc.enabled }}
+      {{ $serviceName = printf "%s-grpc" (include "argo-cd.server.fullname" $) }}
+    {{- end }}
     - host: {{ $host }}
       http:
         paths:
           {{- with $extraPaths }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- range $p := $paths }}
-          {{- if and $.Values.server.ingressGrpc.isAWSALB $.Values.server.ingressGrpc.enabled }}
-          - path: {{ $p }}
+          {{- range $paths }}
+          {{ $backendServicePort := .service.port | default $servicePort }}
+          - path: {{ .path }}
             pathType: Prefix
             backend:
               service:
-                name: {{ template "argo-cd.server.fullname" $ }}-grpc
+                name: {{ .service.name | default $serviceName }}
                 port:
-                  {{- if kindIs "float64" $servicePort }}
-                  number: {{ $servicePort }}
+                  {{- if kindIs "float64" $backendServicePort }}
+                  number: {{ $backendServicePort }}
                   {{- else }}
-                  name: {{ $servicePort }}
-                  {{- end }}
-            {{- end }}
-          - path: {{ $p }}
-            pathType: {{ $pathType }}
-            backend:
-              service:
-                name: {{ include "argo-cd.server.fullname" $ }}
-                port:
-                  {{- if kindIs "float64" $servicePort }}
-                  number: {{ $servicePort }}
-                  {{- else }}
-                  name: {{ $servicePort }}
+                  name: {{ $backendServicePort }}
                   {{- end }}
           {{- end -}}
     {{- end -}}
@@ -68,17 +59,18 @@ spec:
           {{- with $extraPaths }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- range $p := $paths }}
-          - path: {{ $p }}
-            pathType: {{ $pathType }}
+          {{- range $paths }}
+          {{ $backendServicePort := .service.port | default $servicePort }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ include "argo-cd.server.fullname" $ }}
+                name: {{ .service.name | default $serviceName }}
                 port:
-                  {{- if kindIs "float64" $servicePort }}
-                  number: {{ $servicePort }}
+                  {{- if kindIs "float64" $backendServicePort }}
+                  number: {{ $backendServicePort }}
                   {{- else }}
-                  name: {{ $servicePort }}
+                  name: {{ $backendServicePort }}
                   {{- end }}
           {{- end -}}
   {{- end -}}

@@ -1666,12 +1666,18 @@ server:
     hosts: []
       # - argocd.example.com
 
-    # -- List of ingress paths
     paths:
-      - /
-    # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
-    pathType: Prefix
-    # -- Additional ingress paths
+      - path: /
+        # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
+        pathType: Prefix
+        service:
+          # -- Backend service name
+          # @default -- argo-cd server service name 
+          name: ""
+          # -- Backend service port. Can be String or Int value. 
+          # @default -- argo-cd server service port 
+          port: ""
+
     extraPaths: []
       # - path: /*
       #   pathType: Prefix

@@ -665,13 +665,15 @@ NAME: my-release
 | server.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
-| server.ingress.extraPaths | list | `[]` | Additional ingress paths |
+| server.ingress.extraPaths | list | `[]` |  |
 | server.ingress.hosts | list | `[]` | List of ingress hosts |
 | server.ingress.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
 | server.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
 | server.ingress.labels | object | `{}` | Additional ingress labels |
-| server.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
-| server.ingress.paths | list | `["/"]` | List of ingress paths |
+| server.ingress.paths[0].path | string | `"/"` |  |
+| server.ingress.paths[0].pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
+| server.ingress.paths[0].service.name | string | argo-cd server service name  | Backend service name |
+| server.ingress.paths[0].service.port | string | argo-cd server service port  | Backend service port. Can be String or Int value.  |
 | server.ingress.tls | list | `[]` | Ingress TLS configuration |
 | server.ingressGrpc.annotations | object | `{}` | Additional ingress annotations for dedicated [gRPC-ingress] |
 | server.ingressGrpc.awsALB.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB gRPC service |
