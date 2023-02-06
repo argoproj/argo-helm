@@ -356,3 +356,5 @@ spec:
       {{- with .Values.repoServer.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      hostNetwork: {{ .Values.repoServer.hostNetwork }}
+      dnsPolicy: {{ .Values.repoServer.dnsPolicy }}

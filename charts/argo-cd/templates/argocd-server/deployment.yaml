@@ -415,3 +415,5 @@ spec:
       {{- with .Values.server.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      hostNetwork: {{ .Values.server.hostNetwork }}
+      dnsPolicy: {{ .Values.server.dnsPolicy }}
