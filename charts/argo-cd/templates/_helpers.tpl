@@ -202,9 +202,12 @@ redis.server: {{ . | quote }}
 server.dex.server: {{ include "argo-cd.dex.server" . | quote }}
 server.dex.server.strict.tls: {{ .Values.dex.certificateSecret.enabled | toString }}
 {{- end }}
-{{- range $component := tuple "controller" "server" "reposerver" }}
+{{- range $component := tuple "applicationsetcontroller" "controller" "server" "reposerver" }}
 {{ $component }}.log.format: {{ $.Values.global.logging.format | quote }}
 {{ $component }}.log.level: {{ $.Values.global.logging.level | quote }}
+{{- end }}
+{{- if .Values.applicationSet.enabled }}
+applicationsetcontroller.enable.leader.election: {{ gt (.Values.applicationSet.replicaCount | int64) 1 }}
 {{- end }}
 {{- end -}}
 
