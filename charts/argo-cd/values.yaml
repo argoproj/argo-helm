@@ -205,6 +205,12 @@ configs:
     # -- Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit.
     reposerver.parallelism.limit: 0
 
+    ## ApplicationSet Properties
+    # -- Modify how application is synced between the generator and the cluster. One of: `sync`, `create-only`, `create-update`, `create-delete`
+    applicationsetcontroller.policy: sync
+    # -- Enables use of the Progressive Syncs capability
+    applicationsetcontroller.enable.progressive.syncs: false
+
   # Argo CD RBAC policy configuration
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
   rbac:
@@ -2147,18 +2153,14 @@ applicationSet:
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
 
-  # -- ApplicationSet controller log format. Either `text` or `json`
-  # @default -- `""` (defaults to global.logging.format)
-  logFormat: ""
-  # -- ApplicationSet controller log level. One of: `debug`, `info`, `warn`, `error`
-  # @default -- `""` (defaults to global.logging.level)
-  logLevel: ""
-
-  args:
+  # -- DEPRECATED - ApplicationSet controller command line flags
+  args: {}
+    # DEPRECATED - Use configs.params.applicationsetcontroller.policy to override
     # -- How application is synced between the generator and the cluster
-    policy: sync
+    # policy: sync
+    # DEPRECATED - Use configs.params.applicationsetcontroller.dryrun to override
     # -- Enable dry run mode
-    dryRun: false
+    # dryRun: false
 
   # -- List of extra cli args to add
   extraArgs: []
