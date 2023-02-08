@@ -262,6 +262,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: application.namespaces
                 optional: true
+          - name: ARGOCD_SERVER_ENABLE_PROXY_EXTENSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.enable.proxy.extension
+                optional: true
         {{- with .Values.server.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
@@ -415,3 +421,5 @@ spec:
       {{- with .Values.server.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      hostNetwork: {{ .Values.server.hostNetwork }}
+      dnsPolicy: {{ .Values.server.dnsPolicy }}

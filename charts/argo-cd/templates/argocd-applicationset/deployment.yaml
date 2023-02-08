@@ -54,14 +54,20 @@ spec:
             - --metrics-addr=:{{ .Values.applicationSet.containerPorts.metrics }}
             - --probe-addr=:{{ .Values.applicationSet.containerPorts.probe }}
             - --webhook-addr=:{{ .Values.applicationSet.containerPorts.webhook }}
-            - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
-            - --enable-leader-election={{ gt ( .Values.applicationSet.replicaCount | int64) 1 }}
-            - --policy={{ .Values.applicationSet.args.policy }}
-            - --dry-run={{ .Values.applicationSet.args.dryRun }}
+            {{- with .Values.applicationSet.args.policy }}
+            - --policy={{ . }}
+            {{- end }}
+            {{- with .Values.applicationSet.args.dryRun }}
+            - --dry-run={{ . }}
+            {{- end }}
+            {{- with .Values.applicationSet.logFormat }}
             - --logformat
-            - {{ default .Values.global.logging.format .Values.applicationSet.logFormat }}
+            - {{ . }}
+            {{- end }}
+            {{- with .Values.applicationSet.logLevel }}
             - --loglevel
-            - {{ default .Values.global.logging.level .Values.applicationSet.logLevel }}
+            - {{ . }}
+            {{- end }}
             {{- with .Values.applicationSet.extraArgs }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -73,6 +79,66 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_LEADER_ELECTION
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.enable.leader.election
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.namespace
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_REPO_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  key: repo.server
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_POLICY
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.policy
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.debug
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_LOGFORMAT
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.log.format
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.log.level
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_DRY_RUN
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.dryrun
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_GIT_MODULES_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.enable.git.submodule
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_PROGRESSIVE_SYNCS
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.enable.progressive.rollouts
+                  name: argocd-cmd-params-cm
+                  optional: true
           {{- with .Values.applicationSet.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
