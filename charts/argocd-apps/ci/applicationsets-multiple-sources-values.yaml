@@ -1,0 +1,24 @@
+# Test with multi-source applicationsets
+
+applicationsets:
+- name: applicationset-multiple-sources
+  generators:
+  - list:
+      elements:
+        - cluster: default-cluster
+          url: https://kubernetes.default.svc
+  template:
+    metadata:
+      name: '{{cluster}}-guestbook'
+    spec:
+      project: default
+      sources:
+      - chart: elasticsearch
+        repoURL: https://helm.elastic.co
+        targetRevision: 8.5.1
+      - repoURL: https://github.com/argoproj/argocd-example-apps.git
+        path: guestbook
+        targetRevision: HEAD
+      destination:
+        server: '{{url}}'
+        namespace: default
