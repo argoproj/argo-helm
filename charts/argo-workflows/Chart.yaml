@@ -3,7 +3,7 @@ appVersion: v3.4.5
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.22.10
+version: 0.22.11
 icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -14,4 +14,4 @@ maintainers:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Upgrade Argo Workflows to v3.4.5
+      description: Cleaned RBAC permissions for subresources (pods/log, pods/exec).
