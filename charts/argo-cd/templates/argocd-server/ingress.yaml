@@ -29,7 +29,7 @@ spec:
   rules:
   {{- if .Values.server.ingress.hosts }}
     {{- range $host := .Values.server.ingress.hosts }}
-    - host: {{ $host }}
+    - host: {{ $host | quote }}
       http:
         paths:
           {{- with $extraPaths }}

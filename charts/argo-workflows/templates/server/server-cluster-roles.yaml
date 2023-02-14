@@ -23,13 +23,18 @@ rules:
   - ""
   resources:
   - pods
-  - pods/exec
-  - pods/log
   verbs:
   - get
   - list
   - watch
   - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - get
+  - list
 {{- if .Values.server.sso }}
 - apiGroups:
   - ""

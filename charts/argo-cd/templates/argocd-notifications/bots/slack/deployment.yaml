@@ -40,6 +40,11 @@ spec:
           command:
             - argocd-notifications
             - bot
+            - --loglevel={{ default .Values.global.logging.level .Values.notifications.bots.slack.logLevel }}
+            - --logformat={{ default .Values.global.logging.format .Values.notifications.bots.slack.logFormat }}
+            {{- range .Values.notifications.bots.slack.extraArgs }}
+            - {{ . | squote }}
+            {{- end }}
           workingDir: /app
           ports:
           - containerPort: 8080
@@ -62,9 +67,7 @@ spec:
       {{- end }}
       {{- with .Values.notifications.bots.slack.dnsConfig }}
       dnsConfig:
-      {{- toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.notifications.bots.slack.dnsPolicy }}
-      dnsPolicy: {{ . }}
-      {{- end }}
+      dnsPolicy: {{ .Values.notifications.bots.slack.dnsPolicy }}
 {{ end }}

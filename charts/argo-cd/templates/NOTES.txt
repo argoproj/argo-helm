@@ -52,9 +52,6 @@ DEPRECATED option configs.gpgKeys - Use config.gpg.keys
 {{- if .Values.configs.gpgKeysAnnotations }}
 DEPRECATED option configs.gpgKeysAnnotations - Use config.gpg.annotations
 {{- end }}
-{{- if hasKey .Values "createAggregateRoles" }}
-DEPRECATED option createAggregateRoles - Use global.rbac.aggregatedRoles
-{{- end }}
 {{- if hasKey (.Values.controller.clusterAdminAccess | default dict) "enabled" }}
 DEPRECATED option .controller.clusterAdminAccess.enabled - Use createClusterRoles
 {{- end }}
@@ -63,6 +60,30 @@ DEPRECATED option .server.clusterAdminAccess.enabled - Use createClusterRoles
 {{- end }}
 {{- if hasKey (.Values.repoServer.clusterAdminAccess | default dict) "enabled" }}
 DEPRECATED option .server.clusterAdminAccess.enabled - Use createClusterRoles
+{{- end }}
+{{- if .Values.configs.knownHostsAnnotations }}
+DEPRECATED option configs.knownHostsAnnotations - Use configs.ssh.annotations
+{{- end }}
+{{- if hasKey .Values.configs "knownHosts" }}
+DEPRECATED option configs.knownHosts.data.ssh_known_hosts - Use configs.ssh.knownHosts
+{{- end }}
+{{- if .Values.configs.tlsCertsAnnotations }}
+DEPRECATED option configs.tlsCertsAnnotations - Use configs.tls.annotations
+{{- end }}
+{{- if hasKey .Values.configs "tlsCerts" }}
+DEPRECATED option configs.tlsCerts.data - Use configs.tls.certificates
+{{- end }}
+{{- if .Values.applicationSet.logFormat }}
+DEPRECATED option applicationSet.logFormat - Use configs.params.applicationsetcontroller.log.format
+{{- end }}
+{{- if .Values.applicationSet.logLevel }}
+DEPRECATED option applicationSet.logLevel - Use configs.params.applicationsetcontroller.log.level
+{{- end }}
+{{- if .Values.applicationSet.args.policy }}
+DEPRECATED option applicationSet.args.policy - Use configs.params.applicationsetcontroller.policy
+{{- end }}
+{{- if .Values.applicationSet.args.dryRun }}
+DEPRECATED option applicationSet.args.dryRun - Use configs.params.applicationsetcontroller.dryRun
 {{- end }}
 {{- if .Values.controller.service }}
 REMOVED option controller.service - Use controller.metrics
@@ -75,6 +96,27 @@ REMOVED option applicationSet.args.debug - Use applicationSet.logLevel: debug
 {{- end }}
 {{- if .Values.applicationSet.args.enableLeaderElection }}
 REMOVED option applicationSet.args.enableLeaderElection - Value determined based on replicas
+{{- end }}
+{{- if .Values.controller.containerPort }}
+REMOVED option controller.containerPort - Use controller.containerPorts
+{{- end }}
+{{- if .Values.server.containerPort }}
+REMOVED option server.containerPort - Use server.containerPorts
+{{- end }}
+{{- if .Values.repoServer.containerPort }}
+REMOVED option repoServer.containerPort - Use repoServer.containerPorts
+{{- end }}
+{{- if .Values.applicationSet.args.metricsAddr }}
+REMOVED option applicationSet.args.metricsAddr - Use applicationSet.containerPorts
+{{- end }}
+{{- if .Values.applicationSet.args.probeBindAddr }}
+REMOVED option applicationSet.args.probeBindAddr - Use applicationSet.containerPorts
+{{- end }}
+{{- if .Values.redis.containerPort }}
+REMOVED option redis.containerPort - Use redis.containerPorts
+{{- end }}
+{{- if .Values.redis.metrics.containerPort }}
+REMOVED option redis.metrics.containerPort - Use redis.containerPorts
 {{- end }}
 
 In order to access the server UI you have the following options:

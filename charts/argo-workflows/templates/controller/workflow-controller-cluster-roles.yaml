@@ -14,7 +14,6 @@ rules:
   - ""
   resources:
   - pods
-  - pods/exec
   verbs:
   - create
   - get
@@ -23,6 +22,12 @@ rules:
   - update
   - patch
   - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
 - apiGroups:
   - ""
   resources:

@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v3.4.4
+appVersion: v3.4.5
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.22.8
+version: 0.22.11
 icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -13,4 +13,5 @@ maintainers:
     url: https://argoproj.github.io/
 annotations:
   artifacthub.io/changes: |
-    - "[Added]: Helm helper function to allow image registry to be absent"
+    - kind: changed
+      description: Cleaned RBAC permissions for subresources (pods/log, pods/exec).
