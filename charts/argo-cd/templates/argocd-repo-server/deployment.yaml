@@ -357,4 +357,8 @@ spec:
       priorityClassName: {{ . }}
       {{- end }}
       hostNetwork: {{ .Values.repoServer.hostNetwork }}
+      {{- with .Values.repoServer.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       dnsPolicy: {{ .Values.repoServer.dnsPolicy }}

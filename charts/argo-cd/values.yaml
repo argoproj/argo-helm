@@ -589,6 +589,8 @@ controller:
   # -- Host Network for application controller pods
   hostNetwork: false
 
+  # -- [DNS configuration]
+  dnsConfig: {}
   # -- Alternative DNS policy for application controller pods
   dnsPolicy: "ClusterFirst"
 
@@ -890,6 +892,11 @@ dex:
     # -- Metrics container port
     metrics: 5558
 
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- Alternative DNS policy for Dex server pods
+  dnsPolicy: "ClusterFirst"
+
   # -- Dex container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
@@ -1105,6 +1112,11 @@ redis:
     redis: 6379
     # -- Metrics container port
     metrics: 9121
+
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- Alternative DNS policy for Redis server pods
+  dnsPolicy: "ClusterFirst"
 
   # -- Redis container-level security context
   # @default -- See [values.yaml]
@@ -1463,6 +1475,8 @@ server:
   # -- Host Network for Server pods
   hostNetwork: false
 
+  # -- [DNS configuration]
+  dnsConfig: {}
   # -- Alternative DNS policy for Server pods
   dnsPolicy: "ClusterFirst"
 
@@ -1952,6 +1966,8 @@ repoServer:
   # -- Host Network for Repo server pods
   hostNetwork: false
 
+    # -- [DNS configuration]
+  dnsConfig: {}
   # -- Alternative DNS policy for Repo server pods
   dnsPolicy: "ClusterFirst"
 
@@ -2279,6 +2295,11 @@ applicationSet:
     # -- Webhook container port
     webhook: 7000
 
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- Alternative DNS policy for ApplicationSet controller pods
+  dnsPolicy: "ClusterFirst"
+
   # -- ApplicationSet controller container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
@@ -2548,6 +2569,11 @@ notifications:
   containerPorts:
     # -- Metrics container port
     metrics: 9001
+
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- Alternative DNS policy for notifications controller Pods
+  dnsPolicy: "ClusterFirst"
 
   # -- Notification controller container-level security Context
   # @default -- See [values.yaml]
@@ -2929,6 +2955,11 @@ notifications:
 
         # -- Annotations applied to created service account
         annotations: {}
+
+      # -- [DNS configuration]
+      dnsConfig: {}
+      # -- Alternative DNS policy for Slack bot pods
+      dnsPolicy: "ClusterFirst"
 
       # -- Slack bot container-level security Context
       # @default -- See [values.yaml]

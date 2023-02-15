@@ -188,4 +188,9 @@ spec:
       {{- with .Values.dex.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      {{- with .Values.dex.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.dex.dnsPolicy }}
 {{- end }}

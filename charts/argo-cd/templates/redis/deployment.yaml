@@ -128,4 +128,9 @@ spec:
       volumes:
         {{- toYaml . | nindent 8}}
       {{- end }}
+      {{- with .Values.redis.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.redis.dnsPolicy }}
 {{- end }}

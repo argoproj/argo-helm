@@ -313,4 +313,8 @@ spec:
       priorityClassName: {{ . }}
       {{- end }}
       hostNetwork: {{ .Values.controller.hostNetwork }}
+      {{- with .Values.controller.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       dnsPolicy: {{ .Values.controller.dnsPolicy }}
