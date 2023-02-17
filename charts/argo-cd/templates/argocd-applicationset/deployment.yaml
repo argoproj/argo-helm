@@ -198,12 +198,10 @@ spec:
       initContainers:
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
+      affinity:
+        {{- include "argo-cd.affinity" (dict "context" . "component" .Values.applicationSet) | nindent 8 }}
       {{- with .Values.applicationSet.nodeSelector }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.applicationSet.affinity }}
-      affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.applicationSet.tolerations }}

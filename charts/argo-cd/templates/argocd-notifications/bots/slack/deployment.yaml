@@ -53,12 +53,10 @@ spec:
             {{- toYaml .Values.notifications.bots.slack.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.notifications.bots.slack.containerSecurityContext | nindent 12 }}
+      affinity:
+        {{- include "argo-cd.affinity" (dict "context" . "component" .Values.notifications.bots.slack) | nindent 8 }}
       {{- with .Values.notifications.bots.slack.nodeSelector }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.notifications.bots.slack.affinity }}
-      affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.notifications.bots.slack.tolerations }}
