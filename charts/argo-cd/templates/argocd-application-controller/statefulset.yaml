@@ -1,0 +1,317 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+  {{- with (mergeOverwrite (deepCopy .Values.global.statefulsetAnnotations) .Values.controller.statefulsetAnnotations) }}
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}   
+{{ include "coreweave.vpc" $ | indent 4}}
+  {{- end }}
+  name: {{ template "argo-cd.controller.fullname" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+spec:
+  replicas: {{ .Values.controller.replicas }}
+  # TODO: Remove for breaking release as history limit cannot be patched
+  revisionHistoryLimit: 5
+  serviceName: {{ include "argo-cd.controller.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.controller.podAnnotations) }}
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+      labels:
+        {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.controller.podLabels) }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.controller.imagePullSecrets | default .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - command:
+        - argocd-application-controller
+        - --metrics-port={{ .Values.controller.containerPorts.metrics }}
+        {{- if .Values.controller.metrics.applicationLabels.enabled }}
+        {{- range .Values.controller.metrics.applicationLabels.labels }}
+        - --metrics-application-labels
+        - {{ . }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.controller.args.statusProcessors }}
+        - --status-processors
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.args.operationProcessors }}
+        - --operation-processors
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.args.appResyncPeriod }}
+        - --app-resync
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.args.appHardResyncPeriod }}
+        - --app-hard-resync
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.args.selfHealTimeout }}
+        - --self-heal-timeout-seconds
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.args.repoServerTimeoutSeconds }}
+        - --repo-server-timeout-seconds
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.logFormat }}
+        - --logformat
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.logLevel }}
+        - --loglevel
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.controller.extraArgs }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        image: {{ default .Values.global.image.repository .Values.controller.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.controller.image.tag }}
+        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
+        name: {{ .Values.controller.name }}
+        env:
+          {{- with .Values.controller.env }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          - name: ARGOCD_CONTROLLER_REPLICAS
+            value: {{ .Values.controller.replicas | quote }}
+          - name: ARGOCD_RECONCILIATION_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cm
+                key: timeout.reconciliation
+                optional: true
+          - name: ARGOCD_HARD_RECONCILIATION_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cm
+                key: timeout.hard.reconciliation
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: repo.server
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_TIMEOUT_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.repo.server.timeout.seconds
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_STATUS_PROCESSORS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.status.processors
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_OPERATION_PROCESSORS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.operation.processors
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_LOGFORMAT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.log.format
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_LOGLEVEL
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.log.level
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_METRICS_CACHE_EXPIRATION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.metrics.cache.expiration
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_TIMEOUT_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.self.heal.timeout.seconds
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_PLAINTEXT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.repo.server.plaintext
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_STRICT_TLS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.repo.server.strict.tls
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_PERSIST_RESOURCE_HEALTH
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.resource.health.persist
+                optional: true
+          - name: ARGOCD_APP_STATE_CACHE_EXPIRATION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.app.state.cache.expiration
+                optional: true
+          - name: REDIS_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.server
+                optional: true
+          - name: REDIS_COMPRESSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.compression
+                optional: true
+          - name: REDISDB
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.db
+                optional: true
+          - name: REDIS_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                key: redis-username
+                optional: true
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                key: redis-password
+                optional: true
+          - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.default.cache.expiration
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_OTLP_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.address
+                optional: true
+          - name: ARGOCD_APPLICATION_NAMESPACES
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: application.namespaces
+                optional: true
+        {{- with .Values.controller.envFrom }}
+        envFrom:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        ports:
+        - name: metrics
+          containerPort: {{ .Values.controller.containerPorts.metrics }}
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          initialDelaySeconds: {{ .Values.controller.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.controller.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.controller.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.controller.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
+        resources:
+          {{- toYaml .Values.controller.resources | nindent 10 }}
+        workingDir: /home/argocd
+        volumeMounts:
+        {{- with .Values.controller.volumeMounts }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - mountPath: /app/config/controller/tls
+          name: argocd-repo-server-tls
+        - mountPath: /home/argocd
+          name: argocd-home
+      {{- with .Values.controller.extraContainers }}
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
+      {{- with .Values.controller.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
+      {{- with .Values.controller.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+{{ (include "argo-cd.retemplate" (dict "value" (default .Values.global.affinity .Values.controller.affinity) "context" $) ) | indent 8 }}
+      {{- with .Values.controller.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+          {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.controller.name) | nindent 12 }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      serviceAccountName: {{ template "argo-cd.controllerServiceAccountName" . }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      volumes:
+      {{- with .Values.controller.volumes }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      - name: argocd-home
+        emptyDir: {}
+      - name: argocd-repo-server-tls
+        secret:
+          secretName: argocd-repo-server-tls
+          optional: true
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+      {{- with .Values.controller.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      hostNetwork: {{ .Values.controller.hostNetwork }}
+      {{- with .Values.controller.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.controller.dnsPolicy }}

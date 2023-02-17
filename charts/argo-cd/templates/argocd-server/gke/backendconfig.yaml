@@ -1,0 +1,10 @@
+{{- if .Values.server.GKEbackendConfig.enabled }}
+apiVersion: {{ include "argo-cd.apiVersions.cloudgoogle" . }}
+kind: BackendConfig
+metadata:
+  name: {{ template "argo-cd.server.fullname" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+spec:
+  {{- toYaml .Values.server.GKEbackendConfig.spec | nindent 2 }}
+{{- end }}

@@ -2,45 +2,124 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.dex.deploymentAnnotations) }}
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+{{ include "coreweave.vpc" $ | indent 4}}
   name: {{ template "argo-cd.dex.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ .Values.dex.image.tag | quote }}
 spec:
+  replicas: 1
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.dex.name) | nindent 6 }}
   template:
     metadata:
-      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.dex.podAnnotations) }}
       annotations:
+        checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- if .Values.dex.certificateSecret.enabled }}
+        checksum/dex-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-dex-server-tls-secret.yaml") . | sha256sum }}
+        {{- end }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.dex.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-      {{- end }}
+        {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ .Values.dex.image.tag | quote }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.dex.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- with .Values.global.imagePullSecrets }}
+      {{- with .Values.dex.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.global.securityContext }}
-      securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
+      {{- with.Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ .Values.dex.name }}
+        image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
+        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.image.imagePullPolicy }}
+        command:
+        - /shared/argocd-dex
+        args:
+        - rundex
+        {{- with .Values.dex.extraArgs }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        env:
+          {{- with .Values.dex.env }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          - name: ARGOCD_DEX_SERVER_DISABLE_TLS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: dexserver.disable.tls
+                optional: true
+        {{- with .Values.dex.envFrom }}
+        envFrom:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.dex.containerPorts.http }}
+          protocol: TCP
+        - name: grpc
+          containerPort: {{ .Values.dex.containerPorts.grpc }}
+          protocol: TCP
+        - name: metrics
+          containerPort: {{ .Values.dex.containerPorts.metrics }}
+          protocol: TCP
+        {{- if .Values.dex.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: /healthz/live
+            port: metrics
+          initialDelaySeconds: {{ .Values.dex.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.dex.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.dex.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.dex.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.dex.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.dex.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: /healthz/ready
+            port: metrics
+          initialDelaySeconds: {{ .Values.dex.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.dex.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.dex.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.dex.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.dex.readinessProbe.failureThreshold }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.dex.resources | nindent 10 }}
+        volumeMounts:
+        {{- with .Values.dex.volumeMounts }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: static-files
+          mountPath: /shared
+        - name: dexconfig
+          mountPath: /tmp
+        - name: argocd-dex-server-tls
+          mountPath: /tls
+      {{- with .Values.dex.extraContainers }}
+        {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
       initContainers:
       - name: copyutil
         image: {{ default .Values.global.image.repository .Values.dex.initImage.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.dex.initImage.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.initImage.imagePullPolicy }}
-        resources:
-{{- toYaml .Values.dex.resources | nindent 10 }}
-        {{- if .Values.dex.containerSecurityContext }}
-        securityContext: {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
-        {{- end }}
         command:
         - cp
         - -n
@@ -49,89 +128,64 @@ spec:
         volumeMounts:
         - mountPath: /shared
           name: static-files
-      containers:
-      - name: {{ .Values.dex.name }}
-        image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
-        imagePullPolicy: {{ .Values.dex.image.imagePullPolicy }}
-        command:
-        - /shared/argocd-dex
-        - rundex
-        {{- with .Values.dex.extraArgs }}
-        {{- . | toYaml | nindent 8 }}
-        {{- end }}
-        {{- if .Values.dex.containerSecurityContext }}
-        securityContext: {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
-        {{- end }}
-        {{- if .Values.dex.env }}
-        env:
-{{- toYaml .Values.dex.env | nindent 8 }}
-        {{- end }}
-        {{- with .Values.dex.envFrom }}
-        envFrom: {{- toYaml . | nindent 8 }}
-        {{- end }}
-        ports:
-        - name: http
-          containerPort: {{ .Values.dex.containerPortHttp }}
-          protocol: TCP
-        - name: grpc
-          containerPort: {{ .Values.dex.containerPortGrpc }}
-          protocol: TCP
-        - name: metrics
-          containerPort: {{ .Values.dex.containerPortMetrics }}
-          protocol: TCP
-        {{- if .Values.dex.livenessProbe.enabled }}
-        livenessProbe:
-          httpGet:
-            path: /healthz/live
-            port: metrics
-          {{- with .Values.dex.livenessProbe }}
-            {{- omit . "enabled" | toYaml | nindent 10 }}
-          {{- end }}
-        {{- end }}
-        {{- if .Values.dex.readinessProbe.enabled }}
-        readinessProbe:
-          httpGet:
-            path: /healthz/ready
-            port: metrics
-          {{- with .Values.dex.readinessProbe }}
-            {{- omit . "enabled" | toYaml | nindent 10 }}
-          {{- end }}
-        {{- end }}
-        volumeMounts:
         - mountPath: /tmp
-          name: tmp-dir
-        {{- if .Values.dex.volumeMounts }}
-        {{- toYaml .Values.dex.volumeMounts | nindent 8 }}
-        {{- end }}
-        {{- if .Values.dex.extraVolumeMounts }}
-        {{- toYaml .Values.dex.extraVolumeMounts | nindent 8 }}
-        {{- end }}
+          name: dexconfig
         resources:
           {{- toYaml .Values.dex.resources | nindent 10 }}
-      {{- with .Values.dex.extraContainers }}
-        {{- toYaml . | nindent 6 }}
+      {{- with .Values.dex.initContainers }}
+        {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{include "coreweave.affinity" . | nindent 6 }}
-      {{include "coreweave.tolerations" . | nindent 6 }}
+      {{- with .Values.dex.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dex.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+{{ (include "argo-cd.retemplate" (dict "value" (default .Values.global.affinity .Values.dex.affinity) "context" $) ) | indent 8 }}
+      {{- with .Values.dex.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+          {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.dex.name) | nindent 12 }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
       serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
       {{- with .Values.global.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:
-      - emptyDir: {}
-        name: tmp-dir
-      {{- if .Values.dex.volumes }}
-      {{- toYaml .Values.dex.volumes | nindent 6 }}
+      - name: static-files
+        emptyDir: {}
+      - name: dexconfig
+        emptyDir: {}
+      - name: argocd-dex-server-tls
+        secret:
+          secretName: argocd-dex-server-tls
+          optional: true
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+      {{- with .Values.dex.volumes }}
+        {{- toYaml . | nindent 6 }}
       {{- end }}
-      {{- if .Values.dex.extraVolumes }}
-      {{- toYaml .Values.dex.extraVolumes | nindent 6 }}
+      {{- with .Values.dex.priorityClassName }}
+      priorityClassName: {{ . }}
       {{- end }}
-      {{- if .Values.dex.initContainers }}
-      initContainers:
-      {{- toYaml .Values.dex.initContainers | nindent 6 }}
+      {{- with .Values.dex.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-{{- if .Values.dex.priorityClassName }}
-      priorityClassName: {{ .Values.dex.priorityClassName }}
-{{- end }}
+      dnsPolicy: {{ .Values.dex.dnsPolicy }}
 {{- end }}

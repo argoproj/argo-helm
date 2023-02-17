@@ -14,9 +14,13 @@ metadata:
     {{- with .Values.repoServer.metrics.serviceMonitor.additionalLabels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.repoServer.metrics.serviceMonitor.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   endpoints:
-    - port: metrics
+    - port: {{ .Values.repoServer.metrics.service.portName }}
       {{- with .Values.repoServer.metrics.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}
@@ -27,6 +31,13 @@ spec:
       {{- end }}
       {{- with .Values.repoServer.metrics.serviceMonitor.metricRelabelings }}
       metricRelabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.repoServer.metrics.serviceMonitor.scheme }}
+      scheme: {{ . }}
+      {{- end }}
+      {{- with .Values.repoServer.metrics.serviceMonitor.tlsConfig }}
+      tlsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
   namespaceSelector:

@@ -15,6 +15,10 @@ metadata:
     {{- with .Values.redis.metrics.serviceMonitor.additionalLabels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.redis.metrics.serviceMonitor.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   endpoints:
     - port: {{ .Values.redis.metrics.service.portName }}
@@ -28,6 +32,13 @@ spec:
       {{- end }}
       {{- with .Values.redis.metrics.serviceMonitor.metricRelabelings }}
       metricRelabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.redis.metrics.serviceMonitor.scheme }}
+      scheme: {{ . }}
+      {{- end }}
+      {{- with .Values.redis.metrics.serviceMonitor.tlsConfig }}
+      tlsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
   namespaceSelector:

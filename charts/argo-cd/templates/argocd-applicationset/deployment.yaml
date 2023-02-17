@@ -1,0 +1,235 @@
+{{- if .Values.applicationSet.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.applicationSet.deploymentAnnotations) }}
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+{{ include "coreweave.vpc" $ | indent 4}}
+  {{- end }}
+  name: {{ include "argo-cd.applicationSet.fullname" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
+spec:
+  replicas: {{ .Values.applicationSet.replicaCount }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 6 }}
+  template:
+    metadata:
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.applicationSet.podAnnotations) }}
+      annotations:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+      {{- end }}
+      labels:
+        {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 8 }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.applicationSet.podLabels) }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.applicationSet.imagePullSecrets | default .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-cd.applicationSetServiceAccountName" . }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      containers:
+        - name: {{ .Values.applicationSet.name }}
+          image: {{ default .Values.global.image.repository .Values.applicationSet.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.applicationSet.image.tag }}
+          imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.applicationSet.image.imagePullPolicy }}
+          command:
+            - entrypoint.sh
+            - argocd-applicationset-controller
+            - --metrics-addr=:{{ .Values.applicationSet.containerPorts.metrics }}
+            - --probe-addr=:{{ .Values.applicationSet.containerPorts.probe }}
+            - --webhook-addr=:{{ .Values.applicationSet.containerPorts.webhook }}
+            {{- with .Values.applicationSet.args.policy }}
+            - --policy={{ . }}
+            {{- end }}
+            {{- with .Values.applicationSet.args.dryRun }}
+            - --dry-run={{ . }}
+            {{- end }}
+            {{- with .Values.applicationSet.logFormat }}
+            - --logformat
+            - {{ . }}
+            {{- end }}
+            {{- with .Values.applicationSet.logLevel }}
+            - --loglevel
+            - {{ . }}
+            {{- end }}
+            {{- with .Values.applicationSet.extraArgs }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          env:
+            {{- with .Values.applicationSet.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_LEADER_ELECTION
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.enable.leader.election
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.namespace
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_REPO_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  key: repo.server
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_POLICY
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.policy
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.debug
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_LOGFORMAT
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.log.format
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.log.level
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_DRY_RUN
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.dryrun
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_GIT_MODULES_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.enable.git.submodule
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_PROGRESSIVE_SYNCS
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.enable.progressive.syncs
+                  name: argocd-cmd-params-cm
+                  optional: true
+          {{- with .Values.applicationSet.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.applicationSet.containerPorts.metrics }}
+              protocol: TCP
+            - name: probe
+              containerPort: {{ .Values.applicationSet.containerPorts.probe }}
+              protocol: TCP
+            - name: webhook
+              containerPort: {{ .Values.applicationSet.containerPorts.webhook }}
+              protocol: TCP
+          {{- if .Values.applicationSet.livenessProbe.enabled }}
+          livenessProbe:
+            tcpSocket:
+              port: probe
+            initialDelaySeconds: {{ .Values.applicationSet.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.applicationSet.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.applicationSet.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.applicationSet.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.applicationSet.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.applicationSet.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: probe
+            initialDelaySeconds: {{ .Values.applicationSet.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.applicationSet.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.applicationSet.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.applicationSet.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.applicationSet.readinessProbe.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.applicationSet.resources | nindent 12 }}
+          volumeMounts:
+            {{- with .Values.applicationSet.extraVolumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            - mountPath: /app/config/ssh
+              name: ssh-known-hosts
+            - mountPath: /app/config/tls
+              name: tls-certs
+            - mountPath: /app/config/gpg/source
+              name: gpg-keys
+            - mountPath: /app/config/gpg/keys
+              name: gpg-keyring
+            - mountPath: /tmp
+              name: tmp
+        {{- with .Values.applicationSet.extraContainers }}
+          {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+      {{- with .Values.applicationSet.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
+      {{- with .Values.applicationSet.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+{{ (include "argo-cd.retemplate" (dict "value" (default .Values.global.affinity .Values.applicationSet.affinity) "context" $) ) | indent 8 }}
+      {{- with .Values.applicationSet.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.applicationSet.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      volumes:
+        {{- with .Values.applicationSet.extraVolumes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: ssh-known-hosts
+          configMap:
+            name: argocd-ssh-known-hosts-cm
+        - name: tls-certs
+          configMap:
+            name: argocd-tls-certs-cm
+        - name: gpg-keys
+          configMap:
+            name: argocd-gpg-keys-cm
+        - name: gpg-keyring
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+      {{- with .Values.applicationSet.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.applicationSet.dnsPolicy }}
+{{- end }}

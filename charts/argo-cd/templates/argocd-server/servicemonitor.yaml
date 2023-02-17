@@ -14,9 +14,13 @@ metadata:
     {{- with .Values.server.metrics.serviceMonitor.additionalLabels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
+  annotations:
+    {{- range $key, $value := .Values.server.metrics.serviceMonitor.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
   endpoints:
-    - port: metrics
+    - port: {{ .Values.server.metrics.service.portName }}
       {{- with .Values.server.metrics.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}
@@ -27,6 +31,13 @@ spec:
       {{- end }}
       {{- with .Values.server.metrics.serviceMonitor.metricRelabelings }}
       metricRelabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.metrics.serviceMonitor.scheme }}
+      scheme: {{ . }}
+      {{- end }}
+      {{- with .Values.server.metrics.serviceMonitor.tlsConfig }}
+      tlsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
   namespaceSelector:

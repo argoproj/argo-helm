@@ -1,7 +1,14 @@
-{{ if not .Values.global.skipCrds }}
+{{- if .Values.crds.install }}
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  annotations:
+    {{- if .Values.crds.keep }}
+    "helm.sh/resource-policy": keep
+    {{- end }}
+    {{- with .Values.crds.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   labels:
     app.kubernetes.io/name: appprojects.argoproj.io
     app.kubernetes.io/part-of: argocd
@@ -160,6 +167,10 @@ spec:
                       for apps which have orphaned resources
                     type: boolean
                 type: object
+              permitOnlyProjectScopedClusters:
+                description: PermitOnlyProjectScopedClusters determines whether destinations
+                  can only reference clusters which are project-scoped
+                type: boolean
               roles:
                 description: Roles are user defined RBAC roles associated with this
                   project
@@ -221,6 +232,12 @@ spec:
                   required:
                   - keyID
                   type: object
+                type: array
+              sourceNamespaces:
+                description: SourceNamespaces defines the namespaces application resources
+                  are allowed to be created in
+                items:
+                  type: string
                 type: array
               sourceRepos:
                 description: SourceRepos contains list of repository URLs which can
@@ -311,4 +328,4 @@ spec:
         type: object
     served: true
     storage: true
-{{ end }}
+{{- end }}

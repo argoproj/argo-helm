@@ -1,0 +1,539 @@
+# Argo CD Chart
+
+A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
+
+Source code can be found here:
+
+{{ template "chart.sourcesList" . }}
+
+This is a **community maintained** chart. This chart installs [argo-cd](https://argo-cd.readthedocs.io/en/stable/), a declarative, GitOps continuous delivery tool for Kubernetes.
+
+The default installation is intended to be similar to the provided Argo CD [releases](https://github.com/argoproj/argo-cd/releases).
+
+If you want to avoid including sensitive information unencrypted (clear text) in your version control, make use of the [declarative setup] of Argo CD.
+For instance, rather than adding repositories and their keys in your Helm values, you could deploy [SealedSecrets](https://github.com/bitnami-labs/sealed-secrets) with contents as seen in this [repositories section](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repositories) or any other secrets manager service (i.e. HashiCorp Vault, AWS/GCP Secrets Manager, etc.).
+
+## High Availability
+
+This chart installs the non-HA version of Argo CD by default. If you want to run Argo CD in HA mode, you can use one of the example values in the next sections.
+Please also have a look into the upstream [Operator Manual regarding High Availability](https://argo-cd.readthedocs.io/en/stable/operator-manual/high_availability/) to understand how scaling of Argo CD works in detail.
+
+> **Warning:**
+> You need at least 3 worker nodes as the HA mode of redis enforces Pods to run on separate nodes.
+
+### HA mode with autoscaling
+
+```yaml
+redis-ha:
+  enabled: true
+
+controller:
+  replicas: 1
+
+server:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+
+repoServer:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+
+applicationSet:
+  replicaCount: 2
+```
+
+### HA mode without autoscaling
+
+```yaml
+redis-ha:
+  enabled: true
+
+controller:
+  replicas: 1
+
+server:
+  replicas: 2
+
+repoServer:
+  replicas: 2
+
+applicationSet:
+  replicaCount: 2
+```
+
+### Synchronizing Changes from Original Repository
+
+In the original [Argo CD repository](https://github.com/argoproj/argo-cd/) an [`manifests/install.yaml`](https://github.com/argoproj/argo-cd/blob/master/manifests/install.yaml) is generated using `kustomize`. It's the basis for the installation as [described in the docs](https://argo-cd.readthedocs.io/en/stable/getting_started/#1-install-argo-cd).
+
+When installing Argo CD using this helm chart the user should have a similar experience and configuration rolled out. Hence, it makes sense to try to achieve a similar output of rendered `.yaml` resources when calling `helm template` using the default settings in `values.yaml`.
+
+To update the templates and default settings in `values.yaml` it may come in handy to look up the diff of the `manifests/install.yaml` between two versions accordingly. This can either be done directly via github and look for `manifests/install.yaml`:
+
+https://github.com/argoproj/argo-cd/compare/v1.8.7...v2.0.0#files_bucket
+
+Or you clone the repository and do a local `git-diff`:
+
+```bash
+git clone https://github.com/argoproj/argo-cd.git
+cd argo-cd
+git diff v1.8.7 v2.0.0 -- manifests/install.yaml
+```
+
+Changes in the `CustomResourceDefinition` resources shall be fixed easily by copying 1:1 from the [`manifests/crds` folder](https://github.com/argoproj/argo-cd/tree/master/manifests/crds) into this [`charts/argo-cd/templates/crds` folder](https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd/templates/crds).
+
+### Custom resource definitions
+
+Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
+
+Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations). Starting with 5.2.0, the CRDs have been moved to `<chart>/templates` to address this design decision.
+
+If you are using Argo CD chart version prior to 5.2.0 or have elected to manage the Argo CD CRDs outside of the chart, please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
+
+```bash
+kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVersion>"
+
+# Eg. version v2.4.9
+kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
+```
+
+## Changelog
+
+For full list of changes please check ArtifactHub [changelog].
+
+Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
+
+### 5.19.0
+
+This version consolidates config for custom repository TLS certificates and SSH known hosts. If you provide this values please move them into new `configs.ssh` and `configs.tls` sections.
+You can also use new option `configs.ssh.extraHosts` to configure your SSH keys without maintaing / overwritting keys for public Git repositories.
+
+### 5.13.0
+
+This version reduces history limit for Argo CD deployment replicas to 3 to provide more visibility for Argo CD deployments that manage itself. If you need more deployment revisions for rollbacks set `global.revisionHistoryLimit` parameter.
+
+### 5.12.0
+
+If Argo CD is managing termination of TLS and you are using `configs.secret.argocdServerTlsConfig` option to provide custom TLS configuration for this chart, please use `server.certificate` or `server.certificateSecret` instead.
+For the secrets for tls termination, please use a secret named `argocd-server-tls` instead of `argocd-secret`.
+For the technical details please check the [Argo CD documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server). When transitioning from the one secret to the other pay attention to `tls.key` and `tls.crt` keys.
+
+### 5.10.0
+
+This version hardens security by configuring default container security contexts and adds hard requirement for Kubernetes 1.22+ to work properly.
+The change aligns chart with officially [supported versions](https://argo-cd.readthedocs.io/en/release-2.5/operator-manual/installation/#supported-versions) by upstream project.
+
+### 5.7.0
+
+This version introcudes new `configs.cm` and `configs.rbac` sections that replaces `server.config` and `server.rbacConfig` respectively.
+Please move your current configuration to the new place. The Argo CD RBAC config now also sets defaults in the `argocd-rbac-cm`.
+If you have manually created this ConfigMap please ensure templating is disabled so you will not lose your changes.
+
+### 5.5.20
+
+This version moved API version templates into dedicated helper. If you are using these in your umbrella
+chart please migrate your templates to pattern `argo-cd.apiVersion.<component>`.
+
+### 5.5.0
+
+This version introduces new `configs.params` section that replaces command line arguments for containers.
+Please refer to documentation in values.yaml for migrating the configuration.
+
+### 5.2.0
+
+Custom resource definitions were moved to `templates` folder so they can be managed by Helm.
+
+To adopt already created CRDs, please use following command:
+
+```bash
+YOUR_ARGOCD_NAMESPACE="" # e.g. argo-cd
+YOUR_ARGOCD_RELEASENAME="" # e.g. argo-cd
+
+for crd in "applications.argoproj.io" "applicationsets.argoproj.io" "argocdextensions.argoproj.io" "appprojects.argoproj.io"; do
+  kubectl label --overwrite crd $crd app.kubernetes.io/managed-by=Helm
+  kubectl annotate --overwrite crd $crd meta.helm.sh/release-namespace="$YOUR_ARGOCD_NAMESPACE"
+  kubectl annotate --overwrite crd $crd meta.helm.sh/release-name="$YOUR_ARGOCD_RELEASENAME"
+done
+```
+
+### 5.0.0
+
+This version **removes support for**:
+
+- deprecated repository credentials (parameter `configs.repositoryCredentials`)
+- option to run application controller as a Deployment
+- the parameters `server.additionalApplications` and `server.additionalProjects`
+
+Please carefully read the following section if you are using these parameters!
+
+In order to upgrade Applications and Projects safely against CRDs' upgrade, `server.additionalApplications` and `server.additionalProjects` are moved to [argocd-apps](../argocd-apps).
+
+If you are using `server.additionalApplications` or `server.additionalProjects`, you can adopt to [argocd-apps](../argocd-apps) as below:
+
+1. Add [helm.sh/resource-policy annotation](https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource) to avoid resources being removed by upgrading Helm chart
+
+You can keep your existing CRDs by adding `"helm.sh/resource-policy": keep` on `additionalAnnotations`, under `server.additionalApplications` and `server.additionalProjects` blocks, and running `helm upgrade`.
+
+e.g:
+
+```yaml
+server:
+  additionalApplications:
+    - name: guestbook
+      namespace: argocd
+      additionalLabels: {}
+      additionalAnnotations:
+        "helm.sh/resource-policy": keep # <-- add this
+      finalizers:
+      - resources-finalizer.argocd.argoproj.io
+      project: guestbook
+      source:
+        repoURL: https://github.com/argoproj/argocd-example-apps.git
+        targetRevision: HEAD
+        path: guestbook
+        directory:
+          recurse: true
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: guestbook
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: false
+      ignoreDifferences:
+      - group: apps
+        kind: Deployment
+        jsonPointers:
+        - /spec/replicas
+      info:
+      - name: url
+        value: https://argoproj.github.io/
+```
+
+You can also keep your existing CRDs by running the following scripts.
+
+```bash
+# keep Applications
+for app in "guestbook"; do
+  kubectl annotate --overwrite application $app helm.sh/resource-policy=keep
+done
+
+# keep Projects
+for project in "guestbook"; do
+  kubectl annotate --overwrite appproject $project helm.sh/resource-policy=keep
+done
+```
+
+2. Upgrade argo-cd Helm chart to v5.0.0
+
+3. Remove keep [helm.sh/resource-policy annotation](https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource)
+
+```bash
+# delete annotations from Applications
+for app in "guestbook"; do
+  kubectl annotate --overwrite application $app helm.sh/resource-policy-
+done
+
+# delete annotations from Projects
+for project in "guestbook"; do
+  kubectl annotate --overwrite appproject $project helm.sh/resource-policy-
+done
+```
+
+4. Adopt existing resources to [argocd-apps](../argocd-apps)
+
+### 4.9.0
+
+This version starts to use upstream image with applicationset binary. Start command was changed from `applicationset-controller` to `argocd-applicationset-controller`
+
+### 4.3.*
+
+With this minor version, the notification notifier's `service.slack` is no longer configured by default.
+
+### 4.0.0 and above
+
+This helm chart version deploys Argo CD v2.3. The Argo CD Notifications and ApplicationSet are part of Argo CD now. You no longer need to install them separately. The Notifications and ApplicationSet components **are bundled into default** Argo CD installation.
+Please read the [v2.2 to 2.3 upgrade instructions] in the upstream repository.
+
+### 3.13.0
+
+This release removes the flag `--staticassets` from argocd server as it has been dropped upstream. If this flag needs to be enabled e.g for older releases of Argo CD, it can be passed via the `server.extraArgs` field
+
+### 3.10.2
+
+Argo CD has recently deprecated the flag `--staticassets` and from chart version `3.10.2` has been disabled by default
+It can be re-enabled by setting `server.staticAssets.enabled` to true
+
+### 3.8.1
+
+This bugfix version potentially introduces a rename (and recreation) of one or more ServiceAccounts. It _only happens_ when you use one of these customization:
+
+```yaml
+# Case 1) - only happens when you do not specify a custom name (repoServer.serviceAccount.name)
+repoServer:
+  serviceAccount:
+    create: true
+
+# Case 2)
+controller:
+  serviceAccount:
+    name: "" # or <nil>
+
+# Case 3)
+dex:
+  serviceAccount:
+    name: "" # or <nil>
+
+# Case 4)
+server:
+  serviceAccount:
+    name: "" # or <nil>
+```
+
+Please check if you are affected by one of these cases **before you upgrade**, especially when you use **cloud IAM roles for service accounts.** (eg. IRSA on AWS or Workload Identity for GKE)
+
+### 3.2.*
+
+With this minor version we introduced the evaluation for the ingress manifest (depending on the capabilities version), See [Pull Request](https://github.com/argoproj/argo-helm/pull/637).
+[Issue 703](https://github.com/argoproj/argo-helm/issues/703) reported that the capabilities evaluation is **not handled correctly when deploying the chart via an Argo CD instance**,
+especially deploying on clusters running a cluster version prior to `1.19` (which misses  `Ingress` on apiVersion `networking.k8s.io/v1`).
+
+If you are running a cluster version prior to `1.19` you can avoid this issue by directly installing chart version `3.6.0` and setting `kubeVersionOverride` like:
+
+```yaml
+kubeVersionOverride: "1.18.0"
+```
+
+Then you should no longer encounter this issue.
+
+
+### 3.0.0 and above
+
+Helm apiVersion switched to `v2`. Requires Helm `3.0.0` or above to install. [Read More](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/) on how to migrate your release from Helm 2 to Helm 3.
+
+### 2.14.7 and above
+
+The `matchLabels` key in the Argo CD Application Controller is no longer hard-coded. Note that labels are immutable so caution should be exercised when making changes to this resource.
+
+### 2.10.x to 2.11.0
+
+The application controller is now available as a `StatefulSet` when the `controller.enableStatefulSet` flag is set to true. Depending on your Helm deployment this may be a downtime or breaking change if enabled when using HA and will become the default in 3.x.
+
+### 1.8.7 to 2.x.x
+
+`controller.extraArgs`, `repoServer.extraArgs` and `server.extraArgs`  are now arrays of strings instead of a map
+
+What was
+
+```yaml
+server:
+  extraArgs:
+    insecure: ""
+```
+
+is now
+
+```yaml
+server:
+  extraArgs:
+  - --insecure
+```
+
+## Prerequisites
+
+- {{ template "chart.kubeVersionLine" . }}
+- Helm v3.0.0+
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add argo https://argoproj.github.io/argo-helm
+"argo" has been added to your repositories
+
+$ helm install my-release argo/argo-cd
+NAME: my-release
+...
+```
+
+## General parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if not (or  (hasPrefix "global" .Key) (hasPrefix "configs" .Key) (hasPrefix "controller" .Key) (hasPrefix "repoServer" .Key) (hasPrefix "server" .Key) (hasPrefix "applicationSet" .Key) (hasPrefix "notifications" .Key) (hasPrefix "dex" .Key) (hasPrefix "redis" .Key) (hasPrefix "externalRedis" .Key) ) }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+## Global Configs
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "global" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+## Argo CD Configs
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "configs" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+## Argo CD Controller
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "controller" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+## Argo Repo Server
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "repoServer" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+## Argo Server
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if and (hasPrefix "server" .Key) (not (hasPrefix "server.additional" .Key)) }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+### Using AWS ALB Ingress Controller With GRPC
+
+If you are using an AWS ALB Ingress controller, you will need to set `server.ingressGrpc.isAWSALB` to `true`. This will create a second service with the annotation `alb.ingress.kubernetes.io/backend-protocol-version: HTTP2` and modify the server ingress to add a condition annotation to route GRPC traffic to the new service.
+
+Example:
+
+```yaml
+server:
+  ingress:
+    enabled: true
+    annotations:
+      alb.ingress.kubernetes.io/backend-protocol: HTTPS
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+      alb.ingress.kubernetes.io/scheme: internal
+      alb.ingress.kubernetes.io/target-type: ip
+  ingressGrpc:
+    enabled: true
+    isAWSALB: true
+    awsALB:
+      serviceType: ClusterIP
+```
+
+## Dex
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "dex" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+## Redis
+
+### Option 1 - Single Redis instance (default option)
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "redis." .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+### Option 2 - Redis HA
+
+This option uses the following third-party chart to bootstrap a clustered Redis: https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha.
+For all available configuration options, please read upstream README and/or chart source.
+The main options are listed here:
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "redis-ha" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+| redis-ha.exporter.image | string | `nil` (follows subchart default) | Exporter image |
+| redis-ha.exporter.tag | string | `nil` (follows subchart default) | Exporter tag |
+| redis-ha.haproxy.image.repository | string | `nil` (follows subchart default) | HAProxy Image Repository |
+| redis-ha.haproxy.image.tag | string | `nil` (follows subchart default) | HAProxy Image Tag |
+| redis-ha.image.repository | string | `nil` (follows subchart default) | Redis image repository |
+
+### Option 3 - External Redis
+
+If you want to use an existing Redis (eg. a managed service from a cloud provider), you can use these parameters:
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "externalRedis" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+## ApplicationSet
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "applicationSet" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+## Notifications
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "notifications" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/helm-docs)
+
+[Argo CD RBAC policy]: https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/
+[affinity]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+[BackendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/concepts/backendconfig#backendconfigspec_v1beta1_cloudgooglecom
+[CSS styles]: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
+[changelog]: https://artifacthub.io/packages/helm/argo/argo-cd?modal=changelog
+[DNS configuration]: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+[external cluster credentials]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
+[FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+[declarative setup]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup
+[gRPC-ingress]: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
+[GnuPG]: https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/
+[HPA]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+[MetricRelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
+[Node selector]: https://kubernetes.io/docs/user-guide/node-selection/
+[PodDisruptionBudget]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets
+[probe]: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+[RelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
+[Tolerations]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+[TopologySpreadConstraints]: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+[values.yaml]: values.yaml
+[v2.2 to 2.3 upgrade instructions]: https://github.com/argoproj/argo-cd/blob/v2.3.0/docs/operator-manual/upgrading/2.2-2.3.md

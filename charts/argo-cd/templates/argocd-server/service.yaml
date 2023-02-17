@@ -1,12 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  {{- if .Values.server.service.annotations }}
+{{- if or .Values.server.service.annotations .Values.server.service.public}}
   annotations:
+  {{- if .Values.server.service.public}}
+    metallb.universe.tf/address-pool: public-{{default .Values.global.region .Values.region | lower}}
+  {{- end}}
   {{- range $key, $value := .Values.server.service.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
-  {{- end }}
+{{- end }}
   name: {{ template "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
@@ -19,14 +22,14 @@ spec:
   - name: {{ .Values.server.service.servicePortHttpName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttp }}
-    targetPort: {{- if .Values.server.service.namedTargetPort }} {{ .Values.server.name }} {{- else }} {{ .Values.server.containerPort }} {{- end }}
+    targetPort: {{ .Values.server.containerPorts.server }}
     {{- if eq .Values.server.service.type "NodePort" }}
     nodePort: {{ .Values.server.service.nodePortHttp }}
     {{- end }}
   - name: {{ .Values.server.service.servicePortHttpsName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttps }}
-    targetPort: {{- if .Values.server.service.namedTargetPort }} {{ .Values.server.name }} {{- else }} {{ .Values.server.containerPort }} {{- end }}
+    targetPort: {{ .Values.server.containerPorts.server }}
     {{- if eq .Values.server.service.type "NodePort" }}
     nodePort: {{ .Values.server.service.nodePortHttps }}
     {{- end }}

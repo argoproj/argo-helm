@@ -1,0 +1,25 @@
+{{- if and .Values.notifications.enabled .Values.notifications.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "argo-cd.notifications.fullname" . }}-metrics
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" "metrics") | nindent 4 }}
+    {{- with .Values.notifications.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.notifications.metrics.service.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  selector:
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 6 }}
+  ports:
+  - name: {{ .Values.notifications.metrics.service.portName }}
+    protocol: TCP
+    port: {{ .Values.notifications.metrics.port }}
+    targetPort: metrics
+{{- end }}

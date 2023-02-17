@@ -1,47 +1,89 @@
-{{- $serviceName := include "argo-cd.server.fullname" . -}}
-{{- $servicePort :=  .Values.server.service.servicePortHttp -}}
-apiVersion: {{ include "argo-cd.ingress.apiVersion" . }}
+{{- if .Values.server.ingress.enabled -}}
+{{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingress.https -}}
+{{- $paths := .Values.server.ingress.paths -}}
+{{- $extraPaths := .Values.server.ingress.extraPaths -}}
+{{- $pathType := .Values.server.ingress.pathType -}}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    {{- if .Values.customExternalDnsName }}
-    kubernetes.io/ingress.class: {{ .Values.customIngressControllerClassAnnotation }}
-    {{- end }}
-    {{- if .Values.server.certificate.enabled }}
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/redirect-entry-point: https
-    {{- end }}
-    ingress.kubernetes.io/force-ssl-redirect: "false"
-    ingress.kubernetes.io/ssl-redirect: "false"
-  name: {{ template "argo-cd.server.fullname" . }}
+  name: {{ include "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    {{- with .Values.server.ingress.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- if .Values.server.ingress.annotations }}
+  annotations:
+    {{- range $key, $value := .Values.server.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+    {{- if and .Values.server.ingressGrpc.isAWSALB .Values.server.ingressGrpc.enabled }}
+    alb.ingress.kubernetes.io/conditions.{{ template "argo-cd.server.fullname" . }}-grpc: |
+      [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "Content-Type", "values":["application/grpc"]}}]
+    {{- end }}
+  {{- end }}
 spec:
+  {{- with .Values.server.ingress.ingressClassName }}
+  ingressClassName: {{ . }}
+  {{- end }}
   rules:
-    - host: {{ include "coreweave.externalDnsName" . }}
+  {{- if .Values.server.ingress.hosts }}
+    {{- range $host := .Values.server.ingress.hosts }}
+    - host: {{ $host | quote }}
       http:
         paths:
-          - path: /
-            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+          {{- with $extraPaths }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- range $p := $paths }}
+          {{- if and $.Values.server.ingressGrpc.isAWSALB $.Values.server.ingressGrpc.enabled }}
+          - path: {{ $p }}
             pathType: Prefix
-            {{- end }}
             backend:
-              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
               service:
-                name: {{ $serviceName }}
+                name: {{ template "argo-cd.server.fullname" $ }}-grpc
                 port:
                   {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
                   {{- else }}
                   name: {{ $servicePort }}
                   {{- end }}
-              {{- else }}
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
-              {{- end }}
-  {{- if .Values.server.certificate.enabled }}
+            {{- end }}
+          - path: {{ $p }}
+            pathType: {{ $pathType }}
+            backend:
+              service:
+                name: {{ include "argo-cd.server.fullname" $ }}
+                port:
+                  {{- if kindIs "float64" $servicePort }}
+                  number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
+          {{- end -}}
+    {{- end -}}
+  {{- else }}
+    - http:
+        paths:
+          {{- with $extraPaths }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- range $p := $paths }}
+          - path: {{ $p }}
+            pathType: {{ $pathType }}
+            backend:
+              service:
+                name: {{ include "argo-cd.server.fullname" $ }}
+                port:
+                  {{- if kindIs "float64" $servicePort }}
+                  number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
+          {{- end -}}
+  {{- end -}}
+  {{- with .Values.server.ingress.tls }}
   tls:
-    - hosts:
-      - {{ include "coreweave.externalDnsName" . }}
-      secretName: {{ include "coreweave.certSecretName" . }}
-  {{- end }}
+    {{- toYaml . | nindent 4 }}
+  {{- end -}}
+{{- end -}}

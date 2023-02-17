@@ -1,0 +1,25 @@
+{{- if .Values.repoServer.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "argo-cd.repoServer.fullname" . }}-metrics
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" (printf "%s-metrics" .Values.repoServer.name)) | nindent 4 }}
+    {{- with .Values.repoServer.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.repoServer.metrics.service.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  ports:
+  - name: {{ .Values.repoServer.metrics.service.portName }}
+    protocol: TCP
+    port: {{ .Values.repoServer.metrics.service.servicePort }}
+    targetPort: metrics
+  selector:
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 4 }}
+{{- end }}

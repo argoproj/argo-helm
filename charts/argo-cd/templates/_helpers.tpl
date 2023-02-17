@@ -1,34 +1,11 @@
 {{/* vim: set filetype=mustache: */}}
 {{/*
-Expand the name of the chart.
-*/}}
-{{- define "argo-cd.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "argo-cd.fullname" -}}
-{{- if .Values.fullnameOverride -}}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Create controller name and version as used by the chart label.
+Truncated at 52 chars because StatefulSet label 'controller-revision-hash' is limited
+to 63 chars and it includes 10 chars of hash and a separating '-'.
 */}}
 {{- define "argo-cd.controller.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.controller.name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.controller.name | trunc 52 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -37,6 +14,17 @@ Create dex name and version as used by the chart label.
 {{- define "argo-cd.dex.fullname" -}}
 {{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.dex.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Create Dex server endpoint
+*/}}
+{{- define "argo-cd.dex.server" -}}
+{{- $insecure := index .Values.configs.params "dexserver.disable.tls" | toString -}}
+{{- $scheme := (eq $insecure "true") | ternary "http" "https" -}}
+{{- $host := include "argo-cd.dex.fullname" . -}}
+{{- $port := int .Values.dex.servicePortHttp -}}
+{{- printf "%s://%s:%d" $scheme $host $port }}
+{{- end }}
 
 {{/*
 Create redis name and version as used by the chart label.
@@ -51,6 +39,18 @@ Create redis name and version as used by the chart label.
 {{- else -}}
 {{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.redis.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Return Redis server endpoint
+*/}}
+{{- define "argo-cd.redis.server" -}}
+{{- $redisHa := (index .Values "redis-ha") -}}
+{{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
+    {{- printf "%s:%s" (include "argo-cd.redis.fullname" .)  (toString .Values.redis.servicePort) }}
+{{- else if and .Values.externalRedis.host .Values.externalRedis.port }}
+    {{- printf "%s:%s" .Values.externalRedis.host (toString .Values.externalRedis.port) }}
+{{- end }}
 {{- end -}}
 
 {{/*
@@ -170,177 +170,162 @@ Create the name of the notifications bots slack service account to use
 {{- end -}}
 
 {{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "argo-cd.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Common labels
-*/}}
-{{- define "argo-cd.labels" -}}
-helm.sh/chart: {{ include "argo-cd.chart" .context }}
-{{ include "argo-cd.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
-app.kubernetes.io/managed-by: {{ .context.Release.Service }}
-app.kubernetes.io/part-of: argocd
-{{- with .context.Values.global.additionalLabels }}
-{{ toYaml . }}
-{{- end }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "argo-cd.selectorLabels" -}}
-{{- if .name -}}
-app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .name }}
-{{ end -}}
-app.kubernetes.io/instance: {{ .context.Release.Name }}
-{{- if .component }}
-app.kubernetes.io/component: {{ .component }}
-{{- end }}
-{{- end }}
-
-{{/*
-Return the appropriate apiVersion for ingress
-*/}}
-{{- define "argo-cd.ingress.apiVersion" -}}
-{{- if .Values.apiVersionOverrides.ingress -}}
-{{- print .Values.apiVersionOverrides.ingress -}}
-{{- else if semverCompare "<1.14-0" (include "argo-cd.kubeVersion" $) -}}
-{{- print "extensions/v1beta1" -}}
-{{- else if semverCompare "<1.19-0" (include "argo-cd.kubeVersion" $) -}}
-{{- print "networking.k8s.io/v1beta1" -}}
-{{- else -}}
-{{- print "networking.k8s.io/v1" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return the target Kubernetes version
-*/}}
-{{- define "argo-cd.kubeVersion" -}}
-  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
-{{- end -}}
-
-{{/*
 Argo Configuration Preset Values (Incluenced by Values configuration)
 */}}
-{{- define "argo-cd.config.presets" -}}
-  {{- if .Values.configs.styles }}
+{{- define "argo-cd.config.cm.presets" -}}
+{{- if .Values.configs.styles -}}
 ui.cssurl: "./custom/custom.styles.css"
-  {{- end }}
+{{- end -}}
+{{- if not .Values.global.cluster.ngcp}}
+resource.inclusions: |
+  - apiGroups:
+    - "kubeflow.org"
+    kinds:
+    - MPIJob
+    - TFJob
+    - MXJob
+    - PyTorchJob
+    - XGBoostJob
+    clusters:
+    - https://10.135.192.1:443
+    - https://kubernetes.default.svc
+    - apiGroups:
+    - "networking.k8s.io"
+    kinds:
+    - Ingress
+    - NetworkPolicy
+    clusters:
+    - https://10.135.192.1:443
+    - https://kubernetes.default.svc
+    - apiGroups:
+    - "cert-manager.io"
+    kinds:
+    - Certificate
+    clusters:
+    - https://10.135.192.1:443
+    - https://kubernetes.default.svc
+    - apiGroups:
+    - "*"
+    kinds:
+    - Deployment
+    - Pod
+    - ConfigMap
+    - Event
+    - LimitRange
+    - PersistentVolumeClaim
+    - PodTemplate
+    - ReplicationController
+    - Service
+    - Secret
+    - Endpoint
+    - ControllerRevision
+    - Application
+    - PodDisruptionBudget
+    - ServiceAccount
+    - StatefulSet
+    - SealedSecret
+    - Workflow
+    - WorkflowTemplate
+    - CronWorkflow
+    - AppProject
+    - Role
+    - RoleBinding
+    - InferenceService
+    - Revision
+    - PodAutoscaler
+    - Virtualservice
+    - HorizontalPodAutoscaler
+    - Batch
+    - Extention
+    - Job
+    - CronJob
+    - ResourceQuota
+    - IngressRoute
+    - IngressRouteTcp
+    - IngressRouteUdp
+    - Middleware
+    - TlsOption
+    - TlsStore
+    - TraefikService
+    - DataVolume
+    - ScaledObject
+    - Issuer
+    - CertificateRequest
+    - ServiceMonitor
+    - VirtualServer
+    clusters:
+    - https://10.135.192.1:443
+    - https://kubernetes.default.svc
+{{- end}}
 {{- end -}}
 
 {{/*
 Merge Argo Configuration with Preset Configuration
 */}}
-{{- define "argo-cd.config" -}}
-  {{- if .Values.server.configEnabled -}}
-{{- toYaml (mergeOverwrite (default dict (fromYaml (include "argo-cd.config.presets" $))) .Values.server.config) }}
-  {{- end -}}
-{{- end -}}
-{{- define "coreweave.config" -}}
-  {{- if .Values.server.configEnabled -}}
-{{- toYaml (mergeOverwrite (default dict (fromYaml (include "argo-cd.config" $))) .Values.server.exclusions) }}
-    {{- end -}}
-{{- end -}}
-{{/*
-Return the default Argo CD app version
-*/}}
-{{- define "argo-cd.defaultTag" -}}
-  {{- default .Chart.AppVersion .Values.global.image.tag }}
+{{- define "argo-cd.config.cm" -}}
+{{- $config := (mergeOverwrite (deepCopy (omit .Values.configs.cm "create" "annotations")) (.Values.server.config | default dict))  -}}
+{{- $preset := include "argo-cd.config.cm.presets" . | fromYaml | default dict -}}
+{{- range $key, $value := mergeOverwrite $preset $config }}
+{{ $key }}: {{ toString $value | toYaml }}
+{{- end }}
 {{- end -}}
 
 {{/*
-Create the name of the notifications controller secret to use
+Argo Params Default Configuration Presets
 */}}
-{{- define "argo-cd.notifications.secretName" -}}
-{{- if .Values.notifications.secret.create -}}
-    {{ default (printf "%s-secret" (include "argo-cd.notifications.fullname" .)) .Values.notifications.secret.name }}
-{{- else -}}
-    {{ default "argocd-notifications-secret" .Values.notifications.secret.name }}
-{{- end -}}
+{{- define "argo-cd.config.params.presets" -}}
+repo.server: "{{ include "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}"
+server.repo.server.strict.tls: {{ .Values.repoServer.certificateSecret.enabled | toString }}
+{{- with include "argo-cd.redis.server" . }}
+redis.server: {{ . | quote }}
+{{- end }}
+{{- if .Values.dex.enabled }}
+server.dex.server: {{ include "argo-cd.dex.server" . | quote }}
+server.dex.server.strict.tls: {{ .Values.dex.certificateSecret.enabled | toString }}
+{{- end }}
+{{- range $component := tuple "applicationsetcontroller" "controller" "server" "reposerver" }}
+{{ $component }}.log.format: {{ $.Values.global.logging.format | quote }}
+{{ $component }}.log.level: {{ $.Values.global.logging.level | quote }}
+{{- end }}
+{{- if .Values.applicationSet.enabled }}
+applicationsetcontroller.enable.leader.election: {{ gt (.Values.applicationSet.replicaCount | int64) 1 }}
+{{- end }}
 {{- end -}}
 
 {{/*
-Create the name of the configmap to use
+Merge Argo Params Configuration with Preset Configuration
 */}}
-{{- define "argo-cd.notifications.configMapName" -}}
-{{- if .Values.notifications.cm.create -}}
-    {{ default (printf "%s-cm" (include "argo-cd.notifications.fullname" .)) .Values.notifications.cm.name }}
-{{- else -}}
-    {{ default "argocd-notifications-cm" .Values.notifications.cm.name }}
-{{- end -}}
+{{- define "argo-cd.config.params" -}}
+{{- $config := omit .Values.configs.params "annotations" }}
+{{- $preset := include "argo-cd.config.params.presets" . | fromYaml | default dict -}}
+{{- range $key, $value := mergeOverwrite $preset $config }}
+{{ $key }}: {{ toString $value | toYaml }}
+{{- end }}
 {{- end -}}
 
-{{/* 
-    Create Hostname helper -- Coreweave Use Only
-*/}}
-{{- define "coreweave.externalDnsName" -}}
-{{- if .Values.fullnameOverride -}}
-{{ default (printf "%s.%s.%s.ingress.coreweave.cloud" .Values.fullnameOverride .Release.Namespace (.Values.region | lower | toString)) .Values.customExternalDnsName }}
-{{- else -}}
-{{ default (printf "%s.%s.%s.ingress.coreweave.cloud" .Release.Name .Release.Namespace (.Values.region | lower | toString)) .Values.customExternalDnsName }}
-{{- end -}}
-{{- end -}}
+{{- define "coreweave.vpc"}}
+  {{- if gt (len .Values.global.network.vpcs) 0}}
+vpc.coreweave.cloud/name: "{{ include "vpcList" . }}"
+  {{- end}}
+vpc.coreweave.cloud/kubernetes-networking: "{{- not .Values.global.network.disableK8sNetworking}}"
+{{- end}}
 
 {{/*
-    Create DRY Helpers
+Convert VPC array to comma separated list
 */}}
-{{- define "coreweave.nodeAffinityAndTolerations" -}}
-tolerations:
-  - key: is_cpu_compute
-    operator: Exists
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: topology.kubernetes.io/region
-              operator: In
-              values:
-                - {{ .Values.region }}
-            - key: node.coreweave.cloud/class
-              operator: In
-              values:
-                - cpu
+{{- define "vpcList" -}}
+{{- $names := list -}}
+{{- range .Values.global.network.vpcs }}
+{{- $names = .name | append $names -}}
 {{- end -}}
-{{- define "coreweave.tolerations" -}}
-{{- if .Values.tolerations }}
-{{- with .Values.tolerations }}
-tolerations:
-{{- toYaml . | nindent 2 }}
-{{- end }}
-{{- else }}
-tolerations:
-  - key: is_cpu_compute
-    operator: Exists
-{{- end }}
+{{- join ","  $names }}
 {{- end -}}
-{{- define "coreweave.affinity" -}}
-{{- if .Values.affinity }}
-{{- with .Values.affinity }}
-affinity:
-{{- toYaml . | nindent 2 }}
-{{- end }}
-{{- else }}
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: topology.kubernetes.io/region
-              operator: In
-              values:
-                - {{ .Values.region }}
-            - key: node.coreweave.cloud/class
-              operator: In
-              values:
-                - cpu
-{{- end }}
-{{- end -}}
-{{- define "coreweave.certSecretName" -}}
-{{printf "%s-tls-cert" .Release.Name }}
-{{- end -}}
+
+# Taken from bitnami common, allows for adding template strings to values file 
+{{- define "argo-cd.retemplate"}}
+  {{- if typeIs "string" .value }}
+        {{- tpl .value .context }}
+    {{- else }}
+        {{- tpl (.value | toYaml) .context }}
+    {{- end }}
+{{- end}}

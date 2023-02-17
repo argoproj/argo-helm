@@ -1,0 +1,25 @@
+{{- if and .Values.applicationSet.enabled .Values.applicationSet.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "argo-cd.applicationSet.fullname" . }}-metrics
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" "metrics") | nindent 4 }}
+    {{- with .Values.applicationSet.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.applicationSet.metrics.service.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  ports:
+  - name:  {{ .Values.applicationSet.metrics.service.portName }}
+    protocol: TCP
+    port: {{ .Values.applicationSet.metrics.service.servicePort }}
+    targetPort: metrics
+  selector:
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 4 }}
+{{- end }}

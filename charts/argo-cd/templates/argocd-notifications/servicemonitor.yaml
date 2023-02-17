@@ -14,15 +14,34 @@ metadata:
     {{- if .Values.notifications.metrics.serviceMonitor.additionalLabels }}
       {{- toYaml .Values.notifications.metrics.serviceMonitor.additionalLabels | nindent 4 }}
     {{- end }}
+  {{- with .Values.notifications.metrics.serviceMonitor.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   endpoints:
-    - port: metrics
+    - port: {{ .Values.notifications.metrics.service.portName }}
       path: /metrics
       {{- if .Values.notifications.metrics.serviceMonitor.interval }}
       interval: {{ .Values.notifications.metrics.serviceMonitor.interval }}
       {{- end }}
       {{- if .Values.notifications.metrics.serviceMonitor.scrapeTimeout }}
       scrapeTimeout: {{ .Values.notifications.metrics.serviceMonitor.scrapeTimeout }}
+      {{- end }}
+      {{- with .Values.notifications.metrics.serviceMonitor.scheme }}
+      scheme: {{ . }}
+      {{- end }}
+      {{- with .Values.notifications.metrics.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.metrics.serviceMonitor.relabelings }}
+      relabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.metrics.serviceMonitor.metricRelabelings }}
+      metricRelabelings:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
   namespaceSelector:
     matchNames:

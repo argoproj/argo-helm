@@ -1,13 +1,21 @@
-{{ if .Values.notifications.bots.slack.enabled }}
+{{ if and .Values.notifications.enabled .Values.notifications.bots.slack.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.notifications.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
   name: {{ template "argo-cd.notifications.fullname" . }}-bot
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" .Values.notifications.bots.slack.name) | nindent 4 }}
 spec:
+  replicas: 1
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   strategy:
-    {{- .Values.notifications.bots.slack.updateStrategy | toYaml | nindent 4 }}
+    type: Recreate
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" "metrics") | nindent 6 }}
@@ -16,29 +24,50 @@ spec:
       labels:
         {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.notifications.bots.slack.name "name" "metrics") | nindent 8 }}
     spec:
-    {{- with .Values.notifications.bots.slack.imagePullSecrets }}
+      {{- with .Values.notifications.bots.slack.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-      serviceAccountName: {{ template "argo-cd.notificationsBotsSlackServiceAccountName" . }}
-      {{- with .Values.notifications.bots.slack.securityContext }}
-      securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-cd.notificationsBotsSlackServiceAccountName" . }}
       containers:
-        - name: {{ template "argo-cd.notifications.fullname" . }}-bot
+        - name: {{ include "argo-cd.notifications.fullname" . }}-bot
           image: {{ default .Values.global.image.repository .Values.notifications.bots.slack.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.notifications.bots.slack.image.tag }}
           imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.notifications.bots.slack.image.pullPolicy }}
-          resources:
-            {{- toYaml .Values.notifications.bots.slack.resources | nindent 12 }}
           command:
             - argocd-notifications
             - bot
+            - --loglevel={{ default .Values.global.logging.level .Values.notifications.bots.slack.logLevel }}
+            - --logformat={{ default .Values.global.logging.format .Values.notifications.bots.slack.logFormat }}
+            {{- range .Values.notifications.bots.slack.extraArgs }}
+            - {{ . | squote }}
+            {{- end }}
           workingDir: /app
           ports:
           - containerPort: 8080
             name: http
-          {{- with .Values.notifications.bots.slack.containerSecurityContext }}
-          securityContext: {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{include "coreweave.nodeAffinityAndTolerations" . | nindent 6 }}
+          resources:
+            {{- toYaml .Values.notifications.bots.slack.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.notifications.bots.slack.containerSecurityContext | nindent 12 }}
+      {{- with .Values.notifications.bots.slack.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.bots.slack.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.bots.slack.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.bots.slack.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.notifications.bots.slack.dnsPolicy }}
 {{ end }}
