@@ -99,13 +99,22 @@ global:
     # -- Default deny all ingress traffic
     defaultDenyIngress: false
 
+  # -- Default priority class for all components
+  priorityClassName: ""
+
+  # -- Default node selector for all components
+  nodeSelector: {}
+
+  # -- Default tolerations for all components
+  tolerations: {}
+
   # Default affinity preset for all components
   affinity:
-    # -- Default pod anti-affinity rules. Either: `soft` or `hard`
+    # -- Default pod anti-affinity rules. Either: `none`, `soft` or `hard`
     podAntiAffinity: soft
     # Node affinity rules
     nodeAffinity:
-      # -- Default node affinity rules. Either: `soft` or `hard`
+      # -- Default node affinity rules. Either: `none`, `soft` or `hard`
       type: hard
       # -- Default match expressions for node affinity
       matchExpressions: []
@@ -114,6 +123,15 @@ global:
         #   values:
         #    - antarctica-east1
         #    - antarctica-west1
+
+  # -- Default [TopologySpreadConstraints] rules for all components
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector of the component
+  topologySpreadConstraints: []
+    # - maxSkew: 1
+    #   topologyKey: topology.kubernetes.io/zone
+    #   whenUnsatisfiable: DoNotSchedule
+
 
 ## Argo Configs
 configs:
@@ -637,10 +655,16 @@ controller:
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
 
+  # -- Priority class for the application controller pods
+  # @default -- `""` (defaults to global.priorityClassName)
+  priorityClassName: ""
+
   # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
   nodeSelector: {}
 
   # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
   tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
@@ -648,15 +672,13 @@ controller:
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the application controller
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
-  # - maxSkew: 1
-  #   topologyKey: topology.kubernetes.io/zone
-  #   whenUnsatisfiable: DoNotSchedule
-
-  # -- Priority class for the application controller pods
-  priorityClassName: ""
+    # - maxSkew: 1
+    #   topologyKey: topology.kubernetes.io/zone
+    #   whenUnsatisfiable: DoNotSchedule
 
   serviceAccount:
     # -- Create a service account for the application controller
@@ -978,24 +1000,30 @@ dex:
   # -- Service port for metrics access
   servicePortMetrics: 5558
 
+  # -- Priority class for the dex pods
+  # @default -- `""` (defaults to global.priorityClassName)
+  priorityClassName: ""
+
   # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
   nodeSelector: {}
+
   # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
   tolerations: []
+
   # -- Assign custom [affinity] rules to the deployment
   # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to dex
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
-  # - maxSkew: 1
-  #   topologyKey: topology.kubernetes.io/zone
-  #   whenUnsatisfiable: DoNotSchedule
-
-  # -- Priority class for dex
-  priorityClassName: ""
+    # - maxSkew: 1
+    #   topologyKey: topology.kubernetes.io/zone
+    #   whenUnsatisfiable: DoNotSchedule
 
 ## Redis
 redis:
@@ -1148,10 +1176,16 @@ redis:
   # -- Redis service port
   servicePort: 6379
 
+  # -- Priority class for redis pods
+  # @default -- `""` (defaults to global.priorityClassName)
+  priorityClassName: ""
+
   # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
   nodeSelector: {}
 
   # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
   tolerations: []
 
   # -- Assign custom [affinity] rules to the deployment
@@ -1159,15 +1193,13 @@ redis:
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to redis
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
-  # - maxSkew: 1
-  #   topologyKey: topology.kubernetes.io/zone
-  #   whenUnsatisfiable: DoNotSchedule
-
-  # -- Priority class for redis
-  priorityClassName: ""
+    # - maxSkew: 1
+    #   topologyKey: topology.kubernetes.io/zone
+    #   whenUnsatisfiable: DoNotSchedule
 
   serviceAccount:
     # -- Create a service account for the redis pod
@@ -1538,24 +1570,30 @@ server:
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
 
+  # -- Priority class for the Argo CD server pods
+  # @default -- `""` (defaults to global.priorityClassName)
+  priorityClassName: ""
+
   # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
   nodeSelector: {}
+
   # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
   tolerations: []
+
   # -- Assign custom [affinity] rules to the deployment
   # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the Argo CD server
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
-  # - maxSkew: 1
-  #   topologyKey: topology.kubernetes.io/zone
-  #   whenUnsatisfiable: DoNotSchedule
-
-  # -- Priority class for the Argo CD server
-  priorityClassName: ""
+    # - maxSkew: 1
+    #   topologyKey: topology.kubernetes.io/zone
+    #   whenUnsatisfiable: DoNotSchedule
 
   # TLS certificate configuration via cert-manager
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
@@ -2031,22 +2069,28 @@ repoServer:
     timeoutSeconds: 1
 
   # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
   nodeSelector: {}
+
   # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
   tolerations: []
+
   # -- Assign custom [affinity] rules to the deployment
   # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the repo server
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
-  # - maxSkew: 1
-  #   topologyKey: topology.kubernetes.io/zone
-  #   whenUnsatisfiable: DoNotSchedule
+    # - maxSkew: 1
+    #   topologyKey: topology.kubernetes.io/zone
+    #   whenUnsatisfiable: DoNotSchedule
 
-  # -- Priority class for the repo server
+  # -- Priority class for the repo server pods
+  # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
 
   # TLS certificate configuration via Secret
@@ -2365,16 +2409,28 @@ applicationSet:
     failureThreshold: 3
 
   # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
   nodeSelector: {}
 
   # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
   tolerations: []
 
   # -- Assign custom [affinity] rules
   # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
-  # -- If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default.
+  # -- Assign custom [TopologySpreadConstraints] rules to the ApplicationSet controller
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+    # - maxSkew: 1
+    #   topologyKey: topology.kubernetes.io/zone
+    #   whenUnsatisfiable: DoNotSchedule
+
+  # -- Priority class for the ApplicationSet controller pods
+  # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
 
   ## Webhook for the Git Generator
@@ -2611,16 +2667,28 @@ notifications:
       - ALL
 
   # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
   nodeSelector: {}
 
   # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
   tolerations: []
 
   # -- Assign custom [affinity] rules
   # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
+  # -- Assign custom [TopologySpreadConstraints] rules to the application controller
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+    # - maxSkew: 1
+    #   topologyKey: topology.kubernetes.io/zone
+    #   whenUnsatisfiable: DoNotSchedule
+
   # -- Priority class for the notifications controller pods
+  # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
 
   serviceAccount:
