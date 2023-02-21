@@ -1072,32 +1072,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 |-----|------|---------|-------------|
 | notifications.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
 | notifications.argocdUrl | string | `nil` | Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates |
-| notifications.bots.slack.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
-| notifications.bots.slack.containerSecurityContext | object | See [values.yaml] | Slack bot container-level security Context |
-| notifications.bots.slack.dnsConfig | object | `{}` | [DNS configuration] |
-| notifications.bots.slack.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Slack bot pods |
-| notifications.bots.slack.enabled | bool | `false` | Enable slack bot |
-| notifications.bots.slack.extraArgs | list | `[]` | List of extra cli args to add for Slack bot |
-| notifications.bots.slack.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Slack bot |
-| notifications.bots.slack.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Slack bot |
-| notifications.bots.slack.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Slack bot |
-| notifications.bots.slack.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
-| notifications.bots.slack.logFormat | string | `""` (defaults to global.logging.format) | Slack bot log format. Either `text` or `json` |
-| notifications.bots.slack.logLevel | string | `""` (defaults to global.logging.level) | Slack bot log level. One of: `debug`, `info`, `warn`, `error` |
-| notifications.bots.slack.nodeSelector | object | `{}` | [Node selector] |
-| notifications.bots.slack.pdb.annotations | object | `{}` | Annotations to be added to Slack bot pdb |
-| notifications.bots.slack.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Slack bot |
-| notifications.bots.slack.pdb.labels | object | `{}` | Labels to be added to Slack bot pdb |
-| notifications.bots.slack.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
-| notifications.bots.slack.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
-| notifications.bots.slack.resources | object | `{}` | Resource limits and requests for the Slack bot |
-| notifications.bots.slack.service.annotations | object | `{}` | Service annotations for Slack bot |
-| notifications.bots.slack.service.port | int | `80` | Service port for Slack bot |
-| notifications.bots.slack.service.type | string | `"LoadBalancer"` | Service type for Slack bot |
-| notifications.bots.slack.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
-| notifications.bots.slack.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| notifications.bots.slack.serviceAccount.name | string | `"argocd-notifications-bot"` | The name of the service account to use. |
-| notifications.bots.slack.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | notifications.cm.create | bool | `true` | Whether helm chart creates notifications controller config map |
 | notifications.containerPorts.metrics | int | `9001` | Metrics container port |
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
