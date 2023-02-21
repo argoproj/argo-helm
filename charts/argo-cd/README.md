@@ -682,6 +682,7 @@ NAME: my-release
 | server.ingress.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
 | server.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
 | server.ingress.labels | object | `{}` | Additional ingress labels |
+| server.ingress.namespace | string | `""` | Install ingress in the different namespace than Release  |
 | server.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
 | server.ingress.paths | list | `["/"]` | List of ingress paths |
 | server.ingress.tls | list | `[]` | Ingress TLS configuration |

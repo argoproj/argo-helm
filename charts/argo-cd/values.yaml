@@ -1693,6 +1693,8 @@ server:
   ingress:
     # -- Enable an ingress resource for the Argo CD server
     enabled: false
+    # -- Install ingress in the different namespace than Release 
+    namespace: ""
     # -- Additional ingress annotations
     annotations: {}
     # -- Additional ingress labels
