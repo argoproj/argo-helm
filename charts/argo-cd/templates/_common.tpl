@@ -79,8 +79,8 @@ Node affinity
 {{- else -}}
 {{- $preset := .context.Values.global.affinity -}}
 podAntiAffinity:
-  preferredDuringSchedulingIgnoredDuringExecution:
   {{- if (eq $preset.podAntiAffinity "soft") }}
+  preferredDuringSchedulingIgnoredDuringExecution:
   - weight: 100
     podAffinityTerm:
       labelSelector:
@@ -88,12 +88,6 @@ podAntiAffinity:
           app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .component.name }}
       topologyKey: kubernetes.io/hostname
   {{- else }}
-  - weight: 100
-    podAffinityTerm:
-      labelSelector:
-        matchLabels:
-          app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .component.name }}
-      topologyKey: topology.kubernetes.io/zone
   requiredDuringSchedulingIgnoredDuringExecution:
   - labelSelector:
       matchLabels:
