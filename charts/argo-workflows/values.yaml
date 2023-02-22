@@ -216,6 +216,8 @@ controller:
     level: info
     # -- Set the glog logging level
     globallevel: "0"
+    # -- Set the logging format (one of: `text`, `json`)
+    format: "text"
 
   # -- Service type of the controller Service
   serviceType: ClusterIP
@@ -468,6 +470,14 @@ server:
   # uncomment the lines below and comment out the default empty list `extraArgs: []` above:
   # extraArgs:
   # - --auth-mode=server
+
+  logging:
+    # -- Set the logging level (one of: `debug`, `info`, `warn`, `error`)
+    level: info
+    # -- Set the glog logging level
+    globallevel: "0"
+    # -- Set the logging format (one of: `text`, `json`)
+    format: "text"
 
   # -- Additional volume mounts to the server main container.
   volumeMounts: []
