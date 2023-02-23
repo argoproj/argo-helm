@@ -37,10 +37,15 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.global.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      serviceAccountName: {{ include "argo-cd.serverServiceAccountName" . }}
       containers:
       - name: {{ .Values.server.name }}
         image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.server.image.tag }}
@@ -368,11 +373,6 @@ spec:
             {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.server.name) | nindent 12 }}
         {{- end }}
         {{- end }}
-      {{- end }}
-      serviceAccountName: {{ template "argo-cd.serverServiceAccountName" . }}
-      {{- with .Values.global.hostAliases }}
-      hostAliases:
-        {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:
       {{- with .Values.server.volumes }}
