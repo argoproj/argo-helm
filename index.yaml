@@ -17000,6 +17000,33 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Added workflow startup option --log-format (defaults to 'text').
+        - kind: added
+          description: Added server startup option --log-format (defaults to 'text').
+        - kind: added
+          description: Added server startup option --loglevel (defaults to 'info').
+        - kind: added
+          description: Added server startup option --gloglevel (defaults to '0').
+    apiVersion: v2
+    appVersion: v3.4.5
+    created: "2023-02-24T21:57:06.572506723Z"
+    description: A Helm chart for Argo Workflows
+    digest: 63145f85cb47303829e5d437dc96af1f6e8a768abe386a4805a05570d632d82e
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.22.13/argo-workflows-0.22.13.tgz
+    version: 0.22.13
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Update documentation to explain why CRDs are in templates folder
     apiVersion: v2
@@ -21146,4 +21173,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-02-23T18:12:15.96133813Z"
+generated: "2023-02-24T21:57:06.574204725Z"
