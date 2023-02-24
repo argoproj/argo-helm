@@ -49,6 +49,12 @@ spec:
           {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}
+          - "--loglevel"
+          - "{{ .Values.server.logging.level }}"
+          - "--gloglevel"
+          - "{{ .Values.server.logging.globallevel }}"
+          - "--log-format"
+          - "{{ .Values.server.logging.format }}"
           ports:
           - name: web
             containerPort: 2746

@@ -106,6 +106,7 @@ Fields to note:
 | controller.links | list | `[]` | Configure Argo Server to show custom [links] |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
 | controller.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
+| controller.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
 | controller.logging.globallevel | string | `"0"` | Set the glog logging level |
 | controller.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | controller.metricsConfig.enabled | bool | `false` | Enables prometheus metrics server |
@@ -214,6 +215,9 @@ Fields to note:
 | server.ingress.tls | list | `[]` | Ingress TLS configuration |
 | server.loadBalancerIP | string | `""` | Static IP address to assign to loadBalancer service type `LoadBalancer` |
 | server.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
+| server.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
+| server.logging.globallevel | string | `"0"` | Set the glog logging level |
+| server.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | server.name | string | `"server"` | Server name string |
 | server.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
 | server.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the server pods |
