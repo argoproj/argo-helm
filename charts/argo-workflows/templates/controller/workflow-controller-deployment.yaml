@@ -46,6 +46,8 @@ spec:
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"
           - "{{ .Values.controller.logging.globallevel }}"
+          - "--log-format"
+          - "{{ .Values.controller.logging.format }}"
           {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}

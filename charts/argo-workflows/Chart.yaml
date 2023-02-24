@@ -3,7 +3,7 @@ appVersion: v3.4.5
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.22.12
+version: 0.22.13
 icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -13,5 +13,11 @@ maintainers:
     url: https://argoproj.github.io/
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: Update documentation to explain why CRDs are in templates folder
+    - kind: added
+      description: Added workflow startup option --log-format (defaults to 'text').
+    - kind: added
+      description: Added server startup option --log-format (defaults to 'text').
+    - kind: added
+      description: Added server startup option --loglevel (defaults to 'info').
+    - kind: added
+      description: Added server startup option --gloglevel (defaults to '0').
