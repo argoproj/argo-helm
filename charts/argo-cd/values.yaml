@@ -499,7 +499,7 @@ controller:
     # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
     # @default -- `""` (defaults to 0 if not specified)
     minAvailable: ""
-    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `controller.pdb.minAvailable`
     maxUnavailable: ""
 
@@ -623,7 +623,7 @@ controller:
       drop:
       - ALL
 
-  # Rediness probe for application controller
+  # Readiness probe for application controller
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
   readinessProbe:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
@@ -1243,7 +1243,7 @@ redis-ha:
     # -- Tag to use for the redis-exporter
     tag: 1.45.0
   persistentVolume:
-    # -- Configures persistency on Redis nodes
+    # -- Configures persistence on Redis nodes
     enabled: false
   redis:
     # -- Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated
@@ -1342,7 +1342,7 @@ server:
     # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
     # @default -- `""` (defaults to 0 if not specified)
     minAvailable: ""
-    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `server.pdb.minAvailable`
     maxUnavailable: ""
 
@@ -1380,7 +1380,7 @@ server:
   lifecycle: {}
 
   ## Argo UI extensions
-  ## This function in tech preview stage, do expect unstability or breaking changes in newer versions.
+  ## This function in tech preview stage, do expect instability or breaking changes in newer versions.
   ## Ref: https://github.com/argoproj-labs/argocd-extensions
   extensions:
     # -- Enable support for Argo UI extensions
@@ -1583,7 +1583,7 @@ server:
       group: ""
       # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
       kind: ""
-      # -- Certificate isser name. Eg. `letsencrypt`
+      # -- Certificate issuer name. Eg. `letsencrypt`
       name: ""
     # Private key of the certificate
     privateKey:
@@ -1885,7 +1885,7 @@ repoServer:
     # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
     # @default -- `""` (defaults to 0 if not specified)
     minAvailable: ""
-    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `repoServer.pdb.minAvailable`
     maxUnavailable: ""
 
@@ -2171,7 +2171,7 @@ applicationSet:
     # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
     # @default -- `""` (defaults to 0 if not specified)
     minAvailable: ""
-    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `applicationSet.pdb.minAvailable`
     maxUnavailable: ""
 
@@ -2445,7 +2445,7 @@ notifications:
     # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
     # @default -- `""` (defaults to 0 if not specified)
     minAvailable: ""
-    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `notifications.pdb.minAvailable`
     maxUnavailable: ""
 
