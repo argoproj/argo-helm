@@ -105,10 +105,6 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
-### 5.23.3
-
-Clarify syntax in values.yaml file
-
 ### 5.21.0
 
 This versions adds `global.affinity` options that are used as a presets. Override on component level works as before and replaces the default preset completely.
