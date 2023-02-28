@@ -45,8 +45,8 @@ rules:
 {{- if eq (toString (index (coalesce .Values.server.config .Values.configs.cm) "exec.enabled")) "true" }}
 - apiGroups:
   - ""
-resources:
+  resources:
   - pods/exec
-verbs:
+  verbs:
   - create
 {{- end }}
