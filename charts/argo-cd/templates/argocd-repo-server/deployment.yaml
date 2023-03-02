@@ -48,6 +48,9 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.repoServer.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       serviceAccountName: {{ include "argo-cd.repoServerServiceAccountName" . }}
       containers:
       - name: {{ .Values.repoServer.name }}
@@ -295,17 +298,19 @@ spec:
       {{- with .Values.repoServer.initContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.repoServer) }}
       affinity:
-        {{- include "argo-cd.affinity" (dict "context" . "component" .Values.repoServer) | nindent 8 }}
-      {{- with .Values.repoServer.nodeSelector }}
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.repoServer.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.repoServer.tolerations }}
+      {{- with .Values.repoServer.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.repoServer.topologySpreadConstraints }}
+      {{- with .Values.repoServer.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -350,9 +355,6 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-      {{- with .Values.repoServer.priorityClassName }}
-      priorityClassName: {{ . }}
-      {{- end }}
       hostNetwork: {{ .Values.repoServer.hostNetwork }}
       {{- with .Values.repoServer.dnsConfig }}
       dnsConfig:

@@ -44,6 +44,9 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.redis.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       serviceAccountName: {{ include "argo-cd.redisServiceAccountName" . }}
       containers:
       - name: {{ .Values.redis.name }}
@@ -102,17 +105,19 @@ spec:
       initContainers:
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- with .Values.redis.nodeSelector }}
+      {{- with .Values.redis.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.redis.tolerations }}
+      {{- with .Values.redis.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.redis) }}
       affinity:
-        {{- include "argo-cd.affinity" (dict "context" . "component" .Values.redis) | nindent 8 }}
-      {{- with .Values.redis.topologySpreadConstraints }}
+        {{-  trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.redis.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -122,9 +127,6 @@ spec:
             app.kubernetes.io/name: {{ include "argo-cd.name" $ }}-{{ $.Values.redis.name }}
         {{- end }}
         {{- end }}
-      {{- end }}
-      {{- with .Values.redis.priorityClassName }}
-      priorityClassName: {{ . }}
       {{- end }}
       {{- with .Values.redis.volumes }}
       volumes:

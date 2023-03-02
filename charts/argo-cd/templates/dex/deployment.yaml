@@ -47,7 +47,10 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "argo-cd.dexServiceAccountName" . }}
+      {{- with .Values.dex.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
       containers:
       - name: {{ .Values.dex.name }}
         image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
@@ -143,17 +146,19 @@ spec:
       {{- with .Values.dex.initContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- with .Values.dex.nodeSelector }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.dex) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dex.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.dex.tolerations }}
+      {{- with .Values.dex.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      affinity:
-        {{- include "argo-cd.affinity" (dict "context" . "component" .Values.dex) | nindent 8 }}
-      {{- with .Values.dex.topologySpreadConstraints }}
+      {{- with .Values.dex.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -182,9 +187,6 @@ spec:
             path: ca.crt
       {{- with .Values.dex.volumes }}
         {{- toYaml . | nindent 6 }}
-      {{- end }}
-      {{- with .Values.dex.priorityClassName }}
-      priorityClassName: {{ . }}
       {{- end }}
       {{- with .Values.dex.dnsConfig }}
       dnsConfig:
