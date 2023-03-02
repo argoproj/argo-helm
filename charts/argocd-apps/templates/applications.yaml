@@ -37,6 +37,9 @@ spec:
   syncPolicy:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .revisionHistoryLimit }}
+  revisionHistoryLimit: {{ . }}
+  {{- end }}
   {{- with .ignoreDifferences }}
   ignoreDifferences:
     {{- toYaml . | nindent 4 }}
