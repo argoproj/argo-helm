@@ -105,7 +105,12 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
-### 5.21.0
+### 5.24.0
+
+This versions adds additional global parameters for scheduling (`nodeSelector`, `tolerations`, `topologySpreadConstraints`).
+Default `global.affinity` rules can be disabled when `none` value is used for the preset.
+
+### 5.22.0
 
 This versions adds `global.affinity` options that are used as a presets. Override on component level works as before and replaces the default preset completely.
 
@@ -386,8 +391,8 @@ NAME: my-release
 |-----|------|---------|-------------|
 | global.additionalLabels | object | `{}` | Common labels for the all resources |
 | global.affinity.nodeAffinity.matchExpressions | list | `[]` | Default match expressions for node affinity |
-| global.affinity.nodeAffinity.type | string | `"hard"` | Default node affinity rules. Either: `soft` or `hard` |
-| global.affinity.podAntiAffinity | string | `"soft"` | Default pod anti-affinity rules. Either: `soft` or `hard` |
+| global.affinity.nodeAffinity.type | string | `"hard"` | Default node affinity rules. Either: `none`, `soft` or `hard` |
+| global.affinity.podAntiAffinity | string | `"soft"` | Default pod anti-affinity rules. Either: `none`, `soft` or `hard` |
 | global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
@@ -398,11 +403,15 @@ NAME: my-release
 | global.logging.level | string | `"info"` | Set the global logging level. One of: `debug`, `info`, `warn` or `error` |
 | global.networkPolicy.create | bool | `false` | Create NetworkPolicy objects for all components |
 | global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
+| global.nodeSelector | object | `{}` | Default node selector for all components |
 | global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
+| global.priorityClassName | string | `""` | Default priority class for all components |
 | global.revisionHistoryLimit | int | `3` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
 | global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
 | global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
+| global.tolerations | object | `{}` | Default tolerations for all components |
+| global.topologySpreadConstraints | list | `[]` | Default [TopologySpreadConstraints] rules for all components |
 
 ## Argo CD Configs
 
@@ -505,7 +514,7 @@ NAME: my-release
 | controller.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | controller.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | controller.name | string | `"application-controller"` | Application controller name string |
-| controller.nodeSelector | object | `{}` | [Node selector] |
+| controller.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | controller.pdb.annotations | object | `{}` | Annotations to be added to application controller pdb |
 | controller.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the application controller |
 | controller.pdb.labels | object | `{}` | Labels to be added to application controller pdb |
@@ -513,7 +522,7 @@ NAME: my-release
 | controller.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | controller.podAnnotations | object | `{}` | Annotations to be added to application controller pods |
 | controller.podLabels | object | `{}` | Labels to be added to application controller pods |
-| controller.priorityClassName | string | `""` | Priority class for the application controller pods |
+| controller.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the application controller pods |
 | controller.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | controller.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | controller.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -527,8 +536,8 @@ NAME: my-release
 | controller.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | controller.serviceAccount.name | string | `"argocd-application-controller"` | Service account name |
 | controller.statefulsetAnnotations | object | `{}` | Annotations for the application controller StatefulSet |
-| controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the application controller |
+| controller.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| controller.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to the application controller main container |
 | controller.volumes | list | `[]` | Additional volumes to the application controller pod |
 
@@ -588,7 +597,7 @@ NAME: my-release
 | repoServer.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | repoServer.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | repoServer.name | string | `"repo-server"` | Repo server name |
-| repoServer.nodeSelector | object | `{}` | [Node selector] |
+| repoServer.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | repoServer.pdb.annotations | object | `{}` | Annotations to be added to repo server pdb |
 | repoServer.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the repo server |
 | repoServer.pdb.labels | object | `{}` | Labels to be added to repo server pdb |
@@ -596,7 +605,7 @@ NAME: my-release
 | repoServer.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | repoServer.podAnnotations | object | `{}` | Annotations to be added to repo server pods |
 | repoServer.podLabels | object | `{}` | Labels to be added to repo server pods |
-| repoServer.priorityClassName | string | `""` | Priority class for the repo server |
+| repoServer.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the repo server pods |
 | repoServer.rbac | list | `[]` | Repo server rbac rules |
 | repoServer.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | repoServer.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
@@ -614,8 +623,8 @@ NAME: my-release
 | repoServer.serviceAccount.create | bool | `true` | Create repo server service account |
 | repoServer.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | repoServer.serviceAccount.name | string | `""` | Repo server service account name |
-| repoServer.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| repoServer.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the repo server |
+| repoServer.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| repoServer.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the repo server |
 | repoServer.volumeMounts | list | `[]` | Additional volumeMounts to the repo server main container |
 | repoServer.volumes | list | `[]` | Additional volumes to the repo server pod |
 
@@ -721,7 +730,7 @@ NAME: my-release
 | server.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | server.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | server.name | string | `"server"` | Argo CD server name |
-| server.nodeSelector | object | `{}` | [Node selector] |
+| server.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | server.pdb.annotations | object | `{}` | Annotations to be added to Argo CD server pdb |
 | server.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Argo CD server |
 | server.pdb.labels | object | `{}` | Labels to be added to Argo CD server pdb |
@@ -729,7 +738,7 @@ NAME: my-release
 | server.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
-| server.priorityClassName | string | `""` | Priority class for the Argo CD server |
+| server.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the Argo CD server pods |
 | server.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | server.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -761,8 +770,8 @@ NAME: my-release
 | server.serviceAccount.create | bool | `true` | Create server service account |
 | server.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | server.serviceAccount.name | string | `"argocd-server"` | Server service account name |
-| server.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| server.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the Argo CD server |
+| server.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| server.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the Argo CD server |
 | server.volumeMounts | list | `[]` | Additional volumeMounts to the server main container |
 | server.volumes | list | `[]` | Additional volumes to the server pod |
 
@@ -840,7 +849,7 @@ server:
 | dex.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | dex.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | dex.name | string | `"dex-server"` | Dex name |
-| dex.nodeSelector | object | `{}` | [Node selector] |
+| dex.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | dex.pdb.annotations | object | `{}` | Annotations to be added to Dex server pdb |
 | dex.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Dex server |
 | dex.pdb.labels | object | `{}` | Labels to be added to Dex server pdb |
@@ -848,7 +857,7 @@ server:
 | dex.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | dex.podAnnotations | object | `{}` | Annotations to be added to the Dex server pods |
 | dex.podLabels | object | `{}` | Labels to be added to the Dex server pods |
-| dex.priorityClassName | string | `""` | Priority class for dex |
+| dex.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the dex pods |
 | dex.readinessProbe.enabled | bool | `false` | Enable Kubernetes readiness probe for Dex >= 2.28.0 |
 | dex.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | dex.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
@@ -865,8 +874,8 @@ server:
 | dex.servicePortHttp | int | `5556` | Service port for HTTP access |
 | dex.servicePortHttpName | string | `"http"` | Service port name for HTTP access |
 | dex.servicePortMetrics | int | `5558` | Service port for metrics access |
-| dex.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| dex.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to dex |
+| dex.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| dex.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to dex |
 | dex.volumeMounts | list | `[]` | Additional volumeMounts to the dex main container |
 | dex.volumes | list | `[]` | Additional volumes to the dex pod |
 
@@ -917,7 +926,7 @@ server:
 | redis.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | redis.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | redis.name | string | `"redis"` | Redis name |
-| redis.nodeSelector | object | `{}` | [Node selector] |
+| redis.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | redis.pdb.annotations | object | `{}` | Annotations to be added to Redis pdb |
 | redis.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Redis |
 | redis.pdb.labels | object | `{}` | Labels to be added to Redis pdb |
@@ -925,7 +934,7 @@ server:
 | redis.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | redis.podAnnotations | object | `{}` | Annotations to be added to the Redis server pods |
 | redis.podLabels | object | `{}` | Labels to be added to the Redis server pods |
-| redis.priorityClassName | string | `""` | Priority class for redis |
+| redis.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for redis pods |
 | redis.resources | object | `{}` | Resource limits and requests for redis |
 | redis.securityContext | object | See [values.yaml] | Redis pod-level security context |
 | redis.service.annotations | object | `{}` | Redis service annotations |
@@ -935,8 +944,8 @@ server:
 | redis.serviceAccount.create | bool | `false` | Create a service account for the redis pod |
 | redis.serviceAccount.name | string | `""` | Service account name for redis pod |
 | redis.servicePort | int | `6379` | Redis service port |
-| redis.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| redis.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to redis |
+| redis.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| redis.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to redis |
 | redis.volumeMounts | list | `[]` | Additional volumeMounts to the redis container |
 | redis.volumes | list | `[]` | Additional volumes to the redis pod |
 
@@ -1029,7 +1038,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | applicationSet.name | string | `"applicationset-controller"` | ApplicationSet controller name string |
-| applicationSet.nodeSelector | object | `{}` | [Node selector] |
+| applicationSet.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | applicationSet.pdb.annotations | object | `{}` | Annotations to be added to ApplicationSet controller pdb |
 | applicationSet.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the ApplicationSet controller |
 | applicationSet.pdb.labels | object | `{}` | Labels to be added to ApplicationSet controller pdb |
@@ -1037,7 +1046,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | applicationSet.podAnnotations | object | `{}` | Annotations for the ApplicationSet controller pods |
 | applicationSet.podLabels | object | `{}` | Labels for the ApplicationSet controller pods |
-| applicationSet.priorityClassName | string | `""` | If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default. |
+| applicationSet.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the ApplicationSet controller pods |
 | applicationSet.readinessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for ApplicationSet controller |
 | applicationSet.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | applicationSet.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
@@ -1055,7 +1064,8 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.serviceAccount.create | bool | `true` | Create ApplicationSet controller service account |
 | applicationSet.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | applicationSet.serviceAccount.name | string | `"argocd-applicationset-controller"` | ApplicationSet controller service account name |
-| applicationSet.tolerations | list | `[]` | [Tolerations] for use with node taints |
+| applicationSet.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| applicationSet.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the ApplicationSet controller |
 | applicationSet.webhook.ingress.annotations | object | `{}` | Additional ingress annotations |
 | applicationSet.webhook.ingress.enabled | bool | `false` | Enable an ingress resource for Webhooks |
 | applicationSet.webhook.ingress.extraPaths | list | `[]` | Additional ingress paths |
@@ -1107,7 +1117,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | notifications.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
-| notifications.nodeSelector | object | `{}` | [Node selector] |
+| notifications.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | notifications.notifiers | object | See [values.yaml] | Configures notification services such as slack, email or custom webhook |
 | notifications.pdb.annotations | object | `{}` | Annotations to be added to notifications controller pdb |
 | notifications.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the notifications controller |
@@ -1116,7 +1126,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the notifications controller Pods |
 | notifications.podLabels | object | `{}` | Labels to be applied to the notifications controller Pods |
-| notifications.priorityClassName | string | `""` | Priority class for the notifications controller pods |
+| notifications.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the notifications controller pods |
 | notifications.resources | object | `{}` | Resource limits and requests for the notifications controller |
 | notifications.secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
 | notifications.secret.create | bool | `true` | Whether helm chart creates notifications controller secret |
@@ -1128,7 +1138,8 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.serviceAccount.name | string | `"argocd-notifications-controller"` | Notification controller service account name |
 | notifications.subscriptions | list | `[]` | Contains centrally managed global application subscriptions |
 | notifications.templates | object | `{}` | The notification template is used to generate the notification content |
-| notifications.tolerations | list | `[]` | [Tolerations] for use with node taints |
+| notifications.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| notifications.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | notifications.triggers | object | `{}` | The trigger defines the condition when the notification should be sent |
 
 ----------------------------------------------

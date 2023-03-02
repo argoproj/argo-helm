@@ -45,6 +45,9 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.notifications.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       serviceAccountName: {{ include "argo-cd.notificationsServiceAccountName" . }}
       containers:
         - name: {{ .Values.notifications.name }}
@@ -92,18 +95,28 @@ spec:
       initContainers:
         {{- tpl (toYaml . ) $ | nindent 8 }}
       {{- end }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.notifications) }}
       affinity:
-        {{- include "argo-cd.affinity" (dict "context" . "component" .Values.notifications) | nindent 8 }}
-      {{- with .Values.notifications.nodeSelector }}
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.notifications.tolerations }}
+      {{- with .Values.notifications.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.notifications.priorityClassName }}
-      priorityClassName: {{ . }}
+      {{- with .Values.notifications.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+          {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.notifications.name) | nindent 12 }}
+          {{- end }}
+        {{- end }}
       {{- end }}
       volumes:
         {{- with .Values.notifications.extraVolumes }}
