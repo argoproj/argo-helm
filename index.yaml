@@ -1588,6 +1588,38 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: ApplicationSet utilizes global tolerations
+    apiVersion: v2
+    appVersion: v2.6.3
+    created: "2023-03-03T17:53:37.971209495Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.4
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 536f3f5642bae6d61b0335447d9f7b17634ce309663b717c3fd49ba924cb4991
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.24.1/argo-cd-5.24.1.tgz
+    version: 5.24.1
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Global nodeSelector configuration
         - kind: added
@@ -21390,4 +21422,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-03-02T15:08:17.836656699Z"
+generated: "2023-03-03T17:53:37.973244938Z"
