@@ -104,7 +104,12 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
-### 5.21.0
+### 5.24.0
+
+This versions adds additional global parameters for scheduling (`nodeSelector`, `tolerations`, `topologySpreadConstraints`).
+Default `global.affinity` rules can be disabled when `none` value is used for the preset.
+
+### 5.22.0
 
 This versions adds `global.affinity` options that are used as a presets. Override on component level works as before and replaces the default preset completely.
 

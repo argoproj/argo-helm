@@ -43,6 +43,9 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.applicationSet.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       serviceAccountName: {{ include "argo-cd.applicationSetServiceAccountName" . }}
       containers:
         - name: {{ .Values.applicationSet.name }}
@@ -198,18 +201,28 @@ spec:
       initContainers:
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.applicationSet) }}
       affinity:
-        {{- include "argo-cd.affinity" (dict "context" . "component" .Values.applicationSet) | nindent 8 }}
+        {{- trim . | nindent 8 }}
+      {{- end }}
       {{- with .Values.applicationSet.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.applicationSet.tolerations }}
+      {{- with .Values.applicationSet.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.applicationSet.priorityClassName }}
-      priorityClassName: {{ . }}
+      {{- with .Values.applicationSet.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+          {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.applicationSet.name) | nindent 12 }}
+          {{- end }}
+        {{- end }}
       {{- end }}
       volumes:
         {{- with .Values.applicationSet.extraVolumes }}
