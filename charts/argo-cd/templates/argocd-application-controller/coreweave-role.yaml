@@ -17,6 +17,7 @@ rules:
     - pods/portforward
     - pods/exec
     - pods/attach
+    - pods/status
     verbs:
       - "*"
   - apiGroups:
@@ -246,3 +247,13 @@ rules:
       - workloadspreads
     verbs:
       - '*'
+  - apiGroups:
+    - ""
+    resourceNames:
+    - {{ .Release.Namespace }}
+    resources:
+    - namespaces
+    verbs:
+    - get
+    - list
+    - watch
