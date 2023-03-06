@@ -427,6 +427,9 @@ NAME: my-release
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
 | configs.cm.create | bool | `true` | Create the argocd-cm configmap for [declarative setup] |
 | configs.cm.url | string | `""` | Argo CD's externally facing base URL (optional). Required when configuring SSO |
+| configs.cmp.annotations | object | `{}` | Annotations to be added to argocd-cmp-cm configmap |
+| configs.cmp.create | bool | `true` | Create the argocd-cmp-cm configmap |
+| configs.cmp.plugins | object | `{}` | Plugin yaml files to be added to argocd-cmp-cm |
 | configs.credentialTemplates | object | `{}` | Repository credentials to be used as Templates for other repos |
 | configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
 | configs.gpg.annotations | object | `{}` | Annotations to be added to argocd-gpg-keys-cm configmap |
