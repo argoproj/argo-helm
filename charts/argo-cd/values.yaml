@@ -738,10 +738,13 @@ controller:
       enabled: false
       # -- PrometheusRule namespace
       namespace: "" # "monitoring"
-
+      # -- PrometheusRule selector
       selector: {}
         # prometheus: kube-prometheus
+
+      # -- PrometheusRule labels
       additionalLabels: {}
+      # -- PrometheusRule annotations
       annotations: {}
 
     # -- PrometheusRule.Spec for the application controller
