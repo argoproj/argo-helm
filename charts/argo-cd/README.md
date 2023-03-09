@@ -901,6 +901,7 @@ server:
 | redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
 | redis.exporter.containerSecurityContext | object | See [values.yaml] | Redis exporter security context |
 | redis.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
+| redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
 | redis.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
 | redis.exporter.image.tag | string | `"1.45.0"` | Tag to use for the redis-exporter |
