@@ -29,7 +29,9 @@ redis-ha:
   enabled: true
 
 controller:
-  replicas: 1
+  autoscaling:
+    enabled: true
+    minReplicas: 2
 
 server:
   autoscaling:
@@ -72,7 +74,7 @@ When installing Argo CD using this helm chart the user should have a similar exp
 
 To update the templates and default settings in `values.yaml` it may come in handy to look up the diff of the `manifests/install.yaml` between two versions accordingly. This can either be done directly via github and look for `manifests/install.yaml`:
 
-https://github.com/argoproj/argo-cd/compare/v1.8.7...v2.0.0#files_bucket
+<https://github.com/argoproj/argo-cd/compare/v1.8.7...v2.0.0#files_bucket>
 
 Or you clone the repository and do a local `git-diff`:
 
@@ -171,9 +173,9 @@ done
 
 This version **removes support for**:
 
-- deprecated repository credentials (parameter `configs.repositoryCredentials`)
-- option to run application controller as a Deployment
-- the parameters `server.additionalApplications` and `server.additionalProjects`
+* deprecated repository credentials (parameter `configs.repositoryCredentials`)
+* option to run application controller as a Deployment
+* the parameters `server.additionalApplications` and `server.additionalProjects`
 
 Please carefully read the following section if you are using these parameters!
 
@@ -351,8 +353,8 @@ server:
 
 ## Prerequisites
 
-- Kubernetes: `>=1.22.0-0`
-- Helm v3.0.0+
+* Kubernetes: `>=1.22.0-0`
+* Helm v3.0.0+
 
 ## Installing the Chart
 
@@ -956,7 +958,7 @@ server:
 
 ### Option 2 - Redis HA
 
-This option uses the following third-party chart to bootstrap a clustered Redis: https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha.
+This option uses the following third-party chart to bootstrap a clustered Redis: <https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha>.
 For all available configuration options, please read upstream README and/or chart source.
 The main options are listed here:
 

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  {{- with (mergeOverwrite (deepCopy .Values.global.statefulsetAnnotations) .Values.controller.statefulsetAnnotations) }}
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.controller.deploymentAnnotations) }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
@@ -11,10 +11,10 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 spec:
+  {{- if not .Values.controller.autoscaling.enabled }}
   replicas: {{ .Values.controller.replicas }}
-  # TODO: Remove for breaking release as history limit cannot be patched
-  revisionHistoryLimit: 5
-  serviceName: {{ include "argo-cd.controller.fullname" . }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
