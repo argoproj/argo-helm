@@ -500,7 +500,11 @@ NAME: my-release
 | controller.metrics.applicationLabels.enabled | bool | `false` | Enables additional labels in argocd_app_labels metric |
 | controller.metrics.applicationLabels.labels | list | `[]` | Additional labels |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
+| controller.metrics.rules.additionalLabels | object | `{}` | PrometheusRule labels |
+| controller.metrics.rules.annotations | object | `{}` | PrometheusRule annotations |
 | controller.metrics.rules.enabled | bool | `false` | Deploy a PrometheusRule for the application controller |
+| controller.metrics.rules.namespace | string | `""` | PrometheusRule namespace |
+| controller.metrics.rules.selector | object | `{}` | PrometheusRule selector |
 | controller.metrics.rules.spec | list | `[]` | PrometheusRule.Spec for the application controller |
 | controller.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | controller.metrics.service.labels | object | `{}` | Metrics service labels |
@@ -900,6 +904,7 @@ server:
 | redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
 | redis.exporter.containerSecurityContext | object | See [values.yaml] | Redis exporter security context |
 | redis.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
+| redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
 | redis.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
 | redis.exporter.image.tag | string | `"1.45.0"` | Tag to use for the redis-exporter |
