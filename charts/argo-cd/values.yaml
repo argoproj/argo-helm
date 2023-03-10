@@ -67,9 +67,6 @@ global:
     # -- Set the global logging level. One of: `debug`, `info`, `warn` or `error`
     level: info
 
-  # -- Annotations for the all deployed Statefulsets
-  statefulsetAnnotations: {}
-
   # -- Annotations for the all deployed Deployments
   deploymentAnnotations: {}
 
@@ -505,6 +502,34 @@ controller:
   # Additional replicas will cause sharding of managed clusters across number of replicas.
   replicas: 1
 
+  ## Argo CD Application Controller Horizontal Pod Autoscaler
+  autoscaling:
+    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Argo CD Application Controller
+    enabled: false
+    # -- Minimum number of replicas for the Argo CD Application Controller [HPA]
+    minReplicas: 1
+    # -- Maximum number of replicas for the Argo CD Application Controller [HPA]
+    maxReplicas: 5
+    # -- Average CPU utilization percentage for the Argo CD Application Controller [HPA]
+    targetCPUUtilizationPercentage: 50
+    # -- Average memory utilization percentage for the Argo CD Application Controller [HPA]
+    targetMemoryUtilizationPercentage: 50
+    # -- Configures the scaling behavior of the target in both Up and Down directions.
+    # This is only available on HPA apiVersion `autoscaling/v2beta2` and newer
+    behavior: {}
+      # scaleDown:
+      #  stabilizationWindowSeconds: 300
+      #  policies:
+      #   - type: Pods
+      #     value: 1
+      #     periodSeconds: 180
+      # scaleUp:
+      #   stabilizationWindowSeconds: 300
+      #   policies:
+      #   - type: Pods
+      #     value: 2
+      #     periodSeconds: 60
+
   ## Application controller Pod Disruption Budget
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
   pdb:
@@ -598,8 +623,8 @@ controller:
   #  - name: custom-tools
   #    emptyDir: {}
 
-  # -- Annotations for the application controller StatefulSet
-  statefulsetAnnotations: {}
+  # -- Annotations for the application controller Deployment
+  deploymentAnnotations: {}
 
   # -- Annotations to be added to application controller pods
   podAnnotations: {}
