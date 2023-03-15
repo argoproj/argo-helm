@@ -3,7 +3,7 @@ appVersion: v2.6.5
 kubeVersion: ">=1.22.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.26.2
+version: 5.26.3
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -23,5 +23,5 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: Use global.nodeSelector value as default value for nodeSelector on ApplicationSet
+    - kind: fixed
+      description: Use default metrics port for argocd-server
