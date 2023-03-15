@@ -38,8 +38,8 @@ jobs:
           changed=$(ct --config ./.github/configs/ct-lint.yaml list-changed)
           charts=$(echo "$changed" | tr '\n' ' ' | xargs)
           if [[ -n "$changed" ]]; then
-            echo "changed=true" >> $GITHUB_STATE
-            echo "changed_charts=$charts" >> $GITHUB_STATE
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "changed_charts=$charts" >> $GITHUB_OUTPUT
           fi
 
       - name: Run chart-testing (lint)
