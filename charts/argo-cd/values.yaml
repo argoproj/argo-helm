@@ -387,6 +387,7 @@ configs:
   ## Ref:
   ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
   ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/security/#external-cluster-credentials
+  ## - https://argo-cd.readthedocs.io/en/stable/user-guide/projects/#project-scoped-repositories-and-clusters
   clusterCredentials: []
     # - name: mycluster
     #   server: https://mycluster.com
@@ -403,6 +404,16 @@ configs:
     #   annotations: {}
     #   namespaces: namespace1,namespace2
     #   clusterResources: true
+    #   config:
+    #     bearerToken: "<authentication token>"
+    #     tlsClientConfig:
+    #       insecure: false
+    #       caData: "<base64 encoded certificate>"
+    # - name: mycluster3-project-scoped
+    #   server: https://mycluster3.com
+    #   labels: {}
+    #   annotations: {}
+    #   project: my-project1
     #   config:
     #     bearerToken: "<authentication token>"
     #     tlsClientConfig:
@@ -1581,7 +1592,7 @@ server:
     # -- Server container port
     server: 8080
     # -- Metrics container port
-    metrics: 8082
+    metrics: 8083
 
   # -- Host Network for Server pods
   hostNetwork: false
