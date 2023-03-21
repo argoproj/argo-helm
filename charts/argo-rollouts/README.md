@@ -47,7 +47,7 @@ For full list of changes please check ArtifactHub [changelog].
 | clusterInstall | bool | `true` | `false` runs controller in namespaced mode (does not require cluster RBAC) |
 | crdAnnotations | object | `{}` | Annotations to be added to all CRDs |
 | createClusterAggregateRoles | bool | `true` | flag to enable creation of cluster aggregate roles (requires cluster RBAC) |
-| extraObjects | list | `[]` | Additional manifests to deploy within the chart. A list of objects. |
+| extraObjects | list | `[]` | Additional manifests to deploy within the chart. A list of objects. # Can be used to add secrets for Analysis with 3rd-party monitoring solutions. |
 | fullnameOverride | string | `nil` | String to fully override "argo-rollouts.fullname" template |
 | imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry. Registry secret names as an array. |
 | installCRDs | bool | `true` | Install and upgrade CRDs |
@@ -77,13 +77,13 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
 | controller.createClusterRole | bool | `true` | flag to enable creation of cluster controller role (requires cluster RBAC) |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-controller.  A list of flags. |
-| controller.extraContainers | list | `[]` | Literal yaml for extra containers to be added to controller deployment. |
+| controller.extraContainers | list | `[]` | Literal yaml for extra containers to be added to controller deployment. # Additional containers to add to the rollouts controller deployment # This will be rendered as the literal yaml |
 | controller.extraEnv | list | `[]` | Additional environment variables for rollouts-controller. A list of name/value maps. |
 | controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | controller.image.registry | string | `"quay.io"` | Registry to use |
 | controller.image.repository | string | `"argoproj/argo-rollouts"` | Repository to use |
 | controller.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
-| controller.initContainers | list | `[]` | Init containers to add to the rollouts controller pod |
+| controller.initContainers | list | `[]` | Init containers to add to the rollouts controller pod # This will be rendered as the literal yaml |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
 | controller.metrics.serviceMonitor.additionalAnnotations | object | `{}` | Annotations to be added to the ServiceMonitor |
@@ -100,7 +100,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.replicas | int | `2` | The number of controller pods to run |
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the controller |
+| controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the controller # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/ # If labelSelector is left out, it will default to the labelSelector configuration of the deployment |
 | podAnnotations | object | `{}` | Annotations to be added to the Rollout pods |
 | podLabels | object | `{}` | Labels to be added to the Rollout pods |
 | podSecurityContext | object | `{"runAsNonRoot":true}` | Security Context to set on pod level |
@@ -127,7 +127,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.ingress.annotations | object | `{}` | Dashboard ingress annotations |
 | dashboard.ingress.enabled | bool | `false` | Enable dashboard ingress support |
 | dashboard.ingress.extraPaths | list | `[]` | Dashboard ingress extra paths |
-| dashboard.ingress.hosts | list | `[]` | Dashboard ingress hosts |
+| dashboard.ingress.hosts | list | `[]` | Dashboard ingress hosts # Argo Rollouts Dashboard Ingress. # Hostnames must be provided if Ingress is enabled. # Secrets must be manually created in the namespace |
 | dashboard.ingress.ingressClassName | string | `""` | Dashboard ingress class name |
 | dashboard.ingress.labels | object | `{}` | Dashboard ingress labels |
 | dashboard.ingress.pathType | string | `"Prefix"` | Dashboard ingress path type |
@@ -158,7 +158,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.serviceAccount.create | bool | `true` | Specifies whether a dashboard service account should be created |
 | dashboard.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | dashboard.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| dashboard.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the dashboard server |
+| dashboard.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the dashboard server # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/ # If labelSelector is left out, it will default to the labelSelector configuration of the deployment |
 
 ## Upgrading
 

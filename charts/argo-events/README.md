@@ -74,8 +74,8 @@ done
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
-| createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-events crds Only applies for cluster-wide installation (`controller.rbac.namespaced: false`) |
-| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
+| createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-events crds Only applies for cluster-wide installation (`controller.rbac.namespaced: false`) # Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles |
+| extraObjects | list | `[]` | Array of extra K8s manifests to deploy # Note: Supports use of custom Helm templates |
 | fullnameOverride | string | `""` | String to fully override "argo-events.fullname" template |
 | global.additionalLabels | object | `{}` | Additional labels to add to all resources |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
@@ -141,7 +141,7 @@ done
 | controller.serviceAccount.create | bool | `true` | Create a service account for the events controller |
 | controller.serviceAccount.name | string | `""` | Service account name |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the events controller |
+| controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the events controller # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/ # If labelSelector is left out, it will default to the labelSelector configuration of the deployment |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to the events controller main container |
 | controller.volumes | list | `[]` | Additional volumes to the events controller pod |
 
@@ -183,7 +183,7 @@ done
 | webhook.serviceAccount.create | bool | `true` | Create a service account for the admission webhook |
 | webhook.serviceAccount.name | string | `""` | Service account name |
 | webhook.tolerations | list | `[]` | [Tolerations] for use with node taints |
-| webhook.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the event controller |
+| webhook.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the event controller # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/ # If labelSelector is left out, it will default to the labelSelector configuration of the deployment |
 | webhook.volumeMounts | list | `[]` | Additional volumeMounts to the event controller main container |
 | webhook.volumes | list | `[]` | Additional volumes to the event controller pod |
 
