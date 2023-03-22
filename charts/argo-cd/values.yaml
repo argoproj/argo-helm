@@ -1564,9 +1564,6 @@ server:
   # -- Annotations to be added to server Deployment
   deploymentAnnotations: {}
 
-  # -- Annotations to be added to server Deployment
-  deploymentAnnotations: {}
-
   # -- Annotations to be added to server pods
   podAnnotations: {}
 
@@ -2176,23 +2173,6 @@ repoServer:
   # -- Priority class for the repo server pods
   # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
-
-  # TLS certificate configuration via Secret
-  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#configuring-tls-to-argocd-repo-server
-  ## Note: Issuing certificates via cert-manager in not supported right now because it's not possible to restart repo server automatically without extra controllers.
-  certificateSecret:
-    # -- Create argocd-repo-server-tls secret
-    enabled: false
-    # -- Annotations to be added to argocd-repo-server-tls secret
-    annotations: {}
-    # -- Labels to be added to argocd-repo-server-tls secret
-    labels: {}
-    # -- Certificate authority. Required for self-signed certificates.
-    ca: ''
-    # -- Certificate private key
-    key: ''
-    # -- Certificate data. Must contain SANs of Repo service (ie: argocd-repo-server, argocd-repo-server.argo-cd.svc)
-    crt: ''
 
   # TLS certificate configuration via Secret
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#configuring-tls-to-argocd-repo-server
