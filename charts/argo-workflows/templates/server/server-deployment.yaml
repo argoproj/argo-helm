@@ -33,6 +33,10 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.server.extraInitContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: argo-server
           image: "{{- include "argo-workflows.image" (dict "context" . "image" .Values.server.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.server.image.tag }}"
