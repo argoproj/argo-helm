@@ -560,16 +560,10 @@ NAME: my-release
 | repoServer.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the repo server [HPA] |
 | repoServer.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the repo server [HPA] |
 | repoServer.certificateSecret.annotations | object | `{}` | Annotations to be added to argocd-repo-server-tls secret |
-| repoServer.certificateSecret.annotations | object | `{}` | Annotations to be added to argocd-repo-server-tls secret |
-| repoServer.certificateSecret.ca | string | `""` | Certificate authority. Required for self-signed certificates. |
 | repoServer.certificateSecret.ca | string | `""` | Certificate authority. Required for self-signed certificates. |
 | repoServer.certificateSecret.crt | string | `""` | Certificate data. Must contain SANs of Repo service (ie: argocd-repo-server, argocd-repo-server.argo-cd.svc) |
-| repoServer.certificateSecret.crt | string | `""` | Certificate data. Must contain SANs of Repo service (ie: argocd-repo-server, argocd-repo-server.argo-cd.svc) |
-| repoServer.certificateSecret.enabled | bool | `false` | Create argocd-repo-server-tls secret |
 | repoServer.certificateSecret.enabled | bool | `false` | Create argocd-repo-server-tls secret |
 | repoServer.certificateSecret.key | string | `""` | Certificate private key |
-| repoServer.certificateSecret.key | string | `""` | Certificate private key |
-| repoServer.certificateSecret.labels | object | `{}` | Labels to be added to argocd-repo-server-tls secret |
 | repoServer.certificateSecret.labels | object | `{}` | Labels to be added to argocd-repo-server-tls secret |
 | repoServer.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the Repo server's Cluster Role resource |
 | repoServer.clusterRoleRules.rules | list | `[]` | List of custom rules for the Repo server's Cluster Role resource |
@@ -679,7 +673,6 @@ NAME: my-release
 | server.containerPorts.metrics | int | `8083` | Metrics container port |
 | server.containerPorts.server | int | `8080` | Server container port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
-| server.deploymentAnnotations | object | `{}` | Annotations to be added to server Deployment |
 | server.deploymentAnnotations | object | `{}` | Annotations to be added to server Deployment |
 | server.dnsConfig | object | `{}` | [DNS configuration] |
 | server.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Server pods |
