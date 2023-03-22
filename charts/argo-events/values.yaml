@@ -62,10 +62,14 @@ configs:
   ## NATS event bus
   nats:
     # -- Supported versions of NATS event bus
+    # @default -- See [values.yaml]
     versions:
       - version: latest
         natsStreamingImage: nats-streaming:latest
         metricsExporterImage: natsio/prometheus-nats-exporter:latest
+      - version: 0.22.1
+        natsStreamingImage: nats-streaming:0.22.1
+        metricsExporterImage: natsio/prometheus-nats-exporter:0.8.0
 
   ## JetStream event bus
   jetstream:
@@ -94,6 +98,35 @@ configs:
         metricsExporterImage: natsio/prometheus-nats-exporter:latest
         configReloaderImage: natsio/nats-server-config-reloader:latest
         startCommand: /nats-server
+
+# -- Array of extra K8s manifests to deploy
+## Note: Supports use of custom Helm templates
+extraObjects: []
+  # - apiVersion: secrets-store.csi.x-k8s.io/v1
+  #   kind: SecretProviderClass
+  #   metadata:
+  #     name: argo-events-secrets-store
+  #   spec:
+  #     provider: aws
+  #     parameters:
+  #       objects: |
+  #         - objectName: "argo-events"
+  #           objectType: "secretsmanager"
+  #           jmesPath:
+  #               - path: "client_id"
+  #                 objectAlias: "client_id"
+  #               - path: "client_secret"
+  #                 objectAlias: "client_secret"
+  #     secretObjects:
+  #     - data:
+  #       - key: client_id
+  #         objectName: client_id
+  #       - key: client_secret
+  #         objectName: client_secret
+  #       secretName: argo-events-secrets-store
+  #       type: Opaque
+  #       labels:
+  #         app.kubernetes.io/part-of: argocd
 
 ## Argo Events controller
 controller:
@@ -314,6 +347,9 @@ webhook:
 
   # -- Labels to be added to event controller pods
   podLabels: {}
+
+  # -- Port to listen on
+  port: 443
 
   # -- Event controller container-level security context
   containerSecurityContext: {}

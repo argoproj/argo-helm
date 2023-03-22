@@ -17,6 +17,19 @@ To regenerate this document, please run:
 ./scripts/helm-docs.sh
 ```
 
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add argo https://argoproj.github.io/argo-helm
+"argo" has been added to your repositories
+
+$ helm install my-release argo/argo-events
+NAME: my-release
+...
+```
+
 ## Upgrading
 
 ### Custom resource definitions

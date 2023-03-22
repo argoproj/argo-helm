@@ -1,29 +1,26 @@
 {{- if and .Values.applicationSet.enabled .Values.applicationSet.webhook.ingress.enabled -}}
-{{- $serviceName := include "argo-cd.applicationSet.fullname" . -}}
 {{- $servicePort := .Values.applicationSet.service.portName -}}
 {{- $paths := .Values.applicationSet.webhook.ingress.paths -}}
 {{- $extraPaths := .Values.applicationSet.webhook.ingress.extraPaths -}}
 {{- $pathType := .Values.applicationSet.webhook.ingress.pathType -}}
-apiVersion: {{ include "argo-cd.apiVersion.ingress" . }}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-{{- if .Values.applicationSet.webhook.ingress.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.applicationSet.webhook.ingress.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-{{- end }}
-  name: {{ template "argo-cd.applicationSet.fullname" . }}
+  name: {{ include "argo-cd.applicationSet.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
-    {{- if .Values.applicationSet.webhook.ingress.labels }}
-    {{- toYaml .Values.applicationSet.webhook.ingress.labels | nindent 4 }}
+    {{- with .Values.applicationSet.webhook.ingress.labels }}
+      {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.applicationSet.webhook.ingress.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
 spec:
-  {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
   {{- with .Values.applicationSet.webhook.ingress.ingressClassName }}
   ingressClassName: {{ . }}
-  {{- end }}
   {{- end }}
   rules:
   {{- if .Values.applicationSet.webhook.ingress.hosts }}
@@ -31,59 +28,45 @@ spec:
     - host: {{ $host }}
       http:
         paths:
-          {{- if $extraPaths }}
-          {{- toYaml $extraPaths | nindent 10 }}
+          {{- with $extraPaths }}
+          {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- range $p := $paths }}
           - path: {{ $p }}
-            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
             pathType: {{ $pathType }}
-            {{- end }}
             backend:
-              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
               service:
-                name: {{ $serviceName }}
+                name: {{ include "argo-cd.applicationSet.fullname" $ }}
                 port:
                   {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
                   {{- else }}
                   name: {{ $servicePort }}
                   {{- end }}
-              {{- else }}
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
-              {{- end }}
           {{- end -}}
     {{- end -}}
   {{- else }}
     - http:
         paths:
-          {{- if $extraPaths }}
-          {{- toYaml $extraPaths | nindent 10 }}
+          {{- with $extraPaths }}
+          {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- range $p := $paths }}
           - path: {{ $p }}
-            {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
             pathType: {{ $pathType }}
-            {{- end }}
             backend:
-              {{- if eq (include "argo-cd.apiVersion.ingress" $) "networking.k8s.io/v1" }}
               service:
-                name: {{ $serviceName }}
+                name: {{ include "argo-cd.applicationSet.fullname" $ }}
                 port:
                   {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
                   {{- else }}
                   name: {{ $servicePort }}
                   {{- end }}
-              {{- else }}
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
-              {{- end }}
           {{- end -}}
   {{- end -}}
-  {{- if .Values.applicationSet.webhook.ingress.tls }}
+  {{- with .Values.applicationSet.webhook.ingress.tls }}
   tls:
-    {{- toYaml .Values.applicationSet.webhook.ingress.tls | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end -}}
 {{- end -}}

@@ -44,17 +44,18 @@ rules:
       - get
       - list
       - watch
-  # deployments and podtemplates read access needed for workload reference support
   - apiGroups:
-      - ""
       - apps
     resources:
       - deployments
-      - podtemplates
     verbs:
       - get
       - list
       - watch
+      {{- if not .Values.dashboard.readonly }}
+      - update
+      - patch
+      {{- end }}
   - apiGroups:
       - apps
     resources:

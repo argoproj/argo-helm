@@ -38,8 +38,8 @@ jobs:
           changed=$(ct --config ./.github/configs/ct-lint.yaml --target-branch ${{ github.base_ref }} list-changed)
           charts=$(echo "$changed" | tr '\n' ' ' | xargs)
           if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
-            echo "::set-output name=changed_charts::$charts"
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "changed_charts=$charts" >> $GITHUB_OUTPUT
           fi
 
       - name: Run chart-testing (lint)
@@ -58,7 +58,7 @@ jobs:
           fi
 
       - name: Create kind cluster
-        uses: helm/kind-action@v1.4.0
+        uses: helm/kind-action@v1.5.0
         if: steps.list-changed.outputs.changed == 'true'
         with:
           config: .github/configs/kind-config.yaml

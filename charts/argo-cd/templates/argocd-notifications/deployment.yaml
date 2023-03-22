@@ -37,9 +37,16 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.global.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.notificationsServiceAccountName" . }}
       containers:
@@ -48,9 +55,9 @@ spec:
           imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.notifications.image.imagePullPolicy }}
           command:
             - argocd-notifications
+            - --metrics-port={{ .Values.notifications.containerPorts.metrics }}
             - --loglevel={{ default .Values.global.logging.level .Values.notifications.logLevel }}
             - --logformat={{ default .Values.global.logging.format .Values.notifications.logFormat }}
-            - --metrics-port={{ .Values.notifications.metrics.port }}
             - --namespace={{ .Release.Namespace }}
             - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
             {{- range .Values.notifications.extraArgs }}
@@ -66,7 +73,7 @@ spec:
           {{- end }}
           ports:
           - name: metrics
-            containerPort: {{ .Values.notifications.metrics.port }}
+            containerPort: {{ .Values.notifications.containerPorts.metrics }}
             protocol: TCP
           resources:
             {{- toYaml .Values.notifications.resources | nindent 12 }}
@@ -81,12 +88,47 @@ spec:
             {{- with .Values.notifications.extraVolumeMounts }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
+        {{- with .Values.notifications.extraContainers }}
+          {{- tpl (toYaml . ) $ | nindent 8 }}
+        {{- end }}
+      {{- with .Values.notifications.initContainers }}
+      initContainers:
+        {{- tpl (toYaml . ) $ | nindent 8 }}
+      {{- end }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.notifications) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.nodeSelector | default .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.tolerations | default .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notifications.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+          {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.notifications.name) | nindent 12 }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
       volumes:
-        - configMap:
+        {{- with .Values.notifications.extraVolumes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: tls-certs
+          configMap:
             name: argocd-tls-certs-cm
-          name: tls-certs
         - name: argocd-repo-server-tls
           secret:
+            secretName: argocd-repo-server-tls
+            optional: true
             items:
             - key: tls.crt
               path: tls.crt
@@ -94,24 +136,9 @@ spec:
               path: tls.key
             - key: ca.crt
               path: ca.crt
-            optional: true
-            secretName: argocd-repo-server-tls
-        {{- with .Values.notifications.extraVolumes }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
-      {{- with .Values.notifications.nodeSelector }}
-      nodeSelector:
+      {{- with .Values.notifications.dnsConfig }}
+      dnsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.notifications.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.notifications.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.notifications.priorityClassName }}
-      priorityClassName: {{ . }}
-    {{- end }}
+      dnsPolicy: {{ .Values.notifications.dnsPolicy }}
 {{- end }}

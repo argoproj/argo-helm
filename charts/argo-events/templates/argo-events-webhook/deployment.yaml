@@ -5,7 +5,7 @@ metadata:
   name: events-webhook
   labels:
     {{- include "argo-events.labels" (dict "context" . "component" .Values.webhook.name "name" .Values.webhook.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default (include "argo-events.defaultTag" .) .Values.webhook.image.tag | quote }}
+    app.kubernetes.io/version: {{ include "argo-events.webhook_chart_version_label" . }}
 spec:
   selector:
     matchLabels:
@@ -22,7 +22,7 @@ spec:
       {{- end }}
       labels:
         {{- include "argo-events.labels" (dict "context" . "component" .Values.webhook.name "name" .Values.webhook.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ default (include "argo-events.defaultTag" .) .Values.webhook.image.tag | quote }}
+        app.kubernetes.io/version: {{ include "argo-events.webhook_chart_version_label" . }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.webhook.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -37,7 +37,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ .Values.webhook.name }}
-        image: {{ default .Values.global.image.repository .Values.webhook.image.repository }}:{{ default (include "argo-events.defaultTag" .) .Values.controller.image.tag }}
+        image: {{ default .Values.global.image.repository .Values.webhook.image.repository }}:{{ default (include "argo-events.defaultTag" .) .Values.webhook.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.webhook.image.imagePullPolicy }}
         args:
         - webhook-service
@@ -50,6 +50,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: PORT
+          value: "{{ .Values.webhook.port }}"
         {{- with .Values.webhook.env }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -63,7 +65,7 @@ spec:
         {{- end }}
         ports:
         - name: webhook
-          containerPort: 443
+          containerPort: {{ .Values.webhook.port }}
           protocol: TCP
         livenessProbe:
           tcpSocket:

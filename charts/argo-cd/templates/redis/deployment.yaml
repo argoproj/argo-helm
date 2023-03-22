@@ -36,15 +36,18 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.redis.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "argo-cd.redisServiceAccountName" . }}
-      {{- with .Values.redis.initContainers }}
-      initContainers:
-        {{- toYaml . | nindent 6 }}
+      {{- with .Values.redis.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
       {{- end }}
+      serviceAccountName: {{ include "argo-cd.redisServiceAccountName" . }}
       containers:
       - name: {{ .Values.redis.name }}
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
@@ -67,7 +70,7 @@ spec:
         {{- end }}
         ports:
         - name: redis
-          containerPort: {{ .Values.redis.containerPort }}
+          containerPort: {{ .Values.redis.containerPorts.redis }}
           protocol: TCP
         resources:
           {{- toYaml .Values.redis.resources | nindent 10 }}
@@ -77,40 +80,47 @@ spec:
         volumeMounts:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-      {{- if .Values.redis.metrics.enabled }}
+      {{- if .Values.redis.exporter.enabled }}
       - name: metrics
-        image: {{ .Values.redis.metrics.image.repository }}:{{ .Values.redis.metrics.image.tag }}
-        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.redis.metrics.image.imagePullPolicy }}
+        image: {{ .Values.redis.exporter.image.repository }}:{{ .Values.redis.exporter.image.tag }}
+        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.redis.exporter.image.imagePullPolicy }}
         env:
         - name: REDIS_ADDR
-          value: {{ printf "redis://localhost:%v" .Values.redis.containerPort }}
+          value: {{ printf "redis://localhost:%v" .Values.redis.containerPorts.redis }}
         - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS
-          value: {{ printf "0.0.0.0:%v" .Values.redis.metrics.containerPort }}
+          value: {{ printf "0.0.0.0:%v" .Values.redis.containerPorts.metrics }}
+        {{- with .Values.redis.exporter.env }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         ports:
         - name: metrics
-          containerPort: {{ .Values.redis.metrics.containerPort }}
+          containerPort: {{ .Values.redis.containerPorts.metrics }}
           protocol: TCP
         resources:
-          {{- toYaml .Values.redis.metrics.resources | nindent 10 }}
+          {{- toYaml .Values.redis.exporter.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.redis.metrics.containerSecurityContext | nindent 10 }}
+          {{- toYaml .Values.redis.exporter.containerSecurityContext | nindent 10 }}
       {{- end }}
       {{- with .Values.redis.extraContainers }}
-        {{- toYaml . | nindent 6 }}
+        {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- with .Values.redis.nodeSelector }}
+      {{- with .Values.redis.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
+      {{- with .Values.redis.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.redis.tolerations }}
+      {{- with .Values.redis.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.redis.affinity }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.redis) }}
       affinity:
-        {{- toYaml . | nindent 8 }}
+        {{-  trim . | nindent 8 }}
       {{- end }}
-      {{- with .Values.redis.topologySpreadConstraints }}
+      {{- with .Values.redis.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -121,11 +131,13 @@ spec:
         {{- end }}
         {{- end }}
       {{- end }}
-      {{- with .Values.redis.priorityClassName }}
-      priorityClassName: {{ . }}
-      {{- end }}
       {{- with .Values.redis.volumes }}
       volumes:
         {{- toYaml . | nindent 8}}
       {{- end }}
+      {{- with .Values.redis.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.redis.dnsPolicy }}
 {{- end }}

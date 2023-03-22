@@ -46,6 +46,32 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create kubernetes friendly chart version label for the controller.
+Examples:
+image.tag = v3.4.4
+output    = v3.4.4
+
+image.tag = v3.4.4@sha256:d06860f1394a94ac3ff8401126ef32ba28915aa6c3c982c7e607ea0b4dadb696
+output    = v3.4.4
+*/}}
+{{- define "argo-workflows.controller_chart_version_label" -}}
+{{- regexReplaceAll "[^a-zA-Z0-9-_.]+" (regexReplaceAll "@sha256:[a-f0-9]+" (default (include "argo-workflows.defaultTag" .) .Values.controller.image.tag) "") "" | trunc 63 | quote -}}
+{{- end -}}
+
+{{/*
+Create kubernetes friendly chart version label for the server.
+Examples:
+image.tag = v3.4.4
+output    = v3.4.4
+
+image.tag = v3.4.4@sha256:d06860f1394a94ac3ff8401126ef32ba28915aa6c3c982c7e607ea0b4dadb696
+output    = v3.4.4
+*/}}
+{{- define "argo-workflows.server_chart_version_label" -}}
+{{- regexReplaceAll "[^a-zA-Z0-9-_.]+" (regexReplaceAll "@sha256:[a-f0-9]+" (default (include "argo-workflows.defaultTag" .) .Values.server.image.tag) "") "" | trunc 63 | quote -}}
+{{- end -}}
+
+{{/*
 Common labels
 */}}
 {{- define "argo-workflows.labels" -}}
@@ -104,17 +130,6 @@ Return the appropriate apiVersion for ingress
 {{- end -}}
 
 {{/*
-Return the appropriate apiVersion for pod disruption budget
-*/}}
-{{- define "argo-workflows.podDisruptionBudget.apiVersion" -}}
-{{- if semverCompare "<1.21-0" (include "argo-workflows.kubeVersion" $) -}}
-{{- print "policy/v1beta1" -}}
-{{- else -}}
-{{- print "policy/v1" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Return the target Kubernetes version
 */}}
 {{- define "argo-workflows.kubeVersion" -}}
@@ -126,4 +141,15 @@ Return the default Argo Workflows app version
 */}}
 {{- define "argo-workflows.defaultTag" -}}
   {{- default .Chart.AppVersion .Values.images.tag }}
+{{- end -}}
+
+{{/*
+Return full image name including or excluding registry based on existence
+*/}}
+{{- define "argo-workflows.image" -}}
+{{- if and .image.registry .image.repository -}}
+  {{ .image.registry }}/{{ .image.repository }}
+{{- else -}}
+  {{ .image.repository }}
+{{- end -}}
 {{- end -}}

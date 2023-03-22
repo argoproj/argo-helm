@@ -63,3 +63,60 @@ app.kubernetes.io/instance: {{ .context.Release.Name }}
 app.kubernetes.io/component: {{ .component }}
 {{- end }}
 {{- end }}
+
+{{/*
+Common affinity definition
+Pod affinity
+  - Soft prefers different nodes
+  - Hard requires different nodes and prefers different availibility zones
+Node affinity
+  - Soft prefers given user expressions
+  - Hard requires given user expressions
+*/}}
+{{- define "argo-cd.affinity" -}}
+{{- with .component.affinity -}}
+  {{- toYaml . -}}
+{{- else -}}
+{{- $preset := .context.Values.global.affinity -}}
+{{- if (eq $preset.podAntiAffinity "soft") }}
+podAntiAffinity:
+  preferredDuringSchedulingIgnoredDuringExecution:
+  - weight: 100
+    podAffinityTerm:
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .component.name }}
+      topologyKey: kubernetes.io/hostname
+{{- else if (eq $preset.podAntiAffinity "hard") }}
+podAntiAffinity:
+  preferredDuringSchedulingIgnoredDuringExecution:
+  - weight: 100
+    podAffinityTerm:
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .component.name }}
+      topologyKey: topology.kubernetes.io/zone
+  requiredDuringSchedulingIgnoredDuringExecution:
+  - labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .component.name }}
+    topologyKey: kubernetes.io/hostname
+{{- end }}
+{{- with $preset.nodeAffinity.matchExpressions }}
+{{- if (eq $preset.nodeAffinity.type "soft") }}
+nodeAffinity:
+  preferredDuringSchedulingIgnoredDuringExecution:
+  - weight: 1
+    preference:
+      matchExpressions:
+      {{- toYaml . | nindent 6 }}
+{{- else if (eq $preset.nodeAffinity.type "hard") }}
+nodeAffinity:
+  requiredDuringSchedulingIgnoredDuringExecution:
+    nodeSelectorTerms:
+    - matchExpressions:
+      {{- toYaml . | nindent 6 }}
+{{- end }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

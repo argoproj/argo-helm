@@ -3,13 +3,20 @@ kind: ConfigMap
 metadata:
   name: argocd-tls-certs-cm
   labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" "tls-certs-cm") | nindent 4 }}
-  {{- with .Values.configs.tlsCertsAnnotations }}
+    {{- include "argo-cd.labels" (dict "context" . "name" "tls-certs-cm") | nindent 4 }}
+  {{- with (mergeOverwrite (deepCopy .Values.configs.tls.annotations) (.Values.configs.tlsCertsAnnotations | default dict)) }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-{{- with .Values.configs.tlsCerts }}
-{{- toYaml . | nindent 0 }}
+{{- if hasKey .Values.configs "tlsCerts" }}
+  {{- with .Values.configs.tlsCerts }}
+    {{- toYaml . | nindent 0 }}
+  {{- end }}
+{{- else }}
+{{- with .Values.configs.tls.certificates }}
+data:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
 {{- end }}

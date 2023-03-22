@@ -15,6 +15,14 @@ applications: []
 #     path: guestbook
 #     directory:
 #       recurse: true
+#   # ArgoCD v2.6 or later
+#   sources:
+#    - chart: elasticsearch
+#      repoURL: https://helm.elastic.co
+#      targetRevision: 8.5.1
+#    - repoURL: https://github.com/argoproj/argocd-example-apps.git
+#      path: guestbook
+#      targetRevision: HEAD
 #   destination:
 #     server: https://kubernetes.default.svc
 #     namespace: guestbook
@@ -22,6 +30,7 @@ applications: []
 #     automated:
 #       prune: false
 #       selfHeal: false
+#   revisionHistoryLimit: null
 #   ignoreDifferences:
 #   - group: apps
 #     kind: Deployment
@@ -74,6 +83,8 @@ projects: []
 #     manualSync: true
 #   signatureKeys:
 #   - keyID: ABCDEF1234567890
+#   sourceNamespaces:
+#   - argocd
 
 # -- Deploy Argo CD ApplicationSets within this helm release
 # @default -- `[]` (See [values.yaml])

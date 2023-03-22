@@ -37,16 +37,26 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.global.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.server.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-cd.serverServiceAccountName" . }}
       containers:
       - name: {{ .Values.server.name }}
         image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.server.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         command:
         - argocd-server
+        - --port={{ .Values.server.containerPorts.server }}
+        - --metrics-port={{ .Values.server.containerPorts.metrics }}
         {{- with .Values.server.logFormat }}
         - --logformat
         - {{ . | quote }}
@@ -260,6 +270,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: application.namespaces
                 optional: true
+          - name: ARGOCD_SERVER_ENABLE_PROXY_EXTENSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.enable.proxy.extension
+                optional: true
         {{- with .Values.server.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
@@ -287,16 +303,16 @@ spec:
           name: extensions
         {{- end }}
         ports:
-        - name: {{ .Values.server.name }}
-          containerPort: {{ .Values.server.containerPort }}
+        - name: server
+          containerPort: {{ .Values.server.containerPorts.server }}
           protocol: TCP
         - name: metrics
-          containerPort: 8083
+          containerPort: {{ .Values.server.containerPorts.metrics }}
           protocol: TCP
         livenessProbe:
           httpGet:
             path: /healthz?full=true
-            port: {{ .Values.server.containerPort }}
+            port: server
           initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.server.livenessProbe.timeoutSeconds }}
@@ -305,7 +321,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /healthz
-            port: {{ .Values.server.containerPort }}
+            port: server
           initialDelaySeconds: {{ .Values.server.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
@@ -319,9 +335,6 @@ spec:
         lifecycle:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-      {{- with .Values.server.extraContainers }}
-        {{- toYaml . | nindent 6 }}
-      {{- end }}
       {{- if .Values.server.extensions.enabled }}
       - name: argocd-extensions
         image: {{ .Values.server.extensions.image.repository }}:{{ .Values.server.extensions.image.tag }}
@@ -336,19 +349,26 @@ spec:
           - name: tmp
             mountPath: /tmp
       {{- end }}
-      {{- with .Values.server.nodeSelector }}
+      {{- with .Values.server.extraContainers }}
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
+      {{- with .Values.server.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.server) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.tolerations }}
+      {{- with .Values.server.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.server.topologySpreadConstraints }}
+      {{- with .Values.server.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -358,11 +378,6 @@ spec:
             {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.server.name) | nindent 12 }}
         {{- end }}
         {{- end }}
-      {{- end }}
-      serviceAccountName: {{ template "argo-cd.serverServiceAccountName" . }}
-      {{- with .Values.global.hostAliases }}
-      hostAliases:
-        {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:
       {{- with .Values.server.volumes }}
@@ -406,10 +421,9 @@ spec:
             path: tls.crt
           - key: ca.crt
             path: ca.crt
-      {{- with .Values.server.initContainers }}
-      initContainers:
-        {{- toYaml . | nindent 6 }}
+      hostNetwork: {{ .Values.server.hostNetwork }}
+      {{- with .Values.server.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.priorityClassName }}
-      priorityClassName: {{ . }}
-      {{- end }}
+      dnsPolicy: {{ .Values.server.dnsPolicy }}
