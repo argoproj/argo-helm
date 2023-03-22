@@ -12,11 +12,11 @@ spec:
   - name: {{ .Values.server.service.servicePortHttpName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttp }}
-    targetPort: {{- if .Values.server.service.namedTargetPort }} {{ .Values.server.name }} {{- else }} {{ .Values.server.containerPort }} {{- end }}
+    targetPort: server
   - name: {{ .Values.server.service.servicePortHttpsName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttps }}
-    targetPort: {{- if .Values.server.service.namedTargetPort }} {{ .Values.server.name }} {{- else }} {{ .Values.server.containerPort }} {{- end }}
+    targetPort: server
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
   sessionAffinity: None

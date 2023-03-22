@@ -37,13 +37,28 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.global.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.controller.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-cd.controllerServiceAccountName" . }}
       containers:
       - command:
         - argocd-application-controller
+        - --metrics-port={{ .Values.controller.containerPorts.metrics }}
+        {{- if .Values.controller.metrics.applicationLabels.enabled }}
+        {{- range .Values.controller.metrics.applicationLabels.labels }}
+        - --metrics-application-labels
+        - {{ . }}
+        {{- end }}
+        {{- end }}
         {{- with .Values.controller.args.statusProcessors }}
         - --status-processors
         - {{ . | quote }}
@@ -75,12 +90,6 @@ spec:
         {{- with .Values.controller.logLevel }}
         - --loglevel
         - {{ . | quote }}
-        {{- end }}
-        {{- if .Values.controller.metrics.applicationLabels.enabled }}
-        {{- range .Values.controller.metrics.applicationLabels.labels }}
-        - --metrics-application-labels
-        - {{ . }}
-        {{- end }}
         {{- end }}
         {{- with .Values.controller.extraArgs }}
           {{- toYaml . | nindent 8 }}
@@ -232,7 +241,7 @@ spec:
         {{- end }}
         ports:
         - name: metrics
-          containerPort: {{ .Values.controller.containerPort }}
+          containerPort: {{ .Values.controller.containerPorts.metrics }}
           protocol: TCP
         readinessProbe:
           httpGet:
@@ -257,21 +266,25 @@ spec:
         - mountPath: /home/argocd
           name: argocd-home
       {{- with .Values.controller.extraContainers }}
-        {{- toYaml . | nindent 6 }}
+        {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- with .Values.controller.nodeSelector }}
+      {{- with .Values.controller.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.controller) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.tolerations }}
+      {{- with .Values.controller.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.controller.topologySpreadConstraints }}
+      {{- with .Values.controller.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -281,11 +294,6 @@ spec:
             {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.controller.name) | nindent 12 }}
           {{- end }}
         {{- end }}
-      {{- end }}
-      serviceAccountName: {{ template "argo-cd.controllerServiceAccountName" . }}
-      {{- with .Values.global.hostAliases }}
-      hostAliases:
-        {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:
       {{- with .Values.controller.volumes }}
@@ -304,10 +312,9 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-      {{- with .Values.controller.initContainers }}
-      initContainers:
-        {{- toYaml . | nindent 6 }}
+      hostNetwork: {{ .Values.controller.hostNetwork }}
+      {{- with .Values.controller.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.priorityClassName }}
-      priorityClassName: {{ . }}
-      {{- end }}
+      dnsPolicy: {{ .Values.controller.dnsPolicy }}

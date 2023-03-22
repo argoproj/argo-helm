@@ -23,13 +23,21 @@ rules:
   - ""
   resources:
   - pods
-  - pods/exec
-  - pods/log
   verbs:
   - get
   - list
   - watch
   - delete
+<<<<<<< HEAD
+=======
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - get
+  - list
+>>>>>>> argo-cd-5.27.1
 {{- if .Values.server.sso }}
 - apiGroups:
   - ""

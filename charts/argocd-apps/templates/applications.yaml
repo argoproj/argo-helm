@@ -23,13 +23,22 @@ metadata:
   {{- end }}
 spec:
   project: {{ tpl .project $ }}
+  {{- with .source }}
   source:
-    {{- toYaml .source | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .sources }}
+  sources:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   destination:
     {{- toYaml .destination | nindent 4 }}
   {{- with .syncPolicy }}
   syncPolicy:
     {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .revisionHistoryLimit }}
+  revisionHistoryLimit: {{ . }}
   {{- end }}
   {{- with .ignoreDifferences }}
   ignoreDifferences:

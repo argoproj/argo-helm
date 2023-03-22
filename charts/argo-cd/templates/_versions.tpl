@@ -20,34 +20,6 @@ Return the appropriate apiVersion for autoscaling
 {{- end -}}
 
 {{/*
-Return the appropriate apiVersion for ingress
-*/}}
-{{- define "argo-cd.apiVersion.ingress" -}}
-{{- if .Values.apiVersionOverrides.ingress -}}
-{{- print .Values.apiVersionOverrides.ingress -}}
-{{- else if semverCompare "<1.14-0" (include "argo-cd.kubeVersion" .) -}}
-{{- print "extensions/v1beta1" -}}
-{{- else if semverCompare "<1.19-0" (include "argo-cd.kubeVersion" .) -}}
-{{- print "networking.k8s.io/v1beta1" -}}
-{{- else -}}
-{{- print "networking.k8s.io/v1" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return the appropriate apiVersion for pod disruption budget
-*/}}
-{{- define "argo-cd.apiVersion.pdb" -}}
-{{- if .Values.apiVersionOverrides.pdb -}}
-{{- print .Values.apiVersionOverrides.pdb -}}
-{{- else if semverCompare "<1.21-0" (include "argo-cd.kubeVersion" .) -}}
-{{- print "policy/v1beta1" -}}
-{{- else -}}
-{{- print "policy/v1" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Return the appropriate apiVersion for cert-manager
 */}}
 {{- define "argo-cd.apiVersion.cert-manager" -}}
@@ -55,6 +27,8 @@ Return the appropriate apiVersion for cert-manager
 {{- print .Values.apiVersionOverrides.certmanager -}}
 {{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1" -}}
 {{- print "cert-manager.io/v1" -}}
+{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1beta1" -}}
+{{- print "cert-manager.io/v1beta1" -}}
 {{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha3" -}}
 {{- print "cert-manager.io/v1alpha3" -}}
 {{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha2" -}}

@@ -13,6 +13,38 @@ A few options are:
 - Manually create a ServiceAccount in the Namespace in which your release will be deployed w/ appropriate bindings to perform this action and set the `serviceAccountName` field in the Workflow spec
 - Augment the `default` ServiceAccount permissions in the Namespace in which your Release is deployed to have the appropriate permissions
 
+### Custom resource definitions
+
+Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
+
+Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations). Starting with 3.4.0 (chart version 0.19.0), the CRDs have been moved to `<chart>/templates` to address this design decision.
+
+If you are using Argo Workflows chart version prior to 3.4.0 (chart version 0.19.0) or have elected to manage the Argo Workflows CRDs outside of the chart, please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
+
+```bash
+kubectl apply -k "https://github.com/argoproj/argo-workflows/manifests/base/crds/full?ref=<appVersion>"
+
+# Eg. version v3.3.9
+kubectl apply -k "https://github.com/argoproj/argo-workflows/manifests/base/crds/full?ref=v3.3.9"
+```
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add argo https://argoproj.github.io/argo-helm
+"argo" has been added to your repositories
+
+$ helm install my-release argo/argo-workflows
+NAME: my-release
+...
+```
+
+## Changelog
+
+For full list of changes, please check ArtifactHub [changelog].
+
 ## Usage Notes
 
 ### Workflow controller
@@ -45,6 +77,7 @@ Fields to note:
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `true` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
+| emissary.images | list | `[]` | The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used. |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `nil` | String to fully override "argo-workflows.fullname" template |
 | images.pullPolicy | string | `"Always"` | imagePullPolicy to apply to all containers |
@@ -82,9 +115,11 @@ Fields to note:
 | controller.instanceID.enabled | bool | `false` | Configures the controller to filter workflow submissions to only those which have a matching instanceID attribute. |
 | controller.instanceID.explicitID | string | `""` | Use a custom instanceID |
 | controller.instanceID.useReleaseName | bool | `false` | Use ReleaseName as instanceID |
+| controller.kubeConfig | object | `{}` (See [values.yaml]) | Configure when workflow controller runs in a different k8s cluster with the workflow workloads, or needs to communicate with the k8s apiserver using an out-of-cluster kubeconfig secret. |
 | controller.links | list | `[]` | Configure Argo Server to show custom [links] |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
 | controller.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
+| controller.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
 | controller.logging.globallevel | string | `"0"` | Set the glog logging level |
 | controller.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | controller.metricsConfig.enabled | bool | `false` | Enables prometheus metrics server |
@@ -99,11 +134,14 @@ Fields to note:
 | controller.name | string | `"workflow-controller"` | Workflow controller name string |
 | controller.namespaceParallelism | string | `nil` | Limits the maximum number of incomplete workflows in a namespace |
 | controller.navColor | string | `""` | Set ui navigation bar background color |
+| controller.nodeEvents.enabled | bool | `true` | Enable to emit events on node completion. |
 | controller.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
 | controller.parallelism | string | `nil` | parallelism dictates how many workflows can be running at the same time |
 | controller.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the controller pods |
 | controller.persistence | object | `{}` | enable persistence using postgres |
 | controller.podAnnotations | object | `{}` | podAnnotations is an optional map of annotations to be applied to the controller Pods |
+| controller.podGCDeleteDelayDuration | string | `5s` (Argo Workflows default) | The duration in seconds before the pods in the GC queue get deleted. A zero value indicates that the pods will be deleted immediately. |
+| controller.podGCGracePeriodSeconds | string | `30` seconds (Kubernetes default) | Specifies the duration in seconds before a terminating pod is forcefully killed. A zero value indicates that the pod will be forcefully terminated immediately. |
 | controller.podLabels | object | `{}` | Optional labels to add to the controller pods |
 | controller.podSecurityContext | object | `{}` | SecurityContext to set on the controller pods |
 | controller.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages. |
@@ -146,6 +184,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | mainContainer.env | list | `[]` | Adds environment variables for the Workflow main container |
+| mainContainer.envFrom | list | `[]` | Adds reference environment variables for the Workflow main container |
 | mainContainer.imagePullPolicy | string | `""` | imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`. |
 | mainContainer.resources | object | `{}` | Resource limits and requests for the Workflow main container |
 | mainContainer.securityContext | object | `{}` | sets security context for the Workflow main container |
@@ -189,6 +228,9 @@ Fields to note:
 | server.ingress.tls | list | `[]` | Ingress TLS configuration |
 | server.loadBalancerIP | string | `""` | Static IP address to assign to loadBalancer service type `LoadBalancer` |
 | server.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
+| server.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
+| server.logging.globallevel | string | `"0"` | Set the glog logging level |
+| server.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | server.name | string | `"server"` | Server name string |
 | server.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
 | server.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the server pods |
@@ -257,3 +299,4 @@ Fields to note:
 [Tolerations]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 [TopologySpreadConstraints]: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 [values.yaml]: values.yaml
+[changelog]: https://artifacthub.io/packages/helm/argo/argo-workflows?modal=changelog

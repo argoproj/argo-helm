@@ -69,6 +69,34 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create kubernetes friendly chart version label for the controller.
+
+Examples:
+image.tag = v1.7.3
+output    = v1.7.3
+
+image.tag = v1.7.3@sha256:a40f4f3ea20d354f00ab469a9f73102668fa545c4d632e1a8e11a206ad3093f3
+output    = v1.7.3
+*/}}
+{{- define "argo-events.controller_chart_version_label" -}}
+{{- regexReplaceAll "[^a-zA-Z0-9-_.]+" (regexReplaceAll "@sha256:[a-f0-9]+" (default (include "argo-events.defaultTag" .) .Values.controller.image.tag) "") "" | trunc 63 | quote -}}
+{{- end -}}
+
+{{/*
+Create kubernetes friendly chart version label for the events webhook.
+
+Examples:
+image.tag = v1.7.3
+output    = v1.7.3
+
+image.tag = v1.7.3@sha256:a40f4f3ea20d354f00ab469a9f73102668fa545c4d632e1a8e11a206ad3093f3
+output    = v1.7.3
+*/}}
+{{- define "argo-events.webhook_chart_version_label" -}}
+{{- regexReplaceAll "[^a-zA-Z0-9-_.]+" (regexReplaceAll "@sha256:[a-f0-9]+" (default (include "argo-events.defaultTag" .) .Values.webhook.image.tag) "") "" | trunc 63 | quote -}}
+{{- end -}}
+
+{{/*
 Common labels
 */}}
 {{- define "argo-events.labels" -}}
@@ -97,3 +125,14 @@ Return the default Argo Events app version
 {{- define "argo-events.defaultTag" -}}
   {{- default .Chart.AppVersion .Values.global.image.tag }}
 {{- end -}}
+
+{{/*
+Define Pdb apiVersion
+*/}}
+{{- define "argo-events.pdb.apiVersion" -}}
+{{- if .Capabilities.APIVersions.Has "policy/v1" }}
+{{- printf "policy/v1" -}}
+{{- else }}
+{{- printf "policy/v1beta1" -}}
+{{- end }}
+{{- end }}

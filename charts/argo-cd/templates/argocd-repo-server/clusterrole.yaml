@@ -1,23 +1,24 @@
-{{- if and .Values.repoServer.serviceAccount.create .Values.repoServer.clusterAdminAccess.enabled }}
+{{- $config := .Values.repoServer.clusterAdminAccess | default dict -}}
+{{- if hasKey $config "enabled" | ternary $config.enabled .Values.createClusterRoles }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "argo-cd.repoServer.fullname" . }}
+  name: {{ include "argo-cd.repoServer.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
 rules:
   {{- if .Values.repoServer.clusterRoleRules.enabled }}
-  {{- toYaml .Values.repoServer.clusterRoleRules.rules | nindent 0 }}
+    {{- toYaml .Values.repoServer.clusterRoleRules.rules | nindent 2 }}
   {{- else }}
-- apiGroups:
-  - '*'
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- nonResourceURLs:
-  - '*'
-  verbs:
-  - '*'
+  - apiGroups:
+    - '*'
+    resources:
+    - '*'
+    verbs:
+    - '*'
+  - nonResourceURLs:
+    - '*'
+    verbs:
+    - '*'
   {{- end }}
 {{- end }}

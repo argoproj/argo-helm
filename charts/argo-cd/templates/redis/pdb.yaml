@@ -1,6 +1,6 @@
 {{- $redisHa := index .Values "redis-ha" -}}
 {{- if and .Values.redis.enabled (not $redisHa.enabled) .Values.redis.pdb.enabled }}
-apiVersion: {{ include "argo-cd.apiVersion.pdb" . }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "argo-cd.redis.fullname" . }}
@@ -16,7 +16,7 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- with .Values.dex.pdb.maxUnavailable }}
+  {{- with .Values.redis.pdb.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- else }}
   minAvailable: {{ .Values.redis.pdb.minAvailable | default 0 }}

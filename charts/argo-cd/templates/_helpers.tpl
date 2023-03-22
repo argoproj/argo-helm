@@ -9,6 +9,17 @@ to 63 chars and it includes 10 chars of hash and a separating '-'.
 {{- end -}}
 
 {{/*
+Create the name of the controller service account to use
+*/}}
+{{- define "argo-cd.controllerServiceAccountName" -}}
+{{- if .Values.controller.serviceAccount.create -}}
+    {{ default (include "argo-cd.controller.fullname" .) .Values.controller.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.controller.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create dex name and version as used by the chart label.
 */}}
 {{- define "argo-cd.dex.fullname" -}}
@@ -25,6 +36,17 @@ Create Dex server endpoint
 {{- $port := int .Values.dex.servicePortHttp -}}
 {{- printf "%s://%s:%d" $scheme $host $port }}
 {{- end }}
+
+{{/*
+Create the name of the dex service account to use
+*/}}
+{{- define "argo-cd.dexServiceAccountName" -}}
+{{- if .Values.dex.serviceAccount.create -}}
+    {{ default (include "argo-cd.dex.fullname" .) .Values.dex.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.dex.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
 
 {{/*
 Create redis name and version as used by the chart label.
@@ -54,56 +76,6 @@ Return Redis server endpoint
 {{- end -}}
 
 {{/*
-Create argocd server name and version as used by the chart label.
-*/}}
-{{- define "argo-cd.server.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.server.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create argocd repo-server name and version as used by the chart label.
-*/}}
-{{- define "argo-cd.repoServer.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.repoServer.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create argocd application set name and version as used by the chart label.
-*/}}
-{{- define "argo-cd.applicationSet.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.applicationSet.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create argocd notifications name and version as used by the chart label.
-*/}}
-{{- define "argo-cd.notifications.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.notifications.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create the name of the controller service account to use
-*/}}
-{{- define "argo-cd.controllerServiceAccountName" -}}
-{{- if .Values.controller.serviceAccount.create -}}
-    {{ default (include "argo-cd.controller.fullname" .) .Values.controller.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.controller.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the dex service account to use
-*/}}
-{{- define "argo-cd.dexServiceAccountName" -}}
-{{- if .Values.dex.serviceAccount.create -}}
-    {{ default (include "argo-cd.dex.fullname" .) .Values.dex.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.dex.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Create the name of the redis service account to use
 */}}
 {{- define "argo-cd.redisServiceAccountName" -}}
@@ -112,6 +84,13 @@ Create the name of the redis service account to use
 {{- else -}}
     {{ default "default" .Values.redis.serviceAccount.name }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Create argocd server name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.server.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.server.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -126,6 +105,13 @@ Create the name of the Argo CD server service account to use
 {{- end -}}
 
 {{/*
+Create argocd repo-server name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.repoServer.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.repoServer.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create the name of the repo-server service account to use
 */}}
 {{- define "argo-cd.repoServerServiceAccountName" -}}
@@ -134,6 +120,13 @@ Create the name of the repo-server service account to use
 {{- else -}}
     {{ default "default" .Values.repoServer.serviceAccount.name }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Create argocd application set name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.applicationSet.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.applicationSet.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -148,6 +141,13 @@ Create the name of the application set service account to use
 {{- end -}}
 
 {{/*
+Create argocd notifications name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.notifications.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.notifications.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create the name of the notifications service account to use
 */}}
 {{- define "argo-cd.notificationsServiceAccountName" -}}
@@ -155,17 +155,6 @@ Create the name of the notifications service account to use
     {{ default (include "argo-cd.notifications.fullname" .) .Values.notifications.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.notifications.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the notifications bots slack service account to use
-*/}}
-{{- define "argo-cd.notificationsBotsSlackServiceAccountName" -}}
-{{- if .Values.notifications.bots.slack.serviceAccount.create -}}
-    {{ default (include "argo-cd.notifications.fullname" .) .Values.notifications.bots.slack.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.notifications.bots.slack.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
@@ -185,7 +174,10 @@ Merge Argo Configuration with Preset Configuration
 {{- $config := (mergeOverwrite (deepCopy (omit .Values.configs.cm "create" "annotations")) (.Values.server.config | default dict))  -}}
 {{- $preset := include "argo-cd.config.cm.presets" . | fromYaml | default dict -}}
 {{- range $key, $value := mergeOverwrite $preset $config }}
-{{ $key }}: {{ toString $value | toYaml }}
+{{- $fmted := $value | toString }}
+{{- if not (eq $fmted "") }}
+{{ $key }}: {{ $fmted | toYaml }}
+{{- end }}
 {{- end }}
 {{- end -}}
 
@@ -202,9 +194,12 @@ redis.server: {{ . | quote }}
 server.dex.server: {{ include "argo-cd.dex.server" . | quote }}
 server.dex.server.strict.tls: {{ .Values.dex.certificateSecret.enabled | toString }}
 {{- end }}
-{{- range $component := tuple "controller" "server" "reposerver" }}
+{{- range $component := tuple "applicationsetcontroller" "controller" "server" "reposerver" }}
 {{ $component }}.log.format: {{ $.Values.global.logging.format | quote }}
 {{ $component }}.log.level: {{ $.Values.global.logging.level | quote }}
+{{- end }}
+{{- if .Values.applicationSet.enabled }}
+applicationsetcontroller.enable.leader.election: {{ gt (.Values.applicationSet.replicaCount | int64) 1 }}
 {{- end }}
 {{- end -}}
 

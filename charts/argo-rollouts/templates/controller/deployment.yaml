@@ -83,6 +83,18 @@ spec:
       affinity:
         {{- toYaml .Values.controller.affinity | nindent 8 }}
       {{- end }}
+      {{- with .Values.controller.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/component: {{ $.Values.controller.component }}
+            {{- include "argo-rollouts.selectorLabels" $ | nindent 12 }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
       {{- with .Values.controller.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}

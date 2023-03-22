@@ -40,7 +40,7 @@ jobs:
           helm package charts/argo-cd -u -d .cr-release-packages/
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@main
+        uses: helm/chart-releaser-action@v1.5.0
         with:
           config: "./.github/configs/cr.yaml"
           skip_packaging: true

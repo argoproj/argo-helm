@@ -17,6 +17,19 @@ To regenerate this document, please run:
 ./scripts/helm-docs.sh
 ```
 
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add argo https://argoproj.github.io/argo-helm
+"argo" has been added to your repositories
+
+$ helm install my-release argo/argo-events
+NAME: my-release
+...
+```
+
 ## Upgrading
 
 ### Custom resource definitions
@@ -57,11 +70,12 @@ done
 | configs.jetstream.versions[0].natsImage | string | `"nats:latest"` |  |
 | configs.jetstream.versions[0].startCommand | string | `"/nats-server"` |  |
 | configs.jetstream.versions[0].version | string | `"latest"` |  |
-| configs.nats.versions | list | `[{"metricsExporterImage":"natsio/prometheus-nats-exporter:latest","natsStreamingImage":"nats-streaming:latest","version":"latest"}]` | Supported versions of NATS event bus |
+| configs.nats.versions | list | See [values.yaml] | Supported versions of NATS event bus |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `false` | Create clusterroles that extend existing clusterroles to interact with argo-events crds Only applies for cluster-wide installation (`controller.rbac.namespaced: false`) |
+| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `""` | String to fully override "argo-events.fullname" template |
 | global.additionalLabels | object | `{}` | Additional labels to add to all resources |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
@@ -155,6 +169,7 @@ done
 | webhook.pdb.labels | object | `{}` | Labels to be added to admission webhook pdb |
 | webhook.podAnnotations | object | `{}` | Annotations to be added to event controller pods |
 | webhook.podLabels | object | `{}` | Labels to be added to event controller pods |
+| webhook.port | int | `443` | Port to listen on |
 | webhook.priorityClassName | string | `""` | Priority class for the event controller pods |
 | webhook.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | webhook.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
