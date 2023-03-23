@@ -147,6 +147,7 @@ Fields to note:
 | controller.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages. |
 | controller.rbac.create | bool | `true` | Adds Role and RoleBinding for the controller. |
 | controller.rbac.secretWhitelist | list | `[]` | Allows controller to get, list, and watch certain k8s secrets |
+| controller.rbac.writeConfigMaps | bool | `false` | Allows controller to create and update ConfigMaps. Enables memoization feature |
 | controller.replicas | int | `1` | The number of controller pods to run |
 | controller.resourceRateLimit | object | `{}` | Globally limits the rate at which pods are created. This is intended to mitigate flooding of the Kubernetes API server by workflows with a large amount of parallel nodes. |
 | controller.resources | object | `{}` | Resource limits and requests for the controller |
