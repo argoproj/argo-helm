@@ -1589,6 +1589,38 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Update Github RSA SSH public key
+    apiVersion: v2
+    appVersion: v2.6.7
+    created: "2023-03-24T09:57:22.15621578Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.4
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 61ca0b24aaeee2b01a141b5ccc53077d36a87347c4d538086957c966359da379
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.27.3/argo-cd-5.27.3.tgz
+    version: 5.27.3
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Upgrade Argo CD to v2.6.7
     apiVersion: v2
     appVersion: v2.6.7
@@ -21840,4 +21872,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-03-24T00:09:06.537297106Z"
+generated: "2023-03-24T09:57:22.158173609Z"
