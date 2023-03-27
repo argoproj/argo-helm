@@ -60,7 +60,7 @@ spec:
         {{- end }}
         {{- with .Values.controller.envFrom }}
         envFrom:
-          {{- toYaml | nindent 8 }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
         volumeMounts:
         - name: config
