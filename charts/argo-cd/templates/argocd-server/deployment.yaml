@@ -421,7 +421,9 @@ spec:
             path: tls.crt
           - key: ca.crt
             path: ca.crt
+      {{- if .Values.server.hostNetwork }}
       hostNetwork: {{ .Values.server.hostNetwork }}
+      {{- end }}
       {{- with .Values.server.dnsConfig }}
       dnsConfig:
         {{- toYaml . | nindent 8 }}
