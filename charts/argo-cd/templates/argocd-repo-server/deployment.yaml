@@ -355,7 +355,9 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
+      {{- if .Values.repoServer.hostNetwork }}
       hostNetwork: {{ .Values.repoServer.hostNetwork }}
+      {{- end }}
       {{- with .Values.repoServer.dnsConfig }}
       dnsConfig:
         {{- toYaml . | nindent 8 }}
