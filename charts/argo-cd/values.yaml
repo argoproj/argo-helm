@@ -132,6 +132,14 @@ global:
     #   topologyKey: topology.kubernetes.io/zone
     #   whenUnsatisfiable: DoNotSchedule
 
+  # POD entrypoint configuration
+  entrypoint:
+    # -- Implicitly use the docker image's entrypoint. This requires the image to have
+    # ENTRYPOINT set properly
+    useImplicit: false
+    # -- The entrypoint to use for the containers.
+    entrypoint: "entrypoint.sh"
+
 
 ## Argo Configs
 configs:

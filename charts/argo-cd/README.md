@@ -394,6 +394,8 @@ NAME: my-release
 | global.affinity.nodeAffinity.type | string | `"hard"` | Default node affinity rules. Either: `none`, `soft` or `hard` |
 | global.affinity.podAntiAffinity | string | `"soft"` | Default pod anti-affinity rules. Either: `none`, `soft` or `hard` |
 | global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
+| global.entrypoint.entrypoint | string | `"entrypoint.sh"` | The entrypoint to use for the containers. |
+| global.entrypoint.useImplicit | bool | `false` | Implicitly use the docker image's entrypoint. This requires the image to have ENTRYPOINT set properly |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
 | global.image.repository | string | `"quay.io/argoproj/argocd"` | If defined, a repository applied to all Argo CD deployments |
