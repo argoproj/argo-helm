@@ -9,6 +9,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ include "argo-cd.notifications.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
 spec:
