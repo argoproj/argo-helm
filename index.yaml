@@ -1588,6 +1588,38 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: entrypoint usage can be configured
+    apiVersion: v2
+    appVersion: v2.6.7
+    created: "2023-03-30T16:33:35.870947476Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.5
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: ff55c694406112375dabccfda5ad785a1c418e598baeab575ac3e7a0a3afe0f3
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.27.5/argo-cd-5.27.5.tgz
+    version: 5.27.5
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Surround with if hostNetwork field to disable it when is set to false
     apiVersion: v2
@@ -21927,4 +21959,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-03-29T09:16:57.500782959Z"
+generated: "2023-03-30T16:33:35.874101015Z"
