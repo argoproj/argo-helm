@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v1.7.6
 description: A Helm chart for Argo Events, the event-driven workflow automation framework
 name: argo-events
-version: 2.1.4
+version: 2.1.5
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-events/assets/logo.png
 keywords:
@@ -15,5 +15,5 @@ maintainers:
     url: https://argoproj.github.io/
 annotations:
   artifacthub.io/changes: |
-    - kind: added
-      description: Add install guide on README
+    - kind: fixed
+      description: priorityClassName was not being set on pods.
