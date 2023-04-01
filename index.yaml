@@ -15249,6 +15249,30 @@ entries:
   argo-events:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: priorityClassName was not being set on pods.
+    apiVersion: v2
+    appVersion: v1.7.6
+    created: "2023-04-01T20:40:28.774354142Z"
+    description: A Helm chart for Argo Events, the event-driven workflow automation
+      framework
+    digest: 6544b2c2fa4cf2cb801c612bfd98df2662a78d0db1f3ffcfcaa5daed9364c995
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-events/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-events
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-events
+    sources:
+    - https://github.com/argoproj/argo-events
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-events-2.1.5/argo-events-2.1.5.tgz
+    version: 2.1.5
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Add install guide on README
     apiVersion: v2
@@ -21959,4 +21983,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-03-30T16:33:35.874101015Z"
+generated: "2023-04-01T20:40:28.777750511Z"
