@@ -12,6 +12,10 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
 spec:
+  {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.applicationSet.deploymentStrategy) }}
+  strategy:
+    {{- trim . | nindent 4 }}
+  {{- end }}
   replicas: {{ .Values.applicationSet.replicaCount }}
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
