@@ -1588,6 +1588,38 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Add support for custom Deployment strategy
+    apiVersion: v2
+    appVersion: v2.6.7
+    created: "2023-04-03T09:59:19.209820773Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.5
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: e79d8c02462e4bf586dfef6f38367c39dd4711efcd221c556a402a312e3d3351
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.28.0/argo-cd-5.28.0.tgz
+    version: 5.28.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: entrypoint usage can be configured
     apiVersion: v2
@@ -21983,4 +22015,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-04-01T20:40:28.777750511Z"
+generated: "2023-04-03T09:59:19.212542495Z"
