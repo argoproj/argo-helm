@@ -295,6 +295,9 @@ controller:
   # -- Extra containers to be added to the controller deployment
   extraContainers: []
 
+  # -- Enables init containers to be added to the controller deployment
+  extraInitContainers: []
+
   # -- Workflow retention by number of workflows
   retentionPolicy: {}
   #  completed: 10
@@ -569,6 +572,9 @@ server:
 
   # -- Extra containers to be added to the server deployment
   extraContainers: []
+
+  # -- Enables init containers to be added to the server deployment
+  extraInitContainers: []
 
 # -- Array of extra K8s manifests to deploy
 extraObjects: []

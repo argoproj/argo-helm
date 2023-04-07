@@ -14,8 +14,10 @@ metadata:
 spec:
   replicas: 1
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
+  {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.notifications.deploymentStrategy) }}
   strategy:
-    type: Recreate
+    {{- trim . | nindent 4 }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 6 }}
