@@ -16,9 +16,11 @@ spec:
   replicas: {{ .Values.dashboard.replicas }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with (mergeOverwrite (deepCopy .Values.podAnnotations) .Values.dashboard.podAnnotations) }}
       annotations:
-        {{- toYaml . | nindent 8 }}
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
       {{- end }}
       labels:
         {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
