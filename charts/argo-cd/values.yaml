@@ -2278,7 +2278,7 @@ applicationSet:
   # -- Enable ApplicationSet controller
   enabled: true
 
-  # -- Application Set controller name string
+  # -- ApplicationSet controller name string
   name: applicationset-controller
 
   # -- The number of ApplicationSet controller pods to run
@@ -2296,19 +2296,19 @@ applicationSet:
     # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
     # @default -- `""` (defaults to 0 if not specified)
     minAvailable: ""
-    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+    # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `applicationSet.pdb.minAvailable`
     maxUnavailable: ""
 
   ## ApplicationSet controller image
   image:
-    # -- Repository to use for the application set controller
+    # -- Repository to use for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.repository)
-    repository: "quay.io/codefresh/applicationset"
-    # -- Tag to use for the application set controller
+    repository: ""
+    # -- Tag to use for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.tag)
-    tag: "v0.4.2-CR-13254-remove-private-logs"
-    # -- Image pull policy for the application set controller
+    tag: ""
+    # -- Image pull policy for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
 
@@ -2316,29 +2316,44 @@ applicationSet:
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
 
-  args:
-    # -- The default metric address
-    metricsAddr: :8080
-    # -- The default health check port
-    probeBindAddr: :8081
-    # -- The default leader election setting
-    enableLeaderElection: false
+  # -- DEPRECATED - ApplicationSet controller command line flags
+  args: {}
+    # DEPRECATED - Use configs.params.applicationsetcontroller.policy to override
     # -- How application is synced between the generator and the cluster
-    policy: sync
-    # -- Print debug logs
-    debug: false
+    # policy: sync
+    # DEPRECATED - Use configs.params.applicationsetcontroller.dryrun to override
     # -- Enable dry run mode
-    dryRun: false
+    # dryRun: false
 
-  # -- ApplicationSet controller log format. Either `text` or `json`
-  # @default -- `""` (defaults to global.logging.format)
-  logFormat: ""
-  # -- ApplicationSet controller log level. One of: `debug`, `info`, `warn`, `error`
-  # @default -- `""` (defaults to global.logging.level)
-  logLevel: ""
+  # -- List of extra cli args to add
+  extraArgs: []
 
-  # -- Additional containers to be added to the applicationset controller pod
+  # -- Environment variables to pass to the ApplicationSet controller
+  extraEnv: []
+    # - name: "MY_VAR"
+    #   value: "value"
+
+  # -- envFrom to pass to the ApplicationSet controller
+  # @default -- `[]` (See [values.yaml])
+  extraEnvFrom: []
+    # - configMapRef:
+    #     name: config-map-name
+    # - secretRef:
+    #     name: secret-name
+
+  # -- Additional containers to be added to the ApplicationSet controller pod
+  ## Note: Supports use of custom Helm templates
   extraContainers: []
+
+  # -- Init containers to add to the ApplicationSet controller pod
+  ## Note: Supports use of custom Helm templates
+  initContainers: []
+
+  # -- List of extra mounts to add (normally used with extraVolumes)
+  extraVolumeMounts: []
+
+  # -- List of extra volumes to add
+  extraVolumes: []
 
   ## Metrics service configuration
   metrics:
@@ -2377,53 +2392,40 @@ applicationSet:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
-  ## Application set service configuration
+  ## ApplicationSet service configuration
   service:
-    # -- Application set service annotations
+    # -- ApplicationSet service annotations
     annotations: {}
-    # -- Application set service labels
+    # -- ApplicationSet service labels
     labels: {}
-    # -- Application set service port
+    # -- ApplicationSet service port
     port: 7000
-    # -- Application set service port name
+    # -- ApplicationSet service port name
     portName: webhook
 
   serviceAccount:
-    # -- Specifies whether a service account should be created
+    # -- Create ApplicationSet controller service account
     create: true
-    # -- Annotations to add to the service account
+    # -- ApplicationSet controller service account name
+    name: argocd-applicationset-controller
+    # -- Annotations applied to created service account
     annotations: {}
     # -- Labels applied to created service account
     labels: {}
-    # -- The name of the service account to use.
-    # If not set and create is true, a name is generated using the fullname template
-    name: ""
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
 
-  # -- Annotations for the controller pods
+  # -- Annotations to be added to ApplicationSet controller Deployment
+  deploymentAnnotations: {}
+
+  # -- Annotations for the ApplicationSet controller pods
   podAnnotations: {}
 
-  # -- Labels for the controller pods
+  # -- Labels for the ApplicationSet controller pods
   podLabels: {}
 
-  # -- Pod Security Context
-  podSecurityContext: {}
-    # fsGroup: 2000
-
-  # -- Security Context
-  securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
-
-  # -- Resource limits and requests for the controller pods.
+  # -- Resource limits and requests for the ApplicationSet controller pods.
   resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     # limits:
     #   cpu: 100m
     #   memory: 128Mi
@@ -2431,43 +2433,86 @@ applicationSet:
     #   cpu: 100m
     #   memory: 128Mi
 
+  # ApplicationSet controller container ports
+  containerPorts:
+    # -- Metrics container port
+    metrics: 8080
+    # -- Probe container port
+    probe: 8081
+    # -- Webhook container port
+    webhook: 7000
+
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- Alternative DNS policy for ApplicationSet controller pods
+  dnsPolicy: "ClusterFirst"
+
+  # -- ApplicationSet controller container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+      - ALL
+
+  ## Probes for ApplicationSet controller (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  readinessProbe:
+    # -- Enable Kubernetes liveness probe for ApplicationSet controller
+    enabled: false
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+
+  livenessProbe:
+    # -- Enable Kubernetes liveness probe for ApplicationSet controller
+    enabled: false
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+
   # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
   nodeSelector: {}
 
   # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
   tolerations: []
 
   # -- Assign custom [affinity] rules
+  # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
-  # -- If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default.
+  # -- Assign custom [TopologySpreadConstraints] rules to the ApplicationSet controller
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+    # - maxSkew: 1
+    #   topologyKey: topology.kubernetes.io/zone
+    #   whenUnsatisfiable: DoNotSchedule
+
+  # -- Priority class for the ApplicationSet controller pods
+  # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
-
-  # -- List of extra mounts to add (normally used with extraVolumes)
-  extraVolumeMounts: []
-    # - mountPath: /tmp/foobar
-    #   name: foobar
-
-  # -- List of extra volumes to add
-  extraVolumes: []
-    # - name: foobar
-    #   emptyDir: {}
-
-  # -- List of extra cli args to add
-  extraArgs: []
-
-  # -- Environment variables to pass to the controller
-  extraEnv: []
-    # - name: "MY_VAR"
-    #   value: "value"
-
-  # -- envFrom to pass to the controller
-  # @default -- `[]` (See [values.yaml])
-  extraEnvFrom: []
-    # - configMapRef:
-    #     name: config-map-name
-    # - secretRef:
-    #     name: secret-name
 
   ## Webhook for the Git Generator
   ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
@@ -2479,7 +2524,7 @@ applicationSet:
       annotations: {}
       # -- Additional ingress labels
       labels: {}
-      # -- Defines which ingress controller will implement the resource
+      # -- Defines which ingress ApplicationSet controller will implement the resource
       ingressClassName: ""
 
       # -- List of ingress hosts
@@ -2513,7 +2558,6 @@ applicationSet:
         # - secretName: argocd-applicationset-tls
         #   hosts:
         #     - argocd-applicationset.example.com
-
 
 ## Notifications controller
 notifications:
