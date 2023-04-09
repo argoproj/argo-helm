@@ -394,6 +394,9 @@ NAME: my-release
 | global.affinity.nodeAffinity.type | string | `"hard"` | Default node affinity rules. Either: `none`, `soft` or `hard` |
 | global.affinity.podAntiAffinity | string | `"soft"` | Default pod anti-affinity rules. Either: `none`, `soft` or `hard` |
 | global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
+| global.deploymentStrategy | object | `{}` | Deployment strategy for the all deployed Deployments |
+| global.entrypoint.entrypoint | string | `"entrypoint.sh"` | The entrypoint to use for the containers. |
+| global.entrypoint.useImplicit | bool | `false` | Implicitly use the docker image's entrypoint. This requires the image to have ENTRYPOINT set properly |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
 | global.image.repository | string | `"quay.io/codefresh/argocd"` | If defined, a repository applied to all Argo CD deployments |
@@ -410,7 +413,7 @@ NAME: my-release
 | global.revisionHistoryLimit | int | `3` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
 | global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
 | global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
-| global.tolerations | object | `{}` | Default tolerations for all components |
+| global.tolerations | list | `[]` | Default tolerations for all components |
 | global.topologySpreadConstraints | list | `[]` | Default [TopologySpreadConstraints] rules for all components |
 
 ## Argo CD Configs
@@ -571,6 +574,7 @@ NAME: my-release
 | repoServer.containerPorts.server | int | `8081` | Repo server container port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
 | repoServer.deploymentAnnotations | object | `{}` | Annotations to be added to repo server Deployment |
+| repoServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the repo server Deployment |
 | repoServer.dnsConfig | object | `{}` | [DNS configuration] |
 | repoServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Repo server pods |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
@@ -674,6 +678,7 @@ NAME: my-release
 | server.containerPorts.server | int | `8080` | Server container port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
 | server.deploymentAnnotations | object | `{}` | Annotations to be added to server Deployment |
+| server.deploymentStrategy | object | `{}` | Deployment strategy to be added to the server Deployment |
 | server.dnsConfig | object | `{}` | [DNS configuration] |
 | server.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Server pods |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
@@ -820,6 +825,7 @@ server:
 | dex.containerPorts.metrics | int | `5558` | Metrics container port |
 | dex.containerSecurityContext | object | See [values.yaml] | Dex container-level security context |
 | dex.deploymentAnnotations | object | `{}` | Annotations to be added to the Dex server Deployment |
+| dex.deploymentStrategy | object | `{}` | Deployment strategy to be added to the Dex server Deployment |
 | dex.dnsConfig | object | `{}` | [DNS configuration] |
 | dex.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Dex server pods |
 | dex.enabled | bool | `true` | Enable dex |
@@ -1003,26 +1009,34 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| applicationSet.affinity | object | `{}` | Assign custom [affinity] rules |
-| applicationSet.args.debug | bool | `false` | Print debug logs |
-| applicationSet.args.dryRun | bool | `false` | Enable dry run mode |
-| applicationSet.args.enableLeaderElection | bool | `false` | The default leader election setting |
-| applicationSet.args.metricsAddr | string | `":8080"` | The default metric address |
-| applicationSet.args.policy | string | `"sync"` | How application is synced between the generator and the cluster |
-| applicationSet.args.probeBindAddr | string | `":8081"` | The default health check port |
+| applicationSet.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
+| applicationSet.args | object | `{}` | DEPRECATED - ApplicationSet controller command line flags |
+| applicationSet.containerPorts.metrics | int | `8080` | Metrics container port |
+| applicationSet.containerPorts.probe | int | `8081` | Probe container port |
+| applicationSet.containerPorts.webhook | int | `7000` | Webhook container port |
+| applicationSet.containerSecurityContext | object | See [values.yaml] | ApplicationSet controller container-level security context |
+| applicationSet.deploymentAnnotations | object | `{}` | Annotations to be added to ApplicationSet controller Deployment |
+| applicationSet.deploymentStrategy | object | `{}` | Deployment strategy to be added to the ApplicationSet controller Deployment |
+| applicationSet.dnsConfig | object | `{}` | [DNS configuration] |
+| applicationSet.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for ApplicationSet controller pods |
 | applicationSet.enabled | bool | `true` | Enable ApplicationSet controller |
 | applicationSet.extraArgs | list | `[]` | List of extra cli args to add |
-| applicationSet.extraContainers | list | `[]` | Additional containers to be added to the applicationset controller pod |
-| applicationSet.extraEnv | list | `[]` | Environment variables to pass to the controller |
-| applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the controller |
+| applicationSet.extraContainers | list | `[]` | Additional containers to be added to the ApplicationSet controller pod |
+| applicationSet.extraEnv | list | `[]` | Environment variables to pass to the ApplicationSet controller |
+| applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the ApplicationSet controller |
 | applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
-| applicationSet.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application set controller |
-| applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application set controller |
-| applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application set controller |
+| applicationSet.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the ApplicationSet controller |
+| applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the ApplicationSet controller |
+| applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the ApplicationSet controller |
 | applicationSet.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
-| applicationSet.logFormat | string | `""` (defaults to global.logging.format) | ApplicationSet controller log format. Either `text` or `json` |
-| applicationSet.logLevel | string | `""` (defaults to global.logging.level) | ApplicationSet controller log level. One of: `debug`, `info`, `warn`, `error` |
+| applicationSet.initContainers | list | `[]` | Init containers to add to the ApplicationSet controller pod |
+| applicationSet.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for ApplicationSet controller |
+| applicationSet.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| applicationSet.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| applicationSet.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| applicationSet.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| applicationSet.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | applicationSet.metrics.enabled | bool | `false` | Deploy metrics service |
 | applicationSet.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | applicationSet.metrics.service.labels | object | `{}` | Metrics service labels |
@@ -1038,34 +1052,40 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | applicationSet.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
-| applicationSet.name | string | `"applicationset-controller"` | Application Set controller name string |
-| applicationSet.nodeSelector | object | `{}` | [Node selector] |
+| applicationSet.name | string | `"applicationset-controller"` | ApplicationSet controller name string |
+| applicationSet.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | applicationSet.pdb.annotations | object | `{}` | Annotations to be added to ApplicationSet controller pdb |
 | applicationSet.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the ApplicationSet controller |
 | applicationSet.pdb.labels | object | `{}` | Labels to be added to ApplicationSet controller pdb |
-| applicationSet.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| applicationSet.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | applicationSet.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
-| applicationSet.podAnnotations | object | `{}` | Annotations for the controller pods |
-| applicationSet.podLabels | object | `{}` | Labels for the controller pods |
-| applicationSet.podSecurityContext | object | `{}` | Pod Security Context |
-| applicationSet.priorityClassName | string | `""` | If specified, indicates the pod's priority. If not specified, the pod priority will be default or zero if there is no default. |
+| applicationSet.podAnnotations | object | `{}` | Annotations for the ApplicationSet controller pods |
+| applicationSet.podLabels | object | `{}` | Labels for the ApplicationSet controller pods |
+| applicationSet.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the ApplicationSet controller pods |
+| applicationSet.readinessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for ApplicationSet controller |
+| applicationSet.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| applicationSet.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| applicationSet.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| applicationSet.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| applicationSet.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | applicationSet.replicaCount | int | `1` | The number of ApplicationSet controller pods to run |
-| applicationSet.resources | object | `{}` | Resource limits and requests for the controller pods. |
-| applicationSet.securityContext | object | `{}` | Security Context |
-| applicationSet.service.annotations | object | `{}` | Application set service annotations |
-| applicationSet.service.labels | object | `{}` | Application set service labels |
-| applicationSet.service.port | int | `7000` | Application set service port |
-| applicationSet.service.portName | string | `"webhook"` | Application set service port name |
-| applicationSet.serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
-| applicationSet.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| applicationSet.resources | object | `{}` | Resource limits and requests for the ApplicationSet controller pods. |
+| applicationSet.service.annotations | object | `{}` | ApplicationSet service annotations |
+| applicationSet.service.labels | object | `{}` | ApplicationSet service labels |
+| applicationSet.service.port | int | `7000` | ApplicationSet service port |
+| applicationSet.service.portName | string | `"webhook"` | ApplicationSet service port name |
+| applicationSet.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
+| applicationSet.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| applicationSet.serviceAccount.create | bool | `true` | Create ApplicationSet controller service account |
 | applicationSet.serviceAccount.labels | object | `{}` | Labels applied to created service account |
-| applicationSet.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| applicationSet.tolerations | list | `[]` | [Tolerations] for use with node taints |
+| applicationSet.serviceAccount.name | string | `"argocd-applicationset-controller"` | ApplicationSet controller service account name |
+| applicationSet.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| applicationSet.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the ApplicationSet controller |
 | applicationSet.webhook.ingress.annotations | object | `{}` | Additional ingress annotations |
 | applicationSet.webhook.ingress.enabled | bool | `false` | Enable an ingress resource for Webhooks |
 | applicationSet.webhook.ingress.extraPaths | list | `[]` | Additional ingress paths |
 | applicationSet.webhook.ingress.hosts | list | `[]` | List of ingress hosts |
-| applicationSet.webhook.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
+| applicationSet.webhook.ingress.ingressClassName | string | `""` | Defines which ingress ApplicationSet controller will implement the resource |
 | applicationSet.webhook.ingress.labels | object | `{}` | Additional ingress labels |
 | applicationSet.webhook.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
 | applicationSet.webhook.ingress.paths | list | `["/api/webhook"]` | List of ingress paths |
@@ -1082,6 +1102,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.context | object | `{}` | Define user-defined context |
 | notifications.deploymentAnnotations | object | `{}` | Annotations to be applied to the notifications controller Deployment |
+| notifications.deploymentStrategy | object | `{"type":"Recreate"}` | Deployment strategy to be added to the notifications controller Deployment |
 | notifications.dnsConfig | object | `{}` | [DNS configuration] |
 | notifications.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for notifications controller Pods |
 | notifications.enabled | bool | `false` | Enable notifications controller |

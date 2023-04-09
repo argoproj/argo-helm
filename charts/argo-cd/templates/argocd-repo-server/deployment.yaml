@@ -11,6 +11,10 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
 spec:
+  {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.repoServer.deploymentStrategy) }}
+  strategy:
+    {{- trim . | nindent 4 }}
+  {{- end }}
   {{- if not .Values.repoServer.autoscaling.enabled }}
   replicas: {{ .Values.repoServer.replicas }}
   {{- end }}
@@ -56,8 +60,10 @@ spec:
       - name: {{ .Values.repoServer.name }}
         image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
+        {{- if not .Values.global.entrypoint.useImplicit }}
         command:
-        - entrypoint.sh
+          - {{ .Values.global.entrypoint.entrypoint | quote }}
+        {{- end }}
         args:
         - argocd-repo-server
         - --port={{ .Values.repoServer.containerPorts.server }}
@@ -355,7 +361,9 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
+      {{- if .Values.repoServer.hostNetwork }}
       hostNetwork: {{ .Values.repoServer.hostNetwork }}
+      {{- end }}
       {{- with .Values.repoServer.dnsConfig }}
       dnsConfig:
         {{- toYaml . | nindent 8 }}
