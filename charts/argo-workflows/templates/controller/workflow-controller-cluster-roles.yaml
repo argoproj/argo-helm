@@ -14,7 +14,6 @@ rules:
   - ""
   resources:
   - pods
-  - pods/exec
   verbs:
   - create
   - get
@@ -26,11 +25,21 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
   - configmaps
   verbs:
   - get
   - watch
   - list
+  {{- if .Values.controller.rbac.writeConfigMaps }}
+  - create
+  - update
+  {{- end}}
 - apiGroups:
   - argoproj.io
   resources:

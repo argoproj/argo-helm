@@ -13,6 +13,34 @@ A few options are:
 - Manually create a ServiceAccount in the Namespace in which your release will be deployed w/ appropriate bindings to perform this action and set the `serviceAccountName` field in the Workflow spec
 - Augment the `default` ServiceAccount permissions in the Namespace in which your Release is deployed to have the appropriate permissions
 
+### Custom resource definitions
+
+Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
+
+Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations). Starting with 3.4.0 (chart version 0.19.0), the CRDs have been moved to `<chart>/templates` to address this design decision.
+
+If you are using Argo Workflows chart version prior to 3.4.0 (chart version 0.19.0) or have elected to manage the Argo Workflows CRDs outside of the chart, please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
+
+```bash
+kubectl apply -k "https://github.com/argoproj/argo-workflows/manifests/base/crds/full?ref=<appVersion>"
+
+# Eg. version v3.3.9
+kubectl apply -k "https://github.com/argoproj/argo-workflows/manifests/base/crds/full?ref=v3.3.9"
+```
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add argo https://argoproj.github.io/argo-helm
+"argo" has been added to your repositories
+
+$ helm install my-release argo/argo-workflows
+NAME: my-release
+...
+```
+
 ## Changelog
 
 For full list of changes, please check ArtifactHub [changelog].
@@ -80,6 +108,7 @@ Fields to note:
 | controller.extraArgs | list | `[]` | Extra arguments to be added to the controller |
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
 | controller.extraEnv | list | `[]` | Extra environment variables to provide to the controller container |
+| controller.extraInitContainers | list | `[]` | Enables init containers to be added to the controller deployment |
 | controller.image.registry | string | `"quay.io"` | Registry to use for the controller |
 | controller.image.repository | string | `"argoproj/workflow-controller"` | Registry to use for the controller |
 | controller.image.tag | string | `""` | Image tag for the workflow controller. Defaults to `.Values.images.tag`. |
@@ -91,6 +120,7 @@ Fields to note:
 | controller.links | list | `[]` | Configure Argo Server to show custom [links] |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
 | controller.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
+| controller.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
 | controller.logging.globallevel | string | `"0"` | Set the glog logging level |
 | controller.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | controller.metricsConfig.enabled | bool | `false` | Enables prometheus metrics server |
@@ -118,6 +148,7 @@ Fields to note:
 | controller.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages. |
 | controller.rbac.create | bool | `true` | Adds Role and RoleBinding for the controller. |
 | controller.rbac.secretWhitelist | list | `[]` | Allows controller to get, list, and watch certain k8s secrets |
+| controller.rbac.writeConfigMaps | bool | `false` | Allows controller to create and update ConfigMaps. Enables memoization feature |
 | controller.replicas | int | `1` | The number of controller pods to run |
 | controller.resourceRateLimit | object | `{}` | Globally limits the rate at which pods are created. This is intended to mitigate flooding of the Kubernetes API server by workflows with a large amount of parallel nodes. |
 | controller.resources | object | `{}` | Resource limits and requests for the controller |
@@ -185,6 +216,7 @@ Fields to note:
 | server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary, such as for disabling authentication. |
 | server.extraContainers | list | `[]` | Extra containers to be added to the server deployment |
 | server.extraEnv | list | `[]` | Extra environment variables to provide to the argo-server container |
+| server.extraInitContainers | list | `[]` | Enables init containers to be added to the server deployment |
 | server.image.registry | string | `"quay.io"` | Registry to use for the server |
 | server.image.repository | string | `"argoproj/argocli"` | Repository to use for the server |
 | server.image.tag | string | `""` | Image tag for the Argo Workflows server. Defaults to `.Values.images.tag`. |
@@ -199,6 +231,9 @@ Fields to note:
 | server.ingress.tls | list | `[]` | Ingress TLS configuration |
 | server.loadBalancerIP | string | `""` | Static IP address to assign to loadBalancer service type `LoadBalancer` |
 | server.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
+| server.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
+| server.logging.globallevel | string | `"0"` | Set the glog logging level |
+| server.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | server.name | string | `"server"` | Server name string |
 | server.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
 | server.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the server pods |

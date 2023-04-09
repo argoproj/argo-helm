@@ -12,6 +12,10 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
 spec:
+  {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.dex.deploymentStrategy) }}
+  strategy:
+    {{- trim . | nindent 4 }}
+  {{- end }}
   replicas: 1
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
@@ -39,10 +43,18 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with.Values.global.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.dex.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
       containers:
       - name: {{ .Values.dex.name }}
         image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
@@ -138,19 +150,19 @@ spec:
       {{- with .Values.dex.initContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- with .Values.dex.nodeSelector }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.dex) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dex.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.dex.tolerations }}
+      {{- with .Values.dex.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.dex.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.dex.topologySpreadConstraints }}
+      {{- with .Values.dex.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -160,11 +172,6 @@ spec:
             {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.dex.name) | nindent 12 }}
           {{- end }}
         {{- end }}
-      {{- end }}
-      serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
-      {{- with .Values.global.hostAliases }}
-      hostAliases:
-        {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:
       - name: static-files
@@ -185,7 +192,9 @@ spec:
       {{- with .Values.dex.volumes }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
-      {{- with .Values.dex.priorityClassName }}
-      priorityClassName: {{ . }}
+      {{- with .Values.dex.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
+      dnsPolicy: {{ .Values.dex.dnsPolicy }}
 {{- end }}

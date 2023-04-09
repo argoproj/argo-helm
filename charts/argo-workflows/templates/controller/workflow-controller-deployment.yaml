@@ -32,6 +32,10 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.controller.extraInitContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: controller
           image: "{{- include "argo-workflows.image" (dict "context" . "image" .Values.controller.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.controller.image.tag }}"
@@ -46,6 +50,8 @@ spec:
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"
           - "{{ .Values.controller.logging.globallevel }}"
+          - "--log-format"
+          - "{{ .Values.controller.logging.format }}"
           {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}

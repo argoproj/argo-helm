@@ -33,6 +33,10 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.server.extraInitContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: argo-server
           image: "{{- include "argo-workflows.image" (dict "context" . "image" .Values.server.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.server.image.tag }}"
@@ -49,6 +53,12 @@ spec:
           {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}
+          - "--loglevel"
+          - "{{ .Values.server.logging.level }}"
+          - "--gloglevel"
+          - "{{ .Values.server.logging.globallevel }}"
+          - "--log-format"
+          - "{{ .Values.server.logging.format }}"
           ports:
           - name: web
             containerPort: 2746

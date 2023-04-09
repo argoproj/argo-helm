@@ -106,6 +106,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | nameOverride | string | `""` | Global name (argocd-image-updater.name in _helpers.tpl) override |
 | nodeSelector | object | `{}` | Kubernetes nodeSelector settings for the deployment |
 | podAnnotations | object | `{}` | Pod Annotations for the deployment |
+| podLabels | object | `{}` | Pod Labels for the deployment |
 | podSecurityContext | object | `{}` | Pod security context settings for the deployment |
 | rbac.enabled | bool | `true` | Enable RBAC creation |
 | replicaCount | int | `1` | Replica count for the deployment. It is not advised to run more than one replica. |

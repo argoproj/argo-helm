@@ -11,6 +11,10 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
+  {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.server.deploymentStrategy) }}
+  strategy:
+    {{- trim . | nindent 4 }}
+  {{- end }}
   {{- if not .Values.server.autoscaling.enabled }}
   replicas: {{ .Values.server.replicas }}
   {{- end }}
@@ -37,10 +41,18 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.global.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.server.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-cd.serverServiceAccountName" . }}
       containers:
       - name: {{ .Values.server.name }}
         image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.server.image.tag }}
@@ -348,19 +360,19 @@ spec:
       initContainers:
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- with .Values.server.nodeSelector }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.server) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.tolerations }}
+      {{- with .Values.server.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.server.topologySpreadConstraints }}
+      {{- with .Values.server.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -370,11 +382,6 @@ spec:
             {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.server.name) | nindent 12 }}
         {{- end }}
         {{- end }}
-      {{- end }}
-      serviceAccountName: {{ template "argo-cd.serverServiceAccountName" . }}
-      {{- with .Values.global.hostAliases }}
-      hostAliases:
-        {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:
       {{- with .Values.server.volumes }}
@@ -418,8 +425,11 @@ spec:
             path: tls.crt
           - key: ca.crt
             path: ca.crt
-      {{- with .Values.server.priorityClassName }}
-      priorityClassName: {{ . }}
-      {{- end }}
+      {{- if .Values.server.hostNetwork }}
       hostNetwork: {{ .Values.server.hostNetwork }}
+      {{- end }}
+      {{- with .Values.server.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       dnsPolicy: {{ .Values.server.dnsPolicy }}

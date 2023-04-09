@@ -36,9 +36,16 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.redis.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.redis.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.redisServiceAccountName" . }}
       containers:
@@ -82,6 +89,9 @@ spec:
           value: {{ printf "redis://localhost:%v" .Values.redis.containerPorts.redis }}
         - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS
           value: {{ printf "0.0.0.0:%v" .Values.redis.containerPorts.metrics }}
+        {{- with .Values.redis.exporter.env }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         ports:
         - name: metrics
           containerPort: {{ .Values.redis.containerPorts.metrics }}
@@ -98,19 +108,19 @@ spec:
       initContainers:
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- with .Values.redis.nodeSelector }}
+      {{- with .Values.redis.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.redis.tolerations }}
+      {{- with .Values.redis.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.redis.affinity }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.redis) }}
       affinity:
-        {{- toYaml . | nindent 8 }}
+        {{-  trim . | nindent 8 }}
       {{- end }}
-      {{- with .Values.redis.topologySpreadConstraints }}
+      {{- with .Values.redis.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -121,11 +131,13 @@ spec:
         {{- end }}
         {{- end }}
       {{- end }}
-      {{- with .Values.redis.priorityClassName }}
-      priorityClassName: {{ . }}
-      {{- end }}
       {{- with .Values.redis.volumes }}
       volumes:
         {{- toYaml . | nindent 8}}
       {{- end }}
+      {{- with .Values.redis.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.redis.dnsPolicy }}
 {{- end }}

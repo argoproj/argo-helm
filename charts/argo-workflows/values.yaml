@@ -74,6 +74,8 @@ controller:
     create: true
     # -- Allows controller to get, list, and watch certain k8s secrets
     secretWhitelist: []
+    # -- Allows controller to create and update ConfigMaps. Enables memoization feature
+    writeConfigMaps: false
 
   # -- Limits the maximum number of incomplete workflows in a namespace
   namespaceParallelism:
@@ -216,6 +218,8 @@ controller:
     level: info
     # -- Set the glog logging level
     globallevel: "0"
+    # -- Set the logging format (one of: `text`, `json`)
+    format: "text"
 
   # -- Service type of the controller Service
   serviceType: ClusterIP
@@ -290,6 +294,9 @@ controller:
     enabled: true
   # -- Extra containers to be added to the controller deployment
   extraContainers: []
+
+  # -- Enables init containers to be added to the controller deployment
+  extraInitContainers: []
 
   # -- Workflow retention by number of workflows
   retentionPolicy: {}
@@ -469,6 +476,14 @@ server:
   # extraArgs:
   # - --auth-mode=server
 
+  logging:
+    # -- Set the logging level (one of: `debug`, `info`, `warn`, `error`)
+    level: info
+    # -- Set the glog logging level
+    globallevel: "0"
+    # -- Set the logging format (one of: `text`, `json`)
+    format: "text"
+
   # -- Additional volume mounts to the server main container.
   volumeMounts: []
   # -- Additional volumes to the server pod.
@@ -557,6 +572,9 @@ server:
 
   # -- Extra containers to be added to the server deployment
   extraContainers: []
+
+  # -- Enables init containers to be added to the server deployment
+  extraInitContainers: []
 
 # -- Array of extra K8s manifests to deploy
 extraObjects: []

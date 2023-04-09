@@ -37,10 +37,18 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.global.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.controller.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-cd.controllerServiceAccountName" . }}
       containers:
       - command:
         - argocd-application-controller
@@ -264,19 +272,19 @@ spec:
       initContainers:
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- with .Values.controller.nodeSelector }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.controller) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.tolerations }}
+      {{- with .Values.controller.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.controller.topologySpreadConstraints }}
+      {{- with .Values.controller.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -286,11 +294,6 @@ spec:
             {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.controller.name) | nindent 12 }}
           {{- end }}
         {{- end }}
-      {{- end }}
-      serviceAccountName: {{ template "argo-cd.controllerServiceAccountName" . }}
-      {{- with .Values.global.hostAliases }}
-      hostAliases:
-        {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:
       {{- with .Values.controller.volumes }}
@@ -309,8 +312,11 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-      {{- with .Values.controller.priorityClassName }}
-      priorityClassName: {{ . }}
-      {{- end }}
+      {{- if .Values.controller.hostNetwork }}
       hostNetwork: {{ .Values.controller.hostNetwork }}
+      {{- end }}
+      {{- with .Values.controller.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       dnsPolicy: {{ .Values.controller.dnsPolicy }}
