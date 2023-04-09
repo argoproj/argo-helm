@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v2.6.0-cap-CR-17237
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.27.1-2-cap-CR-17237
+version: 5.28.1-1-cap-CR-17237
 kubeVersion: ">=1.22.0-0"
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
@@ -18,10 +18,10 @@ maintainers:
     url: https://argoproj.github.io/
 dependencies:
   - name: redis-ha
-    version: 4.22.4
+    version: 4.22.5
     repository: https://dandydeveloper.github.io/charts/
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: Upgrade Argo CD to v2.6.6
+    - kind: fixed
+      description: Change default value for global.tolerations, from object to array.

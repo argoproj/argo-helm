@@ -120,3 +120,20 @@ nodeAffinity:
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Common deployment strategy definition
+- Recreate don't have additional fields, we need to remove them if added by the mergeOverwrite 
+*/}}
+{{- define "argo-cd.strategy" -}}
+{{- $preset := . -}}
+{{- if (eq $preset.type "Recreate") }}
+type: Recreate
+{{- else if (eq $preset.type "RollingUpdate") }}
+type: RollingUpdate
+{{- with $preset.rollingUpdate }}
+rollingUpdate:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}

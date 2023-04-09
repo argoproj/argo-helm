@@ -394,6 +394,9 @@ NAME: my-release
 | global.affinity.nodeAffinity.type | string | `"hard"` | Default node affinity rules. Either: `none`, `soft` or `hard` |
 | global.affinity.podAntiAffinity | string | `"soft"` | Default pod anti-affinity rules. Either: `none`, `soft` or `hard` |
 | global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
+| global.deploymentStrategy | object | `{}` | Deployment strategy for the all deployed Deployments |
+| global.entrypoint.entrypoint | string | `"entrypoint.sh"` | The entrypoint to use for the containers. |
+| global.entrypoint.useImplicit | bool | `false` | Implicitly use the docker image's entrypoint. This requires the image to have ENTRYPOINT set properly |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
 | global.image.repository | string | `"quay.io/codefresh/argocd"` | If defined, a repository applied to all Argo CD deployments |
@@ -410,7 +413,7 @@ NAME: my-release
 | global.revisionHistoryLimit | int | `3` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
 | global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
 | global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
-| global.tolerations | object | `{}` | Default tolerations for all components |
+| global.tolerations | list | `[]` | Default tolerations for all components |
 | global.topologySpreadConstraints | list | `[]` | Default [TopologySpreadConstraints] rules for all components |
 
 ## Argo CD Configs
@@ -571,6 +574,7 @@ NAME: my-release
 | repoServer.containerPorts.server | int | `8081` | Repo server container port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
 | repoServer.deploymentAnnotations | object | `{}` | Annotations to be added to repo server Deployment |
+| repoServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the repo server Deployment |
 | repoServer.dnsConfig | object | `{}` | [DNS configuration] |
 | repoServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Repo server pods |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
@@ -674,6 +678,7 @@ NAME: my-release
 | server.containerPorts.server | int | `8080` | Server container port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
 | server.deploymentAnnotations | object | `{}` | Annotations to be added to server Deployment |
+| server.deploymentStrategy | object | `{}` | Deployment strategy to be added to the server Deployment |
 | server.dnsConfig | object | `{}` | [DNS configuration] |
 | server.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Server pods |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
@@ -820,6 +825,7 @@ server:
 | dex.containerPorts.metrics | int | `5558` | Metrics container port |
 | dex.containerSecurityContext | object | See [values.yaml] | Dex container-level security context |
 | dex.deploymentAnnotations | object | `{}` | Annotations to be added to the Dex server Deployment |
+| dex.deploymentStrategy | object | `{}` | Deployment strategy to be added to the Dex server Deployment |
 | dex.dnsConfig | object | `{}` | [DNS configuration] |
 | dex.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Dex server pods |
 | dex.enabled | bool | `true` | Enable dex |
@@ -1010,6 +1016,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.containerPorts.webhook | int | `7000` | Webhook container port |
 | applicationSet.containerSecurityContext | object | See [values.yaml] | ApplicationSet controller container-level security context |
 | applicationSet.deploymentAnnotations | object | `{}` | Annotations to be added to ApplicationSet controller Deployment |
+| applicationSet.deploymentStrategy | object | `{}` | Deployment strategy to be added to the ApplicationSet controller Deployment |
 | applicationSet.dnsConfig | object | `{}` | [DNS configuration] |
 | applicationSet.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for ApplicationSet controller pods |
 | applicationSet.enabled | bool | `true` | Enable ApplicationSet controller |
@@ -1095,6 +1102,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.context | object | `{}` | Define user-defined context |
 | notifications.deploymentAnnotations | object | `{}` | Annotations to be applied to the notifications controller Deployment |
+| notifications.deploymentStrategy | object | `{"type":"Recreate"}` | Deployment strategy to be added to the notifications controller Deployment |
 | notifications.dnsConfig | object | `{}` | [DNS configuration] |
 | notifications.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for notifications controller Pods |
 | notifications.enabled | bool | `false` | Enable notifications controller |
