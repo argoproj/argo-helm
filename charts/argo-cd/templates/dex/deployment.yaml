@@ -61,6 +61,8 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.image.imagePullPolicy }}
         command:
         - /shared/argocd-dex
+        - --logformat={{ default .Values.global.logging.format .Values.dex.logFormat }}
+        - --loglevel={{ default .Values.global.logging.level .Values.dex.logLevel }}
         args:
         - rundex
         {{- with .Values.dex.extraArgs }}
