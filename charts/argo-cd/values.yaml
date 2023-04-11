@@ -1106,6 +1106,13 @@ dex:
     #   maxSurge: 25%
     #   maxUnavailable: 25%
 
+  # -- Dex log format. Either `text` or `json`
+  # @default -- `""` (defaults to global.logging.format)
+  logFormat: ""
+  # -- Dex log level. One of: `debug`, `info`, `warn`, `error`
+  # @default -- `""` (defaults to global.logging.level)
+  logLevel: ""
+
 ## Redis
 redis:
   # -- Enable redis
