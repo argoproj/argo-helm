@@ -1588,6 +1588,38 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Add log format and log level to dex.
+    apiVersion: v2
+    appVersion: v2.6.7
+    created: "2023-04-11T13:34:13.335439418Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.5
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 1a9a5678c7771e2139b299b543f7feb9f1927f2841f481bc1c25308291190041
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.28.2/argo-cd-5.28.2.tgz
+    version: 5.28.2
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Change default value for global.tolerations, from object to array.
     apiVersion: v2
@@ -22137,4 +22169,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-04-07T12:46:05.071817699Z"
+generated: "2023-04-11T13:34:13.338655489Z"
