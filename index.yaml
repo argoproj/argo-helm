@@ -1588,6 +1588,38 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Add namespace field for namespace scoped resources
+    apiVersion: v2
+    appVersion: v2.6.7
+    created: "2023-04-13T14:09:41.401381384Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.5
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: b287804d4e3c87ce70efc68dc5777d090e2938b3645b553c57aa3907a305e102
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.29.0/argo-cd-5.29.0.tgz
+    version: 5.29.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Add log format and log level to dex.
     apiVersion: v2
@@ -22232,4 +22264,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-04-13T09:25:34.659000588Z"
+generated: "2023-04-13T14:09:41.403407434Z"
