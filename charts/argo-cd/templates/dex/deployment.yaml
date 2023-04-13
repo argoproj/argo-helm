@@ -13,6 +13,10 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
 spec:
+  {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.dex.deploymentStrategy) }}
+  strategy:
+    {{- trim . | nindent 4 }}
+  {{- end }}
   replicas: 1
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
@@ -58,6 +62,8 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.image.imagePullPolicy }}
         command:
         - /shared/argocd-dex
+        - --logformat={{ default .Values.global.logging.format .Values.dex.logFormat }}
+        - --loglevel={{ default .Values.global.logging.level .Values.dex.logLevel }}
         args:
         - rundex
         {{- with .Values.dex.extraArgs }}

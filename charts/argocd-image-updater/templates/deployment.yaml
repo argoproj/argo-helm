@@ -19,6 +19,9 @@ spec:
       {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
+      {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}      
         {{- include "argocd-image-updater.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}

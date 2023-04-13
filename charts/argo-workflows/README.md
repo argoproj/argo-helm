@@ -6,13 +6,6 @@ If you want your deployment of this helm chart to most closely match the [argo C
 
 ## Pre-Requisites
 
-This chart uses an install hook to configure the CRD definition. Installation of CRDs is a somewhat privileged process in itself and in RBAC enabled clusters the `default` service account for namespaces does not typically have the ability to create these.
-
-A few options are:
-
-- Manually create a ServiceAccount in the Namespace in which your release will be deployed w/ appropriate bindings to perform this action and set the `serviceAccountName` field in the Workflow spec
-- Augment the `default` ServiceAccount permissions in the Namespace in which your Release is deployed to have the appropriate permissions
-
 ### Custom resource definitions
 
 Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
@@ -26,6 +19,41 @@ kubectl apply -k "https://github.com/argoproj/argo-workflows/manifests/base/crds
 
 # Eg. version v3.3.9
 kubectl apply -k "https://github.com/argoproj/argo-workflows/manifests/base/crds/full?ref=v3.3.9"
+```
+
+### ServiceAccount for Workflow Spec
+In order for each Workflow run, you create ServiceAccount via `values.yaml` like below.
+
+```yaml
+workflow:
+  serviceAccount:
+    create: true
+    name: "argo-workflow"
+  rbac:
+    create: true
+controller:
+  workflowNamespaces:
+    - default
+    - foo
+    - bar
+```
+
+Set ServiceAccount on Workflow.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: hello-world-
+spec:
+  entrypoint: whalesay
+  serviceAccountName: argo-workflow # Set ServiceAccount
+  templates:
+    - name: whalesay
+      container:
+        image: docker/whalesay
+        command: [ cowsay ]
+        args: [ "hello world" ]
 ```
 
 ## Installing the Chart
@@ -108,6 +136,7 @@ Fields to note:
 | controller.extraArgs | list | `[]` | Extra arguments to be added to the controller |
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
 | controller.extraEnv | list | `[]` | Extra environment variables to provide to the controller container |
+| controller.extraInitContainers | list | `[]` | Enables init containers to be added to the controller deployment |
 | controller.image.registry | string | `"quay.io"` | Registry to use for the controller |
 | controller.image.repository | string | `"argoproj/workflow-controller"` | Registry to use for the controller |
 | controller.image.tag | string | `""` | Image tag for the workflow controller. Defaults to `.Values.images.tag`. |
@@ -215,6 +244,7 @@ Fields to note:
 | server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary, such as for disabling authentication. |
 | server.extraContainers | list | `[]` | Extra containers to be added to the server deployment |
 | server.extraEnv | list | `[]` | Extra environment variables to provide to the argo-server container |
+| server.extraInitContainers | list | `[]` | Enables init containers to be added to the server deployment |
 | server.image.registry | string | `"quay.io"` | Registry to use for the server |
 | server.image.repository | string | `"argoproj/argocli"` | Repository to use for the server |
 | server.image.tag | string | `""` | Image tag for the Argo Workflows server. Defaults to `.Values.images.tag`. |
