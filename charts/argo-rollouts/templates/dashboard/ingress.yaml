@@ -14,6 +14,7 @@ metadata:
   {{- end }}
 {{- end }}
   name: {{ template "argo-rollouts.fullname" . }}-dashboard
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-rollouts.labels" . | nindent 4 }}
     {{- if .Values.dashboard.ingress.labels }}
