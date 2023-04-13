@@ -14,6 +14,7 @@ metadata:
   {{- end }}
 {{- end }}
   name: {{ template "argo-workflows.server.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     {{- if .Values.server.ingress.labels }}
