@@ -154,6 +154,17 @@ controller:
     # -- Maximum number / percentage of pods that may be made unavailable
     maxUnavailable: # 0
 
+  # -- Additional volumes to add to the controller pod
+  volumes: []
+    # - configMap:
+    #     name: my-certs-cm
+    #   name: my-certs
+
+  # -- Additional volumeMounts to add to the controller container
+  volumeMounts: []
+    # - mountPath: /etc/ssl/certs
+    #   name: my-certs
+
 serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
@@ -354,6 +365,12 @@ dashboard:
       # - secretName: argorollouts-example-tls
       #   hosts:
       #     - argorollouts.example.com
+
+  # -- Additional volumes to add to the dashboard pod
+  volumes: []
+
+  # -- Additional volumeMounts to add to the dashboard container
+  volumeMounts: []
 
 notifications:
   secret:
