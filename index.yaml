@@ -1589,6 +1589,38 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: fixed
+          description: Namespace field for some namespaced resources needs to be evaluated via helm root scope
+    apiVersion: v2
+    appVersion: v2.6.7
+    created: "2023-04-13T23:44:43.665392372Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.5
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 56f9b2dc5c37f6bfbc7011347b5c9c3e11501a95cda6c2979ae436b06ce3de39
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.29.1/argo-cd-5.29.1.tgz
+    version: 5.29.1
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: fixed
           description: Add namespace field for namespace scoped resources
     apiVersion: v2
     appVersion: v2.6.7
@@ -22311,4 +22343,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-04-13T18:38:30.076405701Z"
+generated: "2023-04-13T23:44:43.667778802Z"
