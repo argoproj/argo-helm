@@ -54,6 +54,10 @@ spec:
           {{- toYaml .Values.dashboard.containerSecurityContext | nindent 10 }}
         resources:
           {{- toYaml .Values.dashboard.resources | nindent 10 }}
+        {{- with .Values.dashboard.volumeMounts }}
+        volumeMounts:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- if .Values.dashboard.nodeSelector }}
       nodeSelector:
         {{- toYaml .Values.dashboard.nodeSelector | nindent 8 }}
@@ -82,5 +86,9 @@ spec:
       {{- end }}
       {{- with .Values.dashboard.priorityClassName }}
       priorityClassName: {{ . }}
+      {{- end }}
+      {{- with .Values.dashboard.volumes }}
+      volumes:
+        {{- toYaml . | nindent 6 }}
       {{- end }}
 {{- end }}

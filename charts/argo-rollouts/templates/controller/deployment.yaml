@@ -65,6 +65,10 @@ spec:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
+        {{- with .Values.controller.volumeMounts }}
+        volumeMounts:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.controller.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
@@ -100,4 +104,8 @@ spec:
       {{- end }}
       {{- with .Values.controller.priorityClassName }}
       priorityClassName: {{ . }}
+      {{- end }}
+      {{- with .Values.controller.volumes }}
+      volumes:
+        {{- toYaml . | nindent 6 }}
       {{- end }}
