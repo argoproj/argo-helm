@@ -17866,6 +17866,27 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Add namespace field to all namespace scoped resources because `helm template` doesn't add the namespace filed automatically.
+    apiVersion: v2
+    appVersion: v3.4.7
+    created: "2023-04-13T09:25:34.656570682Z"
+    description: A Helm chart for Argo Workflows
+    digest: 8cbc97e4c0df9aa5bccc7e3fe5fb984a89c69d6a90a36aed7178521983e6c35b
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.24.0/argo-workflows-0.24.0.tgz
+    version: 0.24.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Upgrade Argo Workflows to v3.4.7.
     apiVersion: v2
@@ -22211,4 +22232,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-04-12T04:52:49.953242391Z"
+generated: "2023-04-13T09:25:34.659000588Z"
