@@ -40,6 +40,11 @@ spec:
           command:
             - argocd-notifications
             - bot
+            - --loglevel={{ default .Values.global.logging.level .Values.notifications.bots.slack.logLevel }}
+            - --logformat={{ default .Values.global.logging.format .Values.notifications.bots.slack.logFormat }}
+            {{- range .Values.notifications.bots.slack.extraArgs }}
+            - {{ . | squote }}
+            {{- end }}
           workingDir: /app
           ports:
           - containerPort: 8080

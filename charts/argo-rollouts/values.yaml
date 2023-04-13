@@ -47,6 +47,15 @@ controller:
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the controller
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   # -- [priorityClassName] for the controller
   priorityClassName: ""
   # -- The number of controller pods to run
@@ -181,6 +190,26 @@ podLabels: {}
 imagePullSecrets: []
 # - name: argo-pull-secret
 
+providerRBAC:
+  # -- Toggles addition of provider-specific RBAC rules to the controller Role and ClusterRole
+  enabled: true
+  # providerRBAC.enabled must be true in order to toggle the individual providers
+  providers:
+    # -- Adds RBAC rules for the Istio provider
+    istio: true
+    # -- Adds RBAC rules for the SMI provider
+    smi: true
+    # -- Adds RBAC rules for the Ambassador provider
+    ambassador: true
+    # -- Adds RBAC rules for the AWS Load Balancer Controller provider
+    awsLoadBalancerController: true
+    # -- Adds RBAC rules for the AWS App Mesh provider
+    awsAppMesh: true
+    # -- Adds RBAC rules for the Traefik provider
+    traefik: true
+    # -- Adds RBAC rules for the Apisix provider
+    apisix: true
+
 dashboard:
   # -- Deploy dashboard server
   enabled: false
@@ -194,6 +223,15 @@ dashboard:
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the dashboard server
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
   # -- [priorityClassName] for the dashboard server
   priorityClassName: ""
 
