@@ -51,10 +51,11 @@ spec:
           command:
             - entrypoint.sh
             - argocd-applicationset-controller
+            - --metrics-addr=:{{ .Values.applicationSet.containerPorts.metrics }}
+            - --probe-addr=:{{ .Values.applicationSet.containerPorts.probe }}
+            - --webhook-addr=:{{ .Values.applicationSet.containerPorts.webhook }}
             - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
             - --enable-leader-election={{ gt ( .Values.applicationSet.replicaCount | int64) 1 }}
-            - --metrics-addr={{ .Values.applicationSet.args.metricsAddr }}
-            - --probe-addr={{ .Values.applicationSet.args.probeBindAddr }}
             - --policy={{ .Values.applicationSet.args.policy }}
             - --dry-run={{ .Values.applicationSet.args.dryRun }}
             - --logformat
@@ -78,13 +79,13 @@ spec:
           {{- end }}
           ports:
             - name: metrics
-              containerPort: {{ (split ":" .Values.applicationSet.args.metricsAddr)._1 }}
+              containerPort: {{ .Values.applicationSet.containerPorts.metrics }}
               protocol: TCP
             - name: probe
-              containerPort: {{ (split ":" .Values.applicationSet.args.probeBindAddr)._1 }}
+              containerPort: {{ .Values.applicationSet.containerPorts.probe }}
               protocol: TCP
             - name: webhook
-              containerPort: 7000
+              containerPort: {{ .Values.applicationSet.containerPorts.webhook }}
               protocol: TCP
           {{- if .Values.applicationSet.livenessProbe.enabled }}
           livenessProbe:
@@ -125,8 +126,12 @@ spec:
             - mountPath: /tmp
               name: tmp
         {{- with .Values.applicationSet.extraContainers }}
-          {{- toYaml . | nindent 8 }}
+          {{- tpl (toYaml .) $ | nindent 8 }}
         {{- end }}
+      {{- with .Values.applicationSet.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
       {{- with .Values.applicationSet.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

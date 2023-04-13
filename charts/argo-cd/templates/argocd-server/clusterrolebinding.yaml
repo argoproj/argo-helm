@@ -1,16 +1,17 @@
-{{- if .Values.server.clusterAdminAccess.enabled }}
+{{- $config := .Values.server.clusterAdminAccess | default dict -}}
+{{- if hasKey $config "enabled" | ternary $config.enabled .Values.createClusterRoles }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "argo-cd.server.fullname" . }}
+  name: {{ include "argo-cd.server.fullname" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "argo-cd.server.fullname" . }}
+  name: {{ include "argo-cd.server.fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "argo-cd.serverServiceAccountName" . }}
+  name: {{ include "argo-cd.serverServiceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 {{- end }}
