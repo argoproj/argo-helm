@@ -187,6 +187,16 @@ rules:
   - watch
   resourceNames: {{- toYaml . | nindent 4 }}
 {{- end }}
+{{- if and (not .Values.controller.rbac.secretWhitelist) (.Values.controller.rbac.accessAllSecrets) }}
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+{{- end }}
 
 {{- if .Values.controller.clusterWorkflowTemplates.enabled }}
 ---
