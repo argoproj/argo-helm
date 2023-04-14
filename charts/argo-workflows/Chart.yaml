@@ -3,7 +3,7 @@ appVersion: v3.4.7
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.24.0
+version: 0.24.1
 icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -13,5 +13,5 @@ maintainers:
     url: https://argoproj.github.io/
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Add namespace field to all namespace scoped resources because `helm template` doesn't add the namespace filed automatically.
+    - kind: added
+      description: Add option for workflow controller to read all secrets.
