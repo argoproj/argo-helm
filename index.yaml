@@ -18000,6 +18000,27 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Add option for workflow controller to read all secrets.
+    apiVersion: v2
+    appVersion: v3.4.7
+    created: "2023-04-14T13:55:08.592110137Z"
+    description: A Helm chart for Argo Workflows
+    digest: 9578ef5b455d9794303a3ed70670fba314d2457f118b14d7a86434e6e480edb5
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.24.1/argo-workflows-0.24.1.tgz
+    version: 0.24.1
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Add namespace field to all namespace scoped resources because `helm template` doesn't add the namespace filed automatically.
     apiVersion: v2
@@ -22366,4 +22387,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-04-13T23:59:10.79227325Z"
+generated: "2023-04-14T13:55:08.59357543Z"
