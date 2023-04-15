@@ -237,6 +237,12 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | server.affinity | object | `{}` | Assign custom [affinity] rules |
+| server.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. This is only available on HPA apiVersion `autoscaling/v2beta2` and newer |
+| server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server |
+| server.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the Argo Server [HPA] |
+| server.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Argo Server [HPA] |
+| server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the Argo Server [HPA] |
+| server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo Server [HPA] |
 | server.baseHref | string | `"/"` | Value for base href in index.html. Used if the server is running behind reverse proxy under subpath different from /. |
 | server.clusterWorkflowTemplates.enableEditing | bool | `true` | Give the server permissions to edit ClusterWorkflowTemplates. |
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
