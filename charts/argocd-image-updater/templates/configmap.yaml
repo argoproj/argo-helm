@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
   name: argocd-image-updater-config
+  namespace: {{ .Release.Namespace | quote }}
 data:
   {{- with .Values.config.applicationsAPIKind }}
   applications_api: {{ . }}
