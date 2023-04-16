@@ -21176,6 +21176,30 @@ entries:
   argocd-image-updater:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: add namespace field for namespace scoped resources
+    apiVersion: v2
+    appVersion: v0.12.2
+    created: "2023-04-16T08:13:23.627213589Z"
+    description: A Helm chart for Argo CD Image Updater, a tool to automatically update
+      the container images of Kubernetes workloads which are managed by Argo CD
+    digest: 829bec42f76784d386ed877e19f0bb692397e56490a9e42feb12a6765c579c46
+    home: https://github.com/argoproj-labs/argocd-image-updater
+    icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-image-updater
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-image-updater-0.9.0/argocd-image-updater-0.9.0.tgz
+    version: 0.9.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Added support for pod labels
     apiVersion: v2
@@ -22387,4 +22411,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-04-14T13:55:08.59357543Z"
+generated: "2023-04-16T08:13:23.628948509Z"
