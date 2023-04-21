@@ -74,6 +74,8 @@ controller:
     create: true
     # -- Allows controller to get, list, and watch certain k8s secrets
     secretWhitelist: []
+    # -- Allows controller to get, list and watch all k8s secrets. Can only be used if secretWhitelist is empty.
+    accessAllSecrets: false
     # -- Allows controller to create and update ConfigMaps. Enables memoization feature
     writeConfigMaps: false
 

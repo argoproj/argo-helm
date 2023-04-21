@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" .) | nindent 4 }}
   name: {{ template "argo-cd.fullname" . }}-default-deny
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   podSelector: {}
   policyTypes:
