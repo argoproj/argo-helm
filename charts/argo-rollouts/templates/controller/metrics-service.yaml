@@ -13,10 +13,10 @@ metadata:
   {{- end }}
 spec:
   ports:
-  - name: metrics
+  - name: {{ .Values.controller.metrics.service.portName }}
     protocol: TCP
-    port: 8090
-    targetPort: 8090
+    port: {{ .Values.controller.metrics.service.port }}
+    targetPort: {{ .Values.controller.metrics.service.targetPort }}
   selector:
     app.kubernetes.io/component: {{ .Values.controller.component }}
     {{- include "argo-rollouts.selectorLabels" . | nindent 4 }}

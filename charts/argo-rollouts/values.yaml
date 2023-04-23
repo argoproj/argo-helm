@@ -106,9 +106,17 @@ controller:
   # -- flag to enable creation of cluster controller role (requires cluster RBAC)
   createClusterRole: true
 
+  healthz:
+    portName: healthz
+    port: 8080
+
   metrics:
     # -- Deploy metrics service
     enabled: false
+    service:
+      portName: metrics
+      port: 8090
+      targetPort: 8090
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false

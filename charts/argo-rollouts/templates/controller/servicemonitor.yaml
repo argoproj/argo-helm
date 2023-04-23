@@ -16,7 +16,7 @@ metadata:
   {{- end }}
 spec:
   endpoints:
-  - port: metrics
+  - port: {{ .Values.controller.metrics.service.portName }}
   namespaceSelector:
     matchNames:
     - {{ .Release.Namespace }}
