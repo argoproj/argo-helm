@@ -153,13 +153,16 @@ Fields to note:
 | controller.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | controller.metricsConfig.enabled | bool | `false` | Enables prometheus metrics server |
 | controller.metricsConfig.ignoreErrors | bool | `false` | Flag that instructs prometheus to ignore metric emission errors. |
+| controller.metricsConfig.metricRelabelings | list | `[]` | ServiceMonitor metric relabel configs to apply to samples before ingestion https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint |
 | controller.metricsConfig.metricsTTL | string | `""` | How often custom metrics are cleared from memory |
 | controller.metricsConfig.path | string | `"/metrics"` | Path is the path where metrics are emitted. Must start with a "/". |
 | controller.metricsConfig.port | int | `9090` | Port is the port where metrics are emitted |
 | controller.metricsConfig.portName | string | `"metrics"` | Container metrics port name |
+| controller.metricsConfig.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig |
 | controller.metricsConfig.secure | bool | `false` | Flag that use a self-signed cert for TLS |
 | controller.metricsConfig.servicePort | int | `8080` | Service metrics port |
 | controller.metricsConfig.servicePortName | string | `"metrics"` | Service metrics port name |
+| controller.metricsConfig.targetLabels | list | `[]` | ServiceMonitor will add labels from the service to the Prometheus metric https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec |
 | controller.name | string | `"workflow-controller"` | Workflow controller name string |
 | controller.namespaceParallelism | string | `nil` | Limits the maximum number of incomplete workflows in a namespace |
 | controller.navColor | string | `""` | Set ui navigation bar background color |
