@@ -89,6 +89,8 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.metrics.serviceMonitor.additionalAnnotations | object | `{}` | Annotations to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Labels to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
+| controller.metrics.serviceMonitor.metricRelabelings | list | `[]` | MetricRelabelConfigs to apply to samples before ingestion |
+| controller.metrics.serviceMonitor.relabelings | list | `[]` | RelabelConfigs to apply to samples before scraping |
 | controller.nodeSelector | object | `{}` | [Node selector] |
 | controller.pdb.annotations | object | `{}` | Annotations to be added to controller [Pod Disruption Budget] |
 | controller.pdb.enabled | bool | `false` | Deploy a [Pod Disruption Budget] for the controller |
