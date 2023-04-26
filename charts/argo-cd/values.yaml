@@ -564,6 +564,41 @@ extraObjects: []
   #       labels:
   #         app.kubernetes.io/part-of: argocd
 
+# -- Array of extra K8s templates to deploy
+## Note: Use extraTemplates when templating syntax is needed
+extraTemplates: []
+  # Example usage of extraTemplates
+  # extraTemplates:
+  # - |
+  #   {{- if .Values.external_secrets.clusters }}
+  #   {{- range $v := .Values.external_secrets.clusters }}
+  #   ---
+  #   apiVersion: external-secrets.io/v1beta1
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: argocd-cluster-{{ $v.name }}
+  #     labels:
+  #       argocd.argoproj.io/secret-type: cluster
+  #   spec:
+  #     refreshInterval: {{ $.Values.external_secrets.refresh_interval }}
+  #     secretStoreRef:
+  #       name: {{ $.Values.external_secrets.secretstoreref_name }}
+  #       kind: {{ $.Values.external_secrets.secretstoreref_type }}
+  #     target:
+  #       name: argocd-cluster-{{ $v.name }}
+  #     data:
+  #     - secretKey: config
+  #       remoteRef:
+  #         key: {{ $v.base }}/{{ $v.name }}/token
+  #     - secretKey: server
+  #       remoteRef:
+  #         key: {{ $v.base }}/{{ $v.name }}/url
+  #     - secretKey: name
+  #       remoteRef:
+  #         key: {{ $v.base }}/{{ $v.name }}/name
+  #   {{- end }}
+  #   {{- end }}
+
 ## Application controller
 controller:
   # -- Application controller name string
