@@ -21048,6 +21048,28 @@ entries:
   argocd-apps:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Changed the project field of the applicationset from a tpl function to a string.
+    apiVersion: v2
+    created: "2023-04-27T12:49:29.661559988Z"
+    description: A Helm chart for managing additional Argo CD Applications and Projects
+    digest: b7bf0f1d163300f87b2fb486d02fc7b14166729f6fcfca00ce652ea926f85275
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-apps
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-apps-1.0.0/argocd-apps-1.0.0.tgz
+    version: 1.0.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Multiple sources for Application and ApplicationSet
     apiVersion: v2
@@ -22476,4 +22498,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-04-24T16:57:54.451434541Z"
+generated: "2023-04-27T12:49:29.663229862Z"
