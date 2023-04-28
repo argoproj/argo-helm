@@ -12,7 +12,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if not .Values.server.autoscaling.enabled }}
   replicas: {{ .Values.server.replicas }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}

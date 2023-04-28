@@ -153,13 +153,16 @@ Fields to note:
 | controller.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | controller.metricsConfig.enabled | bool | `false` | Enables prometheus metrics server |
 | controller.metricsConfig.ignoreErrors | bool | `false` | Flag that instructs prometheus to ignore metric emission errors. |
+| controller.metricsConfig.metricRelabelings | list | `[]` | ServiceMonitor metric relabel configs to apply to samples before ingestion |
 | controller.metricsConfig.metricsTTL | string | `""` | How often custom metrics are cleared from memory |
 | controller.metricsConfig.path | string | `"/metrics"` | Path is the path where metrics are emitted. Must start with a "/". |
 | controller.metricsConfig.port | int | `9090` | Port is the port where metrics are emitted |
 | controller.metricsConfig.portName | string | `"metrics"` | Container metrics port name |
+| controller.metricsConfig.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping |
 | controller.metricsConfig.secure | bool | `false` | Flag that use a self-signed cert for TLS |
 | controller.metricsConfig.servicePort | int | `8080` | Service metrics port |
 | controller.metricsConfig.servicePortName | string | `"metrics"` | Service metrics port name |
+| controller.metricsConfig.targetLabels | list | `[]` | ServiceMonitor will add labels from the service to the Prometheus metric |
 | controller.name | string | `"workflow-controller"` | Workflow controller name string |
 | controller.namespaceParallelism | string | `nil` | Limits the maximum number of incomplete workflows in a namespace |
 | controller.navColor | string | `""` | Set ui navigation bar background color |
@@ -237,6 +240,12 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | server.affinity | object | `{}` | Assign custom [affinity] rules |
+| server.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. This is only available on HPA apiVersion `autoscaling/v2beta2` and newer |
+| server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server |
+| server.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the Argo Server [HPA] |
+| server.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Argo Server [HPA] |
+| server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the Argo Server [HPA] |
+| server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo Server [HPA] |
 | server.baseHref | string | `"/"` | Value for base href in index.html. Used if the server is running behind reverse proxy under subpath different from /. |
 | server.clusterWorkflowTemplates.enableEditing | bool | `true` | Give the server permissions to edit ClusterWorkflowTemplates. |
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
