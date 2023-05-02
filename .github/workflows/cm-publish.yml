@@ -17,13 +17,17 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
         with:
-          version: v3.10.1 # Also update in lint-and-test.yaml
+          version: v3.10.1
 
       - name: Add uclalibrary helm repo
         run: |
           helm repo add uclalibrary https://chartmuseum.library.ucla.edu/charts/
 
-      - name: Run chart-releaser
+      - name: Install ChartMuseum helm plugin
+        run: |
+          helm plugin install https://github.com/chartmuseum/helm-push
+
+      - name: Publish ArgoCD helm chart to UCLA Library's Chartmuseum
         run: |
           helm cm-push charts/argo-cd uclalibrary -u ${CM_USERNAME} -p ${CM_PASSWORD}
         env:
