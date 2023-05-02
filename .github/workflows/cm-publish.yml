@@ -1,0 +1,31 @@
+## Reference: https://github.com/helm/chart-releaser-action
+name: Publish Chart to Chartmuseum
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.1 # Also update in lint-and-test.yaml
+
+      - name: Add uclalibrary helm repo
+        run: |
+          helm repo add uclalibrary https://chartmuseum.library.ucla.edu/charts/
+
+      - name: Run chart-releaser
+        run: |
+          helm cm-push charts/argo-cd uclalibrary -u ${CM_USERNAME} -p ${CM_PASSWORD}
+        env:
+          CM_USERNAME: "${{ secrets.CM_USERNAME }}"
+          CM_PASSWORD: "${{ secrets.CM_PASSWORD }}"
