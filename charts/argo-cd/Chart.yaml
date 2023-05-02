@@ -3,7 +3,7 @@ appVersion: v2.7.0
 kubeVersion: ">=1.22.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.30.1
+version: 5.31.0
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -24,6 +24,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Upgrade Dex to v2.36.0
-    - kind: changed
-      description: Upgrade Redis to v7.0.11 for avoiding CVE-2023-0464
+      description: Use tini as the ENTRYPOINT

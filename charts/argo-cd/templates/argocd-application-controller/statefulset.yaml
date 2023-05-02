@@ -51,8 +51,8 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "argo-cd.controllerServiceAccountName" . }}
       containers:
-      - command:
-        - argocd-application-controller
+      - args:
+        - /usr/local/bin/argocd-application-controller
         - --metrics-port={{ .Values.controller.containerPorts.metrics }}
         {{- if .Values.controller.metrics.applicationLabels.enabled }}
         {{- range .Values.controller.metrics.applicationLabels.labels }}

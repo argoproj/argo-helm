@@ -136,8 +136,8 @@ spec:
       - name: copyutil
         image: {{ default .Values.global.image.repository .Values.dex.initImage.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.dex.initImage.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.initImage.imagePullPolicy }}
-        command:
-        - cp
+        args:
+        - /bin/cp
         - -n
         - /usr/local/bin/argocd
         - /shared/argocd-dex
