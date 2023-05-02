@@ -56,12 +56,8 @@ spec:
         - name: {{ .Values.applicationSet.name }}
           image: {{ default .Values.global.image.repository .Values.applicationSet.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.applicationSet.image.tag }}
           imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.applicationSet.image.imagePullPolicy }}
-          {{- if not .Values.global.entrypoint.useImplicit }}
-          command:
-            - {{ .Values.global.entrypoint.entrypoint | quote }}
-          {{- end }}
           args:
-            - argocd-applicationset-controller
+            - /usr/local/bin/argocd-applicationset-controller
             - --metrics-addr=:{{ .Values.applicationSet.containerPorts.metrics }}
             - --probe-addr=:{{ .Values.applicationSet.containerPorts.probe }}
             - --webhook-addr=:{{ .Values.applicationSet.containerPorts.webhook }}
