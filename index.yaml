@@ -1588,6 +1588,38 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Allow extraObjects to contain string templates
+    apiVersion: v2
+    appVersion: v2.7.1
+    created: "2023-05-05T20:19:41.574031914Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.22.5
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 5bd516dd903de837b19d6019af035015777de2d0d97eb0080a09f83c3b2ae626
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.32.0/argo-cd-5.32.0.tgz
+    version: 5.32.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Update Argo CD v2.7.1
     apiVersion: v2
@@ -22693,4 +22725,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-05-05T14:31:12.725416933Z"
+generated: "2023-05-05T20:19:41.577861162Z"
