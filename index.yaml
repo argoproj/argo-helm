@@ -18176,6 +18176,27 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fix
+          description: Add missing argo-workflows.apiVersion.autoscaling helper function used for HPA configuration
+    apiVersion: v2
+    appVersion: v3.4.7
+    created: "2023-05-05T14:14:02.406461237Z"
+    description: A Helm chart for Argo Workflows
+    digest: ce2b41027410dda1a07ff3ae2b8f88daf54e3f7a21037d8ff9a08c6fd9c88992
+    home: https://github.com/argoproj/argo-helm
+    icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.25.2/argo-workflows-0.25.2.tgz
+    version: 0.25.2
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Add Prometheus ServiceMonitor relabelings, metricRelabelings & targetLabels
     apiVersion: v2
@@ -22651,4 +22672,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-05-03T09:48:27.243601284Z"
+generated: "2023-05-05T14:14:02.408626186Z"
