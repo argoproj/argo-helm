@@ -639,8 +639,6 @@ extraObjects: []
   #       secretName: argo-server-sso-secrets-store
   #       type: Opaque
 
-# -- Influences the creation of the ConfigMap for the workflow-controller itself.
-useDefaultArtifactRepo: false
 # -- Use static credentials for S3 (eg. when not using AWS IRSA)
 useStaticCredentials: true
 artifactRepository:
@@ -702,18 +700,16 @@ artifactRepository:
   #  key: account-access-key
 
 # -- The section of custom artifact repository.
-# Will be added to the config in case useDefaultArtifactRepo is set to false
+# Utilize a custom artifact repository that is not one of the current base ones (s3, gcs, azure)
 customArtifactRepository: {}
-# customArtifactRepository:
-#   archiveLogs: true
-#   artifactory:
-#     repoUrl: https://artifactory.example.com/raw
-#     usernameSecret:
-#       name: artifactory-creds
-#       key: username
-#     passwordSecret:
-#       name: artifactory-creds
-#       key: password
+# artifactory:
+#   repoUrl: https://artifactory.example.com/raw
+#   usernameSecret:
+#     name: artifactory-creds
+#     key: username
+#   passwordSecret:
+#     name: artifactory-creds
+#     key: password
 
 emissary:
   # -- The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used.
