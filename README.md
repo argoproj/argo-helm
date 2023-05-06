@@ -36,7 +36,7 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 
 ### Security Policy
 
-If you have a security concern relating to either this project repo or an individual helm chart, please [open an issue](https://github.com/argoproj/argo-helm/issues/new/choose) or [start a discussion](https://github.com/argoproj/argo-helm/discussions/new).
+Please refer to [SECURITY.md](SECURITY.md) for details on how to report security issues.
 
 ### Changelog
 
