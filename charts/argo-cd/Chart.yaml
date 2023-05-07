@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.6.7
+appVersion: v2.7.1
 kubeVersion: ">=1.22.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.29.1
+version: 5.32.0
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -23,5 +23,5 @@ dependencies:
     condition: redis-ha.enabled
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Namespace field for some namespaced resources needs to be evaluated via helm root scope
+    - kind: added
+      description: Allow extraObjects to contain string templates

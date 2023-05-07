@@ -132,14 +132,6 @@ global:
     #   topologyKey: topology.kubernetes.io/zone
     #   whenUnsatisfiable: DoNotSchedule
 
-  # POD entrypoint configuration
-  entrypoint:
-    # -- Implicitly use the docker image's entrypoint. This requires the image to have
-    # ENTRYPOINT set properly
-    useImplicit: false
-    # -- The entrypoint to use for the containers.
-    entrypoint: "entrypoint.sh"
-
   # -- Deployment strategy for the all deployed Deployments
   deploymentStrategy: {}
     # type: RollingUpdate
@@ -915,7 +907,7 @@ dex:
     # -- Dex image repository
     repository: ghcr.io/dexidp/dex
     # -- Dex image tag
-    tag: v2.35.3
+    tag: v2.36.0
     # -- Dex imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1141,7 +1133,7 @@ redis:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.0.7-alpine
+    tag: 7.0.11-alpine
     # -- Redis image pull policy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1384,7 +1376,7 @@ redis-ha:
       enabled: true
   image:
     # -- Redis tag
-    tag: 7.0.7-alpine
+    tag: 7.0.11-alpine
 
   ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints:

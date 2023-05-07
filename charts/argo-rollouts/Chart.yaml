@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v1.4.1
 description: A Helm chart for Argo Rollouts
 name: argo-rollouts
-version: 2.25.0
+version: 2.27.0
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
 keywords:
@@ -15,6 +15,8 @@ maintainers:
     url: https://argoproj.github.io/
 annotations:
   artifacthub.io/changes: |
+    - kind: added
+      description: Allow extraObjects to contain string templates
     - kind: added
       description: Ability to configure metrics and healthz ports
     - kind: added

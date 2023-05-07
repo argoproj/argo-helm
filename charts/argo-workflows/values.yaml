@@ -111,6 +111,15 @@ controller:
     servicePort: 8080
     # -- Service metrics port name
     servicePortName: metrics
+    # -- ServiceMonitor relabel configs to apply to samples before scraping
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+    relabelings: []
+    # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
+    metricRelabelings: []
+    # -- ServiceMonitor will add labels from the service to the Prometheus metric
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
+    targetLabels: []
   # -- the controller container's securityContext
   securityContext:
     readOnlyRootFilesystem: true
@@ -431,6 +440,32 @@ server:
   resources: {}
   # -- The number of server pods to run
   replicas: 1
+  ## Argo Server Horizontal Pod Autoscaler
+  autoscaling:
+    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server
+    enabled: false
+    # -- Minimum number of replicas for the Argo Server [HPA]
+    minReplicas: 1
+    # -- Maximum number of replicas for the Argo Server [HPA]
+    maxReplicas: 5
+    # -- Average CPU utilization percentage for the Argo Server [HPA]
+    targetCPUUtilizationPercentage: 50
+    # -- Average memory utilization percentage for the Argo Server [HPA]
+    targetMemoryUtilizationPercentage: 50
+    # -- Configures the scaling behavior of the target in both Up and Down directions.
+    # This is only available on HPA apiVersion `autoscaling/v2beta2` and newer
+    behavior: {}
+      # scaleDown:
+      #  stabilizationWindowSeconds: 300
+      #  policies:
+      #   - type: Pods
+      #     value: 1
+      #     periodSeconds: 180
+      # scaleUp:
+      #   stabilizationWindowSeconds: 300
+      #   policies:
+      #   - type: Pods
+      #     value: 2
   pdb:
     # -- Configure [Pod Disruption Budget] for the server pods
     enabled: false
@@ -604,8 +639,6 @@ extraObjects: []
   #       secretName: argo-server-sso-secrets-store
   #       type: Opaque
 
-# -- Influences the creation of the ConfigMap for the workflow-controller itself.
-useDefaultArtifactRepo: false
 # -- Use static credentials for S3 (eg. when not using AWS IRSA)
 useStaticCredentials: true
 artifactRepository:
@@ -667,18 +700,16 @@ artifactRepository:
   #  key: account-access-key
 
 # -- The section of custom artifact repository.
-# Will be added to the config in case useDefaultArtifactRepo is set to false
+# Utilize a custom artifact repository that is not one of the current base ones (s3, gcs, azure)
 customArtifactRepository: {}
-# customArtifactRepository:
-#   archiveLogs: true
-#   artifactory:
-#     repoUrl: https://artifactory.example.com/raw
-#     usernameSecret:
-#       name: artifactory-creds
-#       key: username
-#     passwordSecret:
-#       name: artifactory-creds
-#       key: password
+# artifactory:
+#   repoUrl: https://artifactory.example.com/raw
+#   usernameSecret:
+#     name: artifactory-creds
+#     key: username
+#   passwordSecret:
+#     name: artifactory-creds
+#     key: password
 
 emissary:
   # -- The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used.

@@ -124,6 +124,10 @@ controller:
       additionalLabels: {}
       # -- Annotations to be added to the ServiceMonitor
       additionalAnnotations: {}
+      # -- RelabelConfigs to apply to samples before scraping
+      relabelings: []
+      # -- MetricRelabelConfigs to apply to samples before ingestion
+      metricRelabelings: []
 
   # -- Configure liveness [probe] for the controller
   # @default -- See [values.yaml]
