@@ -12,7 +12,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/labeler@v4
+      - uses: actions/labeler@ba790c862c380240c6d5e7427be5ace9a05c754b # v4.0.3
         with:
           configuration-path: ".github/configs/labeler.yaml"
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
@@ -22,6 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: size-label
-        uses: "pascalgn/size-label-action@v0.4.3"
+        uses: "pascalgn/size-label-action@1619680c5ac1ef360b944bb56a57587ba4aa2af8 # v0.4.3"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
