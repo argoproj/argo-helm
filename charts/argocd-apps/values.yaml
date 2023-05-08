@@ -196,6 +196,36 @@ applicationsets: []
 #     preserveResourcesOnDeletion: false
 
 applicationsetTemplates: []
+# - appSets:
+#     - name: my-appset
+#       generators:
+#         - list:
+#             elements:
+#             - cluster: engineering-dev
+#               url: https://1.2.3.4
+#             - cluster: engineering-prod
+#               url: https://2.4.6.8
+#             - cluster: finance-preprod
+#               url: https://9.8.7.6
+#   template: |-
+#     apiVersion: argoproj.io/v1alpha1
+#     kind: ApplicationSet
+#     metadata:
+#       name: {{ .name }}
+#     spec:
+#       generators: {{ toYaml .generators | nindent 4 }}
+#       template:
+#         metadata:
+#         name: '{{`{{cluster}}`}}-guestbook'
+#         spec:
+#         project: my-project
+#         source:
+#             repoURL: https://github.com/infra-team/cluster-deployments.git
+#             targetRevision: HEAD
+#             path: guestbook/{{`{{cluster}}`}}
+#         destination:
+#             server: '{{`{{cluster}}`}}'
+#             namespace: guestbook
 # -- Deploy Argo UI Extensions within this helm release
 # @default -- `[]` (See [values.yaml])
 ## This function in tech preview stage, do expect unstability or breaking changes in newer versions. Bump image.tag if necessary.
