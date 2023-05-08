@@ -1079,6 +1079,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.service.labels | object | `{}` | ApplicationSet service labels |
 | applicationSet.service.port | int | `7000` | ApplicationSet service port |
 | applicationSet.service.portName | string | `"webhook"` | ApplicationSet service port name |
+| applicationSet.service.type | string | `"ClusterIP"` | ApplicationSet service type |
 | applicationSet.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | applicationSet.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | applicationSet.serviceAccount.create | bool | `true` | Create ApplicationSet controller service account |
