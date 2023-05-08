@@ -68,3 +68,17 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
+---
+{{- range .Values.projectTemplates }}
+{{- if kindIs "string" .template }}
+{{- $template := .template -}}
+{{- range .projects }}
+{{ tpl $template (set . "Template" $.Template) }}
+{{- end }}
+{{- else }}
+{{- $template := .template | toYaml -}}
+{{- range .projects }}
+{{ tpl $template (set . "Template" $.Template) }}
+{{- end }}
+{{- end }}
+{{- end }}
