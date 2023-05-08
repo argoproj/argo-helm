@@ -54,11 +54,13 @@ spec:
 {{- if kindIs "string" .template }}
 {{- $template := .template -}}
 {{- range .apps }}
+---
 {{ tpl $template (set . "Template" $.Template) }}
 {{- end }}
 {{- else }}
 {{- $template := .template | toYaml -}}
 {{- range .apps }}
+---
 {{ tpl $template (set . "Template" $.Template) }}
 {{- end }}
 {{- end }}
