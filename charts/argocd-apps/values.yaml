@@ -40,6 +40,46 @@ applications: []
 #   - name: url
 #     value: https://argoproj.github.io/
 
+applicationTemplates:
+  []
+  # - apps:
+  #     - name: guestbook
+  #       project: guestbook-project
+  #   template: |-
+  #     apiVersion: argoproj.io/v1alpha1
+  #     kind: Application
+  #     metadata:
+  #       name: {{ .name }}
+  #       # You'll usually want to add your resources to the argocd namespace.
+  #       namespace: argocd
+  #       # Add this finalizer ONLY if you want these to cascade delete.
+  #       finalizers:
+  #         - resources-finalizer.argocd.argoproj.io
+  #       # Add labels to your application object.
+  #       labels:
+  #         name: guestbook
+  #     spec:
+  #       # The project the application belongs to.
+  #       project: {{ .project }}
+
+  #       # Source of the application manifests
+  #       source:
+  #         repoURL: https://github.com/argoproj/argocd-example-apps.git  # Can point to either a Helm chart repo or a git repo.
+  #         targetRevision: HEAD  # For Helm, this refers to the chart version.
+  #         path: guestbook  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+
+  #         # helm specific config
+  #         chart: chart-name  # Set this when pulling directly from a Helm repo. DO NOT set for git-hosted Helm charts.
+  #         helm:
+  #           passCredentials: false # If true then adds --pass-credentials to Helm commands to pass credentials to all domains
+  #           # Extra parameters to set (same as setting through values.yaml, but these take precedence)
+  #           parameters:
+  #           - name: "nginx-ingress.controller.service.annotations.external-dns\\.alpha\\.kubernetes\\.io/hostname"
+  #             value: mydomain.example.com
+  #           - name: "ingress.annotations.kubernetes\\.io/tls-acme"
+  #             value: "true"
+  #             forceString: true # ensures that value is treated as a string
+
 # -- Deploy Argo CD Projects within this helm release
 # @default -- `[]` (See [values.yaml])
 ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
@@ -137,7 +177,8 @@ applicationsets: []
 # @default -- `[]` (See [values.yaml])
 ## This function in tech preview stage, do expect unstability or breaking changes in newer versions. Bump image.tag if necessary.
 ## Ref: https://github.com/argoproj-labs/argocd-extensions
-extensions: []
+extensions:
+  []
   # - name: example
   #   namespace: argocd
   #   additionalLabels: {}

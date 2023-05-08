@@ -49,3 +49,10 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
+---
+{{- range .Values.applicationTemplates }}
+{{- $template := .template }}
+{{- range .apps }}
+{{  tpl $template  (set . "Template" $.Template) }}
+{{- end }}
+{{- end }}
