@@ -60,6 +60,7 @@ spec:
 {{- else }}
 {{- $template := .template | toYaml -}}
 {{- range .apps }}
+---
 {{ tpl $template (set . "Template" $.Template) }}
 {{- end }}
 {{- end }}
