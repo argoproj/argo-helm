@@ -18336,6 +18336,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: fixed
+          description: Fix Helm chart to correctly reference Kubernetes version in conditional check for HPA apiVersion
+    apiVersion: v2
+    appVersion: v3.4.7
+    created: "2023-05-09T03:42:16.300886636Z"
+    description: A Helm chart for Argo Workflows
+    digest: a29c5d1bcd4f50963a368cd258d4c1a1aa6bbe4c13e44b6d0b25bf4516b3621c
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-workflows/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.26.3/argo-workflows-0.26.3.tgz
+    version: 0.26.3
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: fixed
           description: Use correct artifacthub kind and get latest chart version to artifacthub
     apiVersion: v2
     appVersion: v3.4.7
@@ -22894,4 +22915,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-05-09T00:38:42.619621934Z"
+generated: "2023-05-09T03:42:16.303591056Z"
