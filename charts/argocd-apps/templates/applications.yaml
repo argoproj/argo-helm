@@ -49,17 +49,17 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
----
-{{- range .Values.applicationTemplates }}
+
+{{- range .Values.itemTemplates }}
 {{- if kindIs "string" .template }}
 {{- $template := .template -}}
-{{- range .apps }}
+{{- range .items }}
 ---
 {{ tpl $template (set . "Template" $.Template) }}
 {{- end }}
 {{- else }}
 {{- $template := .template | toYaml -}}
-{{- range .apps }}
+{{- range .items }}
 ---
 {{ tpl $template (set . "Template" $.Template) }}
 {{- end }}
