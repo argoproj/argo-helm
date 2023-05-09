@@ -9,9 +9,13 @@ metadata:
     {{- with .Values.server.metrics.service.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.server.metrics.service.annotations }}
+  {{- if or .Values.server.metrics.service.annotations .Values.global.addPrometheusAnnotations }}
   annotations:
-    {{- range $key, $value := . }}
+    {{- if .Values.global.addPrometheusAnnotations }}
+    prometheus.io/port: {{ .Values.server.metrics.service.servicePort | quote }}
+    prometheus.io/scrape: "true"
+    {{- end }}
+    {{- range $key, $value := .Values.server.metrics.service.annotations }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
