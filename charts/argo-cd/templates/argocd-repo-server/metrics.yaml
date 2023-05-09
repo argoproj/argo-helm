@@ -20,6 +20,10 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
+  type: {{ .Values.repoServer.metrics.service.type }}
+  {{- if and .Values.repoServer.metrics.service.clusterIP (eq .Values.repoServer.metrics.service.type "ClusterIP") }}
+  clusterIP: {{ .Values.repoServer.metrics.service.clusterIP }}
+  {{- end }}
   ports:
   - name: {{ .Values.repoServer.metrics.service.portName }}
     protocol: TCP

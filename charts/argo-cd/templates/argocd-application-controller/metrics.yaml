@@ -20,6 +20,10 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
+  type: {{ .Values.controller.metrics.service.type }}
+  {{- if and .Values.controller.metrics.service.clusterIP (eq .Values.controller.metrics.service.type "ClusterIP") }}
+  clusterIP: {{ .Values.controller.metrics.service.clusterIP }}
+  {{- end }}
   ports:
   - name: {{ .Values.controller.metrics.service.portName }}
     protocol: TCP

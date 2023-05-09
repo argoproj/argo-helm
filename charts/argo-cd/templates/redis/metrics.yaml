@@ -22,8 +22,8 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.redis.metrics.service.type }}
-  {{- with .Values.redis.metrics.service.clusterIP }}
-  clusterIP: {{ . }}
+  {{- if and .Values.redis.metrics.service.clusterIP (eq .Values.redis.metrics.service.type "ClusterIP") }}
+  clusterIP: {{ .Values.redis.metrics.service.clusterIP }}
   {{- end }}
   ports:
     - name: {{ .Values.redis.metrics.service.portName }}
