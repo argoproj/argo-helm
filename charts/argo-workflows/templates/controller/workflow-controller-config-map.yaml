@@ -60,10 +60,10 @@ data:
       archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
       {{- end }}
       {{- with .Values.artifactRepository.gcs }}
-      gcs: {{- toYaml . | nindent 8 }}
+      gcs: {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       {{- with .Values.artifactRepository.azure }}
-      azure: {{- toYaml . | nindent 8 }}
+      azure: {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       {{- if and  (not .Values.artifactRepository.gcs) (not .Values.artifactRepository.azure) }}
       s3:
