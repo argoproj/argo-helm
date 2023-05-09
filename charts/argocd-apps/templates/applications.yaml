@@ -59,7 +59,7 @@ spec:
 {{- end }}
 {{- else }}
 {{- $template := .template | toYaml -}}
-{{- range .apps }}
+{{- range .items }}
 ---
 {{ tpl $template (set . "Template" $.Template) }}
 {{- end }}
