@@ -1,2 +1,8 @@
 ## Reference: https://github.com/helm/chart-releaser
-index-path: "./index.yaml" 
+index-path: "./index.yaml"
+
+# PGP signing
+sign: true
+key: Argo Helm maintainers
+# keyring:          # Set via env variable CR_KEYRING
+# passphrase-file:  # Set via env variable CR_PASSPHRASE_FILE
