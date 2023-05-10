@@ -15638,6 +15638,33 @@ entries:
   argo-events:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Introduce chart signing
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.7.6
+    created: "2023-05-10T15:49:06.471118908Z"
+    description: A Helm chart for Argo Events, the event-driven workflow automation
+      framework
+    digest: f2745b65269846d960d81f39a0c5a8f39ff6be6517cec7352acff11a348ed214
+    home: https://github.com/argoproj/argo-helm
+    icon: https://avatars.githubusercontent.com/u/30269780?s=200&v=4
+    keywords:
+    - argoproj
+    - argo-events
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-events
+    sources:
+    - https://github.com/argoproj/argo-events
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-events-2.3.3/argo-events-2.3.3.tgz
+    version: 2.3.3
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Use correct artifacthub kind and get latest chart version to artifacthub
     apiVersion: v2
@@ -23023,4 +23050,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-05-10T15:37:44.813950476Z"
+generated: "2023-05-10T15:49:06.473054016Z"
