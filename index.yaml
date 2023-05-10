@@ -18370,6 +18370,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Introduce chart signing
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.4.7
+    created: "2023-05-10T14:21:37.481757353Z"
+    description: A Helm chart for Argo Workflows
+    digest: 7f2c7b422bca67a76ce0d6e8d58dda9e3e6ed61932ab180cad365802782ece58
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-workflows/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.26.5/argo-workflows-0.26.5.tgz
+    version: 0.26.5
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Create clusterWorkflowTemplates CRD only when enabled in Helm values.
     apiVersion: v2
@@ -22971,4 +22995,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-05-10T13:50:06.891835992Z"
+generated: "2023-05-10T14:21:37.483421256Z"
