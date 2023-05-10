@@ -17051,6 +17051,34 @@ entries:
   argo-rollouts:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Upgrade Argo Rollouts to v1.5.0
+        - kind: added
+          description: Introduce chart signing
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.5.0
+    created: "2023-05-10T15:37:44.811200174Z"
+    description: A Helm chart for Argo Rollouts
+    digest: e07e16aa79a88ac1cb014ef3b904f9dd44a770f0dab43627f7e718893af2a141
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-rollouts
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-rollouts
+    sources:
+    - https://github.com/argoproj/argo-rollouts
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-rollouts-2.28.0/argo-rollouts-2.28.0.tgz
+    version: 2.28.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Allow extraObjects to contain string templates
     apiVersion: v2
@@ -22995,4 +23023,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-05-10T14:21:37.483421256Z"
+generated: "2023-05-10T15:37:44.813950476Z"
