@@ -3,7 +3,7 @@ appVersion: v3.4.7
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.26.4
+version: 0.26.5
 icon: https://argoproj.github.io/argo-workflows/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -12,6 +12,9 @@ maintainers:
   - name: argoproj
     url: https://argoproj.github.io/
 annotations:
+  artifacthub.io/signKey: |
+    fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+    url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Create clusterWorkflowTemplates CRD only when enabled in Helm values.
+    - kind: added
+      description: Introduce chart signing
