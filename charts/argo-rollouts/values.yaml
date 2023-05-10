@@ -169,6 +169,13 @@ controller:
     # - mountPath: /etc/ssl/certs
     #   name: my-certs
 
+  # -- Configures 3rd party metric providers for controller
+  ## Ref: https://argo-rollouts.readthedocs.io/en/stable/analysis/plugins/
+  metricProviderPlugins: {}
+    # metricProviderPlugins: |-
+    #   - name: "argoproj-labs/sample-prometheus" # name of the plugin, it must match the name required by the plugin so that it can find its configuration
+    #     location: "file://./my-custom-plugin" # supports http(s):// urls and file://
+
 serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
