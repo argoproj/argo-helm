@@ -18336,6 +18336,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: fixed
+          description: Create clusterWorkflowTemplates CRD only when enabled in Helm values.
+    apiVersion: v2
+    appVersion: v3.4.7
+    created: "2023-05-10T10:16:36.853789427Z"
+    description: A Helm chart for Argo Workflows
+    digest: 3d8b513542845b8073065a6212716c2ad1c5733f0933c48c4d76a62f8b4831db
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-workflows/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.26.4/argo-workflows-0.26.4.tgz
+    version: 0.26.4
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: fixed
           description: Fix Helm chart to correctly reference Kubernetes version in conditional check for HPA apiVersion
     apiVersion: v2
     appVersion: v3.4.7
@@ -22915,4 +22936,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-05-09T21:30:00.303591056Z"
+generated: "2023-05-10T10:16:36.855821538Z"
