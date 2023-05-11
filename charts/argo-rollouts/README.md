@@ -47,6 +47,7 @@ For full list of changes please check ArtifactHub [changelog].
 | clusterInstall | bool | `true` | `false` runs controller in namespaced mode (does not require cluster RBAC) |
 | crdAnnotations | object | `{}` | Annotations to be added to all CRDs |
 | createClusterAggregateRoles | bool | `true` | flag to enable creation of cluster aggregate roles (requires cluster RBAC) |
+| deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
 | extraObjects | list | `[]` | Additional manifests to deploy within the chart. A list of objects. |
 | fullnameOverride | string | `nil` | String to fully override "argo-rollouts.fullname" template |
 | imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry. Registry secret names as an array. |
@@ -76,6 +77,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
 | controller.createClusterRole | bool | `true` | flag to enable creation of cluster controller role (requires cluster RBAC) |
+| controller.deploymentAnnotations | object | `{}` | Annotations to be added to the controller deployment |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-controller.  A list of flags. |
 | controller.extraContainers | list | `[]` | Literal yaml for extra containers to be added to controller deployment. |
 | controller.extraEnv | list | `[]` | Additional environment variables for rollouts-controller. A list of name/value maps. |
@@ -123,6 +125,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.component | string | `"rollouts-dashboard"` | Value of label `app.kubernetes.io/component` |
 | dashboard.containerSecurityContext | object | `{}` | Security Context to set on container level |
 | dashboard.createClusterRole | bool | `true` | flag to enable creation of dashbord cluster role (requires cluster RBAC) |
+| dashboard.deploymentAnnotations | object | `{}` | Annotations to be added to the dashboard deployment |
 | dashboard.enabled | bool | `false` | Deploy dashboard server |
 | dashboard.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-dashboard. A list of flags. |
 | dashboard.extraEnv | list | `[]` | Additional environment variables for rollouts-dashboard. A list of name/value maps. |

@@ -38,9 +38,15 @@ extraObjects: []
   #     api-key: <datadog-api-key>
   #     app-key: <datadog-app-key>
 
+global:
+  # -- Annotations for all deployed Deployments
+  deploymentAnnotations: {}
+
 controller:
   # -- Value of label `app.kubernetes.io/component`
   component: rollouts-controller
+  # -- Annotations to be added to the controller deployment
+  deploymentAnnotations: {}
   # -- Annotations to be added to application controller pods
   podAnnotations: {}
   # -- [Node selector]
@@ -188,6 +194,9 @@ serviceAccount:
 # -- Annotations to be added to all CRDs
 crdAnnotations: {}
 
+# -- Annotations for all deployed Deployments
+deploymentAnnotations: {}
+
 # -- Annotations for the all deployed pods
 podAnnotations: {}
 
@@ -241,6 +250,8 @@ dashboard:
   readonly: false
   # -- Value of label `app.kubernetes.io/component`
   component: rollouts-dashboard
+  # -- Annotations to be added to the dashboard deployment
+  deploymentAnnotations: {}
   # -- Annotations to be added to application dashboard pods
   podAnnotations: {}
   # -- [Node selector]
