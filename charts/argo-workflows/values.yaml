@@ -655,10 +655,10 @@ artifactRepository:
     # Note the `key` attribute is not the actual secret, it's the PATH to
     # the contents in the associated secret, as defined by the `name` attribute.
     accessKeySecret:
-      # name: <releaseName>-minio
+      name: "{{ .Release.Name }}-minio"
       key: accesskey
     secretKeySecret:
-      # name: <releaseName>-minio
+      name: "{{ .Release.Name }}-minio"
       key: secretkey
     # insecure will disable TLS. Primarily used for minio installs not configured with TLS
     insecure: false
