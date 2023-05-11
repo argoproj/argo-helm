@@ -3,7 +3,7 @@ appVersion: v2.7.1
 kubeVersion: ">=1.22.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.33.0
+version: 5.33.1
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -27,6 +27,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: added
-      description: Ability to add prometheus.io/scrape annotations to all metrics services
-    - kind: added
-      description: Ability to change metrics service type and clusterIP
+      description: Ability to add additional labels to all CRDs via .Values.crds.additionalLabels
