@@ -60,29 +60,29 @@ data:
       archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
       {{- end }}
       {{- with .Values.artifactRepository.gcs }}
-      gcs: {{- toYaml . | nindent 8 }}
+      gcs: {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       {{- with .Values.artifactRepository.azure }}
-      azure: {{- toYaml . | nindent 8 }}
+      azure: {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       {{- if and  (not .Values.artifactRepository.gcs) (not .Values.artifactRepository.azure) }}
       s3:
         {{- if .Values.useStaticCredentials }}
         accessKeySecret:
-          key: {{ .Values.artifactRepository.s3.accessKeySecret.key }}
-          name: {{ .Values.artifactRepository.s3.accessKeySecret.name }}
+          key: {{ tpl .Values.artifactRepository.s3.accessKeySecret.key . }}
+          name: {{ tpl .Values.artifactRepository.s3.accessKeySecret.name . }}
         secretKeySecret:
-          key: {{ .Values.artifactRepository.s3.secretKeySecret.key }}
-          name: {{ .Values.artifactRepository.s3.secretKeySecret.name }}
+          key: {{ tpl .Values.artifactRepository.s3.secretKeySecret.key . }}
+          name: {{ tpl .Values.artifactRepository.s3.secretKeySecret.name . }}
         {{- end }}
-        bucket: {{ .Values.artifactRepository.s3.bucket }}
-        endpoint: {{ .Values.artifactRepository.s3.endpoint }}
+        bucket: {{ tpl (.Values.artifactRepository.s3.bucket | default "") . }}
+        endpoint: {{ tpl (.Values.artifactRepository.s3.endpoint | default "") . }}
         insecure: {{ .Values.artifactRepository.s3.insecure }}
         {{- if .Values.artifactRepository.s3.keyFormat }}
         keyFormat: {{ .Values.artifactRepository.s3.keyFormat | quote }}
         {{- end }}
         {{- if .Values.artifactRepository.s3.region }}
-        region: {{ .Values.artifactRepository.s3.region }}
+        region: {{ tpl .Values.artifactRepository.s3.region $ }}
         {{- end }}
         {{- if .Values.artifactRepository.s3.roleARN }}
         roleARN: {{ .Values.artifactRepository.s3.roleARN }}

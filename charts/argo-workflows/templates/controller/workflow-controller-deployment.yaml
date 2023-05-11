@@ -35,7 +35,7 @@ spec:
       {{- end }}
       {{- with .Values.controller.extraInitContainers }}
       initContainers:
-        {{- toYaml . | nindent 8 }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       containers:
         - name: controller
