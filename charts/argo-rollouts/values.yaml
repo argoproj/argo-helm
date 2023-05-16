@@ -116,6 +116,10 @@ controller:
       additionalLabels: {}
       # -- Annotations to be added to the ServiceMonitor
       additionalAnnotations: {}
+      # -- RelabelConfigs to apply to samples before scraping
+      relabelings: []
+      # -- MetricRelabelConfigs to apply to samples before ingestion
+      metricRelabelings: []
 
   # -- Configure liveness [probe] for the controller
   # @default -- See [values.yaml]
@@ -153,6 +157,24 @@ controller:
     minAvailable: # 1
     # -- Maximum number / percentage of pods that may be made unavailable
     maxUnavailable: # 0
+
+  # -- Additional volumes to add to the controller pod
+  volumes: []
+    # - configMap:
+    #     name: my-certs-cm
+    #   name: my-certs
+
+  # -- Additional volumeMounts to add to the controller container
+  volumeMounts: []
+    # - mountPath: /etc/ssl/certs
+    #   name: my-certs
+
+  # -- Configures 3rd party metric providers for controller
+  ## Ref: https://argo-rollouts.readthedocs.io/en/stable/analysis/plugins/
+  metricProviderPlugins: {}
+    # metricProviderPlugins: |-
+    #   - name: "argoproj-labs/sample-prometheus" # name of the plugin, it must match the name required by the plugin so that it can find its configuration
+    #     location: "file://./my-custom-plugin" # supports http(s):// urls and file://
 
 serviceAccount:
   # -- Specifies whether a service account should be created
@@ -354,6 +376,12 @@ dashboard:
       # - secretName: argorollouts-example-tls
       #   hosts:
       #     - argorollouts.example.com
+
+  # -- Additional volumes to add to the dashboard pod
+  volumes: []
+
+  # -- Additional volumeMounts to add to the dashboard container
+  volumeMounts: []
 
 notifications:
   secret:

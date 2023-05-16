@@ -3,18 +3,27 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "argo-cd.controller.fullname" . }}-metrics
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" "metrics") | nindent 4 }}
     {{- with .Values.controller.metrics.service.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.controller.metrics.service.annotations }}
+  {{- if or .Values.controller.metrics.service.annotations .Values.global.addPrometheusAnnotations }}
   annotations:
-    {{- range $key, $value := . }}
+    {{- if .Values.global.addPrometheusAnnotations }}
+    prometheus.io/port: {{ .Values.controller.metrics.service.servicePort | quote }}
+    prometheus.io/scrape: "true"
+    {{- end }}
+    {{- range $key, $value := .Values.controller.metrics.service.annotations }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
 spec:
+  type: {{ .Values.controller.metrics.service.type }}
+  {{- if and .Values.controller.metrics.service.clusterIP (eq .Values.controller.metrics.service.type "ClusterIP") }}
+  clusterIP: {{ .Values.controller.metrics.service.clusterIP }}
+  {{- end }}
   ports:
   - name: {{ .Values.controller.metrics.service.portName }}
     protocol: TCP
