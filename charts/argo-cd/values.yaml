@@ -2059,6 +2059,9 @@ repoServer:
   # - secretRef:
   #     name: secret-name
 
+  # -- Specify postStart and preStop lifecycle hooks for your argo-repo-server container
+  lifecycle: {}
+
   # -- Additional containers to be added to the repo server pod
   ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
   ## Note: Supports use of custom Helm templates
