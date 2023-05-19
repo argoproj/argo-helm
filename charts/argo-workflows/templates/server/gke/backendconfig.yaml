@@ -1,0 +1,11 @@
+{{- if .Values.server.GKEbackendConfig.enabled }}
+apiVersion: {{ include "argo-workflows.apiVersions.cloudgoogle" . }}
+kind: BackendConfig
+metadata:
+  name: {{ template "argo-workflows.server.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+spec:
+  {{- toYaml .Values.server.GKEbackendConfig.spec | nindent 2 }}
+{{- end }}
