@@ -275,6 +275,10 @@ spec:
           {{- toYaml .Values.repoServer.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
+        {{- with .Values.repoServer.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       {{- with .Values.repoServer.extraContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}

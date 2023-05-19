@@ -379,6 +379,7 @@ NAME: my-release
 | apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling rendered by this helm chart |
 | apiVersionOverrides.certmanager | string | `""` | String to override apiVersion of cert-manager resources rendered by this helm chart |
 | apiVersionOverrides.cloudgoogle | string | `""` | String to override apiVersion of GKE resources rendered by this helm chart |
+| crds.additionalLabels | object | `{}` | Addtional labels to be added to all CRDs |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
@@ -394,6 +395,7 @@ NAME: my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| global.addPrometheusAnnotations | bool | `false` | Add Prometheus scrape annotations to all metrics services. This can be used as an alternative to the ServiceMonitors. |
 | global.additionalLabels | object | `{}` | Common labels for the all resources |
 | global.affinity.nodeAffinity.matchExpressions | list | `[]` | Default match expressions for node affinity |
 | global.affinity.nodeAffinity.type | string | `"hard"` | Default node affinity rules. Either: `none`, `soft` or `hard` |
@@ -513,9 +515,11 @@ NAME: my-release
 | controller.metrics.rules.selector | object | `{}` | PrometheusRule selector |
 | controller.metrics.rules.spec | list | `[]` | PrometheusRule.Spec for the application controller |
 | controller.metrics.service.annotations | object | `{}` | Metrics service annotations |
+| controller.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
 | controller.metrics.service.labels | object | `{}` | Metrics service labels |
 | controller.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | controller.metrics.service.servicePort | int | `8082` | Metrics service port |
+| controller.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | controller.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
@@ -590,6 +594,7 @@ NAME: my-release
 | repoServer.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the repo server |
 | repoServer.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | repoServer.initContainers | list | `[]` | Init containers to add to the repo server pods |
+| repoServer.lifecycle | object | `{}` | Specify postStart and preStop lifecycle hooks for your argo-repo-server container |
 | repoServer.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | repoServer.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | repoServer.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -597,9 +602,11 @@ NAME: my-release
 | repoServer.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | repoServer.metrics.enabled | bool | `false` | Deploy metrics service |
 | repoServer.metrics.service.annotations | object | `{}` | Metrics service annotations |
+| repoServer.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
 | repoServer.metrics.service.labels | object | `{}` | Metrics service labels |
 | repoServer.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | repoServer.metrics.service.servicePort | int | `8084` | Metrics service port |
+| repoServer.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | repoServer.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | repoServer.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | repoServer.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
@@ -731,9 +738,11 @@ NAME: my-release
 | server.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | server.metrics.enabled | bool | `false` | Deploy metrics service |
 | server.metrics.service.annotations | object | `{}` | Metrics service annotations |
+| server.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
 | server.metrics.service.labels | object | `{}` | Metrics service labels |
 | server.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | server.metrics.service.servicePort | int | `8083` | Metrics service port |
+| server.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | server.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | server.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | server.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
@@ -1016,6 +1025,19 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 |-----|------|---------|-------------|
 | applicationSet.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
 | applicationSet.args | object | `{}` | DEPRECATED - ApplicationSet controller command line flags |
+| applicationSet.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
+| applicationSet.certificate.domain | string | `"argocd.example.com"` | Certificate primary domain (commonName) |
+| applicationSet.certificate.duration | string | `""` (defaults to 2160h = 90d if not specified) | The requested 'duration' (i.e. lifetime) of the certificate. |
+| applicationSet.certificate.enabled | bool | `false` | Deploy a Certificate resource (requires cert-manager) |
+| applicationSet.certificate.issuer.group | string | `""` | Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io` |
+| applicationSet.certificate.issuer.kind | string | `""` | Certificate issuer kind. Either `Issuer` or `ClusterIssuer` |
+| applicationSet.certificate.issuer.name | string | `""` | Certificate issuer name. Eg. `letsencrypt` |
+| applicationSet.certificate.privateKey.algorithm | string | `"RSA"` | Algorithm used to generate certificate private key. One of: `RSA`, `Ed25519` or `ECDSA` |
+| applicationSet.certificate.privateKey.encoding | string | `"PKCS1"` | The private key cryptography standards (PKCS) encoding for private key. Either: `PCKS1` or `PKCS8` |
+| applicationSet.certificate.privateKey.rotationPolicy | string | `"Never"` | Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always` |
+| applicationSet.certificate.privateKey.size | int | `2048` | Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored. |
+| applicationSet.certificate.renewBefore | string | `""` (defaults to 360h = 15d if not specified) | How long before the expiry a certificate should be renewed. |
+| applicationSet.certificate.secretName | string | `"argocd-application-controller-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
 | applicationSet.containerPorts.metrics | int | `8080` | Metrics container port |
 | applicationSet.containerPorts.probe | int | `8081` | Probe container port |
 | applicationSet.containerPorts.webhook | int | `7000` | Webhook container port |
@@ -1044,9 +1066,11 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | applicationSet.metrics.enabled | bool | `false` | Deploy metrics service |
 | applicationSet.metrics.service.annotations | object | `{}` | Metrics service annotations |
+| applicationSet.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
 | applicationSet.metrics.service.labels | object | `{}` | Metrics service labels |
 | applicationSet.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | applicationSet.metrics.service.servicePort | int | `8085` | Metrics service port |
+| applicationSet.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | applicationSet.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | applicationSet.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | applicationSet.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
@@ -1079,6 +1103,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.service.labels | object | `{}` | ApplicationSet service labels |
 | applicationSet.service.port | int | `7000` | ApplicationSet service port |
 | applicationSet.service.portName | string | `"webhook"` | ApplicationSet service port name |
+| applicationSet.service.type | string | `"ClusterIP"` | ApplicationSet service type |
 | applicationSet.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | applicationSet.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | applicationSet.serviceAccount.create | bool | `true` | Create ApplicationSet controller service account |
@@ -1127,8 +1152,10 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.metrics.enabled | bool | `false` | Enables prometheus metrics server |
 | notifications.metrics.port | int | `9001` | Metrics port |
 | notifications.metrics.service.annotations | object | `{}` | Metrics service annotations |
+| notifications.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
 | notifications.metrics.service.labels | object | `{}` | Metrics service labels |
 | notifications.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
+| notifications.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | notifications.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | notifications.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
 | notifications.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |

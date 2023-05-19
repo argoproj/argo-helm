@@ -38,6 +38,22 @@ jobs:
         run: |
           git checkout origin/gh-pages index.yaml
 
+      # The GitHub repository secret `PGP_PRIVATE_KEY` contains the private key
+      # in ASCII-armored format. To export a (new) key, run this command:
+      # `gpg --armor --export-secret-key <my key>`
+      - name: Prepare PGP key
+        run: |
+          IFS=""
+          echo "$PGP_PRIVATE_KEY" | gpg --dearmor > $HOME/secring.gpg
+          echo "$PGP_PASSPHRASE" > $HOME/passphrase.txt
+
+          # Tell chart-releaser-action where to find the key and its passphrase
+          echo "CR_KEYRING=$HOME/secring.gpg" >> "$GITHUB_ENV"
+          echo "CR_PASSPHRASE_FILE=$HOME/passphrase.txt" >> "$GITHUB_ENV"
+        env:
+          PGP_PRIVATE_KEY: "${{ secrets.PGP_PRIVATE_KEY }}"
+          PGP_PASSPHRASE: "${{ secrets.PGP_PASSPHRASE }}"
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@be16258da8010256c6e82849661221415f031968 # v1.5.0
         with:

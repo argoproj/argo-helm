@@ -13,6 +13,9 @@ metadata:
   labels:
     app.kubernetes.io/name: argocdextensions.argoproj.io
     app.kubernetes.io/part-of: argocd
+    {{- with .Values.crds.additionalLabels }}
+      {{- toYaml . | nindent 4}}
+    {{- end }} 
   name: argocdextensions.argoproj.io
 spec:
   group: argoproj.io

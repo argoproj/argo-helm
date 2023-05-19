@@ -29,6 +29,13 @@ fullnameOverride:
 # -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
 
+# Override APIVersions
+apiVersionOverrides:
+  # -- String to override apiVersion of autoscaling rendered by this helm chart
+  autoscaling: "" # autoscaling/v2
+  # -- String to override apiVersion of GKE resources rendered by this helm chart
+  cloudgoogle: "" # cloud.google.com/v1
+
 # -- Restrict Argo to operate only in a single namespace (the namespace of the
 # Helm release) by apply Roles and RoleBindings instead of the Cluster
 # equivalents, and start workflow-controller with the --namespaced flag. Use it
@@ -571,6 +578,40 @@ server:
       #   hosts:
       #     - argoworkflows.example.com
 
+  ## Create a Google Backendconfig  for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-configuration#configuring_ingress_features_through_backendconfig_parameters
+  GKEbackendConfig:
+    # -- Enable BackendConfig custom resource for Google Kubernetes Engine
+    enabled: false
+    # -- [BackendConfigSpec]
+    spec: {}
+  #  spec:
+  #    iap:
+  #      enabled: true
+  #      oauthclientCredentials:
+  #        secretName: argoworkflows-secret
+
+  ## Create a Google Managed Certificate for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
+  GKEmanagedCertificate:
+    # -- Enable ManagedCertificate custom resource for Google Kubernetes Engine.
+    enabled: false
+    # -- Domains for the Google Managed Certificate
+    domains:
+    - argoworkflows.example.com
+
+  ## Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+  GKEfrontendConfig:
+    # -- Enable FrontConfig custom resource for Google Kubernetes Engine
+    enabled: false
+    # -- [FrontendConfigSpec]
+    spec: {}
+  # spec:
+  #   redirectToHttps:
+  #     enabled: true
+  #     responseCodeName: RESPONSE_CODE
+
   clusterWorkflowTemplates:
     # -- Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates.
     enabled: true
@@ -650,10 +691,10 @@ artifactRepository:
     # Note the `key` attribute is not the actual secret, it's the PATH to
     # the contents in the associated secret, as defined by the `name` attribute.
     accessKeySecret:
-      # name: <releaseName>-minio
+      name: "{{ .Release.Name }}-minio"
       key: accesskey
     secretKeySecret:
-      # name: <releaseName>-minio
+      name: "{{ .Release.Name }}-minio"
       key: secretkey
     # insecure will disable TLS. Primarily used for minio installs not configured with TLS
     insecure: false

@@ -38,6 +38,8 @@ crds:
   keep: true
   # -- Annotations to be added to all CRDs
   annotations: {}
+  # -- Addtional labels to be added to all CRDs
+  additionalLabels: {}
 
 ## Globally shared configuration
 global:
@@ -78,6 +80,9 @@ global:
 
   # -- Labels for the all deployed pods
   podLabels: {}
+
+  # -- Add Prometheus scrape annotations to all metrics services. This can be used as an alternative to the ServiceMonitors.
+  addPrometheusAnnotations: false
 
   # -- Toggle and define pod-level security context.
   # @default -- `{}` (See [values.yaml])
@@ -310,6 +315,8 @@ configs:
     # -- Known hosts to be added to the known host list by default.
     # @default -- See [values.yaml]
     knownHosts: |
+      bitbucket.org ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIazEu89wgQZ4bqs3d63QSMzYVa0MuJ2e2gKTKqu+UUO
+      bitbucket.org ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPIQmuzMBuKdWeF4+a2sjSSpBK0iqitSQ+5BM9KhpexuGt20JpTVM7u5BDZngncgrqDMbWdxMWWOGtZ9UgbqgZE=
       bitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==
       github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
       github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
@@ -762,6 +769,10 @@ controller:
       # -- Additional labels
       labels: []
     service:
+      # -- Metrics service type
+      type: ClusterIP
+      # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
+      clusterIP: ""
       # -- Metrics service annotations
       annotations: {}
       # -- Metrics service labels
@@ -1773,6 +1784,10 @@ server:
     # -- Deploy metrics service
     enabled: false
     service:
+      # -- Metrics service type
+      type: ClusterIP
+      # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
+      clusterIP: ""
       # -- Metrics service annotations
       annotations: {}
       # -- Metrics service labels
@@ -2046,6 +2061,9 @@ repoServer:
   # - secretRef:
   #     name: secret-name
 
+  # -- Specify postStart and preStop lifecycle hooks for your argo-repo-server container
+  lifecycle: {}
+
   # -- Additional containers to be added to the repo server pod
   ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
   ## Note: Supports use of custom Helm templates
@@ -2241,6 +2259,10 @@ repoServer:
     # -- Deploy metrics service
     enabled: false
     service:
+      # -- Metrics service type
+      type: ClusterIP
+      # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
+      clusterIP: ""
       # -- Metrics service annotations
       annotations: {}
       # -- Metrics service labels
@@ -2394,6 +2416,10 @@ applicationSet:
     # -- Deploy metrics service
     enabled: false
     service:
+      # -- Metrics service type
+      type: ClusterIP
+      # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
+      clusterIP: ""
       # -- Metrics service annotations
       annotations: {}
       # -- Metrics service labels
@@ -2432,6 +2458,8 @@ applicationSet:
     annotations: {}
     # -- ApplicationSet service labels
     labels: {}
+    # -- ApplicationSet service type
+    type: ClusterIP
     # -- ApplicationSet service port
     port: 7000
     # -- ApplicationSet service port name
@@ -2600,6 +2628,45 @@ applicationSet:
         #   hosts:
         #     - argocd-applicationset.example.com
 
+  # TLS certificate configuration via cert-manager
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-configuration
+  certificate:
+    # -- Deploy a Certificate resource (requires cert-manager)
+    enabled: false
+    # -- The name of the Secret that will be automatically created and managed by this Certificate resource
+    secretName: argocd-application-controller-tls
+    # -- Certificate primary domain (commonName)
+    domain: argocd.example.com
+    # -- Certificate Subject Alternate Names (SANs)
+    additionalHosts: []
+    # -- The requested 'duration' (i.e. lifetime) of the certificate.
+    # @default -- `""` (defaults to 2160h = 90d if not specified)
+    ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
+    duration: ""
+    # -- How long before the expiry a certificate should be renewed.
+    # @default -- `""` (defaults to 360h = 15d if not specified)
+    ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
+    renewBefore: ""
+    # Certificate issuer
+    ## Ref: https://cert-manager.io/docs/concepts/issuer
+    issuer:
+      # -- Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io`
+      group: ""
+      # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
+      kind: ""
+      # -- Certificate issuer name. Eg. `letsencrypt`
+      name: ""
+    # Private key of the certificate
+    privateKey:
+      # -- Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always`
+      rotationPolicy: Never
+      # -- The private key cryptography standards (PKCS) encoding for private key. Either: `PCKS1` or `PKCS8`
+      encoding: PKCS1
+      # -- Algorithm used to generate certificate private key. One of: `RSA`, `Ed25519` or `ECDSA`
+      algorithm: RSA
+      # -- Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored.
+      size: 2048
+
 ## Notifications controller
 notifications:
   # -- Enable notifications controller
@@ -2713,6 +2780,10 @@ notifications:
     # -- Metrics port
     port: 9001
     service:
+      # -- Metrics service type
+      type: ClusterIP
+      # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
+      clusterIP: ""
       # -- Metrics service annotations
       annotations: {}
       # -- Metrics service labels
