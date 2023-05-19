@@ -102,6 +102,7 @@ Fields to note:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling rendered by this helm chart |
+| apiVersionOverrides.cloudgoogle | string | `""` | String to override apiVersion of GKE resources rendered by this helm chart |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
@@ -240,13 +241,10 @@ Fields to note:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| server.GKEbackendConfig | object | `{"enabled":false,"spec":{}}` | Create a Google Backendconfig  for use with the GKE Ingress Controller |
 | server.GKEbackendConfig.enabled | bool | `false` | Enable BackendConfig custom resource for Google Kubernetes Engine |
 | server.GKEbackendConfig.spec | object | `{}` | [BackendConfigSpec] |
-| server.GKEfrontendConfig | object | `{"enabled":false,"spec":{}}` | Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller |
 | server.GKEfrontendConfig.enabled | bool | `false` | Enable FrontConfig custom resource for Google Kubernetes Engine |
 | server.GKEfrontendConfig.spec | object | `{}` | [FrontendConfigSpec] |
-| server.GKEmanagedCertificate | object | `{"domains":["argoworkflows.example.com"],"enabled":false}` | Create a Google Managed Certificate for use with the GKE Ingress Controller |
 | server.GKEmanagedCertificate.domains | list | `["argoworkflows.example.com"]` | Domains for the Google Managed Certificate |
 | server.GKEmanagedCertificate.enabled | bool | `false` | Enable ManagedCertificate custom resource for Google Kubernetes Engine. |
 | server.affinity | object | `{}` | Assign custom [affinity] rules |
@@ -342,6 +340,8 @@ Fields to note:
 1. moved the field previously known as `telemetryServicePort` inside the `telemetryConfig` as `telemetryConfig.servicePort` - same for `metricsConfig`
 
 [affinity]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+[BackendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/concepts/backendconfig#backendconfigspec_v1beta1_cloudgooglecom
+[FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
 [links]: https://argoproj.github.io/argo-workflows/links/
 [Node selector]: https://kubernetes.io/docs/user-guide/node-selection/
 [Pod Disruption Budget]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
