@@ -3,7 +3,7 @@ appVersion: v3.4.7
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.27.0
+version: 0.28.0
 icon: https://argoproj.github.io/argo-workflows/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -17,4 +17,8 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: added
-      description: Allow extraObjects to contain string templates
+      description: Add support for Google ManagedCertificate on GKE
+    - kind: added
+      description: Add support for Google FrontendConfig on GKE
+    - kind: added
+      description: Add support for Google BackendConfig on GKE
