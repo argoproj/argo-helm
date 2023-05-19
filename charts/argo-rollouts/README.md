@@ -75,12 +75,12 @@ For full list of changes please check ArtifactHub [changelog].
 | containerSecurityContext | object | `{}` | Security Context to set on container level |
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
+| controller.containerPorts.healthz | int | `8080` | Healthz container port |
+| controller.containerPorts.metrics | int | `8090` | Metrics container port |
 | controller.createClusterRole | bool | `true` | flag to enable creation of cluster controller role (requires cluster RBAC) |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-controller.  A list of flags. |
 | controller.extraContainers | list | `[]` | Literal yaml for extra containers to be added to controller deployment. |
 | controller.extraEnv | list | `[]` | Additional environment variables for rollouts-controller. A list of name/value maps. |
-| controller.healthz.port | int | `8080` |  |
-| controller.healthz.portName | string | `"healthz"` |  |
 | controller.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | controller.image.registry | string | `"quay.io"` | Registry to use |
 | controller.image.repository | string | `"argoproj/argo-rollouts"` | Repository to use |
@@ -89,9 +89,8 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
 | controller.metricProviderPlugins | object | `{}` | Configures 3rd party metric providers for controller |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
-| controller.metrics.service.port | int | `8090` |  |
-| controller.metrics.service.portName | string | `"metrics"` |  |
-| controller.metrics.service.targetPort | int | `8090` |  |
+| controller.metrics.service.port | int | `8090` | Metrics service port |
+| controller.metrics.service.portName | string | `"metrics"` | Metrics service port name |
 | controller.metrics.serviceMonitor.additionalAnnotations | object | `{}` | Annotations to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Labels to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |

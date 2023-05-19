@@ -16,7 +16,7 @@ spec:
   - name: {{ .Values.controller.metrics.service.portName }}
     protocol: TCP
     port: {{ .Values.controller.metrics.service.port }}
-    targetPort: {{ .Values.controller.metrics.service.targetPort }}
+    targetPort: metrics
   selector:
     app.kubernetes.io/component: {{ .Values.controller.component }}
     {{- include "argo-rollouts.selectorLabels" . | nindent 4 }}

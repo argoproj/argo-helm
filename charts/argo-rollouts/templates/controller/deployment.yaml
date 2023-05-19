@@ -37,8 +37,8 @@ spec:
       containers:
       - image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ default .Chart.AppVersion .Values.controller.image.tag }}"
         args:
-        - --healthzPort={{ .Values.controller.healthz.port }}
-        - --metricsport={{ .Values.controller.metrics.service.port }}
+        - --healthzPort={{ .Values.controller.containerPorts.healthz }}
+        - --metricsport={{ .Values.controller.containerPorts.metrics }}
         {{- if not .Values.clusterInstall }}
         - --namespaced
         {{- end }}
@@ -55,10 +55,10 @@ spec:
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         name: argo-rollouts
         ports:
-        - containerPort: {{ .Values.controller.metrics.service.port }}
-          name: {{ .Values.controller.metrics.service.portName }}
-        - containerPort: {{ .Values.controller.healthz.port }}
-          name: {{ .Values.controller.healthz.portName }}
+        - containerPort: {{ .Values.controller.containerPorts.metrics }}
+          name: metrics
+        - containerPort: {{ .Values.controller.containerPorts.healthz }}
+          name: healthz
         livenessProbe:
           {{- toYaml .Values.controller.livenessProbe | nindent 10 }}
         readinessProbe:

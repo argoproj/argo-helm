@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v1.5.0
 description: A Helm chart for Argo Rollouts
 name: argo-rollouts
-version: 2.28.0
+version: 2.29.0
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
 keywords:
@@ -18,9 +18,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: changed
-      description: Upgrade Argo Rollouts to v1.5.0
     - kind: added
-      description: Introduce chart signing
-    - kind: added
-      description: Ability to provide additional volumes and volumeMounts
+      description: Ability to configure healthz and metrics ports to be compatible with Istio
