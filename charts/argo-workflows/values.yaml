@@ -576,6 +576,8 @@ server:
       #   hosts:
       #     - argoworkflows.example.com
 
+  # -- Create a Google Backendconfig  for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-configuration#configuring_ingress_features_through_backendconfig_parameters
   GKEbackendConfig:
     # -- Enable BackendConfig custom resource for Google Kubernetes Engine
     enabled: false
@@ -587,7 +589,7 @@ server:
   #      oauthclientCredentials:
   #        secretName: argoworkflows-secret
 
-  ## Create a Google Managed Certificate for use with the GKE Ingress Controller
+  # -- Create a Google Managed Certificate for use with the GKE Ingress Controller
   ## https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
   GKEmanagedCertificate:
     # -- Enable ManagedCertificate custom resource for Google Kubernetes Engine.
@@ -596,7 +598,7 @@ server:
     domains:
     - argoworkflows.example.com
 
-  ## Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
+  # -- Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
   ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
   GKEfrontendConfig:
     # -- Enable FrontConfig custom resource for Google Kubernetes Engine
