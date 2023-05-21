@@ -103,10 +103,28 @@ applicationsets: []
 #       directories:
 #       - path: guestbook
 #       - path: kustomize-*
+#   # Progressive Syncs is an experimental feature and it must be explicitly enabled
+#   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Progressive-Syncs/#enabling-progressive-syncs
+#   strategy:
+#     type: RollingSync
+#     rollingSync:
+#       steps:
+#       - matchExpressions:
+#         - key: project
+#           operator: In
+#           values:
+#           - guestbook
+#       - matchExpressions:
+#         - key: project
+#           operator: In
+#           values:
+#           - kustomize-foo
+#           - kustomize-bar
 #   template:
 #     metadata:
 #       name: '{{path.basename}}'
-#       labels: {}
+#       labels:
+#         project: '{{path.basename}}'
 #       annotations: {}
 #     spec:
 #       project: default

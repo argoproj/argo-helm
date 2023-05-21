@@ -26,6 +26,10 @@ spec:
   generators:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with .syncPolicy }}
   syncPolicy:
     {{- toYaml . | nindent 4 }}
