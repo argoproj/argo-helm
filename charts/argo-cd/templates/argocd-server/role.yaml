@@ -23,7 +23,9 @@ rules:
   - argoproj.io
   resources:
   - applications
+  {{- if .Values.applicationSet.enabled }}
   - applicationsets
+  {{- end }}
   - appprojects
   {{- if .Values.server.extensions.enabled }}
   - argocdextensions
