@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: v2.6.0-cap-CR-17237
+appVersion: v2.6.0-cap-CR-18430-del-app
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.29.1-1-cap-CR-17237
+version: 5.29.2-cap-CR-18430
 kubeVersion: ">=1.22.0-0"
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
@@ -24,4 +24,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: fixed
-      description: Use default value for configs.cm.application.instanceLabelKey, instead of overwriting it.
+      description: Send app deleted event to codefresh platform.
