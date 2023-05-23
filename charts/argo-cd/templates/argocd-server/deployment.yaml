@@ -334,9 +334,9 @@ spec:
           failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
         resources:
           {{- toYaml .Values.server.resources | nindent 10 }}
-        {{- if .Values.server.containerSecurityContext.enabled }}
+        {{- with .Values.server.containerSecurityContext }}
         securityContext:
-          {{- omit .Values.server.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
         {{- end }}
         {{- with .Values.server.lifecycle }}
         lifecycle:
@@ -348,9 +348,9 @@ spec:
         imagePullPolicy: {{ .Values.server.extensions.image.imagePullPolicy }}
         resources:
           {{- toYaml .Values.server.extensions.resources | nindent 10 }}
-        {{- if .Values.server.extensions.containerSecurityContext.enabled }}
+        {{- with .Values.server.extensions.containerSecurityContext }}
         securityContext:
-          {{- omit .Values.server.extensions.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
           - name: extensions

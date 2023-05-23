@@ -80,9 +80,9 @@ spec:
             protocol: TCP
           resources:
             {{- toYaml .Values.notifications.resources | nindent 12 }}
-          {{- if .Values.notifications.containerSecurityContext.enabled }}
+          {{- with .Values.notifications.containerSecurityContext }}
           securityContext:
-            {{- omit .Values.notifications.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           workingDir: /app
           volumeMounts:

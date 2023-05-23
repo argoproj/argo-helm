@@ -41,11 +41,9 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.redis.containerSecurityContext.enabled }}
       {{- with .Values.redis.securityContext }}
       securityContext:
-        {{- omit . "enabled" | toYaml | nindent 8 }}
-      {{- end }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.redis.priorityClassName | default .Values.global.priorityClassName }}
       priorityClassName: {{ . }}
@@ -77,9 +75,9 @@ spec:
           protocol: TCP
         resources:
           {{- toYaml .Values.redis.resources | nindent 10 }}
-        {{- if .Values.redis.containerSecurityContext.enabled }}
+        {{- with .Values.redis.containerSecurityContext }}
         securityContext:
-          {{- omit .Values.redis.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
         {{- end }}
         {{- with .Values.redis.volumeMounts }}
         volumeMounts:
@@ -103,10 +101,10 @@ spec:
           protocol: TCP
         resources:
           {{- toYaml .Values.redis.exporter.resources | nindent 10 }}
-        {{- if .Values.redis.exporter.containerSecurityContext.enabled }}
+        {{- with .Values.redis.exporter.containerSecurityContext }}
         securityContext:
-          {{- omit .Values.redis.exporter.containerSecurityContext "enabled" | toYaml | nindent 10 }}
-          {{- end }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       {{- end }}
       {{- with .Values.redis.extraContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}

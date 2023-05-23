@@ -699,7 +699,6 @@ controller:
   # -- Application controller container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
-    enabled: true
     runAsNonRoot: true
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
@@ -1018,7 +1017,6 @@ dex:
   # -- Dex container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
-    enabled: true
     runAsNonRoot: true
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
@@ -1170,7 +1168,6 @@ redis:
     # -- Redis exporter security context
     # @default -- See [values.yaml]
     containerSecurityContext:
-      enabled: true
       runAsNonRoot: true
       readOnlyRootFilesystem: true
       allowPrivilegeEscalation: false
@@ -1264,7 +1261,6 @@ redis:
   # -- Redis container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
-    enabled: true
     allowPrivilegeEscalation: false
     capabilities:
       drop:
@@ -1528,7 +1524,6 @@ server:
     # -- Server UI extensions container-level security context
     # @default -- See [values.yaml]
     containerSecurityContext:
-      enabled: true
       runAsNonRoot: true
       readOnlyRootFilesystem: true
       allowPrivilegeEscalation: false
@@ -1633,7 +1628,6 @@ server:
   # -- Server container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
-    enabled: true
     runAsNonRoot: true
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
@@ -2165,7 +2159,6 @@ repoServer:
   # -- Repo server container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
-    enabled: true
     runAsNonRoot: true
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
@@ -2519,7 +2512,6 @@ applicationSet:
   # -- ApplicationSet controller container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
-    enabled: true
     runAsNonRoot: true
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
@@ -2858,7 +2850,6 @@ notifications:
   # -- Notification controller container-level security Context
   # @default -- See [values.yaml]
   containerSecurityContext:
-    enabled: true
     runAsNonRoot: true
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false

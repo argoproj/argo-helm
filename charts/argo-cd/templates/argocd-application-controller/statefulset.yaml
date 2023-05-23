@@ -255,10 +255,10 @@ spec:
           failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
-        {{- if .Values.controller.containerSecurityContext.enabled }}
+        {{- with .Values.controller.containerSecurityContext }}
         securityContext:
-          {{- omit .Values.controller.containerSecurityContext "enabled" | toYaml | nindent 10 }}
-          {{- end }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         workingDir: /home/argocd
         volumeMounts:
         {{- with .Values.controller.volumeMounts }}

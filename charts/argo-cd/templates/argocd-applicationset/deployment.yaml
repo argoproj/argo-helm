@@ -182,9 +182,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.applicationSet.resources | nindent 12 }}
-          {{- if .Values.applicationSet.containerSecurityContext.enabled }}
+          {{- with .Values.applicationSet.containerSecurityContext }}
           securityContext:
-            {{- omit .Values.applicationSet.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
             {{- with .Values.applicationSet.extraVolumeMounts }}

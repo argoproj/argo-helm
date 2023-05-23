@@ -117,10 +117,10 @@ spec:
         {{- end }}
         resources:
           {{- toYaml .Values.dex.resources | nindent 10 }}
-        {{- if .Values.dex.containerSecurityContext.enabled }}
+        {{- with .Values.dex.containerSecurityContext }}
         securityContext:
-          {{- omit .Values.dex.containerSecurityContext "enabled" | toYaml | nindent 10 }}
-          {{- end }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         volumeMounts:
         {{- with .Values.dex.volumeMounts }}
           {{- toYaml . | nindent 8 }}
@@ -150,10 +150,10 @@ spec:
           name: dexconfig
         resources:
           {{- toYaml .Values.dex.resources | nindent 10 }}
-        {{- if .Values.dex.containerSecurityContext.enabled }}
+        {{- with .Values.dex.containerSecurityContext }}
         securityContext:
-          {{- omit .Values.dex.containerSecurityContext "enabled" | toYaml | nindent 10 }}
-          {{- end}}
+          {{- toYaml . | nindent 10 }}
+        {{- end}}
       {{- with .Values.dex.initContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
