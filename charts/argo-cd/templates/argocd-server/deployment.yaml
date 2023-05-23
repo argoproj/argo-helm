@@ -351,7 +351,7 @@ spec:
         {{- if .Values.server.extensions.containerSecurityContext.enabled }}
         securityContext:
           {{- toYaml .Values.server.extensions.containerSecurityContext | nindent 10 }}
-          {{-end }}
+          {{- end }}
         volumeMounts:
           - name: extensions
             mountPath: /tmp/extensions/
