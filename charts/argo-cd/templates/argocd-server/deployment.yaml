@@ -334,9 +334,9 @@ spec:
           failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
         resources:
           {{- toYaml .Values.server.resources | nindent 10 }}
-        {{- if .Values.repoServer.containerSecurityContext.enabled }}
+        {{- if .Values.server.containerSecurityContext.enabled }}
         securityContext:
-          {{- omit .Values.repoServer.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+          {{- omit .Values.server.containerSecurityContext "enabled" | toYaml | nindent 10 }}
         {{- end }}
         {{- with .Values.server.lifecycle }}
         lifecycle:
@@ -351,7 +351,7 @@ spec:
         {{- if .Values.server.extensions.containerSecurityContext.enabled }}
         securityContext:
           {{- omit .Values.server.extensions.containerSecurityContext "enabled" | toYaml | nindent 10 }}
-          {{- end }}
+        {{- end }}
         volumeMounts:
           - name: extensions
             mountPath: /tmp/extensions/
