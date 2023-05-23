@@ -182,8 +182,10 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.applicationSet.resources | nindent 12 }}
+          {{- with .Values.applicationSet.containerSecurityContext }}
           securityContext:
-            {{- toYaml .Values.applicationSet.containerSecurityContext | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             {{- with .Values.applicationSet.extraVolumeMounts }}
               {{- toYaml . | nindent 12 }}

@@ -80,8 +80,10 @@ spec:
             protocol: TCP
           resources:
             {{- toYaml .Values.notifications.resources | nindent 12 }}
+          {{- with .Values.notifications.containerSecurityContext }}
           securityContext:
-            {{- toYaml .Values.notifications.containerSecurityContext | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           workingDir: /app
           volumeMounts:
             - name: tls-certs
