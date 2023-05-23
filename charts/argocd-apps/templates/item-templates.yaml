@@ -1,0 +1,15 @@
+{{- range .Values.itemTemplates }}
+{{- if kindIs "string" .template }}
+{{- $template := .template -}}
+{{- range .items }}
+---
+{{ tpl $template (set . "Template" $.Template) }}
+{{- end }}
+{{- else }}
+{{- $template := .template | toYaml -}}
+{{- range .items }}
+---
+{{ tpl $template (set . "Template" $.Template) }}
+{{- end }}
+{{- end }}
+{{- end }}
