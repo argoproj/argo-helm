@@ -75,8 +75,10 @@ spec:
           protocol: TCP
         resources:
           {{- toYaml .Values.redis.resources | nindent 10 }}
+        {{- if .Values.redis.containerSecurityContext.enabled }}
         securityContext:
           {{- toYaml .Values.redis.containerSecurityContext | nindent 10 }}
+        {{- end }}
         {{- with .Values.redis.volumeMounts }}
         volumeMounts:
           {{- toYaml . | nindent 10 }}
@@ -99,8 +101,10 @@ spec:
           protocol: TCP
         resources:
           {{- toYaml .Values.redis.exporter.resources | nindent 10 }}
+        {{- if .Values.redis.exporter.containerSecurityContext.enabled }}
         securityContext:
           {{- toYaml .Values.redis.exporter.containerSecurityContext | nindent 10 }}
+          {{- end }}
       {{- end }}
       {{- with .Values.redis.extraContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}

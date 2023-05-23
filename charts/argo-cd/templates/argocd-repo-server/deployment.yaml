@@ -273,8 +273,10 @@ spec:
           failureThreshold: {{ .Values.repoServer.readinessProbe.failureThreshold }}
         resources:
           {{- toYaml .Values.repoServer.resources | nindent 10 }}
+        {{- if .Values.repoServer.containerSecurityContext.enabled }}
         securityContext:
           {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
+        {{- end }}
         {{- with .Values.repoServer.lifecycle }}
         lifecycle:
           {{- toYaml . | nindent 10 }}
@@ -295,9 +297,11 @@ spec:
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        {{- if .Values.repoServer.containerSecurityContext.enabled }}
         {{- with .Values.repoServer.containerSecurityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
+        {{- end }}
         {{- end }}
         volumeMounts:
         - mountPath: /var/run/argocd
