@@ -275,7 +275,7 @@ spec:
           {{- toYaml .Values.repoServer.resources | nindent 10 }}
         {{- if .Values.repoServer.containerSecurityContext.enabled }}
         securityContext:
-          {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
+          {{- omit .Values.repoServer.containerSecurityContext "enabled" | toYaml | nindent 10 }}
         {{- end }}
         {{- with .Values.repoServer.lifecycle }}
         lifecycle:
@@ -300,7 +300,7 @@ spec:
         {{- if .Values.repoServer.containerSecurityContext.enabled }}
         {{- with .Values.repoServer.containerSecurityContext }}
         securityContext:
-          {{- toYaml . | nindent 10 }}
+          {{- omit . "enabled" | toYaml | nindent 10 }}
         {{- end }}
         {{- end }}
         volumeMounts:

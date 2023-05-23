@@ -119,7 +119,7 @@ spec:
           {{- toYaml .Values.dex.resources | nindent 10 }}
         {{- if .Values.dex.containerSecurityContext.enabled }}
         securityContext:
-          {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
+          {{- omit .Values.dex.containerSecurityContext "enabled" | toYaml | nindent 10 }}
           {{- end }}
         volumeMounts:
         {{- with .Values.dex.volumeMounts }}
@@ -152,7 +152,7 @@ spec:
           {{- toYaml .Values.dex.resources | nindent 10 }}
         {{- if .Values.dex.containerSecurityContext.enabled }}
         securityContext:
-          {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
+          {{- omit .Values.dex.containerSecurityContext "enabled" | toYaml | nindent 10 }}
           {{- end}}
       {{- with .Values.dex.initContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}

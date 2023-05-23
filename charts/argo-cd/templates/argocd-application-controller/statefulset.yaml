@@ -257,7 +257,7 @@ spec:
           {{- toYaml .Values.controller.resources | nindent 10 }}
         {{- if .Values.controller.containerSecurityContext.enabled }}
         securityContext:
-          {{- toYaml .Values.controller.containerSecurityContext | nindent 10 }}
+          {{- omit .Values.controller.containerSecurityContext "enabled" | toYaml | nindent 10 }}
           {{- end }}
         workingDir: /home/argocd
         volumeMounts:

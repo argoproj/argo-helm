@@ -336,7 +336,7 @@ spec:
           {{- toYaml .Values.server.resources | nindent 10 }}
         {{- if .Values.repoServer.containerSecurityContext.enabled }}
         securityContext:
-          {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
+          {{- omit .Values.repoServer.containerSecurityContext "enabled" | toYaml | nindent 10 }}
         {{- end }}
         {{- with .Values.server.lifecycle }}
         lifecycle:
@@ -350,7 +350,7 @@ spec:
           {{- toYaml .Values.server.extensions.resources | nindent 10 }}
         {{- if .Values.server.extensions.containerSecurityContext.enabled }}
         securityContext:
-          {{- toYaml .Values.server.extensions.containerSecurityContext | nindent 10 }}
+          {{- omit .Values.server.extensions.containerSecurityContext "enabled" | toYaml | nindent 10 }}
           {{- end }}
         volumeMounts:
           - name: extensions

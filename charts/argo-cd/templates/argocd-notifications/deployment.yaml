@@ -82,7 +82,7 @@ spec:
             {{- toYaml .Values.notifications.resources | nindent 12 }}
           {{- if .Values.notifications.containerSecurityContext.enabled }}
           securityContext:
-            {{- toYaml .Values.notifications.containerSecurityContext | nindent 12 }}
+            {{- omit .Values.notifications.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           workingDir: /app
           volumeMounts:
