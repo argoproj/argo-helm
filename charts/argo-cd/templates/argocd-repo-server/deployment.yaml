@@ -273,7 +273,7 @@ spec:
           failureThreshold: {{ .Values.repoServer.readinessProbe.failureThreshold }}
         resources:
           {{- toYaml .Values.repoServer.resources | nindent 10 }}
-        {{- if .Values.repoServer.containerSecurityContext }}
+        {{- with .Values.repoServer.containerSecurityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
