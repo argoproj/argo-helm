@@ -12,7 +12,7 @@ metadata:
 spec:
   endpoints:
   {{- if .Values.controller.metricsConfig.enabled }}
-    - port: metrics
+    - port: {{ .Values.controller.metricsConfig.servicePortName }}
       path: {{ .Values.controller.metricsConfig.path }}
       interval: 30s
       {{- with .Values.controller.metricsConfig.relabelings }}
