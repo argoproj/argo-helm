@@ -3,7 +3,7 @@ appVersion: v3.4.7
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.28.0
+version: 0.28.1
 icon: https://argoproj.github.io/argo-workflows/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -16,9 +16,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: added
-      description: Add support for Google ManagedCertificate on GKE
-    - kind: added
-      description: Add support for Google FrontendConfig on GKE
-    - kind: added
-      description: Add support for Google BackendConfig on GKE
+    - kind: changed
+      description: Enable to configure Service Monitor port 
