@@ -71,4 +71,10 @@ rules:
     verbs:
       - list
       - watch
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
 {{- end }}
