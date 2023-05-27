@@ -49,6 +49,7 @@ For full list of changes please check ArtifactHub [changelog].
 | createClusterAggregateRoles | bool | `true` | flag to enable creation of cluster aggregate roles (requires cluster RBAC) |
 | extraObjects | list | `[]` | Additional manifests to deploy within the chart. A list of objects. |
 | fullnameOverride | string | `nil` | String to fully override "argo-rollouts.fullname" template |
+| global.deploymentAnnotations | object | `{}` | Annotations for all deployed Deployments |
 | imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry. Registry secret names as an array. |
 | installCRDs | bool | `true` | Install and upgrade CRDs |
 | keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
@@ -75,7 +76,10 @@ For full list of changes please check ArtifactHub [changelog].
 | containerSecurityContext | object | `{}` | Security Context to set on container level |
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
+| controller.containerPorts.healthz | int | `8080` | Healthz container port |
+| controller.containerPorts.metrics | int | `8090` | Metrics container port |
 | controller.createClusterRole | bool | `true` | flag to enable creation of cluster controller role (requires cluster RBAC) |
+| controller.deploymentAnnotations | object | `{}` | Annotations to be added to the controller deployment |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-controller.  A list of flags. |
 | controller.extraContainers | list | `[]` | Literal yaml for extra containers to be added to controller deployment. |
 | controller.extraEnv | list | `[]` | Additional environment variables for rollouts-controller. A list of name/value maps. |
@@ -85,10 +89,15 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
 | controller.initContainers | list | `[]` | Init containers to add to the rollouts controller pod |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
+| controller.metricProviderPlugins | object | `{}` | Configures 3rd party metric providers for controller |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
+| controller.metrics.service.port | int | `8090` | Metrics service port |
+| controller.metrics.service.portName | string | `"metrics"` | Metrics service port name |
 | controller.metrics.serviceMonitor.additionalAnnotations | object | `{}` | Annotations to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Labels to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
+| controller.metrics.serviceMonitor.metricRelabelings | list | `[]` | MetricRelabelConfigs to apply to samples before ingestion |
+| controller.metrics.serviceMonitor.relabelings | list | `[]` | RelabelConfigs to apply to samples before scraping |
 | controller.nodeSelector | object | `{}` | [Node selector] |
 | controller.pdb.annotations | object | `{}` | Annotations to be added to controller [Pod Disruption Budget] |
 | controller.pdb.enabled | bool | `false` | Deploy a [Pod Disruption Budget] for the controller |
@@ -120,6 +129,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.component | string | `"rollouts-dashboard"` | Value of label `app.kubernetes.io/component` |
 | dashboard.containerSecurityContext | object | `{}` | Security Context to set on container level |
 | dashboard.createClusterRole | bool | `true` | flag to enable creation of dashbord cluster role (requires cluster RBAC) |
+| dashboard.deploymentAnnotations | object | `{}` | Annotations to be added to the dashboard deployment |
 | dashboard.enabled | bool | `false` | Deploy dashboard server |
 | dashboard.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-dashboard. A list of flags. |
 | dashboard.extraEnv | list | `[]` | Additional environment variables for rollouts-dashboard. A list of name/value maps. |
