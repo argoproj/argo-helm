@@ -16,6 +16,7 @@ metadata:
 {{- toYaml . | nindent 4 }}
 {{- end }}
 spec:
+  type: {{ .Values.applicationSet.service.type }}
   ports:
   - name: {{ .Values.applicationSet.service.portName }}
     port: {{ .Values.applicationSet.service.port }}

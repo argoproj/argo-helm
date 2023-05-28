@@ -1,0 +1,33 @@
+{{- if .Values.applicationSet.certificate.enabled -}}
+apiVersion: {{ include "argo-cd.apiVersion.cert-manager" . }}
+kind: Certificate
+metadata:
+  name: {{ template "argo-cd.applicationSet.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
+spec:
+  secretName: {{ .Values.applicationSet.certificate.secretName }}
+  commonName: {{ .Values.applicationSet.certificate.domain | quote }}
+  dnsNames:
+    - {{ .Values.applicationSet.certificate.domain | quote }}
+    {{- range .Values.applicationSet.certificate.additionalHosts }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- with .Values.applicationSet.certificate.duration }}
+  duration: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.applicationSet.certificate.renewBefore }}
+  renewBefore: {{ . | quote }}
+  {{- end }}
+  issuerRef:
+    {{- with .Values.applicationSet.certificate.issuer.group }}
+    group: {{ . | quote }}
+    {{- end }}
+    kind: {{ .Values.applicationSet.certificate.issuer.kind | quote }}
+    name: {{ .Values.applicationSet.certificate.issuer.name | quote }}
+  {{- with .Values.applicationSet.certificate.privateKey }}
+  privateKey:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

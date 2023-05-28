@@ -16,7 +16,15 @@ metadata:
   {{- end }}
 spec:
   endpoints:
-  - port: metrics
+  - port: {{ .Values.controller.metrics.service.portName }}
+    {{- with .Values.controller.metrics.serviceMonitor.relabelings }}
+    relabelings:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.controller.metrics.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   namespaceSelector:
     matchNames:
     - {{ .Release.Namespace }}

@@ -1,6 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.controller.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
   name: {{ include "argo-rollouts.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
@@ -37,6 +43,8 @@ spec:
       containers:
       - image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ default .Chart.AppVersion .Values.controller.image.tag }}"
         args:
+        - --healthzPort={{ .Values.controller.containerPorts.healthz }}
+        - --metricsport={{ .Values.controller.containerPorts.metrics }}
         {{- if not .Values.clusterInstall }}
         - --namespaced
         {{- end }}
@@ -53,9 +61,9 @@ spec:
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         name: argo-rollouts
         ports:
-        - containerPort: 8090
+        - containerPort: {{ .Values.controller.containerPorts.metrics }}
           name: metrics
-        - containerPort: 8080
+        - containerPort: {{ .Values.controller.containerPorts.healthz }}
           name: healthz
         livenessProbe:
           {{- toYaml .Values.controller.livenessProbe | nindent 10 }}
