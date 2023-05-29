@@ -31,6 +31,9 @@ spec:
     {{- if eq .Values.server.service.type "NodePort" }}
     nodePort: {{ .Values.server.service.nodePortHttps }}
     {{- end }}
+    {{- with .Values.server.service.servicePortHttpsAppProtocol }}
+    appProtocol: {{ . }}
+    {{- end }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
 {{- if eq .Values.server.service.type "LoadBalancer" }}
