@@ -709,7 +709,7 @@ artifactRepository:
   # @default -- `{}` (See [values.yaml])
   gcs: {}
   # bucket: <project>-argo
-  # keyFormat: "{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}"
+  # keyFormat: "{{ \"{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}\" }}"
   # serviceAccountKeySecret is a secret selector.
   # It references the k8s secret named 'my-gcs-credentials'.
   # This secret is expected to have have the key 'serviceAccountKey',
