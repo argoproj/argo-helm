@@ -302,7 +302,21 @@ Fields to note:
 | server.servicePort | int | `2746` | Service port for server |
 | server.servicePortName | string | `""` | Service port name |
 | server.serviceType | string | `"ClusterIP"` | Service type for server pods |
-| server.sso | object | `{}` | SSO configuration when SSO is specified as a server auth mode. |
+| server.sso.clientId.key | string | `"client-id"` | Key of secret to retrieve the app OIDC client ID |
+| server.sso.clientId.name | string | `"argo-server-sso"` | Name of secret to retrieve the app OIDC client ID |
+| server.sso.clientSecret.key | string | `"client-secret"` | Key of a secret to retrieve the app OIDC client secret |
+| server.sso.clientSecret.name | string | `"argo-server-sso"` | Name of a secret to retrieve the app OIDC client secret |
+| server.sso.customGroupClaimName | string | `""` | Override claim name for OIDC groups |
+| server.sso.enabled | bool | `false` | Create SSO configuration |
+| server.sso.insecureSkipVerify | bool | `false` | Skip TLS verification for the HTTP client |
+| server.sso.issuer | string | `"https://accounts.google.com"` | The root URL of the OIDC identity provider |
+| server.sso.issuerAlias | string | `""` | Alternate root URLs that can be included for some OIDC providers |
+| server.sso.rbac.enabled | bool | `true` | Adds ServiceAccount Policy to server (Cluster)Role. |
+| server.sso.rbac.secretWhitelist | list | `[]` | Whitelist to allow server to fetch Secrets |
+| server.sso.redirectUrl | string | `"https://argo/oauth2/callback"` |  |
+| server.sso.scopes | list | `[]` | Scopes requested from the SSO ID provider |
+| server.sso.sessionExpiry | string | `""` | Define how long your login is valid for (in hours) |
+| server.sso.userInfoPath | string | `""` | Specify the user info endpoint that contains the groups claim |
 | server.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | server.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the argo server |
 | server.volumeMounts | list | `[]` | Additional volume mounts to the server main container. |
