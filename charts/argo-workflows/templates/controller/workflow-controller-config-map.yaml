@@ -126,37 +126,35 @@ data:
     {{- if .Values.controller.workflowDefaults }}
     workflowDefaults:
 {{ toYaml .Values.controller.workflowDefaults | indent 6 }}{{- end }}
-    {{- with .Values.server.sso }}
+    {{- if .Values.server.sso.enabled }}
     sso:
-      issuer: {{ .issuer }}
+      issuer: {{ .Values.server.sso.issuer }}
       clientId:
-        name: {{ .clientId.name }}
-        key: {{ .clientId.key }}
+        name: {{ .Values.server.sso.clientId.name }}
+        key: {{ .Values.server.sso.clientId.key }}
       clientSecret:
-        name: {{ .clientSecret.name }}
-        key: {{ .clientSecret.key }}
-      redirectUrl: {{ .redirectUrl }}
-      {{- with .rbac }}
+        name: {{ .Values.server.sso.clientSecret.name }}
+        key: {{ .Values.server.sso.clientSecret.key }}
+      redirectUrl: {{ .Values.server.sso.redirectUrl }}
       rbac:
-        enabled: {{ .enabled }}
+        enabled: {{ .Values.server.sso.rbac.enabled }}
+      {{- with .Values.server.sso.scopes }}
+      scopes: {{ toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .scopes }}
-      scopes: {{ toYaml .scopes | nindent 8 }}
+      {{- with .Values.server.sso.issuerAlias }}
+      issuerAlias: {{ toYaml . }}
       {{- end }}
-      {{- if .issuerAlias }}
-      issuerAlias: {{ .issuerAlias }}
+      {{- with .Values.server.sso.sessionExpiry }}
+      sessionExpiry: {{ toYaml . }}
       {{- end }}
-      {{- if .sessionExpiry }}
-      sessionExpiry: {{ .sessionExpiry }}
+      {{- with .Values.server.sso.customGroupClaimName }}
+      customGroupClaimName: {{ toYaml . }}
       {{- end }}
-      {{- if .customGroupClaimName }}
-      customGroupClaimName: {{ .customGroupClaimName }}
+      {{- with .Values.server.sso.userInfoPath }}
+      userInfoPath: {{ toYaml . }}
       {{- end }}
-      {{- if .userInfoPath }}
-      userInfoPath: {{ .userInfoPath }}
-      {{- end }}
-      {{- if .insecureSkipVerify }}
-      insecureSkipVerify: {{ .insecureSkipVerify }}
+      {{- with .Values.server.sso.insecureSkipVerify }}
+      insecureSkipVerify: {{ toYaml . }}
       {{- end }}
     {{- end }}
     {{- with .Values.controller.workflowRestrictions }}
