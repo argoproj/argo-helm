@@ -618,35 +618,50 @@ server:
     # -- Give the server permissions to edit ClusterWorkflowTemplates.
     enableEditing: true
 
-  # -- SSO configuration when SSO is specified as a server auth mode.
-  sso: {}
-    ## All the values are required. SSO is activated by adding --auth-mode=sso
-    ## to the server command line.
-    #
-    ## The root URL of the OIDC identity provider.
-    # issuer: https://accounts.google.com
-    ## Name of a secret and a key in it to retrieve the app OIDC client ID from.
-    # clientId:
-    #   name: argo-server-sso
-    #   key: client-id
-    ## Name of a secret and a key in it to retrieve the app OIDC client secret from.
-    # clientSecret:
-    #   name: argo-server-sso
-    #   key: client-secret
-    ## The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
-    # redirectUrl: https://argo/oauth2/callback
-    # rbac:
-    #   enabled: true
+  # SSO configuration when SSO is specified as a server auth mode.
+  sso:
+    # -- Create SSO configuration
+    ## SSO is activated by adding --auth-mode=sso to the server command line.
+    enabled: false
+    # -- The root URL of the OIDC identity provider
+    issuer: https://accounts.google.com
+    clientId:
+      # -- Name of secret to retrieve the app OIDC client ID
+      name: argo-server-sso
+      # -- Key of secret to retrieve the app OIDC client ID
+      key: client-id
+    clientSecret:
+      # -- Name of a secret to retrieve the app OIDC client secret
+      name: argo-server-sso
+      # -- Key of a secret to retrieve the app OIDC client secret
+      key: client-secret
+    # - The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
+    redirectUrl: https://argo/oauth2/callback
+    rbac:
+      # -- Adds ServiceAccount Policy to server (Cluster)Role.
+      enabled: true
+    # -- Whitelist to allow server to fetch Secrets
     ## When present, restricts secrets the server can read to a given list.
     ## You can use it to restrict the server to only be able to access the
     ## service account token secrets that are associated with service accounts
     ## used for authorization.
-    #   secretWhitelist: []
-    ## Scopes requested from the SSO ID provider.  The 'groups' scope requests
-    ## group membership information, which is usually used for authorization
-    ## decisions.
-    # scopes:
-    # - groups
+      secretWhitelist: []
+    # -- Scopes requested from the SSO ID provider
+    ## The 'groups' scope requests group membership information, which is usually used for authorization decisions.
+    scopes: []
+      # - groups
+    # -- Define how long your login is valid for (in hours)
+    ## If omitted, defaults to 10h.
+    sessionExpiry: ""
+    # -- Alternate root URLs that can be included for some OIDC providers
+    issuerAlias: ""
+    # -- Override claim name for OIDC groups
+    customGroupClaimName: ""
+    # -- Specify the user info endpoint that contains the groups claim
+    ## Configure this if your OIDC provider provides groups information only using the user-info endpoint (e.g. Okta)
+    userInfoPath: ""
+    # -- Skip TLS verification for the HTTP client
+    insecureSkipVerify: false
 
   # -- Extra containers to be added to the server deployment
   extraContainers: []
