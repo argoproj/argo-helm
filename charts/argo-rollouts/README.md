@@ -111,6 +111,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the controller |
+| controller.trafficRouterPlugins | object | `{}` | Configures 3rd party traffic router plugins for controller |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to add to the controller container |
 | controller.volumes | list | `[]` | Additional volumes to add to the controller pod |
 | podAnnotations | object | `{}` | Annotations for the all deployed pods |

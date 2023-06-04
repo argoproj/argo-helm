@@ -10,3 +10,6 @@ data:
   {{- with .Values.controller.metricProviderPlugins }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
+  {{- with .Values.controller.trafficRouterPlugins }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
