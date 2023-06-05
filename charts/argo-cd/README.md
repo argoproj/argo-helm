@@ -106,7 +106,7 @@ For full list of changes please check ArtifactHub [changelog].
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
 ### 5.35.0
-This version changed supported Kubernetes version from `>=1.22.0-0` to `>=1.23.0-0`. Though the supported version of Kubernetes is v1.24 or later, we align with Amazon EKS because there are a lot of EKS users.
+This version supports Kubernetes version from `>=1.22.0-0` to `>=1.23.0-0`. Though the supported version of Kubernetes is v1.24 or later, we align with Amazon EKS because there are a lot of EKS users.
 
 Please see more information about EoL: [Amazon EKS EoL][EKS EoL].
 
