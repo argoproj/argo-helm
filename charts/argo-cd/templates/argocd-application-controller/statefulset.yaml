@@ -99,7 +99,7 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
         name: {{ .Values.controller.name }}
         env:
-          {{- with .Values.controller.env }}
+          {{- with (concat .Values.global.env .Values.controller.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
           - name: ARGOCD_CONTROLLER_REPLICAS

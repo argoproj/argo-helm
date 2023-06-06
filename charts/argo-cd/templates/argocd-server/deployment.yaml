@@ -74,7 +74,7 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
-          {{- with .Values.server.env }}
+          {{- with (concat .Values.global.env .Values.server.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
           - name: ARGOCD_SERVER_INSECURE

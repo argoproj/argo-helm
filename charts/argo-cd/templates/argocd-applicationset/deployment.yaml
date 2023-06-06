@@ -79,7 +79,7 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           env:
-            {{- with .Values.applicationSet.extraEnv }}
+            {{- with (concat .Values.global.env .Values.applicationSet.extraEnv) }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
             - name: NAMESPACE

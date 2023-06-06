@@ -66,7 +66,7 @@ spec:
             {{- range .Values.notifications.extraArgs }}
             - {{ . | squote }}
             {{- end }}
-          {{- with .Values.notifications.extraEnv }}
+          {{- with (concat .Values.global.env .Values.notifications.extraEnv) }}
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
