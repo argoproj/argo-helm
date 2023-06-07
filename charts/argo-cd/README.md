@@ -107,6 +107,7 @@ Highlighted versions provide information about additional steps that should be p
 
 ### 5.36.0
 This version adds `global.env` for all deployed deployments
+
 ### 5.35.0
 This version supports Kubernetes version `>=1.23.0-0`. The current supported version of Kubernetes is v1.24 or later and we align with Amazon EKS calendar, because many of AWS users and conservative approach.
 
