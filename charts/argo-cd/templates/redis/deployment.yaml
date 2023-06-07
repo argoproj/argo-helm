@@ -61,7 +61,7 @@ spec:
         {{- with .Values.redis.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.redis.env }}
+        {{- with (concat .Values.global.env .Values.redis.env) }}
         env:
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -92,7 +92,7 @@ spec:
           value: {{ printf "redis://localhost:%v" .Values.redis.containerPorts.redis }}
         - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS
           value: {{ printf "0.0.0.0:%v" .Values.redis.containerPorts.metrics }}
-        {{- with .Values.redis.exporter.env }}
+        {{- with (concat .Values.global.env .Values.redis.exporter.env) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         ports:
