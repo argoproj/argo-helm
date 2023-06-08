@@ -54,13 +54,13 @@ spec:
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.redis.image.imagePullPolicy }}
         args:
+        {{- with .Values.redis.extraArgs }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         - --save
         - ""
         - --appendonly
         - "no"
-        {{- with .Values.redis.extraArgs }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
         {{- with (concat .Values.global.env .Values.redis.env) }}
         env:
           {{- toYaml . | nindent 8 }}
