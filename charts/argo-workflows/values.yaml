@@ -709,12 +709,12 @@ artifactRepository:
     # Note the `key` attribute is not the actual secret, it's the PATH to
     # the contents in the associated secret, as defined by the `name` attribute.
     accessKeySecret:
-      name: "{{ .Release.Name }}-minio"
+      name: "{{ .Release.Name }}"
       key: accesskey
     secretKeySecret:
-      name: "{{ .Release.Name }}-minio"
+      name: "{{ .Release.Name }}"
       key: secretkey
-    # insecure will disable TLS. Primarily used for minio installs not configured with TLS
+    # insecure will disable TLS. Used for s3 comptiable alternatives not configured with TLS
     insecure: false
     # bucket:
     # endpoint:
