@@ -706,13 +706,14 @@ artifactRepository:
   # -- Store artifact in a S3-compliant object store
   # @default -- See [values.yaml]
   s3:
+    secretName: "{{ .Release.Name }}-minio"
     # Note the `key` attribute is not the actual secret, it's the PATH to
     # the contents in the associated secret, as defined by the `name` attribute.
     accessKeySecret:
-      name: "{{ .Release.Name }}"
+      name: "{{ tpl .Values.artifactRepository.s3.secretName . }}"
       key: accesskey
     secretKeySecret:
-      name: "{{ .Release.Name }}"
+      name: "{{ tpl .Values.artifactRepository.s3.secretName . }}"
       key: secretkey
     # insecure will disable TLS. Used for s3 comptiable alternatives not configured with TLS
     insecure: false
