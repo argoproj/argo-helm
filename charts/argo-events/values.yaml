@@ -138,6 +138,8 @@ controller:
     enabled: true
     # -- Restrict events controller to operate only in a single namespace instead of cluster-wide scope.
     namespaced: false
+    # -- Additional namespace to be monitored by the controller
+    managedNamespace: ""
     # -- Additional user rules for event controller's rbac
     rules: []
 
