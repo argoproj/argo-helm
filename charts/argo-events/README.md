@@ -127,6 +127,7 @@ done
 | controller.podLabels | object | `{}` | Labels to be added to events controller pods |
 | controller.priorityClassName | string | `""` | Priority class for the events controller pods |
 | controller.rbac.enabled | bool | `true` | Create events controller RBAC |
+| controller.rbac.managedNamespace | string | `""` | Additional namespace to be monitored by the controller |
 | controller.rbac.namespaced | bool | `false` | Restrict events controller to operate only in a single namespace instead of cluster-wide scope. |
 | controller.rbac.rules | list | `[]` | Additional user rules for event controller's rbac |
 | controller.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
