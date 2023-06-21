@@ -66,10 +66,22 @@ spec:
             {{- range .Values.notifications.extraArgs }}
             - {{ . | squote }}
             {{- end }}
-          {{- with (concat .Values.global.env .Values.notifications.extraEnv) }}
           env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- with (concat .Values.global.env .Values.notifications.extraEnv) }}
+              {{- toYaml . | nindent 12 }}
+             {{- end }}
+            - name: ARGOCD_NOTIFICATIONS_CONTROLLER_LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: notificationscontroller.log.level
+                  name: argocd-cmd-params-cm
+                  optional: true              
+            - name: ARGOCD_NOTIFICATIONS_CONTROLLER_LOGFORMAT
+              valueFrom:
+                configMapKeyRef:
+                  key: notificationscontroller.log.format
+                  name: argocd-cmd-params-cm
+                  optional: true
           {{- with .Values.notifications.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
