@@ -715,7 +715,7 @@ artifactRepository:
     secretKeySecret:
       name: "{{ tpl .Values.artifactRepository.s3.secretName . }}"
       key: secretkey
-    # insecure will disable TLS. Used for s3 comptiable alternatives not configured with TLS
+    # insecure will disable TLS. Used for s3 compatible alternatives not configured with TLS
     insecure: false
     # bucket:
     # endpoint:
