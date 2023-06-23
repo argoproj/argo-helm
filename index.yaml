@@ -1589,6 +1589,43 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Adapt `applicationSet.containerPorts.metrics` to 8080 (revert previous release)
+        - kind: changed
+          description: Adapt `applicationSet.metrics.service.servicePort` to 8080
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v2.7.6
+    created: "2023-06-23T13:59:36.762881002Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.23.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 8dccba6a0612f681259dc4f74840b886205fdb68387b63d662beed284495330c
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.23.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.36.7/argo-cd-5.36.7.tgz
+    version: 5.36.7
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Upgrade Argo CD to v2.7.6
         - kind: changed
           description: applicationSet.containerPorts.metrics to 8085
@@ -24222,4 +24259,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-06-21T14:54:38.897115969Z"
+generated: "2023-06-23T13:59:36.767051798Z"
