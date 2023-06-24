@@ -329,6 +329,7 @@ Fields to note:
 |-----|------|---------|-------------|
 | artifactRepository.archiveLogs | bool | `false` | Archive the main container logs as an artifact |
 | artifactRepository.azure | object | `{}` (See [values.yaml]) | Store artifact in Azure Blob Storage |
+| artifactRepository.enabled | bool | `false` | Enables artifactRepository |
 | artifactRepository.gcs | object | `{}` (See [values.yaml]) | Store artifact in a GCS object store |
 | artifactRepository.s3 | object | See [values.yaml] | Store artifact in a S3-compliant object store |
 | customArtifactRepository | object | `{}` | The section of custom artifact repository. Utilize a custom artifact repository that is not one of the current base ones (s3, gcs, azure) |

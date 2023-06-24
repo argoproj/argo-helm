@@ -701,6 +701,8 @@ extraObjects: []
 # -- Use static credentials for S3 (eg. when not using AWS IRSA)
 useStaticCredentials: true
 artifactRepository:
+  # -- Enables artifactRepository
+  enabled: false
   # -- Archive the main container logs as an artifact
   archiveLogs: false
   # -- Store artifact in a S3-compliant object store
