@@ -1,0 +1,22 @@
+# Test with artifact repository(s3)
+crds:
+  keep: false
+
+useStaticCredentials: true
+artifactRepository:
+  archiveLogs: false
+  s3:
+    accessKeySecret:
+      name: "{{ .Release.Name }}-minio"
+      key: accesskey
+    secretKeySecret:
+      name: "{{ .Release.Name }}-minio"
+      key: secretkey
+    insecure: false
+    bucket:
+    endpoint:
+    region:
+    roleARN:
+    useSDKCreds: true
+    encryptionOptions:
+      enableEncryption: true
