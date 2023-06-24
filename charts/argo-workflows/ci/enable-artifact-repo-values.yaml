@@ -1,0 +1,46 @@
+# Test with artifact repository
+crds:
+  keep: false
+
+useStaticCredentials: true
+artifactRepository:
+  archiveLogs: false
+  s3:
+    accessKeySecret:
+      name: "{{ .Release.Name }}-minio"
+      key: accesskey
+    secretKeySecret:
+      name: "{{ .Release.Name }}-minio"
+      key: secretkey
+    insecure: false
+    bucket:
+    endpoint:
+    region:
+    roleARN:
+    useSDKCreds: true
+    encryptionOptions:
+      enableEncryption: true
+  gcs:
+    bucket: project-argo
+    keyFormat: "{{ `{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}` }}"
+    serviceAccountKeySecret:
+      name: my-gcs-credentials
+      key: serviceAccountKey
+  azure:
+    endpoint: https://mystorageaccountname.blob.core.windows.net
+    container: my-container-name
+    blobNameFormat: path/in/container
+    useSDKCreds: true
+    accountKeySecret:
+      name: my-azure-storage-credentials
+      key: account-access-key
+
+customArtifactRepository:
+  artifactory:
+    repoUrl: https://artifactory.example.com/raw
+    usernameSecret:
+      name: artifactory-creds
+      key: username
+    passwordSecret:
+      name: artifactory-creds
+      key: password
