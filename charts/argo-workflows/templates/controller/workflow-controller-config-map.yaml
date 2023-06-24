@@ -55,7 +55,7 @@ data:
       securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- end }}
-    {{- if or .Values.artifactRepository.gcs .Values.artifactRepository.azure .Values.artifactRepository.s3 }}
+    {{- if or .Values.artifactRepository.s3 .Values.artifactRepository.gcs .Values.artifactRepository.azure .Values.customArtifactRepository }}
     artifactRepository:
       {{- if .Values.artifactRepository.archiveLogs }}
       archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
@@ -66,7 +66,7 @@ data:
       {{- with .Values.artifactRepository.azure }}
       azure: {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
-      {{- if and  (not .Values.artifactRepository.gcs) (not .Values.artifactRepository.azure) }}
+      {{- if .Values.artifactRepository.s3 }}
       s3:
         {{- if .Values.useStaticCredentials }}
         accessKeySecret:
@@ -96,9 +96,9 @@ data:
           {{- toYaml . | nindent 10 }}
         {{- end }}
       {{- end }}
-    {{- end }}
-    {{- if .Values.customArtifactRepository }}
-    {{- toYaml .Values.customArtifactRepository | nindent 6 }}
+      {{- if .Values.customArtifactRepository }}
+      {{- toYaml .Values.customArtifactRepository | nindent 6 }}
+      {{- end }}
     {{- end }}
     {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:

@@ -1,4 +1,4 @@
-# Test with artifact repository(azure, gcp. s3 will be ignored.)
+# Test with artifact repository
 crds:
   keep: false
 
@@ -34,3 +34,13 @@ artifactRepository:
     accountKeySecret:
       name: my-azure-storage-credentials
       key: account-access-key
+
+customArtifactRepository:
+  artifactory:
+    repoUrl: https://artifactory.example.com/raw
+    usernameSecret:
+      name: artifactory-creds
+      key: username
+    passwordSecret:
+      name: artifactory-creds
+      key: password
