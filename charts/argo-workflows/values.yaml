@@ -705,17 +705,17 @@ artifactRepository:
   archiveLogs: false
   # -- Store artifact in a S3-compliant object store
   # @default -- See [values.yaml]
-  s3:
-    # Note the `key` attribute is not the actual secret, it's the PATH to
-    # the contents in the associated secret, as defined by the `name` attribute.
-    accessKeySecret:
-      name: "{{ .Release.Name }}-minio"
-      key: accesskey
-    secretKeySecret:
-      name: "{{ .Release.Name }}-minio"
-      key: secretkey
-    # insecure will disable TLS. Primarily used for minio installs not configured with TLS
-    insecure: false
+  s3: {}
+    # # Note the `key` attribute is not the actual secret, it's the PATH to
+    # # the contents in the associated secret, as defined by the `name` attribute.
+    # accessKeySecret:
+    #   name: "{{ .Release.Name }}-minio"
+    #   key: accesskey
+    # secretKeySecret:
+    #   name: "{{ .Release.Name }}-minio"
+    #   key: secretkey
+    # # insecure will disable TLS. Primarily used for minio installs not configured with TLS
+    # insecure: false
     # bucket:
     # endpoint:
     # region:
