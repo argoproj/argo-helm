@@ -1044,7 +1044,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.certificate.privateKey.size | int | `2048` | Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored. |
 | applicationSet.certificate.renewBefore | string | `""` (defaults to 360h = 15d if not specified) | How long before the expiry a certificate should be renewed. |
 | applicationSet.certificate.secretName | string | `"argocd-application-controller-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
-| applicationSet.containerPorts.metrics | int | `8085` | Metrics container port |
+| applicationSet.containerPorts.metrics | int | `8080` | Metrics container port |
 | applicationSet.containerPorts.probe | int | `8081` | Probe container port |
 | applicationSet.containerPorts.webhook | int | `7000` | Webhook container port |
 | applicationSet.containerSecurityContext | object | See [values.yaml] | ApplicationSet controller container-level security context |
@@ -1075,7 +1075,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
 | applicationSet.metrics.service.labels | object | `{}` | Metrics service labels |
 | applicationSet.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
-| applicationSet.metrics.service.servicePort | int | `8085` | Metrics service port |
+| applicationSet.metrics.service.servicePort | int | `8080` | Metrics service port |
 | applicationSet.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | applicationSet.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | applicationSet.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |

@@ -2433,7 +2433,7 @@ applicationSet:
       # -- Metrics service labels
       labels: {}
       # -- Metrics service port
-      servicePort: 8085
+      servicePort: 8080
       # -- Metrics service port name
       portName: http-metrics
     serviceMonitor:
@@ -2506,7 +2506,7 @@ applicationSet:
   # ApplicationSet controller container ports
   containerPorts:
     # -- Metrics container port
-    metrics: 8085
+    metrics: 8080
     # -- Probe container port
     probe: 8081
     # -- Webhook container port
