@@ -26,5 +26,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: added
-      description: Add `ARGOCD_NOTIFICATIONS_CONTROLLER_LOGLEVEL` and `ARGOCD_NOTIFICATIONS_CONTROLLER_LOGFORMAT` env vars to argo-notifications Deployment
+    - kind: changed
+      description: Change `targetPort` to use proper `.Values.server.containerPorts.server` value in argo-cd/argo-server for grpc Service so that AWS ALB will not fail the health check for this extra Service.
