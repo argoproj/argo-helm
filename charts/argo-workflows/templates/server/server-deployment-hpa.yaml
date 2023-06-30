@@ -1,0 +1,45 @@
+{{- if and .Values.server.enabled .Values.server.autoscaling.enabled }}
+apiVersion: {{ include "argo-workflows.apiVersion.autoscaling" . }}
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "argo-workflows.server.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "argo-workflows.server.fullname" . }}
+  minReplicas: {{ .Values.server.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.server.autoscaling.maxReplicas }}
+  metrics:
+  {{- with .Values.server.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        {{- if eq (include "argo-workflows.apiVersion.autoscaling" $) "autoscaling/v2beta1" }}
+        targetAverageUtilization: {{ . }}
+        {{- else }}
+        target:
+          averageUtilization: {{ . }}
+          type: Utilization
+        {{- end }}
+  {{- end }}
+  {{- with .Values.server.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        {{- if eq (include "argo-workflows.apiVersion.autoscaling" $) "autoscaling/v2beta1" }}
+        targetAverageUtilization: {{ . }}
+        {{- else }}
+        target:
+          averageUtilization: {{ . }}
+          type: Utilization
+        {{- end }}
+  {{- end }}
+  {{- with .Values.server.autoscaling.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}-configmap
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" "cm") | nindent 4 }}
 data:
@@ -54,35 +55,35 @@ data:
       securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- end }}
-    {{- if .Values.useDefaultArtifactRepo }}
+    {{- if or .Values.artifactRepository.s3 .Values.artifactRepository.gcs .Values.artifactRepository.azure .Values.customArtifactRepository }}
     artifactRepository:
       {{- if .Values.artifactRepository.archiveLogs }}
       archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
       {{- end }}
       {{- with .Values.artifactRepository.gcs }}
-      gcs: {{- toYaml . | nindent 8 }}
+      gcs: {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       {{- with .Values.artifactRepository.azure }}
-      azure: {{- toYaml . | nindent 8 }}
+      azure: {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
-      {{- if and  (not .Values.artifactRepository.gcs) (not .Values.artifactRepository.azure) }}
+      {{- if .Values.artifactRepository.s3 }}
       s3:
         {{- if .Values.useStaticCredentials }}
         accessKeySecret:
-          key: {{ .Values.artifactRepository.s3.accessKeySecret.key }}
-          name: {{ .Values.artifactRepository.s3.accessKeySecret.name }}
+          key: {{ tpl .Values.artifactRepository.s3.accessKeySecret.key . }}
+          name: {{ tpl .Values.artifactRepository.s3.accessKeySecret.name . }}
         secretKeySecret:
-          key: {{ .Values.artifactRepository.s3.secretKeySecret.key }}
-          name: {{ .Values.artifactRepository.s3.secretKeySecret.name }}
+          key: {{ tpl .Values.artifactRepository.s3.secretKeySecret.key . }}
+          name: {{ tpl .Values.artifactRepository.s3.secretKeySecret.name . }}
         {{- end }}
-        bucket: {{ .Values.artifactRepository.s3.bucket }}
-        endpoint: {{ .Values.artifactRepository.s3.endpoint }}
+        bucket: {{ tpl (.Values.artifactRepository.s3.bucket | default "") . }}
+        endpoint: {{ tpl (.Values.artifactRepository.s3.endpoint | default "") . }}
         insecure: {{ .Values.artifactRepository.s3.insecure }}
         {{- if .Values.artifactRepository.s3.keyFormat }}
         keyFormat: {{ .Values.artifactRepository.s3.keyFormat | quote }}
         {{- end }}
         {{- if .Values.artifactRepository.s3.region }}
-        region: {{ .Values.artifactRepository.s3.region }}
+        region: {{ tpl .Values.artifactRepository.s3.region $ }}
         {{- end }}
         {{- if .Values.artifactRepository.s3.roleARN }}
         roleARN: {{ .Values.artifactRepository.s3.roleARN }}
@@ -95,9 +96,8 @@ data:
           {{- toYaml . | nindent 10 }}
         {{- end }}
       {{- end }}
-    {{- else }}
       {{- if .Values.customArtifactRepository }}
-    artifactRepository: {{- toYaml .Values.customArtifactRepository | nindent 6 }}
+      {{- toYaml .Values.customArtifactRepository | nindent 6 }}
       {{- end }}
     {{- end }}
     {{- if .Values.controller.metricsConfig.enabled }}
@@ -128,37 +128,35 @@ data:
     {{- if .Values.controller.workflowDefaults }}
     workflowDefaults:
 {{ toYaml .Values.controller.workflowDefaults | indent 6 }}{{- end }}
-    {{- with .Values.server.sso }}
+    {{- if .Values.server.sso.enabled }}
     sso:
-      issuer: {{ .issuer }}
+      issuer: {{ .Values.server.sso.issuer }}
       clientId:
-        name: {{ .clientId.name }}
-        key: {{ .clientId.key }}
+        name: {{ .Values.server.sso.clientId.name }}
+        key: {{ .Values.server.sso.clientId.key }}
       clientSecret:
-        name: {{ .clientSecret.name }}
-        key: {{ .clientSecret.key }}
-      redirectUrl: {{ .redirectUrl }}
-      {{- with .rbac }}
+        name: {{ .Values.server.sso.clientSecret.name }}
+        key: {{ .Values.server.sso.clientSecret.key }}
+      redirectUrl: {{ .Values.server.sso.redirectUrl }}
       rbac:
-        enabled: {{ .enabled }}
+        enabled: {{ .Values.server.sso.rbac.enabled }}
+      {{- with .Values.server.sso.scopes }}
+      scopes: {{ toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .scopes }}
-      scopes: {{ toYaml .scopes | nindent 8 }}
+      {{- with .Values.server.sso.issuerAlias }}
+      issuerAlias: {{ toYaml . }}
       {{- end }}
-      {{- if .issuerAlias }}
-      issuerAlias: {{ .issuerAlias }}
+      {{- with .Values.server.sso.sessionExpiry }}
+      sessionExpiry: {{ toYaml . }}
       {{- end }}
-      {{- if .sessionExpiry }}
-      sessionExpiry: {{ .sessionExpiry }}
+      {{- with .Values.server.sso.customGroupClaimName }}
+      customGroupClaimName: {{ toYaml . }}
       {{- end }}
-      {{- if .customGroupClaimName }}
-      customGroupClaimName: {{ .customGroupClaimName }}
+      {{- with .Values.server.sso.userInfoPath }}
+      userInfoPath: {{ toYaml . }}
       {{- end }}
-      {{- if .userInfoPath }}
-      userInfoPath: {{ .userInfoPath }}
-      {{- end }}
-      {{- if .insecureSkipVerify }}
-      insecureSkipVerify: {{ .insecureSkipVerify }}
+      {{- with .Values.server.sso.insecureSkipVerify }}
+      insecureSkipVerify: {{ toYaml . }}
       {{- end }}
     {{- end }}
     {{- with .Values.controller.workflowRestrictions }}
@@ -166,6 +164,9 @@ data:
     {{- end }}
     {{- with .Values.controller.links }}
     links: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.controller.columns }}
+    columns: {{- toYaml . | nindent 6 }}
     {{- end }}
     {{- with .Values.controller.navColor }}
     navColor: {{ . }}

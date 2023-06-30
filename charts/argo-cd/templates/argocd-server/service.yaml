@@ -8,6 +8,7 @@ metadata:
   {{- end }}
 {{- end }}
   name: {{ template "argo-cd.server.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 {{- if .Values.server.service.labels }}
@@ -29,6 +30,9 @@ spec:
     targetPort: {{ .Values.server.containerPorts.server }}
     {{- if eq .Values.server.service.type "NodePort" }}
     nodePort: {{ .Values.server.service.nodePortHttps }}
+    {{- end }}
+    {{- with .Values.server.service.servicePortHttpsAppProtocol }}
+    appProtocol: {{ . }}
     {{- end }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}

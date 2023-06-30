@@ -29,6 +29,13 @@ fullnameOverride:
 # -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
 
+# Override APIVersions
+apiVersionOverrides:
+  # -- String to override apiVersion of autoscaling rendered by this helm chart
+  autoscaling: "" # autoscaling/v2
+  # -- String to override apiVersion of GKE resources rendered by this helm chart
+  cloudgoogle: "" # cloud.google.com/v1
+
 # -- Restrict Argo to operate only in a single namespace (the namespace of the
 # Helm release) by apply Roles and RoleBindings instead of the Cluster
 # equivalents, and start workflow-controller with the --namespaced flag. Use it
@@ -74,6 +81,8 @@ controller:
     create: true
     # -- Allows controller to get, list, and watch certain k8s secrets
     secretWhitelist: []
+    # -- Allows controller to get, list and watch all k8s secrets. Can only be used if secretWhitelist is empty.
+    accessAllSecrets: false
     # -- Allows controller to create and update ConfigMaps. Enables memoization feature
     writeConfigMaps: false
 
@@ -109,6 +118,15 @@ controller:
     servicePort: 8080
     # -- Service metrics port name
     servicePortName: metrics
+    # -- ServiceMonitor relabel configs to apply to samples before scraping
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+    relabelings: []
+    # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
+    metricRelabelings: []
+    # -- ServiceMonitor will add labels from the service to the Prometheus metric
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
+    targetLabels: []
   # -- the controller container's securityContext
   securityContext:
     readOnlyRootFilesystem: true
@@ -287,6 +305,9 @@ controller:
   # -- Configure Argo Server to show custom [links]
   ## Ref: https://argoproj.github.io/argo-workflows/links/
   links: []
+  # -- Configure Argo Server to show custom [columns]
+  ## Ref: https://github.com/argoproj/argo-workflows/pull/10693
+  columns: []
   # -- Set ui navigation bar background color
   navColor: ""
   clusterWorkflowTemplates:
@@ -429,6 +450,32 @@ server:
   resources: {}
   # -- The number of server pods to run
   replicas: 1
+  ## Argo Server Horizontal Pod Autoscaler
+  autoscaling:
+    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server
+    enabled: false
+    # -- Minimum number of replicas for the Argo Server [HPA]
+    minReplicas: 1
+    # -- Maximum number of replicas for the Argo Server [HPA]
+    maxReplicas: 5
+    # -- Average CPU utilization percentage for the Argo Server [HPA]
+    targetCPUUtilizationPercentage: 50
+    # -- Average memory utilization percentage for the Argo Server [HPA]
+    targetMemoryUtilizationPercentage: 50
+    # -- Configures the scaling behavior of the target in both Up and Down directions.
+    # This is only available on HPA apiVersion `autoscaling/v2beta2` and newer
+    behavior: {}
+      # scaleDown:
+      #  stabilizationWindowSeconds: 300
+      #  policies:
+      #   - type: Pods
+      #     value: 1
+      #     periodSeconds: 180
+      # scaleUp:
+      #   stabilizationWindowSeconds: 300
+      #   policies:
+      #   - type: Pods
+      #     value: 2
   pdb:
     # -- Configure [Pod Disruption Budget] for the server pods
     enabled: false
@@ -534,41 +581,90 @@ server:
       #   hosts:
       #     - argoworkflows.example.com
 
+  ## Create a Google Backendconfig  for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-configuration#configuring_ingress_features_through_backendconfig_parameters
+  GKEbackendConfig:
+    # -- Enable BackendConfig custom resource for Google Kubernetes Engine
+    enabled: false
+    # -- [BackendConfigSpec]
+    spec: {}
+  #  spec:
+  #    iap:
+  #      enabled: true
+  #      oauthclientCredentials:
+  #        secretName: argoworkflows-secret
+
+  ## Create a Google Managed Certificate for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
+  GKEmanagedCertificate:
+    # -- Enable ManagedCertificate custom resource for Google Kubernetes Engine.
+    enabled: false
+    # -- Domains for the Google Managed Certificate
+    domains:
+    - argoworkflows.example.com
+
+  ## Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+  GKEfrontendConfig:
+    # -- Enable FrontConfig custom resource for Google Kubernetes Engine
+    enabled: false
+    # -- [FrontendConfigSpec]
+    spec: {}
+  # spec:
+  #   redirectToHttps:
+  #     enabled: true
+  #     responseCodeName: RESPONSE_CODE
+
   clusterWorkflowTemplates:
     # -- Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates.
     enabled: true
     # -- Give the server permissions to edit ClusterWorkflowTemplates.
     enableEditing: true
 
-  # -- SSO configuration when SSO is specified as a server auth mode.
-  sso: {}
-    ## All the values are required. SSO is activated by adding --auth-mode=sso
-    ## to the server command line.
-    #
-    ## The root URL of the OIDC identity provider.
-    # issuer: https://accounts.google.com
-    ## Name of a secret and a key in it to retrieve the app OIDC client ID from.
-    # clientId:
-    #   name: argo-server-sso
-    #   key: client-id
-    ## Name of a secret and a key in it to retrieve the app OIDC client secret from.
-    # clientSecret:
-    #   name: argo-server-sso
-    #   key: client-secret
-    ## The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
-    # redirectUrl: https://argo/oauth2/callback
-    # rbac:
-    #   enabled: true
+  # SSO configuration when SSO is specified as a server auth mode.
+  sso:
+    # -- Create SSO configuration
+    ## SSO is activated by adding --auth-mode=sso to the server command line.
+    enabled: false
+    # -- The root URL of the OIDC identity provider
+    issuer: https://accounts.google.com
+    clientId:
+      # -- Name of secret to retrieve the app OIDC client ID
+      name: argo-server-sso
+      # -- Key of secret to retrieve the app OIDC client ID
+      key: client-id
+    clientSecret:
+      # -- Name of a secret to retrieve the app OIDC client secret
+      name: argo-server-sso
+      # -- Key of a secret to retrieve the app OIDC client secret
+      key: client-secret
+    # - The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
+    redirectUrl: https://argo/oauth2/callback
+    rbac:
+      # -- Adds ServiceAccount Policy to server (Cluster)Role.
+      enabled: true
+    # -- Whitelist to allow server to fetch Secrets
     ## When present, restricts secrets the server can read to a given list.
     ## You can use it to restrict the server to only be able to access the
     ## service account token secrets that are associated with service accounts
     ## used for authorization.
-    #   secretWhitelist: []
-    ## Scopes requested from the SSO ID provider.  The 'groups' scope requests
-    ## group membership information, which is usually used for authorization
-    ## decisions.
-    # scopes:
-    # - groups
+      secretWhitelist: []
+    # -- Scopes requested from the SSO ID provider
+    ## The 'groups' scope requests group membership information, which is usually used for authorization decisions.
+    scopes: []
+      # - groups
+    # -- Define how long your login is valid for (in hours)
+    ## If omitted, defaults to 10h.
+    sessionExpiry: ""
+    # -- Alternate root URLs that can be included for some OIDC providers
+    issuerAlias: ""
+    # -- Override claim name for OIDC groups
+    customGroupClaimName: ""
+    # -- Specify the user info endpoint that contains the groups claim
+    ## Configure this if your OIDC provider provides groups information only using the user-info endpoint (e.g. Okta)
+    userInfoPath: ""
+    # -- Skip TLS verification for the HTTP client
+    insecureSkipVerify: false
 
   # -- Extra containers to be added to the server deployment
   extraContainers: []
@@ -602,8 +698,6 @@ extraObjects: []
   #       secretName: argo-server-sso-secrets-store
   #       type: Opaque
 
-# -- Influences the creation of the ConfigMap for the workflow-controller itself.
-useDefaultArtifactRepo: false
 # -- Use static credentials for S3 (eg. when not using AWS IRSA)
 useStaticCredentials: true
 artifactRepository:
@@ -611,17 +705,17 @@ artifactRepository:
   archiveLogs: false
   # -- Store artifact in a S3-compliant object store
   # @default -- See [values.yaml]
-  s3:
-    # Note the `key` attribute is not the actual secret, it's the PATH to
-    # the contents in the associated secret, as defined by the `name` attribute.
-    accessKeySecret:
-      # name: <releaseName>-minio
-      key: accesskey
-    secretKeySecret:
-      # name: <releaseName>-minio
-      key: secretkey
-    # insecure will disable TLS. Primarily used for minio installs not configured with TLS
-    insecure: false
+  s3: {}
+    # # Note the `key` attribute is not the actual secret, it's the PATH to
+    # # the contents in the associated secret, as defined by the `name` attribute.
+    # accessKeySecret:
+    #   name: "{{ .Release.Name }}-minio"
+    #   key: accesskey
+    # secretKeySecret:
+    #   name: "{{ .Release.Name }}-minio"
+    #   key: secretkey
+    # # insecure will disable TLS. Primarily used for minio installs not configured with TLS
+    # insecure: false
     # bucket:
     # endpoint:
     # region:
@@ -633,7 +727,7 @@ artifactRepository:
   # @default -- `{}` (See [values.yaml])
   gcs: {}
   # bucket: <project>-argo
-  # keyFormat: "{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}"
+  # keyFormat: "{{ \"{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}\" }}"
   # serviceAccountKeySecret is a secret selector.
   # It references the k8s secret named 'my-gcs-credentials'.
   # This secret is expected to have have the key 'serviceAccountKey',
@@ -665,18 +759,16 @@ artifactRepository:
   #  key: account-access-key
 
 # -- The section of custom artifact repository.
-# Will be added to the config in case useDefaultArtifactRepo is set to false
+# Utilize a custom artifact repository that is not one of the current base ones (s3, gcs, azure)
 customArtifactRepository: {}
-# customArtifactRepository:
-#   archiveLogs: true
-#   artifactory:
-#     repoUrl: https://artifactory.example.com/raw
-#     usernameSecret:
-#       name: artifactory-creds
-#       key: username
-#     passwordSecret:
-#       name: artifactory-creds
-#       key: password
+# artifactory:
+#   repoUrl: https://artifactory.example.com/raw
+#   usernameSecret:
+#     name: artifactory-creds
+#     key: username
+#   passwordSecret:
+#     name: artifactory-creds
+#     key: password
 
 emissary:
   # -- The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used.

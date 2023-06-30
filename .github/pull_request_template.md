@@ -1,6 +1,8 @@
+<!--
 Note on DCO:
 
 If the DCO action in the integration test fails, one or more of your commits are not signed off. Please click on the *Details* link next to the DCO action for instructions on how to resolve this.
+-->
 
 Checklist:
 
@@ -11,4 +13,4 @@ Checklist:
 * [ ] I have signed off all my commits as required by [DCO](https://github.com/argoproj/argoproj/blob/master/community/CONTRIBUTING.md).
 * [ ] My build is green ([troubleshooting builds](https://argo-cd.readthedocs.io/en/stable/developer-guide/ci/)).
 
-Changes are automatically published when merged to `main`. They are not published on branches.
+<!-- Changes are automatically published when merged to `main`. They are not published on branches. -->
