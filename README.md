@@ -12,6 +12,8 @@ Argo Helm is a collection of **community maintained** charts for [https://argopr
 helm repo add argo https://argoproj.github.io/argo-helm
 ```
 
+test mi-chart-bump
+
 ## Contributing
 
 We'd love to have you contribute! Please refer to our [contribution guidelines](CONTRIBUTING.md) for details.
