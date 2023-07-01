@@ -6,6 +6,12 @@ If you want your deployment of this helm chart to most closely match the [argo C
 
 ## Pre-Requisites
 
+### Supported Versions
+- {{ template "chart.kubeVersionLine" . }}
+  - We align with [Amazon EKS calendar][EKS EoL] because there are many AWS users and it's a conservative approach.
+  - Please check [Support Matrix of Argo CD][Kubernetes Compatibility Matrix] for official info.
+- Helm v3.0.0+
+
 ### Custom resource definitions
 
 Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
@@ -199,3 +205,5 @@ Fields to note:
 [TopologySpreadConstraints]: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 [values.yaml]: values.yaml
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-workflows?modal=changelog
+[EKS EoL]: https://endoflife.date/amazon-eks
+[Kubernetes Compatibility Matrix]: https://argoproj.github.io/argo-workflows/releases/#kubernetes-compatibility-matrix
