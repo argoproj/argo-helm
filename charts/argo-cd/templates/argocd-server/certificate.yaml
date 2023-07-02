@@ -30,10 +30,8 @@ spec:
   privateKey:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if .Values.server.certificate.usages }}
+  {{- with .Values.server.certificate.usages }}
   usages:
-    {{- range .Values.server.certificate.usages }}
-    - {{ . | quote }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
