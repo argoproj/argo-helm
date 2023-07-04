@@ -128,9 +128,9 @@ Common deployment strategy definition
 */}}
 {{- define "argo-cd.strategy" -}}
 {{- $preset := . -}}
-{{- if (eq $preset.type "Recreate") }}
+{{- if (eq (toString $preset.type) "Recreate") }}
 type: Recreate
-{{- else if (eq $preset.type "RollingUpdate") }}
+{{- else if (eq (toString $preset.type) "RollingUpdate") }}
 type: RollingUpdate
 {{- with $preset.rollingUpdate }}
 rollingUpdate:
