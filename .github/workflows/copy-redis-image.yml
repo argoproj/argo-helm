@@ -34,6 +34,6 @@ jobs:
       - name: Copy Redis Image
         env:
           SRC_IMAGE_REPO: public.ecr.aws/docker/library/redis
-          DST_IMAGE_REPO: quay.io/codefresh/redis
+          DST_IMAGE_REPO: quay.io/codefresh/redis-test
         run: |
           regctl image copy "${{ env.SRC_IMAGE_REPO }}":"${{ env.VERSION }}" "${{ env.DST_IMAGE_REPO }}":"${{ env.VERSION }}" --verbosity debug
