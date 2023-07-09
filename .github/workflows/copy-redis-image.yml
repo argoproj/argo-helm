@@ -1,0 +1,39 @@
+name: Copy Redis Image
+
+on: 
+  push:
+    branches:
+      - argo-cd
+
+jobs:
+  copy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Extract Redis Image Tag from values.yaml
+        id: get_redis_image_tag
+        run: |
+          echo "VERSION=$(yq e .redis.image.tag ../../charts/argo-cd/values.yaml)" >> $GITHUB_ENV
+
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USER }}
+          password: ${{ secrets.QUAY_TOKEN }}
+
+      - name: Install regctl
+        run: |
+          curl -Lo regctl https://github.com/regclient/regclient/releases/download/v0.5.0/regctl-linux-amd64
+          chmod +x regctl
+          sudo mv regctl /usr/local/bin/
+          
+      - name: Copy Redis Image
+        env:
+          SRC_IMAGE_REPO: public.ecr.aws/docker/library/redis
+          DST_IMAGE_REPO: quay.io/codefresh/redis
+        run: |
+          regctl image copy "${{ env.SRC_IMAGE_REPO }}":"${{ env.VERSION }}" "${{ env.DST_IMAGE_REPO }}":"${{ env.VERSION }}" --verbosity debug
