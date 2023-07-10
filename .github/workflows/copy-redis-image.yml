@@ -1,9 +1,5 @@
 name: Copy Redis Image
-
-on: 
-  push:
-    branches:
-      - argocd/cr-19101-copy-redis-image
+on: pull_request
 
 jobs:
   copy:
@@ -34,6 +30,6 @@ jobs:
       - name: Copy Redis Image
         env:
           SRC_IMAGE_REPO: public.ecr.aws/docker/library/redis
-          DST_IMAGE_REPO: quay.io/codefresh/redis-test
+          DST_IMAGE_REPO: quay.io/codefresh/redis
         run: |
           regctl image copy ${{ env.SRC_IMAGE_REPO }}:${{ env.VERSION }} ${{ env.DST_IMAGE_REPO }}:${{ env.VERSION }} --verbosity debug
