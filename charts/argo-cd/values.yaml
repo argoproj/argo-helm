@@ -147,6 +147,9 @@ global:
   # -- Environment variables to pass to all deployed Deployments
   env: []
 
+  # -- Annotations for the all deployed Certificates
+  certificateAnnotations: {}
+
 ## Argo Configs
 configs:
   # General Argo CD configuration
@@ -1743,6 +1746,8 @@ server:
       algorithm: RSA
       # -- Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored.
       size: 2048
+    # -- Annotations to be applied to the Server Certificate
+    annotations: {}
     # -- Usages for the certificate
     ### Ref: https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.KeyUsage
     usages: []
@@ -2681,6 +2686,8 @@ applicationSet:
       algorithm: RSA
       # -- Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored.
       size: 2048
+    # -- Annotations to be applied to the ApplicationSet Certificate
+    annotations: {}
 
 ## Notifications controller
 notifications:
