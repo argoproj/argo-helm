@@ -7,6 +7,9 @@ kind: ClusterRole
   {{- end }}
 metadata:
   name: {{ template "argo-workflows.server.fullname" . }}
+  {{- if .Values.singleNamespace }}
+  namespace: {{ .Release.Namespace | quote }}
+  {{- end }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 rules:
@@ -37,8 +40,7 @@ rules:
   verbs:
   - get
   - list
->>>>>>> argo-cd-5.27.1
-{{- if .Values.server.sso }}
+{{- if .Values.server.sso.enabled }}
 - apiGroups:
   - ""
   resources:
@@ -54,7 +56,7 @@ rules:
   - secrets
   verbs:
   - create
-  {{- if .Values.server.sso.rbac }}
+  {{- if .Values.server.sso.rbac.enabled }}
 - apiGroups:
   - ""
   resources:
@@ -73,11 +75,9 @@ rules:
   - get
   - list
   - watch
-{{- if .Values.server.sso }}
-  {{- if .Values.server.sso.rbac }}
-    {{- with .Values.server.sso.rbac.secretWhitelist }}
+{{- if and .Values.server.sso.enabled .Values.server.sso.rbac.enabled }}
+  {{- with .Values.server.sso.rbac.secretWhitelist }}
   resourceNames: {{- toYaml . | nindent 4 }}
-    {{- end }}
   {{- end }}
 {{- end }}
 - apiGroups:

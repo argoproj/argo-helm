@@ -1,8 +1,12 @@
 ## Reference: https://github.com/pascalgn/size-label-action
 name: 'PR Labeling'
+
 on: 
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 permissions:
   contents: read
@@ -12,7 +16,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/labeler@v4
+      - uses: actions/labeler@0967ca812e7fdc8f5f71402a1b486d5bd061fe20 # v4.2.0
         with:
           configuration-path: ".github/configs/labeler.yaml"
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
@@ -21,7 +25,6 @@ jobs:
   size-label:
     runs-on: ubuntu-latest
     steps:
-      - name: size-label
-        uses: "pascalgn/size-label-action@v0.4.3"
+      - uses: pascalgn/size-label-action@37a5ad4ae20ea8032abf169d953bcd661fd82cd3 # v0.5.0
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

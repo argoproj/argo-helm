@@ -3,6 +3,7 @@ apiVersion: {{ include "argo-rollouts.podDisruptionBudget.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
   name: {{ template "argo-rollouts.fullname" . }}-dashboard
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-rollouts.labels" . | nindent 4 }}
   {{- with .Values.dashboard.pdb.labels }}

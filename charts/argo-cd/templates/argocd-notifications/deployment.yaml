@@ -9,6 +9,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ include "argo-cd.notifications.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
 spec:
@@ -55,8 +56,8 @@ spec:
         - name: {{ .Values.notifications.name }}
           image: {{ default .Values.global.image.repository .Values.notifications.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.notifications.image.tag }}
           imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.notifications.image.imagePullPolicy }}
-          command:
-            - argocd-notifications
+          args:
+            - /usr/local/bin/argocd-notifications
             - --metrics-port={{ .Values.notifications.containerPorts.metrics }}
             - --loglevel={{ default .Values.global.logging.level .Values.notifications.logLevel }}
             - --logformat={{ default .Values.global.logging.format .Values.notifications.logFormat }}
@@ -65,10 +66,22 @@ spec:
             {{- range .Values.notifications.extraArgs }}
             - {{ . | squote }}
             {{- end }}
-          {{- with .Values.notifications.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- with (concat .Values.global.env .Values.notifications.extraEnv) }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            - name: ARGOCD_NOTIFICATIONS_CONTROLLER_LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: notificationscontroller.log.level
+                  name: argocd-cmd-params-cm
+                  optional: true              
+            - name: ARGOCD_NOTIFICATIONS_CONTROLLER_LOGFORMAT
+              valueFrom:
+                configMapKeyRef:
+                  key: notificationscontroller.log.format
+                  name: argocd-cmd-params-cm
+                  optional: true
           {{- with .Values.notifications.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
@@ -79,8 +92,10 @@ spec:
             protocol: TCP
           resources:
             {{- toYaml .Values.notifications.resources | nindent 12 }}
+          {{- with .Values.notifications.containerSecurityContext }}
           securityContext:
-            {{- toYaml .Values.notifications.containerSecurityContext | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           workingDir: /app
           volumeMounts:
             - name: tls-certs

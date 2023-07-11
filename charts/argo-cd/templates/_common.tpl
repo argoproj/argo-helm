@@ -46,6 +46,7 @@ helm.sh/chart: {{ include "argo-cd.chart" .context }}
 {{ include "argo-cd.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
 app.kubernetes.io/managed-by: {{ .context.Release.Service }}
 app.kubernetes.io/part-of: argocd
+app.kubernetes.io/version: {{ include "argo-cd.defaultTag" .context }}
 {{- with .context.Values.global.additionalLabels }}
 {{ toYaml . }}
 {{- end }}
@@ -123,13 +124,13 @@ nodeAffinity:
 
 {{/*
 Common deployment strategy definition
-- Recreate don't have additional fields, we need to remove them if added by the mergeOverwrite 
+- Recreate don't have additional fields, we need to remove them if added by the mergeOverwrite
 */}}
 {{- define "argo-cd.strategy" -}}
 {{- $preset := . -}}
-{{- if (eq $preset.type "Recreate") }}
+{{- if (eq (toString $preset.type) "Recreate") }}
 type: Recreate
-{{- else if (eq $preset.type "RollingUpdate") }}
+{{- else if (eq (toString $preset.type) "RollingUpdate") }}
 type: RollingUpdate
 {{- with $preset.rollingUpdate }}
 rollingUpdate:

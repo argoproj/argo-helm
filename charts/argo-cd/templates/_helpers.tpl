@@ -207,7 +207,7 @@ applicationsetcontroller.enable.leader.election: {{ gt (.Values.applicationSet.r
 Merge Argo Params Configuration with Preset Configuration
 */}}
 {{- define "argo-cd.config.params" -}}
-{{- $config := omit .Values.configs.params "annotations" }}
+{{- $config := omit .Values.configs.params "create" "annotations" }}
 {{- $preset := include "argo-cd.config.params.presets" . | fromYaml | default dict -}}
 {{- range $key, $value := mergeOverwrite $preset $config }}
 {{ $key }}: {{ toString $value | toYaml }}

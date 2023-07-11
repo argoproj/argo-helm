@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" (printf "%s-hpa" .Values.server.name)) | nindent 4 }}
   name: {{ template "argo-cd.server.fullname" . }}-hpa
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

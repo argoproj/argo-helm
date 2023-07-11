@@ -163,6 +163,17 @@ spec:
                         x-kubernetes-int-or-string: true
                       postPromotionAnalysis:
                         properties:
+                          analysisRunMetadata:
+                            properties:
+                              annotations:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                              labels:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                            type: object
                           args:
                             items:
                               properties:
@@ -220,6 +231,17 @@ spec:
                         type: object
                       prePromotionAnalysis:
                         properties:
+                          analysisRunMetadata:
+                            properties:
+                              annotations:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                              labels:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                            type: object
                           args:
                             items:
                               properties:
@@ -307,6 +329,17 @@ spec:
                         type: integer
                       analysis:
                         properties:
+                          analysisRunMetadata:
+                            properties:
+                              annotations:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                              labels:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                            type: object
                           args:
                             items:
                               properties:
@@ -440,6 +473,17 @@ spec:
                           properties:
                             analysis:
                               properties:
+                                analysisRunMetadata:
+                                  properties:
+                                    annotations:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
+                                    labels:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
+                                  type: object
                                 args:
                                   items:
                                     properties:
@@ -579,6 +623,11 @@ spec:
                                             additionalProperties:
                                               type: string
                                             type: object
+                                        type: object
+                                      service:
+                                        properties:
+                                          name:
+                                            type: string
                                         type: object
                                       specRef:
                                         type: string
@@ -869,9 +918,14 @@ spec:
                                 type: string
                               stableIngress:
                                 type: string
-                            required:
-                            - stableIngress
+                              stableIngresses:
+                                items:
+                                  type: string
+                                type: array
                             type: object
+                          plugins:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
                           smi:
                             properties:
                               rootService:
@@ -2456,6 +2510,8 @@ spec:
                         type: boolean
                       hostPID:
                         type: boolean
+                      hostUsers:
+                        type: boolean
                       hostname:
                         type: string
                       imagePullSecrets:
@@ -3203,12 +3259,21 @@ spec:
                                     type: string
                                   type: object
                               type: object
+                            matchLabelKeys:
+                              items:
+                                type: string
+                              type: array
+                              x-kubernetes-list-type: atomic
                             maxSkew:
                               format: int32
                               type: integer
                             minDomains:
                               format: int32
                               type: integer
+                            nodeAffinityPolicy:
+                              type: string
+                            nodeTaintsPolicy:
+                              type: string
                             topologyKey:
                               type: string
                             whenUnsatisfiable:
@@ -3257,30 +3322,39 @@ spec:
                     properties:
                       arn:
                         type: string
+                      fullName:
+                        type: string
                       name:
                         type: string
                     required:
                     - arn
+                    - fullName
                     - name
                     type: object
                   loadBalancer:
                     properties:
                       arn:
                         type: string
+                      fullName:
+                        type: string
                       name:
                         type: string
                     required:
                     - arn
+                    - fullName
                     - name
                     type: object
                   stableTargetGroup:
                     properties:
                       arn:
                         type: string
+                      fullName:
+                        type: string
                       name:
                         type: string
                     required:
                     - arn
+                    - fullName
                     - name
                     type: object
                 type: object

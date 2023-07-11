@@ -6,6 +6,7 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
   name: {{ template "argo-cd.redis.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   ingress:
   - from:
