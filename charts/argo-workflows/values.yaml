@@ -161,9 +161,13 @@ controller:
   # Only valid for 2.7+
   ## See more: https://argoproj.github.io/argo-workflows/default-workflow-specs/
   workflowDefaults: {}
-  #  spec:
-  #    ttlStrategy:
-  #      secondsAfterCompletion: 84600
+  #   spec:
+  #     ttlStrategy:
+  #       secondsAfterCompletion: 84600
+  #     # Ref: https://argoproj.github.io/argo-workflows/artifact-repository-ref/
+  #     artifactRepositoryRef:
+  #       configMap: my-artifact-repository # default is "artifact-repositories"
+  #       key: v2-s3-artifact-repository # default can be set by the `workflows.argoproj.io/default-artifact-repository` annotation in config map.
 
   # -- Number of workflow workers
   workflowWorkers: # 32
@@ -769,6 +773,59 @@ customArtifactRepository: {}
 #   passwordSecret:
 #     name: artifactory-creds
 #     key: password
+
+# -- The section of [artifact repository ref](https://argoproj.github.io/argo-workflows/artifact-repository-ref/).
+# Each map key is the name of configmap
+# @default -- `{}` (See [values.yaml])
+artifactRepositoryRef: {}
+  # # -- 1st ConfigMap
+  # # If you want to use this config map by default, name it "artifact-repositories".
+  # # Otherwise, you can provide a reference to a
+  # # different config map in `artifactRepositoryRef.configMap`.
+  # artifact-repositories:
+  #   # -- v3.0 and after - if you want to use a specific key, put that key into this annotation.
+  #   annotations:
+  #     workflows.argoproj.io/default-artifact-repository: default-v1-s3-artifact-repository
+  #   # 1st data of configmap. See above artifactRepository or customArtifactRepository.
+  #   default-v1-s3-artifact-repository:
+  #     archiveLogs: false
+  #     s3:
+  #       bucket: my-bucket
+  #       endpoint: minio:9000
+  #       insecure: true
+  #       accessKeySecret:
+  #         name: my-minio-cred
+  #         key: accesskey
+  #       secretKeySecret:
+  #         name: my-minio-cred
+  #         key: secretkey
+  #    # 2nd data
+  #    oss-artifact-repository:
+  #      archiveLogs: false
+  #      oss:
+  #        endpoint: http://oss-cn-zhangjiakou-internal.aliyuncs.com
+  #        bucket: $mybucket
+  #        # accessKeySecret and secretKeySecret are secret selectors.
+  #        # It references the k8s secret named 'bucket-workflow-artifect-credentials'.
+  #        # This secret is expected to have have the keys 'accessKey'
+  #        # and 'secretKey', containing the base64 encoded credentials
+  #        # to the bucket.
+  #        accessKeySecret:
+  #          name: $mybucket-credentials
+  #          key: accessKey
+  #        secretKeySecret:
+  #          name: $mybucket-credentials
+  #          key: secretKey
+  # # 2nd ConfigMap
+  # another-artifact-repositories:
+  #   annotations:
+  #     workflows.argoproj.io/default-artifact-repository: gcs
+  #   gcs:
+  #     bucket: my-bucket
+  #     keyFormat: prefix/in/bucket/{{workflow.name}}/{{pod.name}}
+  #     serviceAccountKeySecret:
+  #       name: my-gcs-credentials
+  #       key: serviceAccountKey
 
 emissary:
   # -- The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used.
