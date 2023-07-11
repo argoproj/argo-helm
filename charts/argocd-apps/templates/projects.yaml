@@ -22,6 +22,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- with .permitOnlyProjectScopedClusters }}
+  permitOnlyProjectScopedClusters: {{ . }}
+  {{- end }}
   description: {{ .description }}
   {{- with .sourceRepos }}
   sourceRepos:
