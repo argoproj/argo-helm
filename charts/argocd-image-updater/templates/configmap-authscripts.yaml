@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
   name: argocd-image-updater-authscripts
+  namespace: {{ .Release.Namespace | quote }}
 data:
   {{- toYaml .Values.authScripts.scripts | nindent 2}}
 {{- end }}

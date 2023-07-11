@@ -7,16 +7,17 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" (print .Values.server.name "-gprc") "name" (print .Values.server.name "-grpc")) | nindent 4 }}
   name: {{ template "argo-cd.server.fullname" . }}-grpc
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   ports:
   - name: {{ .Values.server.service.servicePortHttpName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttp }}
-    targetPort: server
+    targetPort: {{ .Values.server.containerPorts.server }}
   - name: {{ .Values.server.service.servicePortHttpsName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttps }}
-    targetPort: server
+    targetPort: {{ .Values.server.containerPorts.server }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
   sessionAffinity: None

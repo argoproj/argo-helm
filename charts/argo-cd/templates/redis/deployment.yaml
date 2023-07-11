@@ -10,6 +10,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ include "argo-cd.redis.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
 spec:
@@ -53,14 +54,14 @@ spec:
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.redis.image.imagePullPolicy }}
         args:
+        {{- with .Values.redis.extraArgs }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         - --save
         - ""
         - --appendonly
         - "no"
-        {{- with .Values.redis.extraArgs }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.redis.env }}
+        {{- with (concat .Values.global.env .Values.redis.env) }}
         env:
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -74,8 +75,10 @@ spec:
           protocol: TCP
         resources:
           {{- toYaml .Values.redis.resources | nindent 10 }}
+        {{- with .Values.redis.containerSecurityContext }}
         securityContext:
-          {{- toYaml .Values.redis.containerSecurityContext | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         {{- with .Values.redis.volumeMounts }}
         volumeMounts:
           {{- toYaml . | nindent 10 }}
@@ -89,7 +92,7 @@ spec:
           value: {{ printf "redis://localhost:%v" .Values.redis.containerPorts.redis }}
         - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS
           value: {{ printf "0.0.0.0:%v" .Values.redis.containerPorts.metrics }}
-        {{- with .Values.redis.exporter.env }}
+        {{- with (concat .Values.global.env .Values.redis.exporter.env) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         ports:
@@ -98,8 +101,10 @@ spec:
           protocol: TCP
         resources:
           {{- toYaml .Values.redis.exporter.resources | nindent 10 }}
+        {{- with .Values.redis.exporter.containerSecurityContext }}
         securityContext:
-          {{- toYaml .Values.redis.exporter.containerSecurityContext | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       {{- end }}
       {{- with .Values.redis.extraContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}

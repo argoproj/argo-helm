@@ -9,6 +9,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ include "argo-cd.applicationSet.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
 spec:
@@ -23,12 +24,13 @@ spec:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 6 }}
   template:
     metadata:
-      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.applicationSet.podAnnotations) }}
       annotations:
+        checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.applicationSet.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-      {{- end }}
+        {{- end }}
       labels:
         {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 8 }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.applicationSet.podLabels) }}
@@ -55,12 +57,8 @@ spec:
         - name: {{ .Values.applicationSet.name }}
           image: {{ default .Values.global.image.repository .Values.applicationSet.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.applicationSet.image.tag }}
           imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.applicationSet.image.imagePullPolicy }}
-          {{- if not .Values.global.entrypoint.useImplicit }}
-          command:
-            - {{ .Values.global.entrypoint.entrypoint | quote }}
-          {{- end }}
           args:
-            - argocd-applicationset-controller
+            - /usr/local/bin/argocd-applicationset-controller
             - --metrics-addr=:{{ .Values.applicationSet.containerPorts.metrics }}
             - --probe-addr=:{{ .Values.applicationSet.containerPorts.probe }}
             - --webhook-addr=:{{ .Values.applicationSet.containerPorts.webhook }}
@@ -82,7 +80,7 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           env:
-            {{- with .Values.applicationSet.extraEnv }}
+            {{- with (concat .Values.global.env .Values.applicationSet.extraEnv) }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
             - name: NAMESPACE
@@ -185,8 +183,10 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.applicationSet.resources | nindent 12 }}
+          {{- with .Values.applicationSet.containerSecurityContext }}
           securityContext:
-            {{- toYaml .Values.applicationSet.containerSecurityContext | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             {{- with .Values.applicationSet.extraVolumeMounts }}
               {{- toYaml . | nindent 12 }}

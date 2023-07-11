@@ -1,0 +1,41 @@
+artifactRepositoryRef:
+  # 1st ConfigMap
+  artifact-repositories:
+    annotations:
+      workflows.argoproj.io/default-artifact-repository: default-v1-s3-artifact-repository
+    # 1st data
+    default-v1-s3-artifact-repository:
+      archiveLogs: true
+      s3:
+        bucket: my-bucket
+        endpoint: minio:9000
+        insecure: true
+        accessKeySecret:
+          name: my-minio-cred
+          key: accesskey
+        secretKeySecret:
+          name: my-minio-cred
+          key: secretkey
+    # 2nd data
+    oss-artifact-repository:
+      archiveLogs: false
+      oss:
+        endpoint: http://oss-cn-zhangjiakou-internal.aliyuncs.com
+        bucket: $mybucket
+        accessKeySecret:
+          name: $mybucket-credentials
+          key: accessKey
+        secretKeySecret:
+          name: $mybucket-credentials
+          key: secretKey
+  # 2nd ConfigMap
+  another-artifact-repositories:
+    annotations:
+      workflows.argoproj.io/default-artifact-repository: gcs
+    gcs:
+      archiveLogs: false
+      bucket: my-bucket
+      keyFormat: prefix/in/bucket/{{workflow.name}}/{{pod.name}}
+      serviceAccountKeySecret:
+        name: my-gcs-credentials
+        key: serviceAccountKey

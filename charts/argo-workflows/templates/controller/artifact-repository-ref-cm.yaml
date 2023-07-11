@@ -1,0 +1,19 @@
+{{- range $cm_name, $cm_val := .Values.artifactRepositoryRef }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $cm_name }}
+  namespace: {{ $.Release.Namespace | quote }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" $ "component" $.Values.controller.name "name" $cm_name) | nindent 4 }}
+  {{- with $cm_val.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+data:
+  {{- range $data_key, $data_val := (omit $cm_val "annotations") }}
+  {{- $data_key | nindent 2 }}: |
+    {{- toYaml $data_val | nindent 4 }}
+  {{- end }}
+{{- end }}

@@ -3,6 +3,7 @@ apiVersion: {{ template "argo-events.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
   name: {{ template "argo-events.controller.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     {{- with .Values.controller.pdb.labels }}

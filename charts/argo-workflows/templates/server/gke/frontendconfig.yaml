@@ -1,0 +1,11 @@
+{{- if .Values.server.GKEfrontendConfig.enabled }}
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: {{ template "argo-workflows.server.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+spec:
+  {{- toYaml .Values.server.GKEfrontendConfig.spec | nindent 2 }}
+{{- end }}

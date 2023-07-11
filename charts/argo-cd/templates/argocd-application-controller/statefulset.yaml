@@ -8,6 +8,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ template "argo-cd.controller.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 spec:
@@ -50,8 +51,8 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "argo-cd.controllerServiceAccountName" . }}
       containers:
-      - command:
-        - argocd-application-controller
+      - args:
+        - /usr/local/bin/argocd-application-controller
         - --metrics-port={{ .Values.controller.containerPorts.metrics }}
         {{- if .Values.controller.metrics.applicationLabels.enabled }}
         {{- range .Values.controller.metrics.applicationLabels.labels }}
@@ -98,7 +99,7 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
         name: {{ .Values.controller.name }}
         env:
-          {{- with .Values.controller.env }}
+          {{- with (concat .Values.global.env .Values.controller.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
           - name: ARGOCD_CONTROLLER_REPLICAS
@@ -254,8 +255,10 @@ spec:
           failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
+        {{- with .Values.controller.containerSecurityContext }}
         securityContext:
-          {{- toYaml .Values.controller.containerSecurityContext | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         workingDir: /home/argocd
         volumeMounts:
         {{- with .Values.controller.volumeMounts }}

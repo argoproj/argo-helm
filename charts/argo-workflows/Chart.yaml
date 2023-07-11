@@ -1,10 +1,10 @@
 apiVersion: v2
-appVersion: v3.4.6
+appVersion: v3.4.8
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.22.16
-icon: https://raw.githubusercontent.com/argoproj/argo-workflows/master/docs/assets/argo.png
+version: 0.31.0
+icon: https://argoproj.github.io/argo-workflows/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
   - https://github.com/argoproj/argo-workflows
@@ -12,6 +12,9 @@ maintainers:
   - name: argoproj
     url: https://argoproj.github.io/
 annotations:
+  artifacthub.io/signKey: |
+    fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+    url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: changed
-      description: Upgrade Argo Workflows to v3.4.6.
+    - kind: added
+      description: Add support for artifactRepositoryRef
