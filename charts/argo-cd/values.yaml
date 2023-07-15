@@ -147,6 +147,9 @@ global:
   # -- Environment variables to pass to all deployed Deployments
   env: []
 
+  # -- Annotations for the all deployed Certificates
+  certificateAnnotations: {}
+
 ## Argo Configs
 configs:
   # General Argo CD configuration
@@ -928,7 +931,7 @@ dex:
     # -- Dex image repository
     repository: ghcr.io/dexidp/dex
     # -- Dex image tag
-    tag: v2.36.0
+    tag: v2.37.0
     # -- Dex imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -948,6 +951,15 @@ dex:
     # -- Argo CD init image imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
+    # -- Argo CD init image resources
+    # @default -- `{}` (defaults to dex.resources)
+    resources: {}
+    #  requests:
+    #    cpu: 5m
+    #    memory: 96Mi
+    #  limits:
+    #    cpu: 10m
+    #    memory: 144Mi
 
   # -- Environment variables to pass to the Dex server
   env: []
@@ -1743,6 +1755,8 @@ server:
       algorithm: RSA
       # -- Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored.
       size: 2048
+    # -- Annotations to be applied to the Server Certificate
+    annotations: {}
     # -- Usages for the certificate
     ### Ref: https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.KeyUsage
     usages: []
@@ -2681,6 +2695,8 @@ applicationSet:
       algorithm: RSA
       # -- Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored.
       size: 2048
+    # -- Annotations to be applied to the ApplicationSet Certificate
+    annotations: {}
 
 ## Notifications controller
 notifications:
