@@ -14,6 +14,9 @@ spec:
   minReplicas: {{ .Values.repoServer.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.repoServer.autoscaling.maxReplicas }}
   metrics:
+  {{- if .Values.repoServer.autoscaling.metrics }}
+    {{- toYaml .Values.repoServer.autoscaling.metrics | nindent 4 }}
+  {{- else }}
   {{- with .Values.repoServer.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
@@ -37,6 +40,7 @@ spec:
           averageUtilization: {{ . }}
           type: Utilization
         {{- end }}
+  {{- end }}
   {{- end }}
   {{- with .Values.repoServer.autoscaling.behavior }}
   behavior:
