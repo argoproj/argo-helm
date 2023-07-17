@@ -14,6 +14,9 @@ spec:
   minReplicas: {{ .Values.server.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.server.autoscaling.maxReplicas }}
   metrics:
+  {{- if .Values.server.autoscaling.metrics }}
+    {{ toYaml .Values.server.autoscaling.metrics | nindent 4 }}
+  {{- else }}
   {{- with .Values.server.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
@@ -38,6 +41,7 @@ spec:
           type: Utilization
         {{- end }}
   {{- end }}
+  {{- end}}
   {{- with .Values.server.autoscaling.behavior }}
   behavior:
     {{- toYaml . | nindent 4 }}

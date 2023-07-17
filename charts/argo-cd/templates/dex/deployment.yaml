@@ -149,7 +149,7 @@ spec:
         - mountPath: /tmp
           name: dexconfig
         resources:
-          {{- toYaml .Values.dex.resources | nindent 10 }}
+          {{- toYaml (default .Values.dex.resources .Values.dex.initImage.resources) | nindent 10 }}
         {{- with .Values.dex.containerSecurityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}

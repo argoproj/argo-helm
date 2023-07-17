@@ -407,6 +407,7 @@ NAME: my-release
 | global.affinity.nodeAffinity.matchExpressions | list | `[]` | Default match expressions for node affinity |
 | global.affinity.nodeAffinity.type | string | `"hard"` | Default node affinity rules. Either: `none`, `soft` or `hard` |
 | global.affinity.podAntiAffinity | string | `"soft"` | Default pod anti-affinity rules. Either: `none`, `soft` or `hard` |
+| global.certificateAnnotations | object | `{}` | Annotations for the all deployed Certificates |
 | global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
 | global.deploymentStrategy | object | `{}` | Deployment strategy for the all deployed Deployments |
 | global.env | list | `[]` | Environment variables to pass to all deployed Deployments |
@@ -575,6 +576,7 @@ NAME: my-release
 | repoServer.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. This is only available on HPA apiVersion `autoscaling/v2beta2` and newer |
 | repoServer.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the repo server |
 | repoServer.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the repo server [HPA] |
+| repoServer.autoscaling.metrics | list | `[]` | Configures custom HPA metrics for the Argo CD repo server Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ |
 | repoServer.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the repo server [HPA] |
 | repoServer.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the repo server [HPA] |
 | repoServer.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the repo server [HPA] |
@@ -672,10 +674,12 @@ NAME: my-release
 | server.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. This is only available on HPA apiVersion `autoscaling/v2beta2` and newer |
 | server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo CD server |
 | server.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the Argo CD server [HPA] |
+| server.autoscaling.metrics | list | `[]` | Configures custom HPA metrics for the Argo CD server Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ |
 | server.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Argo CD server [HPA] |
 | server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the Argo CD server [HPA] |
 | server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo CD server [HPA] |
 | server.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
+| server.certificate.annotations | object | `{}` | Annotations to be applied to the Server Certificate |
 | server.certificate.domain | string | `"argocd.example.com"` | Certificate primary domain (commonName) |
 | server.certificate.duration | string | `""` (defaults to 2160h = 90d if not specified) | The requested 'duration' (i.e. lifetime) of the certificate. |
 | server.certificate.enabled | bool | `false` | Deploy a Certificate resource (requires cert-manager) |
@@ -857,11 +861,12 @@ server:
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
-| dex.image.tag | string | `"v2.36.0"` | Dex image tag |
+| dex.image.tag | string | `"v2.37.0"` | Dex image tag |
 | dex.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
 | dex.initImage.repository | string | `""` (defaults to global.image.repository) | Argo CD init image repository |
+| dex.initImage.resources | object | `{}` (defaults to dex.resources) | Argo CD init image resources |
 | dex.initImage.tag | string | `""` (defaults to global.image.tag) | Argo CD init image tag |
 | dex.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Dex >= 2.28.0 |
 | dex.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
@@ -1036,6 +1041,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
 | applicationSet.args | object | `{}` | DEPRECATED - ApplicationSet controller command line flags |
 | applicationSet.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
+| applicationSet.certificate.annotations | object | `{}` | Annotations to be applied to the ApplicationSet Certificate |
 | applicationSet.certificate.domain | string | `"argocd.example.com"` | Certificate primary domain (commonName) |
 | applicationSet.certificate.duration | string | `""` (defaults to 2160h = 90d if not specified) | The requested 'duration' (i.e. lifetime) of the certificate. |
 | applicationSet.certificate.enabled | bool | `false` | Deploy a Certificate resource (requires cert-manager) |
