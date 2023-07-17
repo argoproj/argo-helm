@@ -13,7 +13,7 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.notifications.replicaCount }}
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.notifications.deploymentStrategy) }}
   strategy:
