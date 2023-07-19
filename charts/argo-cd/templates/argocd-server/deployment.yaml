@@ -303,6 +303,11 @@ spec:
           name: styles
         - mountPath: /tmp
           name: tmp
+        {{- if .Values.server.certificate.enabled -}}
+        - mountPath: /etc/ssl/certs/ingress-ca-certificates.crt
+          name: ingress-ca-certificate
+          subPath: ca.crt
+        {{- end }}
         {{- if .Values.server.extensions.enabled }}
         - mountPath: /tmp/extensions
           name: extensions
@@ -423,17 +428,22 @@ spec:
             path: ca.crt
       - name: argocd-dex-server-tls
         secret:
-          {{- if .Values.server.certificate.enabled -}}
-          secretName: {{ .Values.server.certificate.secretName }}
-          {{- else }}
           secretName: argocd-dex-server-tls
-          {{- end }}
           optional: true
           items:
           - key: tls.crt
             path: tls.crt
           - key: ca.crt
             path: ca.crt
+      {{- if .Values.server.certificate.enabled -}}
+      - name: ingress-ca-certificate
+        secret:
+          secretName: {{ .Values.server.certificate.secretName }}
+          optional: true
+          items:
+            - key: ca.crt
+              path: ca.crt
+      {{- end }}
       {{- if .Values.server.hostNetwork }}
       hostNetwork: {{ .Values.server.hostNetwork }}
       {{- end }}
