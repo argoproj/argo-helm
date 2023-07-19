@@ -423,7 +423,11 @@ spec:
             path: ca.crt
       - name: argocd-dex-server-tls
         secret:
+          {{- if .Values.server.certificate.enabled -}}
+          secretName: {{ .Values.server.certificate.secretName }}
+          {{- else -}}
           secretName: argocd-dex-server-tls
+          {{- end }}
           optional: true
           items:
           - key: tls.crt
