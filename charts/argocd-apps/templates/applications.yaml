@@ -37,10 +37,6 @@ spec:
   syncPolicy:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .syncOptions }}
-  syncOptions:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
   {{- with .revisionHistoryLimit }}
   revisionHistoryLimit: {{ . }}
   {{- end }}
