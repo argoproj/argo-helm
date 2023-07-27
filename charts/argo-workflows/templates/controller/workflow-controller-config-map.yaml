@@ -42,11 +42,14 @@ data:
       securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- end }}
-    {{- if or .Values.executor.resources .Values.executor.env .Values.executor.securityContext}}
+    {{- if or .Values.executor.resources .Values.executor.env .Values.executor.args .Values.executor.securityContext}}
     executor:
       imagePullPolicy: {{ default (.Values.images.pullPolicy) .Values.executor.image.pullPolicy }}
       {{- with .Values.executor.resources }}
       resources: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.executor.args }}
+      args: {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.executor.env }}
       env: {{- toYaml . | nindent 8 }}
