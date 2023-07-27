@@ -1195,6 +1195,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
 | notifications.secret.create | bool | `true` | Whether helm chart creates notifications controller secret |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the secret |
+| notifications.secret.labels | object | `{}` | key:value pairs of labels to be added to the secret |
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | notifications.serviceAccount.create | bool | `true` | Create notifications controller service account |
