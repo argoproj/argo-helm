@@ -461,7 +461,7 @@ NAME: my-release
 | configs.params."reposerver.parallelism.limit" | int | `0` | Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit. |
 | configs.params."server.basehref" | string | `"/"` | Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from / |
 | configs.params."server.disable.auth" | bool | `false` | Disable Argo CD RBAC for user authentication |
-| configs.params."server.enable.gzip" | bool | `false` | Enable GZIP compression |
+| configs.params."server.enable.gzip" | bool | `true` | Enable GZIP compression |
 | configs.params."server.insecure" | bool | `false` | Run server without TLS |
 | configs.params."server.rootpath" | string | `""` | Used if Argo CD is running behind reverse proxy under subpath different from / |
 | configs.params."server.staticassets" | string | `"/shared/app"` | Directory path that contains additional static assets |
