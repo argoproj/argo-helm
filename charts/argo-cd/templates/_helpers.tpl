@@ -198,7 +198,7 @@ NOTE: Configuration keys must be stored as dict because YAML treats dot as separ
 {{- end -}}
 {{- range $component := tuple "applicationsetcontroller" "controller" "server" "reposerver" -}}
 {{- $_ := set $presets (printf "%s.log.format" $component) $.Values.global.logging.format -}}
-{{- $_ := set $presets (printf "%s.log.format" $component) $.Values.global.logging.format -}}
+{{- $_ := set $presets (printf "%s.log.level" $component) $.Values.global.logging.level -}}
 {{- end -}}
 {{- if .Values.applicationSet.enabled -}}
 {{- $_ := set $presets "applicationsetcontroller.enable.leader.election" (gt (.Values.applicationSet.replicaCount | int64) 1) -}}
