@@ -1113,7 +1113,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | applicationSet.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | applicationSet.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| applicationSet.replicaCount | int | `1` | The number of ApplicationSet controller pods to run |
+| applicationSet.replicas | int | `1` | The number of ApplicationSet controller pods to run |
 | applicationSet.resources | object | `{}` | Resource limits and requests for the ApplicationSet controller pods. |
 | applicationSet.service.annotations | object | `{}` | ApplicationSet service annotations |
 | applicationSet.service.labels | object | `{}` | ApplicationSet service labels |

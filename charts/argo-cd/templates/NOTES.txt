@@ -73,6 +73,9 @@ DEPRECATED option configs.tlsCertsAnnotations - Use configs.tls.annotations
 {{- if hasKey .Values.configs "tlsCerts" }}
 DEPRECATED option configs.tlsCerts.data - Use configs.tls.certificates
 {{- end }}
+{{- if .Values.applicationSet.replicaCount }}
+DEPRECATED option applicationSet.replicaCount - Use applicationSet.replicas
+{{- end }}
 {{- if .Values.applicationSet.logFormat }}
 DEPRECATED option applicationSet.logFormat - Use configs.params.applicationsetcontroller.log.format
 {{- end }}
