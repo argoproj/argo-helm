@@ -17,7 +17,7 @@ spec:
   strategy:
     {{- trim . | nindent 4 }}
   {{- end }}
-  replicas: {{ .Values.applicationSet.replicaCount }}
+  replicas: {{ .Values.applicationSet.replicas | default .Values.applicationSet.replicaCount }}
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
     matchLabels:
