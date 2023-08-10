@@ -277,6 +277,7 @@ Fields to note:
 | server.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
 | server.ingress.paths | list | `["/"]` | List of ingress paths |
 | server.ingress.tls | list | `[]` | Ingress TLS configuration |
+| server.livenessProbe | object | httpGet on 2746 | Configure liveness [probe] for the server |
 | server.loadBalancerIP | string | `""` | Static IP address to assign to loadBalancer service type `LoadBalancer` |
 | server.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
 | server.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
@@ -290,6 +291,7 @@ Fields to note:
 | server.podSecurityContext | object | `{}` | SecurityContext to set on the server pods |
 | server.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages |
 | server.rbac.create | bool | `true` | Adds Role and RoleBinding for the server. |
+| server.readinessProbe | object | httpGet on 2746 | Configure readiness [probe] for the server |
 | server.replicas | int | `1` | The number of server pods to run |
 | server.resources | object | `{}` | Resource limits and requests for the server |
 | server.secure | bool | `false` | Run the argo server in "secure" mode. Configure this value instead of `--secure` in extraArgs. |

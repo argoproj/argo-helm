@@ -65,6 +65,23 @@ spec:
           ports:
           - name: web
             containerPort: 2746
+          {{- with .Values.server.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- else }}
+          livenessProbe:
+            httpGet:
+              port: 2746
+              path: /healthz
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 5
+          {{- end }}
+          {{- with .Values.server.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- else }}
           readinessProbe:
             httpGet:
               path: /
@@ -76,6 +93,7 @@ spec:
               {{- end }}
             initialDelaySeconds: 10
             periodSeconds: 20
+          {{- end }}
           env:
             - name: IN_CLUSTER
               value: "true"

@@ -406,6 +406,12 @@ server:
     tag: ""
   # -- optional map of annotations to be applied to the ui Deployment
   deploymentAnnotations: {}
+  # -- Configure liveness [probe] for the server
+  # @default -- httpGet on 2746
+  livenessProbe: {}
+  # -- Configure readiness [probe] for the server
+  # @default -- httpGet on 2746
+  readinessProbe: {}
   # -- optional map of annotations to be applied to the ui Pods
   podAnnotations: {}
   # -- Optional labels to add to the UI pods
