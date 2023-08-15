@@ -132,6 +132,8 @@ controller:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Namespace to be used for the ServiceMonitor
+      namespace: ""
       # -- Labels to be added to the ServiceMonitor
       additionalLabels: {}
       # -- Annotations to be added to the ServiceMonitor
