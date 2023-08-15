@@ -94,6 +94,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.metrics.service.annotations | object | `{}` | Service annotations |
 | controller.metrics.service.port | int | `8090` | Metrics service port |
 | controller.metrics.service.portName | string | `"metrics"` | Metrics service port name |
+| controller.metrics.serviceMonitor.namespace | string | `""` | Namespace to be used for the ServiceMonitor |
 | controller.metrics.serviceMonitor.additionalAnnotations | object | `{}` | Annotations to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Labels to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
