@@ -1,4 +1,4 @@
-{{- $config := .Values.controller.clusterAdminAccess | default dict -}}
+{{- $config := .Values.applicationSet.clusterRole | default dict -}}
 {{- if hasKey $config "enabled" | ternary $config.enabled .Values.createClusterRoles }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
