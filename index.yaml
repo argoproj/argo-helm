@@ -1588,6 +1588,41 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Upgrade Argo CD to v2.8.1
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v2.8.1
+    created: "2023-08-23T03:57:37.481560018Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.23.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 98f6916fcf4b072d4d31fd8e420bcb2da8e0337c47461b37907decf629565c63
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.23.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.43.5/argo-cd-5.43.5.tgz
+    version: 5.43.5
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Rename comment of repositoryCredentials to credentialTemplates
       artifacthub.io/signKey: |
@@ -25618,4 +25653,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-08-19T06:00:09.897451209Z"
+generated: "2023-08-23T03:57:37.484159149Z"
