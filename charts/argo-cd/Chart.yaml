@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.7.0-cap-CR-18361-custom-instance-label
+appVersion: v2.7.0-cap-CR-19754-deletion-fix
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.38.1-1-cap-CR-18361
+version: 5.38.1-2-cap-CR-19754
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -26,5 +26,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: added
-      description: Adding the option to set `annotations` for `Certificate` resources
+    - kind: changed
+      description: Update ArgoCD version to v2.7.0-cap-CR-19754-deletion-fix
