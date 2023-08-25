@@ -42,7 +42,7 @@ repoServer:
     minReplicas: 2
 
 applicationSet:
-  replicaCount: 2
+  replicas: 2
 ```
 
 ### HA mode without autoscaling
@@ -61,7 +61,7 @@ repoServer:
   replicas: 2
 
 applicationSet:
-  replicaCount: 2
+  replicas: 2
 ```
 
 ### Synchronizing Changes from Original Repository
