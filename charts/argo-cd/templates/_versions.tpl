@@ -7,20 +7,6 @@ Return the target Kubernetes version
 {{- end }}
 
 {{/*
-Return the appropriate apiVersion for autoscaling
-*/}}
-{{- define "argo-cd.apiVersion.autoscaling" -}}
-{{- if .Values.apiVersionOverrides.autoscaling -}}
-{{- print .Values.apiVersionOverrides.autoscaling -}}
-{{- else if semverCompare "<1.23-0" (include "argo-cd.kubeVersion" .) -}}
-{{- print "autoscaling/v2beta1" -}}
-{{- else -}}
-{{- print "autoscaling/v2" -}}
-{{- end -}}
-{{- end -}}
-
-
-{{/*
 Return the appropriate apiVersion for GKE resources
 */}}
 {{- define "argo-cd.apiVersions.cloudgoogle" -}}
