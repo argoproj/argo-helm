@@ -121,6 +121,9 @@ REMOVED option redis.containerPort - Use redis.containerPorts
 {{- if .Values.redis.metrics.containerPort }}
 REMOVED option redis.metrics.containerPort - Use redis.containerPorts
 {{- end }}
+{{- if .Values.apiVersionOverrides.certmanager }}
+REMOVED option apiVersionOverrides.certmanager - API v1 is only possible option after K8s 1.22
+{{- end }}
 
 In order to access the server UI you have the following options:
 
