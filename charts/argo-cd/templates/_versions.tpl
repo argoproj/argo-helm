@@ -19,24 +19,6 @@ Return the appropriate apiVersion for autoscaling
 {{- end -}}
 {{- end -}}
 
-{{/*
-Return the appropriate apiVersion for cert-manager
-*/}}
-{{- define "argo-cd.apiVersion.cert-manager" -}}
-{{- if .Values.apiVersionOverrides.certmanager -}}
-{{- print .Values.apiVersionOverrides.certmanager -}}
-{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1" -}}
-{{- print "cert-manager.io/v1" -}}
-{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1beta1" -}}
-{{- print "cert-manager.io/v1beta1" -}}
-{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha3" -}}
-{{- print "cert-manager.io/v1alpha3" -}}
-{{- else if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha2" -}}
-{{- print "cert-manager.io/v1alpha2" -}}
-{{- else -}}
-{{- print "certmanager.k8s.io/v1alpha1" -}}
-{{- end -}}
-{{- end -}}
 
 {{/*
 Return the appropriate apiVersion for GKE resources
