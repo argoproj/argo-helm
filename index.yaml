@@ -1589,6 +1589,43 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: removed
+          description: Option apiVersionOverrides.autoscaling as v2 is now GA
+        - kind: removed
+          description: Codebase for autoscaling/v1 API
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v2.8.2
+    created: "2023-08-28T08:12:54.155564659Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.23.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: c0782bc039596fda0668087905f8004b13e328db387d2fd4e3ce7fb8a569db4a
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.23.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.45.0/argo-cd-5.45.0.tgz
+    version: 5.45.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: removed
           description: Support for cert-manager APIs prior K8s 1.22
       artifacthub.io/signKey: |
         fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
@@ -25793,4 +25830,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-08-27T19:07:43.287871539Z"
+generated: "2023-08-28T08:12:54.157933202Z"
