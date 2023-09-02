@@ -12,12 +12,8 @@ kubeVersionOverride: ""
 # If you want to template helm charts but cannot access k8s API server
 # you can set api versions here
 apiVersionOverrides:
-  # -- String to override apiVersion of cert-manager resources rendered by this helm chart
-  certmanager: "" # cert-manager.io/v1
   # -- String to override apiVersion of GKE resources rendered by this helm chart
   cloudgoogle: "" # cloud.google.com/v1
-  # -- String to override apiVersion of autoscaling rendered by this helm chart
-  autoscaling: "" # autoscaling/v2
 
 # -- Create aggregated roles that extend existing cluster roles to interact with argo-cd resources
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -1462,7 +1458,6 @@ server:
     # -- Average memory utilization percentage for the Argo CD server [HPA]
     targetMemoryUtilizationPercentage: 50
     # -- Configures the scaling behavior of the target in both Up and Down directions.
-    # This is only available on HPA apiVersion `autoscaling/v2beta2` and newer
     behavior: {}
       # scaleDown:
       #  stabilizationWindowSeconds: 300
@@ -2032,7 +2027,6 @@ repoServer:
     # -- Average memory utilization percentage for the repo server [HPA]
     targetMemoryUtilizationPercentage: 50
     # -- Configures the scaling behavior of the target in both Up and Down directions.
-    # This is only available on HPA apiVersion `autoscaling/v2beta2` and newer
     behavior: {}
       # scaleDown:
       #  stabilizationWindowSeconds: 300

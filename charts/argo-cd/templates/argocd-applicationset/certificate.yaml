@@ -1,5 +1,5 @@
 {{- if .Values.applicationSet.certificate.enabled -}}
-apiVersion: {{ include "argo-cd.apiVersion.cert-manager" . }}
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   {{- with (mergeOverwrite (deepCopy .Values.global.certificateAnnotations) .Values.applicationSet.certificate.annotations) }}

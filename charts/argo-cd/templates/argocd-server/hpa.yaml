@@ -1,47 +1,39 @@
 {{- if .Values.server.autoscaling.enabled }}
-apiVersion: {{ include "argo-cd.apiVersion.autoscaling" . }}
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" (printf "%s-hpa" .Values.server.name)) | nindent 4 }}
-  name: {{ template "argo-cd.server.fullname" . }}-hpa
+  name: {{ include "argo-cd.server.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ template "argo-cd.server.fullname" . }}
+    name: {{ include "argo-cd.server.fullname" . }}
   minReplicas: {{ .Values.server.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.server.autoscaling.maxReplicas }}
   metrics:
-  {{- if .Values.server.autoscaling.metrics }}
-    {{ toYaml .Values.server.autoscaling.metrics | nindent 4 }}
+  {{- with .Values.server.autoscaling.metrics }}
+    {{- toYaml . | nindent 4 }}
   {{- else }}
-  {{- with .Values.server.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- with .Values.server.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
-        {{- if eq (include "argo-cd.apiVersion.autoscaling" $) "autoscaling/v2beta1" }}
-        targetAverageUtilization: {{ . }}
-        {{- else }}
         target:
-          averageUtilization: {{ . }}
           type: Utilization
-        {{- end }}
-  {{- end }}
-  {{- with .Values.server.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ . }}
+    {{- end }}
+    {{- with .Values.server.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
-        {{- if eq (include "argo-cd.apiVersion.autoscaling" $) "autoscaling/v2beta1" }}
-        targetAverageUtilization: {{ . }}
-        {{- else }}
         target:
-          averageUtilization: {{ . }}
           type: Utilization
-        {{- end }}
+          averageUtilization: {{ . }}
+    {{- end }}
   {{- end }}
-  {{- end}}
   {{- with .Values.server.autoscaling.behavior }}
   behavior:
     {{- toYaml . | nindent 4 }}
