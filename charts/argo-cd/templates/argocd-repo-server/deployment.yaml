@@ -231,12 +231,14 @@ spec:
                 key: reposerver.enable.git.submodule
                 name: argocd-cmd-params-cm
                 optional: true
+          {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
           - name: HELM_CACHE_HOME
             value: /helm-working-dir
           - name: HELM_CONFIG_HOME
             value: /helm-working-dir
           - name: HELM_DATA_HOME
             value: /helm-working-dir
+          {{- end }}
         {{- with .Values.repoServer.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
@@ -255,8 +257,10 @@ spec:
           name: gpg-keyring
         - mountPath: /app/config/reposerver/tls
           name: argocd-repo-server-tls
+        {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
         - mountPath: /helm-working-dir
           name: helm-working-dir
+        {{- end }}
         - mountPath: /home/argocd/cmp-server/plugins
           name: plugins
         - mountPath: /tmp
@@ -349,8 +353,10 @@ spec:
       {{- with .Values.repoServer.volumes }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
       - name: helm-working-dir
         emptyDir: {}
+      {{- end }}
       - name: plugins
         emptyDir: {}
       - name: var-files
