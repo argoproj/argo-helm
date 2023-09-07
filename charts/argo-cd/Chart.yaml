@@ -3,7 +3,7 @@ appVersion: v2.8.2
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.45.2
+version: 5.45.3
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -26,5 +26,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: do not hardcode the pathtype of the grpc ingress rule when using a single ingress resource in aws alb
+    - kind: added
+      description: Documented scheduling parameters for redis-ha
