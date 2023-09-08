@@ -40,6 +40,9 @@ rules:
       - argoproj.io
     resources:
       - applications
+      {{- if .Values.applicationSet.enabled }}
+      - applicationsets
+      {{- end }}
     verbs:
       - get
       - list
