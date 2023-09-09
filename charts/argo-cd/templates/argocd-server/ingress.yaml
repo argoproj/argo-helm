@@ -39,7 +39,7 @@ spec:
           {{- range $p := $paths }}
           {{- if and $.Values.server.ingressGrpc.isAWSALB $.Values.server.ingressGrpc.enabled }}
           - path: {{ $p }}
-            pathType: Prefix
+            pathType: {{ $.Values.server.ingressGrpc.pathType }}
             backend:
               service:
                 name: {{ template "argo-cd.server.fullname" $ }}-grpc
