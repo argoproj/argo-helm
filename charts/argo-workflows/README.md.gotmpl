@@ -75,6 +75,11 @@ For full list of changes, please check ArtifactHub [changelog].
 
 ## Usage Notes
 
+### High Availability
+
+This chart installs the non-HA version of Argo Workflows by default. If you want to run in HA mode, you can use [these example values](ci/ha-values.yaml) as a starting point.
+Please see the upstream [Operator Manual's High Availability page](https://argoproj.github.io/argo-workflows/high-availability/) to understand how to scale Argo Workflows in depth.
+
 ### Workflow controller
 
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster. If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of its configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.

@@ -91,12 +91,14 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
 | controller.metricProviderPlugins | object | `{}` | Configures 3rd party metric providers for controller |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
+| controller.metrics.service.annotations | object | `{}` | Service annotations |
 | controller.metrics.service.port | int | `8090` | Metrics service port |
 | controller.metrics.service.portName | string | `"metrics"` | Metrics service port name |
 | controller.metrics.serviceMonitor.additionalAnnotations | object | `{}` | Annotations to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Labels to be added to the ServiceMonitor |
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | controller.metrics.serviceMonitor.metricRelabelings | list | `[]` | MetricRelabelConfigs to apply to samples before ingestion |
+| controller.metrics.serviceMonitor.namespace | string | `""` | Namespace to be used for the ServiceMonitor |
 | controller.metrics.serviceMonitor.relabelings | list | `[]` | RelabelConfigs to apply to samples before scraping |
 | controller.nodeSelector | object | `{}` | [Node selector] |
 | controller.pdb.annotations | object | `{}` | Annotations to be added to controller [Pod Disruption Budget] |

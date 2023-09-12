@@ -30,6 +30,9 @@ spec:
         {{- if .Values.repoServer.certificateSecret.enabled }}
         checksum/repo-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-repo-server-tls-secret.yaml") . | sha256sum }}
         {{- end }}
+        {{- if (hasKey .Values.server "configEnabled") | ternary .Values.server.configEnabled .Values.configs.cm.create }}
+        checksum/cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | sha256sum }}
+        {{- end }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.repoServer.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
@@ -107,6 +110,18 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: reposerver.parallelism.limit
+                optional: true
+          - name: ARGOCD_REPO_SERVER_LISTEN_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: reposerver.listen.address
+                optional: true
+          - name: ARGOCD_REPO_SERVER_LISTEN_METRICS_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: reposerver.metrics.listen.address
                 optional: true
           - name: ARGOCD_REPO_SERVER_DISABLE_TLS
             valueFrom:
@@ -216,12 +231,14 @@ spec:
                 key: reposerver.enable.git.submodule
                 name: argocd-cmd-params-cm
                 optional: true
+          {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
           - name: HELM_CACHE_HOME
             value: /helm-working-dir
           - name: HELM_CONFIG_HOME
             value: /helm-working-dir
           - name: HELM_DATA_HOME
             value: /helm-working-dir
+          {{- end }}
         {{- with .Values.repoServer.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
@@ -240,8 +257,10 @@ spec:
           name: gpg-keyring
         - mountPath: /app/config/reposerver/tls
           name: argocd-repo-server-tls
+        {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
         - mountPath: /helm-working-dir
           name: helm-working-dir
+        {{- end }}
         - mountPath: /home/argocd/cmp-server/plugins
           name: plugins
         - mountPath: /tmp
@@ -334,8 +353,10 @@ spec:
       {{- with .Values.repoServer.volumes }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
       - name: helm-working-dir
         emptyDir: {}
+      {{- end }}
       - name: plugins
         emptyDir: {}
       - name: var-files

@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.7.0-cap-CR-19754-deletion-fix
+appVersion: v2.8.1-cap-CR-20116-rollout-sync-sha
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.38.1-2-cap-CR-19754
+version: 5.46.2-1-cap-CR-20116
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -27,4 +27,6 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: Update ArgoCD version to v2.7.0-cap-CR-19754-deletion-fix
+      description: Update to upstream 5.46.2
+    - kind: changed
+      description: Update ArgoCD version to v2.8.1-cap-CR-20116-rollout-sync-sha

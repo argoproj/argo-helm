@@ -23,6 +23,9 @@ spec:
     metadata:
       annotations:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- if (hasKey .Values.server "configEnabled") | ternary .Values.server.configEnabled .Values.configs.cm.create }}
+        checksum/cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | sha256sum }}
+        {{- end }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.controller.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
@@ -235,6 +238,18 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: application.namespaces
+                optional: true
+          - name: ARGOCD_CONTROLLER_SHARDING_ALGORITHM
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.sharding.algorithm
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_KUBECTL_PARALLELISM_LIMIT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.kubectl.parallelism.limit
                 optional: true
         {{- with .Values.controller.envFrom }}
         envFrom:

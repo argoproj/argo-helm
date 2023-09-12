@@ -41,7 +41,7 @@ repoServer:
     minReplicas: 2
 
 applicationSet:
-  replicaCount: 2
+  replicas: 2
 ```
 
 ### HA mode without autoscaling
@@ -60,7 +60,7 @@ repoServer:
   replicas: 2
 
 applicationSet:
-  replicaCount: 2
+  replicas: 2
 ```
 
 ### Synchronizing Changes from Original Repository
@@ -105,7 +105,7 @@ For full list of changes please check ArtifactHub [changelog].
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
 ### 5.35.0
-This version supports Kubernetes version `>=1.23.0-0`. The current supported version of Kubernetes is v1.24 or later and we align with Amazon EKS calendar, because many of AWS users and conservative approach.
+This version supports Kubernetes version `>=1.23.0-0`. The current supported version of Kubernetes is v1.24 or later and we align with the Amazon EKS calendar, because many AWS users follow a conservative approach.
 
 Please see more information about EoL: [Amazon EKS EoL][EKS EoL].
 
@@ -126,7 +126,7 @@ This versions adds `global.affinity` options that are used as a presets. Overrid
 
 ### 5.19.0
 
-This version consolidates config for custom repository TLS certificates and SSH known hosts. If you provide this values please move them into new `configs.ssh` and `configs.tls` sections.
+This version consolidates config for custom repository TLS certificates and SSH known hosts. If you provided these values (`configs.knownHosts.*`, `configs.knownHostsAnnotations`, `configs.tlsCerts`, `configs.tlsCertsAnnotations`) please move them into new `configs.ssh` and `configs.tls` sections.
 You can also use new option `configs.ssh.extraHosts` to configure your SSH keys without maintaing / overwritting keys for public Git repositories.
 
 ### 5.13.0

@@ -75,6 +75,11 @@ For full list of changes, please check ArtifactHub [changelog].
 
 ## Usage Notes
 
+### High Availability
+
+This chart installs the non-HA version of Argo Workflows by default. If you want to run in HA mode, you can use [these example values](ci/ha-values.yaml) as a starting point.
+Please see the upstream [Operator Manual's High Availability page](https://argoproj.github.io/argo-workflows/high-availability/) to understand how to scale Argo Workflows in depth.
+
 ### Workflow controller
 
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster. If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of its configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.
@@ -127,6 +132,7 @@ Fields to note:
 | workflow.serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
 | workflow.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | workflow.serviceAccount.name | string | `"argo-workflow"` | Service account which is used to run workflows |
+| workflow.serviceAccount.pullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry. Same format as `.Values.images.pullSecrets` |
 
 ### Workflow Controller
 
@@ -230,6 +236,7 @@ Fields to note:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| executor.args | list | `[]` | Passes arguments to the executor processes |
 | executor.env | list | `[]` | Adds environment variables for the executor. |
 | executor.image.pullPolicy | string | `""` | Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`. |
 | executor.image.registry | string | `"quay.io"` | Registry to use for the Workflow Executors |

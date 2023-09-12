@@ -54,6 +54,8 @@ workflow:
     annotations: {}
     # -- Service account which is used to run workflows
     name: "argo-workflow"
+    # -- Secrets with credentials to pull images from a private registry. Same format as `.Values.images.pullSecrets`
+    pullSecrets: []
   rbac:
     # -- Adds Role and RoleBinding for the above specified service account to be able to run workflows.
     # A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below)
@@ -382,6 +384,8 @@ executor:
     pullPolicy: ""
   # -- Resource limits and requests for the Workflow Executors
   resources: {}
+  # -- Passes arguments to the executor processes
+  args: []
   # -- Adds environment variables for the executor.
   env: []
   # -- sets security context for the executor container
@@ -748,7 +752,7 @@ artifactRepository:
   azure: {}
   # endpoint: https://mystorageaccountname.blob.core.windows.net
   # container: my-container-name
-  # blob: path/in/container
+  # blobNameFormat: path/in/container
   ## accountKeySecret is a secret selector.
   ## It references the k8s secret named 'my-azure-storage-credentials'.
   ## This secret is expected to have have the key 'account-access-key',

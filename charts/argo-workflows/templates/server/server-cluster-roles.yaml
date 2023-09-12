@@ -49,7 +49,6 @@ rules:
   - sso
   verbs:
   - get
-  - update
 - apiGroups:
   - ""
   resources:
@@ -73,8 +72,6 @@ rules:
   - secrets
   verbs:
   - get
-  - list
-  - watch
 {{- if and .Values.server.sso.enabled .Values.server.sso.rbac.enabled }}
   {{- with .Values.server.sso.rbac.secretWhitelist }}
   resourceNames: {{- toYaml . | nindent 4 }}

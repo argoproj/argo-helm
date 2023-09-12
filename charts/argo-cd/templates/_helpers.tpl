@@ -162,9 +162,11 @@ Create the name of the notifications service account to use
 Argo Configuration Preset Values (Incluenced by Values configuration)
 */}}
 {{- define "argo-cd.config.cm.presets" -}}
+{{- $presets := dict -}}
 {{- if .Values.configs.styles -}}
-ui.cssurl: "./custom/custom.styles.css"
+{{- $_ := set $presets "ui.cssurl" "./custom/custom.styles.css" -}}
 {{- end -}}
+{{- toYaml $presets }}
 {{- end -}}
 
 {{/*
@@ -183,24 +185,25 @@ Merge Argo Configuration with Preset Configuration
 
 {{/*
 Argo Params Default Configuration Presets
+NOTE: Configuration keys must be stored as dict because YAML treats dot as separator
 */}}
 {{- define "argo-cd.config.params.presets" -}}
-repo.server: "{{ include "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}"
-server.repo.server.strict.tls: {{ .Values.repoServer.certificateSecret.enabled | toString }}
-{{- with include "argo-cd.redis.server" . }}
-redis.server: {{ . | quote }}
-{{- end }}
-{{- if .Values.dex.enabled }}
-server.dex.server: {{ include "argo-cd.dex.server" . | quote }}
-server.dex.server.strict.tls: {{ .Values.dex.certificateSecret.enabled | toString }}
-{{- end }}
-{{- range $component := tuple "applicationsetcontroller" "controller" "server" "reposerver" }}
-{{ $component }}.log.format: {{ $.Values.global.logging.format | quote }}
-{{ $component }}.log.level: {{ $.Values.global.logging.level | quote }}
-{{- end }}
-{{- if .Values.applicationSet.enabled }}
-applicationsetcontroller.enable.leader.election: {{ gt (.Values.applicationSet.replicaCount | int64) 1 }}
-{{- end }}
+{{- $presets := dict -}}
+{{- $_ := set $presets "repo.server" (printf "%s:%s" (include "argo-cd.repoServer.fullname" .) (.Values.repoServer.service.port | toString)) -}}
+{{- $_ := set $presets "server.repo.server.strict.tls" (.Values.repoServer.certificateSecret.enabled | toString ) -}}
+{{- $_ := set $presets "redis.server" (include "argo-cd.redis.server" .) -}}
+{{- if .Values.dex.enabled -}}
+{{- $_ := set $presets "server.dex.server" (include "argo-cd.dex.server" .) -}}
+{{- $_ := set $presets "server.dex.server.strict.tls" .Values.dex.certificateSecret.enabled -}}
+{{- end -}}
+{{- range $component := tuple "applicationsetcontroller" "controller" "server" "reposerver" -}}
+{{- $_ := set $presets (printf "%s.log.format" $component) $.Values.global.logging.format -}}
+{{- $_ := set $presets (printf "%s.log.level" $component) $.Values.global.logging.level -}}
+{{- end -}}
+{{- if .Values.applicationSet.enabled -}}
+{{- $_ := set $presets "applicationsetcontroller.enable.leader.election" (gt ((.Values.applicationSet.replicas | default .Values.applicationSet.replicaCount) | int64) 1) -}}
+{{- end -}}
+{{- toYaml $presets }}
 {{- end -}}
 
 {{/*

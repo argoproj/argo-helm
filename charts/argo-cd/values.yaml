@@ -12,12 +12,8 @@ kubeVersionOverride: ""
 # If you want to template helm charts but cannot access k8s API server
 # you can set api versions here
 apiVersionOverrides:
-  # -- String to override apiVersion of cert-manager resources rendered by this helm chart
-  certmanager: "" # cert-manager.io/v1
   # -- String to override apiVersion of GKE resources rendered by this helm chart
   cloudgoogle: "" # cloud.google.com/v1
-  # -- String to override apiVersion of autoscaling rendered by this helm chart
-  autoscaling: "" # autoscaling/v2
 
 # -- Create aggregated roles that extend existing cluster roles to interact with argo-cd resources
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -253,7 +249,7 @@ configs:
     # -- Disable Argo CD RBAC for user authentication
     server.disable.auth: false
     # -- Enable GZIP compression
-    server.enable.gzip: false
+    server.enable.gzip: true
     # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
     server.x.frame.options: sameorigin
 
@@ -476,7 +472,7 @@ configs:
 
   # -- Repositories list to be used by applications
   ## Creates a secret for each key/value specified below to create repositories
-  ## Note: the last example in the list would use a repository credential template, configured under "configs.repositoryCredentials".
+  ## Note: the last example in the list would use a repository credential template, configured under "configs.credentialTemplates".
   repositories: {}
     # istio-helm-repo:
     #   url: https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts
@@ -543,7 +539,7 @@ configs:
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
   styles: ""
   # styles: |
-  #  .nav-bar {
+  #  .sidebar {
   #    background: linear-gradient(to bottom, #999, #777, #333, #222, #111);
   #  }
 
@@ -951,6 +947,15 @@ dex:
     # -- Argo CD init image imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
+    # -- Argo CD init image resources
+    # @default -- `{}` (defaults to dex.resources)
+    resources: {}
+    #  requests:
+    #    cpu: 5m
+    #    memory: 96Mi
+    #  limits:
+    #    cpu: 10m
+    #    memory: 144Mi
 
   # -- Environment variables to pass to the Dex server
   env: []
@@ -1173,7 +1178,7 @@ redis:
       # -- Repository to use for the redis-exporter
       repository: public.ecr.aws/bitnami/redis-exporter
       # -- Tag to use for the redis-exporter
-      tag: 1.45.0
+      tag: 1.53.0
       # -- Image pull policy for the redis-exporter
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
@@ -1366,12 +1371,17 @@ redis:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
-# This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
-# the custom redis deployment is omitted
-# Check the redis-ha chart for more properties
+## Redis-HA subchart replaces custom redis deployment when `redis-ha.enabled=true`
+# Ref: https://github.com/DandyDeveloper/charts/blob/master/charts/redis-ha/values.yaml
 redis-ha:
   # -- Enables the Redis HA subchart and disables the custom Redis single node deployment
   enabled: false
+  ## Redis image
+  image:
+    # -- Redis repository
+    repository: redis
+    # -- Redis tag
+    tag: 7.0.11-alpine
   ## Prometheus redis-exporter sidecar
   exporter:
     # -- Enable Prometheus redis-exporter sidecar
@@ -1379,10 +1389,11 @@ redis-ha:
     # -- Repository to use for the redis-exporter
     image: public.ecr.aws/bitnami/redis-exporter
     # -- Tag to use for the redis-exporter
-    tag: 1.45.0
+    tag: 1.53.0
   persistentVolume:
     # -- Configures persistence on Redis nodes
     enabled: false
+  ## Redis specific configuration options
   redis:
     # -- Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated
     masterGroupName: argocd
@@ -1392,16 +1403,35 @@ redis-ha:
       # -- Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled
       # @default -- `'""'`
       save: '""'
+  ## Enables a HA Proxy for better LoadBalancing / Sentinel Master support. Automatically proxies to Redis master.
   haproxy:
     # -- Enabled HAProxy LoadBalancing/Proxy
     enabled: true
     metrics:
       # -- HAProxy enable prometheus metric scraping
       enabled: true
-  image:
-    # -- Redis tag
-    tag: 7.0.11-alpine
+    # -- Whether the haproxy pods should be forced to run on separate nodes.
+    hardAntiAffinity: true
+    # -- Additional affinities to add to the haproxy pods.
+    additionalAffinities: {}
+    # -- Assign custom [affinity] rules to the haproxy pods.
+    affinity: {}
+    # -- [Tolerations] for use with node taints for haproxy pods.
+    tolerations: []
 
+  # -- Whether the Redis server pods should be forced to run on separate nodes.
+  hardAntiAffinity: true
+
+  # -- Additional affinities to add to the Redis server pods.
+  additionalAffinities: {}
+
+  # -- Assign custom [affinity] rules to the Redis pods.
+  affinity: {}
+
+  # -- [Tolerations] for use with node taints for Redis pods.
+  tolerations: []
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the Redis pods.
   ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints:
     # -- Enable Redis HA topology spread constraints
@@ -1453,7 +1483,6 @@ server:
     # -- Average memory utilization percentage for the Argo CD server [HPA]
     targetMemoryUtilizationPercentage: 50
     # -- Configures the scaling behavior of the target in both Up and Down directions.
-    # This is only available on HPA apiVersion `autoscaling/v2beta2` and newer
     behavior: {}
       # scaleDown:
       #  stabilizationWindowSeconds: 300
@@ -1467,6 +1496,9 @@ server:
       #   - type: Pods
       #     value: 2
       #     periodSeconds: 60
+    # -- Configures custom HPA metrics for the Argo CD server
+    # Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+    metrics: []
 
   ## Argo CD server Pod Disruption Budget
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
@@ -2020,7 +2052,6 @@ repoServer:
     # -- Average memory utilization percentage for the repo server [HPA]
     targetMemoryUtilizationPercentage: 50
     # -- Configures the scaling behavior of the target in both Up and Down directions.
-    # This is only available on HPA apiVersion `autoscaling/v2beta2` and newer
     behavior: {}
       # scaleDown:
       #  stabilizationWindowSeconds: 300
@@ -2034,6 +2065,9 @@ repoServer:
       #   - type: Pods
       #     value: 2
       #     periodSeconds: 60
+    # -- Configures custom HPA metrics for the Argo CD repo server
+    # Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+    metrics: []
 
   ## Repo server Pod Disruption Budget
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
@@ -2142,6 +2176,9 @@ repoServer:
   #      name: argocd-cmp-cm
   #  - name: cmp-tmp
   #    emptyDir: {}
+
+  # -- Toggle the usage of a ephemeral Helm working directory
+  useEphemeralHelmWorkingDir: true
 
   # -- Annotations to be added to repo server Deployment
   deploymentAnnotations: {}
@@ -2358,7 +2395,7 @@ applicationSet:
   name: applicationset-controller
 
   # -- The number of ApplicationSet controller pods to run
-  replicaCount: 1
+  replicas: 1
 
   ## ApplicationSet controller Pod Disruption Budget
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
@@ -2779,6 +2816,9 @@ notifications:
 
     # -- key:value pairs of annotations to be added to the secret
     annotations: {}
+
+    # -- key:value pairs of labels to be added to the secret
+    labels: {}
 
     # -- Generic key:value pairs to be inserted into the secret
     ## Can be used for templates, notification services etc. Some examples given below.

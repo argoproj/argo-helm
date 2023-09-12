@@ -30,6 +30,8 @@ applications: []
 #     automated:
 #       prune: false
 #       selfHeal: false
+#     syncOptions:
+#     - CreateNamespace=true
 #   revisionHistoryLimit: null
 #   ignoreDifferences:
 #   - group: apps
@@ -48,6 +50,7 @@ projects: []
 #   namespace: argocd
 #   additionalLabels: {}
 #   additionalAnnotations: {}
+#   permitOnlyProjectScopedClusters: false
 #   finalizers:
 #   - resources-finalizer.argocd.argoproj.io
 #   description: Example Project
