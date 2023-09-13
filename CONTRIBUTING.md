@@ -64,7 +64,7 @@ Each release for each chart must be immutable. Any change to a chart (even just 
 
 ### Chart Versioning
 
-Currently we require a chart version bump for every change to a chart, including updating information for older verions.  This may change in the future.
+Currently we require a chart version bump for every change to a chart, including updating information for older versions.  This may change in the future.
 
 ### Artifact Hub Annotations
 
