@@ -1415,7 +1415,7 @@ redis-ha:
     # -- Additional affinities to add to the haproxy pods.
     additionalAffinities: {}
     # -- Assign custom [affinity] rules to the haproxy pods.
-    affinity: {}
+    affinity: |
     # -- [Tolerations] for use with node taints for haproxy pods.
     tolerations: []
 
@@ -1426,7 +1426,7 @@ redis-ha:
   additionalAffinities: {}
 
   # -- Assign custom [affinity] rules to the Redis pods.
-  affinity: {}
+  affinity: |
 
   # -- [Tolerations] for use with node taints for Redis pods.
   tolerations: []

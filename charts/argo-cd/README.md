@@ -1000,13 +1000,13 @@ The main options are listed here:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redis-ha.additionalAffinities | object | `{}` | Additional affinities to add to the Redis server pods. |
-| redis-ha.affinity | object | `{}` | Assign custom [affinity] rules to the Redis pods. |
+| redis-ha.affinity | string | `""` | Assign custom [affinity] rules to the Redis pods. |
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
 | redis-ha.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
 | redis-ha.exporter.image | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
 | redis-ha.exporter.tag | string | `"1.53.0"` | Tag to use for the redis-exporter |
 | redis-ha.haproxy.additionalAffinities | object | `{}` | Additional affinities to add to the haproxy pods. |
-| redis-ha.haproxy.affinity | object | `{}` | Assign custom [affinity] rules to the haproxy pods. |
+| redis-ha.haproxy.affinity | string | `""` | Assign custom [affinity] rules to the haproxy pods. |
 | redis-ha.haproxy.enabled | bool | `true` | Enabled HAProxy LoadBalancing/Proxy |
 | redis-ha.haproxy.hardAntiAffinity | bool | `true` | Whether the haproxy pods should be forced to run on separate nodes. |
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
