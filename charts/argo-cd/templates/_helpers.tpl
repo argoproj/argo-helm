@@ -207,6 +207,14 @@ NOTE: Configuration keys must be stored as dict because YAML treats dot as separ
 {{- end -}}
 
 {{/*
+Use correct pdb version
+*/}}
+{{- define "argo-cd.podDisruptionBudget.apiVersion" -}}
+{{- if semverCompare "<1.21-0" (include "argo-cd.kubeVersion" $) -}}
+{{- print "policy/v1beta1" -}}
+{{- else -}}
+
+{{/*
 Merge Argo Params Configuration with Preset Configuration
 */}}
 {{- define "argo-cd.config.params" -}}
