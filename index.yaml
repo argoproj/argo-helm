@@ -1588,6 +1588,41 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: security
+          description: updated redis dependency to 7.0.13-alpine to fix CVE-2022-48174
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v2.8.4
+    created: "2023-09-22T15:50:59.567856936Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.23.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: ab20e5f4e1d0deecb83d9f654e07fd6666bce4a7f328717a80220a81e8db6640
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.23.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-5.46.7/argo-cd-5.46.7.tgz
+    version: 5.46.7
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: fixed repo-server deployment not restarting when a cmp configmap is modified
       artifacthub.io/signKey: |
@@ -26351,4 +26386,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-19T09:02:10.687655447Z"
+generated: "2023-09-22T15:50:59.570404149Z"
