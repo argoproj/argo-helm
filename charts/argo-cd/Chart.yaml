@@ -26,5 +26,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: fixed repo-server deployment not restarting when a cmp configmap is modified
+    - kind: security
+      description: updated redis dependency to 7.0.13-alpine to fix CVE-2022-48174
