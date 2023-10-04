@@ -172,6 +172,9 @@ configs:
     ## Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/rbac/#exec-resource
     exec.enabled: false
 
+    # -- Enable set namespace during kustomize build
+    kustomize.setNamespace.enabled: false
+
     # -- Enable local admin user
     ## Ref: https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
     admin.enabled: true
