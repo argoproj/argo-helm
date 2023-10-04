@@ -436,7 +436,7 @@ NAME: my-release
 | configs.cm."admin.enabled" | bool | `true` | Enable local admin user |
 | configs.cm."application.instanceLabelKey" | string | Defaults to app.kubernetes.io/instance | The name of tracking label used by Argo CD for resource pruning |
 | configs.cm."exec.enabled" | bool | `false` | Enable exec feature in Argo UI |
-| configs.cm."kustomize.setNamespace.enabled" | bool | `true` | Enable set namespace during kustomize build |
+| configs.cm."kustomize.setNamespace.enabled" | bool | `false` | Enable set namespace during kustomize build |
 | configs.cm."server.rbac.log.enforce.enable" | bool | `false` | Enable logs RBAC enforcement |
 | configs.cm."timeout.hard.reconciliation" | string | `"0s"` | Timeout to refresh application data as well as target manifests cache |
 | configs.cm."timeout.reconciliation" | string | `"180s"` | Timeout to discover if a new manifests version got published to the repository |
