@@ -256,6 +256,7 @@ Fields to note:
 | server.GKEmanagedCertificate.domains | list | `["argoworkflows.example.com"]` | Domains for the Google Managed Certificate |
 | server.GKEmanagedCertificate.enabled | bool | `false` | Enable ManagedCertificate custom resource for Google Kubernetes Engine. |
 | server.affinity | object | `{}` | Assign custom [affinity] rules |
+| server.authMode | string | `""` | Auth Mode is available from `server` , `client` or `sso`. If you chose `sso` , please configure `.Values.server.sso` as well. |
 | server.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. This is only available on HPA apiVersion `autoscaling/v2beta2` and newer |
 | server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server |
 | server.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the Argo Server [HPA] |
@@ -267,7 +268,7 @@ Fields to note:
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
 | server.deploymentAnnotations | object | `{}` | optional map of annotations to be applied to the ui Deployment |
 | server.enabled | bool | `true` | Deploy the Argo Server |
-| server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary, such as for disabling authentication. |
+| server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary. |
 | server.extraContainers | list | `[]` | Extra containers to be added to the server deployment |
 | server.extraEnv | list | `[]` | Extra environment variables to provide to the argo-server container |
 | server.extraInitContainers | list | `[]` | Enables init containers to be added to the server deployment |
@@ -315,7 +316,7 @@ Fields to note:
 | server.sso.clientSecret.key | string | `"client-secret"` | Key of a secret to retrieve the app OIDC client secret |
 | server.sso.clientSecret.name | string | `"argo-server-sso"` | Name of a secret to retrieve the app OIDC client secret |
 | server.sso.customGroupClaimName | string | `""` | Override claim name for OIDC groups |
-| server.sso.enabled | bool | `false` | Create SSO configuration |
+| server.sso.enabled | bool | `false` | Create SSO configuration. If you set `true` , please also set `.Values.server.authMode` as `sso`. |
 | server.sso.insecureSkipVerify | bool | `false` | Skip TLS verification for the HTTP client |
 | server.sso.issuer | string | `"https://accounts.google.com"` | The root URL of the OIDC identity provider |
 | server.sso.issuerAlias | string | `""` | Alternate root URLs that can be included for some OIDC providers |
