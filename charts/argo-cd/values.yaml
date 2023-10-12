@@ -1279,6 +1279,7 @@ redis:
   # -- Redis container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
+    readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
     capabilities:
       drop:
@@ -1416,8 +1417,13 @@ redis-ha:
     additionalAffinities: {}
     # -- Assign custom [affinity] rules to the haproxy pods.
     affinity: |
+
     # -- [Tolerations] for use with node taints for haproxy pods.
     tolerations: []
+    # -- HAProxy container-level security context
+    # @default -- See [values.yaml]
+    containerSecurityContext:
+      readOnlyRootFilesystem: true
 
   # -- Whether the Redis server pods should be forced to run on separate nodes.
   hardAntiAffinity: true
@@ -1445,6 +1451,10 @@ redis-ha:
     # -- Enforcement policy, hard or soft
     # @default -- `""` (defaults to `ScheduleAnyway`)
     whenUnsatisfiable: ""
+  # -- Redis HA statefulset container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
 
 # External Redis parameters
 externalRedis:
