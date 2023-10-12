@@ -522,14 +522,13 @@ server:
     # - name: FOO
     #   value: "bar"
 
-  # -- Extra arguments to provide to the Argo server binary, such as for disabling authentication.
+  # -- Auth Mode is available from `server` , `client` or `sso`. If you chose `sso` , please configure `.Values.server.sso` as well.
+  ## Ref: https://argoproj.github.io/argo-workflows/argo-server-auth-mode/
+  authMode: ""
+
+  # -- Extra arguments to provide to the Argo server binary.
+  ## Ref: https://argoproj.github.io/argo-workflows/argo-server/#options
   extraArgs: []
-  # If you want to disable authentication for purposes such as:
-  #   - local dev-mode without authentication
-  #   - gateway authentication through some other service such as KeyCloak
-  # uncomment the lines below and comment out the default empty list `extraArgs: []` above:
-  # extraArgs:
-  # - --auth-mode=server
 
   logging:
     # -- Set the logging level (one of: `debug`, `info`, `warn`, `error`)
@@ -631,8 +630,7 @@ server:
 
   # SSO configuration when SSO is specified as a server auth mode.
   sso:
-    # -- Create SSO configuration
-    ## SSO is activated by adding --auth-mode=sso to the server command line.
+    # -- Create SSO configuration. If you set `true` , please also set `.Values.server.authMode` as `sso`.
     enabled: false
     # -- The root URL of the OIDC identity provider
     issuer: https://accounts.google.com
