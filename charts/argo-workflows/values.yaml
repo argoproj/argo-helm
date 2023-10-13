@@ -148,9 +148,6 @@ controller:
         secondsAfterFailure: 86400
       podGC:
         strategy: OnWorkflowCompletion
-        labelSelector:
-          matchLabels:
-            should-be-deleted: "true"
 
   # -- Number of workflow workers
   workflowWorkers: # 32
