@@ -176,6 +176,13 @@ controller:
 
   # -- Number of workflow workers
   workflowWorkers: # 32
+  # -- Number of workflow TTL workers
+  workflowTTLWorkers: # 4
+  # -- Number of pod cleanup workers
+  podCleanupWorkers: # 4
+  # -- Number of cron workflow workers
+  # Only valid for 3.5+
+  cronWorkflowWorkers: # 8
   # -- Restricts the Workflows that the controller will process.
   # Only valid for 2.9+
   workflowRestrictions: {}
