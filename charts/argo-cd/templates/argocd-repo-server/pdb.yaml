@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if .Values.repoServer.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -25,3 +26,4 @@ spec:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 6 }}
 {{- end }}
+{{- end -}}

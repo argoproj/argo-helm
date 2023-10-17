@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -22,3 +23,4 @@ spec:
     targetPort: repo-server
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 4 }}
+{{- end -}}

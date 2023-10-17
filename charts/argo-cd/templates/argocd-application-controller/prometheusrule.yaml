@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if and .Values.controller.metrics.enabled .Values.controller.metrics.rules.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
@@ -22,3 +23,4 @@ spec:
     rules:
 {{- toYaml .Values.controller.metrics.rules.spec | nindent 4 }}
 {{- end }}
+{{- end -}}

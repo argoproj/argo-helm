@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if and .Values.applicationSet.enabled .Values.applicationSet.webhook.ingress.enabled -}}
 {{- $servicePort := .Values.applicationSet.service.portName -}}
 {{- $paths := .Values.applicationSet.webhook.ingress.paths -}}
@@ -70,4 +71,5 @@ spec:
   tls:
     {{- toYaml . | nindent 4 }}
   {{- end -}}
+{{- end -}}
 {{- end -}}

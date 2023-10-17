@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- $config := .Values.server.clusterAdminAccess | default dict -}}
 {{- if hasKey $config "enabled" | ternary $config.enabled .Values.createClusterRoles }}
 apiVersion: rbac.authorization.k8s.io/v1
@@ -60,3 +61,4 @@ rules:
       {{/* supports triggering workflows from UI */}}
       - create
 {{- end }}
+{{- end -}}

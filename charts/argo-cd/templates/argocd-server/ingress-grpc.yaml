@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if and .Values.server.ingressGrpc.enabled (not .Values.server.ingressGrpc.isAWSALB) -}}
 {{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingressGrpc.https -}}
 {{- $paths := .Values.server.ingressGrpc.paths -}}
@@ -70,4 +71,5 @@ spec:
   tls:
     {{- toYaml . | nindent 4 }}
   {{- end -}}
+{{- end -}}
 {{- end -}}

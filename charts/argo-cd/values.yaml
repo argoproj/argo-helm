@@ -28,6 +28,8 @@ openshift:
 
 ## Custom resource configuration
 crds:
+  # -- Only install CRDs
+  only: false 
   # -- Install and upgrade CRDs
   install: true
   # -- Keep CRDs on chart uninstall

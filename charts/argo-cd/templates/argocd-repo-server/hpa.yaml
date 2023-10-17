@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if .Values.repoServer.autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -39,3 +40,4 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
+{{- end -}}

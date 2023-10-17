@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- $redisHa := (index .Values "redis-ha") -}}
 {{- if and .Values.redis.enabled (not $redisHa.enabled) -}}
 apiVersion: v1
@@ -24,3 +25,4 @@ spec:
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.redis.name) | nindent 4 }}
 {{- end }}
+{{- end -}}
