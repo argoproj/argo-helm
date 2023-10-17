@@ -19,7 +19,7 @@ We'd love to have you contribute! Please refer to our [contribution guidelines](
 
 ### Custom resource definitions
 
-Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of the main four charts (argo-cd, argo-workflows, argo-events, argo-rollouts) by using `--set crds.install=false` when installing the chart.
+Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of the main four charts (argo-cd, argo-workflows, argo-events, argo-rollouts) by using `--set crds.install=false` when installing the chart. Alternatively, installing only the CRDs can be achieved by setting `crds.only` to `true`
 
 Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations). Our CRDs have been moved to `<chart>/templates` to address this design decision.
 
