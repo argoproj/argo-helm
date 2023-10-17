@@ -79,6 +79,9 @@ helm.sh/chart: {{ include "argo-workflows.chart" .context }}
 {{ include "argo-workflows.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
 app.kubernetes.io/managed-by: {{ .context.Release.Service }}
 app.kubernetes.io/part-of: argo-workflows
+{{- with .Values.commonLabels }}
+{{ toYaml .}}
+{{- end }}
 {{- end }}
 
 {{/*
