@@ -16,7 +16,7 @@ metadata:
   {{- if .Values.server.ingress.annotations }}
   annotations:
     {{- range $key, $value := .Values.server.ingress.annotations }}
-    {{ $key }}: {{ $value | quote }}
+    {{ $key }}: {{ tpl $value $ | quote }}
     {{- end }}
     {{- if and .Values.server.ingressGrpc.isAWSALB .Values.server.ingressGrpc.enabled }}
     alb.ingress.kubernetes.io/conditions.{{ template "argo-cd.server.fullname" . }}-grpc: |
@@ -30,7 +30,7 @@ spec:
   rules:
   {{- if .Values.server.ingress.hosts }}
     {{- range $host := .Values.server.ingress.hosts }}
-    - host: {{ $host | quote }}
+    - host: {{ tpl $host $ | quote }}
       http:
         paths:
           {{- with $extraPaths }}

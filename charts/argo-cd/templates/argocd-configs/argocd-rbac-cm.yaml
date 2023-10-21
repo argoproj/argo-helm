@@ -14,6 +14,6 @@ metadata:
   {{- end }}
 {{- with (mergeOverwrite (deepCopy (omit .Values.configs.rbac "create" "annotations")) (.Values.server.rbacConfig | default dict)) }}
 data:
-  {{- toYaml . | nindent 2 }}
+  {{- tpl (toYaml .) $ | nindent 2 }}
 {{- end }}
 {{- end }}

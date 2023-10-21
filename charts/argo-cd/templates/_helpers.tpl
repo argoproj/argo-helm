@@ -176,7 +176,7 @@ Merge Argo Configuration with Preset Configuration
 {{- $config := (mergeOverwrite (deepCopy (omit .Values.configs.cm "create" "annotations")) (.Values.server.config | default dict))  -}}
 {{- $preset := include "argo-cd.config.cm.presets" . | fromYaml | default dict -}}
 {{- range $key, $value := mergeOverwrite $preset $config }}
-{{- $fmted := $value | toString }}
+{{- $fmted := tpl ($value | toString) $ }}
 {{- if not (eq $fmted "") }}
 {{ $key }}: {{ $fmted | toYaml }}
 {{- end }}

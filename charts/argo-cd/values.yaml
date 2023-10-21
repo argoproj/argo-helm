@@ -1898,6 +1898,7 @@ server:
     # -- Enable an ingress resource for the Argo CD server
     enabled: false
     # -- Additional ingress annotations
+    ## Annotation values may reference other values by {{ .Values.otherValue }} (be sure protect by quotation marks)
     annotations: {}
     # -- Additional ingress labels
     labels: {}
@@ -1908,6 +1909,7 @@ server:
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
+    ## Hosts value may reference other values by {{ .Values.otherValue }} (be sure protect by quotation marks)
     hosts: []
       # - argocd.example.com
 
@@ -1943,6 +1945,7 @@ server:
     # -- Setup up gRPC ingress to work with an AWS ALB
     isAWSALB: false
     # -- Additional ingress annotations for dedicated [gRPC-ingress]
+    ## Annotations values may reference other values by {{ .Values.otherValue }} (be sure protect by quotation marks)
     annotations: {}
     # -- Additional ingress labels for dedicated [gRPC-ingress]
     labels: {}
@@ -1965,6 +1968,7 @@ server:
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
+    ## Hosts value may reference other values by {{ .Values.otherValue }} (be sure protect by quotation marks)
     ##
     hosts: []
       # - argocd.example.com

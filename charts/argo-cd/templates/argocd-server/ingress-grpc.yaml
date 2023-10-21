@@ -16,7 +16,7 @@ metadata:
   {{- with .Values.server.ingressGrpc.annotations }}
   annotations:
     {{- range $key, $value := . }}
-    {{ $key }}: {{ $value | quote }}
+    {{ $key }}: {{ tpl $value $ | quote }}
     {{- end }}
   {{- end }}
 spec:
@@ -26,7 +26,7 @@ spec:
   rules:
   {{- if .Values.server.ingressGrpc.hosts }}
     {{- range $host := .Values.server.ingressGrpc.hosts }}
-    - host: {{ $host }}
+    - host: {{ tpl $host $  }}
       http:
         paths:
           {{- with $extraPaths }}
