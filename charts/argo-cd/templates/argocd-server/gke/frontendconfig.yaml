@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if .Values.server.GKEfrontendConfig.enabled }}
 apiVersion: networking.gke.io/v1beta1
 kind: FrontendConfig
@@ -9,3 +10,4 @@ metadata:
 spec:
   {{- toYaml .Values.server.GKEfrontendConfig.spec | nindent 2 }}
 {{- end }}
+{{- end -}}

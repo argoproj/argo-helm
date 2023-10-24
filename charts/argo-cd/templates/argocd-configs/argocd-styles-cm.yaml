@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if .Values.configs.styles }}
 apiVersion: v1
 kind: ConfigMap
@@ -10,3 +11,4 @@ data:
   custom.styles.css: |
     {{- .Values.configs.styles | nindent 4 }}
 {{- end }}
+{{- end -}}

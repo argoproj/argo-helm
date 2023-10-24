@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if and .Values.notifications.enabled .Values.notifications.metrics.enabled }}
 apiVersion: v1
 kind: Service
@@ -32,3 +33,4 @@ spec:
     port: {{ .Values.notifications.metrics.port }}
     targetPort: metrics
 {{- end }}
+{{- end -}}

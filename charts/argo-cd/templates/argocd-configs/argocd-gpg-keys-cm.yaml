@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -15,3 +16,4 @@ metadata:
 data:
   {{- toYaml . | nindent 2 }}
 {{- end }}
+{{- end -}}

@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- $redisHa := index .Values "redis-ha" -}}
 {{- if and .Values.redis.enabled (not $redisHa.enabled) .Values.redis.pdb.enabled }}
 apiVersion: policy/v1
@@ -26,3 +27,4 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.redis.name }}
 {{- end }}
+{{- end -}}

@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if and (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") .Values.server.metrics.enabled .Values.server.metrics.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -45,3 +46,4 @@ spec:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "component" .Values.server.name "name" (printf "%s-metrics" .Values.server.name)) | nindent 6 }}
 {{- end }}
+{{- end -}}

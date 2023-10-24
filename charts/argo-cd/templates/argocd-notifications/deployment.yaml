@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if .Values.notifications.enabled }}
 apiVersion: apps/v1
 kind: Deployment
@@ -159,3 +160,4 @@ spec:
       {{- end }}
       dnsPolicy: {{ .Values.notifications.dnsPolicy }}
 {{- end }}
+{{- end -}}

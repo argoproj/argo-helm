@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if .Values.server.ingress.enabled -}}
 {{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingress.https -}}
 {{- $paths := .Values.server.ingress.paths -}}
@@ -87,4 +88,5 @@ spec:
   tls:
     {{- toYaml . | nindent 4 }}
   {{- end -}}
+{{- end -}}
 {{- end -}}

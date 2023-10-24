@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if and .Values.server.ingressGrpc.enabled .Values.server.ingressGrpc.isAWSALB -}}
 apiVersion: v1
 kind: Service
@@ -22,4 +23,5 @@ spec:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
   sessionAffinity: None
   type: {{ .Values.server.ingressGrpc.awsALB.serviceType }}
+{{- end -}}
 {{- end -}}

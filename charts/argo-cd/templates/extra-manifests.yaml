@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{ range .Values.extraObjects }}
 ---
 {{ if typeIs "string" . }}
@@ -6,3 +7,4 @@
     {{- tpl (toYaml .) $ }}
 {{- end }}
 {{ end }}
+{{- end -}}

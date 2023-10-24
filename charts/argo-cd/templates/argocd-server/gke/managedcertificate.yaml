@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if .Values.server.GKEmanagedCertificate.enabled }}
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
@@ -10,3 +11,4 @@ spec:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 {{- end }}
+{{- end -}}

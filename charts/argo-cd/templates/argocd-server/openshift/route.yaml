@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if .Values.server.route.enabled -}}
 apiVersion: route.openshift.io/v1
 kind: Route
@@ -25,3 +26,4 @@ spec:
     insecureEdgeTerminationPolicy: {{ .Values.server.route.termination_policy | quote }}
   wildcardPolicy: None
 {{- end }}
+{{- end -}}

@@ -1,3 +1,4 @@
+{{- if not .Values.crds.only -}}
 {{- if .Values.dex.enabled }}
 apiVersion: apps/v1
 kind: Deployment
@@ -205,3 +206,4 @@ spec:
       {{- end }}
       dnsPolicy: {{ .Values.dex.dnsPolicy }}
 {{- end }}
+{{- end -}}
