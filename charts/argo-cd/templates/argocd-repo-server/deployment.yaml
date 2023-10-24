@@ -62,6 +62,9 @@ spec:
       {{- with .Values.repoServer.priorityClassName | default .Values.global.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      {{- if .Values.repoServer.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.repoServer.terminationGracePeriodSeconds }}
+      {{- end }}
       serviceAccountName: {{ include "argo-cd.repoServerServiceAccountName" . }}
       containers:
       - name: {{ .Values.repoServer.name }}

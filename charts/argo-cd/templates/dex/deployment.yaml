@@ -55,6 +55,9 @@ spec:
       {{- with .Values.dex.priorityClassName | default .Values.global.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      {{- if .Values.dex.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.dex.terminationGracePeriodSeconds }}
+      {{- end }}
       serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
       containers:
       - name: {{ .Values.dex.name }}
