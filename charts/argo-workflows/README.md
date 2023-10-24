@@ -142,6 +142,7 @@ Fields to note:
 | controller.affinity | object | `{}` | Assign custom [affinity] rules |
 | controller.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates. |
 | controller.columns | list | `[]` | Configure Argo Server to show custom [columns] |
+| controller.cronWorkflowWorkers | string | `nil` | Number of cron workflow workers Only valid for 3.5+ |
 | controller.deploymentAnnotations | object | `{}` | deploymentAnnotations is an optional map of annotations to be applied to the controller Deployment |
 | controller.extraArgs | list | `[]` | Extra arguments to be added to the controller |
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
@@ -182,6 +183,7 @@ Fields to note:
 | controller.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the controller pods |
 | controller.persistence | object | `{}` | enable persistence using postgres |
 | controller.podAnnotations | object | `{}` | podAnnotations is an optional map of annotations to be applied to the controller Pods |
+| controller.podCleanupWorkers | string | `nil` | Number of pod cleanup workers |
 | controller.podGCDeleteDelayDuration | string | `5s` (Argo Workflows default) | The duration in seconds before the pods in the GC queue get deleted. A zero value indicates that the pods will be deleted immediately. |
 | controller.podGCGracePeriodSeconds | string | `30` seconds (Kubernetes default) | Specifies the duration in seconds before a terminating pod is forcefully killed. A zero value indicates that the pod will be forcefully terminated immediately. |
 | controller.podLabels | object | `{}` | Optional labels to add to the controller pods |
@@ -221,6 +223,7 @@ Fields to note:
 | controller.workflowDefaults | object | `{}` | Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level. Only valid for 2.7+ |
 | controller.workflowNamespaces | list | `["default"]` | Specify all namespaces where this workflow controller instance will manage workflows. This controls where the service account and RBAC resources will be created. Only valid when singleNamespace is false. |
 | controller.workflowRestrictions | object | `{}` | Restricts the Workflows that the controller will process. Only valid for 2.9+ |
+| controller.workflowTTLWorkers | string | `nil` | Number of workflow TTL workers |
 | controller.workflowWorkers | string | `nil` | Number of workflow workers |
 
 ### Workflow Main Container
