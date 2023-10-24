@@ -60,6 +60,18 @@ spec:
           - "--workflow-workers"
           - {{ . | quote }}
           {{- end }}
+          {{- with .Values.controller.workflowTTLWorkers }}
+          - "--workflow-ttl-workers"
+          - {{ . | quote }}
+          {{- end }}
+          {{- with .Values.controller.podCleanupWorkers }}
+          - "--pod-cleanup-workers"
+          - {{ . | quote }}
+          {{- end }}
+          {{- with .Values.controller.cronWorkflowWorkers }}
+          - "--cron-workflow-workers"
+          - {{ . | quote }}
+          {{- end }}
           {{- with .Values.controller.extraArgs }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
