@@ -731,6 +731,9 @@ controller:
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
 
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+
   # -- Priority class for the application controller pods
   # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
@@ -1074,6 +1077,9 @@ dex:
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
 
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+
   serviceAccount:
     # -- Create dex service account
     create: true
@@ -1312,6 +1318,9 @@ redis:
     # - maxSkew: 1
     #   topologyKey: topology.kubernetes.io/zone
     #   whenUnsatisfiable: DoNotSchedule
+
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
 
   serviceAccount:
     # -- Create a service account for the redis pod
@@ -1717,6 +1726,9 @@ server:
     successThreshold: 1
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
+
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
 
   # -- Priority class for the Argo CD server pods
   # @default -- `""` (defaults to global.priorityClassName)
@@ -2266,6 +2278,9 @@ repoServer:
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
 
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+
   # -- [Node selector]
   # @default -- `{}` (defaults to global.nodeSelector)
   nodeSelector: {}
@@ -2623,6 +2638,9 @@ applicationSet:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
 
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+
   # -- [Node selector]
   # @default -- `{}` (defaults to global.nodeSelector)
   nodeSelector: {}
@@ -2935,6 +2953,9 @@ notifications:
     capabilities:
       drop:
       - ALL
+
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
 
   # -- [Node selector]
   # @default -- `{}` (defaults to global.nodeSelector)

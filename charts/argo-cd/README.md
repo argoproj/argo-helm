@@ -561,6 +561,7 @@ NAME: my-release
 | controller.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | controller.serviceAccount.name | string | `"argocd-application-controller"` | Service account name |
 | controller.statefulsetAnnotations | object | `{}` | Annotations for the application controller StatefulSet |
+| controller.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | controller.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to the application controller main container |
@@ -653,6 +654,7 @@ NAME: my-release
 | repoServer.serviceAccount.create | bool | `true` | Create repo server service account |
 | repoServer.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | repoServer.serviceAccount.name | string | `""` | Repo server service account name |
+| repoServer.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | repoServer.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | repoServer.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the repo server |
 | repoServer.useEphemeralHelmWorkingDir | bool | `true` | Toggle the usage of a ephemeral Helm working directory |
@@ -807,6 +809,7 @@ NAME: my-release
 | server.serviceAccount.create | bool | `true` | Create server service account |
 | server.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | server.serviceAccount.name | string | `"argocd-server"` | Server service account name |
+| server.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | server.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | server.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the Argo CD server |
 | server.volumeMounts | list | `[]` | Additional volumeMounts to the server main container |
@@ -915,6 +918,7 @@ server:
 | dex.servicePortHttp | int | `5556` | Service port for HTTP access |
 | dex.servicePortHttpName | string | `"http"` | Service port name for HTTP access |
 | dex.servicePortMetrics | int | `5558` | Service port for metrics access |
+| dex.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | dex.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | dex.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to dex |
 | dex.volumeMounts | list | `[]` | Additional volumeMounts to the dex main container |
@@ -986,6 +990,7 @@ server:
 | redis.serviceAccount.create | bool | `false` | Create a service account for the redis pod |
 | redis.serviceAccount.name | string | `""` | Service account name for redis pod |
 | redis.servicePort | int | `6379` | Redis service port |
+| redis.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | redis.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | redis.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to redis |
 | redis.volumeMounts | list | `[]` | Additional volumeMounts to the redis container |
@@ -1136,6 +1141,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.serviceAccount.create | bool | `true` | Create ApplicationSet controller service account |
 | applicationSet.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | applicationSet.serviceAccount.name | string | `"argocd-applicationset-controller"` | ApplicationSet controller service account name |
+| applicationSet.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | applicationSet.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | applicationSet.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the ApplicationSet controller |
 | applicationSet.webhook.ingress.annotations | object | `{}` | Additional ingress annotations |
@@ -1214,6 +1220,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.serviceAccount.name | string | `"argocd-notifications-controller"` | Notification controller service account name |
 | notifications.subscriptions | list | `[]` | Contains centrally managed global application subscriptions |
 | notifications.templates | object | `{}` | The notification template is used to generate the notification content |
+| notifications.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | notifications.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | notifications.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | notifications.triggers | object | `{}` | The trigger defines the condition when the notification should be sent |
