@@ -1909,7 +1909,22 @@ server:
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
-    ## Hosts value may reference other values by {{ .Values.otherValue }} (be sure protect by quotation marks)
+    ##
+    ## Hosts value may reference other values.
+    ## For example in case of multiple environments you can use the same argocd values when environment specific
+    ## values are defined in separate environment file that is used by multiple helm charts
+    ##
+    ## # env-values.yaml
+    ## global:
+    ##   dnsDomain: .my.domain.com
+    ##
+    ## # values.yaml
+    ## hosts:
+    ##   - "argocd {{ .Values.global.dnsDomain }}" # be sure protect by quotation marks
+    ##
+    ## helm install my-release argo/argo-cd -f global/env/configuration/env1-values.yaml
+    ##
+
     hosts: []
       # - argocd.example.com
 
@@ -1965,10 +1980,11 @@ server:
       backendProtocolVersion: HTTP2
 
     # -- List of ingress hosts for dedicated [gRPC-ingress]
+    # Hosts value may [reference other values]
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
-    ## Hosts value may reference other values by {{ .Values.otherValue }} (be sure protect by quotation marks)
+
     ##
     hosts: []
       # - argocd.example.com
