@@ -719,10 +719,10 @@ NAME: my-release
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
 | server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Argo CD server |
 | server.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
-| server.ingress.annotations | object | `{}` | Additional ingress annotations |
+| server.ingress.annotations | object | `{}` | Additional ingress annotations  Annotation values may [reference other values] |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
 | server.ingress.extraPaths | list | `[]` | Additional ingress paths |
-| server.ingress.hosts | list | `[]` | List of ingress hosts |
+| server.ingress.hosts | list | `[]` | List of ingress hosts Hosts value may [reference other values] |
 | server.ingress.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
 | server.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
 | server.ingress.labels | object | `{}` | Additional ingress labels |
