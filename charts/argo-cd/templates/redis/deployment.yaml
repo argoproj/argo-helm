@@ -48,6 +48,9 @@ spec:
       {{- with .Values.redis.priorityClassName | default .Values.global.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      {{- if .Values.redis.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.redis.terminationGracePeriodSeconds }}
+      {{- end }}
       serviceAccountName: {{ include "argo-cd.redisServiceAccountName" . }}
       containers:
       - name: {{ .Values.redis.name }}

@@ -52,6 +52,9 @@ spec:
       {{- with .Values.applicationSet.priorityClassName | default .Values.global.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      {{- if .Values.applicationSet.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.applicationSet.terminationGracePeriodSeconds }}
+      {{- end }}
       serviceAccountName: {{ include "argo-cd.applicationSetServiceAccountName" . }}
       containers:
         - name: {{ .Values.applicationSet.name }}
