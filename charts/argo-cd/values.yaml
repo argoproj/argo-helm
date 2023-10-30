@@ -2997,6 +2997,12 @@ notifications:
     # -- Whether helm chart creates notifications controller config map
     create: true
 
+  ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
+  ## Defaults to off
+  clusterRoleRules:
+    # -- List of custom rules for the notifications controller's ClusterRole resource
+    rules: []
+
   # -- Contains centrally managed global application subscriptions
   ## For more information: https://argocd-notifications.readthedocs.io/en/stable/subscriptions/
   subscriptions: []
