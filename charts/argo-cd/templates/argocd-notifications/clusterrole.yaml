@@ -8,7 +8,7 @@ metadata:
 rules:
   {{- with .Values.notifications.clusterRoleRules.rules }}
     {{- toYaml . | nindent 2 }}
-  {{- else }}
+  {{- end }}
   - apiGroups:
     - "argoproj.io"
     resources:
@@ -19,5 +19,4 @@ rules:
     - watch
     - update
     - patch
-  {{- end }}
 {{- end }}
