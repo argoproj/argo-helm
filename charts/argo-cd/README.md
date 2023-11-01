@@ -1247,7 +1247,7 @@ global:
 server:
   ingress:
     hosts:
-      - "argocd {{ .Values.global.dnsDomain }}" # be sure protect by quotation marks
+      - "argocd{{ .Values.global.dnsDomain }}" # be sure protect by quotation marks
 ```
 
 ```
