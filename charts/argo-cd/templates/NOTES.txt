@@ -142,7 +142,7 @@ In order to access the server UI you have the following options:
 {{ if eq (toString (index (coalesce .Values.server.config .Values.configs.cm) "admin.enabled")) "true" -}}
 After reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:
 
-kubectl -n {{ .Release.Namespace }} get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+kubectl -n {{ .Release.Namespace }} get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d | xargs
 
 (You should delete the initial secret afterwards as suggested by the Getting Started Guide: https://argo-cd.readthedocs.io/en/stable/getting_started/#4-login-using-the-cli)
 {{ else if or (index .Values.configs.cm "dex.config") (index .Values.configs.cm "oidc.config") -}}
