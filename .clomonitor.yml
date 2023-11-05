@@ -7,6 +7,10 @@ exemptions:
     reason: "Helm deps are not currently scanned. Maintainers are watching developments to dependabot-core #2237" # Justification of this exemption (mandatory, it will be displayed on the UI)
   - check: sbom
     reason: "Tracking Helm dependencies is not yet a stable practice."
+  - check: self_assessment
+    reason: "Refer to self assessments supplied by the codebases Argo Helm supports."
+  - check: signed_releases
+    reason: "Argo Helm releases are made via Artifact Hub, where they are signed. The unsigned GitHub releases are for reference only."
 
 # TODO:
 # License scanning information
