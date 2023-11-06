@@ -6,6 +6,7 @@
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/argo)](https://artifacthub.io/packages/search?repo=argo)
 [![CLOMonitor](https://img.shields.io/endpoint?url=https://clomonitor.io/api/projects/cncf/argo/badge)](https://clomonitor.io/projects/cncf/argo)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/argoproj/argo-helm/badge)](https://api.securityscorecards.dev/projects/github.com/argoproj/argo-helm)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/7942/badge)](https://www.bestpractices.dev/projects/7942)
 
 Argo Helm is a collection of **community maintained** charts for [https://argoproj.github.io](https://argoproj.github.io) projects. The charts can be added using following command:
 
