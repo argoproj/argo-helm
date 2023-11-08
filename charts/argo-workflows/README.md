@@ -260,7 +260,8 @@ Fields to note:
 | server.GKEmanagedCertificate.domains | list | `["argoworkflows.example.com"]` | Domains for the Google Managed Certificate |
 | server.GKEmanagedCertificate.enabled | bool | `false` | Enable ManagedCertificate custom resource for Google Kubernetes Engine. |
 | server.affinity | object | `{}` | Assign custom [affinity] rules |
-| server.authMode | string | `""` | Auth Mode is available from `server` , `client` or `sso`. If you chose `sso` , please configure `.Values.server.sso` as well. |
+| server.authMode | string | `""` | Deprecated; use server.authModes instead. |
+| server.authModes | list | `[]` | A list of supported authentication modes. Available values are `server`, `client`, or `sso`. If you provide sso, please configure `.Values.server.sso` as well. |
 | server.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. This is only available on HPA apiVersion `autoscaling/v2beta2` and newer |
 | server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server |
 | server.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the Argo Server [HPA] |
