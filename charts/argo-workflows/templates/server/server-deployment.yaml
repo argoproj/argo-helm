@@ -52,7 +52,10 @@ spec:
           {{- with .Values.server.extraArgs }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- range .Values.server.authMode }}
+          {{- if .Values.server.authMode }}
+          - "--auth-mode={{ .Values.server.authMode }}"
+          {{- end }}
+          {{- range .Values.server.authModes }}
           - "--auth-mode={{ . }}"
           {{- end }}
           - "--secure={{ .Values.server.secure }}"

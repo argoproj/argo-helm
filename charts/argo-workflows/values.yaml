@@ -536,9 +536,12 @@ server:
     # - name: FOO
     #   value: "bar"
 
+  # -- Deprecated; use server.authModes instead.
+  authMode: ""
+
   # -- A list of supported authentication modes. Available values are `server`, `client`, or `sso`. If you provide sso, please configure `.Values.server.sso` as well.
   ## Ref: https://argoproj.github.io/argo-workflows/argo-server-auth-mode/
-  authMode: []
+  authModes: []
 
   # -- Extra arguments to provide to the Argo server binary.
   ## Ref: https://argoproj.github.io/argo-workflows/argo-server/#options
