@@ -55,6 +55,9 @@ spec:
           {{- if .Values.server.authMode }}
           - "--auth-mode={{ .Values.server.authMode }}"
           {{- end }}
+          {{- range .Values.server.authModes }}
+          - "--auth-mode={{ . }}"
+          {{- end }}
           - "--secure={{ .Values.server.secure }}"
           {{- if .Values.singleNamespace }}
           - "--namespaced"
