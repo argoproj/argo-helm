@@ -536,7 +536,7 @@ server:
     # - name: FOO
     #   value: "bar"
 
-  # -- Auth Mode is available from `server` , `client` or `sso`. If you chose `sso` , please configure `.Values.server.sso` as well.
+  # -- A list of supported authentication modes. Available values are `server`, `client`, or `sso`. If you provide sso, please configure `.Values.server.sso` as well.
   ## Ref: https://argoproj.github.io/argo-workflows/argo-server-auth-mode/
   authMode: []
 
