@@ -21,6 +21,9 @@ rules:
       - events
     verbs:
       - list
+      {{- if (index .Values.configs.params "application.namespaces") }}
+      - create
+      {{- end }}
   - apiGroups:
       - ""
     resources:
