@@ -51,6 +51,9 @@ spec:
       {{- with .Values.notifications.priorityClassName | default .Values.global.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      {{- if .Values.notifications.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.notifications.terminationGracePeriodSeconds }}
+      {{- end }}
       serviceAccountName: {{ include "argo-cd.notificationsServiceAccountName" . }}
       containers:
         - name: {{ .Values.notifications.name }}
@@ -75,11 +78,17 @@ spec:
                 configMapKeyRef:
                   key: notificationscontroller.log.level
                   name: argocd-cmd-params-cm
-                  optional: true              
+                  optional: true
             - name: ARGOCD_NOTIFICATIONS_CONTROLLER_LOGFORMAT
               valueFrom:
                 configMapKeyRef:
                   key: notificationscontroller.log.format
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATION_NAMESPACES
+              valueFrom:
+                configMapKeyRef:
+                  key: application.namespaces
                   name: argocd-cmd-params-cm
                   optional: true
           {{- with .Values.notifications.extraEnvFrom }}

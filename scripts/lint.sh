@@ -9,7 +9,7 @@ echo -e "\n-- Linting all Helm Charts --\n"
 docker run \
      -v "$SRCROOT:/workdir" \
      --entrypoint /bin/sh \
-     quay.io/helmpack/chart-testing:v3.7.1 \
+     quay.io/helmpack/chart-testing:v3.10.0 \
      -c cd /workdir \
      ct lint \
      --config .github/configs/ct-lint.yaml \
