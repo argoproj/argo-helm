@@ -2,17 +2,17 @@ apiVersion: v2
 name: argocd-image-updater
 description: A Helm chart for Argo CD Image Updater, a tool to automatically update the container images of Kubernetes workloads which are managed by Argo CD
 type: application
-version: 0.9.1
+version: 0.9.2
 appVersion: v0.12.2
 home: https://github.com/argoproj-labs/argocd-image-updater
 icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
 keywords:
-  - argoproj
-  - argocd
-  - gitops
+- argoproj
+- argocd
+- gitops
 maintainers:
-  - name: argoproj
-    url: https://argoproj.github.io/
+- name: argoproj
+  url: https://argoproj.github.io/
 annotations:
   artifacthub.io/signKey: |
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
@@ -20,3 +20,7 @@ annotations:
   artifacthub.io/changes: |
     - kind: added
       description: Introduce chart signing
+    - kind: added
+      description: Added Google Artifact Repository in the list of supported registries.
+    - kind: fixed
+      description: Fixed a typo in SECURITY.md   
