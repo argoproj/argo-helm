@@ -19841,6 +19841,32 @@ entries:
   argo-rollouts:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Upgrade Argo Rollouts to v1.6.1
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.6.1
+    created: "2023-11-15T10:00:47.477945549Z"
+    description: A Helm chart for Argo Rollouts
+    digest: 4f3b68abc7b3bdd0030eddbd6c46d92882ec643973bdc9e5575cb867581855c6
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-rollouts
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-rollouts
+    sources:
+    - https://github.com/argoproj/argo-rollouts
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-rollouts-2.32.3/argo-rollouts-2.32.3.tgz
+    version: 2.32.3
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Update AnalysisRun CRD to match upstream
       artifacthub.io/signKey: |
@@ -27006,4 +27032,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-11-15T05:59:35.164704809Z"
+generated: "2023-11-15T10:00:47.479888422Z"
