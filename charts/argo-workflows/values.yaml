@@ -295,6 +295,8 @@ controller:
   volumes: []
   # -- The number of controller pods to run
   replicas: 1
+  # -- The number of revisions to keep.
+  revisionHistoryLimit: 10
 
   pdb:
     # -- Configure [Pod Disruption Budget] for the controller pods
@@ -472,6 +474,8 @@ server:
   resources: {}
   # -- The number of server pods to run
   replicas: 1
+  # -- The number of revisions to keep.
+  revisionHistoryLimit: 10
   ## Argo Server Horizontal Pod Autoscaler
   autoscaling:
     # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server
@@ -555,6 +559,9 @@ server:
     # -- Set the logging format (one of: `text`, `json`)
     format: "text"
 
+  # -- Volume to be mounted in Pods for temporary files.
+  tmpVolume:
+    emptyDir: {}
   # -- Additional volume mounts to the server main container.
   volumeMounts: []
   # -- Additional volumes to the server pod.
