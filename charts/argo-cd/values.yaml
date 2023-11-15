@@ -236,6 +236,10 @@ configs:
     controller.self.heal.timeout.seconds: 5
     # -- Repo server RPC call timeout seconds.
     controller.repo.server.timeout.seconds: 60
+    # -- The maximum number of retries for each request
+    controller.k8sclient.retry.max: 0
+    # -- The initial backoff delay on the first retry attempt in ms. Subsequent retries will double this backoff time up to a maximum threshold
+    controller.k8sclient.retry.base.backoff: 100
 
     ## Server properties
     # -- Run server without TLS
@@ -252,6 +256,10 @@ configs:
     server.enable.gzip: true
     # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
     server.x.frame.options: sameorigin
+    # -- The maximum number of retries for each request
+    server.k8sclient.retry.max: 0
+    # -- The initial backoff delay on the first retry attempt in ms. Subsequent retries will double this backoff time up to a maximum threshold
+    server.k8sclient.retry.base.backoff: 100
 
     ## Repo-server properties
     # -- Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit.

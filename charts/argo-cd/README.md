@@ -452,6 +452,8 @@ NAME: my-release
 | configs.params."application.namespaces" | string | `""` | Enables [Applications in any namespace] |
 | configs.params."applicationsetcontroller.enable.progressive.syncs" | bool | `false` | Enables use of the Progressive Syncs capability |
 | configs.params."applicationsetcontroller.policy" | string | `"sync"` | Modify how application is synced between the generator and the cluster. One of: `sync`, `create-only`, `create-update`, `create-delete` |
+| configs.params."controller.k8sclient.retry.base.backoff" | int | `100` | The initial backoff delay on the first retry attempt in ms. Subsequent retries will double this backoff time up to a maximum threshold |
+| configs.params."controller.k8sclient.retry.max" | int | `0` | The maximum number of retries for each request |
 | configs.params."controller.operation.processors" | int | `10` | Number of application operation processors |
 | configs.params."controller.repo.server.timeout.seconds" | int | `60` | Repo server RPC call timeout seconds. |
 | configs.params."controller.self.heal.timeout.seconds" | int | `5` | Specifies timeout between application self heal attempts |
@@ -462,6 +464,8 @@ NAME: my-release
 | configs.params."server.disable.auth" | bool | `false` | Disable Argo CD RBAC for user authentication |
 | configs.params."server.enable.gzip" | bool | `true` | Enable GZIP compression |
 | configs.params."server.insecure" | bool | `false` | Run server without TLS |
+| configs.params."server.k8sclient.retry.base.backoff" | int | `100` | The initial backoff delay on the first retry attempt in ms. Subsequent retries will double this backoff time up to a maximum threshold |
+| configs.params."server.k8sclient.retry.max" | int | `0` | The maximum number of retries for each request |
 | configs.params."server.rootpath" | string | `""` | Used if Argo CD is running behind reverse proxy under subpath different from / |
 | configs.params."server.staticassets" | string | `"/shared/app"` | Directory path that contains additional static assets |
 | configs.params."server.x.frame.options" | string | `"sameorigin"` | Set X-Frame-Options header in HTTP responses to value. To disable, set to "". |
