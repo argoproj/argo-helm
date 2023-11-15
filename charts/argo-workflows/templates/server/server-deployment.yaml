@@ -15,6 +15,7 @@ spec:
   {{- if not .Values.server.autoscaling.enabled }}
   replicas: {{ .Values.server.replicas }}
   {{- end }}
+  revisionHistoryLimit: {{ .Values.server.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}
@@ -112,7 +113,7 @@ spec:
       {{- end }}
       volumes:
       - name: tmp
-        emptyDir: {}
+        {{- toYaml .Values.server.tmpVolume | nindent 8 }}
       {{- with .Values.server.volumes }}
         {{- toYaml . | nindent 6}}
       {{- end }}
