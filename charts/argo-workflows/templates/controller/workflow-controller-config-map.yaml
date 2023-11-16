@@ -177,8 +177,6 @@ data:
     {{- with .Values.controller.retentionPolicy }}
     retentionPolicy: {{- toYaml . | nindent 6 }}
     {{- end }}
-<<<<<<< HEAD
-=======
     {{- with .Values.emissary.images }}
     images: {{- toYaml . | nindent 6 }}
     {{- end }}
@@ -193,4 +191,3 @@ data:
     {{- with .Values.controller.podGCDeleteDelayDuration }}
     podGCDeleteDelayDuration: {{ . }}
     {{- end }}
->>>>>>> argo-cd-5.27.1

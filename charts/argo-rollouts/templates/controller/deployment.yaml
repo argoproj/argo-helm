@@ -48,7 +48,7 @@ spec:
         {{- if not .Values.clusterInstall }}
         - --namespaced
         {{- end }}
-        {{- if gt .Values.controller.replicas 1.0 }}
+        {{- if gt (int .Values.controller.replicas) 1 }}
         - --leader-elect
         {{- end }}
         {{- with .Values.controller.extraArgs }}
