@@ -56,6 +56,7 @@ ArgoCD Image Updater natively supports the following registries (as mentioned in
 
 - Docker Hub
 - Google Container Registry
+- Google Artifact Registry
 - RedHat Quay
 - GitHub Container Registry
 - GitHub Docker Packages
