@@ -142,6 +142,8 @@ Fields to note:
 | controller.affinity | object | `{}` | Assign custom [affinity] rules |
 | controller.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates. |
 | controller.columns | list | `[]` | Configure Argo Server to show custom [columns] |
+| controller.configMap.create | bool | `true` | Create a ConfigMap for the controller |
+| controller.configMap.name | string | `""` | ConfigMap name |
 | controller.cronWorkflowWorkers | string | `nil` | Number of cron workflow workers Only valid for 3.5+ |
 | controller.deploymentAnnotations | object | `{}` | deploymentAnnotations is an optional map of annotations to be applied to the controller Deployment |
 | controller.extraArgs | list | `[]` | Extra arguments to be added to the controller |
