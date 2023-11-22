@@ -45,7 +45,7 @@ spec:
           command: [ "workflow-controller" ]
           args:
           - "--configmap"
-          - {{ template "argo-workflows.controller.config-map.name" . | quote }}
+          - "{{ template "argo-workflows.controller.config-map.name" . }}"
           - "--executor-image"
           - "{{- include "argo-workflows.image" (dict "context" . "image" .Values.executor.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.executor.image.tag }}"
           - "--loglevel"
