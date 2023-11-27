@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v3.5.1
+appVersion: v3.5.2
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.39.4
+version: 0.39.5
 icon: https://argoproj.github.io/argo-workflows/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -16,5 +16,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: added
-      description: Make configMap optional and allow its name to be overridden
+    - kind: changed
+      description: Upgrade Argo Workflows to v3.5.2
