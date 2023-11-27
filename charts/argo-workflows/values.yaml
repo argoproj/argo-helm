@@ -91,6 +91,12 @@ controller:
     # -- Allows controller to create and update ConfigMaps. Enables memoization feature
     writeConfigMaps: false
 
+  configMap:
+    # -- Create a ConfigMap for the controller
+    create: true
+    # -- ConfigMap name
+    name: ""
+
   # -- Limits the maximum number of incomplete workflows in a namespace
   namespaceParallelism:
   # -- Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224
