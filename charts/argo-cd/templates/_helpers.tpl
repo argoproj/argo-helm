@@ -216,3 +216,20 @@ Merge Argo Params Configuration with Preset Configuration
 {{ $key }}: {{ toString $value | toYaml }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Create event reporter name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.event-reporter.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.eventReporter.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{/*
+Create the name of the Argo CD server service account to use
+*/}}
+{{- define "argo-cd.eventReporterServiceAccountName" -}}
+{{- if .Values.eventReporter.serviceAccount.create -}}
+    {{ default (include "argo-cd.event-reporter.fullname" .) .Values.eventReporter.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.eventReporter.serviceAccount.name }}
+{{- end -}}
+{{- end -}}

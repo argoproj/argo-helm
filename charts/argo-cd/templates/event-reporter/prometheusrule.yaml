@@ -1,0 +1,24 @@
+{{- if and .Values.eventReporter.enabled .Values.eventReporter.metrics.enabled .Values.eventReporter.metrics.rules.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ template "argo-cd.event-reporter.fullname" . }}
+  namespace: {{ default .Release.Namespace .Values.eventReporter.metrics.rules.namespace | quote }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.eventReporter.name "name" .Values.eventReporter.name) | nindent 4 }}
+    {{- if .Values.eventReporter.metrics.rules.selector }}
+{{- toYaml .Values.eventReporter.metrics.rules.selector | nindent 4 }}
+    {{- end }}
+    {{- if .Values.eventReporter.metrics.rules.additionalLabels }}
+{{- toYaml .Values.eventReporter.metrics.rules.additionalLabels | nindent 4 }}
+    {{- end }}
+  {{- with .Values.eventReporter.metrics.rules.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  groups:
+  - name: argocd
+    rules:
+{{- toYaml .Values.eventReporter.metrics.rules.spec | nindent 4 }}
+{{- end }}

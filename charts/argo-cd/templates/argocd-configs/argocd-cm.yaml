@@ -14,4 +14,8 @@ metadata:
   {{- end }}
 data:
   {{- include "argo-cd.config.cm" . | trim | nindent 2 }}
+
+  {{- if and .Values.eventReporter.enabled .Values.eventReporter.version }}
+  codefresh.reporterVersion: {{ .Values.eventReporter.version | quote }}
+  {{- end }}
 {{- end }}
