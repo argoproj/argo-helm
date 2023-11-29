@@ -121,7 +121,7 @@ This version adds support for Config Management Plugins using the sidecar model 
 Users will need to migrate from the previous `argocd-cm` ConfigMap method to using the sidecar method before Argo CD v2.8. See the [Argo CD CMP migration guide](https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/#migrating-from-argocd-cm-plugins) for more specifics.
 
 To migrate your plugins, you can now set the `configs.cmp.create` to `true` and move your plugin from `configs.cm` to `configs.cmp.plugins`.
-You will also need to configure the sidecar containers under `repoServer.extraContainers` and mount ensure you are mounting any custom volumes you need from `repoServer.volumes` into here also.
+You will also need to configure the sidecar containers under `repoServer.extraContainers` and ensure you are mounting any custom volumes you need from `repoServer.volumes` into here also.
 
 ### 5.24.0
 
