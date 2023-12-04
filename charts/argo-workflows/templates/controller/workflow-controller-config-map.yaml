@@ -1,7 +1,8 @@
+{{- if .Values.controller.configMap.create }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "argo-workflows.controller.fullname" . }}-configmap
+  name: {{ template "argo-workflows.controller.config-map.name" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" "cm") | nindent 4 }}
@@ -191,3 +192,4 @@ data:
     {{- with .Values.controller.podGCDeleteDelayDuration }}
     podGCDeleteDelayDuration: {{ . }}
     {{- end }}
+{{- end }}

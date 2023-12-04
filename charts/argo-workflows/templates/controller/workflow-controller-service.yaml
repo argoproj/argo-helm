@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ default (include "argo-workflows.defaultTag" .) .Values.controller.image.tag | trunc 63 | quote }}
+    app.kubernetes.io/version: {{ include "argo-workflows.controller_chart_version_label" . }}
     {{- with .Values.controller.serviceLabels }}
       {{ toYaml . | nindent 4 }}
     {{- end }}
