@@ -8,6 +8,9 @@ on:
     types:
       - labeled
 
+permissions:
+  contents: write
+
 jobs:
   helm-bumper:
     if: ${{ (contains(github.event.pull_request.labels.*.name, 'renovate')) }}
