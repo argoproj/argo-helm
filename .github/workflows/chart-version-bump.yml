@@ -38,7 +38,7 @@ jobs:
           minor=$(echo $version | cut -d. -f2)
           patch=$(echo $version | cut -d. -f3)
           patch=$(expr $patch + 1)
-          sed -i "s/^version:.*/version: v${major}.${minor}.${patch}/g" ${parentDir}/Chart.yaml
+          sed -i "s/^version:.*/version: ${major}.${minor}.${patch}/g" ${parentDir}/Chart.yaml
 
           # Add a changelog entry
           appVersion=$(grep '^appVersion:' ${parentDir}/Chart.yaml | awk '{print $2}')
