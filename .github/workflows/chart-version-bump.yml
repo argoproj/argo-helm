@@ -16,12 +16,12 @@ jobs:
     if: ${{ (contains(github.event.pull_request.labels.*.name, 'renovate')) }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@v40
+        uses: tj-actions/changed-files@https://github.com/tj-actions/changed-files/commit/1c938490c880156b746568a518594309cfb3f66b # v40.2.1
         with:
           files: charts/{argo-workflows,argo-cd,argo-events,argo-rollouts,argocd-image-updater}/Chart.yaml
       - name: "Bump Version and Changelog"
@@ -48,6 +48,6 @@ jobs:
           echo "      description: Bump ${chartName} to ${appVersion}" >> ${parentDir}/Chart.yaml
           cat ${parentDir}/Chart.yaml
       - name: "Commit and push changes"
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5.0.0
         with:
           commit_options: '--signoff'
