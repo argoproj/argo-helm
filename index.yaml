@@ -21796,6 +21796,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Add support for sso filterGroupsRegex according to https://argoproj.github.io/argo-workflows/argo-server-sso/#filtering-groups
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.5.2
+    created: "2023-12-08T22:45:25.512498484Z"
+    description: A Helm chart for Argo Workflows
+    digest: 02219ee3b4e467fd0a8ade0f92c095dc125ceace0468d955ad39b82f4a9c1410
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-workflows/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.39.8/argo-workflows-0.39.8.tgz
+    version: 0.39.8
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Fixes OAuth redirect URL autoconfig.
       artifacthub.io/signKey: |
@@ -27444,4 +27468,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-12-08T15:07:00.140165707Z"
+generated: "2023-12-08T22:45:25.513869353Z"
