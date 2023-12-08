@@ -701,6 +701,11 @@ server:
     userInfoPath: ""
     # -- Skip TLS verification for the HTTP client
     insecureSkipVerify: false
+    # -- Filter the groups returned by the OIDC provider
+    ## A logical "OR" is used between each regex in the list
+    filterGroupsRegex: []
+      # - ".*argo-wf.*"
+      # - ".*argo-workflow.*"
 
   # -- Extra containers to be added to the server deployment
   extraContainers: []
