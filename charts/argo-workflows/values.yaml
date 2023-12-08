@@ -91,6 +91,12 @@ controller:
     # -- Allows controller to create and update ConfigMaps. Enables memoization feature
     writeConfigMaps: false
 
+  configMap:
+    # -- Create a ConfigMap for the controller
+    create: true
+    # -- ConfigMap name
+    name: ""
+
   # -- Limits the maximum number of incomplete workflows in a namespace
   namespaceParallelism:
   # -- Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224
@@ -124,7 +130,7 @@ controller:
     # -- Service metrics port name
     servicePortName: metrics
     # -- ServiceMonitor relabel configs to apply to samples before scraping
-    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
     relabelings: []
     # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
     ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
@@ -295,6 +301,8 @@ controller:
   volumes: []
   # -- The number of controller pods to run
   replicas: 1
+  # -- The number of revisions to keep.
+  revisionHistoryLimit: 10
 
   pdb:
     # -- Configure [Pod Disruption Budget] for the controller pods
@@ -472,6 +480,8 @@ server:
   resources: {}
   # -- The number of server pods to run
   replicas: 1
+  # -- The number of revisions to keep.
+  revisionHistoryLimit: 10
   ## Argo Server Horizontal Pod Autoscaler
   autoscaling:
     # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server
@@ -536,9 +546,12 @@ server:
     # - name: FOO
     #   value: "bar"
 
-  # -- Auth Mode is available from `server` , `client` or `sso`. If you chose `sso` , please configure `.Values.server.sso` as well.
-  ## Ref: https://argoproj.github.io/argo-workflows/argo-server-auth-mode/
+  # -- Deprecated; use server.authModes instead.
   authMode: ""
+
+  # -- A list of supported authentication modes. Available values are `server`, `client`, or `sso`. If you provide sso, please configure `.Values.server.sso` as well.
+  ## Ref: https://argoproj.github.io/argo-workflows/argo-server-auth-mode/
+  authModes: []
 
   # -- Extra arguments to provide to the Argo server binary.
   ## Ref: https://argoproj.github.io/argo-workflows/argo-server/#options
@@ -552,6 +565,9 @@ server:
     # -- Set the logging format (one of: `text`, `json`)
     format: "text"
 
+  # -- Volume to be mounted in Pods for temporary files.
+  tmpVolume:
+    emptyDir: {}
   # -- Additional volume mounts to the server main container.
   volumeMounts: []
   # -- Additional volumes to the server pod.

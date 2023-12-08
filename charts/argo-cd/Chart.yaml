@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.8.1-cap-CR-create-apps-with-err
+appVersion: v2.9-2023.12.06-e6258156d
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.50.1-2-cap-CR-create-apps-with-err
+version: 5.51.6-1-cap-2.9-2023.12.06-e6258156d
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -26,9 +26,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: added
-      description: Add priority queue to reporter
-    - kind: fixed
-      description: Fix bug with skip-current-step
-    - kind: fixed
-      description: Support creation of apps with empty dir in reporter
+    - kind: changed
+      description: Upgrade Argo CD to v2.9-2023.12.06-e6258156d

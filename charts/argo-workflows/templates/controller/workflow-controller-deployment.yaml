@@ -12,6 +12,7 @@ metadata:
   {{- end }}
 spec:
   replicas: {{ .Values.controller.replicas }}
+  revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
@@ -44,7 +45,7 @@ spec:
           command: [ "workflow-controller" ]
           args:
           - "--configmap"
-          - "{{ template "argo-workflows.controller.fullname" . }}-configmap"
+          - "{{ template "argo-workflows.controller.config-map.name" . }}"
           - "--executor-image"
           - "{{- include "argo-workflows.image" (dict "context" . "image" .Values.executor.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.executor.image.tag }}"
           - "--loglevel"

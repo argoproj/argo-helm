@@ -6,6 +6,7 @@
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/argo)](https://artifacthub.io/packages/search?repo=argo)
 [![CLOMonitor](https://img.shields.io/endpoint?url=https://clomonitor.io/api/projects/cncf/argo/badge)](https://clomonitor.io/projects/cncf/argo)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/argoproj/argo-helm/badge)](https://api.securityscorecards.dev/projects/github.com/argoproj/argo-helm)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/7942/badge)](https://www.bestpractices.dev/projects/7942)
 
 Argo Helm is a collection of **community maintained** charts for [https://argoproj.github.io](https://argoproj.github.io) projects. The charts can be added using following command:
 
@@ -23,7 +24,7 @@ Some users would prefer to install the CRDs _outside_ of the chart. You can disa
 
 Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations). Our CRDs have been moved to `<chart>/templates` to address this design decision.
 
-If you are using versions of a chart that have the CRDs in the root of the chart or have elected to manage the Argo Workflows CRDs outside of the chart, please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
+If you are using versions of a chart that have the CRDs in the root of the chart or have elected to manage the Argo CRDs outside of the chart, please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
 
 Example:
 

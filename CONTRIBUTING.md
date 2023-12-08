@@ -47,6 +47,8 @@ Any breaking changes to a chart (backwards incompatible) require:
 
 ### New Application Versions
 
+Helm charts are intended to be created for all non-patched releases of Argo CD, Workflows, Rollouts, and Events. Associated dependencies, such as Redis, will use the version recommended by the associated release.
+
 When selecting new application versions ensure you make the following changes:
 
 * `values.yaml`: Bump all instances of the container image version
