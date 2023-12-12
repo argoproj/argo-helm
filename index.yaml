@@ -21797,6 +21797,30 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "fix(argo-workflows): fix helm lint error when extraObjects is defined and same fix as one done for argo-cd #2116"
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.5.2
+    created: "2023-12-12T06:27:58.878431487Z"
+    description: A Helm chart for Argo Workflows
+    digest: 7449f4831cdd22b15f8d2aefb6ae8ad38cf9c50db5c38a20c226e3f63e4451d2
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-workflows/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.39.9/argo-workflows-0.39.9.tgz
+    version: 0.39.9
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Add support for sso filterGroupsRegex according to https://argoproj.github.io/argo-workflows/argo-server-sso/#filtering-groups
       artifacthub.io/signKey: |
         fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
@@ -27468,4 +27492,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2023-12-08T22:45:25.513869353Z"
+generated: "2023-12-12T06:27:58.879897012Z"
