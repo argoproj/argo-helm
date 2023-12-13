@@ -45,6 +45,10 @@ spec:
       - image: "{{ .Values.dashboard.image.registry }}/{{ .Values.dashboard.image.repository }}:{{ default .Chart.AppVersion .Values.dashboard.image.tag }}"
         imagePullPolicy: {{ .Values.dashboard.image.pullPolicy }}
         args:
+        - "--loglevel"
+        - "{{ .Values.controller.logging.level }}"
+        - "--log-format"
+        - "{{ .Values.controller.logging.format }}"
         {{- with .Values.dashboard.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

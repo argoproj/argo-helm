@@ -45,6 +45,10 @@ spec:
         args:
         - --healthzPort={{ .Values.controller.containerPorts.healthz }}
         - --metricsport={{ .Values.controller.containerPorts.metrics }}
+        - "--loglevel"
+        - "{{ .Values.controller.logging.level }}"
+        - "--log-format"
+        - "{{ .Values.controller.logging.format }}"
         {{- if not .Values.clusterInstall }}
         - --namespaced
         {{- end }}
