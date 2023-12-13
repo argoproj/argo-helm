@@ -47,7 +47,7 @@ spec:
         - --metricsport={{ .Values.controller.containerPorts.metrics }}
         - "--loglevel"
         - "{{ .Values.controller.logging.level }}"
-        - "--log-format"
+        - "--logformat"
         - "{{ .Values.controller.logging.format }}"
         {{- if not .Values.clusterInstall }}
         - --namespaced

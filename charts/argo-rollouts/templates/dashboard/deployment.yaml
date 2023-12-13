@@ -46,9 +46,9 @@ spec:
         imagePullPolicy: {{ .Values.dashboard.image.pullPolicy }}
         args:
         - "--loglevel"
-        - "{{ .Values.controller.logging.level }}"
-        - "--log-format"
-        - "{{ .Values.controller.logging.format }}"
+        - "{{ .Values.dashboard.logging.level }}"
+        - "--logformat"
+        - "{{ .Values.dashboard.logging.format }}"
         {{- with .Values.dashboard.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
