@@ -91,6 +91,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.initContainers | list | `[]` | Init containers to add to the rollouts controller pod |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
 | controller.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
+| controller.logging.kloglevel | string | `"0"` | Set the klog logging level |
 | controller.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | controller.metricProviderPlugins | object | `{}` | Configures 3rd party metric providers for controller |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
@@ -152,7 +153,6 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.ingress.pathType | string | `"Prefix"` | Dashboard ingress path type |
 | dashboard.ingress.paths | list | `["/"]` | Dashboard ingress paths |
 | dashboard.ingress.tls | list | `[]` | Dashboard ingress tls |
-| dashboard.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | dashboard.nodeSelector | object | `{}` | [Node selector] |
 | dashboard.pdb.annotations | object | `{}` | Annotations to be added to dashboard [Pod Disruption Budget] |
 | dashboard.pdb.enabled | bool | `false` | Deploy a [Pod Disruption Budget] for the dashboard |
