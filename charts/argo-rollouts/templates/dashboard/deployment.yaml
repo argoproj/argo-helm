@@ -47,8 +47,6 @@ spec:
         args:
         - "--loglevel"
         - "{{ .Values.dashboard.logging.level }}"
-        - "--logformat"
-        - "{{ .Values.dashboard.logging.format }}"
         {{- with .Values.dashboard.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
