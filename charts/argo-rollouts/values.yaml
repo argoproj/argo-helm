@@ -55,6 +55,13 @@ controller:
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+  logging:
+    # -- Set the logging level (one of: `debug`, `info`, `warn`, `error`)
+    level: info
+    # -- Set the klog logging level
+    kloglevel: "0"
+    # -- Set the logging format (one of: `text`, `json`)
+    format: "text"
 
   # -- Assign custom [TopologySpreadConstraints] rules to the controller
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/

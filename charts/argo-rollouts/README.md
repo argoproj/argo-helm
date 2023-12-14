@@ -90,6 +90,9 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
 | controller.initContainers | list | `[]` | Init containers to add to the rollouts controller pod |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
+| controller.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
+| controller.logging.kloglevel | string | `"0"` | Set the klog logging level |
+| controller.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | controller.metricProviderPlugins | object | `{}` | Configures 3rd party metric providers for controller |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
 | controller.metrics.service.annotations | object | `{}` | Service annotations |
