@@ -458,6 +458,12 @@ server:
   # -- Service port name
   servicePortName: "" # http
 
+  # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
+  hostAliases: []
+  # - ip: 10.20.30.40
+  #   hostnames:
+  #   - git.myhostname
+
   serviceAccount:
     # -- Create a service account for the server
     create: true
