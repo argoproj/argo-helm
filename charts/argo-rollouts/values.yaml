@@ -289,6 +289,11 @@ dashboard:
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+  logging:
+    # -- Set the logging level (one of: `debug`, `info`, `warn`, `error`)
+    level: info
+    # -- Set the klog logging level
+    kloglevel: "0"
 
   # -- Assign custom [TopologySpreadConstraints] rules to the dashboard server
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/

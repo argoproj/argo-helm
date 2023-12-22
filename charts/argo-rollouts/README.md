@@ -153,6 +153,8 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.ingress.pathType | string | `"Prefix"` | Dashboard ingress path type |
 | dashboard.ingress.paths | list | `["/"]` | Dashboard ingress paths |
 | dashboard.ingress.tls | list | `[]` | Dashboard ingress tls |
+| dashboard.logging.kloglevel | string | `"0"` | Set the klog logging level |
+| dashboard.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | dashboard.nodeSelector | object | `{}` | [Node selector] |
 | dashboard.pdb.annotations | object | `{}` | Annotations to be added to dashboard [Pod Disruption Budget] |
 | dashboard.pdb.enabled | bool | `false` | Deploy a [Pod Disruption Budget] for the dashboard |
