@@ -56,6 +56,11 @@ spec:
         args: [ "hello world" ]
 ```
 
+### Argo Workflows Server SSO
+In order to enable SSO, please configure `.Values.server.sso` and `.Values.server.authMode`.
+
+In order to manage access levels, you can optionally add RBAC to SSO. Please refer [SSO RBAC] for more details.
+
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
@@ -204,3 +209,4 @@ Fields to note:
 [TopologySpreadConstraints]: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 [values.yaml]: values.yaml
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-workflows?modal=changelog
+[SSO RBAC]: https://argoproj.github.io/argo-workflows/argo-server-sso/#sso-rbac
