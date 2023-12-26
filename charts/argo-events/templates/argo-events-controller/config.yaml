@@ -13,8 +13,8 @@ data:
         versions:
         {{- range .Values.configs.nats.versions }}
         - version: {{ .version }}
-          natsStreamingImage: {{ .natsStreamingImage }}
-          metricsExporterImage: {{ .metricsExporterImage }}
+          natsStreamingImage: {{ tpl .natsStreamingImage $ }}
+          metricsExporterImage: {{ tpl .metricsExporterImage $ }}
         {{- end }}
       {{- end }}
       {{- if .Values.configs.jetstream.versions }}
@@ -35,9 +35,9 @@ data:
         versions:
         {{- range .Values.configs.jetstream.versions }}
         - version: {{ .version }}
-          natsImage: {{ .natsImage }}
-          metricsExporterImage: {{ .metricsExporterImage }}
-          configReloaderImage: {{ .configReloaderImage }}
+          natsImage: {{ tpl .natsImage $ }}
+          metricsExporterImage: {{ tpl .metricsExporterImage $ }}
+          configReloaderImage: {{ tpl .configReloaderImage $ }}
           startCommand: {{ .startCommand }}
         {{- end }}
       {{- end }}

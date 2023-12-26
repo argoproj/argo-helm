@@ -41,8 +41,8 @@ spec:
       {{- end }}
       containers:
       - name: {{ .Values.controller.name }}
-        image: {{ default .Values.global.image.repository .Values.controller.image.repository }}:{{ default (include "argo-events.defaultTag" .) .Values.controller.image.tag }}
-        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
+        image: {{ tpl (default .Values.global.image.repository .Values.controller.image.repository) . }}:{{ tpl (default (include "argo-events.defaultTag" .) .Values.controller.image.tag) . }}
+        imagePullPolicy: {{ tpl (default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy) . }}
         args:
         - controller
         {{- if .Values.controller.rbac.namespaced }}
@@ -58,7 +58,7 @@ spec:
         {{- end }}
         env:
         - name: ARGO_EVENTS_IMAGE
-          value: {{ default .Values.global.image.repository .Values.controller.image.repository }}:{{ default (include "argo-events.defaultTag" .) .Values.controller.image.tag }}
+          value: {{ tpl (default .Values.global.image.repository .Values.controller.image.repository) . }}:{{ tpl (default (include "argo-events.defaultTag" .) .Values.controller.image.tag) . }}
         - name: NAMESPACE
           valueFrom:
             fieldRef:
