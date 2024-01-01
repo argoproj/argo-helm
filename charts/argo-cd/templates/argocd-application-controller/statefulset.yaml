@@ -55,7 +55,7 @@ spec:
       {{- if .Values.controller.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.controller.terminationGracePeriodSeconds }}
       {{- end }}
-      serviceAccountName: {{ include "argo-cd.controllerServiceAccountName" . }}
+      serviceAccountName: {{ include "argo-cd.controller.serviceAccountName" . }}
       containers:
       - args:
         - /usr/local/bin/argocd-application-controller
