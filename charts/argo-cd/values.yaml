@@ -2217,6 +2217,24 @@ repoServer:
   #  - name: cmp-tmp
   #    emptyDir: {}
 
+    # use to override emptydir on default volumes
+  existingVolumes: {}
+  #  gpg_keyring:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-keyring
+  #  helm_working_dir:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-workdir
+  #  tmp:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-tmp
+  #  var_files:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-varfiles
+  #  plugins:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-plugins
+
   # -- Toggle the usage of a ephemeral Helm working directory
   useEphemeralHelmWorkingDir: true
 
