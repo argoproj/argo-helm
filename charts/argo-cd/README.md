@@ -4,6 +4,7 @@ A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kub
 
 Source code can be found here:
 
+
 * <https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd>
 * <https://github.com/argoproj/argo-cd>
 
@@ -105,6 +106,9 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 5.53.0
+Argocd-repo-server can now optionally use Persistent Volumes for its mountpoints instead of only emptydir()
+
 ### 5.52.0
 Because [Argo CD Extensions] is now deprecated and no further changes will be made, we switched to [Argo CD Extension Installer], adding an Argo CD Extension Installer to init-container in the Argo CD API server.
 If you used old mechanism, please move to new mechanism. For more details, please refer `.Values.server.extensions` in values.yaml.
@@ -114,6 +118,7 @@ This version supports Kubernetes version `>=1.23.0-0`. The current supported ver
 
 Please see more information about EoL: [Amazon EKS EoL][EKS EoL].
 
+
 ### 5.31.0
 The manifests are now using [`tini` as entrypoint][tini], instead of `entrypoint.sh`. Until Argo CD v2.8, `entrypoint.sh` is retained for upgrade compatibility.
 This means that the deployment manifests have to be updated after upgrading to Argo CD v2.7, and before upgrading to Argo CD v2.8 later.
@@ -121,7 +126,7 @@ In case the manifests are updated before moving to Argo CD v2.8, the containers 
 
 ### 5.26.0
 
-This version adds support for Config Management Plugins using the sidecar model and configured in a ConfigMap named `argocd-cmp-cm`.
+This version adds support for Config Management Plugins using the sidecar model and configured in a ConfigMap named `argocd-cmp-cm`. 
 Users will need to migrate from the previous `argocd-cm` ConfigMap method to using the sidecar method before Argo CD v2.8. See the [Argo CD CMP migration guide](https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/#migrating-from-argocd-cm-plugins) for more specifics.
 
 To migrate your plugins, you can now set the `configs.cmp.create` to `true` and move your plugins from `configs.cm` to `configs.cmp.plugins`.
@@ -338,6 +343,7 @@ kubeVersionOverride: "1.18.0"
 ```
 
 Then you should no longer encounter this issue.
+
 
 ### 3.0.0 and above
 
@@ -609,6 +615,7 @@ NAME: my-release
 | repoServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Repo server pods |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
 | repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
+| repoServer.existingVolumes | object | `{}` | Volumes to be used in replacement of emptydir on default volumes |
 | repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to repo server |
 | repoServer.extraContainers | list | `[]` | Additional containers to be added to the repo server pod |
 | repoServer.hostNetwork | bool | `false` | Host Network for Repo server pods |
