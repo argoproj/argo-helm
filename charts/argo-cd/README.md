@@ -4,7 +4,6 @@ A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kub
 
 Source code can be found here:
 
-
 * <https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd>
 * <https://github.com/argoproj/argo-cd>
 
@@ -107,6 +106,7 @@ For full list of changes please check ArtifactHub [changelog].
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
 ### 5.53.0
+
 Argocd-repo-server can now optionally use Persistent Volumes for its mountpoints instead of only emptydir()
 
 ### 5.52.0
@@ -118,7 +118,6 @@ This version supports Kubernetes version `>=1.23.0-0`. The current supported ver
 
 Please see more information about EoL: [Amazon EKS EoL][EKS EoL].
 
-
 ### 5.31.0
 The manifests are now using [`tini` as entrypoint][tini], instead of `entrypoint.sh`. Until Argo CD v2.8, `entrypoint.sh` is retained for upgrade compatibility.
 This means that the deployment manifests have to be updated after upgrading to Argo CD v2.7, and before upgrading to Argo CD v2.8 later.
@@ -126,7 +125,7 @@ In case the manifests are updated before moving to Argo CD v2.8, the containers 
 
 ### 5.26.0
 
-This version adds support for Config Management Plugins using the sidecar model and configured in a ConfigMap named `argocd-cmp-cm`. 
+This version adds support for Config Management Plugins using the sidecar model and configured in a ConfigMap named `argocd-cmp-cm`.
 Users will need to migrate from the previous `argocd-cm` ConfigMap method to using the sidecar method before Argo CD v2.8. See the [Argo CD CMP migration guide](https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/#migrating-from-argocd-cm-plugins) for more specifics.
 
 To migrate your plugins, you can now set the `configs.cmp.create` to `true` and move your plugins from `configs.cm` to `configs.cmp.plugins`.
@@ -343,7 +342,6 @@ kubeVersionOverride: "1.18.0"
 ```
 
 Then you should no longer encounter this issue.
-
 
 ### 3.0.0 and above
 
