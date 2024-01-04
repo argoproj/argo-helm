@@ -78,6 +78,12 @@ spec:
               secretKeyRef:
                 key: token
                 name: argocd-token
+          - name: ARGOCD_SERVER_ROOTPATH
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.rootpath
+                optional: true
           - name: CODEFRESH_URL
             valueFrom:
               configMapKeyRef:
