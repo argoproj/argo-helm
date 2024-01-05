@@ -17,8 +17,13 @@ spec:
     matchLabels:
       app.kubernetes.io/component: {{ .Values.controller.component }}
       {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
+  {{- if .Values.controller.deploymentStrategy }}
   strategy:
-    type: Recreate
+    {{- toYaml .Values.controller.deploymentStrategy | nindent 4 }}
+  {{- else }}
+  strategy:
+    type: RollingUpdate
+  {{- end }}
   replicas: {{ .Values.controller.replicas }}
   template:
     metadata:

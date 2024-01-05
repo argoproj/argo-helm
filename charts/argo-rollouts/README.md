@@ -80,6 +80,9 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.containerPorts.healthz | int | `8080` | Healthz container port |
 | controller.containerPorts.metrics | int | `8090` | Metrics container port |
 | controller.createClusterRole | bool | `true` | flag to enable creation of cluster controller role (requires cluster RBAC) |
+| controller.deploymentStrategy.type | string | `""` | Deployment strategy type. Options: "Recreate" or "RollingUpdate". If not specified, defaults to "RollingUpdate". |
+| controller.deploymentStrategy.rollingUpdate.maxSurge | int or string | `0` | Maximum number or percentage of additional pods that can be created during an update. |
+| controller.deploymentStrategy.rollingUpdate.maxUnavailable | int or string | `0` | Maximum number or percentage of pods that can be unavailable during an update. |
 | controller.deploymentAnnotations | object | `{}` | Annotations to be added to the controller deployment |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-controller.  A list of flags. |
 | controller.extraContainers | list | `[]` | Literal yaml for extra containers to be added to controller deployment. |

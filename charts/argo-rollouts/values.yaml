@@ -45,6 +45,14 @@ global:
 controller:
   # -- Value of label `app.kubernetes.io/component`
   component: rollouts-controller
+
+  # -- Configuration for the deployment strategy defaults to RollingUpdate
+  deploymentStrategy: {}
+    # type: RollingUpdate
+    # rollingUpdate:
+    #   maxSurge: 25%
+    #   maxUnavailable: 25%
+
   # -- Annotations to be added to the controller deployment
   deploymentAnnotations: {}
   # -- Annotations to be added to application controller pods
