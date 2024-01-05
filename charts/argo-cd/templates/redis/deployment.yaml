@@ -51,7 +51,7 @@ spec:
       {{- if .Values.redis.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.redis.terminationGracePeriodSeconds }}
       {{- end }}
-      serviceAccountName: {{ include "argo-cd.redisServiceAccountName" . }}
+      serviceAccountName: {{ include "argo-cd.redis.serviceAccountName" . }}
       containers:
       - name: {{ .Values.redis.name }}
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
