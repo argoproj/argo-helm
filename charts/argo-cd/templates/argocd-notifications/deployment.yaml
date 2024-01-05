@@ -54,7 +54,7 @@ spec:
       {{- if .Values.notifications.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.notifications.terminationGracePeriodSeconds }}
       {{- end }}
-      serviceAccountName: {{ include "argo-cd.notificationsServiceAccountName" . }}
+      serviceAccountName: {{ include "argo-cd.notifications.serviceAccountName" . }}
       containers:
         - name: {{ .Values.notifications.name }}
           image: {{ default .Values.global.image.repository .Values.notifications.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.notifications.image.tag }}
