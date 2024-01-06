@@ -1,4 +1,4 @@
-{{- if and .Values.applicationSet.enabled .Values.applicationSet.webhook.ingress.enabled -}}
+{{- if and .Values.applicationSet.enabled (and .Values.applicationSet.webhook.ingress.enabled .Values.applicationSet.webhook.ingress.hosts) -}}
 {{- $servicePort := .Values.applicationSet.service.portName -}}
 {{- $paths := .Values.applicationSet.webhook.ingress.paths -}}
 {{- $extraPaths := .Values.applicationSet.webhook.ingress.extraPaths -}}
@@ -24,13 +24,12 @@ spec:
   ingressClassName: {{ . }}
   {{- end }}
   rules:
-  {{- if .Values.applicationSet.webhook.ingress.hosts }}
-    {{- range $host := .Values.applicationSet.webhook.ingress.hosts }}
-    - host: {{ $host }}
+    {{- range .Values.applicationSet.webhook.ingress.hosts }}
+    - host: {{ . }}
       http:
         paths:
           {{- with $extraPaths }}
-          {{- toYaml . | nindent 10 }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- range $p := $paths }}
           - path: {{ $p }}
@@ -44,28 +43,8 @@ spec:
                   {{- else }}
                   name: {{ $servicePort }}
                   {{- end }}
-          {{- end -}}
-    {{- end -}}
-  {{- else }}
-    - http:
-        paths:
-          {{- with $extraPaths }}
-          {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- range $p := $paths }}
-          - path: {{ $p }}
-            pathType: {{ $pathType }}
-            backend:
-              service:
-                name: {{ include "argo-cd.applicationSet.fullname" $ }}
-                port:
-                  {{- if kindIs "float64" $servicePort }}
-                  number: {{ $servicePort }}
-                  {{- else }}
-                  name: {{ $servicePort }}
-                  {{- end }}
-          {{- end -}}
-  {{- end -}}
+    {{- end }}
   {{- with .Values.applicationSet.webhook.ingress.tls }}
   tls:
     {{- toYaml . | nindent 4 }}
