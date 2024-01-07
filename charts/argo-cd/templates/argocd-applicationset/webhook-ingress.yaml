@@ -1,8 +1,5 @@
 {{- if and .Values.applicationSet.enabled (and .Values.applicationSet.webhook.ingress.enabled .Values.applicationSet.webhook.ingress.hosts) -}}
 {{- $servicePort := .Values.applicationSet.service.portName -}}
-{{- $paths := .Values.applicationSet.webhook.ingress.paths -}}
-{{- $extraPaths := .Values.applicationSet.webhook.ingress.extraPaths -}}
-{{- $pathType := .Values.applicationSet.webhook.ingress.pathType -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -28,12 +25,12 @@ spec:
     - host: {{ . }}
       http:
         paths:
-          {{- with $extraPaths }}
+          {{- with $.Values.applicationSet.webhook.ingress.extraPaths }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- range $p := $paths }}
-          - path: {{ $p }}
-            pathType: {{ $pathType }}
+          {{- range $.Values.applicationSet.webhook.ingress.paths }}
+          - path: {{ . }}
+            pathType: {{ $.Values.applicationSet.webhook.ingress.pathType }}
             backend:
               service:
                 name: {{ include "argo-cd.applicationSet.fullname" $ }}
