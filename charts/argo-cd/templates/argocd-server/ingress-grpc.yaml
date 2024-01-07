@@ -45,6 +45,9 @@ spec:
                   {{- end }}
           {{- end }}
     {{- end }}
+    {{- with .Values.server.ingressGrpc.extraRules }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.server.ingressGrpc.tls }}
   tls:
     {{- toYaml . | nindent 4 }}

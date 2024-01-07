@@ -62,6 +62,9 @@ spec:
                   {{- end }}
           {{- end }}
     {{- end }}
+    {{- with .Values.server.ingress.extraRules }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.server.ingress.tls }}
   tls:
     {{- toYaml . | nindent 4 }}

@@ -1922,6 +1922,7 @@ server:
       - /
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
+
     # -- Additional ingress paths
     extraPaths: []
       # - path: /*
@@ -1931,6 +1932,18 @@ server:
       #       name: ssl-redirect
       #       port:
       #         name: use-annotation
+
+    # -- Additional ingress rules
+    # @default -- `[]` (See [values.yaml])
+    extraRules: []
+      # - host: example.server.local
+      #   http:
+      #       path: /
+      #       backend:
+      #         service:
+      #           name: example-svc
+      #           port:
+      #             name: http
 
     # -- Ingress TLS configuration
     tls: []
@@ -1989,6 +2002,18 @@ server:
       #       name: ssl-redirect
       #       port:
       #         name: use-annotation
+
+    # -- Additional ingress rules
+    # @default -- `[]` (See [values.yaml])
+    extraRules: []
+      # - host: example.server.local
+      #   http:
+      #       path: /
+      #       backend:
+      #         service:
+      #           name: example-svc
+      #           port:
+      #             name: http
 
     # -- Ingress TLS configuration for dedicated [gRPC-ingress]
     tls: []
@@ -2698,17 +2723,24 @@ applicationSet:
       # -- Additional ingress paths
       extraPaths: []
         # - path: /*
-        #   backend:
-        #     serviceName: ssl-redirect
-        #     servicePort: use-annotation
-        ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
-        # - path: /*
         #   pathType: Prefix
         #   backend:
         #     service:
         #       name: ssl-redirect
         #       port:
         #         name: use-annotation
+
+      # -- Additional ingress rules
+      # @default -- `[]` (See [values.yaml])
+      extraRules: []
+        # - host: example.server.local
+        #   http:
+        #       path: /
+        #       backend:
+        #         service:
+        #           name: example-svc
+        #           port:
+        #             name: http
 
       # -- Ingress TLS configuration
       tls: []
