@@ -1,8 +1,5 @@
 {{- if and (and .Values.server.ingressGrpc.enabled .Values.server.ingressGrpc.hosts) (not .Values.server.ingressGrpc.isAWSALB) -}}
 {{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingressGrpc.https -}}
-{{- $paths := .Values.server.ingressGrpc.paths -}}
-{{- $extraPaths := .Values.server.ingressGrpc.extraPaths -}}
-{{- $pathType := .Values.server.ingressGrpc.pathType -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -28,12 +25,12 @@ spec:
     - host: {{ . }}
       http:
         paths:
-          {{- with $extraPaths }}
+          {{- with $.Values.server.ingressGrpc.extraPaths }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- range $p := $paths }}
-          - path: {{ $p }}
-            pathType: {{ $pathType }}
+          {{- range $.Values.server.ingressGrpc.paths }}
+          - path: {{ . }}
+            pathType: {{ $.Values.server.ingressGrpc.pathType }}
             backend:
               service:
                 name: {{ include "argo-cd.server.fullname" $ }}
