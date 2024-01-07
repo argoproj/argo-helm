@@ -45,6 +45,9 @@ spec:
                   {{- end }}
           {{- end }}
     {{- end }}
+    {{- with .Values.applicationSet.webhook.ingress.extraRules }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.applicationSet.webhook.ingress.tls }}
   tls:
     {{- toYaml . | nindent 4 }}
