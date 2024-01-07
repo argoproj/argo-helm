@@ -12,6 +12,6 @@ roleRef:
   name: {{ include "argo-cd.controller.fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ include "argo-cd.controllerServiceAccountName" . }}
+  name: {{ include "argo-cd.controller.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 {{- end }}
