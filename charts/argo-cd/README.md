@@ -737,7 +737,7 @@ NAME: my-release
 | server.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
-| server.ingress.extraPaths | list | `[]` | Additional ingress paths |
+| server.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | server.ingress.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
 | server.ingress.hosts | list | `[]` | List of ingress hosts |
 | server.ingress.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
@@ -750,8 +750,8 @@ NAME: my-release
 | server.ingressGrpc.awsALB.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB gRPC service |
 | server.ingressGrpc.awsALB.serviceType | string | `"NodePort"` | Service type for the AWS ALB gRPC service |
 | server.ingressGrpc.enabled | bool | `false` | Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress] |
-| server.ingressGrpc.extraPaths | list | `[]` | Additional ingress paths for dedicated [gRPC-ingress] |
-| server.ingressGrpc.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
+| server.ingressGrpc.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths for dedicated [gRPC-ingress] |
+| server.ingressGrpc.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules for dedicated [gRPC-ingress] |
 | server.ingressGrpc.hosts | list | `[]` | List of ingress hosts for dedicated [gRPC-ingress] |
 | server.ingressGrpc.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
 | server.ingressGrpc.ingressClassName | string | `""` | Defines which ingress controller will implement the resource [gRPC-ingress] |
@@ -1162,7 +1162,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the ApplicationSet controller |
 | applicationSet.webhook.ingress.annotations | object | `{}` | Additional ingress annotations |
 | applicationSet.webhook.ingress.enabled | bool | `false` | Enable an ingress resource for Webhooks |
-| applicationSet.webhook.ingress.extraPaths | list | `[]` | Additional ingress paths |
+| applicationSet.webhook.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | applicationSet.webhook.ingress.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
 | applicationSet.webhook.ingress.hosts | list | `[]` | List of ingress hosts |
 | applicationSet.webhook.ingress.ingressClassName | string | `""` | Defines which ingress ApplicationSet controller will implement the resource |
