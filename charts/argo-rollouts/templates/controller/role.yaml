@@ -256,5 +256,14 @@ rules:
   - get
   - update
 {{- end }}
+{{- if .Values.providerRBAC.providers.glooPlatform }}
+  # Access needed when using the Gloo Platform provider
+- apiGroups:
+    - networking.gloo.solo.io
+  resources:
+    - routetables
+  verbs:
+    - '*'
+{{- end }}
 {{- end }}
 {{- end }}
