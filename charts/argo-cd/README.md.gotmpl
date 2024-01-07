@@ -114,6 +114,15 @@ This version **removes support for**:
 * deprecated configuration `server.rbacConfig` that was replaced with `configs.rbac`
 
 Please upgrade with replace strategy due to removal of immutable fields in StatefulSet.
+  
+  1) Use Helm uninstall / install 6.0.0
+  2) Use `helm template argocd/argo-cd | kubectl replace -f`
+
+Major version also contains **changes related to Argo CD Ingress** resources that are were hard to extend and maintain due to support of multiple ingress controllers.
+
+* catch all rule was removed for security reasons. If you need this please use `server.ingress.extraRules` to provide rule without hostname
+* ingress rule for `paths` changed to `path` as there is single Argo CD backend
+* ingress rule for `hosts` changed to `hostname` as there can be only single SSO redirect for given domain 
 
 ### 5.53.0
 

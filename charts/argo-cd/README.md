@@ -115,6 +115,15 @@ This version **removes support for**:
 * deprecated configuration `server.rbacConfig` that was replaced with `configs.rbac`
 
 Please upgrade with replace strategy due to removal of immutable fields in StatefulSet.
+ 
+  1) Use Helm uninstall / install 6.0.0
+  2) Use `helm template argocd/argo-cd | kubectl replace -f`
+
+Major version also contains **changes related to Argo CD Ingress** resources that are were hard to extend and maintain due to support of multiple ingress controllers.
+
+* catch all rule was removed for security reasons. If you need this please use `server.ingress.extraRules` to provide rule without hostname
+* ingress rule for `paths` changed to `path` as there is single Argo CD backend
+* ingress rule for `hosts` changed to `hostname` as there can be only single SSO redirect for given domain
 
 ### 5.53.0
 
@@ -756,7 +765,7 @@ NAME: my-release
 | server.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
-| server.ingress.extraPaths | list | `[]` | Additional ingress paths |
+| server.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | server.ingress.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
 | server.ingress.hosts | list | `[]` | List of ingress hosts |
 | server.ingress.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
@@ -769,7 +778,7 @@ NAME: my-release
 | server.ingressGrpc.awsALB.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB gRPC service |
 | server.ingressGrpc.awsALB.serviceType | string | `"NodePort"` | Service type for the AWS ALB gRPC service |
 | server.ingressGrpc.enabled | bool | `false` | Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress] |
-| server.ingressGrpc.extraPaths | list | `[]` | Additional ingress paths for dedicated [gRPC-ingress] |
+| server.ingressGrpc.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths for dedicated [gRPC-ingress] |
 | server.ingressGrpc.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
 | server.ingressGrpc.hosts | list | `[]` | List of ingress hosts for dedicated [gRPC-ingress] |
 | server.ingressGrpc.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
@@ -1180,7 +1189,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the ApplicationSet controller |
 | applicationSet.webhook.ingress.annotations | object | `{}` | Additional ingress annotations |
 | applicationSet.webhook.ingress.enabled | bool | `false` | Enable an ingress resource for Webhooks |
-| applicationSet.webhook.ingress.extraPaths | list | `[]` | Additional ingress paths |
+| applicationSet.webhook.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | applicationSet.webhook.ingress.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
 | applicationSet.webhook.ingress.hosts | list | `[]` | List of ingress hosts |
 | applicationSet.webhook.ingress.ingressClassName | string | `""` | Defines which ingress ApplicationSet controller will implement the resource |

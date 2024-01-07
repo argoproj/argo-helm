@@ -1903,10 +1903,14 @@ server:
   ingress:
     # -- Enable an ingress resource for the Argo CD server
     enabled: false
-    # -- Additional ingress annotations
-    annotations: {}
     # -- Additional ingress labels
     labels: {}
+    # -- Additional ingress annotations
+    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
+    annotations: {}
+      # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+
     # -- Defines which ingress controller will implement the resource
     ingressClassName: ""
 
@@ -1924,6 +1928,7 @@ server:
     pathType: Prefix
 
     # -- Additional ingress paths
+    # @default -- `[]` (See [values.yaml])
     extraPaths: []
       # - path: /*
       #   pathType: Prefix
@@ -1991,9 +1996,12 @@ server:
     # -- List of ingress paths for dedicated [gRPC-ingress]
     paths:
       - /
+
     # -- Ingress path type for dedicated [gRPC-ingress]. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
+
     # -- Additional ingress paths for dedicated [gRPC-ingress]
+    # @default -- `[]` (See [values.yaml])
     extraPaths: []
       # - path: /*
       #   pathType: Prefix
@@ -2702,10 +2710,11 @@ applicationSet:
     ingress:
       # -- Enable an ingress resource for Webhooks
       enabled: false
-      # -- Additional ingress annotations
-      annotations: {}
       # -- Additional ingress labels
       labels: {}
+      # -- Additional ingress annotations
+      annotations: {}
+
       # -- Defines which ingress ApplicationSet controller will implement the resource
       ingressClassName: ""
 
@@ -2718,9 +2727,12 @@ applicationSet:
       # -- List of ingress paths
       paths:
         - /api/webhook
+
       # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
       pathType: Prefix
+
       # -- Additional ingress paths
+      # @default -- `[]` (See [values.yaml])
       extraPaths: []
         # - path: /*
         #   pathType: Prefix
