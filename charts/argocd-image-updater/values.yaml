@@ -42,6 +42,35 @@ extraEnv: []
   # - name: AWS_REGION
   #   value: "us-west-1"
 
+# -- Extra K8s manifests to deploy for argocd-image-updater
+## Note: Supports use of custom Helm templates
+extraObjects: []
+  # - apiVersion: secrets-store.csi.x-k8s.io/v1
+  #   kind: SecretProviderClass
+  #   metadata:
+  #     name: argocd-image-updater-secrets-store
+  #   spec:
+  #     provider: aws
+  #     parameters:
+  #       objects: |
+  #         - objectName: "argocd-image-updater"
+  #           objectType: "secretsmanager"
+  #           jmesPath:
+  #               - path: "client_id"
+  #                 objectAlias: "client_id"
+  #               - path: "client_secret"
+  #                 objectAlias: "client_secret"
+  #     secretObjects:
+  #     - data:
+  #       - key: client_id
+  #         objectName: client_id
+  #       - key: client_secret
+  #         objectName: client_secret
+  #       secretName: argocd-image-updater-secrets-store
+  #       type: Opaque
+  #       labels:
+  #         app.kubernetes.io/part-of: argocd
+
 # -- Init containers to add to the image updater pod
 initContainers: []
   #  - name: download-tools
