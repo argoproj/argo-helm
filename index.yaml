@@ -26658,6 +26658,33 @@ entries:
   argocd-image-updater:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Support extra K8s manifests
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v0.12.2
+    created: "2024-01-18T06:22:01.645519104Z"
+    description: A Helm chart for Argo CD Image Updater, a tool to automatically update
+      the container images of Kubernetes workloads which are managed by Argo CD
+    digest: c259ca4a3dd9b1f43f345b2df25994a1f303738d8644589540ab6c7bd40bf1fa
+    home: https://github.com/argoproj-labs/argocd-image-updater
+    icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-image-updater
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-image-updater-0.9.3/argocd-image-updater-0.9.3.tgz
+    version: 0.9.3
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Update outdated link on README
         - kind: changed
@@ -27949,4 +27976,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-01-17T07:56:38.321973133Z"
+generated: "2024-01-18T06:22:01.647167911Z"
