@@ -373,8 +373,8 @@ spec:
       {{- end }}
       {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
       - name: helm-working-dir
-        {{- if .Values.repoServer.existingVolumes.helm_working_dir -}}
-        {{ toYaml .Values.repoServer.existingVolumes.helm_working_dir | nindent 8  }}
+        {{- if .Values.repoServer.existingVolumes.helmWorkingDir -}}
+        {{ toYaml .Values.repoServer.existingVolumes.helmWorkingDir | nindent 8  }}
         {{- else }}
         emptyDir: {}
         {{- end }}
@@ -386,8 +386,8 @@ spec:
         emptyDir: {}
         {{- end }}
       - name: var-files
-        {{- if .Values.repoServer.existingVolumes.var_files -}}
-        {{ toYaml .Values.repoServer.existingVolumes.var_files | nindent 8  }}
+        {{- if .Values.repoServer.existingVolumes.varFiles -}}
+        {{ toYaml .Values.repoServer.existingVolumes.varFiles | nindent 8  }}
         {{- else }}
         emptyDir: {}
         {{- end }}
@@ -407,8 +407,8 @@ spec:
         configMap:
           name: argocd-gpg-keys-cm
       - name: gpg-keyring
-        {{- if .Values.repoServer.existingVolumes.gpg_keyring -}}
-        {{ toYaml .Values.repoServer.existingVolumes.gpg_keyring | nindent 8  }}
+        {{- if .Values.repoServer.existingVolumes.gpgKeyring -}}
+        {{ toYaml .Values.repoServer.existingVolumes.gpgKeyring | nindent 8  }}
         {{- else }}
         emptyDir: {}
         {{- end }}
