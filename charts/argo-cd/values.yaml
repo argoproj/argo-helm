@@ -291,7 +291,7 @@ configs:
     #  p, subject, resource, action, object, effect
     # Role definitions and bindings are in the form:
     #  g, subject, inherited-subject
-    # policy.csv |
+    # policy.csv: |
     #   p, role:org-admin, applications, *, */*, allow
     #   p, role:org-admin, clusters, get, *, allow
     #   p, role:org-admin, repositories, *, *, allow
@@ -410,7 +410,7 @@ configs:
   ## - https://argo-cd.readthedocs.io/en/stable/user-guide/projects/#project-scoped-repositories-and-clusters
   clusterCredentials: []
     # - name: mycluster
-    #   server: https://mycluster.com
+    #   server: https://mycluster.example.com
     #   labels: {}
     #   annotations: {}
     #   config:
@@ -419,7 +419,7 @@ configs:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
     # - name: mycluster2
-    #   server: https://mycluster2.com
+    #   server: https://mycluster2.example.com
     #   labels: {}
     #   annotations: {}
     #   namespaces: namespace1,namespace2
@@ -430,7 +430,7 @@ configs:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
     # - name: mycluster3-project-scoped
-    #   server: https://mycluster3.com
+    #   server: https://mycluster3.example.com
     #   labels: {}
     #   annotations: {}
     #   project: my-project1
@@ -1574,22 +1574,33 @@ server:
   # -- Specify postStart and preStop lifecycle hooks for your argo-cd-server container
   lifecycle: {}
 
-  ## Argo UI extensions
+  ## Argo CD extensions
   ## This function in tech preview stage, do expect instability or breaking changes in newer versions.
-  ## Ref: https://github.com/argoproj-labs/argocd-extensions
+  ## Ref: https://github.com/argoproj-labs/argocd-extension-installer
   extensions:
-    # -- Enable support for Argo UI extensions
+    # -- Enable support for Argo CD extensions
     enabled: false
 
-    ## Argo UI extensions image
+    ## Argo CD extension installer image
     image:
-      # -- Repository to use for extensions image
-      repository: "ghcr.io/argoproj-labs/argocd-extensions"
-      # -- Tag to use for extensions image
-      tag: "v0.2.1"
+      # -- Repository to use for extension installer image
+      repository: "quay.io/argoprojlabs/argocd-extension-installer"
+      # -- Tag to use for extension installer image
+      tag: "v0.0.1"
       # -- Image pull policy for extensions
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
+
+    # -- Extensions for Argo CD
+    # @default -- `[]` (See [values.yaml])
+    ## Ref: https://github.com/argoproj-labs/argocd-extension-metrics#install-ui-extension
+    extensionList: []
+    #  - name: extension-metrics
+    #    env:
+    #      - name: EXTENSION_URL
+    #        value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension.tar.gz
+    #      - name: EXTENSION_CHECKSUM_URL
+    #        value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension_checksums.txt
 
     # -- Server UI extensions container-level security context
     # @default -- See [values.yaml]
@@ -1597,6 +1608,7 @@ server:
       runAsNonRoot: true
       readOnlyRootFilesystem: true
       allowPrivilegeEscalation: false
+      runAsUser: 1000
       seccompProfile:
         type: RuntimeDefault
       capabilities:
@@ -2204,6 +2216,24 @@ repoServer:
   #      name: argocd-cmp-cm
   #  - name: cmp-tmp
   #    emptyDir: {}
+
+  # -- Volumes to be used in replacement of emptydir on default volumes
+  existingVolumes: {}
+  #  gpgKeyring:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-keyring
+  #  helmWorkingDir:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-workdir
+  #  tmp:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-tmp
+  #  varFiles:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-varfiles
+  #  plugins:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-plugins
 
   # -- Toggle the usage of a ephemeral Helm working directory
   useEphemeralHelmWorkingDir: true

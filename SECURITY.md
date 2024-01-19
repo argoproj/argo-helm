@@ -2,7 +2,7 @@
 
 ## Supported Versions and Upstream Reporting
 
-Each helm chart currently supports the designated application version in the Chart.yaml.  There is a chance a security issue you've discovered may not be with the helm chart but with the upstream application.  Please visit that application's Security policy docueent to find out how to report the security issue.
+Each helm chart currently supports the designated application version in the Chart.yaml. There is a chance a security issue you've discovered may not be with the helm chart but with the upstream application. Please visit that application's Security policy document to find out how to report the security issue.
 
 * [Security Policy for Argo Workflows](https://github.com/argoproj/argo-workflows/blob/master/SECURITY.md)
 * [Security Policy for Argo Events](https://github.com/argoproj/argo-events/blob/master/SECURITY.md)

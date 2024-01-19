@@ -65,7 +65,7 @@ spec:
       {{- if .Values.repoServer.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.repoServer.terminationGracePeriodSeconds }}
       {{- end }}
-      serviceAccountName: {{ include "argo-cd.repoServerServiceAccountName" . }}
+      serviceAccountName: {{ include "argo-cd.repoServer.serviceAccountName" . }}
       containers:
       - name: {{ .Values.repoServer.name }}
         image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}
@@ -373,14 +373,30 @@ spec:
       {{- end }}
       {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
       - name: helm-working-dir
+        {{- if .Values.repoServer.existingVolumes.helmWorkingDir -}}
+        {{ toYaml .Values.repoServer.existingVolumes.helmWorkingDir | nindent 8  }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       {{- end }}
       - name: plugins
+        {{- if .Values.repoServer.existingVolumes.plugins -}}
+        {{ toYaml .Values.repoServer.existingVolumes.plugins | nindent 8  }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: var-files
+        {{- if .Values.repoServer.existingVolumes.varFiles -}}
+        {{ toYaml .Values.repoServer.existingVolumes.varFiles | nindent 8  }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: tmp
+        {{- if .Values.repoServer.existingVolumes.tmp -}}
+        {{ toYaml .Values.repoServer.existingVolumes.tmp | nindent 8  }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: ssh-known-hosts
         configMap:
           name: argocd-ssh-known-hosts-cm
@@ -391,7 +407,11 @@ spec:
         configMap:
           name: argocd-gpg-keys-cm
       - name: gpg-keyring
+        {{- if .Values.repoServer.existingVolumes.gpgKeyring -}}
+        {{ toYaml .Values.repoServer.existingVolumes.gpgKeyring | nindent 8  }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: argocd-repo-server-tls
         secret:
           secretName: argocd-repo-server-tls

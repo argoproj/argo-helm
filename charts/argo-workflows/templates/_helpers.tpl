@@ -98,6 +98,13 @@ app.kubernetes.io/component: {{ .component }}
 {{- end }}
 
 {{/*
+Create the name of the controller configMap
+*/}}
+{{- define "argo-workflows.controller.config-map.name" -}}
+{{- .Values.controller.configMap.name | default (printf "%s-%s" (include "argo-workflows.controller.fullname" .) "configmap") | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create the name of the server service account to use
 */}}
 {{- define "argo-workflows.serverServiceAccountName" -}}

@@ -1,0 +1,57 @@
+## Used on Renovate PRs to bump the chart version and add a changelog entry
+## Reference: https://github.com/stefanzweifel/git-auto-commit-action
+## Reference: https://github.com/marketplace/actions/changed-files
+name: 'Chart Version Bump and Changelog'
+
+on:
+  pull_request:
+    types:
+      - labeled
+
+permissions:
+  contents: write
+
+jobs:
+  helm-bumper:
+    if: ${{ (contains(github.event.pull_request.labels.*.name, 'renovate')) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@716b1e13042866565e00e85fd4ec490e186c4a2f # v41.0.1
+        with:
+          files: charts/{argo-workflows,argo-cd,argo-events,argo-rollouts,argocd-image-updater}/Chart.yaml
+
+      - name: "Bump Version and Changelog"
+        run: |
+          chartName="$(echo \"${{ steps.changed-files.outputs.all_changed_files }}\" | cut -d '/' -f2)"
+          echo "Changed chart name is: $chartName"
+          echo "----------------------------------------"
+
+          parentDir="charts/${chartName}"
+
+          # Bump the chart version by one patch version
+          version=$(grep '^version:' ${parentDir}/Chart.yaml | awk '{print $2}')
+          major=$(echo $version | cut -d. -f1)
+          minor=$(echo $version | cut -d. -f2)
+          patch=$(echo $version | cut -d. -f3)
+          patch=$(expr $patch + 1)
+          sed -i "s/^version:.*/version: ${major}.${minor}.${patch}/g" ${parentDir}/Chart.yaml
+
+          # Add a changelog entry
+          appVersion=$(grep '^appVersion:' ${parentDir}/Chart.yaml | awk '{print $2}')
+          sed -i -e '/^  artifacthub.io\/changes: |/,$d' ${parentDir}/Chart.yaml
+          echo "  artifacthub.io/changes: |" >> ${parentDir}/Chart.yaml
+          echo "    - kind: changed" >> ${parentDir}/Chart.yaml
+          echo "      description: Bump ${chartName} to ${appVersion}" >> ${parentDir}/Chart.yaml
+          cat ${parentDir}/Chart.yaml
+
+      - name: "Commit and push changes"
+        uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5.0.0
+        with:
+          commit_options: '--signoff'

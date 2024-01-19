@@ -1,0 +1,14 @@
+# Test with extraObjects enabled
+# Do not deploy the CRDs as they are already present from the previous test
+installCRDs: false
+
+extraObjects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: datadog
+    type: Opaque
+    data:
+      address: aHR0cHM6Ly9hcGkuZGF0YWRvZ2hxLmNvbQo= # https://api.datadoghq.com
+      api-key: dGVzdC1hcGkta2V5Cg== # test-api-key
+      app-key: dGVzdC1hcHAta2V5Cg== # test-app-key

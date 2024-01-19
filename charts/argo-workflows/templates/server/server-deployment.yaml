@@ -15,6 +15,7 @@ spec:
   {{- if not .Values.server.autoscaling.enabled }}
   replicas: {{ .Values.server.replicas }}
   {{- end }}
+  revisionHistoryLimit: {{ .Values.server.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}
@@ -36,6 +37,10 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.server.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.server.extraInitContainers }}
       initContainers:
         {{- tpl (toYaml .) $ | nindent 8 }}
@@ -48,7 +53,7 @@ spec:
             {{- toYaml .Values.server.securityContext | nindent 12 }}
           args:
           - server
-          - --configmap={{ template "argo-workflows.controller.fullname" . }}-configmap
+          - --configmap={{ template "argo-workflows.controller.config-map.name" . }}
           {{- with .Values.server.extraArgs }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -112,7 +117,7 @@ spec:
       {{- end }}
       volumes:
       - name: tmp
-        emptyDir: {}
+        {{- toYaml .Values.server.tmpVolume | nindent 8 }}
       {{- with .Values.server.volumes }}
         {{- toYaml . | nindent 6}}
       {{- end }}

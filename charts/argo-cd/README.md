@@ -105,6 +105,14 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 5.53.0
+
+Argocd-repo-server can now optionally use Persistent Volumes for its mountpoints instead of only emptydir()
+
+### 5.52.0
+Because [Argo CD Extensions] is now deprecated and no further changes will be made, we switched to [Argo CD Extension Installer], adding an Argo CD Extension Installer to init-container in the Argo CD API server.
+If you used old mechanism, please move to new mechanism. For more details, please refer `.Values.server.extensions` in values.yaml.
+
 ### 5.35.0
 This version supports Kubernetes version `>=1.23.0-0`. The current supported version of Kubernetes is v1.24 or later and we align with the Amazon EKS calendar, because many AWS users follow a conservative approach.
 
@@ -115,14 +123,22 @@ The manifests are now using [`tini` as entrypoint][tini], instead of `entrypoint
 This means that the deployment manifests have to be updated after upgrading to Argo CD v2.7, and before upgrading to Argo CD v2.8 later.
 In case the manifests are updated before moving to Argo CD v2.8, the containers will not be able to start.
 
+### 5.26.0
+
+This version adds support for Config Management Plugins using the sidecar model and configured in a ConfigMap named `argocd-cmp-cm`.
+Users will need to migrate from the previous `argocd-cm` ConfigMap method to using the sidecar method before Argo CD v2.8. See the [Argo CD CMP migration guide](https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/#migrating-from-argocd-cm-plugins) for more specifics.
+
+To migrate your plugins, you can now set the `configs.cmp.create` to `true` and move your plugins from `configs.cm` to `configs.cmp.plugins`.
+You will also need to configure the sidecar containers under `repoServer.extraContainers` and ensure you are mounting any custom volumes you need from `repoServer.volumes` into here also.
+
 ### 5.24.0
 
-This versions adds additional global parameters for scheduling (`nodeSelector`, `tolerations`, `topologySpreadConstraints`).
+This version adds additional global parameters for scheduling (`nodeSelector`, `tolerations`, `topologySpreadConstraints`).
 Default `global.affinity` rules can be disabled when `none` value is used for the preset.
 
 ### 5.22.0
 
-This versions adds `global.affinity` options that are used as a presets. Override on component level works as before and replaces the default preset completely.
+This version adds `global.affinity` options that are used as a presets. Override on component level works as before and replaces the default preset completely.
 
 ### 5.19.0
 
@@ -597,6 +613,7 @@ NAME: my-release
 | repoServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Repo server pods |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
 | repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
+| repoServer.existingVolumes | object | `{}` | Volumes to be used in replacement of emptydir on default volumes |
 | repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to repo server |
 | repoServer.extraContainers | list | `[]` | Additional containers to be added to the repo server pod |
 | repoServer.hostNetwork | bool | `false` | Host Network for Repo server pods |
@@ -710,10 +727,11 @@ NAME: my-release
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
 | server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
 | server.extensions.containerSecurityContext | object | See [values.yaml] | Server UI extensions container-level security context |
-| server.extensions.enabled | bool | `false` | Enable support for Argo UI extensions |
+| server.extensions.enabled | bool | `false` | Enable support for Argo CD extensions |
+| server.extensions.extensionList | list | `[]` (See [values.yaml]) | Extensions for Argo CD |
 | server.extensions.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for extensions |
-| server.extensions.image.repository | string | `"ghcr.io/argoproj-labs/argocd-extensions"` | Repository to use for extensions image |
-| server.extensions.image.tag | string | `"v0.2.1"` | Tag to use for extensions image |
+| server.extensions.image.repository | string | `"quay.io/argoprojlabs/argocd-extension-installer"` | Repository to use for extension installer image |
+| server.extensions.image.tag | string | `"v0.0.1"` | Tag to use for extension installer image |
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
@@ -1255,3 +1273,5 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [EKS EoL]: https://endoflife.date/amazon-eks
 [Kubernetes Compatibility Matrix]: https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/#supported-versions
 [Applications in any namespace]: https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/#applications-in-any-namespace
+[Argo CD Extensions]: https://github.com/argoproj-labs/argocd-extensions?tab=readme-ov-file#deprecation-notice
+[Argo CD Extension Installer]: https://github.com/argoproj-labs/argocd-extension-installer
