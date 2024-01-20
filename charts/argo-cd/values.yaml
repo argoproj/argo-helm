@@ -1583,6 +1583,8 @@ server:
   ## Argo CD extensions
   ## This function in tech preview stage, do expect instability or breaking changes in newer versions.
   ## Ref: https://github.com/argoproj-labs/argocd-extension-installer
+  ## When you enable extensions, you need to configure RBAC of logged in Argo CD user.
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/#the-extensions-resource
   extensions:
     # -- Enable support for Argo CD extensions
     enabled: false
