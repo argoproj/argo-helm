@@ -65,14 +65,6 @@ spec:
         - /usr/local/bin/argocd-server
         - --port={{ .Values.server.containerPorts.server }}
         - --metrics-port={{ .Values.server.containerPorts.metrics }}
-        {{- with .Values.server.logFormat }}
-        - --logformat
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.server.logLevel }}
-        - --loglevel
-        - {{ . | quote }}
-        {{- end }}
         {{- with .Values.server.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}

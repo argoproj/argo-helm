@@ -74,14 +74,6 @@ spec:
         - /usr/local/bin/argocd-repo-server
         - --port={{ .Values.repoServer.containerPorts.server }}
         - --metrics-port={{ .Values.repoServer.containerPorts.metrics }}
-        {{- with .Values.repoServer.logFormat }}
-        - --logformat
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.repoServer.logLevel }}
-        - --loglevel
-        - {{ . | quote }}
-        {{- end }}
         {{- with .Values.repoServer.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}

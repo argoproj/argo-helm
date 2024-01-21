@@ -105,15 +105,28 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 6.0.0
+
+This version **removes support for**:
+
+* deprecated component options `logLevel` and `logFormat`
+* deprecated component arguments `<components>.args.<feature>` that were replaced with `configs.params`
+* deprecated configuration `server.config` that was replaced with `configs.cm`
+* deprecated configuration `server.rbacConfig` that was replaced with `configs.rbac`
+
+Please upgrade with replace strategy due to removal of immutable fields in StatefulSet.
+
 ### 5.53.0
 
 Argocd-repo-server can now optionally use Persistent Volumes for its mountpoints instead of only emptydir()
 
 ### 5.52.0
+
 Because [Argo CD Extensions] is now deprecated and no further changes will be made, we switched to [Argo CD Extension Installer], adding an Argo CD Extension Installer to init-container in the Argo CD API server.
 If you used old mechanism, please move to new mechanism. For more details, please refer `.Values.server.extensions` in values.yaml.
 
 ### 5.35.0
+
 This version supports Kubernetes version `>=1.23.0-0`. The current supported version of Kubernetes is v1.24 or later and we align with the Amazon EKS calendar, because many AWS users follow a conservative approach.
 
 Please see more information about EoL: [Amazon EKS EoL][EKS EoL].
@@ -515,7 +528,6 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
-| controller.args | object | `{}` | DEPRECATED - Application controller commandline flags |
 | controller.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the application controller's ClusterRole resource |
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
 | controller.containerPorts.metrics | int | `8082` | Metrics container port |
@@ -1076,7 +1088,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | applicationSet.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
-| applicationSet.args | object | `{}` | DEPRECATED - ApplicationSet controller command line flags |
 | applicationSet.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
 | applicationSet.certificate.annotations | object | `{}` | Annotations to be applied to the ApplicationSet Certificate |
 | applicationSet.certificate.domain | string | `"argocd.example.com"` | Certificate primary domain (commonName) |
@@ -1100,7 +1111,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.dnsConfig | object | `{}` | [DNS configuration] |
 | applicationSet.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for ApplicationSet controller pods |
 | applicationSet.enabled | bool | `true` | Enable ApplicationSet controller |
-| applicationSet.extraArgs | list | `[]` | List of extra cli args to add |
+| applicationSet.extraArgs | list | `[]` | ApplicationSet controller command line flags |
 | applicationSet.extraContainers | list | `[]` | Additional containers to be added to the ApplicationSet controller pod |
 | applicationSet.extraEnv | list | `[]` | Environment variables to pass to the ApplicationSet controller |
 | applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the ApplicationSet controller |

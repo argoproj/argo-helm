@@ -440,16 +440,6 @@ configs:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
 
-  # DEPRECATED - Moved to configs.ssh.annotations
-  # knownHostsAnnotations: {}
-  # DEPRECATED - Moved to configs.ssh.knownHosts
-  # knownHosts: {}
-
-  # DEPRECATED - Moved to configs.tls.annotations
-  # tlsCertsAnnotations: {}
-  # DEPRECATED - Moved to configs.tls.certificates
-  # tlsCerts: {}
-
   # -- Repository credentials to be used as Templates for other repos
   ## Creates a secret for each key/value specified below to create repository credentials
   credentialTemplates: {}
@@ -530,12 +520,6 @@ configs:
     extra:
       {}
       # LDAP_PASSWORD: "mypassword"
-
-    # -- Argo TLS Data
-    # DEPRECATED - Use server.certificate or server.certificateSecret
-    # argocdServerTlsConfig:
-    #  key: ''
-    #  crt: ''
 
     # -- Bcrypt hashed admin password
     ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
@@ -624,22 +608,6 @@ controller:
   # -- Secrets with credentials to pull images from a private registry
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
-
-  # -- DEPRECATED - Application controller commandline flags
-  args: {}
-  # DEPRECATED - Use configs.params to override
-  #  # -- define the application controller `--status-processors`
-  #  statusProcessors: "20"
-  #  # -- define the application controller `--operation-processors`
-  #  operationProcessors: "10"
-  #  # -- define the application controller `--app-hard-resync`
-  #  appHardResyncPeriod: "0"
-  #  # -- define the application controller `--app-resync`
-  #  appResyncPeriod: "180"
-  #  # -- define the application controller `--self-heal-timeout-seconds`
-  #  selfHealTimeout: "5"
-  #  # -- define the application controller `--repo-server-timeout-seconds`
-  #  repoServerTimeoutSeconds: "60"
 
   # -- Additional command line arguments to pass to application controller
   extraArgs: []
@@ -2498,16 +2466,7 @@ applicationSet:
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
 
-  # -- DEPRECATED - ApplicationSet controller command line flags
-  args: {}
-    # DEPRECATED - Use configs.params.applicationsetcontroller.policy to override
-    # -- How application is synced between the generator and the cluster
-    # policy: sync
-    # DEPRECATED - Use configs.params.applicationsetcontroller.dryrun to override
-    # -- Enable dry run mode
-    # dryRun: false
-
-  # -- List of extra cli args to add
+  # -- ApplicationSet controller command line flags
   extraArgs: []
 
   # -- Environment variables to pass to the ApplicationSet controller

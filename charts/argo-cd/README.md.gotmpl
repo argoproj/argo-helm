@@ -104,15 +104,28 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 6.0.0
+
+This version **removes support for**:
+
+* deprecated component options `logLevel` and `logFormat`
+* deprecated component arguments `<components>.args.<feature>` that were replaced with `configs.params`
+* deprecated configuration `server.config` that was replaced with `configs.cm`
+* deprecated configuration `server.rbacConfig` that was replaced with `configs.rbac`
+
+Please upgrade with replace strategy due to removal of immutable fields in StatefulSet.
+
 ### 5.53.0
 
 Argocd-repo-server can now optionally use Persistent Volumes for its mountpoints instead of only emptydir()
 
 ### 5.52.0
+
 Because [Argo CD Extensions] is now deprecated and no further changes will be made, we switched to [Argo CD Extension Installer], adding an Argo CD Extension Installer to init-container in the Argo CD API server.
 If you used old mechanism, please move to new mechanism. For more details, please refer `.Values.server.extensions` in values.yaml.
 
 ### 5.35.0
+
 This version supports Kubernetes version `>=1.23.0-0`. The current supported version of Kubernetes is v1.24 or later and we align with the Amazon EKS calendar, because many AWS users follow a conservative approach.
 
 Please see more information about EoL: [Amazon EKS EoL][EKS EoL].
