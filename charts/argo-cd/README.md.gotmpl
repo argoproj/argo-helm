@@ -118,11 +118,13 @@ Please upgrade with replace strategy due to removal of immutable fields in State
   1) Use Helm uninstall / install 6.0.0
   2) Use `helm template argocd/argo-cd | kubectl replace -f`
 
-Major version also contains **changes related to Argo CD Ingress** resources that are were hard to extend and maintain due to support of multiple ingress controllers.
+Major version also contains breaking **changes related to Argo CD Ingress** resources that were hard to extend and maintain for various ingress controller implementations.
+Please review your setup and adjust to new configuration options:
 
-* catch all rule was removed for security reasons. If you need this please use `server.ingress.extraRules` to provide rule without hostname
-* ingress rule for `paths` changed to `path` as there is single Argo CD backend
-* ingress rule for `hosts` changed to `hostname` as there can be only single SSO redirect for given domain 
+* catch all rule was removed for security reasons. If you need this please use `server.ingress.extraRules` to provide ingress rule without hostname
+* ingress rule for `paths` changed to `path` as there is only single Argo CD backend path
+* ingress rule for `hosts` changed to `hostname` as there can be only single SSO redirect for given hostname
+* additional hostnames and routing can be provided via `extraHosts` configuration section
 
 ### 5.53.0
 

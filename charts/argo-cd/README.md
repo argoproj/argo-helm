@@ -119,11 +119,13 @@ Please upgrade with replace strategy due to removal of immutable fields in State
   1) Use Helm uninstall / install 6.0.0
   2) Use `helm template argocd/argo-cd | kubectl replace -f`
 
-Major version also contains **changes related to Argo CD Ingress** resources that are were hard to extend and maintain due to support of multiple ingress controllers.
+Major version also contains breaking **changes related to Argo CD Ingress** resources that were hard to extend and maintain for various ingress controller implementations.
+Please review your setup and adjust to new configuration options:
 
-* catch all rule was removed for security reasons. If you need this please use `server.ingress.extraRules` to provide rule without hostname
-* ingress rule for `paths` changed to `path` as there is single Argo CD backend
-* ingress rule for `hosts` changed to `hostname` as there can be only single SSO redirect for given domain
+* catch all rule was removed for security reasons. If you need this please use `server.ingress.extraRules` to provide ingress rule without hostname
+* ingress rule for `paths` changed to `path` as there is only single Argo CD backend path
+* ingress rule for `hosts` changed to `hostname` as there can be only single SSO redirect for given hostname
+* additional hostnames and routing can be provided via `extraHosts` configuration section
 
 ### 5.53.0
 
@@ -764,29 +766,31 @@ NAME: my-release
 | server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Argo CD server |
 | server.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
-| server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
+| server.ingress.enabled | bool | `true` | Enable an ingress resource for the Argo CD server |
+| server.ingress.extraHosts | list | `[]` | The list of additional hostnames to be covered by ingress record |
 | server.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | server.ingress.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
-| server.ingress.hosts | list | `[]` | List of ingress hosts |
+| server.ingress.hostname | string | `"argocd.server.local"` | Argo CD server hostname |
 | server.ingress.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
 | server.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
 | server.ingress.labels | object | `{}` | Additional ingress labels |
+| server.ingress.path | string | `"/"` | The path to Argo CD server |
 | server.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
-| server.ingress.paths | list | `["/"]` | List of ingress paths |
 | server.ingress.tls | list | `[]` | Ingress TLS configuration |
 | server.ingressGrpc.annotations | object | `{}` | Additional ingress annotations for dedicated [gRPC-ingress] |
 | server.ingressGrpc.awsALB.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB gRPC service |
 | server.ingressGrpc.awsALB.serviceType | string | `"NodePort"` | Service type for the AWS ALB gRPC service |
 | server.ingressGrpc.enabled | bool | `false` | Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress] |
+| server.ingressGrpc.extraHosts | list | `[]` | The list of additional hostnames to be covered by ingress record |
 | server.ingressGrpc.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths for dedicated [gRPC-ingress] |
 | server.ingressGrpc.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
-| server.ingressGrpc.hosts | list | `[]` | List of ingress hosts for dedicated [gRPC-ingress] |
+| server.ingressGrpc.hostname | string | `""` | Argo CD server hostname for dedicated [gRPC-ingress] |
 | server.ingressGrpc.https | bool | `false` | Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp` |
 | server.ingressGrpc.ingressClassName | string | `""` | Defines which ingress controller will implement the resource [gRPC-ingress] |
 | server.ingressGrpc.isAWSALB | bool | `false` | Setup up gRPC ingress to work with an AWS ALB |
 | server.ingressGrpc.labels | object | `{}` | Additional ingress labels for dedicated [gRPC-ingress] |
+| server.ingressGrpc.path | string | `"/"` | Argo CD server ingress path for dedicated [gRPC-ingress] |
 | server.ingressGrpc.pathType | string | `"Prefix"` | Ingress path type for dedicated [gRPC-ingress]. One of `Exact`, `Prefix` or `ImplementationSpecific` |
-| server.ingressGrpc.paths | list | `["/"]` | List of ingress paths for dedicated [gRPC-ingress] |
 | server.ingressGrpc.tls | list | `[]` | Ingress TLS configuration for dedicated [gRPC-ingress] |
 | server.initContainers | list | `[]` | Init containers to add to the server pod |
 | server.lifecycle | object | `{}` | Specify postStart and preStop lifecycle hooks for your argo-cd-server container |
@@ -1189,13 +1193,14 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the ApplicationSet controller |
 | applicationSet.webhook.ingress.annotations | object | `{}` | Additional ingress annotations |
 | applicationSet.webhook.ingress.enabled | bool | `false` | Enable an ingress resource for Webhooks |
+| applicationSet.webhook.ingress.extraHosts | list | `[]` | The list of additional hostnames to be covered by ingress record |
 | applicationSet.webhook.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | applicationSet.webhook.ingress.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
-| applicationSet.webhook.ingress.hosts | list | `[]` | List of ingress hosts |
+| applicationSet.webhook.ingress.hostname | string | `""` | Argo CD ApplicationSet hostname |
 | applicationSet.webhook.ingress.ingressClassName | string | `""` | Defines which ingress ApplicationSet controller will implement the resource |
 | applicationSet.webhook.ingress.labels | object | `{}` | Additional ingress labels |
+| applicationSet.webhook.ingress.path | string | `"/api/webhook"` | List of ingress paths |
 | applicationSet.webhook.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
-| applicationSet.webhook.ingress.paths | list | `["/api/webhook"]` | List of ingress paths |
 | applicationSet.webhook.ingress.tls | list | `[]` | Ingress TLS configuration |
 
 ## Notifications

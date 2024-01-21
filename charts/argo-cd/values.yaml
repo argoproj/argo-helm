@@ -1902,7 +1902,7 @@ server:
 
   ingress:
     # -- Enable an ingress resource for the Argo CD server
-    enabled: false
+    enabled: true #false
     # -- Additional ingress labels
     labels: {}
     # -- Additional ingress annotations
@@ -1914,18 +1914,21 @@ server:
     # -- Defines which ingress controller will implement the resource
     ingressClassName: ""
 
-    # -- List of ingress hosts
-    ## Argo Ingress.
-    ## Hostnames must be provided if Ingress is enabled.
-    ## Secrets must be manually created in the namespace
-    hosts: []
-      # - argocd.example.com
+    # -- Argo CD server hostname
+    ## Hostname must be provided if Ingress is enabled
+    hostname: argocd.server.local
 
-    # -- List of ingress paths
-    paths:
-      - /
+    # -- The path to Argo CD server
+    ## NOTE: You may need to set this to `/*` in order to use this with GKE ingress controller
+    path: /
+
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
+
+    # -- The list of additional hostnames to be covered by ingress record
+    extraHosts: []
+      # - name: argocd.server.local
+      #   path: /
 
     # -- Additional ingress paths
     # @default -- `[]` (See [values.yaml])
@@ -1985,20 +1988,19 @@ server:
       ## This tells AWS to send traffic from the ALB using HTTP2. Can use gRPC as well if you want to leverage gRPC specific features
       backendProtocolVersion: HTTP2
 
-    # -- List of ingress hosts for dedicated [gRPC-ingress]
-    ## Argo Ingress.
-    ## Hostnames must be provided if Ingress is enabled.
-    ## Secrets must be manually created in the namespace
-    ##
-    hosts: []
-      # - argocd.example.com
+    # -- Argo CD server hostname for dedicated [gRPC-ingress]
+    hostname: ""
 
-    # -- List of ingress paths for dedicated [gRPC-ingress]
-    paths:
-      - /
+    # -- Argo CD server ingress path for dedicated [gRPC-ingress]
+    path: /
 
     # -- Ingress path type for dedicated [gRPC-ingress]. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
+
+    # -- The list of additional hostnames to be covered by ingress record
+    extraHosts: []
+      # - name: grpc.argocd.server.local
+      #   path: /
 
     # -- Additional ingress paths for dedicated [gRPC-ingress]
     # @default -- `[]` (See [values.yaml])
@@ -2718,18 +2720,19 @@ applicationSet:
       # -- Defines which ingress ApplicationSet controller will implement the resource
       ingressClassName: ""
 
-      # -- List of ingress hosts
-      ## Hostnames must be provided if Ingress is enabled.
-      ## Secrets must be manually created in the namespace
-      hosts: []
-        # - argocd-applicationset.example.com
+      # -- Argo CD ApplicationSet hostname
+      hostname: ""
 
       # -- List of ingress paths
-      paths:
-        - /api/webhook
+      path: /api/webhook
 
       # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
       pathType: Prefix
+
+      # -- The list of additional hostnames to be covered by ingress record
+      extraHosts: []
+      # - name: argocd.server.local
+      #   path: /
 
       # -- Additional ingress paths
       # @default -- `[]` (See [values.yaml])

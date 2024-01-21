@@ -1,4 +1,4 @@
-{{- if and .Values.server.ingress.enabled .Values.server.ingress.hosts -}}
+{{- if .Values.server.ingress.enabled }}
 {{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingress.https -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -25,16 +25,25 @@ spec:
   ingressClassName: {{ . }}
   {{- end }}
   rules:
-    {{- range .Values.server.ingress.hosts }}
-    - host: {{ . }}
+    - host: {{ .Values.server.ingress.hostname }}
       http:
         paths:
-          {{- with $.Values.server.ingress.extraPaths }}
+          {{- with .Values.server.ingress.extraPaths }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- range $.Values.server.ingress.paths }}
-          {{- if and $.Values.server.ingressGrpc.isAWSALB $.Values.server.ingressGrpc.enabled }}
-          - path: {{ . }}
+          - path: {{ .Values.server.ingress.path }}
+            pathType: {{ $.Values.server.ingress.pathType }}
+            backend:
+              service:
+                name: {{ include "argo-cd.server.fullname" . }}
+                port:
+                  {{- if kindIs "float64" $servicePort }}
+                  number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
+          {{- if and .Values.server.ingressGrpc.isAWSALB .Values.server.ingressGrpc.enabled }}
+          - path: {{ .Values.server.ingress.path }}
             pathType: {{ $.Values.server.ingressGrpc.pathType }}
             backend:
               service:
@@ -46,18 +55,21 @@ spec:
                   name: {{ $servicePort }}
                   {{- end }}
           {{- end }}
-          - path: {{ . }}
-            pathType: {{ $.Values.server.ingress.pathType }}
+    {{- range .Values.server.ingress.extraHosts }}
+    - host: {{ .name | quote }}
+      http:
+        paths:
+          - path: {{ default .Values.server.ingress.path .path }}
+            pathType: {{ default .Values.server.ingress.pathType .pathType }}
             backend:
               service:
-                name: {{ include "argo-cd.server.fullname" $ }}
+                name: {{ include "argo-cd.server.fullname" . }}
                 port:
                   {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
                   {{- else }}
                   name: {{ $servicePort }}
                   {{- end }}
-          {{- end }}
     {{- end }}
     {{- with .Values.server.ingress.extraRules }}
       {{- toYaml . | nindent 4 }}

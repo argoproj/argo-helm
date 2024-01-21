@@ -1,4 +1,4 @@
-{{- if and .Values.applicationSet.enabled (and .Values.applicationSet.webhook.ingress.enabled .Values.applicationSet.webhook.ingress.hosts) -}}
+{{- if and .Values.applicationSet.enabled .Values.applicationSet.webhook.ingress.enabled -}}
 {{- $servicePort := .Values.applicationSet.service.portName -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -21,15 +21,14 @@ spec:
   ingressClassName: {{ . }}
   {{- end }}
   rules:
-    {{- range .Values.applicationSet.webhook.ingress.hosts }}
-    - host: {{ . }}
+    {{- if .Values.applicationSet.webhook.ingress.hostname }}
+    - host: {{ .Values.applicationSet.webhook.ingress.hostname }}
       http:
         paths:
-          {{- with $.Values.applicationSet.webhook.ingress.extraPaths }}
+          {{- with .Values.applicationSet.webhook.ingress.extraPaths }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- range $.Values.applicationSet.webhook.ingress.paths }}
-          - path: {{ . }}
+          - path: {{ .Values.applicationSet.webhook.ingress.path }}
             pathType: {{ $.Values.applicationSet.webhook.ingress.pathType }}
             backend:
               service:
@@ -40,7 +39,22 @@ spec:
                   {{- else }}
                   name: {{ $servicePort }}
                   {{- end }}
-          {{- end }}
+    {{- end }}
+    {{- range .Values.server.ingress.extraHosts }}
+    - host: {{ .name | quote }}
+      http:
+        paths:
+          - path: {{ default .Values.server.ingress.path .path }}
+            pathType: {{ default .Values.server.ingress.pathType .pathType }}
+            backend:
+              service:
+                name: {{ include "argo-cd.applicationSet.fullname" . }}
+                port:
+                  {{- if kindIs "float64" $servicePort }}
+                  number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
     {{- end }}
     {{- with .Values.applicationSet.webhook.ingress.extraRules }}
       {{- toYaml . | nindent 4 }}
