@@ -1,5 +1,5 @@
 {{- if and .Values.server.ingressGrpc.enabled (not .Values.server.ingressGrpc.isAWSALB) -}}
-{{- $hostname := printf "grpc.%s" .Values.server.ingress.hostname -}}
+{{- $hostname := default (printf "grpc.%s" .Values.server.ingress.hostname) .Values.server.ingressGrpc.hostname -}}
 {{- $insecure := index .Values.configs.params "server.insecure" | toString -}}
 {{- $servicePort := eq $insecure "true" | ternary .Values.server.service.servicePortHttp .Values.server.service.servicePortHttps -}}
 apiVersion: networking.k8s.io/v1
@@ -23,25 +23,25 @@ spec:
   ingressClassName: {{ . }}
   {{- end }}
   rules:
-    - host: {{ default $hostname .Values.server.ingressGrpc.hostname }}
+    - host: {{ $hostname }}
       http:
         paths:
-          {{- with $.Values.server.ingressGrpc.extraPaths }}
+          {{- with .Values.server.ingressGrpc.extraPaths }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
           - path: {{ .Values.server.ingressGrpc.path }}
-            pathType: {{ $.Values.server.ingressGrpc.pathType }}
+            pathType: {{ .Values.server.ingressGrpc.pathType }}
             backend:
               service:
-                name: {{ include "argo-cd.server.fullname" $ }}
+                name: {{ include "argo-cd.server.fullname" . }}
                 port:
                   number: {{ $servicePort }}
-    {{- range .Values.server.ingress.extraHosts }}
+    {{- range .Values.server.ingressGrpc.extraHosts }}
     - host: {{ .name | quote }}
       http:
         paths:
-          - path: {{ default .Values.server.ingress.path .path }}
-            pathType: {{ default .Values.server.ingress.pathType .pathType }}
+          - path: {{ default .Values.server.ingressGrpc.path .path }}
+            pathType: {{ default .Values.server.ingressGrpc.pathType .pathType }}
             backend:
               service:
                 name: {{ include "argo-cd.server.fullname" . }}
