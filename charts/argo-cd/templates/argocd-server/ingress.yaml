@@ -1,4 +1,4 @@
-{{- if .Values.server.ingress.enabled -}}
+{{- if and .Values.server.ingress.enabled .Values.server.ingress.hosts -}}
 {{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingress.https -}}
 {{- $paths := .Values.server.ingress.paths -}}
 {{- $extraPaths := .Values.server.ingress.extraPaths -}}
@@ -28,13 +28,12 @@ spec:
   ingressClassName: {{ . }}
   {{- end }}
   rules:
-  {{- if .Values.server.ingress.hosts }}
-    {{- range $host := .Values.server.ingress.hosts }}
-    - host: {{ $host | quote }}
+    {{- range .Values.server.ingress.hosts }}
+    - host: {{ . }}
       http:
         paths:
           {{- with $extraPaths }}
-          {{- toYaml . | nindent 10 }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- range $p := $paths }}
           {{- if and $.Values.server.ingressGrpc.isAWSALB $.Values.server.ingressGrpc.enabled }}
@@ -42,34 +41,14 @@ spec:
             pathType: {{ $.Values.server.ingressGrpc.pathType }}
             backend:
               service:
-                name: {{ template "argo-cd.server.fullname" $ }}-grpc
+                name: {{ include "argo-cd.server.fullname" $ }}-grpc
                 port:
                   {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
                   {{- else }}
                   name: {{ $servicePort }}
                   {{- end }}
-            {{- end }}
-          - path: {{ $p }}
-            pathType: {{ $pathType }}
-            backend:
-              service:
-                name: {{ include "argo-cd.server.fullname" $ }}
-                port:
-                  {{- if kindIs "float64" $servicePort }}
-                  number: {{ $servicePort }}
-                  {{- else }}
-                  name: {{ $servicePort }}
-                  {{- end }}
-          {{- end -}}
-    {{- end -}}
-  {{- else }}
-    - http:
-        paths:
-          {{- with $extraPaths }}
-          {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- range $p := $paths }}
           - path: {{ $p }}
             pathType: {{ $pathType }}
             backend:
@@ -81,10 +60,10 @@ spec:
                   {{- else }}
                   name: {{ $servicePort }}
                   {{- end }}
-          {{- end -}}
-  {{- end -}}
+          {{- end }}
+    {{- end }}
   {{- with .Values.server.ingress.tls }}
   tls:
     {{- toYaml . | nindent 4 }}
-  {{- end -}}
-{{- end -}}
+  {{- end }}
+{{- end }}
