@@ -51,8 +51,15 @@ spec:
     {{- with .Values.server.ingressGrpc.extraRules }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.server.ingressGrpc.tls }}
+  {{- if or .Values.server.ingressGrpc.tls .Values.server.ingressGrpc.extraTls }}
   tls:
-    {{- toYaml . | nindent 4 }}
+    {{- if .Values.server.ingressGrpc.tls }}
+    - hosts:
+      - {{ $hostname }}
+      secretName: {{ printf "%s-tls" $hostname }}
+    {{- end }}
+    {{- with .Values.server.ingressGrpc.tls }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- end }}
 {{- end }}

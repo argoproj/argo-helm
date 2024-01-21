@@ -50,8 +50,15 @@ spec:
     {{- with .Values.applicationSet.webhook.ingress.extraRules }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.applicationSet.webhook.ingress.tls }}
+  {{- if or .Values.applicationSet.webhook.ingress.tls .Values.applicationSet.webhook.ingress.extraTls }}
   tls:
-    {{- toYaml . | nindent 4 }}
-  {{- end -}}
-{{- end -}}
+    {{- if .Values.applicationSet.webhook.ingress.tls }}
+    - hosts:
+      - {{ .Values.applicationSet.webhook.ingress.hostname }}
+      secretName: {{ printf "%s-tls" .Values.applicationSet.webhook.ingress.hostname }}
+    {{- end }}
+    {{- with .Values.applicationSet.webhook.ingress.extraTls }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+{{- end }}

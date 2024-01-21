@@ -1900,6 +1900,7 @@ server:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
+  # Argo CD server ingress configuration
   ingress:
     # -- Enable an ingress resource for the Argo CD server
     enabled: true #false
@@ -1915,7 +1916,7 @@ server:
     ingressClassName: ""
 
     # -- Argo CD server hostname
-    ## Hostname must be provided if Ingress is enabled
+    ## NOTE: Hostname must be provided if Ingress is enabled
     hostname: argocd.server.local
 
     # -- The path to Argo CD server
@@ -1925,7 +1926,13 @@ server:
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
 
+    # -- Enable TLS configuration for the hostname defined at `server.ingress.hostname`
+    ## TLS certificate will be retrieved from a TLS secret `argocd-server-tls`
+    ## You can create this secret via `certificate` or `certificateSecret` option
+    tls: false
+
     # -- The list of additional hostnames to be covered by ingress record
+    # @default -- `[]` (See [values.yaml])
     extraHosts: []
       # - name: argocd.server.local
       #   path: /
@@ -1953,14 +1960,15 @@ server:
       #           port:
       #             name: http
 
-    # -- Ingress TLS configuration
-    tls: []
-      # - secretName: your-certificate-name
-      #   hosts:
-      #     - argocd.example.com
+    # -- Additional TLS configuration
+    # @default -- `[]` (See [values.yaml])
+    extraTls: []
+      # - hosts:
+      #   - argocd.example.com
+      #   secretName: your-certificate-name
 
-  # dedicated ingress for gRPC as documented at
-  # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
+  # Dedicated ingress for gRPC as documented at
+  # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-multiple-ingress-objects-and-hosts
   ingressGrpc:
     # -- Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress]
     enabled: false
@@ -1994,7 +2002,12 @@ server:
     # -- Ingress path type for dedicated [gRPC-ingress]. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
 
+    # -- Enable TLS configuration for the hostname defined at `server.ingressGrpc.hostname`
+    ## TLS certificate will be retrieved from a TLS secret with name: `<hostname>-tls`
+    tls: false
+
     # -- The list of additional hostnames to be covered by ingress record
+    # @default -- `[]` (See [values.yaml])
     extraHosts: []
       # - name: grpc.argocd.server.local
       #   path: /
@@ -2022,8 +2035,9 @@ server:
       #           port:
       #             name: http
 
-    # -- Ingress TLS configuration for dedicated [gRPC-ingress]
-    tls: []
+    # -- Additional TLS configuration for dedicated [gRPC-ingress]
+    # @default -- `[]` (See [values.yaml])
+    extraTls: []
       # - secretName: your-certificate-name
       #   hosts:
       #     - argocd.example.com
@@ -2723,6 +2737,10 @@ applicationSet:
       # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
       pathType: Prefix
 
+      # -- Enable TLS configuration for the hostname defined at `applicationSet.webhook.ingress.hostname`
+      ## TLS certificate will be retrieved from a TLS secret with name: `<hostname>-tls`
+      tls: false
+
       # -- The list of additional hostnames to be covered by ingress record
       extraHosts: []
       # - name: argocd.server.local
@@ -2751,8 +2769,9 @@ applicationSet:
         #           port:
         #             name: http
 
-      # -- Ingress TLS configuration
-      tls: []
+      # -- Additional ingress TLS configuration
+      # @default -- `[]` (See [values.yaml])
+      extraTls: []
         # - secretName: argocd-applicationset-tls
         #   hosts:
         #     - argocd-applicationset.example.com

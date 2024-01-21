@@ -124,7 +124,10 @@ Please review your setup and adjust to new configuration options:
 * catch all rule was removed for security reasons. If you need this please use `server.ingress.extraRules` to provide ingress rule without hostname
 * ingress rule for `paths` changed to `path` as there is only single Argo CD backend path
 * ingress rule for `hosts` changed to `hostname` as there can be only single SSO redirect for given hostname
+* ingress TLS for server uses by default `argocd-server-tls` secret required by Argo CD server, additional ingresses are using `<hostname>-tls` secret when `tls: true`
 * additional hostnames and routing can be provided via `extraHosts` configuration section
+* additional TLS secrets can be provided via `extraTls` configuration section
+
 
 ### 5.53.0
 
