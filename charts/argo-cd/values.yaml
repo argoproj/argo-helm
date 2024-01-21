@@ -1901,7 +1901,7 @@ server:
   # Argo CD server ingress configuration
   ingress:
     # -- Enable an ingress resource for the Argo CD server
-    enabled: true #false
+    enabled: false
     # -- Specific implementation for ingress controller. One of `generic`, `aws` or `gke`
     ## Additional configuration might be required in related configuration sections
     controller: generic
@@ -2713,68 +2713,6 @@ applicationSet:
   # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
 
-  ## Webhook for the Git Generator
-  ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
-  webhook:
-    ingress:
-      # -- Enable an ingress resource for Webhooks
-      enabled: false
-      # -- Additional ingress labels
-      labels: {}
-      # -- Additional ingress annotations
-      annotations: {}
-
-      # -- Defines which ingress ApplicationSet controller will implement the resource
-      ingressClassName: ""
-
-      # -- Argo CD ApplicationSet hostname
-      hostname: ""
-
-      # -- List of ingress paths
-      path: /api/webhook
-
-      # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
-      pathType: Prefix
-
-      # -- Enable TLS configuration for the hostname defined at `applicationSet.webhook.ingress.hostname`
-      ## TLS certificate will be retrieved from a TLS secret with name: `<hostname>-tls`
-      tls: false
-
-      # -- The list of additional hostnames to be covered by ingress record
-      extraHosts: []
-      # - name: argocd.server.local
-      #   path: /
-
-      # -- Additional ingress paths
-      # @default -- `[]` (See [values.yaml])
-      extraPaths: []
-        # - path: /*
-        #   pathType: Prefix
-        #   backend:
-        #     service:
-        #       name: ssl-redirect
-        #       port:
-        #         name: use-annotation
-
-      # -- Additional ingress rules
-      # @default -- `[]` (See [values.yaml])
-      extraRules: []
-        # - host: example.server.local
-        #   http:
-        #       path: /
-        #       backend:
-        #         service:
-        #           name: example-svc
-        #           port:
-        #             name: http
-
-      # -- Additional ingress TLS configuration
-      # @default -- `[]` (See [values.yaml])
-      extraTls: []
-        # - secretName: argocd-applicationset-tls
-        #   hosts:
-        #     - argocd-applicationset.example.com
-
   # TLS certificate configuration via cert-manager
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-configuration
   certificate:
@@ -2815,6 +2753,69 @@ applicationSet:
       size: 2048
     # -- Annotations to be applied to the ApplicationSet Certificate
     annotations: {}
+
+  ## Ingress for the Git Generator webhook
+  ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
+  ingress:
+    # -- Enable an ingress resource for ApplicationSet webhook
+    enabled: false
+    # -- Additional ingress labels
+    labels: {}
+    # -- Additional ingress annotations
+    annotations: {}
+
+    # -- Defines which ingress ApplicationSet controller will implement the resource
+    ingressClassName: ""
+
+    # -- Argo CD ApplicationSet hostname
+    ## NOTE: Hostname must be provided if Ingress is enabled
+    hostname: argocd.server.local
+
+    # -- List of ingress paths
+    path: /api/webhook
+
+    # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
+    pathType: Prefix
+
+    # -- Enable TLS configuration for the hostname defined at `applicationSet.webhook.ingress.hostname`
+    ## TLS certificate will be retrieved from a TLS secret with name:`argocd-application-controller-tls`
+    tls: false
+
+    # -- The list of additional hostnames to be covered by ingress record
+    # @default -- `[]` (See [values.yaml])
+    extraHosts: []
+      # - name: argocd.server.local
+      #   path: /
+
+    # -- Additional ingress paths
+    # @default -- `[]` (See [values.yaml])
+    extraPaths: []
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
+
+    # -- Additional ingress rules
+    # @default -- `[]` (See [values.yaml])
+    extraRules: []
+      # - host: example.server.local
+      #   http:
+      #       path: /
+      #       backend:
+      #         service:
+      #           name: example-svc
+      #           port:
+      #             name: http
+
+    # -- Additional ingress TLS configuration
+    # @default -- `[]` (See [values.yaml])
+    extraTls: []
+      # - secretName: argocd-applicationset-tls
+      #   hosts:
+      #     - argocd-applicationset.example.com
 
 ## Notifications controller
 notifications:

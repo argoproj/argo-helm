@@ -813,7 +813,7 @@ NAME: my-release
 | server.ingress.aws.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB gRPC service |
 | server.ingress.aws.serviceType | string | `"NodePort"` | Service type for the AWS ALB gRPC service |
 | server.ingress.controller | string | `"generic"` | Specific implementation for ingress controller. One of `generic`, `aws` or `gke` |
-| server.ingress.enabled | bool | `true` | Enable an ingress resource for the Argo CD server |
+| server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
 | server.ingress.extraHosts | list | `[]` (See [values.yaml]) | The list of additional hostnames to be covered by ingress record |
 | server.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | server.ingress.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
@@ -1185,6 +1185,18 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the ApplicationSet controller |
 | applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the ApplicationSet controller |
 | applicationSet.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | If defined, uses a Secret to pull an image from a private Docker registry or repository. |
+| applicationSet.ingress.annotations | object | `{}` | Additional ingress annotations |
+| applicationSet.ingress.enabled | bool | `false` | Enable an ingress resource for ApplicationSet webhook |
+| applicationSet.ingress.extraHosts | list | `[]` (See [values.yaml]) | The list of additional hostnames to be covered by ingress record |
+| applicationSet.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
+| applicationSet.ingress.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
+| applicationSet.ingress.extraTls | list | `[]` (See [values.yaml]) | Additional ingress TLS configuration |
+| applicationSet.ingress.hostname | string | `"argocd.server.local"` | Argo CD ApplicationSet hostname |
+| applicationSet.ingress.ingressClassName | string | `""` | Defines which ingress ApplicationSet controller will implement the resource |
+| applicationSet.ingress.labels | object | `{}` | Additional ingress labels |
+| applicationSet.ingress.path | string | `"/api/webhook"` | List of ingress paths |
+| applicationSet.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
+| applicationSet.ingress.tls | bool | `false` | Enable TLS configuration for the hostname defined at `applicationSet.webhook.ingress.hostname` |
 | applicationSet.initContainers | list | `[]` | Init containers to add to the ApplicationSet controller pod |
 | applicationSet.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for ApplicationSet controller |
 | applicationSet.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
@@ -1240,18 +1252,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | applicationSet.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | applicationSet.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the ApplicationSet controller |
-| applicationSet.webhook.ingress.annotations | object | `{}` | Additional ingress annotations |
-| applicationSet.webhook.ingress.enabled | bool | `false` | Enable an ingress resource for Webhooks |
-| applicationSet.webhook.ingress.extraHosts | list | `[]` | The list of additional hostnames to be covered by ingress record |
-| applicationSet.webhook.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
-| applicationSet.webhook.ingress.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
-| applicationSet.webhook.ingress.extraTls | list | `[]` (See [values.yaml]) | Additional ingress TLS configuration |
-| applicationSet.webhook.ingress.hostname | string | `""` | Argo CD ApplicationSet hostname |
-| applicationSet.webhook.ingress.ingressClassName | string | `""` | Defines which ingress ApplicationSet controller will implement the resource |
-| applicationSet.webhook.ingress.labels | object | `{}` | Additional ingress labels |
-| applicationSet.webhook.ingress.path | string | `"/api/webhook"` | List of ingress paths |
-| applicationSet.webhook.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
-| applicationSet.webhook.ingress.tls | bool | `false` | Enable TLS configuration for the hostname defined at `applicationSet.webhook.ingress.hostname` |
 
 ## Notifications
 
