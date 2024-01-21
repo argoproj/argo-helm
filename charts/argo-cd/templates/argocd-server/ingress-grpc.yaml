@@ -1,5 +1,5 @@
-{{- if and .Values.server.ingressGrpc.enabled (not .Values.server.ingressGrpc.isAWSALB) -}}
-{{- $hostname := default (printf "grpc.%s" .Values.server.ingress.hostname) .Values.server.ingressGrpc.hostname -}}
+{{- if and .Values.server.ingressGrpc.enabled (eq .Values.server.ingress.controller "generic") -}}
+{{- $hostname := .Values.server.ingressGrpc.hostname | default (printf "grpc.%s" .Values.server.ingress.hostname) -}}
 {{- $insecure := index .Values.configs.params "server.insecure" | toString -}}
 {{- $servicePort := eq $insecure "true" | ternary .Values.server.service.servicePortHttp .Values.server.service.servicePortHttps -}}
 apiVersion: networking.k8s.io/v1

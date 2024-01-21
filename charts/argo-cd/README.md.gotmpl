@@ -128,6 +128,53 @@ Please review your setup and adjust to new configuration options:
 * additional hostnames and routing can be provided via `extraHosts` configuration section
 * additional TLS secrets can be provided via `extraTls` configuration section
 
+Specific ingress implementations for cloud providers were decoupled from generic ingress resource.
+
+To configure AWS Application Load Balancer:
+
+```yaml
+server:
+  ingress:
+    enabled: true
+    controller: aws
+    annotations:
+      alb.ingress.kubernetes.io/backend-protocol: HTTPS
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    aws:
+      backendProtocolVersion: HTTP2
+      serviceType: NodePort
+```
+
+To configure GKE Application Load Balancer:
+
+```yaml
+configs:
+  params:
+    "server.insecure": true
+
+server:
+  service:
+    annotations:
+      cloud.google.com/neg: '{"ingress": true}'
+      cloud.google.com/backend-config: '{"ports": {"http":"argocd-server"}}'
+
+  ingress:
+    enabled: true
+    controller: gke
+    gke:
+      backendConfig:
+        healthCheck:
+          checkIntervalSec: 30
+          timeoutSec: 5
+          healthyThreshold: 1
+          unhealthyThreshold: 2
+          type: HTTP
+          requestPath: /healthz
+          port: 8080
+      frontendConfig:
+        redirectToHttps:
+          enabled: true  
+```
 
 ### 5.53.0
 
