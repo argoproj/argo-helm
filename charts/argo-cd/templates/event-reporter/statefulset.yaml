@@ -73,6 +73,12 @@ spec:
           {{- end }}
           - name: EVENT_REPORTER_REPLICAS
             value: {{ .Values.eventReporter.replicas | quote }}
+          - name: ARGOCD_APPLICATION_NAMESPACES
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: application.namespaces
+                optional: true
           - name: ARGOCD_TOKEN
             valueFrom:
               secretKeyRef:
