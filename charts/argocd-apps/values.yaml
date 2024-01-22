@@ -106,6 +106,10 @@ applicationsets: []
 #       directories:
 #       - path: guestbook
 #       - path: kustomize-*
+#   # Ref https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Controlling-Resource-Modification/#allow-temporarily-toggling-auto-sync
+#   ignoreApplicationDifferences:
+#   - jsonPointers:
+#     - /spec/syncPolicy
 #   # Progressive Syncs is an experimental feature and it must be explicitly enabled
 #   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Progressive-Syncs/#enabling-progressive-syncs
 #   strategy:

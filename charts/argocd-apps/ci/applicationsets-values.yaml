@@ -13,6 +13,10 @@ applicationsets:
       directories:
       - path: guestbook
       - path: kustomize-*
+  # Ref https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Controlling-Resource-Modification/#allow-temporarily-toggling-auto-sync
+  ignoreApplicationDifferences:
+  - jsonPointers:
+    - /spec/syncPolicy
   template:
     metadata:
       name: '{{path.basename}}'
