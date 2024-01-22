@@ -303,6 +303,9 @@ configs:
     # The scope value can be a string, or a list of strings.
     scopes: "[groups]"
 
+    # -- Matcher function for Casbin, `glob` for glob matcher and `regex` for regex matcher.
+    policy.matchMode: "glob"
+
   # GnuPG public keys for commit verification
   ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/
   gpg:
