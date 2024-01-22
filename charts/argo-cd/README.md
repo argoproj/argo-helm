@@ -1041,7 +1041,7 @@ The main options are listed here:
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
 | redis-ha.haproxy.tolerations | list | `[]` | [Tolerations] for use with node taints for haproxy pods. |
 | redis-ha.hardAntiAffinity | bool | `true` | Whether the Redis server pods should be forced to run on separate nodes. |
-| redis-ha.image.repository | string | `"redis"` | Redis repository |
+| redis-ha.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
 | redis-ha.image.tag | string | `"7.0.13-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistence on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
