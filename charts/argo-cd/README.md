@@ -822,7 +822,7 @@ NAME: my-release
 | server.ingress.gke.frontendConfig | object | `{}` (See [values.yaml]) | Google [FrontendConfig] resource, for use with the GKE Ingress Controller |
 | server.ingress.gke.managedCertificate.create | bool | `true` | Create ManagedCertificate resource and annotations for Google Load balancer |
 | server.ingress.gke.managedCertificate.extraDomains | list | `[]` | Additional domains for ManagedCertificate resource |
-| server.ingress.hostname | string | `"argocd.server.local"` | Argo CD server hostname |
+| server.ingress.hostname | string | `"argocd.example.com"` | Argo CD server hostname |
 | server.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
 | server.ingress.labels | object | `{}` | Additional ingress labels |
 | server.ingress.path | string | `"/"` | The path to Argo CD server |
@@ -1191,7 +1191,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | applicationSet.ingress.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
 | applicationSet.ingress.extraTls | list | `[]` (See [values.yaml]) | Additional ingress TLS configuration |
-| applicationSet.ingress.hostname | string | `"argocd.server.local"` | Argo CD ApplicationSet hostname |
+| applicationSet.ingress.hostname | string | `"argocd.example.com"` | Argo CD ApplicationSet hostname |
 | applicationSet.ingress.ingressClassName | string | `""` | Defines which ingress ApplicationSet controller will implement the resource |
 | applicationSet.ingress.labels | object | `{}` | Additional ingress labels |
 | applicationSet.ingress.path | string | `"/api/webhook"` | List of ingress paths |

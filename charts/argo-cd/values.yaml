@@ -1918,7 +1918,7 @@ server:
 
     # -- Argo CD server hostname
     ## NOTE: Hostname must be provided if Ingress is enabled
-    hostname: argocd.server.local
+    hostname: argocd.example.com
 
     # -- The path to Argo CD server
     path: /
@@ -1934,7 +1934,7 @@ server:
     # -- The list of additional hostnames to be covered by ingress record
     # @default -- `[]` (See [values.yaml])
     extraHosts: []
-      # - name: argocd.server.local
+      # - name: argocd.example.com
       #   path: /
 
     # -- Additional ingress paths
@@ -1951,7 +1951,7 @@ server:
     # -- Additional ingress rules
     # @default -- `[]` (See [values.yaml])
     extraRules: []
-      # - host: example.server.local
+      # - host: example.example.com
       #   http:
       #       path: /
       #       backend:
@@ -2040,7 +2040,7 @@ server:
     # -- The list of additional hostnames to be covered by ingress record
     # @default -- `[]` (See [values.yaml])
     extraHosts: []
-      # - name: grpc.argocd.server.local
+      # - name: grpc.argocd.example.com
       #   path: /
 
     # -- Additional ingress paths for dedicated [gRPC-ingress]
@@ -2057,7 +2057,7 @@ server:
     # -- Additional ingress rules
     # @default -- `[]` (See [values.yaml])
     extraRules: []
-      # - host: example.server.local
+      # - host: example.example.com
       #   http:
       #       path: /
       #       backend:
@@ -2769,7 +2769,7 @@ applicationSet:
 
     # -- Argo CD ApplicationSet hostname
     ## NOTE: Hostname must be provided if Ingress is enabled
-    hostname: argocd.server.local
+    hostname: argocd.example.com
 
     # -- List of ingress paths
     path: /api/webhook
@@ -2784,7 +2784,7 @@ applicationSet:
     # -- The list of additional hostnames to be covered by ingress record
     # @default -- `[]` (See [values.yaml])
     extraHosts: []
-      # - name: argocd.server.local
+      # - name: argocd.example.com
       #   path: /
 
     # -- Additional ingress paths
@@ -2801,7 +2801,7 @@ applicationSet:
     # -- Additional ingress rules
     # @default -- `[]` (See [values.yaml])
     extraRules: []
-      # - host: example.server.local
+      # - host: example.example.com
       #   http:
       #       path: /
       #       backend:
