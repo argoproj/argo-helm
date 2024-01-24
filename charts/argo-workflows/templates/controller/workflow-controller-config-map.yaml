@@ -19,7 +19,7 @@ data:
     parallelism: {{ .Values.controller.parallelism }}
     {{- end }}
     {{- if .Values.controller.resourceRateLimit }}
-    resourceRateLimit: {{ toYaml .Values.controller.resourceRateLimit | nindent 6 }}
+    resourceRateLimit: {{- toYaml .Values.controller.resourceRateLimit | nindent 6 }}
     {{- end }}
     {{- with .Values.controller.namespaceParallelism }}
     namespaceParallelism: {{ . }}
@@ -141,7 +141,7 @@ data:
       clientSecret:
         name: {{ .Values.server.sso.clientSecret.name }}
         key: {{ .Values.server.sso.clientSecret.key }}
-      redirectUrl: {{ .Values.server.sso.redirectUrl }}
+      redirectUrl: {{ .Values.server.sso.redirectUrl | quote }}
       rbac:
         enabled: {{ .Values.server.sso.rbac.enabled }}
       {{- with .Values.server.sso.scopes }}
