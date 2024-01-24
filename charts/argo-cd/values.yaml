@@ -159,7 +159,6 @@ configs:
     url: ""
 
     # -- The name of tracking label used by Argo CD for resource pruning
-    # @default -- Defaults to app.kubernetes.io/instance
     application.instanceLabelKey: argocd.argoproj.io/instance
 
     # -- Enable logs RBAC enforcement
@@ -300,6 +299,9 @@ configs:
     # -- OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
     # The scope value can be a string, or a list of strings.
     scopes: "[groups]"
+
+    # -- Matcher function for Casbin, `glob` for glob matcher and `regex` for regex matcher.
+    policy.matchMode: "glob"
 
   # GnuPG public keys for commit verification
   ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/
@@ -1367,7 +1369,7 @@ redis-ha:
   ## Redis image
   image:
     # -- Redis repository
-    repository: redis
+    repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
     tag: 7.0.13-alpine
   ## Prometheus redis-exporter sidecar
