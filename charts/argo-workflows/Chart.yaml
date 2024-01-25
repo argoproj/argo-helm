@@ -3,7 +3,7 @@ appVersion: v3.5.4
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.40.7
+version: 0.40.8
 icon: https://argoproj.github.io/argo-workflows/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -17,4 +17,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: Wrong identation in artifactRepository block
+      description: Remove trailing whitespace from `.resourceRateLimit` when value is set and `.sso.redirectUrl` when value is an empty string.
