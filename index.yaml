@@ -26632,6 +26632,31 @@ entries:
   argocd-apps:
   - annotations:
       artifacthub.io/changes: |
+        - kind: deprecated
+          description: Add deprecated note for Argo CD Extensions
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    created: "2024-01-25T07:07:48.295006682Z"
+    description: A Helm chart for managing additional Argo CD Applications and Projects
+    digest: 3c7d63aaa79b132adb45cabfc979dd2b55ea43847b9f2af4cab351eafcc83894
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-apps
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-apps-1.5.0/argocd-apps-1.5.0.tgz
+    version: 1.5.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: syncOptions for applications
       artifacthub.io/signKey: |
@@ -28315,4 +28340,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-01-24T23:58:14.98243547Z"
+generated: "2024-01-25T07:07:48.297274298Z"
