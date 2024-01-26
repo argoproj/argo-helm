@@ -310,9 +310,17 @@ spec:
           configMap:
             name: argocd-gpg-keys-cm
         - name: gpg-keyring
+          {{- with .Values.applicationSet.existingVolumes.gpgKeyring }}
+          {{- toYaml . | nindent 10 }}
+          {{- else }}
           emptyDir: {}
+          {{- end }}
         - name: tmp
+          {{- with .Values.applicationSet.existingVolumes.tmp }}
+          {{- toYaml . | nindent 10 }}
+          {{- else }}
           emptyDir: {}
+          {{- end }}
         - name: argocd-repo-server-tls
           secret:
             secretName: argocd-repo-server-tls

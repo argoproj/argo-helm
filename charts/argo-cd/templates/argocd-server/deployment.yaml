@@ -418,12 +418,24 @@ spec:
       {{- end }}
       {{- if .Values.server.extensions.enabled }}
       - name: extensions
+        {{- with .Values.server.existingVolumes.extensions }}
+        {{- toYaml . | nindent 8 }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       {{- end }}
       - name: plugins-home
+        {{- with .Values.server.existingVolumes.pluginsHome }}
+        {{- toYaml . | nindent 8 }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: tmp
+        {{- with .Values.server.existingVolumes.tmp }}
+        {{- toYaml . | nindent 8 }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: ssh-known-hosts
         configMap:
           name: argocd-ssh-known-hosts-cm

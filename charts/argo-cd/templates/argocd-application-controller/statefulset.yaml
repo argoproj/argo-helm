@@ -321,7 +321,11 @@ spec:
         {{- toYaml . | nindent 6 }}
       {{- end }}
       - name: argocd-home
+        {{- with .Values.controller.existingVolumes.argocdHome }}
+        {{- toYaml . | nindent 8 }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: argocd-repo-server-tls
         secret:
           secretName: argocd-repo-server-tls

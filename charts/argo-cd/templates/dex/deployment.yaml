@@ -185,9 +185,17 @@ spec:
       {{- end }}
       volumes:
       - name: static-files
+        {{- with .Values.dex.existingVolumes.staticFiles }}
+        {{- toYaml . | nindent 8 }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: dexconfig
+        {{- with .Values.dex.existingVolumes.dexconfig }}
+        {{- toYaml . | nindent 8 }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: argocd-dex-server-tls
         secret:
           secretName: argocd-dex-server-tls
