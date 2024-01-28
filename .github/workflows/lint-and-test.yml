@@ -95,7 +95,7 @@ jobs:
         run: |
           kubectl create namespace redis
           helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm install redis bitnami/redis --wait --namespace redis --set auth.password=argocd --set architecture=standalone
+          helm install redis bitnami/redis --wait --namespace redis --set auth.password=argocd --set architecture=replication
 
       - name: Run chart-testing (install)
         run: ct install --config ./.github/configs/ct-install.yaml
