@@ -1,0 +1,41 @@
+# Test applicationsets with Progressive Syncs
+
+applicationsets:
+- name: applicationset-progressive-syncs
+  generators:
+  - list:
+      elements:
+      - cluster: engineering-dev
+        url: https://1.2.3.4
+        env: env-dev
+      - cluster: engineering-prod
+        url: https://9.8.7.6/
+        env: env-prod
+  strategy:
+    type: RollingSync
+    rollingSync:
+      steps:
+      - matchExpressions:
+        - key: envLabel
+          operator: In
+          values:
+          - env-dev
+      - matchExpressions:
+        - key: envLabel
+          operator: In
+          values:
+          - env-prod
+  template:
+    metadata:
+      name: '{{.cluster}}-guestbook'
+      labels:
+        envLabel: '{{.env}}'
+    spec:
+      project: my-project
+      source:
+        repoURL: https://github.com/argoproj/argocd-example-apps.git
+        targetRevision: HEAD
+        path: guestbook/{{.cluster}}
+      destination:
+        server: '{{.url}}'
+        namespace: guestbook

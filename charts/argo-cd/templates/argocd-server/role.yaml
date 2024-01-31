@@ -2,6 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 rules:
@@ -22,11 +23,10 @@ rules:
   - argoproj.io
   resources:
   - applications
+  {{- if .Values.applicationSet.enabled }}
   - applicationsets
-  - appprojects
-  {{- if .Values.server.extensions.enabled }}
-  - argocdextensions
   {{- end }}
+  - appprojects
   verbs:
   - create
   - get
@@ -42,3 +42,11 @@ rules:
   verbs:
   - create
   - list
+{{- if eq (toString (index (coalesce .Values.server.config .Values.configs.cm) "exec.enabled")) "true" }}
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+{{- end }}

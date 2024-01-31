@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argo-rollouts-config
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/component: {{ .Values.controller.component }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
+data:
+  {{- with .Values.controller.metricProviderPlugins }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- with .Values.controller.trafficRouterPlugins }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}

@@ -1,0 +1,28 @@
+#  Test with multi-source applications
+
+applications:
+- name: argocd-application-multiple-sources
+  additionalLabels: {}
+  additionalAnnotations: {}
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  project: default
+  sources:
+  - chart: elasticsearch
+    repoURL: https://helm.elastic.co
+    targetRevision: 8.5.1
+  - repoURL: https://github.com/argoproj/argocd-example-apps.git
+    path: guestbook
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas

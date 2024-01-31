@@ -15,6 +15,14 @@ applications: []
 #     path: guestbook
 #     directory:
 #       recurse: true
+#   # ArgoCD v2.6 or later
+#   sources:
+#    - chart: elasticsearch
+#      repoURL: https://helm.elastic.co
+#      targetRevision: 8.5.1
+#    - repoURL: https://github.com/argoproj/argocd-example-apps.git
+#      path: guestbook
+#      targetRevision: HEAD
 #   destination:
 #     server: https://kubernetes.default.svc
 #     namespace: guestbook
@@ -22,6 +30,9 @@ applications: []
 #     automated:
 #       prune: false
 #       selfHeal: false
+#     syncOptions:
+#     - CreateNamespace=true
+#   revisionHistoryLimit: null
 #   ignoreDifferences:
 #   - group: apps
 #     kind: Deployment
@@ -39,6 +50,7 @@ projects: []
 #   namespace: argocd
 #   additionalLabels: {}
 #   additionalAnnotations: {}
+#   permitOnlyProjectScopedClusters: false
 #   finalizers:
 #   - resources-finalizer.argocd.argoproj.io
 #   description: Example Project
@@ -94,10 +106,28 @@ applicationsets: []
 #       directories:
 #       - path: guestbook
 #       - path: kustomize-*
+#   # Progressive Syncs is an experimental feature and it must be explicitly enabled
+#   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Progressive-Syncs/#enabling-progressive-syncs
+#   strategy:
+#     type: RollingSync
+#     rollingSync:
+#       steps:
+#       - matchExpressions:
+#         - key: project
+#           operator: In
+#           values:
+#           - guestbook
+#       - matchExpressions:
+#         - key: project
+#           operator: In
+#           values:
+#           - kustomize-foo
+#           - kustomize-bar
 #   template:
 #     metadata:
 #       name: '{{path.basename}}'
-#       labels: {}
+#       labels:
+#         project: '{{path.basename}}'
 #       annotations: {}
 #     spec:
 #       project: default
@@ -124,7 +154,72 @@ applicationsets: []
 #     # Set Application finalizer
 #     preserveResourcesOnDeletion: false
 
-# -- Deploy Argo UI Extensions within this helm release
+# --  Deploy Argo CD Applications/ApplicationSets/Projects within this helm release
+# @default -- `[]` (See [values.yaml])
+## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/
+itemTemplates: []
+# - items:
+#     - name: my-appset
+#       generators: &generators
+#         - list:
+#             elements:
+#               - cluster: engineering-dev
+#                 url: https://1.2.3.4
+#               - cluster: engineering-prod
+#                 url: https://2.4.6.8
+#               - cluster: finance-preprod
+#                 url: https://9.8.7.6
+#   template:
+#     apiVersion: argoproj.io/v1alpha1
+#     kind: ApplicationSet
+#     metadata:
+#       name: "{{ .name }}"
+#     spec:
+#       generators: *generators
+#       template:
+#         metadata:
+#           name: "{{`{{cluster}}`}}-guestbook"
+#         spec:
+#           project: my-project
+#           source:
+#             repoURL: https://github.com/infra-team/cluster-deployments.git
+#             targetRevision: HEAD
+#             path: guestbook/{{`{{cluster}}`}}
+#           destination:
+#             server: "{{`{{cluster}}`}}"
+#             namespace: guestbook
+# - items:
+#     - name: my-appset
+#       generators:
+#         - list:
+#             elements:
+#               - cluster: engineering-dev
+#                 url: https://1.2.3.4
+#               - cluster: engineering-prod
+#                 url: https://2.4.6.8
+#               - cluster: finance-preprod
+#                 url: https://9.8.7.6
+#   template: |-
+#     apiVersion: argoproj.io/v1alpha1
+#     kind: ApplicationSet
+#     metadata:
+#       name: {{ .name }}
+#     spec:
+#       generators: {{ toYaml .generators | nindent 4 }}
+#       template:
+#         metadata:
+#           name: '{{`{{cluster}}`}}-guestbook'
+#         spec:
+#           project: my-project
+#           source:
+#             repoURL: https://github.com/infra-team/cluster-deployments.git
+#             targetRevision: HEAD
+#             path: guestbook/{{`{{cluster}}`}}
+#           destination:
+#             server: '{{`{{cluster}}`}}'
+#             namespace: guestbook
+
+# -- DEPRECATED - Please refer [Deprecation Notice](https://github.com/argoproj-labs/argocd-extensions?tab=readme-ov-file#deprecation-notice) for more info.
 # @default -- `[]` (See [values.yaml])
 ## This function in tech preview stage, do expect unstability or breaking changes in newer versions. Bump image.tag if necessary.
 ## Ref: https://github.com/argoproj-labs/argocd-extensions

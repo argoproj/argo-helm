@@ -8,6 +8,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ template "argo-cd.controller.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 spec:
@@ -22,6 +23,9 @@ spec:
     metadata:
       annotations:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- if (hasKey .Values.server "configEnabled") | ternary .Values.server.configEnabled .Values.configs.cm.create }}
+        checksum/cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | sha256sum }}
+        {{- end }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.controller.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
@@ -37,13 +41,24 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.global.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.controller.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      {{- if .Values.controller.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.controller.terminationGracePeriodSeconds }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-cd.controller.serviceAccountName" . }}
       containers:
-      - command:
-        - argocd-application-controller
+      - args:
+        - /usr/local/bin/argocd-application-controller
         - --metrics-port={{ .Values.controller.containerPorts.metrics }}
         {{- if .Values.controller.metrics.applicationLabels.enabled }}
         {{- range .Values.controller.metrics.applicationLabels.labels }}
@@ -90,7 +105,7 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
         name: {{ .Values.controller.name }}
         env:
-          {{- with .Values.controller.env }}
+          {{- with (concat .Values.global.env .Values.controller.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
           - name: ARGOCD_CONTROLLER_REPLICAS
@@ -227,6 +242,18 @@ spec:
                 name: argocd-cmd-params-cm
                 key: application.namespaces
                 optional: true
+          - name: ARGOCD_CONTROLLER_SHARDING_ALGORITHM
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.sharding.algorithm
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_KUBECTL_PARALLELISM_LIMIT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.kubectl.parallelism.limit
+                optional: true
         {{- with .Values.controller.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
@@ -246,8 +273,10 @@ spec:
           failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
+        {{- with .Values.controller.containerSecurityContext }}
         securityContext:
-          {{- toYaml .Values.controller.containerSecurityContext | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         workingDir: /home/argocd
         volumeMounts:
         {{- with .Values.controller.volumeMounts }}
@@ -264,19 +293,19 @@ spec:
       initContainers:
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- with .Values.controller.nodeSelector }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.controller) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.tolerations }}
+      {{- with .Values.controller.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.controller.topologySpreadConstraints }}
+      {{- with .Values.controller.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -286,11 +315,6 @@ spec:
             {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.controller.name) | nindent 12 }}
           {{- end }}
         {{- end }}
-      {{- end }}
-      serviceAccountName: {{ template "argo-cd.controllerServiceAccountName" . }}
-      {{- with .Values.global.hostAliases }}
-      hostAliases:
-        {{- toYaml . | nindent 6 }}
       {{- end }}
       volumes:
       {{- with .Values.controller.volumes }}
@@ -309,6 +333,11 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-      {{- with .Values.controller.priorityClassName }}
-      priorityClassName: {{ . }}
+      {{- if .Values.controller.hostNetwork }}
+      hostNetwork: {{ .Values.controller.hostNetwork }}
       {{- end }}
+      {{- with .Values.controller.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.controller.dnsPolicy }}

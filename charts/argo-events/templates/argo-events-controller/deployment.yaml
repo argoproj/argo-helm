@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "argo-events.controller.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     app.kubernetes.io/version: {{ include "argo-events.controller_chart_version_label" . }}
@@ -27,6 +28,9 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.controller.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -44,6 +48,10 @@ spec:
         {{- if .Values.controller.rbac.namespaced }}
         - --namespaced
         {{- end }}
+        {{- if .Values.controller.rbac.managedNamespace }}
+        - --managed-namespace
+        - {{ .Values.controller.rbac.managedNamespace }}
+        {{- end }}
         {{- with .Values.controller.containerSecurityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
@@ -60,7 +68,7 @@ spec:
         {{- end }}
         {{- with .Values.controller.envFrom }}
         envFrom:
-          {{- toYaml | nindent 8 }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
         volumeMounts:
         - name: config

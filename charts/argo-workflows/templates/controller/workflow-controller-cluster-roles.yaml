@@ -7,6 +7,9 @@ kind: ClusterRole
 {{- end }}
 metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
+  {{- if .Values.singleNamespace }}
+  namespace: {{ .Release.Namespace | quote }}
+  {{- end }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 rules:
@@ -14,7 +17,6 @@ rules:
   - ""
   resources:
   - pods
-  - pods/exec
   verbs:
   - create
   - get
@@ -26,11 +28,21 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
   - configmaps
   verbs:
   - get
   - watch
   - list
+  {{- if .Values.controller.rbac.writeConfigMaps }}
+  - create
+  - update
+  {{- end}}
 - apiGroups:
   - ""
   resources:
@@ -174,6 +186,16 @@ rules:
   - list
   - watch
   resourceNames: {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- if and (not .Values.controller.rbac.secretWhitelist) (.Values.controller.rbac.accessAllSecrets) }}
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
 {{- end }}
 
 {{- if .Values.controller.clusterWorkflowTemplates.enabled }}

@@ -135,6 +135,7 @@ rules:
   - get
   - list
   - watch
+  - update
   - patch
 # job access needed for analysis template job metrics
 - apiGroups:
@@ -253,6 +254,27 @@ rules:
   - watch
   - get
   - update
+{{- end }}
+{{- if .Values.providerRBAC.providers.contour }}
+  # Access needed when using the Contour provider
+- apiGroups:
+    - projectcontour.io
+  resources:
+    - httpproxies
+  verbs:
+    - get
+    - list
+    - watch
+    - update
+{{- end }}
+{{- if .Values.providerRBAC.providers.glooPlatform }}
+  # Access needed when using the Gloo Platform provider
+- apiGroups:
+    - networking.gloo.solo.io
+  resources:
+    - routetables
+  verbs:
+    - '*'
 {{- end }}
 {{- end }}
 {{- end }}
