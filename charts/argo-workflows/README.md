@@ -266,6 +266,7 @@ Fields to note:
 | server.GKEmanagedCertificate.domains | list | `["argoworkflows.example.com"]` | Domains for the Google Managed Certificate |
 | server.GKEmanagedCertificate.enabled | bool | `false` | Enable ManagedCertificate custom resource for Google Kubernetes Engine. |
 | server.affinity | object | `{}` | Assign custom [affinity] rules |
+| server.authMode | string | `""` | Deprecated; use server.authModes instead. |
 | server.authModes | list | `[]` | A list of supported authentication modes. Available values are `server`, `client`, or `sso`. If you provide sso, please configure `.Values.server.sso` as well. |
 | server.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. This is only available on HPA apiVersion `autoscaling/v2beta2` and newer |
 | server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server |
@@ -278,7 +279,6 @@ Fields to note:
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
 | server.deploymentAnnotations | object | `{}` | optional map of annotations to be applied to the ui Deployment |
 | server.enabled | bool | `true` | Deploy the Argo Server |
-| server.extraArgs | list | `["--auth-mode=server"]` | Extra arguments to provide to the Argo server binary, such as for disabling authentication. |
 | server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary. |
 | server.extraContainers | list | `[]` | Extra containers to be added to the server deployment |
 | server.extraEnv | list | `[]` | Extra environment variables to provide to the argo-server container |

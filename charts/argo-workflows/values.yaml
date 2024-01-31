@@ -564,14 +564,8 @@ server:
     # - name: FOO
     #   value: "bar"
 
-  # -- Extra arguments to provide to the Argo server binary, such as for disabling authentication.
-  extraArgs: ['--auth-mode=server']
-  # If you want to disable authentication for purposes such as:
-  #   - local dev-mode without authentication
-  #   - gateway authentication through some other service such as KeyCloak
-  # uncomment the lines below and comment out the default empty list `extraArgs: []` above:
-  # extraArgs:
-  # - --auth-mode=server
+  # -- Deprecated; use server.authModes instead.
+  authMode: ""
 
   # -- A list of supported authentication modes. Available values are `server`, `client`, or `sso`. If you provide sso, please configure `.Values.server.sso` as well.
   ## Ref: https://argoproj.github.io/argo-workflows/argo-server-auth-mode/
