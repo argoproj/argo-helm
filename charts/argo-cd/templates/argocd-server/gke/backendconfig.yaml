@@ -3,6 +3,7 @@ apiVersion: {{ include "argo-cd.apiVersions.cloudgoogle" . }}
 kind: BackendConfig
 metadata:
   name: {{ template "argo-cd.server.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:

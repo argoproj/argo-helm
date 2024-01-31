@@ -26,8 +26,18 @@ nameOverride:
 # -- String to fully override "argo-workflows.fullname" template
 fullnameOverride:
 
+# -- Labels to set on all resources
+commonLabels: {}
+
 # -- Override the Kubernetes version, which is used to evaluate certain manifests
 kubeVersionOverride: ""
+
+# Override APIVersions
+apiVersionOverrides:
+  # -- String to override apiVersion of autoscaling rendered by this helm chart
+  autoscaling: "" # autoscaling/v2
+  # -- String to override apiVersion of GKE resources rendered by this helm chart
+  cloudgoogle: "" # cloud.google.com/v1
 
 # -- Restrict Argo to operate only in a single namespace (the namespace of the
 # Helm release) by apply Roles and RoleBindings instead of the Cluster
@@ -47,6 +57,8 @@ workflow:
     annotations: {}
     # -- Service account which is used to run workflows
     name: "argo-workflow"
+    # -- Secrets with credentials to pull images from a private registry. Same format as `.Values.images.pullSecrets`
+    pullSecrets: []
   rbac:
     # -- Adds Role and RoleBinding for the above specified service account to be able to run workflows.
     # A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below)
@@ -74,6 +86,16 @@ controller:
     create: true
     # -- Allows controller to get, list, and watch certain k8s secrets
     secretWhitelist: []
+    # -- Allows controller to get, list and watch all k8s secrets. Can only be used if secretWhitelist is empty.
+    accessAllSecrets: false
+    # -- Allows controller to create and update ConfigMaps. Enables memoization feature
+    writeConfigMaps: false
+
+  configMap:
+    # -- Create a ConfigMap for the controller
+    create: true
+    # -- ConfigMap name
+    name: ""
 
   # -- Limits the maximum number of incomplete workflows in a namespace
   namespaceParallelism:
@@ -107,6 +129,15 @@ controller:
     servicePort: 8080
     # -- Service metrics port name
     servicePortName: metrics
+    # -- ServiceMonitor relabel configs to apply to samples before scraping
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
+    relabelings: []
+    # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
+    metricRelabelings: []
+    # -- ServiceMonitor will add labels from the service to the Prometheus metric
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
+    targetLabels: []
   # -- the controller container's securityContext
   securityContext:
     readOnlyRootFilesystem: true
@@ -115,7 +146,8 @@ controller:
     capabilities:
       drop:
         - ALL
-  # -- enable persistence using postgres
+  # -- enable Workflow Archive to store the status of workflows. Postgres and MySQL (>= 5.7.8) are available.
+  ## Ref: https://argo-workflows.readthedocs.io/en/latest/workflow-archive/
   persistence: {}
   # connectionPool:
   #   maxIdleConns: 100
@@ -136,6 +168,21 @@ controller:
   #   passwordSecret:
   #     name: argo-postgres-config
   #     key: password
+  #   ssl: true
+  #   # sslMode must be one of: disable, require, verify-ca, verify-full
+  #   # you can find more information about those ssl options here: https://godoc.org/github.com/lib/pq
+  #   sslMode: require
+  # mysql:
+  #   host: localhost
+  #   port: 3306
+  #   database: argo
+  #   tableName: argo_workflows
+  #   userNameSecret:
+  #     name: argo-mysql-config
+  #     key: username
+  #   passwordSecret:
+  #     name: argo-mysql-config
+  #     key: password
 
   # -- Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level.
   # Only valid for 2.7+
@@ -151,6 +198,13 @@ controller:
 
   # -- Number of workflow workers
   workflowWorkers: # 32
+  # -- Number of workflow TTL workers
+  workflowTTLWorkers: # 4
+  # -- Number of pod cleanup workers
+  podCleanupWorkers: # 4
+  # -- Number of cron workflow workers
+  # Only valid for 3.5+
+  cronWorkflowWorkers: # 8
   # -- Restricts the Workflows that the controller will process.
   # Only valid for 2.9+
   workflowRestrictions: {}
@@ -220,6 +274,8 @@ controller:
     level: info
     # -- Set the glog logging level
     globallevel: "0"
+    # -- Set the logging format (one of: `text`, `json`)
+    format: "text"
 
   # -- Service type of the controller Service
   serviceType: ClusterIP
@@ -257,6 +313,8 @@ controller:
   volumes: []
   # -- The number of controller pods to run
   replicas: 1
+  # -- The number of revisions to keep.
+  revisionHistoryLimit: 10
 
   pdb:
     # -- Configure [Pod Disruption Budget] for the controller pods
@@ -287,6 +345,9 @@ controller:
   # -- Configure Argo Server to show custom [links]
   ## Ref: https://argoproj.github.io/argo-workflows/links/
   links: []
+  # -- Configure Argo Server to show custom [columns]
+  ## Ref: https://github.com/argoproj/argo-workflows/pull/10693
+  columns: []
   # -- Set ui navigation bar background color
   navColor: ""
   clusterWorkflowTemplates:
@@ -294,6 +355,9 @@ controller:
     enabled: true
   # -- Extra containers to be added to the controller deployment
   extraContainers: []
+
+  # -- Enables init containers to be added to the controller deployment
+  extraInitContainers: []
 
   # -- Workflow retention by number of workflows
   retentionPolicy: {}
@@ -354,6 +418,8 @@ executor:
     pullPolicy: ""
   # -- Resource limits and requests for the Workflow Executors
   resources: {}
+  # -- Passes arguments to the executor processes
+  args: []
   # -- Adds environment variables for the executor.
   env: []
   # -- sets security context for the executor container
@@ -404,6 +470,12 @@ server:
   # -- Service port name
   servicePortName: "" # http
 
+  # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
+  hostAliases: []
+  # - ip: 10.20.30.40
+  #   hostnames:
+  #   - git.myhostname
+
   serviceAccount:
     # -- Create a service account for the server
     create: true
@@ -426,6 +498,34 @@ server:
   resources: {}
   # -- The number of server pods to run
   replicas: 1
+  # -- The number of revisions to keep.
+  revisionHistoryLimit: 10
+  ## Argo Server Horizontal Pod Autoscaler
+  autoscaling:
+    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server
+    enabled: false
+    # -- Minimum number of replicas for the Argo Server [HPA]
+    minReplicas: 1
+    # -- Maximum number of replicas for the Argo Server [HPA]
+    maxReplicas: 5
+    # -- Average CPU utilization percentage for the Argo Server [HPA]
+    targetCPUUtilizationPercentage: 50
+    # -- Average memory utilization percentage for the Argo Server [HPA]
+    targetMemoryUtilizationPercentage: 50
+    # -- Configures the scaling behavior of the target in both Up and Down directions.
+    # This is only available on HPA apiVersion `autoscaling/v2beta2` and newer
+    behavior: {}
+      # scaleDown:
+      #  stabilizationWindowSeconds: 300
+      #  policies:
+      #   - type: Pods
+      #     value: 1
+      #     periodSeconds: 180
+      # scaleUp:
+      #   stabilizationWindowSeconds: 300
+      #   policies:
+      #   - type: Pods
+      #     value: 2
   pdb:
     # -- Configure [Pod Disruption Budget] for the server pods
     enabled: false
@@ -473,6 +573,25 @@ server:
   # extraArgs:
   # - --auth-mode=server
 
+  # -- A list of supported authentication modes. Available values are `server`, `client`, or `sso`. If you provide sso, please configure `.Values.server.sso` as well.
+  ## Ref: https://argoproj.github.io/argo-workflows/argo-server-auth-mode/
+  authModes: []
+
+  # -- Extra arguments to provide to the Argo server binary.
+  ## Ref: https://argoproj.github.io/argo-workflows/argo-server/#options
+  extraArgs: []
+
+  logging:
+    # -- Set the logging level (one of: `debug`, `info`, `warn`, `error`)
+    level: info
+    # -- Set the glog logging level
+    globallevel: "0"
+    # -- Set the logging format (one of: `text`, `json`)
+    format: "text"
+
+  # -- Volume to be mounted in Pods for temporary files.
+  tmpVolume:
+    emptyDir: {}
   # -- Additional volume mounts to the server main container.
   volumeMounts: []
   # -- Additional volumes to the server pod.
@@ -523,44 +642,100 @@ server:
       #   hosts:
       #     - argoworkflows.example.com
 
+  ## Create a Google Backendconfig  for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-configuration#configuring_ingress_features_through_backendconfig_parameters
+  GKEbackendConfig:
+    # -- Enable BackendConfig custom resource for Google Kubernetes Engine
+    enabled: false
+    # -- [BackendConfigSpec]
+    spec: {}
+  #  spec:
+  #    iap:
+  #      enabled: true
+  #      oauthclientCredentials:
+  #        secretName: argoworkflows-secret
+
+  ## Create a Google Managed Certificate for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs
+  GKEmanagedCertificate:
+    # -- Enable ManagedCertificate custom resource for Google Kubernetes Engine.
+    enabled: false
+    # -- Domains for the Google Managed Certificate
+    domains:
+    - argoworkflows.example.com
+
+  ## Create a Google FrontendConfig Custom Resource, for use with the GKE Ingress Controller
+  ## https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+  GKEfrontendConfig:
+    # -- Enable FrontConfig custom resource for Google Kubernetes Engine
+    enabled: false
+    # -- [FrontendConfigSpec]
+    spec: {}
+  # spec:
+  #   redirectToHttps:
+  #     enabled: true
+  #     responseCodeName: RESPONSE_CODE
+
   clusterWorkflowTemplates:
     # -- Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates.
     enabled: true
     # -- Give the server permissions to edit ClusterWorkflowTemplates.
     enableEditing: true
 
-  # -- SSO configuration when SSO is specified as a server auth mode.
-  sso: {}
-    ## All the values are required. SSO is activated by adding --auth-mode=sso
-    ## to the server command line.
-    #
-    ## The root URL of the OIDC identity provider.
-    # issuer: https://accounts.google.com
-    ## Name of a secret and a key in it to retrieve the app OIDC client ID from.
-    # clientId:
-    #   name: argo-server-sso
-    #   key: client-id
-    ## Name of a secret and a key in it to retrieve the app OIDC client secret from.
-    # clientSecret:
-    #   name: argo-server-sso
-    #   key: client-secret
-    ## The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
-    # redirectUrl: https://argo/oauth2/callback
-    # rbac:
-    #   enabled: true
+  # SSO configuration when SSO is specified as a server auth mode.
+  sso:
+    # -- Create SSO configuration. If you set `true` , please also set `.Values.server.authMode` as `sso`.
+    enabled: false
+    # -- The root URL of the OIDC identity provider
+    issuer: https://accounts.google.com
+    clientId:
+      # -- Name of secret to retrieve the app OIDC client ID
+      name: argo-server-sso
+      # -- Key of secret to retrieve the app OIDC client ID
+      key: client-id
+    clientSecret:
+      # -- Name of a secret to retrieve the app OIDC client secret
+      name: argo-server-sso
+      # -- Key of a secret to retrieve the app OIDC client secret
+      key: client-secret
+    # - The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
+    redirectUrl: ""
+    rbac:
+      # -- Adds ServiceAccount Policy to server (Cluster)Role.
+      enabled: true
+    # -- Whitelist to allow server to fetch Secrets
     ## When present, restricts secrets the server can read to a given list.
     ## You can use it to restrict the server to only be able to access the
     ## service account token secrets that are associated with service accounts
     ## used for authorization.
-    #   secretWhitelist: []
-    ## Scopes requested from the SSO ID provider.  The 'groups' scope requests
-    ## group membership information, which is usually used for authorization
-    ## decisions.
-    # scopes:
-    # - groups
+      secretWhitelist: []
+    # -- Scopes requested from the SSO ID provider
+    ## The 'groups' scope requests group membership information, which is usually used for authorization decisions.
+    scopes: []
+      # - groups
+    # -- Define how long your login is valid for (in hours)
+    ## If omitted, defaults to 10h.
+    sessionExpiry: ""
+    # -- Alternate root URLs that can be included for some OIDC providers
+    issuerAlias: ""
+    # -- Override claim name for OIDC groups
+    customGroupClaimName: ""
+    # -- Specify the user info endpoint that contains the groups claim
+    ## Configure this if your OIDC provider provides groups information only using the user-info endpoint (e.g. Okta)
+    userInfoPath: ""
+    # -- Skip TLS verification for the HTTP client
+    insecureSkipVerify: false
+    # -- Filter the groups returned by the OIDC provider
+    ## A logical "OR" is used between each regex in the list
+    filterGroupsRegex: []
+      # - ".*argo-wf.*"
+      # - ".*argo-workflow.*"
 
   # -- Extra containers to be added to the server deployment
   extraContainers: []
+
+  # -- Enables init containers to be added to the server deployment
+  extraInitContainers: []
 
 # -- Array of extra K8s manifests to deploy
 extraObjects: []
@@ -588,8 +763,6 @@ extraObjects: []
   #       secretName: argo-server-sso-secrets-store
   #       type: Opaque
 
-# -- Influences the creation of the ConfigMap for the workflow-controller itself.
-useDefaultArtifactRepo: false
 # -- Use static credentials for S3 (eg. when not using AWS IRSA)
 useStaticCredentials: true
 artifactRepository:
@@ -597,72 +770,123 @@ artifactRepository:
   archiveLogs: false
   # -- Store artifact in a S3-compliant object store
   # @default -- See [values.yaml]
-  s3:
-    # Note the `key` attribute is not the actual secret, it's the PATH to
-    # the contents in the associated secret, as defined by the `name` attribute.
-    accessKeySecret:
-      # name: <releaseName>-minio
-      key: accesskey
-    secretKeySecret:
-      # name: <releaseName>-minio
-      key: secretkey
-    # insecure will disable TLS. Primarily used for minio installs not configured with TLS
-    insecure: false
+  s3: {}
+    # # Note the `key` attribute is not the actual secret, it's the PATH to
+    # # the contents in the associated secret, as defined by the `name` attribute.
+    # accessKeySecret:
+    #   name: "{{ .Release.Name }}-minio"
+    #   key: accesskey
+    # secretKeySecret:
+    #   name: "{{ .Release.Name }}-minio"
+    #   key: secretkey
+    # # insecure will disable TLS. Primarily used for minio installs not configured with TLS
+    # insecure: false
     # bucket:
     # endpoint:
     # region:
     # roleARN:
     # useSDKCreds: true
     # encryptionOptions:
-    #    enableEncryption: true
+    #   enableEncryption: true
   # -- Store artifact in a GCS object store
   # @default -- `{}` (See [values.yaml])
   gcs: {}
-  # bucket: <project>-argo
-  # keyFormat: "{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}"
-  # serviceAccountKeySecret is a secret selector.
-  # It references the k8s secret named 'my-gcs-credentials'.
-  # This secret is expected to have have the key 'serviceAccountKey',
-  # containing the base64 encoded credentials
-  # to the bucket.
-  #
-  # If it's running on GKE and Workload Identity is used,
-  # serviceAccountKeySecret is not needed.
-  # serviceAccountKeySecret:
-  # name: my-gcs-credentials
-  # key: serviceAccountKey
+    # bucket: <project>-argo
+    # keyFormat: "{{ \"{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}\" }}"
+    # # serviceAccountKeySecret is a secret selector.
+    # # It references the k8s secret named 'my-gcs-credentials'.
+    # # This secret is expected to have have the key 'serviceAccountKey',
+    # # containing the base64 encoded credentials
+    # # to the bucket.
+    # #
+    # # If it's running on GKE and Workload Identity is used,
+    # # serviceAccountKeySecret is not needed.
+    # serviceAccountKeySecret:
+    #   name: my-gcs-credentials
+    #   key: serviceAccountKey
   # -- Store artifact in Azure Blob Storage
   # @default -- `{}` (See [values.yaml])
   azure: {}
-  # endpoint: https://mystorageaccountname.blob.core.windows.net
-  # container: my-container-name
-  # blob: path/in/container
-  ## accountKeySecret is a secret selector.
-  ## It references the k8s secret named 'my-azure-storage-credentials'.
-  ## This secret is expected to have have the key 'account-access-key',
-  ## containing the base64 encoded credentials to the storage account.
-  ## If a managed identity has been assigned to the machines running the
-  ## workflow (e.g., https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
-  ## then accountKeySecret is not needed, and useSDKCreds should be
-  ## set to true instead:
-  # useSDKCreds: true
-  # accountKeySecret:
-  #  name: my-azure-storage-credentials
-  #  key: account-access-key
+    # endpoint: https://mystorageaccountname.blob.core.windows.net
+    # container: my-container-name
+    # blobNameFormat: path/in/container
+    # # accountKeySecret is a secret selector.
+    # # It references the k8s secret named 'my-azure-storage-credentials'.
+    # # This secret is expected to have have the key 'account-access-key',
+    # # containing the base64 encoded credentials to the storage account.
+    # # If a managed identity has been assigned to the machines running the
+    # # workflow (e.g., https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
+    # # then accountKeySecret is not needed, and useSDKCreds should be
+    # # set to true instead:
+    # useSDKCreds: true
+    # accountKeySecret:
+    #   name: my-azure-storage-credentials
+    #   key: account-access-key
 
 # -- The section of custom artifact repository.
-# Will be added to the config in case useDefaultArtifactRepo is set to false
+# Utilize a custom artifact repository that is not one of the current base ones (s3, gcs, azure)
 customArtifactRepository: {}
-# customArtifactRepository:
-#   archiveLogs: true
-#   artifactory:
-#     repoUrl: https://artifactory.example.com/raw
-#     usernameSecret:
-#       name: artifactory-creds
-#       key: username
-#     passwordSecret:
-#       name: artifactory-creds
-#       key: password
+# artifactory:
+#   repoUrl: https://artifactory.example.com/raw
+#   usernameSecret:
+#     name: artifactory-creds
+#     key: username
+#   passwordSecret:
+#     name: artifactory-creds
+#     key: password
+
+# -- The section of [artifact repository ref](https://argoproj.github.io/argo-workflows/artifact-repository-ref/).
+# Each map key is the name of configmap
+# @default -- `{}` (See [values.yaml])
+artifactRepositoryRef: {}
+  # # -- 1st ConfigMap
+  # # If you want to use this config map by default, name it "artifact-repositories".
+  # # Otherwise, you can provide a reference to a
+  # # different config map in `artifactRepositoryRef.configMap`.
+  # artifact-repositories:
+  #   # -- v3.0 and after - if you want to use a specific key, put that key into this annotation.
+  #   annotations:
+  #     workflows.argoproj.io/default-artifact-repository: default-v1-s3-artifact-repository
+  #   # 1st data of configmap. See above artifactRepository or customArtifactRepository.
+  #   default-v1-s3-artifact-repository:
+  #     archiveLogs: false
+  #     s3:
+  #       bucket: my-bucket
+  #       endpoint: minio:9000
+  #       insecure: true
+  #       accessKeySecret:
+  #         name: my-minio-cred
+  #         key: accesskey
+  #       secretKeySecret:
+  #         name: my-minio-cred
+  #         key: secretkey
+  #    # 2nd data
+  #    oss-artifact-repository:
+  #      archiveLogs: false
+  #      oss:
+  #        endpoint: http://oss-cn-zhangjiakou-internal.aliyuncs.com
+  #        bucket: $mybucket
+  #        # accessKeySecret and secretKeySecret are secret selectors.
+  #        # It references the k8s secret named 'bucket-workflow-artifect-credentials'.
+  #        # This secret is expected to have have the keys 'accessKey'
+  #        # and 'secretKey', containing the base64 encoded credentials
+  #        # to the bucket.
+  #        accessKeySecret:
+  #          name: $mybucket-credentials
+  #          key: accessKey
+  #        secretKeySecret:
+  #          name: $mybucket-credentials
+  #          key: secretKey
+  # # 2nd ConfigMap
+  # another-artifact-repositories:
+  #   annotations:
+  #     workflows.argoproj.io/default-artifact-repository: gcs
+  #   gcs:
+  #     bucket: my-bucket
+  #     keyFormat: prefix/in/bucket/{{workflow.name}}/{{pod.name}}
+  #     serviceAccountKeySecret:
+  #       name: my-gcs-credentials
+  #       key: serviceAccountKey
 
 emissary:
   # -- The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used.

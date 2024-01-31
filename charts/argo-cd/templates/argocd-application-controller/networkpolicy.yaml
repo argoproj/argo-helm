@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
   name: {{ template "argo-cd.controller.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   ingress:
   - from:

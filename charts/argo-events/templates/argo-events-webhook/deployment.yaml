@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: events-webhook
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-events.labels" (dict "context" . "component" .Values.webhook.name "name" .Values.webhook.name) | nindent 4 }}
     app.kubernetes.io/version: {{ include "argo-events.webhook_chart_version_label" . }}
@@ -27,6 +28,9 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.webhook.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

@@ -1,8 +1,7 @@
 # Test with applicationsets
 
 applicationsets:
-- name: guestbook
-  namespace: default # Only for test purpose.
+- name: applicationset
   additionalLabels: {}
   additionalAnnotations: {}
   # See PR #10026 (ArgoCD v2.5 or later)
@@ -43,3 +42,32 @@ applicationsets:
   syncPolicy:
     # Set Application finalizer
     preserveResourcesOnDeletion: false
+- name: applicationset-list-generator
+  generators:
+  - list:
+      elements:
+        - cluster: engineering-dev
+          url: https://kubernetes.default.svc
+      template:
+        metadata: {}
+        spec:
+          project: '{{cluster}}'
+          source:
+            targetRevision: HEAD
+            repoURL: https://github.com/argoproj/argo-cd.git
+            # New path value is generated here:
+            path: 'applicationset/examples/template-override/{{cluster}}-override'
+          destination: {}
+  template:
+    metadata:
+      name: '{{cluster}}-guestbook'
+    spec:
+      project: '{{cluster}}'
+      source:
+        repoURL: https://github.com/argoproj/argo-cd.git
+        targetRevision: HEAD
+        # This 'default' value is not used: it is is replaced by the generator's template path, above
+        path: applicationset/examples/template-override/default
+      destination:
+        server: '{{url}}'
+        namespace: guestbook

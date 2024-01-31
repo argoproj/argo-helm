@@ -1,2 +1,12 @@
 ## Reference: https://github.com/helm/chart-releaser
-index-path: "./index.yaml" 
+index-path: "./index.yaml"
+
+# PGP signing
+sign: true
+key: Argo Helm maintainers
+# keyring:          # Set via env variable CR_KEYRING
+# passphrase-file:  # Set via env variable CR_PASSPHRASE_FILE
+
+# Enable automatic generation of release notes using GitHubs release notes generator.
+# see: https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+generate-release-notes: true

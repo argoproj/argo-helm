@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     app.kubernetes.io/version: {{ include "argo-workflows.controller_chart_version_label" . }}
@@ -11,6 +12,7 @@ metadata:
   {{- end }}
 spec:
   replicas: {{ .Values.controller.replicas }}
+  revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
@@ -32,6 +34,10 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.controller.extraInitContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
       containers:
         - name: controller
           image: "{{- include "argo-workflows.image" (dict "context" . "image" .Values.controller.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.controller.image.tag }}"
@@ -39,18 +45,32 @@ spec:
           command: [ "workflow-controller" ]
           args:
           - "--configmap"
-          - "{{ template "argo-workflows.controller.fullname" . }}-configmap"
+          - "{{ template "argo-workflows.controller.config-map.name" . }}"
           - "--executor-image"
           - "{{- include "argo-workflows.image" (dict "context" . "image" .Values.executor.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.executor.image.tag }}"
           - "--loglevel"
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"
           - "{{ .Values.controller.logging.globallevel }}"
+          - "--log-format"
+          - "{{ .Values.controller.logging.format }}"
           {{- if .Values.singleNamespace }}
           - "--namespaced"
           {{- end }}
           {{- with .Values.controller.workflowWorkers }}
           - "--workflow-workers"
+          - {{ . | quote }}
+          {{- end }}
+          {{- with .Values.controller.workflowTTLWorkers }}
+          - "--workflow-ttl-workers"
+          - {{ . | quote }}
+          {{- end }}
+          {{- with .Values.controller.podCleanupWorkers }}
+          - "--pod-cleanup-workers"
+          - {{ . | quote }}
+          {{- end }}
+          {{- with .Values.controller.cronWorkflowWorkers }}
+          - "--cron-workflow-workers"
           - {{ . | quote }}
           {{- end }}
           {{- with .Values.controller.extraArgs }}

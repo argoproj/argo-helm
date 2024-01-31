@@ -1,0 +1,61 @@
+itemTemplates:
+  - items:
+      - name: my-appset
+        generators: &generators
+          - list:
+              elements:
+                - cluster: engineering-dev
+                  url: https://1.2.3.4
+                - cluster: engineering-prod
+                  url: https://2.4.6.8
+                - cluster: finance-preprod
+                  url: https://9.8.7.6
+    template:
+      apiVersion: argoproj.io/v1alpha1
+      kind: ApplicationSet
+      metadata:
+        name: "{{ .name }}"
+      spec:
+        generators: *generators
+        template:
+          metadata:
+            name: "{{`{{cluster}}`}}-guestbook"
+          spec:
+            project: my-project
+            source:
+              repoURL: https://github.com/infra-team/cluster-deployments.git
+              targetRevision: HEAD
+              path: guestbook/{{`{{cluster}}`}}
+            destination:
+              server: "{{`{{cluster}}`}}"
+              namespace: guestbook
+  - items:
+      - name: my-appset
+        generators:
+          - list:
+              elements:
+                - cluster: engineering-dev
+                  url: https://1.2.3.4
+                - cluster: engineering-prod
+                  url: https://2.4.6.8
+                - cluster: finance-preprod
+                  url: https://9.8.7.6
+    template: |-
+      apiVersion: argoproj.io/v1alpha1
+      kind: ApplicationSet
+      metadata:
+        name: {{ .name }}
+      spec:
+        generators: {{ toYaml .generators | nindent 4 }}
+        template:
+          metadata:
+            name: '{{`{{cluster}}`}}-guestbook'
+          spec:
+            project: my-project
+            source:
+              repoURL: https://github.com/infra-team/cluster-deployments.git
+              targetRevision: HEAD
+              path: guestbook/{{`{{cluster}}`}}
+            destination:
+              server: '{{`{{cluster}}`}}'
+              namespace: guestbook

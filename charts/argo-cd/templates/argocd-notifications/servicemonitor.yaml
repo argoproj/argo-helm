@@ -1,11 +1,9 @@
-{{- if and .Values.notifications.enabled .Values.notifications.metrics.enabled .Values.notifications.metrics.serviceMonitor.enabled }}
+{{- if and (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") .Values.notifications.enabled .Values.notifications.metrics.enabled .Values.notifications.metrics.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-cd.notifications.fullname" . }}
-  {{- if .Values.notifications.metrics.serviceMonitor.namespace }}
-  namespace: {{ .Values.notifications.metrics.serviceMonitor.namespace }}
-  {{- end }}
+  namespace: {{ default .Release.Namespace .Values.notifications.metrics.serviceMonitor.namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
     {{- with .Values.notifications.metrics.serviceMonitor.selector }}

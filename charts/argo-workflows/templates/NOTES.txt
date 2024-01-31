@@ -1,3 +1,7 @@
+{{- if .Values.server.authMode }}
+DEPRECATED option server.authMode - Use server.authModes
+{{- end }}
+
 1. Get Argo Server external IP/domain by running:
 
 kubectl --namespace {{ .Release.Namespace }} get services -o wide | grep {{ template "argo-workflows.server.fullname" . }}

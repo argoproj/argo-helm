@@ -8,9 +8,14 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ template "argo-cd.repoServer.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
 spec:
+  {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.repoServer.deploymentStrategy) }}
+  strategy:
+    {{- trim . | nindent 4 }}
+  {{- end }}
   {{- if not .Values.repoServer.autoscaling.enabled }}
   replicas: {{ .Values.repoServer.replicas }}
   {{- end }}
@@ -24,6 +29,12 @@ spec:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
         {{- if .Values.repoServer.certificateSecret.enabled }}
         checksum/repo-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-repo-server-tls-secret.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if (hasKey .Values.server "configEnabled") | ternary .Values.server.configEnabled .Values.configs.cm.create }}
+        checksum/cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if .Values.configs.cmp.create }}
+        checksum/cmp-cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmp-cm.yaml") . | sha256sum }}
         {{- end }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.repoServer.podAnnotations) }}
         {{- range $key, $value := . }}
@@ -40,19 +51,27 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      automountServiceAccountToken: {{ .Values.repoServer.serviceAccount.automountServiceAccountToken }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.global.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.repoServer.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      {{- if .Values.repoServer.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.repoServer.terminationGracePeriodSeconds }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-cd.repoServer.serviceAccountName" . }}
       containers:
       - name: {{ .Values.repoServer.name }}
         image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
-        command:
-        - entrypoint.sh
         args:
-        - argocd-repo-server
+        - /usr/local/bin/argocd-repo-server
         - --port={{ .Values.repoServer.containerPorts.server }}
         - --metrics-port={{ .Values.repoServer.containerPorts.metrics }}
         {{- with .Values.repoServer.logFormat }}
@@ -67,7 +86,7 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
-          {{- with .Values.repoServer.env }}
+          {{- with (concat .Values.global.env .Values.repoServer.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- if .Values.openshift.enabled }}
@@ -97,6 +116,18 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: reposerver.parallelism.limit
+                optional: true
+          - name: ARGOCD_REPO_SERVER_LISTEN_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: reposerver.listen.address
+                optional: true
+          - name: ARGOCD_REPO_SERVER_LISTEN_METRICS_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: reposerver.metrics.listen.address
                 optional: true
           - name: ARGOCD_REPO_SERVER_DISABLE_TLS
             valueFrom:
@@ -200,18 +231,32 @@ spec:
                 key: reposerver.streamed.manifest.max.extracted.size
                 name: argocd-cmd-params-cm
                 optional: true
+          - name: ARGOCD_REPO_SERVER_HELM_MANIFEST_MAX_EXTRACTED_SIZE
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.helm.manifest.max.extracted.size
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_REPO_SERVER_DISABLE_HELM_MANIFEST_MAX_EXTRACTED_SIZE
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: reposerver.disable.helm.manifest.max.extracted.size
+                optional: true
           - name: ARGOCD_GIT_MODULES_ENABLED
             valueFrom:
               configMapKeyRef:
                 key: reposerver.enable.git.submodule
                 name: argocd-cmd-params-cm
                 optional: true
+          {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
           - name: HELM_CACHE_HOME
             value: /helm-working-dir
           - name: HELM_CONFIG_HOME
             value: /helm-working-dir
           - name: HELM_DATA_HOME
             value: /helm-working-dir
+          {{- end }}
         {{- with .Values.repoServer.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
@@ -230,8 +275,10 @@ spec:
           name: gpg-keyring
         - mountPath: /app/config/reposerver/tls
           name: argocd-repo-server-tls
+        {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
         - mountPath: /helm-working-dir
           name: helm-working-dir
+        {{- end }}
         - mountPath: /home/argocd/cmp-server/plugins
           name: plugins
         - mountPath: /tmp
@@ -263,14 +310,20 @@ spec:
           failureThreshold: {{ .Values.repoServer.readinessProbe.failureThreshold }}
         resources:
           {{- toYaml .Values.repoServer.resources | nindent 10 }}
+        {{- with .Values.repoServer.containerSecurityContext }}
         securityContext:
-          {{- toYaml .Values.repoServer.containerSecurityContext | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.repoServer.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       {{- with .Values.repoServer.extraContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
       initContainers:
       - command:
-        - cp
+        - /bin/cp
         - -n
         - /usr/local/bin/argocd
         - /var/run/argocd/argocd-cmp-server
@@ -291,19 +344,19 @@ spec:
       {{- with .Values.repoServer.initContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
-      {{- with .Values.repoServer.nodeSelector }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.repoServer) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.repoServer.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.repoServer.tolerations }}
+      {{- with .Values.repoServer.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.repoServer.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.repoServer.topologySpreadConstraints }}
+      {{- with .Values.repoServer.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
@@ -314,23 +367,36 @@ spec:
         {{- end }}
         {{- end }}
       {{- end }}
-      serviceAccountName: {{ template "argo-cd.repoServerServiceAccountName" . }}
-      {{- with .Values.global.hostAliases }}
-      hostAliases:
-        {{- toYaml . | nindent 6 }}
-      {{- end }}
       volumes:
       {{- with .Values.repoServer.volumes }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
       - name: helm-working-dir
+        {{- if .Values.repoServer.existingVolumes.helmWorkingDir -}}
+        {{ toYaml .Values.repoServer.existingVolumes.helmWorkingDir | nindent 8  }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
+      {{- end }}
       - name: plugins
+        {{- if .Values.repoServer.existingVolumes.plugins -}}
+        {{ toYaml .Values.repoServer.existingVolumes.plugins | nindent 8  }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: var-files
+        {{- if .Values.repoServer.existingVolumes.varFiles -}}
+        {{ toYaml .Values.repoServer.existingVolumes.varFiles | nindent 8  }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: tmp
+        {{- if .Values.repoServer.existingVolumes.tmp -}}
+        {{ toYaml .Values.repoServer.existingVolumes.tmp | nindent 8  }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: ssh-known-hosts
         configMap:
           name: argocd-ssh-known-hosts-cm
@@ -341,7 +407,11 @@ spec:
         configMap:
           name: argocd-gpg-keys-cm
       - name: gpg-keyring
+        {{- if .Values.repoServer.existingVolumes.gpgKeyring -}}
+        {{ toYaml .Values.repoServer.existingVolumes.gpgKeyring | nindent 8  }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: argocd-repo-server-tls
         secret:
           secretName: argocd-repo-server-tls
@@ -353,6 +423,11 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-      {{- with .Values.repoServer.priorityClassName }}
-      priorityClassName: {{ . }}
+      {{- if .Values.repoServer.hostNetwork }}
+      hostNetwork: {{ .Values.repoServer.hostNetwork }}
       {{- end }}
+      {{- with .Values.repoServer.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.repoServer.dnsPolicy }}

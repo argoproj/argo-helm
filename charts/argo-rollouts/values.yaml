@@ -38,15 +38,30 @@ extraObjects: []
   #     api-key: <datadog-api-key>
   #     app-key: <datadog-app-key>
 
+global:
+  # -- Annotations for all deployed Deployments
+  deploymentAnnotations: {}
+
 controller:
   # -- Value of label `app.kubernetes.io/component`
   component: rollouts-controller
+  # -- Annotations to be added to the controller deployment
+  deploymentAnnotations: {}
+  # -- Annotations to be added to application controller pods
+  podAnnotations: {}
   # -- [Node selector]
   nodeSelector: {}
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+  logging:
+    # -- Set the logging level (one of: `debug`, `info`, `warn`, `error`)
+    level: info
+    # -- Set the klog logging level
+    kloglevel: "0"
+    # -- Set the logging format (one of: `text`, `json`)
+    format: "text"
 
   # -- Assign custom [TopologySpreadConstraints] rules to the controller
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
@@ -104,16 +119,36 @@ controller:
   # -- flag to enable creation of cluster controller role (requires cluster RBAC)
   createClusterRole: true
 
+  # Controller container ports
+  containerPorts:
+    # -- Metrics container port
+    metrics: 8090
+    # -- Healthz container port
+    healthz: 8080
+
   metrics:
     # -- Deploy metrics service
     enabled: false
+    service:
+      # -- Metrics service port name
+      portName: metrics
+      # -- Metrics service port
+      port: 8090
+      # -- Service annotations
+      annotations: {}
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Namespace to be used for the ServiceMonitor
+      namespace: ""
       # -- Labels to be added to the ServiceMonitor
       additionalLabels: {}
       # -- Annotations to be added to the ServiceMonitor
       additionalAnnotations: {}
+      # -- RelabelConfigs to apply to samples before scraping
+      relabelings: []
+      # -- MetricRelabelConfigs to apply to samples before ingestion
+      metricRelabelings: []
 
   # -- Configure liveness [probe] for the controller
   # @default -- See [values.yaml]
@@ -152,6 +187,31 @@ controller:
     # -- Maximum number / percentage of pods that may be made unavailable
     maxUnavailable: # 0
 
+  # -- Additional volumes to add to the controller pod
+  volumes: []
+    # - configMap:
+    #     name: my-certs-cm
+    #   name: my-certs
+
+  # -- Additional volumeMounts to add to the controller container
+  volumeMounts: []
+    # - mountPath: /etc/ssl/certs
+    #   name: my-certs
+
+  # -- Configures 3rd party metric providers for controller
+  ## Ref: https://argo-rollouts.readthedocs.io/en/stable/analysis/plugins/
+  metricProviderPlugins: {}
+    # metricProviderPlugins: |-
+    #   - name: "argoproj-labs/sample-prometheus" # name of the plugin, it must match the name required by the plugin so that it can find its configuration
+    #     location: "file://./my-custom-plugin" # supports http(s):// urls and file://
+
+  # -- Configures 3rd party traffic router plugins for controller
+  ## Ref: https://argo-rollouts.readthedocs.io/en/stable/features/traffic-management/plugins/
+  trafficRouterPlugins: {}
+    # trafficRouterPlugins: |-
+    #   - name: "argoproj-labs/sample-nginx" # name of the plugin, it must match the name required by the plugin so it can find it's configuration
+    #     location: "file://./my-custom-plugin" # supports http(s):// urls and file://
+
 serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
@@ -164,7 +224,7 @@ serviceAccount:
 # -- Annotations to be added to all CRDs
 crdAnnotations: {}
 
-# -- Annotations to be added to the Rollout pods
+# -- Annotations for the all deployed pods
 podAnnotations: {}
 
 # -- Security Context to set on pod level
@@ -209,6 +269,10 @@ providerRBAC:
     traefik: true
     # -- Adds RBAC rules for the Apisix provider
     apisix: true
+    # -- Adds RBAC rules for the Contour provider, see `https://github.com/argoproj-labs/rollouts-plugin-trafficrouter-contour/blob/main/README.md`
+    contour: true
+    # -- Adds RBAC rules for the Gloo Platform provider, see `https://github.com/argoproj-labs/rollouts-plugin-trafficrouter-glooplatform/blob/main/README.md`
+    glooPlatform: true
 
 dashboard:
   # -- Deploy dashboard server
@@ -217,12 +281,21 @@ dashboard:
   readonly: false
   # -- Value of label `app.kubernetes.io/component`
   component: rollouts-dashboard
+  # -- Annotations to be added to the dashboard deployment
+  deploymentAnnotations: {}
+  # -- Annotations to be added to application dashboard pods
+  podAnnotations: {}
   # -- [Node selector]
   nodeSelector: {}
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+  logging:
+    # -- Set the logging level (one of: `debug`, `info`, `warn`, `error`)
+    level: info
+    # -- Set the klog logging level
+    kloglevel: "0"
 
   # -- Assign custom [TopologySpreadConstraints] rules to the dashboard server
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
@@ -350,6 +423,12 @@ dashboard:
       # - secretName: argorollouts-example-tls
       #   hosts:
       #     - argorollouts.example.com
+
+  # -- Additional volumes to add to the dashboard pod
+  volumes: []
+
+  # -- Additional volumeMounts to add to the dashboard container
+  volumeMounts: []
 
 notifications:
   secret:

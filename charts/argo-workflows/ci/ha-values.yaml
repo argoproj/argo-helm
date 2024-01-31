@@ -1,0 +1,23 @@
+# Sample values for High Availability configuration, following https://argoproj.github.io/argo-workflows/high-availability/
+
+controller:
+  # in v3.0+, a second controller can be ran as a hot-standby: https://argoproj.github.io/argo-workflows/high-availability/#workflow-controller
+  replicas: 2 # should be strictly greater than PDB minAvailable
+  # enable PDB with at least one Pod
+  pdb:
+    # -- Configure [Pod Disruption Budget] for the controller pods
+    enabled: true
+    minAvailable: 1
+
+server:
+  # enable HPA with at least two Pods
+  autoscaling:
+    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server
+    enabled: true
+    # -- Minimum number of replicas for the Argo Server [HPA]
+    minReplicas: 2 # should be strictly greater than PDB minAvailable
+  # enable PDB with at least one Pod
+  pdb:
+    # -- Configure [Pod Disruption Budget] for the controller pods
+    enabled: true
+    minAvailable: 1

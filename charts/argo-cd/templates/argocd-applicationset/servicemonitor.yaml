@@ -1,12 +1,10 @@
 {{- if .Values.applicationSet.enabled }}
-{{- if and .Values.applicationSet.metrics.enabled .Values.applicationSet.metrics.serviceMonitor.enabled }}
+{{- if and (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") .Values.applicationSet.metrics.enabled .Values.applicationSet.metrics.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-cd.applicationSet.fullname" . }}
-  {{- with .Values.applicationSet.metrics.serviceMonitor.namespace }}
-  namespace: {{ . }}
-  {{- end }}
+  namespace: {{ default .Release.Namespace .Values.applicationSet.metrics.serviceMonitor.namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
     {{- with .Values.applicationSet.metrics.serviceMonitor.selector }}

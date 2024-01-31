@@ -1,11 +1,9 @@
-{{- if and .Values.repoServer.metrics.enabled .Values.repoServer.metrics.serviceMonitor.enabled }}
+{{- if and (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") .Values.repoServer.metrics.enabled .Values.repoServer.metrics.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-cd.repoServer.fullname" . }}
-  {{- with .Values.repoServer.metrics.serviceMonitor.namespace }}
-  namespace: {{ . }}
-  {{- end }}
+  namespace: {{ default .Release.Namespace .Values.repoServer.metrics.serviceMonitor.namespace | default }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
     {{- with .Values.repoServer.metrics.serviceMonitor.selector }}

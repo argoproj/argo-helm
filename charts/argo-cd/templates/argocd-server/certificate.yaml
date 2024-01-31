@@ -1,8 +1,15 @@
 {{- if .Values.server.certificate.enabled -}}
-apiVersion: {{ include "argo-cd.apiVersion.cert-manager" . }}
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.certificateAnnotations) .Values.server.certificate.annotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
   name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
@@ -27,6 +34,10 @@ spec:
     name: {{ .Values.server.certificate.issuer.name | quote }}
   {{- with .Values.server.certificate.privateKey }}
   privateKey:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.server.certificate.usages }}
+  usages:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}

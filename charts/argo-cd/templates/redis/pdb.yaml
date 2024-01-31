@@ -4,6 +4,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "argo-cd.redis.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
     {{- with .Values.redis.pdb.labels }}
@@ -16,7 +17,7 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- with .Values.dex.pdb.maxUnavailable }}
+  {{- with .Values.redis.pdb.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- else }}
   minAvailable: {{ .Values.redis.pdb.minAvailable | default 0 }}
