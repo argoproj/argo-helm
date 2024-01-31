@@ -36,8 +36,11 @@ jobs:
           rm -rf .cr-release-packages
           mkdir .cr-release-packages
           helm package charts/argo-workflows -u -d .cr-release-packages/
+    
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@main
+        # todo: change later to v1.6.0 (also in agro-rollouts chart)
+        # issue: https://github.com/helm/chart-releaser-action/issues/171
+        uses: helm/chart-releaser-action@be16258da8010256c6e82849661221415f031968 # v1.5.0
         with:
           config: "./.github/configs/cr.yaml"
           skip_packaging: true
