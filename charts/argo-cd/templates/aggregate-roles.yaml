@@ -14,9 +14,6 @@ rules:
   {{- if .Values.applicationSet.enabled }}
   - applicationsets
   {{- end }}
-  {{- if .Values.server.extensions.enabled }}
-  - argocdextensions
-  {{- end }}
   - appprojects
   verbs:
   - get
@@ -38,9 +35,6 @@ rules:
   - applications
   {{- if .Values.applicationSet.enabled }}
   - applicationsets
-  {{- end }}
-  {{- if .Values.server.extensions.enabled }}
-  - argocdextensions
   {{- end }}
   - appprojects
   verbs:
@@ -68,9 +62,6 @@ rules:
   - applications
   {{- if .Values.applicationSet.enabled }}
   - applicationsets
-  {{- end }}
-  {{- if .Values.server.extensions.enabled }}
-  - argocdextensions
   {{- end }}
   - appprojects
   verbs:

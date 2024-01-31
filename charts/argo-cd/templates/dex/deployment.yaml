@@ -58,7 +58,7 @@ spec:
       {{- if .Values.dex.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.dex.terminationGracePeriodSeconds }}
       {{- end }}
-      serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
+      serviceAccountName: {{ template "argo-cd.dex.serviceAccountName" . }}
       containers:
       - name: {{ .Values.dex.name }}
         image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}

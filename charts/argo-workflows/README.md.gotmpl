@@ -84,9 +84,13 @@ Please see the upstream [Operator Manual's High Availability page](https://argop
 
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster. If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of its configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.
 
-### Workflow server authentication
+### Argo Workflows server authentication
 
-By default, the chart requires some kind of authentication mechanism. This adopts the [default behaviour from the Argo project](https://github.com/argoproj/argo-workflows/pull/5211) itself. However, for local development purposes, or cases where your gateway authentication is covered by some other means, you can set the authentication mode for the Argo server by setting the `server.extraArgs: [--auth-mode=server]`. There are a few additional comments in the values.yaml file itself, including commented-out settings to disable authentication on the server UI itself using the same `--auth-mode=server` setting.
+Argo Workflows server provides some choices for authentication mechanism and you can configure `.Values.server.authModes`. By default, authentication mode is `[server]`, for local development purposes or cases where your gateway authentication is covered by some other means.
+Please refer to [Argo Server Auth Mode] for more details.
+
+Argo Workflows server also supports SSO and you can enable it to configure `.Values.server.sso` and `.Values.server.authModes`. In order to manage access levels, you can optionally add RBAC to SSO. Please refer to [SSO RBAC] for more details.
+
 
 ## Values
 
@@ -204,3 +208,5 @@ Fields to note:
 [TopologySpreadConstraints]: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 [values.yaml]: values.yaml
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-workflows?modal=changelog
+[SSO RBAC]: https://argo-workflows.readthedocs.io/en/latest/argo-server-sso/
+[Argo Server Auth Mode]: https://argo-workflows.readthedocs.io/en/latest/argo-server-auth-mode/ 

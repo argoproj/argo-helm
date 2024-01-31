@@ -55,6 +55,13 @@ controller:
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+  logging:
+    # -- Set the logging level (one of: `debug`, `info`, `warn`, `error`)
+    level: info
+    # -- Set the klog logging level
+    kloglevel: "0"
+    # -- Set the logging format (one of: `text`, `json`)
+    format: "text"
 
   # -- Assign custom [TopologySpreadConstraints] rules to the controller
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
@@ -262,6 +269,10 @@ providerRBAC:
     traefik: true
     # -- Adds RBAC rules for the Apisix provider
     apisix: true
+    # -- Adds RBAC rules for the Contour provider, see `https://github.com/argoproj-labs/rollouts-plugin-trafficrouter-contour/blob/main/README.md`
+    contour: true
+    # -- Adds RBAC rules for the Gloo Platform provider, see `https://github.com/argoproj-labs/rollouts-plugin-trafficrouter-glooplatform/blob/main/README.md`
+    glooPlatform: true
 
 dashboard:
   # -- Deploy dashboard server
@@ -280,6 +291,11 @@ dashboard:
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+  logging:
+    # -- Set the logging level (one of: `debug`, `info`, `warn`, `error`)
+    level: info
+    # -- Set the klog logging level
+    kloglevel: "0"
 
   # -- Assign custom [TopologySpreadConstraints] rules to the dashboard server
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/

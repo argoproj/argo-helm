@@ -84,9 +84,12 @@ Please see the upstream [Operator Manual's High Availability page](https://argop
 
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster. If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of its configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.
 
-### Workflow server authentication
+### Argo Workflows server authentication
 
-By default, the chart requires some kind of authentication mechanism. This adopts the [default behaviour from the Argo project](https://github.com/argoproj/argo-workflows/pull/5211) itself. However, for local development purposes, or cases where your gateway authentication is covered by some other means, you can set the authentication mode for the Argo server by setting the `server.extraArgs: [--auth-mode=server]`. There are a few additional comments in the values.yaml file itself, including commented-out settings to disable authentication on the server UI itself using the same `--auth-mode=server` setting.
+Argo Workflows server provides some choices for authentication mechanism and you can configure `.Values.server.authModes`. By default, authentication mode is `[server]`, for local development purposes or cases where your gateway authentication is covered by some other means.
+Please refer to [Argo Server Auth Mode] for more details.
+
+Argo Workflows server also supports SSO and you can enable it to configure `.Values.server.sso` and `.Values.server.authModes`. In order to manage access levels, you can optionally add RBAC to SSO. Please refer to [SSO RBAC] for more details.
 
 ## Values
 
@@ -183,7 +186,7 @@ Fields to note:
 | controller.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
 | controller.parallelism | string | `nil` | parallelism dictates how many workflows can be running at the same time |
 | controller.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the controller pods |
-| controller.persistence | object | `{}` | enable persistence using postgres |
+| controller.persistence | object | `{}` | enable Workflow Archive to store the status of workflows. Postgres and MySQL (>= 5.7.8) are available. |
 | controller.podAnnotations | object | `{}` | podAnnotations is an optional map of annotations to be applied to the controller Pods |
 | controller.podCleanupWorkers | string | `nil` | Number of pod cleanup workers |
 | controller.podGCDeleteDelayDuration | string | `5s` (Argo Workflows default) | The duration in seconds before the pods in the GC queue get deleted. A zero value indicates that the pods will be deleted immediately. |
@@ -280,6 +283,7 @@ Fields to note:
 | server.extraContainers | list | `[]` | Extra containers to be added to the server deployment |
 | server.extraEnv | list | `[]` | Extra environment variables to provide to the argo-server container |
 | server.extraInitContainers | list | `[]` | Enables init containers to be added to the server deployment |
+| server.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | server.image.registry | string | `"quay.io"` | Registry to use for the server |
 | server.image.repository | string | `"argoproj/argocli"` | Repository to use for the server |
 | server.image.tag | string | `""` | Image tag for the Argo Workflows server. Defaults to `.Values.images.tag`. |
@@ -326,12 +330,13 @@ Fields to note:
 | server.sso.clientSecret.name | string | `"argo-server-sso"` | Name of a secret to retrieve the app OIDC client secret |
 | server.sso.customGroupClaimName | string | `""` | Override claim name for OIDC groups |
 | server.sso.enabled | bool | `false` | Create SSO configuration. If you set `true` , please also set `.Values.server.authMode` as `sso`. |
+| server.sso.filterGroupsRegex | list | `[]` | Filter the groups returned by the OIDC provider |
 | server.sso.insecureSkipVerify | bool | `false` | Skip TLS verification for the HTTP client |
 | server.sso.issuer | string | `"https://accounts.google.com"` | The root URL of the OIDC identity provider |
 | server.sso.issuerAlias | string | `""` | Alternate root URLs that can be included for some OIDC providers |
 | server.sso.rbac.enabled | bool | `true` | Adds ServiceAccount Policy to server (Cluster)Role. |
 | server.sso.rbac.secretWhitelist | list | `[]` | Whitelist to allow server to fetch Secrets |
-| server.sso.redirectUrl | string | `"https://argo/oauth2/callback"` |  |
+| server.sso.redirectUrl | string | `""` |  |
 | server.sso.scopes | list | `[]` | Scopes requested from the SSO ID provider |
 | server.sso.sessionExpiry | string | `""` | Define how long your login is valid for (in hours) |
 | server.sso.userInfoPath | string | `""` | Specify the user info endpoint that contains the groups claim |
@@ -385,3 +390,5 @@ Fields to note:
 [TopologySpreadConstraints]: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 [values.yaml]: values.yaml
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-workflows?modal=changelog
+[SSO RBAC]: https://argo-workflows.readthedocs.io/en/latest/argo-server-sso/
+[Argo Server Auth Mode]: https://argo-workflows.readthedocs.io/en/latest/argo-server-auth-mode/

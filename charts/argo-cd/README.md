@@ -105,6 +105,14 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 5.53.0
+
+Argocd-repo-server can now optionally use Persistent Volumes for its mountpoints instead of only emptydir()
+
+### 5.52.0
+Because [Argo CD Extensions] is now deprecated and no further changes will be made, we switched to [Argo CD Extension Installer], adding an Argo CD Extension Installer to init-container in the Argo CD API server.
+If you used old mechanism, please move to new mechanism. For more details, please refer `.Values.server.extensions` in values.yaml.
+
 ### 5.35.0
 This version supports Kubernetes version `>=1.23.0-0`. The current supported version of Kubernetes is v1.24 or later and we align with the Amazon EKS calendar, because many AWS users follow a conservative approach.
 
@@ -515,7 +523,7 @@ NAME: my-release
 |-----|------|---------|-------------|
 | configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.cm."admin.enabled" | bool | `true` | Enable local admin user |
-| configs.cm."application.instanceLabelKey" | string | Defaults to app.kubernetes.io/instance | The name of tracking label used by Argo CD for resource pruning |
+| configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` | The name of tracking label used by Argo CD for resource pruning |
 | configs.cm."exec.enabled" | bool | `false` | Enable exec feature in Argo UI |
 | configs.cm."kustomize.setNamespace.enabled" | bool | `false` | Enable set namespace during kustomize build |
 | configs.cm."server.rbac.log.enforce.enable" | bool | `false` | Enable logs RBAC enforcement |
@@ -551,6 +559,7 @@ NAME: my-release
 | configs.params.create | bool | `true` | Create the argocd-cmd-params-cm configmap If false, it is expected the configmap will be created by something else. |
 | configs.rbac."policy.csv" | string | `''` (See [values.yaml]) | File containing user-defined policies and role definitions. |
 | configs.rbac."policy.default" | string | `""` | The name of the default role which Argo CD will falls back to, when authorizing API requests (optional). If omitted or empty, users may be still be able to login, but will see no apps, projects, etc... |
+| configs.rbac."policy.matchMode" | string | `"glob"` | Matcher function for Casbin, `glob` for glob matcher and `regex` for regex matcher. |
 | configs.rbac.annotations | object | `{}` | Annotations to be added to argocd-rbac-cm configmap |
 | configs.rbac.create | bool | `true` | Create the argocd-rbac-cm configmap with ([Argo CD RBAC policy]) definitions. If false, it is expected the configmap will be created by something else. Argo CD will not work if there is no configmap created with the name above. |
 | configs.rbac.scopes | string | `"[groups]"` | OIDC scopes to examine during rbac enforcement (in addition to `sub` scope). The scope value can be a string, or a list of strings. |
@@ -559,6 +568,8 @@ NAME: my-release
 | configs.secret.annotations | object | `{}` | Annotations to be added to argocd-secret |
 | configs.secret.argocdServerAdminPassword | string | `""` | Bcrypt hashed admin password |
 | configs.secret.argocdServerAdminPasswordMtime | string | `""` (defaults to current time) | Admin password modification time. Eg. `"2006-01-02T15:04:05Z"` |
+| configs.secret.azureDevops.password | string | `""` | Shared secret password for authenticating Azure DevOps webhook events |
+| configs.secret.azureDevops.username | string | `""` | Shared secret username for authenticating Azure DevOps webhook events |
 | configs.secret.bitbucketServerSecret | string | `""` | Shared secret for authenticating BitbucketServer webhook events |
 | configs.secret.bitbucketUUID | string | `""` | UUID for authenticating Bitbucket webhook events |
 | configs.secret.createSecret | bool | `true` | Create the argocd-secret |
@@ -679,6 +690,7 @@ NAME: my-release
 | repoServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Repo server pods |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
 | repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
+| repoServer.existingVolumes | object | `{}` | Volumes to be used in replacement of emptydir on default volumes |
 | repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to repo server |
 | repoServer.extraContainers | list | `[]` | Additional containers to be added to the repo server pod |
 | repoServer.hostNetwork | bool | `false` | Host Network for Repo server pods |
@@ -792,10 +804,11 @@ NAME: my-release
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
 | server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
 | server.extensions.containerSecurityContext | object | See [values.yaml] | Server UI extensions container-level security context |
-| server.extensions.enabled | bool | `false` | Enable support for Argo UI extensions |
+| server.extensions.enabled | bool | `false` | Enable support for Argo CD extensions |
+| server.extensions.extensionList | list | `[]` (See [values.yaml]) | Extensions for Argo CD |
 | server.extensions.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for extensions |
-| server.extensions.image.repository | string | `"ghcr.io/argoproj-labs/argocd-extensions"` | Repository to use for extensions image |
-| server.extensions.image.tag | string | `"v0.2.1"` | Tag to use for extensions image |
+| server.extensions.image.repository | string | `"quay.io/argoprojlabs/argocd-extension-installer"` | Repository to use for extension installer image |
+| server.extensions.image.tag | string | `"v0.0.1"` | Tag to use for extension installer image |
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
@@ -946,7 +959,7 @@ server:
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
-| dex.image.tag | string | `"v2.37.0"` | Dex image tag |
+| dex.image.tag | string | `"v2.38.0"` | Dex image tag |
 | dex.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
@@ -1028,13 +1041,13 @@ server:
 | redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
 | redis.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
-| redis.exporter.image.tag | string | `"1.53.0"` | Tag to use for the redis-exporter |
+| redis.exporter.image.tag | string | `"1.57.0"` | Tag to use for the redis-exporter |
 | redis.exporter.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Redis image pull policy |
 | redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
-| redis.image.tag | string | `"7.0.13-alpine"` | Redis tag |
+| redis.image.tag | string | `"7.0.15-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.metrics.enabled | bool | `false` | Deploy metrics service |
@@ -1093,7 +1106,7 @@ The main options are listed here:
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
 | redis-ha.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
 | redis-ha.exporter.image | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
-| redis-ha.exporter.tag | string | `"1.53.0"` | Tag to use for the redis-exporter |
+| redis-ha.exporter.tag | string | `"1.57.0"` | Tag to use for the redis-exporter |
 | redis-ha.haproxy.additionalAffinities | object | `{}` | Additional affinities to add to the haproxy pods. |
 | redis-ha.haproxy.affinity | string | `""` | Assign custom [affinity] rules to the haproxy pods. |
 | redis-ha.haproxy.containerSecurityContext | object | See [values.yaml] | HAProxy container-level security context |
@@ -1102,8 +1115,8 @@ The main options are listed here:
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
 | redis-ha.haproxy.tolerations | list | `[]` | [Tolerations] for use with node taints for haproxy pods. |
 | redis-ha.hardAntiAffinity | bool | `true` | Whether the Redis server pods should be forced to run on separate nodes. |
-| redis-ha.image.repository | string | `"redis"` | Redis repository |
-| redis-ha.image.tag | string | `"7.0.13-alpine"` | Redis tag |
+| redis-ha.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
+| redis-ha.image.tag | string | `"7.0.15-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistence on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
@@ -1337,3 +1350,5 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [EKS EoL]: https://endoflife.date/amazon-eks
 [Kubernetes Compatibility Matrix]: https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/#supported-versions
 [Applications in any namespace]: https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/#applications-in-any-namespace
+[Argo CD Extensions]: https://github.com/argoproj-labs/argocd-extensions?tab=readme-ov-file#deprecation-notice
+[Argo CD Extension Installer]: https://github.com/argoproj-labs/argocd-extension-installer

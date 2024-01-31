@@ -42,6 +42,35 @@ extraEnv: []
   # - name: AWS_REGION
   #   value: "us-west-1"
 
+# -- Extra K8s manifests to deploy for argocd-image-updater
+## Note: Supports use of custom Helm templates
+extraObjects: []
+  # - apiVersion: secrets-store.csi.x-k8s.io/v1
+  #   kind: SecretProviderClass
+  #   metadata:
+  #     name: argocd-image-updater-secrets-store
+  #   spec:
+  #     provider: aws
+  #     parameters:
+  #       objects: |
+  #         - objectName: "argocd-image-updater"
+  #           objectType: "secretsmanager"
+  #           jmesPath:
+  #               - path: "client_id"
+  #                 objectAlias: "client_id"
+  #               - path: "client_secret"
+  #                 objectAlias: "client_secret"
+  #     secretObjects:
+  #     - data:
+  #       - key: client_id
+  #         objectName: client_id
+  #       - key: client_secret
+  #         objectName: client_secret
+  #       secretName: argocd-image-updater-secrets-store
+  #       type: Opaque
+  #       labels:
+  #         app.kubernetes.io/part-of: argocd
+
 # -- Init containers to add to the image updater pod
 initContainers: []
   #  - name: download-tools
@@ -77,9 +106,9 @@ config:
     serverAddress: ""
     # -- If specified, the certificate of the Argo CD API server is not verified.
     insecure: false
-    # -- If specified, use an unencrypted HTTP connection to the ArgoCD API instead of TLS.
+    # -- If specified, use an unencrypted HTTP connection to the Argo CD API instead of TLS.
     plaintext: false
-    # -- If specified, the secret with ArgoCD API key will be created.
+    # -- If specified, the secret with Argo CD API key will be created.
     token: ""
 
   # -- Disable kubernetes events
@@ -94,10 +123,10 @@ config:
   # -- Changing the Git commit message
   gitCommitTemplate: ""
 
-  # -- ArgoCD Image Update log level
+  # -- Argo CD Image Update log level
   logLevel: "info"
 
-  # -- ArgoCD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/)
+  # -- Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/)
   registries: []
     # - name: Docker Hub
     #   api_url: https://registry-1.docker.io
@@ -122,7 +151,7 @@ config:
     #   credentials: ext:/scripts/auth1.sh
     #   credsexpire: 10h
 
-  # -- ArgoCD Image Updater ssh client parameter configuration.
+  # -- Argo CD Image Updater ssh client parameter configuration.
   sshConfig:
     {}
     #  config: |

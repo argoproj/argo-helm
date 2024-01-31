@@ -1,0 +1,91 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "kubernetes": {
+    "fileMatch": ["\\.yaml$", "\\.yml$"]
+  },
+  "extends": [
+    "config:base",
+    "docker:enableMajor"
+  ],
+  "labels": ["renovate"],
+  "includePaths": [
+    "**/charts/argo-workflows/Chart.yaml",
+    "**/charts/argo-cd/Chart.yaml",
+    "**/charts/argo-events/Chart.yaml",
+    "**/charts/argo-rollouts/Chart.yaml",
+    "**/charts/argocd-image-updater/Chart.yaml"
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["charts/argo-workflows/Chart.yaml$"],
+      "matchStrings": [
+        "\\sappVersion: (?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+      "depNameTemplate": "argoproj/argo-workflows",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["charts/argo-cd/Chart.yaml$"],
+      "matchStrings": [
+        "\\sappVersion: (?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+      "depNameTemplate": "argoproj/argo-cd",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["charts/argo-events/Chart.yaml$"],
+      "matchStrings": [
+        "\\sappVersion: (?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+      "depNameTemplate": "argoproj/argo-events",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["charts/argo-rollouts/Chart.yaml$"],
+      "matchStrings": [
+        "\\sappVersion: (?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+      "depNameTemplate": "argoproj/argo-rollouts",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["charts/argocd-image-updater/Chart.yaml$"],
+      "matchStrings": [
+        "\\sappVersion: (?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+      "depNameTemplate": "argoproj-labs/argocd-image-updater",
+      "datasourceTemplate": "github-releases"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["argoproj/argo-workflows"],
+      "commitMessagePrefix": "chore(argo-workflows):"
+    },
+    {
+      "matchPackagePatterns": ["argoproj/argo-cd"],
+      "commitMessagePrefix": "chore(argo-cd):"
+    },
+    {
+      "matchPackagePatterns": ["argoproj/argo-events"],
+      "commitMessagePrefix": "chore(argo-events):"
+    },
+    {
+      "matchPackagePatterns": ["argoproj/argo-rollouts"],
+      "commitMessagePrefix": "chore(argo-rollouts):"
+    },
+    {
+      "matchPackagePatterns": ["argoproj-labs/argocd-image-updater"],
+      "commitMessagePrefix": "chore(argocd-image-updater):"
+    },
+    {
+      "matchPackagePatterns": ["redis-ha"],
+      "enabled": false
+    }
+  ]
+}

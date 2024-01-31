@@ -2,7 +2,7 @@ apiVersion: v2
 name: argocd-apps
 description: A Helm chart for managing additional Argo CD Applications and Projects
 type: application
-version: 1.4.1
+version: 1.6.0
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 keywords:
@@ -17,5 +17,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: syncOptions for applications
+    - kind: added
+      description: ability to specify ignoreApplicationDifferences for applicationsets

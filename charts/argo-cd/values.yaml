@@ -294,7 +294,7 @@ configs:
     #  p, subject, resource, action, object, effect
     # Role definitions and bindings are in the form:
     #  g, subject, inherited-subject
-    # policy.csv |
+    # policy.csv: |
     #   p, role:org-admin, applications, *, */*, allow
     #   p, role:org-admin, clusters, get, *, allow
     #   p, role:org-admin, repositories, *, *, allow
@@ -305,6 +305,9 @@ configs:
     # -- OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
     # The scope value can be a string, or a list of strings.
     scopes: "[groups]"
+
+    # -- Matcher function for Casbin, `glob` for glob matcher and `regex` for regex matcher.
+    policy.matchMode: "glob"
 
   # GnuPG public keys for commit verification
   ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/
@@ -519,6 +522,12 @@ configs:
     bitbucketUUID: ""
     # -- Shared secret for authenticating Gogs webhook events
     gogsSecret: ""
+    ## Azure DevOps
+    azureDevops:
+      # -- Shared secret username for authenticating Azure DevOps webhook events
+      username: ""
+      # -- Shared secret password for authenticating Azure DevOps webhook events
+      password: ""
 
     # -- add additional secrets to be added to argocd-secret
     ## Custom secrets. Useful for injecting SSO secrets into environment variables.
@@ -939,7 +948,7 @@ dex:
     # -- Dex image repository
     repository: ghcr.io/dexidp/dex
     # -- Dex image tag
-    tag: v2.37.0
+    tag: v2.38.0
     # -- Dex imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1177,7 +1186,7 @@ redis:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.0.13-alpine
+    tag: 7.0.15-alpine
     # -- Redis image pull policy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1193,7 +1202,7 @@ redis:
       # -- Repository to use for the redis-exporter
       repository: public.ecr.aws/bitnami/redis-exporter
       # -- Tag to use for the redis-exporter
-      tag: 1.53.0
+      tag: 1.57.0
       # -- Image pull policy for the redis-exporter
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
@@ -1398,9 +1407,9 @@ redis-ha:
   ## Redis image
   image:
     # -- Redis repository
-    repository: redis
+    repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.0.13-alpine
+    tag: 7.0.15-alpine
   ## Prometheus redis-exporter sidecar
   exporter:
     # -- Enable Prometheus redis-exporter sidecar
@@ -1408,7 +1417,7 @@ redis-ha:
     # -- Repository to use for the redis-exporter
     image: public.ecr.aws/bitnami/redis-exporter
     # -- Tag to use for the redis-exporter
-    tag: 1.53.0
+    tag: 1.57.0
   persistentVolume:
     # -- Configures persistence on Redis nodes
     enabled: false
@@ -1577,22 +1586,35 @@ server:
   # -- Specify postStart and preStop lifecycle hooks for your argo-cd-server container
   lifecycle: {}
 
-  ## Argo UI extensions
+  ## Argo CD extensions
   ## This function in tech preview stage, do expect instability or breaking changes in newer versions.
-  ## Ref: https://github.com/argoproj-labs/argocd-extensions
+  ## Ref: https://github.com/argoproj-labs/argocd-extension-installer
+  ## When you enable extensions, you need to configure RBAC of logged in Argo CD user.
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/#the-extensions-resource
   extensions:
-    # -- Enable support for Argo UI extensions
+    # -- Enable support for Argo CD extensions
     enabled: false
 
-    ## Argo UI extensions image
+    ## Argo CD extension installer image
     image:
-      # -- Repository to use for extensions image
-      repository: "ghcr.io/argoproj-labs/argocd-extensions"
-      # -- Tag to use for extensions image
-      tag: "v0.2.1"
+      # -- Repository to use for extension installer image
+      repository: "quay.io/argoprojlabs/argocd-extension-installer"
+      # -- Tag to use for extension installer image
+      tag: "v0.0.1"
       # -- Image pull policy for extensions
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
+
+    # -- Extensions for Argo CD
+    # @default -- `[]` (See [values.yaml])
+    ## Ref: https://github.com/argoproj-labs/argocd-extension-metrics#install-ui-extension
+    extensionList: []
+    #  - name: extension-metrics
+    #    env:
+    #      - name: EXTENSION_URL
+    #        value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension.tar.gz
+    #      - name: EXTENSION_CHECKSUM_URL
+    #        value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension_checksums.txt
 
     # -- Server UI extensions container-level security context
     # @default -- See [values.yaml]
@@ -1600,6 +1622,7 @@ server:
       runAsNonRoot: true
       readOnlyRootFilesystem: true
       allowPrivilegeEscalation: false
+      runAsUser: 1000
       seccompProfile:
         type: RuntimeDefault
       capabilities:
@@ -2207,6 +2230,24 @@ repoServer:
   #      name: argocd-cmp-cm
   #  - name: cmp-tmp
   #    emptyDir: {}
+
+  # -- Volumes to be used in replacement of emptydir on default volumes
+  existingVolumes: {}
+  #  gpgKeyring:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-keyring
+  #  helmWorkingDir:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-workdir
+  #  tmp:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-tmp
+  #  varFiles:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-varfiles
+  #  plugins:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-repo-server-plugins
 
   # -- Toggle the usage of a ephemeral Helm working directory
   useEphemeralHelmWorkingDir: true

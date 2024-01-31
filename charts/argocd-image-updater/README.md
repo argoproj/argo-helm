@@ -14,7 +14,7 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm install argocd-image-updater argo/argocd-image-updater
 ```
 
-You will also need to run through the [secret setup documentation](https://argocd-image-updater.readthedocs.io/en/stable/install/start/#connect-using-argo-cd-api-server) so ArgoCD ImageUpdater can talk to the ArgoCD API (until its automated in this chart).
+You will also need to run through the [secret setup documentation] so Argo CD Image Updater can talk to the Argo CD API (until its automated in this chart).
 
 ## Prerequisites
 
@@ -22,9 +22,9 @@ You will also need to run through the [secret setup documentation](https://argoc
 
 ## Configuration options
 
-In order for your deployment of ArgoCD Image Updater to be successful, you will need to make sure you set the correct configuration options described in detail on the [argocd-image-updater flags page](https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags).
+In order for your deployment of Argo CD Image Updater to be successful, you will need to make sure you set the correct configuration options described in detail on the [argocd-image-updater flags page].
 
-All of the `argocd-` prefixed flags, which tell `argocd-image-updater` how your ArgoCD instance is setup, are set in the `config.argocd` values block. For instance:
+All of the `argocd-` prefixed flags, which tell `argocd-image-updater` how your Argo CD instance is setup, are set in the `config.argocd` values block. For instance:
 
 ```yaml
 config:
@@ -35,12 +35,12 @@ config:
     plaintext: true
 ```
 
-Any additional arguments mentioned on the [argocd-image-updater flags page](https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags) can be configured using the `extraArgs` value, like so.
+Any additional arguments mentioned on the [argocd-image-updater flags page] can be configured using the `extraArgs` value, like so.
 
-### ArgoCD API key
+### Argo CD API key
 
 If you are unable to install Argo CD Image Updater into the same Kubernetes cluster you might configure it to use API of your Argo CD installation.
-Please also read [the documentation](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/).
+Please also read [Configuration of Container Registries].
 
 ```yaml
 config:
@@ -52,7 +52,7 @@ If you specify a token value the secret will be created.
 
 ### Registries
 
-ArgoCD Image Updater natively supports the following registries (as mentioned in [the documentation](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/)):
+Argo CD Image Updater natively supports the following registries (as mentioned in [Configuration of Container Registries]):
 
 - Docker Hub
 - Google Container Registry
@@ -60,7 +60,7 @@ ArgoCD Image Updater natively supports the following registries (as mentioned in
 - GitHub Container Registry
 - GitHub Docker Packages
 
-If you need support for ECR, you can reference [this issue](https://github.com/argoproj-labs/argocd-image-updater/issues/112) for configuration. You can use the `authScripts` values to configure the scripts that are needed to authenticate with ECR.
+If you need support for ECR, you can reference this issue, [Support ECR authentication], for configuration. You can use the `authScripts` values to configure the scripts that are needed to authenticate with ECR.
 
 The `config.registries` value can be used exactly as it looks in the documentation as it gets dumped directly into a configmap in this chart.
 
@@ -74,18 +74,19 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.applicationsAPIKind | string | `""` | API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`) |
 | config.argocd.grpcWeb | bool | `true` | Use the gRPC-web protocol to connect to the Argo CD API |
 | config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
-| config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the ArgoCD API instead of TLS. |
+| config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the Argo CD API instead of TLS. |
 | config.argocd.serverAddress | string | `""` | Connect to the Argo CD API server at server address |
-| config.argocd.token | string | `""` | If specified, the secret with ArgoCD API key will be created. |
+| config.argocd.token | string | `""` | If specified, the secret with Argo CD API key will be created. |
 | config.disableKubeEvents | bool | `false` | Disable kubernetes events |
 | config.gitCommitMail | string | `""` | E-Mail address to use for Git commits |
 | config.gitCommitTemplate | string | `""` | Changing the Git commit message |
 | config.gitCommitUser | string | `""` | Username to use for Git commits |
-| config.logLevel | string | `"info"` | ArgoCD Image Update log level |
-| config.registries | list | `[]` | ArgoCD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/) |
-| config.sshConfig | object | `{}` | ArgoCD Image Updater ssh client parameter configuration. |
+| config.logLevel | string | `"info"` | Argo CD Image Update log level |
+| config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/) |
+| config.sshConfig | object | `{}` | Argo CD Image Updater ssh client parameter configuration. |
 | extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry |
 | extraEnv | list | `[]` | Extra environment variables for argocd-image-updater |
+| extraObjects | list | `[]` | Extra K8s manifests to deploy for argocd-image-updater |
 | fullnameOverride | string | `""` | Global fullname (argocd-image-updater.fullname in _helpers.tpl) override |
 | image.pullPolicy | string | `"Always"` | Default image pull policy |
 | image.repository | string | `"quay.io/argoprojlabs/argocd-image-updater"` | Default image repository |
@@ -125,3 +126,7 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 
 [MetricRelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 [RelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
+[secret setup documentation]: https://argocd-image-updater.readthedocs.io/en/stable/install/installation/#method-2-connect-using-argo-cd-api-server
+[argocd-image-updater flags page]: https://argocd-image-updater.readthedocs.io/en/stable/install/reference/#flags
+[Configuration of Container Registries]: https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/
+[Support ECR authentication]: https://github.com/argoproj-labs/argocd-image-updater/issues/112
