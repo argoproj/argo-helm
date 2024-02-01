@@ -27,6 +27,10 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .strategy }}
+  {{- with .ignoreApplicationDifferences }}
+  ignoreApplicationDifferences:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   strategy:
     {{- toYaml . | nindent 4 }}
   {{- end }}

@@ -146,7 +146,8 @@ controller:
     capabilities:
       drop:
         - ALL
-  # -- enable persistence using postgres
+  # -- enable Workflow Archive to store the status of workflows. Postgres and MySQL (>= 5.7.8) are available.
+  ## Ref: https://argo-workflows.readthedocs.io/en/latest/workflow-archive/
   persistence: {}
   # connectionPool:
   #   maxIdleConns: 100
@@ -171,6 +172,17 @@ controller:
   #   # sslMode must be one of: disable, require, verify-ca, verify-full
   #   # you can find more information about those ssl options here: https://godoc.org/github.com/lib/pq
   #   sslMode: require
+  # mysql:
+  #   host: localhost
+  #   port: 3306
+  #   database: argo
+  #   tableName: argo_workflows
+  #   userNameSecret:
+  #     name: argo-mysql-config
+  #     key: username
+  #   passwordSecret:
+  #     name: argo-mysql-config
+  #     key: password
 
   # -- Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level.
   # Only valid for 2.7+
@@ -458,6 +470,12 @@ server:
   # -- Service port name
   servicePortName: "" # http
 
+  # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
+  hostAliases: []
+  # - ip: 10.20.30.40
+  #   hostnames:
+  #   - git.myhostname
+
   serviceAccount:
     # -- Create a service account for the server
     create: true
@@ -675,7 +693,7 @@ server:
       # -- Key of a secret to retrieve the app OIDC client secret
       key: client-secret
     # - The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
-    redirectUrl: https://argo/oauth2/callback
+    redirectUrl: ""
     rbac:
       # -- Adds ServiceAccount Policy to server (Cluster)Role.
       enabled: true
@@ -701,6 +719,11 @@ server:
     userInfoPath: ""
     # -- Skip TLS verification for the HTTP client
     insecureSkipVerify: false
+    # -- Filter the groups returned by the OIDC provider
+    ## A logical "OR" is used between each regex in the list
+    filterGroupsRegex: []
+      # - ".*argo-wf.*"
+      # - ".*argo-workflow.*"
 
   # -- Extra containers to be added to the server deployment
   extraContainers: []
@@ -758,41 +781,41 @@ artifactRepository:
     # roleARN:
     # useSDKCreds: true
     # encryptionOptions:
-    #    enableEncryption: true
+    #   enableEncryption: true
   # -- Store artifact in a GCS object store
   # @default -- `{}` (See [values.yaml])
   gcs: {}
-  # bucket: <project>-argo
-  # keyFormat: "{{ \"{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}\" }}"
-  # serviceAccountKeySecret is a secret selector.
-  # It references the k8s secret named 'my-gcs-credentials'.
-  # This secret is expected to have have the key 'serviceAccountKey',
-  # containing the base64 encoded credentials
-  # to the bucket.
-  #
-  # If it's running on GKE and Workload Identity is used,
-  # serviceAccountKeySecret is not needed.
-  # serviceAccountKeySecret:
-  # name: my-gcs-credentials
-  # key: serviceAccountKey
+    # bucket: <project>-argo
+    # keyFormat: "{{ \"{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}\" }}"
+    # # serviceAccountKeySecret is a secret selector.
+    # # It references the k8s secret named 'my-gcs-credentials'.
+    # # This secret is expected to have have the key 'serviceAccountKey',
+    # # containing the base64 encoded credentials
+    # # to the bucket.
+    # #
+    # # If it's running on GKE and Workload Identity is used,
+    # # serviceAccountKeySecret is not needed.
+    # serviceAccountKeySecret:
+    #   name: my-gcs-credentials
+    #   key: serviceAccountKey
   # -- Store artifact in Azure Blob Storage
   # @default -- `{}` (See [values.yaml])
   azure: {}
-  # endpoint: https://mystorageaccountname.blob.core.windows.net
-  # container: my-container-name
-  # blobNameFormat: path/in/container
-  ## accountKeySecret is a secret selector.
-  ## It references the k8s secret named 'my-azure-storage-credentials'.
-  ## This secret is expected to have have the key 'account-access-key',
-  ## containing the base64 encoded credentials to the storage account.
-  ## If a managed identity has been assigned to the machines running the
-  ## workflow (e.g., https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
-  ## then accountKeySecret is not needed, and useSDKCreds should be
-  ## set to true instead:
-  # useSDKCreds: true
-  # accountKeySecret:
-  #  name: my-azure-storage-credentials
-  #  key: account-access-key
+    # endpoint: https://mystorageaccountname.blob.core.windows.net
+    # container: my-container-name
+    # blobNameFormat: path/in/container
+    # # accountKeySecret is a secret selector.
+    # # It references the k8s secret named 'my-azure-storage-credentials'.
+    # # This secret is expected to have have the key 'account-access-key',
+    # # containing the base64 encoded credentials to the storage account.
+    # # If a managed identity has been assigned to the machines running the
+    # # workflow (e.g., https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
+    # # then accountKeySecret is not needed, and useSDKCreds should be
+    # # set to true instead:
+    # useSDKCreds: true
+    # accountKeySecret:
+    #   name: my-azure-storage-credentials
+    #   key: account-access-key
 
 # -- The section of custom artifact repository.
 # Utilize a custom artifact repository that is not one of the current base ones (s3, gcs, azure)

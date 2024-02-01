@@ -106,6 +106,10 @@ applicationsets: []
 #       directories:
 #       - path: guestbook
 #       - path: kustomize-*
+#   # Ref https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Controlling-Resource-Modification/#allow-temporarily-toggling-auto-sync
+#   ignoreApplicationDifferences:
+#   - jsonPointers:
+#     - /spec/syncPolicy
 #   # Progressive Syncs is an experimental feature and it must be explicitly enabled
 #   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Progressive-Syncs/#enabling-progressive-syncs
 #   strategy:
@@ -219,7 +223,7 @@ itemTemplates: []
 #             server: '{{`{{cluster}}`}}'
 #             namespace: guestbook
 
-# -- Deploy Argo UI Extensions within this helm release
+# -- DEPRECATED - Please refer [Deprecation Notice](https://github.com/argoproj-labs/argocd-extensions?tab=readme-ov-file#deprecation-notice) for more info.
 # @default -- `[]` (See [values.yaml])
 ## This function in tech preview stage, do expect unstability or breaking changes in newer versions. Bump image.tag if necessary.
 ## Ref: https://github.com/argoproj-labs/argocd-extensions
