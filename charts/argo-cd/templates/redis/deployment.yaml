@@ -72,6 +72,28 @@ spec:
         envFrom:
           {{- toYaml . | nindent 8 }}
         {{- end }}
+        livenessProbe:
+          initialDelaySeconds: {{ .Values.redis.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.redis.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.redis.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.redis.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.redis.livenessProbe.failureThreshold }}
+          exec:
+            command:
+              - sh
+              - -c
+              - /health/redis_liveness.sh
+        readinessProbe:
+          initialDelaySeconds: {{ .Values.redis.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.redis.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.redis.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.redis.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.redis.readinessProbe.failureThreshold }}
+          exec:
+            command:
+              - sh
+              - -c
+              - /health/redis_readiness.sh
         ports:
         - name: redis
           containerPort: {{ .Values.redis.containerPorts.redis }}
@@ -82,8 +104,10 @@ spec:
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- with .Values.redis.volumeMounts }}
         volumeMounts:
+          - mountPath: /health
+            name: health
+        {{- with .Values.redis.volumeMounts }}
           {{- toYaml . | nindent 10 }}
         {{- end }}
       {{- if .Values.redis.exporter.enabled }}
@@ -102,6 +126,24 @@ spec:
         - name: metrics
           containerPort: {{ .Values.redis.containerPorts.metrics }}
           protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: {{ .Values.redis.containerPorts.metrics }}
+          initialDelaySeconds: {{ .Values.redis.exporter.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.redis.exporter.livenessProbe.timeoutSeconds }}
+          periodSeconds: {{ .Values.redis.exporter.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.redis.exporter.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.redis.exporter.livenessProbe.failureThreshold }}
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: {{ .Values.redis.containerPorts.metrics }}
+          initialDelaySeconds: {{ .Values.redis.exporter.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.redis.exporter.readinessProbe.timeoutSeconds }}
+          periodSeconds: {{ .Values.redis.exporter.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.redis.exporter.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.redis.exporter.readinessProbe.failureThreshold }}
         resources:
           {{- toYaml .Values.redis.exporter.resources | nindent 10 }}
         {{- with .Values.redis.exporter.containerSecurityContext }}
@@ -139,8 +181,12 @@ spec:
         {{- end }}
         {{- end }}
       {{- end }}
-      {{- with .Values.redis.volumes }}
       volumes:
+        - name: health
+          configMap:
+            name: {{ include "argo-cd.redis.fullname" . }}-health-configmap
+            defaultMode: 0755
+      {{- with .Values.redis.volumes }}
         {{- toYaml . | nindent 8}}
       {{- end }}
       {{- with .Values.redis.dnsConfig }}

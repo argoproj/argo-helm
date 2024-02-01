@@ -1215,6 +1215,22 @@ redis:
         drop:
         - ALL
 
+    # -- livenessProbe parameters to pass to the Redis server
+    livenessProbe:
+      initialDelaySeconds: 30
+      periodSeconds: 15
+      timeoutSeconds: 15
+      successThreshold: 1
+      failureThreshold: 5
+
+    # -- readinessProbe parameters to pass to the Redis server
+    readinessProbe:
+      initialDelaySeconds: 30
+      periodSeconds: 15
+      timeoutSeconds: 15
+      successThreshold: 1
+      failureThreshold: 5
+
     # -- Resource limits and requests for redis-exporter sidecar
     resources: {}
       # limits:
@@ -1243,6 +1259,22 @@ redis:
   #     name: config-map-name
   # - secretRef:
   #     name: secret-name
+
+  # -- livenessProbe parameters to pass to the Redis server
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 15
+    timeoutSeconds: 15
+    successThreshold: 1
+    failureThreshold: 5
+
+  # -- readinessProbe parameters to pass to the Redis server
+  readinessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 15
+    timeoutSeconds: 15
+    successThreshold: 1
+    failureThreshold: 5
 
   # -- Additional containers to be added to the redis pod
   ## Note: Supports use of custom Helm templates

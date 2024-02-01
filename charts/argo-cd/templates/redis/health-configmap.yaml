@@ -1,0 +1,15 @@
+{{- $redisHa := index .Values "redis-ha" -}}
+{{- if and .Values.redis.enabled (not $redisHa.enabled) -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "argo-cd.redis.fullname" . }}-health-configmap
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
+data:
+  redis_liveness.sh: |
+{{- include "redis_liveness.sh" . }}
+  redis_readiness.sh: |
+{{- include "redis_readiness.sh" . }}
+{{- end }}
