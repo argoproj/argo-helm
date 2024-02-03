@@ -124,7 +124,7 @@ helm install charts/argo-workflows -n argo
 argo version
 ```
 
-Follow [these](https://argoproj.github.io/argo-workflows/quick-start/#submitting-an-example-workflow) instructions for running a hello world workflow.
+Follow [these](https://argo-workflows.readthedocs.io/en/stable/quick-start/#submitting-an-example-workflow) instructions for running a hello world workflow.
 
 ### Testing Argo CD Changes
 
