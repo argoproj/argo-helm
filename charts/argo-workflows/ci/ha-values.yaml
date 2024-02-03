@@ -1,7 +1,7 @@
-# Sample values for High Availability configuration, following https://argoproj.github.io/argo-workflows/high-availability/
+# Sample values for High Availability configuration, following https://argo-workflows.readthedocs.io/en/stable/high-availability/
 
 controller:
-  # in v3.0+, a second controller can be ran as a hot-standby: https://argoproj.github.io/argo-workflows/high-availability/#workflow-controller
+  # in v3.0+, a second controller can be ran as a hot-standby: https://argo-workflows.readthedocs.io/en/stable/high-availability/#workflow-controller
   replicas: 2 # should be strictly greater than PDB minAvailable
   # enable PDB with at least one Pod
   pdb:

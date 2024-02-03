@@ -26,11 +26,11 @@ spec:
   generators:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .strategy }}
   {{- with .ignoreApplicationDifferences }}
   ignoreApplicationDifferences:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .strategy }}
   strategy:
     {{- toYaml . | nindent 4 }}
   {{- end }}
