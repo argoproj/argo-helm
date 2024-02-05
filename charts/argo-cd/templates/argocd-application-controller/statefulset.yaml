@@ -13,6 +13,7 @@ metadata:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 spec:
   replicas: {{ .Values.controller.replicas }}
+  revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit | default .Values.global.revisionHistoryLimit }}
   serviceName: {{ include "argo-cd.controller.fullname" . }}
   selector:
     matchLabels:
