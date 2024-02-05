@@ -688,6 +688,12 @@ controller:
   #  - name: custom-tools
   #    emptyDir: {}
 
+  # -- Volumes to be used in replacement of emptydir on default volumes
+  existingVolumes: {}
+  #  argocdHome:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-application-controller-home
+
   # -- Annotations for the application controller StatefulSet
   statefulsetAnnotations: {}
 
@@ -998,6 +1004,15 @@ dex:
 
   # -- Additional volumes to the dex pod
   volumes: []
+
+  # -- Volumes to be used in replacement of emptydir on default volumes
+  existingVolumes: {}
+  #  staticFiles:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-dex-server-static-files
+  #  dexconfig:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-dex-server-dexconfig
 
   # TLS certificate configuration via Secret
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#configuring-tls-to-argocd-dex-server
@@ -1683,6 +1698,18 @@ server:
   volumes: []
   #  - name: custom-tools
   #    emptyDir: {}
+
+  # -- Volumes to be used in replacement of emptydir on default volumes
+  existingVolumes: {}
+  #  extensions:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-server-extensions
+  #  pluginsHome:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-server-plugins-home
+  #  tmp:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-server-tmp
 
   # -- Annotations to be added to server Deployment
   deploymentAnnotations: {}
@@ -2538,6 +2565,15 @@ applicationSet:
 
   # -- List of extra volumes to add
   extraVolumes: []
+
+  # -- Volumes to be used in replacement of emptydir on default volumes
+  existingVolumes: {}
+  #  gpgKeyring:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-applicationset-controller-keyring
+  #  tmp:
+  #    persistentVolumeClaim:
+  #      claimName: pvc-argocd-applicationset-controller-tmp
 
   ## Metrics service configuration
   metrics:
