@@ -14,7 +14,7 @@ metadata:
     app.kubernetes.io/part-of: argocd
     {{- with .Values.crds.additionalLabels }}
       {{- toYaml . | nindent 4}}
-    {{- end }} 
+    {{- end }}
   name: appprojects.argoproj.io
 spec:
   group: argoproj.io
