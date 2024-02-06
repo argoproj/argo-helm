@@ -72,6 +72,7 @@ spec:
         envFrom:
           {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- if .Values.redis.livenessProbe.enabled }}
         livenessProbe:
           initialDelaySeconds: {{ .Values.redis.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.redis.livenessProbe.periodSeconds }}
@@ -83,6 +84,8 @@ spec:
               - sh
               - -c
               - /health/redis_liveness.sh
+        {{- end }}
+        {{- if .Values.redis.readinessProbe.enabled }}
         readinessProbe:
           initialDelaySeconds: {{ .Values.redis.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.redis.readinessProbe.periodSeconds }}
@@ -94,6 +97,7 @@ spec:
               - sh
               - -c
               - /health/redis_readiness.sh
+        {{- end }}
         ports:
         - name: redis
           containerPort: {{ .Values.redis.containerPorts.redis }}
@@ -126,6 +130,7 @@ spec:
         - name: metrics
           containerPort: {{ .Values.redis.containerPorts.metrics }}
           protocol: TCP
+        {{- if .Values.redis.exporter.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /metrics
@@ -135,6 +140,8 @@ spec:
           periodSeconds: {{ .Values.redis.exporter.livenessProbe.periodSeconds }}
           successThreshold: {{ .Values.redis.exporter.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.redis.exporter.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.redis.exporter.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
             path: /metrics
@@ -144,6 +151,7 @@ spec:
           periodSeconds: {{ .Values.redis.exporter.readinessProbe.periodSeconds }}
           successThreshold: {{ .Values.redis.exporter.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.redis.exporter.readinessProbe.failureThreshold }}
+        {{- end }}
         resources:
           {{- toYaml .Values.redis.exporter.resources | nindent 10 }}
         {{- with .Values.redis.exporter.containerSecurityContext }}
