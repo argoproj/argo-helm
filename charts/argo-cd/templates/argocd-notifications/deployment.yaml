@@ -91,6 +91,12 @@ spec:
                   key: application.namespaces
                   name: argocd-cmd-params-cm
                   optional: true
+            - name: ARGOCD_NOTIFICATION_CONTROLLER_SELF_SERVICE_NOTIFICATION_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: notificationscontroller.selfservice.enabled
+                  name: argocd-cmd-params-cm
+                  optional: true
           {{- with .Values.notifications.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
