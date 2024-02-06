@@ -114,11 +114,6 @@ This version **removes support for**:
 * deprecated configuration `server.config` that was replaced with `configs.cm`
 * deprecated configuration `server.rbacConfig` that was replaced with `configs.rbac`
 
-Please upgrade with replace strategy due to removal of immutable fields in StatefulSet.
- 
-  1) Use Helm uninstall / install 6.0.0
-  2) Use `helm template argocd/argo-cd | kubectl replace -f`
-
 Major version also contains breaking **changes related to Argo CD Ingress** resources that were hard to extend and maintain for various ingress controller implementations.
 Please review your setup and adjust to new configuration options:
 
@@ -648,6 +643,7 @@ NAME: my-release
 | controller.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | controller.replicas | int | `1` | The number of application controller pods to run. Additional replicas will cause sharding of managed clusters across number of replicas. |
 | controller.resources | object | `{}` | Resource limits and requests for the application controller pods |
+| controller.revisionHistoryLimit | int | `5` | Maximum number of controller revisions that will be maintained in controller StatefulSet history |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the application controller |
