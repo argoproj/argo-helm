@@ -5,13 +5,13 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "name" "gpg-keys-cm") | nindent 4 }}
-  {{ with (mergeOverwrite (deepCopy .Values.configs.gpg.annotations) (.Values.configs.gpgKeysAnnotations | default dict)) -}}
+  {{- with .Values.configs.gpg.annotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-{{ with (mergeOverwrite (deepCopy .Values.configs.gpg.keys) (.Values.configs.gpgKeys | default dict)) -}}
+{{- with .Values.configs.gpg.keys }}
 data:
   {{- toYaml . | nindent 2 }}
 {{- end }}

@@ -13,8 +13,7 @@ metadata:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 spec:
   replicas: {{ .Values.controller.replicas }}
-  # TODO: Remove for breaking release as history limit cannot be patched
-  revisionHistoryLimit: 5
+  revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit | default .Values.global.revisionHistoryLimit }}
   serviceName: {{ include "argo-cd.controller.fullname" . }}
   selector:
     matchLabels:
@@ -65,38 +64,6 @@ spec:
         - --metrics-application-labels
         - {{ . }}
         {{- end }}
-        {{- end }}
-        {{- with .Values.controller.args.statusProcessors }}
-        - --status-processors
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.operationProcessors }}
-        - --operation-processors
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.appResyncPeriod }}
-        - --app-resync
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.appHardResyncPeriod }}
-        - --app-hard-resync
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.selfHealTimeout }}
-        - --self-heal-timeout-seconds
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.repoServerTimeoutSeconds }}
-        - --repo-server-timeout-seconds
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.logFormat }}
-        - --logformat
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.logLevel }}
-        - --loglevel
-        - {{ . | quote }}
         {{- end }}
         {{- with .Values.controller.extraArgs }}
           {{- toYaml . | nindent 8 }}

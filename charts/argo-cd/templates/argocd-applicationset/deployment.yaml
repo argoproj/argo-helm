@@ -17,7 +17,7 @@ spec:
   strategy:
     {{- trim . | nindent 4 }}
   {{- end }}
-  replicas: {{ .Values.applicationSet.replicas | default .Values.applicationSet.replicaCount }}
+  replicas: {{ .Values.applicationSet.replicas }}
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
     matchLabels:
@@ -65,20 +65,6 @@ spec:
             - --metrics-addr=:{{ .Values.applicationSet.containerPorts.metrics }}
             - --probe-addr=:{{ .Values.applicationSet.containerPorts.probe }}
             - --webhook-addr=:{{ .Values.applicationSet.containerPorts.webhook }}
-            {{- with .Values.applicationSet.args.policy }}
-            - --policy={{ . }}
-            {{- end }}
-            {{- with .Values.applicationSet.args.dryRun }}
-            - --dry-run={{ . }}
-            {{- end }}
-            {{- with .Values.applicationSet.logFormat }}
-            - --logformat
-            - {{ . }}
-            {{- end }}
-            {{- with .Values.applicationSet.logLevel }}
-            - --loglevel
-            - {{ . }}
-            {{- end }}
             {{- with .Values.applicationSet.extraArgs }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
