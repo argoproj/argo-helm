@@ -1184,6 +1184,35 @@ redis:
         drop:
         - ALL
 
+    ## Probes for Redis exporter (optional)
+    ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+    readinessProbe:
+      # -- Enable Kubernetes liveness probe for Redis exporter (optional)
+      enabled: false
+      # -- Number of seconds after the container has started before [probe] is initiated
+      initialDelaySeconds: 30
+      # -- How often (in seconds) to perform the [probe]
+      periodSeconds: 15
+      # -- Number of seconds after which the [probe] times out
+      timeoutSeconds: 15
+      # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+      successThreshold: 1
+      # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+      failureThreshold: 5
+    livenessProbe:
+      # -- Enable Kubernetes liveness probe for Redis exporter
+      enabled: false
+      # -- Number of seconds after the container has started before [probe] is initiated
+      initialDelaySeconds: 30
+      # -- How often (in seconds) to perform the [probe]
+      periodSeconds: 15
+      # -- Number of seconds after which the [probe] times out
+      timeoutSeconds: 15
+      # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+      successThreshold: 1
+      # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+      failureThreshold: 5
+
     # -- Resource limits and requests for redis-exporter sidecar
     resources: {}
       # limits:
@@ -1212,6 +1241,35 @@ redis:
   #     name: config-map-name
   # - secretRef:
   #     name: secret-name
+
+  ## Probes for Redis server (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  readinessProbe:
+    # -- Enable Kubernetes liveness probe for Redis server
+    enabled: false
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 30
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 15
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 15
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 5
+  livenessProbe:
+    # -- Enable Kubernetes liveness probe for Redis server
+    enabled: false
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 30
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 15
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 15
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 5
 
   # -- Additional containers to be added to the redis pod
   ## Note: Supports use of custom Helm templates
