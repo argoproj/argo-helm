@@ -58,7 +58,7 @@ spec:
       - {{ $hostname }}
       secretName: {{ printf "%s-tls" $hostname }}
     {{- end }}
-    {{- with .Values.server.ingressGrpc.tls }}
+    {{- with .Values.server.ingressGrpc.extraTls }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- end }}
