@@ -56,9 +56,9 @@ spec:
     {{- if .Values.server.ingressGrpc.tls }}
     - hosts:
       - {{ $hostname }}
-      secretName: {{ printf "%s-tls" $hostname }}
+      secretName: argocd-server-grpc-tls
     {{- end }}
-    {{- with .Values.server.ingressGrpc.tls }}
+    {{- with .Values.server.ingressGrpc.extraTls }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- end }}
