@@ -28,24 +28,24 @@ spec:
             {{- toYaml . | nindent 10 }}
           {{- end }}
           - path: {{ .Values.applicationSet.ingress.path }}
-            pathType: {{ $.Values.applicationSet.ingress.pathType }}
-            backend:
-              service:
-                name: {{ include "argo-cd.applicationSet.fullname" $ }}
-                port:
-                  number: {{ .Values.applicationSet.service.port }}
-    {{- end }}
-    {{- range .Values.server.ingress.extraHosts }}
-    - host: {{ .name | quote }}
-      http:
-        paths:
-          - path: {{ default .Values.server.ingress.path .path }}
-            pathType: {{ default .Values.server.ingress.pathType .pathType }}
+            pathType: {{ .Values.applicationSet.ingress.pathType }}
             backend:
               service:
                 name: {{ include "argo-cd.applicationSet.fullname" . }}
                 port:
                   number: {{ .Values.applicationSet.service.port }}
+    {{- end }}
+    {{- range .Values.applicationSet.ingress.extraHosts }}
+    - host: {{ .name | quote }}
+      http:
+        paths:
+          - path: {{ default $.Values.applicationSet.ingress.path .path }}
+            pathType: {{ default $.Values.applicationSet.ingress.pathType .pathType }}
+            backend:
+              service:
+                name: {{ include "argo-cd.applicationSet.fullname" $ }}
+                port:
+                  number: {{ $.Values.applicationSet.service.port }}
     {{- end }}
     {{- with .Values.applicationSet.ingress.extraRules }}
       {{- toYaml . | nindent 4 }}
