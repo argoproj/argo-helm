@@ -40,11 +40,11 @@ spec:
     - host: {{ .name | quote }}
       http:
         paths:
-          - path: {{ default .Values.server.ingressGrpc.path .path }}
-            pathType: {{ default .Values.server.ingressGrpc.pathType .pathType }}
+          - path: {{ default $.Values.server.ingressGrpc.path .path }}
+            pathType: {{ default $.Values.server.ingressGrpc.pathType .pathType }}
             backend:
               service:
-                name: {{ include "argo-cd.server.fullname" . }}
+                name: {{ include "argo-cd.server.fullname" $ }}
                 port:
                   number: {{ $servicePort }}
     {{- end }}
