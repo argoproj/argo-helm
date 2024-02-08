@@ -2555,6 +2555,12 @@ applicationSet:
     ## Has higher precedence over `applicationSet.pdb.minAvailable`
     maxUnavailable: ""
 
+  ## -- ApplicationSet webhook configuration
+  webhook:
+    # -- Ingress configuration for the webhook
+    ingress:
+      # -- Enable ApplicationSet webhook ingress
+      enabled: false
   ## ApplicationSet controller image
   image:
     # -- Repository to use for the ApplicationSet controller

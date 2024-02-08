@@ -1273,6 +1273,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | applicationSet.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | applicationSet.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the ApplicationSet controller |
+| applicationSet.webhook.ingress.enabled | bool | `true` | Create ApplicationSet webhook ingress |
 
 ## Notifications
 
