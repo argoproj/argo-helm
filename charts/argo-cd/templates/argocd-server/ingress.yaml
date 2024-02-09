@@ -55,6 +55,11 @@ spec:
     {{- if .Values.server.ingress.tls }}
     - hosts:
       - {{ .Values.server.ingress.hostname }}
+      {{- range .Values.server.ingress.extraHosts }}
+        {{- if .name }}
+      -  {{ .name }} 
+        {{- end }}
+      {{- end }}
       secretName: argocd-server-tls
     {{- end }}
     {{- with .Values.server.ingress.extraTls }}
