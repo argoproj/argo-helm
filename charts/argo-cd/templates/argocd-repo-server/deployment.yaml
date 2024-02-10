@@ -36,6 +36,7 @@ spec:
         {{- if .Values.configs.cmp.create }}
         checksum/cmp-cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmp-cm.yaml") . | sha256sum }}
         {{- end }}
+        checksum/known-hosts-cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-ssh-known-hosts-cm.yaml") . | sha256sum }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.repoServer.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
