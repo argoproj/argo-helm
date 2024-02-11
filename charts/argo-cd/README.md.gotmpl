@@ -73,14 +73,15 @@ below corespond to their respective sections.
 The `tls: true` option will expect that the `argocd-server-tls` secret exists as Argo CD server loads TLS certificates from this place.
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 certificate:
   enabled: true
-  domain: argocd.example.com
 
 server:
   ingress:
     enabled: true
-    hostname: argocd.example.com
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -91,6 +92,9 @@ server:
 ### SSL Termination at Ingress Controller
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 configs:
   params:
     server.insecure: true
@@ -98,7 +102,6 @@ configs:
 server:
   ingress:
     enabled: true
-    hostname: argocd.example.com
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -118,6 +121,9 @@ server:
 Use `ingressGrpc` section if your ingress controller supports only a single protocol per Ingress resource (i.e.: Contour).
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 configs:
   params:
     server.insecure: true
@@ -125,7 +131,6 @@ configs:
 server:
   ingress:
     enabled: true
-    hostname: argocd.example.com
     ingressClassName: contour-internal
     extraTls:
       - hosts:
@@ -134,7 +139,6 @@ server:
 
    ingressGrpc:
      enabled: true
-     hostname: grpc.argocd.example.com
      ingressClassName: contour-internal
      extraTls:
       - hosts:
@@ -145,10 +149,12 @@ server:
 ### Multiple ingress domains
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 server:
   ingress:
     enabled: true
-    hostname: argocd.example.com
     ingressClassName: nginx
     annotations:
       cert-manager.io/cluster-issuer: "<my-issuer>"
@@ -168,6 +174,9 @@ The provided example assumes you are using TLS off-loading via AWS ACM service.
 > Using `controller: aws` creates additional service for gRPC traffic and it's no longer need to use `ingressGrpc` configuration section.
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 configs:
   params:
     server.insecure: true
@@ -175,7 +184,6 @@ configs:
 server:
   ingress:
     enabled: true
-    hostname: argocd.example.com
     controller: aws
     ingressClassName: alb
     annotations:
@@ -183,7 +191,7 @@ server:
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/backend-protocol: HTTP
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":80}, {"HTTPS":443}]'
-      alb.ingress.kubernetes.io/ssl-redirect" '443'
+      alb.ingress.kubernetes.io/ssl-redirect: '443'
     aws:
       serviceType: ClusterIP # <- Used with target-type: ip
       backendProtocolVersion: GRPC
@@ -195,6 +203,9 @@ The implementation will populate `ingressClassName`, `networking.gke.io/managed-
 automatically if you provide configuration for GKE resources.
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 configs:
   params:
     server.insecure: true
@@ -207,7 +218,6 @@ server:
 
   ingress:
     enabled: true
-    hostname: argocd.example.com
     controller: gke
     gke:
       backendConfig:
@@ -267,6 +277,10 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
+
+### 6.1.0
+
+Added support for global domain used by all components.
 
 ### 6.0.0
 
