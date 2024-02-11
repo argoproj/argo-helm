@@ -236,6 +236,7 @@ configs:
 
     ## Server properties
     # -- Run server without TLS
+    ## NOTE: This value should be set when you generate params by other means as it changes ports used by ingress template.
     server.insecure: false
     # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
     server.basehref: /
@@ -2078,8 +2079,6 @@ server:
   ingressGrpc:
     # -- Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress]
     enabled: false
-    # -- Setup up gRPC ingress to work with an AWS ALB
-    isAWSALB: false
     # -- Additional ingress annotations for dedicated [gRPC-ingress]
     annotations: {}
     # -- Additional ingress labels for dedicated [gRPC-ingress]
@@ -2088,6 +2087,7 @@ server:
     ingressClassName: ""
 
     # -- Argo CD server hostname for dedicated [gRPC-ingress]
+    # @default -- `""` (defaults to grpc.`server.ingress.hostname`)
     hostname: ""
 
     # -- Argo CD server ingress path for dedicated [gRPC-ingress]
@@ -2097,7 +2097,7 @@ server:
     pathType: Prefix
 
     # -- Enable TLS configuration for the hostname defined at `server.ingressGrpc.hostname`
-    ## TLS certificate will be retrieved from a TLS secret with name: `<hostname>-tls`
+    ## TLS certificate will be retrieved from a TLS secret with name: `argocd-server-grpc-tls`
     tls: false
 
     # -- The list of additional hostnames to be covered by ingress record
