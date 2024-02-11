@@ -1588,6 +1588,43 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Dedicated gRPC ingress should route to HTTPS port even when running with insecure server
+        - kind: changed
+          description: Dedicated gRPC ingress TLS secret changed to argocd-server-grpc-tls based on feedback
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v2.10.0
+    created: "2024-02-11T14:52:40.814641482Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.23.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 06a3abc71f6247e1af5400026db415de49a77533611ff26fd810fd2e4685a475
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.23.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-6.0.6/argo-cd-6.0.6.tgz
+    version: 6.0.6
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Improved documentation for various ingress setups
       artifacthub.io/signKey: |
@@ -28962,4 +28999,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-02-09T12:14:22.523164594Z"
+generated: "2024-02-11T14:52:40.816431544Z"
