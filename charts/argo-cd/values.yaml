@@ -759,6 +759,8 @@ controller:
   metrics:
     # -- Deploy metrics service
     enabled: false
+    # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+    scrapeTimeout: ""
     applicationLabels:
       # -- Enables additional labels in argocd_app_labels metric
       enabled: false
@@ -1931,6 +1933,8 @@ server:
       enabled: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
+      # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+      scrapeTimeout: ""
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
@@ -2475,6 +2479,8 @@ repoServer:
       enabled: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
+      # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+      scrapeTimeout: ""
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
@@ -2623,6 +2629,8 @@ applicationSet:
       enabled: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
+      # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+      scrapeTimeout: ""
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion

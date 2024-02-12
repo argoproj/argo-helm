@@ -727,6 +727,7 @@ NAME: my-release
 | controller.metrics.rules.namespace | string | `""` | PrometheusRule namespace |
 | controller.metrics.rules.selector | object | `{}` | PrometheusRule selector |
 | controller.metrics.rules.spec | list | `[]` | PrometheusRule.Spec for the application controller |
+| controller.metrics.scrapeTimeout | string | `""` | Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used. |
 | controller.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | controller.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
 | controller.metrics.service.labels | object | `{}` | Metrics service labels |
@@ -832,6 +833,7 @@ NAME: my-release
 | repoServer.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | repoServer.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
 | repoServer.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
+| repoServer.metrics.serviceMonitor.scrapeTimeout | string | `""` | Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used. |
 | repoServer.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | repoServer.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | repoServer.name | string | `"repo-server"` | Repo server name |
@@ -976,6 +978,7 @@ NAME: my-release
 | server.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | server.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
 | server.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
+| server.metrics.serviceMonitor.scrapeTimeout | string | `""` | Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used. |
 | server.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | server.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | server.name | string | `"server"` | Argo CD server name |
@@ -1334,6 +1337,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | applicationSet.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
 | applicationSet.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
+| applicationSet.metrics.serviceMonitor.scrapeTimeout | string | `""` | Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used. |
 | applicationSet.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | applicationSet.name | string | `"applicationset-controller"` | ApplicationSet controller name string |
