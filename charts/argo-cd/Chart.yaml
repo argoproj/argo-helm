@@ -3,7 +3,7 @@ appVersion: v2.10.0
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 6.0.6
+version: 6.0.7
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -27,6 +27,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: Dedicated gRPC ingress should route to HTTPS port even when running with insecure server
-    - kind: changed
-      description: Dedicated gRPC ingress TLS secret changed to argocd-server-grpc-tls based on feedback
+      description: Fixed port name for argocd-repo-server and applicationset webhook for Istio service discovery
