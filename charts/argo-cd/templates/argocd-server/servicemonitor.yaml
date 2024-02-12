@@ -22,6 +22,9 @@ spec:
       {{- with .Values.server.metrics.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}
+      {{- with .Values.server.metrics.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+      {{- end }}
       path: /metrics
       {{- with .Values.server.metrics.serviceMonitor.relabelings }}
       relabelings:
