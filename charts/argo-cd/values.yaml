@@ -2967,7 +2967,7 @@ notifications:
   extraVolumes: []
 
   # -- Define user-defined context
-  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/templates/#defining-user-defined-context
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/templates/#defining-user-defined-context
   context: {}
     # region: east
     # environmentName: staging
@@ -2984,19 +2984,19 @@ notifications:
 
     # -- Generic key:value pairs to be inserted into the secret
     ## Can be used for templates, notification services etc. Some examples given below.
-    ## For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
+    ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/overview/
     items: {}
       # slack-token:
-      #   # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/slack/
+      #   # For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/slack/
 
       # grafana-apiKey:
-      #   # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/grafana/
+      #   # For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/grafana/
 
       # webhooks-github-token:
 
       # email-username:
       # email-password:
-        # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/email/
+        # For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/email/
 
   metrics:
     # -- Enables prometheus metrics server
@@ -3038,7 +3038,7 @@ notifications:
 
   # -- Configures notification services such as slack, email or custom webhook
   # @default -- See [values.yaml]
-  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/overview/
   notifiers: {}
     # service.slack: |
     #   token: $slack-token
@@ -3138,7 +3138,7 @@ notifications:
     rules: []
 
   # -- Contains centrally managed global application subscriptions
-  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/subscriptions/
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/subscriptions/
   subscriptions: []
     # # subscription for on-sync-status-unknown trigger notifications
     # - recipients:
@@ -3154,7 +3154,7 @@ notifications:
     #   - on-sync-status-unknown
 
   # -- The notification template is used to generate the notification content
-  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/templates/
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/templates/
   templates: {}
     # template.app-deployed: |
     #   email:
@@ -3371,7 +3371,7 @@ notifications:
     #       }]
 
   # -- The trigger defines the condition when the notification should be sent
-  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/triggers/
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/triggers/
   triggers: {}
     # trigger.on-deployed: |
     #   - description: Application is synced and healthy. Triggered once per commit.
@@ -3405,6 +3405,6 @@ notifications:
     #     - app-sync-succeeded
     #     when: app.status.operationState.phase in ['Succeeded']
     #
-    # For more information: https://argocd-notifications.readthedocs.io/en/stable/triggers/#default-triggers
+    # For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/triggers/#default-triggers
     # defaultTriggers: |
     #   - on-sync-status-unknown
