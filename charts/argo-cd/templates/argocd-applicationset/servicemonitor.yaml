@@ -23,6 +23,9 @@ spec:
       {{- with .Values.applicationSet.metrics.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}
+      {{- with .Values.applicationSet.metrics.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+      {{- end }}
       path: /metrics
       {{- with .Values.applicationSet.metrics.serviceMonitor.relabelings }}
       relabelings:
