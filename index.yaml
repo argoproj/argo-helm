@@ -1588,6 +1588,43 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Use argocd-applicationset-controller-tls secret for ApplicationSet certificate
+        - kind: fixed
+          description: Use argocd-applicationset-controller-tls secret for ApplicationSet webhook ingress
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v2.10.0
+    created: "2024-02-14T10:52:50.827887463Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.23.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 81f2d909ab46c88268eddf0db8c4d6b3c2bde8b9db00ea497230cbe5703a8b93
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.23.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-6.0.13/argo-cd-6.0.13.tgz
+    version: 6.0.13
+  - annotations:
+      artifacthub.io/changes: |
         - kind: security
           description: Argo CD repo-server cluster role is not deployed by default
       artifacthub.io/signKey: |
@@ -29262,4 +29299,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-02-14T08:53:02.084908415Z"
+generated: "2024-02-14T10:52:50.829876501Z"
