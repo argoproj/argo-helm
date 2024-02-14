@@ -2790,7 +2790,7 @@ applicationSet:
     # -- Deploy a Certificate resource (requires cert-manager)
     enabled: false
     # -- The name of the Secret that will be automatically created and managed by this Certificate resource
-    secretName: argocd-application-controller-tls
+    secretName: argocd-applicationset-controller-tls
     # -- Certificate primary domain (commonName)
     domain: argocd.example.com
     # -- Certificate Subject Alternate Names (SANs)
@@ -2849,7 +2849,7 @@ applicationSet:
     pathType: Prefix
 
     # -- Enable TLS configuration for the hostname defined at `applicationSet.webhook.ingress.hostname`
-    ## TLS certificate will be retrieved from a TLS secret with name:`argocd-application-controller-tls`
+    ## TLS certificate will be retrieved from a TLS secret with name:`argocd-applicationset-controller-tls`
     tls: false
 
     # -- The list of additional hostnames to be covered by ingress record
