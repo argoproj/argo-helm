@@ -55,7 +55,7 @@ spec:
     {{- if .Values.applicationSet.ingress.tls }}
     - hosts:
       - {{ .Values.applicationSet.ingress.hostname }}
-      secretName: argocd-application-controller-tls
+      secretName: argocd-applicationset-controller-tls
     {{- end }}
     {{- with .Values.applicationSet.ingress.extraTls }}
       {{- toYaml . | nindent 4 }}
