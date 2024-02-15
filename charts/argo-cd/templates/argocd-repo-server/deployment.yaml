@@ -89,6 +89,8 @@ spec:
           {{- with (concat .Values.global.env .Values.repoServer.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+          - name: CODEFRESH_IGNORE_VERSION_CONFIG
+            value: {{ .Values.repoServer.versionConfiguration.disabled | quote }}
           {{- if .Values.openshift.enabled }}
           - name: USER_NAME
             value: argocd
@@ -249,23 +251,18 @@ spec:
                 key: reposerver.enable.git.submodule
                 name: argocd-cmd-params-cm
                 optional: true
-          - name: ARGOCD_REPO_SERVER_CODEFRESH_IGNORE_VERSION_CONFIG
-            valueFrom:
-              configMapKeyRef:
-                name: codefresh-cm
-                key: ignore-version-config
-                optional: true
-          - name: ARGOCD_REPO_SERVER_CODEFRESH_URL
+          - name: CODEFRESH_URL
             valueFrom:
               configMapKeyRef:
                 name: codefresh-cm
                 key: base-url
                 optional: true
-          - name: ARGOCD_REPO_SERVER_CODEFRESH_TOKEN
+          - name: CODEFRESH_TOKEN
             valueFrom:
               secretKeyRef:
                 key: token
                 name: codefresh-token
+                optional: true
           {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
           - name: HELM_CACHE_HOME
             value: /helm-working-dir
