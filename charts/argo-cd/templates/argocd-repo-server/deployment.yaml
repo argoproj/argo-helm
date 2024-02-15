@@ -93,9 +93,9 @@ spec:
           - name: USER_NAME
             value: argocd
           {{- end }}
-          - name: CODEFRESH_APPVERSION_ENABLE
+          - name: CODEFRESH_APPVERSION_ENABLED
             value: {{ .Values.applicationVersioning.enabled | quote }}
-          - name: CODEFRESH_APPVERSION_USE_CONFIG
+          - name: CODEFRESH_APPVERSION_USE_APPCONFIG
             value: {{ .Values.applicationVersioning.useApplicationConfiguration | quote }}
           - name: ARGOCD_RECONCILIATION_TIMEOUT
             valueFrom:
