@@ -26,6 +26,12 @@ openshift:
   # -- enables using arbitrary uid for argo repo server
   enabled: false
 
+applicationVersioning:
+  # -- enables the Codefresh application versioning feature
+  enabled: true
+  # -- use ApplicationConfiguration CRD to manage application versioning
+  useApplicationConfiguration: true
+
 ## Custom resource configuration
 crds:
   # -- Install and upgrade CRDs

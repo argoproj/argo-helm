@@ -93,6 +93,10 @@ spec:
           - name: USER_NAME
             value: argocd
           {{- end }}
+          - name: CODEFRESH_APPVERSION_ENABLED
+            value: {{ .Values.applicationVersioning.enabled | quote }}
+          - name: CODEFRESH_APPVERSION_USE_APPCONFIG
+            value: {{ .Values.applicationVersioning.useApplicationConfiguration | quote }}
           - name: ARGOCD_RECONCILIATION_TIMEOUT
             valueFrom:
               configMapKeyRef:
@@ -248,6 +252,18 @@ spec:
               configMapKeyRef:
                 key: reposerver.enable.git.submodule
                 name: argocd-cmd-params-cm
+                optional: true
+          - name: CODEFRESH_URL
+            valueFrom:
+              configMapKeyRef:
+                name: codefresh-cm
+                key: base-url
+                optional: true
+          - name: CODEFRESH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: token
+                name: codefresh-token
                 optional: true
           {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
           - name: HELM_CACHE_HOME
