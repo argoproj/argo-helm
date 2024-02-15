@@ -89,12 +89,14 @@ spec:
           {{- with (concat .Values.global.env .Values.repoServer.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
-          - name: CODEFRESH_IGNORE_VERSION_CONFIG
-            value: {{ not .Values.applicationVersioning.enabled | quote }}
           {{- if .Values.openshift.enabled }}
           - name: USER_NAME
             value: argocd
           {{- end }}
+          - name: CODEFRESH_APPVERSION_ENABLE
+            value: {{ .Values.applicationVersioning.enabled | quote }}
+          - name: CODEFRESH_APPVERSION_USE_CONFIG
+            value: {{ .Values.applicationVersioning.useApplicationConfiguration | quote }}
           - name: ARGOCD_RECONCILIATION_TIMEOUT
             valueFrom:
               configMapKeyRef:
