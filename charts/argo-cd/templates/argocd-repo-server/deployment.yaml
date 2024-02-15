@@ -90,7 +90,7 @@ spec:
             {{- toYaml . | nindent 10 }}
           {{- end }}
           - name: CODEFRESH_IGNORE_VERSION_CONFIG
-            value: {{ .Values.repoServer.versionConfiguration.disabled | quote }}
+            value: {{ not .Values.applicationVersioning.enabled | quote }}
           {{- if .Values.openshift.enabled }}
           - name: USER_NAME
             value: argocd
