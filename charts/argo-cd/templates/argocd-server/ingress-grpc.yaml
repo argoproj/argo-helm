@@ -1,5 +1,5 @@
 {{- if and .Values.server.ingressGrpc.enabled (eq .Values.server.ingress.controller "generic") -}}
-{{- $hostname := .Values.server.ingressGrpc.hostname | default (printf "grpc.%s" .Values.server.ingress.hostname) -}}
+{{- $hostname := printf "grpc.%s" (.Values.server.ingress.hostname | default .Values.global.domain) -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -21,7 +21,7 @@ spec:
   ingressClassName: {{ . }}
   {{- end }}
   rules:
-    - host: {{ $hostname }}
+    - host: {{ .Values.server.ingressGrpc.hostname | default $hostname }}
       http:
         paths:
           {{- with .Values.server.ingressGrpc.extraPaths }}

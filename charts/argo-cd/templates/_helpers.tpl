@@ -163,6 +163,7 @@ Argo Configuration Preset Values (Incluenced by Values configuration)
 */}}
 {{- define "argo-cd.config.cm.presets" -}}
 {{- $presets := dict -}}
+{{- $_ := set $presets "url" (printf "https://%s" .Values.global.domain) -}}
 {{- if .Values.configs.styles -}}
 {{- $_ := set $presets "ui.cssurl" "./custom/custom.styles.css" -}}
 {{- end -}}
