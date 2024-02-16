@@ -1588,6 +1588,41 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Configuration option global.domain that is tied to all components
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v2.10.1
+    created: "2024-02-16T14:45:13.775608759Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.23.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: e88ce6a09bd61408a9e7bd3235fcbad25313b739a3c6a3872a9a721cc38c0f5b
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.23.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-6.1.0/argo-cd-6.1.0.tgz
+    version: 6.1.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Bump argo-cd to v2.10.1
       artifacthub.io/signKey: |
@@ -29334,4 +29369,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-02-14T21:04:44.583790082Z"
+generated: "2024-02-16T14:45:13.777485213Z"
