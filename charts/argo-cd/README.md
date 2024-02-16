@@ -74,14 +74,15 @@ below corespond to their respective sections.
 The `tls: true` option will expect that the `argocd-server-tls` secret exists as Argo CD server loads TLS certificates from this place.
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 certificate:
   enabled: true
-  domain: argocd.example.com
 
 server:
   ingress:
     enabled: true
-    hostname: argocd.example.com
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -92,6 +93,9 @@ server:
 ### SSL Termination at Ingress Controller
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 configs:
   params:
     server.insecure: true
@@ -99,7 +103,6 @@ configs:
 server:
   ingress:
     enabled: true
-    hostname: argocd.example.com
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -119,6 +122,9 @@ server:
 Use `ingressGrpc` section if your ingress controller supports only a single protocol per Ingress resource (i.e.: Contour).
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 configs:
   params:
     server.insecure: true
@@ -126,7 +132,6 @@ configs:
 server:
   ingress:
     enabled: true
-    hostname: argocd.example.com
     ingressClassName: contour-internal
     extraTls:
       - hosts:
@@ -135,7 +140,6 @@ server:
 
    ingressGrpc:
      enabled: true
-     hostname: grpc.argocd.example.com
      ingressClassName: contour-internal
      extraTls:
       - hosts:
@@ -146,10 +150,12 @@ server:
 ### Multiple ingress domains
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 server:
   ingress:
     enabled: true
-    hostname: argocd.example.com
     ingressClassName: nginx
     annotations:
       cert-manager.io/cluster-issuer: "<my-issuer>"
@@ -169,6 +175,9 @@ The provided example assumes you are using TLS off-loading via AWS ACM service.
 > Using `controller: aws` creates additional service for gRPC traffic and it's no longer need to use `ingressGrpc` configuration section.
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 configs:
   params:
     server.insecure: true
@@ -176,7 +185,6 @@ configs:
 server:
   ingress:
     enabled: true
-    hostname: argocd.example.com
     controller: aws
     ingressClassName: alb
     annotations:
@@ -184,7 +192,7 @@ server:
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/backend-protocol: HTTP
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":80}, {"HTTPS":443}]'
-      alb.ingress.kubernetes.io/ssl-redirect" '443'
+      alb.ingress.kubernetes.io/ssl-redirect: '443'
     aws:
       serviceType: ClusterIP # <- Used with target-type: ip
       backendProtocolVersion: GRPC
@@ -196,6 +204,9 @@ The implementation will populate `ingressClassName`, `networking.gke.io/managed-
 automatically if you provide configuration for GKE resources.
 
 ```yaml
+global:
+  domain: argocd.example.com
+
 configs:
   params:
     server.insecure: true
@@ -208,7 +219,6 @@ server:
 
   ingress:
     enabled: true
-    hostname: argocd.example.com
     controller: gke
     gke:
       backendConfig:
@@ -267,6 +277,10 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
+
+### 6.1.0
+
+Added support for global domain used by all components.
 
 ### 6.0.0
 
@@ -610,6 +624,7 @@ NAME: my-release
 | global.certificateAnnotations | object | `{}` | Annotations for the all deployed Certificates |
 | global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
 | global.deploymentStrategy | object | `{}` | Deployment strategy for the all deployed Deployments |
+| global.domain | string | `"argocd.example.com"` | Default domain used by all components |
 | global.env | list | `[]` | Environment variables to pass to all deployed Deployments |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
@@ -643,7 +658,6 @@ NAME: my-release
 | configs.cm."timeout.reconciliation" | string | `"180s"` | Timeout to discover if a new manifests version got published to the repository |
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
 | configs.cm.create | bool | `true` | Create the argocd-cm configmap for [declarative setup] |
-| configs.cm.url | string | `""` | Argo CD's externally facing base URL (optional). Required when configuring SSO |
 | configs.cmp.annotations | object | `{}` | Annotations to be added to argocd-cmp-cm configmap |
 | configs.cmp.create | bool | `false` | Create the argocd-cmp-cm configmap |
 | configs.cmp.plugins | object | `{}` | Plugin yaml files to be added to argocd-cmp-cm |
@@ -884,7 +898,7 @@ NAME: my-release
 | server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo CD server [HPA] |
 | server.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
 | server.certificate.annotations | object | `{}` | Annotations to be applied to the Server Certificate |
-| server.certificate.domain | string | `"argocd.example.com"` | Certificate primary domain (commonName) |
+| server.certificate.domain | string | `""` (defaults to global.domain) | Certificate primary domain (commonName) |
 | server.certificate.duration | string | `""` (defaults to 2160h = 90d if not specified) | The requested 'duration' (i.e. lifetime) of the certificate. |
 | server.certificate.enabled | bool | `false` | Deploy a Certificate resource (requires cert-manager) |
 | server.certificate.issuer.group | string | `""` | Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io` |
@@ -938,7 +952,7 @@ NAME: my-release
 | server.ingress.gke.frontendConfig | object | `{}` (See [values.yaml]) | Google [FrontendConfig] resource, for use with the GKE Ingress Controller |
 | server.ingress.gke.managedCertificate.create | bool | `true` | Create ManagedCertificate resource and annotations for Google Load balancer |
 | server.ingress.gke.managedCertificate.extraDomains | list | `[]` | Additional domains for ManagedCertificate resource |
-| server.ingress.hostname | string | `"argocd.example.com"` | Argo CD server hostname |
+| server.ingress.hostname | string | `""` (defaults to global.domain) | Argo CD server hostname |
 | server.ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
 | server.ingress.labels | object | `{}` | Additional ingress labels |
 | server.ingress.path | string | `"/"` | The path to Argo CD server |
@@ -1272,7 +1286,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
 | applicationSet.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
 | applicationSet.certificate.annotations | object | `{}` | Annotations to be applied to the ApplicationSet Certificate |
-| applicationSet.certificate.domain | string | `"argocd.example.com"` | Certificate primary domain (commonName) |
+| applicationSet.certificate.domain | string | `""` (defaults to global.domain) | Certificate primary domain (commonName) |
 | applicationSet.certificate.duration | string | `""` (defaults to 2160h = 90d if not specified) | The requested 'duration' (i.e. lifetime) of the certificate. |
 | applicationSet.certificate.enabled | bool | `false` | Deploy a Certificate resource (requires cert-manager) |
 | applicationSet.certificate.issuer.group | string | `""` | Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io` |
@@ -1309,7 +1323,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | applicationSet.ingress.extraRules | list | `[]` (See [values.yaml]) | Additional ingress rules |
 | applicationSet.ingress.extraTls | list | `[]` (See [values.yaml]) | Additional ingress TLS configuration |
-| applicationSet.ingress.hostname | string | `"argocd.example.com"` | Argo CD ApplicationSet hostname |
+| applicationSet.ingress.hostname | string | `""` (defaults to global.domain) | Argo CD ApplicationSet hostname |
 | applicationSet.ingress.ingressClassName | string | `""` | Defines which ingress ApplicationSet controller will implement the resource |
 | applicationSet.ingress.labels | object | `{}` | Additional ingress labels |
 | applicationSet.ingress.path | string | `"/api/webhook"` | List of ingress paths |
@@ -1377,7 +1391,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | notifications.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
-| notifications.argocdUrl | string | `nil` | Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates |
+| notifications.argocdUrl | string | `""` (defaults to https://`global.domain`) | Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates |
 | notifications.clusterRoleRules.rules | list | `[]` | List of custom rules for the notifications controller's ClusterRole resource |
 | notifications.cm.create | bool | `true` | Whether helm chart creates notifications controller config map |
 | notifications.containerPorts.metrics | int | `9001` | Metrics container port |

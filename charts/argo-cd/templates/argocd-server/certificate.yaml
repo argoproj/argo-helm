@@ -14,9 +14,9 @@ metadata:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
   secretName: {{ .Values.server.certificate.secretName }}
-  commonName: {{ .Values.server.certificate.domain | quote }}
+  commonName: {{ .Values.server.certificate.domain | default .Values.global.domain }}
   dnsNames:
-    - {{ .Values.server.certificate.domain | quote }}
+    - {{ .Values.server.certificate.domain | default .Values.global.domain }}
     {{- range .Values.server.certificate.additionalHosts }}
     - {{ . | quote }}
     {{- end }}

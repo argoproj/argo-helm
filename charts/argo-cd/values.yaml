@@ -37,6 +37,10 @@ crds:
 
 ## Globally shared configuration
 global:
+  # -- Default domain used by all components
+  ## Used for ingresses, certificates, SSO, notifications, etc.
+  domain: argocd.example.com
+
   # -- Common labels for the all resources
   additionalLabels: {}
     # app: argo-cd
@@ -154,9 +158,6 @@ configs:
 
     # -- Annotations to be added to argocd-cm configmap
     annotations: {}
-
-    # -- Argo CD's externally facing base URL (optional). Required when configuring SSO
-    url: ""
 
     # -- The name of tracking label used by Argo CD for resource pruning
     application.instanceLabelKey: argocd.argoproj.io/instance
@@ -1828,7 +1829,8 @@ server:
     # -- The name of the Secret that will be automatically created and managed by this Certificate resource
     secretName: argocd-server-tls
     # -- Certificate primary domain (commonName)
-    domain: argocd.example.com
+    # @default -- `""` (defaults to global.domain)
+    domain: ""
     # -- Certificate Subject Alternate Names (SANs)
     additionalHosts: []
     # -- The requested 'duration' (i.e. lifetime) of the certificate.
@@ -1985,8 +1987,8 @@ server:
     ingressClassName: ""
 
     # -- Argo CD server hostname
-    ## NOTE: Hostname must be provided if Ingress is enabled
-    hostname: argocd.example.com
+    # @default -- `""` (defaults to global.domain)
+    hostname: ""
 
     # -- The path to Argo CD server
     path: /
@@ -2792,7 +2794,8 @@ applicationSet:
     # -- The name of the Secret that will be automatically created and managed by this Certificate resource
     secretName: argocd-applicationset-controller-tls
     # -- Certificate primary domain (commonName)
-    domain: argocd.example.com
+    # @default -- `""` (defaults to global.domain)
+    domain: ""
     # -- Certificate Subject Alternate Names (SANs)
     additionalHosts: []
     # -- The requested 'duration' (i.e. lifetime) of the certificate.
@@ -2839,8 +2842,8 @@ applicationSet:
     ingressClassName: ""
 
     # -- Argo CD ApplicationSet hostname
-    ## NOTE: Hostname must be provided if Ingress is enabled
-    hostname: argocd.example.com
+    # @default -- `""` (defaults to global.domain)
+    hostname: ""
 
     # -- List of ingress paths
     path: /api/webhook
@@ -2897,7 +2900,8 @@ notifications:
   name: notifications-controller
 
   # -- Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates
-  argocdUrl:
+  # @default -- `""` (defaults to https://`global.domain`)
+  argocdUrl: ""
 
   ## Notifications controller Pod Disruption Budget
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
