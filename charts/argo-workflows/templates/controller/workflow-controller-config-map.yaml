@@ -83,6 +83,11 @@ data:
         bucket: {{ tpl (.Values.artifactRepository.s3.bucket | default "") . }}
         endpoint: {{ tpl (.Values.artifactRepository.s3.endpoint | default "") . }}
         insecure: {{ .Values.artifactRepository.s3.insecure }}
+        {{- if .Values.artifactRepository.s3.caSecret }}
+        caSecret:
+          name: {{ tpl .Values.artifactRepository.s3.caSecret.name . }}
+          key: {{ tpl .Values.artifactRepository.s3.caSecret.key . }}
+        {{- end }}
         {{- if .Values.artifactRepository.s3.keyFormat }}
         keyFormat: {{ .Values.artifactRepository.s3.keyFormat | quote }}
         {{- end }}
