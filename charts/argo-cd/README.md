@@ -1150,7 +1150,7 @@ NAME: my-release
 | redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
 | redis.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
-| redis.exporter.image.tag | string | `"1.57.0"` | Tag to use for the redis-exporter |
+| redis.exporter.image.tag | string | `"1.58.0"` | Tag to use for the redis-exporter |
 | redis.exporter.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis exporter |
 | redis.exporter.livenessProbe.failureThreshold | int | `5` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | redis.exporter.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |
@@ -1239,7 +1239,7 @@ The main options are listed here:
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
 | redis-ha.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
 | redis-ha.exporter.image | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
-| redis-ha.exporter.tag | string | `"1.57.0"` | Tag to use for the redis-exporter |
+| redis-ha.exporter.tag | string | `"1.58.0"` | Tag to use for the redis-exporter |
 | redis-ha.haproxy.additionalAffinities | object | `{}` | Additional affinities to add to the haproxy pods. |
 | redis-ha.haproxy.affinity | string | `""` | Assign custom [affinity] rules to the haproxy pods. |
 | redis-ha.haproxy.containerSecurityContext | object | See [values.yaml] | HAProxy container-level security context |
