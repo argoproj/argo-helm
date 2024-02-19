@@ -8,7 +8,7 @@ metadata:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
   domains:
-    - {{ .Values.server.ingress.hostname }}
+    - {{ .Values.server.ingress.hostname | default .Values.global.domain }}
     {{- with .Values.server.ingress.gke.managedCertificate.extraDomains }}
       {{- toYaml . | nindent 4 }}
     {{- end }}

@@ -52,7 +52,7 @@ spec:
   tls:
     {{- if .Values.applicationSet.ingress.tls }}
     - hosts:
-      - {{ .Values.applicationSet.ingress.hostname }}
+      - {{ .Values.applicationSet.ingress.hostname | default .Values.global.domain }}
       secretName: argocd-applicationset-controller-tls
     {{- end }}
     {{- with .Values.applicationSet.ingress.extraTls }}
