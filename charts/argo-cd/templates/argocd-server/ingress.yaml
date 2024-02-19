@@ -54,7 +54,7 @@ spec:
   tls:
     {{- if .Values.server.ingress.tls }}
     - hosts:
-      - {{ .Values.server.ingress.hostname }}
+      - {{ .Values.server.ingress.hostname | default .Values.global.domain }}
       {{- range .Values.server.ingress.extraHosts }}
         {{- if .name }}
       -  {{ .name }}

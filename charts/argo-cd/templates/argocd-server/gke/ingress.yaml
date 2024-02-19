@@ -27,7 +27,7 @@ spec:
   ingressClassName: {{ . }}
   {{- end }}
   rules:
-    - host: {{ .Values.server.ingress.hostname }}
+    - host: {{ .Values.server.ingress.hostname | default .Values.global.domain }}
       http:
         paths:
           {{- with .Values.server.ingress.extraPaths }}
@@ -59,7 +59,7 @@ spec:
   tls:
     {{- if .Values.server.ingress.tls }}
     - hosts:
-      - {{ .Values.server.ingress.hostname }}
+      - {{ .Values.server.ingress.hostname | default .Values.global.domain }}
       secretName: argocd-server-tls
     {{- end }}
     {{- with .Values.server.ingress.extraTls }}
