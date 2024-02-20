@@ -29,17 +29,17 @@ spec:
             {{- toYaml . | nindent 10 }}
           {{- end }}
           - path: {{ .Values.server.ingress.path }}
-            pathType: {{ $.Values.server.ingress.pathType }}
-            backend:
-              service:
-                name: {{ include "argo-cd.server.fullname" . }}
-                port:
-                  number: {{ $servicePort }}
-          - path: {{ .Values.server.ingress.path }}
             pathType: {{ $.Values.server.ingressGrpc.pathType }}
             backend:
               service:
                 name: {{ include "argo-cd.server.fullname" $ }}-grpc
+                port:
+                  number: {{ $servicePort }}
+          - path: {{ .Values.server.ingress.path }}
+            pathType: {{ $.Values.server.ingress.pathType }}
+            backend:
+              service:
+                name: {{ include "argo-cd.server.fullname" . }}
                 port:
                   number: {{ $servicePort }}
     {{- range .Values.server.ingress.extraHosts }}
