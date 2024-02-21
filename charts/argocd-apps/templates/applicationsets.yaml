@@ -1,5 +1,5 @@
 
-{{- range .Values.applicationsets }}
+{{- range $k, $v := .Values.applicationsets }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -14,7 +14,7 @@ metadata:
   labels:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: {{ .name }}
+  name: {{ $k }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}

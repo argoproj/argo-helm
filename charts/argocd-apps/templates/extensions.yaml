@@ -1,9 +1,9 @@
-{{- range .Values.extensions }}
+{{- range $k, $v := .Values.extensions }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ArgoCDExtension
 metadata:
-  name: {{ .name }}
+  name: {{ $k }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}

@@ -1,4 +1,4 @@
-{{- range .Values.projects }}
+{{- range $k, $v := .Values.projects }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -13,7 +13,7 @@ metadata:
   labels:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: {{ .name }}
+  name: {{ $k }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}

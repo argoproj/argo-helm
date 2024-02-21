@@ -1,239 +1,242 @@
 # -- Deploy Argo CD Applications within this helm release
 # @default -- `[]` (See [values.yaml])
 ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
-applications: []
-# - name: guestbook
-#   namespace: argocd
-#   additionalLabels: {}
-#   additionalAnnotations: {}
-#   finalizers:
-#   - resources-finalizer.argocd.argoproj.io
-#   project: guestbook
-#   source:
-#     repoURL: https://github.com/argoproj/argocd-example-apps.git
-#     targetRevision: HEAD
-#     path: guestbook
-#     directory:
-#       recurse: true
-#   # ArgoCD v2.6 or later
-#   sources:
+applications: {}
+#  guestbook:
+#    namespace: argocd
+#    additionalLabels: {}
+#    additionalAnnotations: {}
+#    finalizers:
+#    - resources-finalizer.argocd.argoproj.io
+#    project: guestbook
+#    source:
+#      repoURL: https://github.com/argoproj/argocd-example-apps.git
+#      targetRevision: HEAD
+#      path: guestbook
+#      directory:
+#        recurse: true
+#    # ArgoCD v2.6 or later
+#    sources:
 #    - chart: elasticsearch
 #      repoURL: https://helm.elastic.co
 #      targetRevision: 8.5.1
 #    - repoURL: https://github.com/argoproj/argocd-example-apps.git
 #      path: guestbook
 #      targetRevision: HEAD
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: guestbook
-#   syncPolicy:
-#     automated:
-#       prune: false
-#       selfHeal: false
-#     syncOptions:
-#     - CreateNamespace=true
-#   revisionHistoryLimit: null
-#   ignoreDifferences:
-#   - group: apps
-#     kind: Deployment
-#     jsonPointers:
-#     - /spec/replicas
-#   info:
-#   - name: url
-#     value: https://argoproj.github.io/
+#    destination:
+#      server: https://kubernetes.default.svc
+#      namespace: guestbook
+#    syncPolicy:
+#      automated:
+#        prune: false
+#        selfHeal: false
+#      syncOptions:
+#      - CreateNamespace=true
+#    revisionHistoryLimit: null
+#    ignoreDifferences:
+#    - group: apps
+#      kind: Deployment
+#      jsonPointers:
+#      - /spec/replicas
+#    info:
+#    - name: url
+#      value: https://argoproj.github.io/
 
 # -- Deploy Argo CD Projects within this helm release
 # @default -- `[]` (See [values.yaml])
 ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/
-projects: []
-# - name: guestbook
-#   namespace: argocd
-#   additionalLabels: {}
-#   additionalAnnotations: {}
-#   permitOnlyProjectScopedClusters: false
-#   finalizers:
-#   - resources-finalizer.argocd.argoproj.io
-#   description: Example Project
-#   sourceRepos:
-#   - '*'
-#   destinations:
-#   - namespace: guestbook
-#     server: https://kubernetes.default.svc
-#   clusterResourceWhitelist: []
-#   clusterResourceBlacklist: []
-#   namespaceResourceBlacklist:
-#   - group: ''
-#     kind: ResourceQuota
-#   - group: ''
-#     kind: LimitRange
-#   - group: ''
-#     kind: NetworkPolicy
-#     orphanedResources: {}
-#     roles: []
-#   namespaceResourceWhitelist:
-#   - group: 'apps'
-#     kind: Deployment
-#   - group: 'apps'
-#     kind: StatefulSet
-#   orphanedResources: {}
-#   roles: []
-#   syncWindows:
-#   - kind: allow
-#     schedule: '10 1 * * *'
-#     duration: 1h
-#     applications:
-#     - '*-prod'
-#     manualSync: true
-#   signatureKeys:
-#   - keyID: ABCDEF1234567890
-#   sourceNamespaces:
-#   - argocd
+projects: {}
+#  guestbook:
+#    namespace: argocd
+#    additionalLabels: {}
+#    additionalAnnotations: {}
+#    permitOnlyProjectScopedClusters: false
+#    finalizers:
+#    - resources-finalizer.argocd.argoproj.io
+#    description: Example Project
+#    sourceRepos:
+#    - '*'
+#    destinations:
+#    - namespace: guestbook
+#      server: https://kubernetes.default.svc
+#    clusterResourceWhitelist: []
+#    clusterResourceBlacklist: []
+#    namespaceResourceBlacklist:
+#    - group: ''
+#      kind: ResourceQuota
+#    - group: ''
+#      kind: LimitRange
+#    - group: ''
+#      kind: NetworkPolicy
+#      orphanedResources: {}
+#      roles: []
+#    namespaceResourceWhitelist:
+#    - group: 'apps'
+#      kind: Deployment
+#    - group: 'apps'
+#      kind: StatefulSet
+#    orphanedResources: {}
+#    roles: []
+#    syncWindows:
+#    - kind: allow
+#      schedule: '10 1 * * *'
+#      duration: 1h
+#      applications:
+#      - '*-prod'
+#      manualSync: true
+#    signatureKeys:
+#    - keyID: ABCDEF1234567890
+#    sourceNamespaces:
+#    - argocd
 
 # -- Deploy Argo CD ApplicationSets within this helm release
 # @default -- `[]` (See [values.yaml])
 ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/
-applicationsets: []
-# - name: guestbook
-#   namespace: argocd
-#   additionalLabels: {}
-#   additionalAnnotations: {}
-#   # See PR #10026 (ArgoCD v2.5 or later)
-#   # goTemplate: false
-#   generators:
-#   - git:
-#       repoURL: https://github.com/argoproj/argocd-example-apps.git
-#       revision: HEAD
-#       directories:
-#       - path: guestbook
-#       - path: kustomize-*
-#   # Ref https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Controlling-Resource-Modification/#allow-temporarily-toggling-auto-sync
-#   ignoreApplicationDifferences:
-#   - jsonPointers:
-#     - /spec/syncPolicy
-#   # Progressive Syncs is an experimental feature and it must be explicitly enabled
-#   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Progressive-Syncs/#enabling-progressive-syncs
-#   strategy:
-#     type: RollingSync
-#     rollingSync:
-#       steps:
-#       - matchExpressions:
-#         - key: project
-#           operator: In
-#           values:
-#           - guestbook
-#       - matchExpressions:
-#         - key: project
-#           operator: In
-#           values:
-#           - kustomize-foo
-#           - kustomize-bar
-#   template:
-#     metadata:
-#       name: '{{path.basename}}'
-#       labels:
-#         project: '{{path.basename}}'
-#       annotations: {}
-#     spec:
-#       project: default
-#       source:
-#         repoURL: https://github.com/argoproj/argocd-example-apps.git
-#         targetRevision: HEAD
-#         path: '{{path}}'
-#       destination:
-#         server: https://kubernetes.default.svc
-#         namespace: default
-#       syncPolicy:
-#         automated:
-#           prune: false
-#           selfHeal: false
-#       ignoreDifferences:
-#       - group: apps
-#         kind: Deployment
-#         jsonPointers:
-#         - /spec/replicas
-#       info:
-#       - name: url
-#         value: https://argoproj.github.io/
-#   syncPolicy:
-#     # Set Application finalizer
-#     preserveResourcesOnDeletion: false
+applicationsets: {}
+#  guestbook:
+#    namespace: argocd
+#    additionalLabels: {}
+#    additionalAnnotations: {}
+#    # See PR #10026 (ArgoCD v2.5 or later)
+#    # goTemplate: false
+#    generators:
+#    - git:
+#        repoURL: https://github.com/argoproj/argocd-example-apps.git
+#        revision: HEAD
+#        directories:
+#        - path: guestbook
+#        - path: kustomize-*
+#    # Ref https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Controlling-Resource-Modification/#allow-temporarily-toggling-auto-sync
+#    ignoreApplicationDifferences:
+#    - jsonPointers:
+#      - /spec/syncPolicy
+#    # Progressive Syncs is an experimental feature and it must be explicitly enabled
+#    # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Progressive-Syncs/#enabling-progressive-syncs
+#    strategy:
+#      type: RollingSync
+#      rollingSync:
+#        steps:
+#        - matchExpressions:
+#          - key: project
+#            operator: In
+#            values:
+#            - guestbook
+#        - matchExpressions:
+#          - key: project
+#            operator: In
+#            values:
+#            - kustomize-foo
+#            - kustomize-bar
+#    template:
+#      metadata:
+#        name: '{{path.basename}}'
+#        labels:
+#          project: '{{path.basename}}'
+#        annotations: {}
+#      spec:
+#        project: default
+#        source:
+#          repoURL: https://github.com/argoproj/argocd-example-apps.git
+#          targetRevision: HEAD
+#          path: '{{path}}'
+#        destination:
+#          server: https://kubernetes.default.svc
+#          namespace: default
+#        syncPolicy:
+#          automated:
+#            prune: false
+#            selfHeal: false
+#        ignoreDifferences:
+#        - group: apps
+#          kind: Deployment
+#          jsonPointers:
+#          - /spec/replicas
+#        info:
+#        - name: url
+#          value: https://argoproj.github.io/
+#    syncPolicy:
+#      # Set Application finalizer
+#      preserveResourcesOnDeletion: false
 
 # --  Deploy Argo CD Applications/ApplicationSets/Projects within this helm release
 # @default -- `[]` (See [values.yaml])
 ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/
-itemTemplates: []
-# - items:
-#     - name: my-appset
-#       generators: &generators
-#         - list:
-#             elements:
-#               - cluster: engineering-dev
-#                 url: https://1.2.3.4
-#               - cluster: engineering-prod
-#                 url: https://2.4.6.8
-#               - cluster: finance-preprod
-#                 url: https://9.8.7.6
-#   template:
-#     apiVersion: argoproj.io/v1alpha1
-#     kind: ApplicationSet
-#     metadata:
-#       name: "{{ .name }}"
-#     spec:
-#       generators: *generators
-#       template:
-#         metadata:
-#           name: "{{`{{cluster}}`}}-guestbook"
-#         spec:
-#           project: my-project
-#           source:
-#             repoURL: https://github.com/infra-team/cluster-deployments.git
-#             targetRevision: HEAD
-#             path: guestbook/{{`{{cluster}}`}}
-#           destination:
-#             server: "{{`{{cluster}}`}}"
-#             namespace: guestbook
-# - items:
-#     - name: my-appset
-#       generators:
-#         - list:
-#             elements:
-#               - cluster: engineering-dev
-#                 url: https://1.2.3.4
-#               - cluster: engineering-prod
-#                 url: https://2.4.6.8
-#               - cluster: finance-preprod
-#                 url: https://9.8.7.6
-#   template: |-
-#     apiVersion: argoproj.io/v1alpha1
-#     kind: ApplicationSet
-#     metadata:
-#       name: {{ .name }}
-#     spec:
-#       generators: {{ toYaml .generators | nindent 4 }}
-#       template:
-#         metadata:
-#           name: '{{`{{cluster}}`}}-guestbook'
-#         spec:
-#           project: my-project
-#           source:
-#             repoURL: https://github.com/infra-team/cluster-deployments.git
-#             targetRevision: HEAD
-#             path: guestbook/{{`{{cluster}}`}}
-#           destination:
-#             server: '{{`{{cluster}}`}}'
-#             namespace: guestbook
+itemTemplates: {}
+#  first:
+#    items:
+#      - name: my-appset
+#        generators: &generators
+#          - list:
+#              elements:
+#                - cluster: engineering-dev
+#                  url: https://1.2.3.4
+#                - cluster: engineering-prod
+#                  url: https://2.4.6.8
+#                - cluster: finance-preprod
+#                  url: https://9.8.7.6
+#    template:
+#      apiVersion: argoproj.io/v1alpha1
+#      kind: ApplicationSet
+#      metadata:
+#        name: "{{ .name }}"
+#      spec:
+#        generators: *generators
+#        template:
+#          metadata:
+#            name: "{{`{{cluster}}`}}-guestbook"
+#          spec:
+#            project: my-project
+#            source:
+#              repoURL: https://github.com/infra-team/cluster-deployments.git
+#              targetRevision: HEAD
+#              path: guestbook/{{`{{cluster}}`}}
+#            destination:
+#              server: "{{`{{cluster}}`}}"
+#              namespace: guestbook
+#  second:
+#    items:
+#      - name: my-appset
+#        generators:
+#          - list:
+#              elements:
+#                - cluster: engineering-dev
+#                  url: https://1.2.3.4
+#                - cluster: engineering-prod
+#                  url: https://2.4.6.8
+#                - cluster: finance-preprod
+#                  url: https://9.8.7.6
+#    template: |-
+#      apiVersion: argoproj.io/v1alpha1
+#      kind: ApplicationSet
+#      metadata:
+#        name: {{ .name }}
+#      spec:
+#        generators: {{ toYaml .generators | nindent 4 }}
+#        template:
+#          metadata:
+#            name: '{{`{{cluster}}`}}-guestbook'
+#          spec:
+#            project: my-project
+#            source:
+#              repoURL: https://github.com/infra-team/cluster-deployments.git
+#              targetRevision: HEAD
+#              path: guestbook/{{`{{cluster}}`}}
+#            destination:
+#              server: '{{`{{cluster}}`}}'
+#              namespace: guestbook
 
 # -- DEPRECATED - Please refer [Deprecation Notice](https://github.com/argoproj-labs/argocd-extensions?tab=readme-ov-file#deprecation-notice) for more info.
 # @default -- `[]` (See [values.yaml])
 ## This function in tech preview stage, do expect unstability or breaking changes in newer versions. Bump image.tag if necessary.
 ## Ref: https://github.com/argoproj-labs/argocd-extensions
-extensions: []
-  # - name: example
-  #   namespace: argocd
-  #   additionalLabels: {}
-  #   additionalAnnotations: {}
-  #   sources:
-  #     - git:
-  #         url: https://github.com/argoproj-labs/argocd-example-extension.git
-  #     - web:
-  #         url: https://github.com/argoproj-labs/argocd-example-extension/releases/download/v0.1.0/extension.tar
+extensions: {}
+#  example:
+#    namespace: argocd
+#    additionalLabels: {}
+#    additionalAnnotations: {}
+#    sources:
+#      - git:
+#          url: https://github.com/argoproj-labs/argocd-example-extension.git
+#      - web:
+#          url: https://github.com/argoproj-labs/argocd-example-extension/releases/download/v0.1.0/extension.tar
+#

@@ -1,9 +1,9 @@
-{{- range .Values.applications }}
+{{- range $k, $v := .Values.applications }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  {{- with .additionalAnnotations }}
+  {{- with $v.additionalAnnotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
@@ -13,7 +13,7 @@ metadata:
   labels:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: {{ .name }}
+  name: {{ $k }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}
