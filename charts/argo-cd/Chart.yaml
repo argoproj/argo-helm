@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.9-2024.2.15-cc783d89f
+appVersion: v2.9-2024.2.22-25d9fca69
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.53.12-3-cap-2.9-2024.2.15-cc783d89f
+version: 5.53.12-4-cap-2.9-2024.2.22-25d9fca69
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -27,4 +27,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: Upgrade Argo CD to v2.9-2024.2.15-cc783d89f. Getting application version configuration from the Codefresh API.
+      description: Upgrade Argo CD to v2.9-2024.2.22-25d9fca69. Fix argo-cd cmp by reverting code related to app versions support.
