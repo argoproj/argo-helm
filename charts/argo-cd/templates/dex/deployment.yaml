@@ -99,8 +99,8 @@ spec:
         {{- if .Values.dex.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: {{ .Values.dex.livenessProbe.httpPort }}
-            port: {{ .Values.dex.livenessProbe.httpPath }}
+            path: {{ .Values.dex.livenessProbe.httpPath }}
+            port: {{ .Values.dex.livenessProbe.httpPort }}
           initialDelaySeconds: {{ .Values.dex.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.dex.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.dex.livenessProbe.timeoutSeconds }}
@@ -110,8 +110,8 @@ spec:
         {{- if .Values.dex.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: {{ .Values.dex.readinessProbe.httpPort }}
-            port: {{ .Values.dex.readinessProbe.httpPath }}
+            path: {{ .Values.dex.readinessProbe.httpPath }}
+            port: {{ .Values.dex.readinessProbe.httpPort }}
           initialDelaySeconds: {{ .Values.dex.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.dex.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.dex.readinessProbe.timeoutSeconds }}
