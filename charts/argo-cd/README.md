@@ -1077,6 +1077,8 @@ NAME: my-release
 | dex.initImage.tag | string | `""` (defaults to global.image.tag) | Argo CD init image tag |
 | dex.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Dex >= 2.28.0 |
 | dex.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| dex.livenessProbe.httpPath | string | `"/healthz/live"` | Http path to use for the liveness probe |
+| dex.livenessProbe.httpPort | string | `"metrics"` | Http port to use for the liveness probe |
 | dex.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | dex.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | dex.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
@@ -1109,6 +1111,8 @@ NAME: my-release
 | dex.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the dex pods |
 | dex.readinessProbe.enabled | bool | `false` | Enable Kubernetes readiness probe for Dex >= 2.28.0 |
 | dex.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| dex.readinessProbe.httpPath | string | `"/healthz/ready"` | Http path to use for the readiness probe |
+| dex.readinessProbe.httpPort | string | `"metrics"` | Http port to use for the readiness probe |
 | dex.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | dex.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | dex.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
