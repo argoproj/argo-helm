@@ -22,24 +22,24 @@ spec:
   ingressClassName: {{ . }}
   {{- end }}
   rules:
-    - host: {{ .Values.server.ingress.hostname }}
+    - host: {{ .Values.server.ingress.hostname | default .Values.global.domain }}
       http:
         paths:
           {{- with .Values.server.ingress.extraPaths }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
           - path: {{ .Values.server.ingress.path }}
-            pathType: {{ $.Values.server.ingress.pathType }}
-            backend:
-              service:
-                name: {{ include "argo-cd.server.fullname" . }}
-                port:
-                  number: {{ $servicePort }}
-          - path: {{ .Values.server.ingress.path }}
             pathType: {{ $.Values.server.ingressGrpc.pathType }}
             backend:
               service:
                 name: {{ include "argo-cd.server.fullname" $ }}-grpc
+                port:
+                  number: {{ $servicePort }}
+          - path: {{ .Values.server.ingress.path }}
+            pathType: {{ $.Values.server.ingress.pathType }}
+            backend:
+              service:
+                name: {{ include "argo-cd.server.fullname" . }}
                 port:
                   number: {{ $servicePort }}
     {{- range .Values.server.ingress.extraHosts }}
@@ -61,7 +61,7 @@ spec:
   tls:
     {{- if .Values.server.ingress.tls }}
     - hosts:
-      - {{ .Values.server.ingress.hostname }}
+      - {{ .Values.server.ingress.hostname | default .Values.global.domain }}
       secretName: argocd-server-tls
     {{- end }}
     {{- with .Values.server.ingress.extraTls }}

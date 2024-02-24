@@ -42,7 +42,7 @@ rules:
   verbs:
   - create
   - list
-{{- if eq (toString (index (coalesce .Values.server.config .Values.configs.cm) "exec.enabled")) "true" }}
+{{- if eq (toString (index .Values.configs.cm "exec.enabled")) "true" }}
 - apiGroups:
   - ""
   resources:

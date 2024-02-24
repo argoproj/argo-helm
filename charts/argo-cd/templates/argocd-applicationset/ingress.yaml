@@ -20,8 +20,7 @@ spec:
   ingressClassName: {{ . }}
   {{- end }}
   rules:
-    {{- if .Values.applicationSet.ingress.hostname }}
-    - host: {{ .Values.applicationSet.ingress.hostname }}
+    - host: {{ .Values.applicationSet.ingress.hostname | default .Values.global.domain }}
       http:
         paths:
           {{- with .Values.applicationSet.ingress.extraPaths }}
@@ -34,7 +33,6 @@ spec:
                 name: {{ include "argo-cd.applicationSet.fullname" . }}
                 port:
                   number: {{ .Values.applicationSet.service.port }}
-    {{- end }}
     {{- range .Values.applicationSet.ingress.extraHosts }}
     - host: {{ .name | quote }}
       http:
@@ -54,8 +52,8 @@ spec:
   tls:
     {{- if .Values.applicationSet.ingress.tls }}
     - hosts:
-      - {{ .Values.applicationSet.ingress.hostname }}
-      secretName: argocd-application-controller-tls
+      - {{ .Values.applicationSet.ingress.hostname | default .Values.global.domain }}
+      secretName: argocd-applicationset-controller-tls
     {{- end }}
     {{- with .Values.applicationSet.ingress.extraTls }}
       {{- toYaml . | nindent 4 }}

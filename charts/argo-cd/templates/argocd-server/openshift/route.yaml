@@ -13,7 +13,7 @@ metadata:
     {{- end }}
 {{- end }}
 spec:
-  host: {{ .Values.server.route.hostname | quote }}
+  host: {{ .Values.server.route.hostname | default .Values.global.domain | quote }}
   to:
     kind: Service
     name: {{ template "argo-cd.server.fullname" . }}

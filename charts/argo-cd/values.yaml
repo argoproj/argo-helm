@@ -37,6 +37,10 @@ crds:
 
 ## Globally shared configuration
 global:
+  # -- Default domain used by all components
+  ## Used for ingresses, certificates, SSO, notifications, etc.
+  domain: argocd.example.com
+
   # -- Common labels for the all resources
   additionalLabels: {}
     # app: argo-cd
@@ -155,9 +159,6 @@ configs:
     # -- Annotations to be added to argocd-cm configmap
     annotations: {}
 
-    # -- Argo CD's externally facing base URL (optional). Required when configuring SSO
-    url: ""
-
     # -- The name of tracking label used by Argo CD for resource pruning
     application.instanceLabelKey: argocd.argoproj.io/instance
 
@@ -236,6 +237,7 @@ configs:
 
     ## Server properties
     # -- Run server without TLS
+    ## NOTE: This value should be set when you generate params by other means as it changes ports used by ingress template.
     server.insecure: false
     # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
     server.basehref: /
@@ -758,6 +760,8 @@ controller:
   metrics:
     # -- Deploy metrics service
     enabled: false
+    # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+    scrapeTimeout: ""
     applicationLabels:
       # -- Enables additional labels in argocd_app_labels metric
       enabled: false
@@ -1035,6 +1039,10 @@ dex:
   livenessProbe:
     # -- Enable Kubernetes liveness probe for Dex >= 2.28.0
     enabled: false
+    # -- Http path to use for the liveness probe
+    httpPath: /healthz/live
+    # -- Http port to use for the liveness probe
+    httpPort: metrics
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -1049,6 +1057,10 @@ dex:
   readinessProbe:
     # -- Enable Kubernetes readiness probe for Dex >= 2.28.0
     enabled: false
+    # -- Http path to use for the readiness probe
+    httpPath: /healthz/ready
+    # -- Http port to use for the readiness probe
+    httpPort: metrics
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -1151,7 +1163,7 @@ redis:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.0.15-alpine
+    tag: 7.2.4-alpine
     # -- Redis image pull policy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1167,7 +1179,7 @@ redis:
       # -- Repository to use for the redis-exporter
       repository: public.ecr.aws/bitnami/redis-exporter
       # -- Tag to use for the redis-exporter
-      tag: 1.57.0
+      tag: 1.58.0
       # -- Image pull policy for the redis-exporter
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
@@ -1432,7 +1444,7 @@ redis-ha:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.0.15-alpine
+    tag: 7.2.4-alpine
   ## Prometheus redis-exporter sidecar
   exporter:
     # -- Enable Prometheus redis-exporter sidecar
@@ -1440,7 +1452,7 @@ redis-ha:
     # -- Repository to use for the redis-exporter
     image: public.ecr.aws/bitnami/redis-exporter
     # -- Tag to use for the redis-exporter
-    tag: 1.57.0
+    tag: 1.58.0
   persistentVolume:
     # -- Configures persistence on Redis nodes
     enabled: false
@@ -1825,7 +1837,8 @@ server:
     # -- The name of the Secret that will be automatically created and managed by this Certificate resource
     secretName: argocd-server-tls
     # -- Certificate primary domain (commonName)
-    domain: argocd.example.com
+    # @default -- `""` (defaults to global.domain)
+    domain: ""
     # -- Certificate Subject Alternate Names (SANs)
     additionalHosts: []
     # -- The requested 'duration' (i.e. lifetime) of the certificate.
@@ -1930,6 +1943,8 @@ server:
       enabled: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
+      # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+      scrapeTimeout: ""
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
@@ -1980,8 +1995,8 @@ server:
     ingressClassName: ""
 
     # -- Argo CD server hostname
-    ## NOTE: Hostname must be provided if Ingress is enabled
-    hostname: argocd.example.com
+    # @default -- `""` (defaults to global.domain)
+    hostname: ""
 
     # -- The path to Argo CD server
     path: /
@@ -2078,8 +2093,6 @@ server:
   ingressGrpc:
     # -- Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress]
     enabled: false
-    # -- Setup up gRPC ingress to work with an AWS ALB
-    isAWSALB: false
     # -- Additional ingress annotations for dedicated [gRPC-ingress]
     annotations: {}
     # -- Additional ingress labels for dedicated [gRPC-ingress]
@@ -2088,6 +2101,7 @@ server:
     ingressClassName: ""
 
     # -- Argo CD server hostname for dedicated [gRPC-ingress]
+    # @default -- `""` (defaults to grpc.`server.ingress.hostname`)
     hostname: ""
 
     # -- Argo CD server ingress path for dedicated [gRPC-ingress]
@@ -2097,7 +2111,7 @@ server:
     pathType: Prefix
 
     # -- Enable TLS configuration for the hostname defined at `server.ingressGrpc.hostname`
-    ## TLS certificate will be retrieved from a TLS secret with name: `<hostname>-tls`
+    ## TLS certificate will be retrieved from a TLS secret with name: `argocd-server-grpc-tls`
     tls: false
 
     # -- The list of additional hostnames to be covered by ingress record
@@ -2451,7 +2465,7 @@ repoServer:
     # -- Repo server service port
     port: 8081
     # -- Repo server service port name
-    portName: https-repo-server
+    portName: tcp-repo-server
 
   ## Repo server metrics service configuration
   metrics:
@@ -2475,6 +2489,8 @@ repoServer:
       enabled: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
+      # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+      scrapeTimeout: ""
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
@@ -2623,6 +2639,8 @@ applicationSet:
       enabled: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
+      # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+      scrapeTimeout: ""
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
       relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
@@ -2653,7 +2671,7 @@ applicationSet:
     # -- ApplicationSet service port
     port: 7000
     # -- ApplicationSet service port name
-    portName: webhook
+    portName: http-webhook
 
   serviceAccount:
     # -- Create ApplicationSet controller service account
@@ -2782,9 +2800,10 @@ applicationSet:
     # -- Deploy a Certificate resource (requires cert-manager)
     enabled: false
     # -- The name of the Secret that will be automatically created and managed by this Certificate resource
-    secretName: argocd-application-controller-tls
+    secretName: argocd-applicationset-controller-tls
     # -- Certificate primary domain (commonName)
-    domain: argocd.example.com
+    # @default -- `""` (defaults to global.domain)
+    domain: ""
     # -- Certificate Subject Alternate Names (SANs)
     additionalHosts: []
     # -- The requested 'duration' (i.e. lifetime) of the certificate.
@@ -2831,8 +2850,8 @@ applicationSet:
     ingressClassName: ""
 
     # -- Argo CD ApplicationSet hostname
-    ## NOTE: Hostname must be provided if Ingress is enabled
-    hostname: argocd.example.com
+    # @default -- `""` (defaults to global.domain)
+    hostname: ""
 
     # -- List of ingress paths
     path: /api/webhook
@@ -2841,7 +2860,7 @@ applicationSet:
     pathType: Prefix
 
     # -- Enable TLS configuration for the hostname defined at `applicationSet.webhook.ingress.hostname`
-    ## TLS certificate will be retrieved from a TLS secret with name:`argocd-application-controller-tls`
+    ## TLS certificate will be retrieved from a TLS secret with name:`argocd-applicationset-controller-tls`
     tls: false
 
     # -- The list of additional hostnames to be covered by ingress record
@@ -2889,7 +2908,8 @@ notifications:
   name: notifications-controller
 
   # -- Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates
-  argocdUrl:
+  # @default -- `""` (defaults to https://`global.domain`)
+  argocdUrl: ""
 
   ## Notifications controller Pod Disruption Budget
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
@@ -2959,7 +2979,7 @@ notifications:
   extraVolumes: []
 
   # -- Define user-defined context
-  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/templates/#defining-user-defined-context
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/templates/#defining-user-defined-context
   context: {}
     # region: east
     # environmentName: staging
@@ -2976,19 +2996,19 @@ notifications:
 
     # -- Generic key:value pairs to be inserted into the secret
     ## Can be used for templates, notification services etc. Some examples given below.
-    ## For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
+    ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/overview/
     items: {}
       # slack-token:
-      #   # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/slack/
+      #   # For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/slack/
 
       # grafana-apiKey:
-      #   # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/grafana/
+      #   # For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/grafana/
 
       # webhooks-github-token:
 
       # email-username:
       # email-password:
-        # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/email/
+        # For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/email/
 
   metrics:
     # -- Enables prometheus metrics server
@@ -3030,7 +3050,7 @@ notifications:
 
   # -- Configures notification services such as slack, email or custom webhook
   # @default -- See [values.yaml]
-  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/services/overview/
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/overview/
   notifiers: {}
     # service.slack: |
     #   token: $slack-token
@@ -3130,7 +3150,7 @@ notifications:
     rules: []
 
   # -- Contains centrally managed global application subscriptions
-  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/subscriptions/
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/subscriptions/
   subscriptions: []
     # # subscription for on-sync-status-unknown trigger notifications
     # - recipients:
@@ -3146,7 +3166,7 @@ notifications:
     #   - on-sync-status-unknown
 
   # -- The notification template is used to generate the notification content
-  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/templates/
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/templates/
   templates: {}
     # template.app-deployed: |
     #   email:
@@ -3363,7 +3383,7 @@ notifications:
     #       }]
 
   # -- The trigger defines the condition when the notification should be sent
-  ## For more information: https://argocd-notifications.readthedocs.io/en/stable/triggers/
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/triggers/
   triggers: {}
     # trigger.on-deployed: |
     #   - description: Application is synced and healthy. Triggered once per commit.
@@ -3397,6 +3417,6 @@ notifications:
     #     - app-sync-succeeded
     #     when: app.status.operationState.phase in ['Succeeded']
     #
-    # For more information: https://argocd-notifications.readthedocs.io/en/stable/triggers/#default-triggers
+    # For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/triggers/#default-triggers
     # defaultTriggers: |
     #   - on-sync-status-unknown
