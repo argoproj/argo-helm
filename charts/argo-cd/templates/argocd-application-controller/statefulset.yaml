@@ -78,6 +78,8 @@ spec:
           {{- end }}
           - name: ARGOCD_CONTROLLER_REPLICAS
             value: {{ .Values.controller.replicas | quote }}
+          - name: ARGOCD_APPLICATION_CONTROLLER_NAME
+            value: {{ template "argo-cd.controller.fullname" . }}
           - name: ARGOCD_RECONCILIATION_TIMEOUT
             valueFrom:
               configMapKeyRef:
