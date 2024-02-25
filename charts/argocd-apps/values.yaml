@@ -157,6 +157,20 @@ applicationsets: []
 #   syncPolicy:
 #     # Set Application finalizer
 #     preserveResourcesOnDeletion: false
+#   # Templating is only available on string type
+#   templatePatch: |
+#     spec:
+#       source:
+#         helm:
+#           valueFiles:
+#           {{- range $valueFile := .valueFiles }}
+#             - {{ $valueFile }}
+#           {{- end }}
+#     {{- if .autoSync }}
+#       syncPolicy:
+#         automated:
+#           prune: {{ .prune }}
+#     {{- end }}
 
 # --  Deploy Argo CD Applications/ApplicationSets/Projects within this helm release
 # @default -- `[]` (See [values.yaml])

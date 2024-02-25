@@ -46,6 +46,19 @@ applicationsets:
   syncPolicy:
     # Set Application finalizer
     preserveResourcesOnDeletion: false
+  templatePatch: |
+    spec:
+      source:
+        helm:
+          valueFiles:
+          {{- range $valueFile := .valueFiles }}
+            - {{ $valueFile }}
+          {{- end }}
+    {{- if .autoSync }}
+      syncPolicy:
+        automated:
+          prune: {{ .prune }}
+    {{- end }}
 - name: applicationset-list-generator
   generators:
   - list:
