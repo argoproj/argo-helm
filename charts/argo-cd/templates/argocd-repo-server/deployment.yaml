@@ -85,6 +85,8 @@ spec:
           - name: USER_NAME
             value: argocd
           {{- end }}
+          - name: ARGOCD_REPO_SERVER_NAME
+            value: {{ template "argo-cd.repoServer.fullname" . }}
           - name: ARGOCD_RECONCILIATION_TIMEOUT
             valueFrom:
               configMapKeyRef:

@@ -75,6 +75,8 @@ spec:
           {{- with (concat .Values.global.env .Values.server.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+          - name: ARGOCD_SERVER_NAME
+            value: {{ template "argo-cd.server.fullname" . }}
           - name: ARGOCD_SERVER_INSECURE
             valueFrom:
               configMapKeyRef:
