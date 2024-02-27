@@ -1060,6 +1060,8 @@ dex:
     httpPath: /healthz/live
     # -- Http port to use for the liveness probe
     httpPort: metrics
+    # -- Scheme to use for for the liveness probe (can be HTTP or HTTPS)
+    httpScheme: HTTP
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -1078,6 +1080,8 @@ dex:
     httpPath: /healthz/ready
     # -- Http port to use for the readiness probe
     httpPort: metrics
+    # -- Scheme to use for for the liveness probe (can be HTTP or HTTPS)
+    httpScheme: HTTP
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
     # -- Number of seconds after the container has started before [probe] is initiated
