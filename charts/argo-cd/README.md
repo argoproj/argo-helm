@@ -1091,6 +1091,7 @@ NAME: my-release
 | dex.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | dex.livenessProbe.httpPath | string | `"/healthz/live"` | Http path to use for the liveness probe |
 | dex.livenessProbe.httpPort | string | `"metrics"` | Http port to use for the liveness probe |
+| dex.livenessProbe.httpScheme | string | `"HTTP"` | Scheme to use for for the liveness probe (can be HTTP or HTTPS) |
 | dex.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | dex.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | dex.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
@@ -1125,6 +1126,7 @@ NAME: my-release
 | dex.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | dex.readinessProbe.httpPath | string | `"/healthz/ready"` | Http path to use for the readiness probe |
 | dex.readinessProbe.httpPort | string | `"metrics"` | Http port to use for the readiness probe |
+| dex.readinessProbe.httpScheme | string | `"HTTP"` | Scheme to use for for the liveness probe (can be HTTP or HTTPS) |
 | dex.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | dex.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | dex.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
