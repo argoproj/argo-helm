@@ -70,7 +70,7 @@ For full list of changes please check ArtifactHub [changelog].
 | providerRBAC.providers.istio | bool | `true` | Adds RBAC rules for the Istio provider |
 | providerRBAC.providers.smi | bool | `true` | Adds RBAC rules for the SMI provider |
 | providerRBAC.providers.traefik | bool | `true` | Adds RBAC rules for the Traefik provider |
-| providerRBAC.additionalRules | object | `{}` | Adds additional RBAC rules for other providers |
+| providerRBAC.additionalRules | list | `[]` | Adds additional RBAC rules for other providers |
 
 ### Controller
 
