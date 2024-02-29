@@ -952,7 +952,7 @@ NAME: my-release
 | server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Argo CD server |
 | server.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
-| server.ingress.aws.backendProtocolVersion | string | `"HTTP2"` | Backend protocol version for the AWS ALB gRPC service |
+| server.ingress.aws.backendProtocolVersion | string | `"GRPC"` | Backend protocol version for the AWS ALB gRPC service |
 | server.ingress.aws.serviceType | string | `"NodePort"` | Service type for the AWS ALB gRPC service |
 | server.ingress.controller | string | `"generic"` | Specific implementation for ingress controller. One of `generic`, `aws` or `gke` |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
