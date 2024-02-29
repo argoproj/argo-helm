@@ -2074,8 +2074,9 @@ server:
     ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#aws-application-load-balancers-albs-and-classic-elb-http-mode
     aws:
       # -- Backend protocol version for the AWS ALB gRPC service
-      ## This tells AWS to send traffic from the ALB using HTTP2. Can use gRPC as well if you want to leverage gRPC specific features
-      backendProtocolVersion: HTTP2
+      ## This tells AWS to send traffic from the ALB using gRPC.
+      ## For more information: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html#health-check-settings
+      backendProtocolVersion: GRPC
       # -- Service type for the AWS ALB gRPC service
       ## Can be of type NodePort or ClusterIP depending on which mode you are running.
       ## Instance mode needs type NodePort, IP mode needs type ClusterIP
