@@ -24,7 +24,7 @@ spec:
       http:
         paths:
           {{- with .Values.applicationSet.ingress.extraPaths }}
-            {{- toYaml . | nindent 10 }}
+            {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
           - path: {{ .Values.applicationSet.ingress.path }}
             pathType: {{ .Values.applicationSet.ingress.pathType }}
@@ -46,7 +46,7 @@ spec:
                   number: {{ $.Values.applicationSet.service.port }}
     {{- end }}
     {{- with .Values.applicationSet.ingress.extraRules }}
-      {{- toYaml . | nindent 4 }}
+      {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
   {{- if or .Values.applicationSet.ingress.tls .Values.applicationSet.ingress.extraTls }}
   tls:

@@ -2038,6 +2038,7 @@ server:
 
     # -- Additional ingress paths
     # @default -- `[]` (See [values.yaml])
+    ## Note: Supports use of custom Helm templates
     extraPaths: []
       # - path: /*
       #   pathType: Prefix
@@ -2049,15 +2050,17 @@ server:
 
     # -- Additional ingress rules
     # @default -- `[]` (See [values.yaml])
+    ## Note: Supports use of custom Helm templates
     extraRules: []
-      # - host: example.example.com
-      #   http:
-      #       path: /
+      # - http:
+      #     paths:
+      #     - path: /
+      #       pathType: Prefix
       #       backend:
       #         service:
-      #           name: example-svc
+      #           name: '{{ include "argo-cd.server.fullname" . }}'
       #           port:
-      #             name: http
+      #             name: '{{ .Values.server.service.servicePortHttpsName }}'
 
     # -- Additional TLS configuration
     # @default -- `[]` (See [values.yaml])
@@ -2144,6 +2147,7 @@ server:
 
     # -- Additional ingress paths for dedicated [gRPC-ingress]
     # @default -- `[]` (See [values.yaml])
+    ## Note: Supports use of custom Helm templates
     extraPaths: []
       # - path: /*
       #   pathType: Prefix
@@ -2155,15 +2159,17 @@ server:
 
     # -- Additional ingress rules
     # @default -- `[]` (See [values.yaml])
+    ## Note: Supports use of custom Helm templates
     extraRules: []
-      # - host: example.example.com
-      #   http:
-      #       path: /
+      # - http:
+      #     paths:
+      #     - path: /
+      #       pathType: Prefix
       #       backend:
       #         service:
-      #           name: example-svc
+      #           name: '{{ include "argo-cd.server.fullname" . }}'
       #           port:
-      #             name: http
+      #             name: '{{ .Values.server.service.servicePortHttpName }}'
 
     # -- Additional TLS configuration for dedicated [gRPC-ingress]
     # @default -- `[]` (See [values.yaml])
@@ -2904,15 +2910,17 @@ applicationSet:
 
     # -- Additional ingress rules
     # @default -- `[]` (See [values.yaml])
+    ## Note: Supports use of custom Helm templates
     extraRules: []
-      # - host: example.example.com
-      #   http:
-      #       path: /
-      #       backend:
-      #         service:
-      #           name: example-svc
-      #           port:
-      #             name: http
+      # - http:
+      #    paths:
+      #    - path: /api/webhook
+      #      pathType: Prefix
+      #      backend:
+      #        service:
+      #          name: '{{ include "argo-cd.applicationSet.fullname" . }}'
+      #          port:
+      #            name: '{{ .Values.applicationSet.service.portName }}'
 
     # -- Additional ingress TLS configuration
     # @default -- `[]` (See [values.yaml])
