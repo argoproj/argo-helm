@@ -276,8 +276,8 @@ rules:
   verbs:
   - '*'
 {{- end }}
-{{- if .Values.providerRBAC.additionalRules }}
-{{ toYaml .Values.providerRBAC.additionalRules }}
+{{- with .Values.providerRBAC.additionalRules }}
+{{ toYaml .  }}
 {{- end }}
 {{- end }}
 {{- end }}
