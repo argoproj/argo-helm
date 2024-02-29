@@ -60,6 +60,7 @@ For full list of changes please check ArtifactHub [changelog].
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the notifications secret |
 | notifications.templates | object | `{}` | Notification templates |
 | notifications.triggers | object | `{}` | The trigger defines the condition when the notification should be sent |
+| providerRBAC.additionalRules | list | `[]` | Additional RBAC rules for others providers |
 | providerRBAC.enabled | bool | `true` | Toggles addition of provider-specific RBAC rules to the controller Role and ClusterRole |
 | providerRBAC.providers.ambassador | bool | `true` | Adds RBAC rules for the Ambassador provider |
 | providerRBAC.providers.apisix | bool | `true` | Adds RBAC rules for the Apisix provider |
@@ -70,7 +71,6 @@ For full list of changes please check ArtifactHub [changelog].
 | providerRBAC.providers.istio | bool | `true` | Adds RBAC rules for the Istio provider |
 | providerRBAC.providers.smi | bool | `true` | Adds RBAC rules for the SMI provider |
 | providerRBAC.providers.traefik | bool | `true` | Adds RBAC rules for the Traefik provider |
-| providerRBAC.additionalRules | list | `[]` | Adds additional RBAC rules for other providers |
 
 ### Controller
 
