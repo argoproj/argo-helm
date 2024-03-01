@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
-  namespace: {{ default .Release.Namespace .Values.controller.serviceMonitor.namespace | quote }}
+  namespace: {{ default (include "argo-workflows.namespace" .) .Values.controller.serviceMonitor.namespace | quote }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     {{- with .Values.controller.serviceMonitor.additionalLabels }}
@@ -43,7 +43,7 @@ spec:
   {{- end }}
   namespaceSelector:
     matchNames:
-      - {{ .Release.Namespace | quote }}
+      - {{ include "argo-workflows.namespace" . | quote }}
   selector:
     matchLabels:
       {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
