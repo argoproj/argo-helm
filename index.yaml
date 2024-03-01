@@ -23665,6 +23665,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Disable leader election if only 1 repl of the Workflow Controller
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.5.5
+    created: "2024-03-01T17:17:29.555033955Z"
+    description: A Helm chart for Argo Workflows
+    digest: a37f41bd2bbef3318b5188007de4f803b1337c7d4e2658bbf794d13b90ac9c20
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.40.13/argo-workflows-0.40.13.tgz
+    version: 0.40.13
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Bump argo-workflows to v3.5.5
       artifacthub.io/signKey: |
@@ -29883,4 +29907,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-03-01T08:41:40.833899232Z"
+generated: "2024-03-01T17:17:29.556553483Z"
