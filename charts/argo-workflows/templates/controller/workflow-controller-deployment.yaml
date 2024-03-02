@@ -89,6 +89,10 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.name
+          {{- if eq (int .Values.controller.replicas) 1 }}
+            - name: LEADER_ELECTION_DISABLE
+              value: "true"
+          {{- end }}
           {{- with .Values.controller.extraEnv }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
