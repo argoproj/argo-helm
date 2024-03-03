@@ -3,7 +3,7 @@ appVersion: v3.5.5
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.40.13
+version: 0.40.14
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -17,4 +17,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: added
-      description: Disable leader election if only 1 repl of the Workflow Controller
+      description: Support namespaceOverride

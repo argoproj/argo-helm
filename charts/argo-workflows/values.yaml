@@ -26,6 +26,10 @@ nameOverride:
 # -- String to fully override "argo-workflows.fullname" template
 fullnameOverride:
 
+# -- Override the namespace
+# @default -- `.Release.Namespace`
+namespaceOverride: ""
+
 # -- Labels to set on all resources
 commonLabels: {}
 
