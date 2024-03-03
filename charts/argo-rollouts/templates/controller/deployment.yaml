@@ -18,7 +18,7 @@ spec:
       app.kubernetes.io/component: {{ .Values.controller.component }}
       {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
   strategy:
-    type: Recreate
+    type: RollingUpdate
   replicas: {{ .Values.controller.replicas }}
   template:
     metadata:
