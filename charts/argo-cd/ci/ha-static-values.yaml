@@ -10,3 +10,8 @@ server:
 
 repoServer:
   replicas: 2
+
+# these tests only support vanilla argo-cd
+# do not work for event reporter component
+eventReporter:
+  enabled: false

@@ -3333,11 +3333,11 @@ notifications:
 
 eventReporter:
   # Enabled we need to skip argo-cd chart tests for this component
-  enabled: false
+  enabled: true
   # Version we need to dynamically switch between old and new version
   # one will be just hanging and the second one working
   # possible values: v1, v2
-  version: v1
+  version: v2
   name: event-reporter
   ## Amount of replicas for event reporting sharding
   replicas: 3

@@ -12,3 +12,8 @@ server:
             value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension.tar.gz
           - name: EXTENSION_CHECKSUM_URL
             value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension_checksums.txt
+
+# these tests only support vanilla argo-cd
+# do not work for event reporter component
+eventReporter:
+  enabled: false
