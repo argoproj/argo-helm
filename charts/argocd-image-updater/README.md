@@ -105,6 +105,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
 | metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | nameOverride | string | `""` | Global name (argocd-image-updater.name in _helpers.tpl) override |
+| namespaceOverride | string | `""` | Global namespace (argocd-image-updater.namespace in _helpers.tpl) override |
 | nodeSelector | object | `{}` | Kubernetes nodeSelector settings for the deployment |
 | podAnnotations | object | `{}` | Pod Annotations for the deployment |
 | podLabels | object | `{}` | Pod Labels for the deployment |

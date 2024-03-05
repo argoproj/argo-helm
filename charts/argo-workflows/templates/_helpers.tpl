@@ -189,3 +189,11 @@ Return the appropriate apiVersion for GKE resources
 {{- print "cloud.google.com/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Expand the namespace of the release.
+Allows overriding it for multi-namespace deployments in combined charts.
+*/}}
+{{- define "argo-workflows.namespace" -}}
+{{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
+{{- end }}

@@ -1,8 +1,8 @@
-{{- if not .Values.controller.dynamicClusterDistribution | default false }}
+{{- if .Values.controller.dynamicClusterDistribution }}
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  {{- with (mergeOverwrite (deepCopy .Values.global.statefulsetAnnotations) .Values.controller.statefulsetAnnotations) }}
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.controller.deploymentAnnotations) }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
@@ -15,7 +15,6 @@ metadata:
 spec:
   replicas: {{ .Values.controller.replicas }}
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit | default .Values.global.revisionHistoryLimit }}
-  serviceName: {{ include "argo-cd.controller.fullname" . }}
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
@@ -76,8 +75,10 @@ spec:
           {{- with (concat .Values.global.env .Values.controller.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
-          - name: ARGOCD_CONTROLLER_REPLICAS
-            value: {{ .Values.controller.replicas | quote }}
+          - name: ARGOCD_ENABLE_DYNAMIC_CLUSTER_DISTRIBUTION
+            value: "true"
+          - name: ARGOCD_CONTROLLER_HEARTBEAT_TIME
+            value: {{ .Values.controller.heartbeatTime | quote }}
           - name: ARGOCD_APPLICATION_CONTROLLER_NAME
             value: {{ template "argo-cd.controller.fullname" . }}
           - name: ARGOCD_RECONCILIATION_TIMEOUT

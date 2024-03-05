@@ -99,8 +99,9 @@ spec:
         {{- if .Values.dex.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: /healthz/live
-            port: metrics
+            path: {{ .Values.dex.livenessProbe.httpPath }}
+            port: {{ .Values.dex.livenessProbe.httpPort }}
+            scheme: {{ .Values.dex.livenessProbe.httpScheme }}
           initialDelaySeconds: {{ .Values.dex.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.dex.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.dex.livenessProbe.timeoutSeconds }}
@@ -110,8 +111,9 @@ spec:
         {{- if .Values.dex.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: /healthz/ready
-            port: metrics
+            path: {{ .Values.dex.readinessProbe.httpPath }}
+            port: {{ .Values.dex.readinessProbe.httpPort }}
+            scheme: {{ .Values.dex.readinessProbe.httpScheme }}
           initialDelaySeconds: {{ .Values.dex.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.dex.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.dex.readinessProbe.timeoutSeconds }}

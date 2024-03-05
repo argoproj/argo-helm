@@ -4,7 +4,7 @@
     "fileMatch": ["\\.yaml$", "\\.yml$"]
   },
   "extends": [
-    "config:base",
+    "config:recommended",
     "docker:enableMajor"
   ],
   "labels": ["renovate"],
@@ -13,10 +13,12 @@
     "**/charts/argo-cd/Chart.yaml",
     "**/charts/argo-events/Chart.yaml",
     "**/charts/argo-rollouts/Chart.yaml",
-    "**/charts/argocd-image-updater/Chart.yaml"
+    "**/charts/argocd-image-updater/Chart.yaml",
+    "**/.github/workflows/renovate.yaml"
   ],
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "fileMatch": ["charts/argo-workflows/Chart.yaml$"],
       "matchStrings": [
         "\\sappVersion: (?<currentValue>.*)\\s"
@@ -26,6 +28,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": ["charts/argo-cd/Chart.yaml$"],
       "matchStrings": [
         "\\sappVersion: (?<currentValue>.*)\\s"
@@ -35,6 +38,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": ["charts/argo-events/Chart.yaml$"],
       "matchStrings": [
         "\\sappVersion: (?<currentValue>.*)\\s"
@@ -44,6 +48,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": ["charts/argo-rollouts/Chart.yaml$"],
       "matchStrings": [
         "\\sappVersion: (?<currentValue>.*)\\s"
@@ -53,6 +58,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": ["charts/argocd-image-updater/Chart.yaml$"],
       "matchStrings": [
         "\\sappVersion: (?<currentValue>.*)\\s"
@@ -60,32 +66,42 @@
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
       "depNameTemplate": "argoproj-labs/argocd-image-updater",
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^\\.github/workflows/[^/]+\\.ya?ml$"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s+.+version: (?<currentValue>.*)"
+      ]
     }
   ],
   "packageRules": [
     {
-      "matchPackagePatterns": ["argoproj/argo-workflows"],
-      "commitMessagePrefix": "chore(argo-workflows):"
-    },
-    {
-      "matchPackagePatterns": ["argoproj/argo-cd"],
-      "commitMessagePrefix": "chore(argo-cd):"
-    },
-    {
-      "matchPackagePatterns": ["argoproj/argo-events"],
-      "commitMessagePrefix": "chore(argo-events):"
-    },
-    {
-      "matchPackagePatterns": ["argoproj/argo-rollouts"],
-      "commitMessagePrefix": "chore(argo-rollouts):"
+      "matchPackagePatterns": [
+        "argoproj/argo-workflows",
+        "argoproj/argo-cd",
+        "argoproj/argo-events",
+        "argoproj/argo-rollouts"
+      ],
+      "commitMessagePrefix": "chore({{{replace 'argoproj/' '' depName}}}):",
+      "postUpgradeTasks": {
+        "commands": ["./scripts/renovate-bump-version.sh {{depName}}"]
+      }
     },
     {
       "matchPackagePatterns": ["argoproj-labs/argocd-image-updater"],
-      "commitMessagePrefix": "chore(argocd-image-updater):"
+      "commitMessagePrefix": "chore({{{replace 'argoproj-labs/' '' depName}}}):",
+      "postUpgradeTasks": {
+        "commands": ["./scripts/renovate-bump-version.sh {{depName}}"]
+      }
     },
     {
       "matchPackagePatterns": ["redis-ha"],
       "enabled": false
+    },
+    {
+      "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
+      "extends": ["schedule:monthly"]
     }
   ]
 }

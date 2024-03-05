@@ -31,7 +31,7 @@ spec:
       http:
         paths:
           {{- with .Values.server.ingress.extraPaths }}
-            {{- toYaml . | nindent 10 }}
+            {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
           - path: {{ .Values.server.ingress.path }}
             pathType: {{ .Values.server.ingress.pathType }}
@@ -53,7 +53,7 @@ spec:
                   number: {{ $servicePort }}
     {{- end }}
     {{- with .Values.server.ingress.extraRules }}
-      {{- toYaml . | nindent 4 }}
+      {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
   {{- if or .Values.server.ingress.tls .Values.server.ingress.extraTls }}
   tls:

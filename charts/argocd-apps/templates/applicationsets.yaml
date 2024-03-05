@@ -84,4 +84,8 @@ spec:
       {{- end }}
     {{- end -}}
   {{- end }}
+  {{- with .templatePatch }}
+  templatePatch: |
+    {{- . | nindent 4 }}
+  {{- end }}
 {{- end }}
