@@ -1,6 +1,6 @@
 {{- if and .Values.server.ingress.enabled (eq .Values.server.ingress.controller "generic") }}
 {{- $insecure := index .Values.configs.params "server.insecure" | toString -}}
-{{- $servicePort := eq $insecure "true" | ternary .Values.server.service.servicePortHttp .Values.server.service.servicePortHttps -}}
+{{- $servicePort := eq $insecure "true" | ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
