@@ -1,4 +1,4 @@
-{{- range $k, $v := .Values.projects }}
+{{- range $k, _:= .Values.projects }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject

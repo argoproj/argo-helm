@@ -1,5 +1,5 @@
 
-{{- range $k, $v := .Values.applicationsets }}
+{{- range $k, _:= .Values.applicationsets }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet

@@ -1,4 +1,4 @@
-{{- range $k, $v := .Values.extensions }}
+{{- range $k, _:= .Values.extensions }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ArgoCDExtension
