@@ -38,11 +38,11 @@ rules:
     verbs:
     - get
   {{- end }}
-  {{- if .Values.notifications.secret.create }}
+  {{- if or .Values.notifications.secret.create .Values.notifications.secret.useExistingSecret }}
   - apiGroups:
     - ""
     resourceNames:
-    - argocd-notifications-secret
+    - {{ .Values.notifications.secret.name }}
     resources:
     - secrets
     verbs:
