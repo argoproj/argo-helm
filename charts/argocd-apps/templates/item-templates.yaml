@@ -1,4 +1,4 @@
-{{- range $k, _:= .Values.itemTemplates }}
+{{- range _, _:= .Values.itemTemplates }}
 {{- if kindIs "string" .template }}
 {{- $template := .template -}}
 {{- range .items }}
