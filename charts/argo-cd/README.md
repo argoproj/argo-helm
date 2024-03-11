@@ -278,10 +278,6 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
-### 6.6.1
-
-Fixed a bug were TLS host for GRPC ingress endpoint does not match the Ingress hosts value
-
 ### 6.4.0
 
 Added support for application controller dynamic cluster distribution.
