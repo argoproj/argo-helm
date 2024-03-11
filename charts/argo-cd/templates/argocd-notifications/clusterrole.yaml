@@ -38,7 +38,6 @@ rules:
     verbs:
     - get
   {{- end }}
-  {{- if or .Values.notifications.secret.create .Values.notifications.secret.useExistingSecret }}
   - apiGroups:
     - ""
     resourceNames:
@@ -47,5 +46,4 @@ rules:
     - secrets
     verbs:
     - get
-  {{- end }}
 {{- end }}

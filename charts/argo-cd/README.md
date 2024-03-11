@@ -1466,7 +1466,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the secret |
 | notifications.secret.labels | object | `{}` | key:value pairs of labels to be added to the secret |
 | notifications.secret.name | string | `"argocd-notifications-secret"` | notifications controller Secret name |
-| notifications.secret.useExistingSecret | bool | `false` | Whether to use existing secret. If true, assumes that the existing secret name is notifications.secret.name |
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | notifications.serviceAccount.create | bool | `true` | Create notifications controller service account |
