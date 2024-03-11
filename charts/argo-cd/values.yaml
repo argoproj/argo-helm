@@ -3017,7 +3017,11 @@ notifications:
 
   secret:
     # -- Whether helm chart creates notifications controller secret
+    ## If true, will create a secret with the name below. Otherwise, will assume existence of a secret with that name.
     create: true
+
+    # -- notifications controller Secret name
+    name: "argocd-notifications-secret"
 
     # -- key:value pairs of annotations to be added to the secret
     annotations: {}
