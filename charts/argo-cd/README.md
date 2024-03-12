@@ -1302,6 +1302,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | applicationSet.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
+| applicationSet.allowAnyNamespace | bool | `false` | Enable ApplicationSet in any namespace feature |
 | applicationSet.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
 | applicationSet.certificate.annotations | object | `{}` | Annotations to be applied to the ApplicationSet Certificate |
 | applicationSet.certificate.domain | string | `""` (defaults to global.domain) | Certificate primary domain (commonName) |
@@ -1464,6 +1465,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.secret.create | bool | `true` | Whether helm chart creates notifications controller secret |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the secret |
 | notifications.secret.labels | object | `{}` | key:value pairs of labels to be added to the secret |
+| notifications.secret.name | string | `"argocd-notifications-secret"` | notifications controller Secret name |
 | notifications.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | notifications.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | notifications.serviceAccount.create | bool | `true` | Create notifications controller service account |

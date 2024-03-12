@@ -1,5 +1,5 @@
 {{- if .Values.workflow.serviceAccount.create -}}
-  {{- range $namespace := or .Values.singleNamespace false | ternary (list "") (append .Values.controller.workflowNamespaces (coalesce .Values.workflow.namespace .Release.Namespace) | uniq)  }}
+  {{- range $namespace := or .Values.singleNamespace false | ternary (list "") (append .Values.controller.workflowNamespaces (coalesce .Values.workflow.namespace (include "argo-workflows.namespace" .)) | uniq)  }}
 ---
 apiVersion: v1
 kind: ServiceAccount

@@ -53,7 +53,7 @@ spec:
   tls:
     {{- if .Values.server.ingressGrpc.tls }}
     - hosts:
-      - {{ $hostname }}
+      - {{ .Values.server.ingressGrpc.hostname | default $hostname }}
       secretName: argocd-server-grpc-tls
     {{- end }}
     {{- with .Values.server.ingressGrpc.extraTls }}

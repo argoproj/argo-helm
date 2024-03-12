@@ -3,7 +3,7 @@ apiVersion: {{ include "argo-workflows.apiVersion.autoscaling" . }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "argo-workflows.server.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argo-workflows.namespace" . | quote }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
