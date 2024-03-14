@@ -66,6 +66,7 @@ spec:
             - --logformat={{ default .Values.global.logging.format .Values.notifications.logFormat }}
             - --namespace={{ .Release.Namespace }}
             - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
+            - --secret-name={{ .Values.notifications.secret.name }}
             {{- range .Values.notifications.extraArgs }}
             - {{ . | squote }}
             {{- end }}
