@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.9-2024.3.12-b23aa3fb6
+appVersion: v2.9-2024.3.14-6cca9ccf8
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 5.53.12-7-cap-2.9-2024.3.12-b23aa3fb6
+version: 5.53.12-8-cap-2.9-2024.3.14-6cca9ccf8
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -32,3 +32,5 @@ annotations:
       description: Change ArgoCD image to 2.9-2024.3.5-80c3e7225 which includes event-reporter rate-limiter.
     - kind: changed
       description: jsonPath to application versions uses format with $ sign for root element.
+    - kind: fixed
+      description: fix default version config.
