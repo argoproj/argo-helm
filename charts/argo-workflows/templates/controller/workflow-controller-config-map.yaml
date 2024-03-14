@@ -1,203 +1,209 @@
-{{- if .Values.controller.configMap.create }}
+{{ $controllers := deepCopy .Values.controllers | merge (dict (include "argo-workflows.namespace" .) .Values.controller) }}
+{{ range $ns, $config := $controllers -}}
+{{ $controller := deepCopy $.Values.controller | merge $config -}}
+{{- if $controller.configMap.create }}
+{{- $context := merge (dict "controller" $controller) $}}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "argo-workflows.controller.config-map.name" . }}
-  namespace: {{ include "argo-workflows.namespace" . | quote }}
+  name: {{ template "argo-workflows.controller.config-map.name" $context }}
+  namespace: {{ $ns | quote }}
   labels:
-    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" "cm") | nindent 4 }}
+    {{- include "argo-workflows.labels" (dict "context" $context "component" $controller.name "name" "cm") | nindent 4 }}
 data:
   config: |
-    {{- if .Values.controller.instanceID.enabled }}
-      {{- if .Values.controller.instanceID.useReleaseName }}
-    instanceID: {{ .Release.Name }}
+    {{- if $controller.instanceID.enabled }}
+      {{- if $controller.instanceID.useReleaseName }}
+    instanceID: {{ $.Release.Name }}
       {{- else }}
-    instanceID: {{ .Values.controller.instanceID.explicitID }}
+    instanceID: {{ $controller.instanceID.explicitID }}
       {{- end }}
     {{- end }}
-    {{- if .Values.controller.parallelism }}
-    parallelism: {{ .Values.controller.parallelism }}
+    {{- if $controller.parallelism }}
+    parallelism: {{ $controller.parallelism }}
     {{- end }}
-    {{- if .Values.controller.resourceRateLimit }}
-    resourceRateLimit: {{- toYaml .Values.controller.resourceRateLimit | nindent 6 }}
+    {{- if $controller.resourceRateLimit }}
+    resourceRateLimit: {{- toYaml $controller.resourceRateLimit | nindent 6 }}
     {{- end }}
-    {{- with .Values.controller.namespaceParallelism }}
+    {{- with $controller.namespaceParallelism }}
     namespaceParallelism: {{ . }}
     {{- end }}
-    {{- with .Values.controller.initialDelay }}
+    {{- with $controller.initialDelay }}
     initialDelay: {{ . }}
     {{- end }}
-    {{- if or .Values.mainContainer.resources .Values.mainContainer.env .Values.mainContainer.envFrom .Values.mainContainer.securityContext}}
+    {{- if or $.Values.mainContainer.resources $.Values.mainContainer.env $.Values.mainContainer.envFrom $.Values.mainContainer.securityContext}}
     mainContainer:
-      imagePullPolicy: {{ default (.Values.images.pullPolicy) .Values.mainContainer.imagePullPolicy }}
-      {{- with .Values.mainContainer.resources }}
+      imagePullPolicy: {{ default (.Values.images.pullPolicy) $.Values.mainContainer.imagePullPolicy }}
+      {{- with $.Values.mainContainer.resources }}
       resources: {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.mainContainer.env }}
+      {{- with $.Values.mainContainer.env }}
       env: {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.mainContainer.envFrom }}
+      {{- with $.Values.mainContainer.envFrom }}
       envFrom: {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.mainContainer.securityContext }}
+      {{- with $.Values.mainContainer.securityContext }}
       securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- end }}
-    {{- if or .Values.executor.resources .Values.executor.env .Values.executor.args .Values.executor.securityContext}}
+    {{- if or $.Values.executor.resources $.Values.executor.env $.Values.executor.args $.Values.executor.securityContext}}
     executor:
-      imagePullPolicy: {{ default (.Values.images.pullPolicy) .Values.executor.image.pullPolicy }}
-      {{- with .Values.executor.resources }}
+      imagePullPolicy: {{ default ($.Values.images.pullPolicy) $.Values.executor.image.pullPolicy }}
+      {{- with $.Values.executor.resources }}
       resources: {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.executor.args }}
+      {{- with $.Values.executor.args }}
       args: {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.executor.env }}
+      {{- with $.Values.executor.env }}
       env: {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.executor.securityContext }}
+      {{- with $.Values.executor.securityContext }}
       securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- end }}
-    {{- if or .Values.artifactRepository.s3 .Values.artifactRepository.gcs .Values.artifactRepository.azure .Values.customArtifactRepository }}
+    {{- if or $.Values.artifactRepository.s3 $.Values.artifactRepository.gcs $.Values.artifactRepository.azure $.Values.customArtifactRepository }}
     artifactRepository:
-      {{- if .Values.artifactRepository.archiveLogs }}
-      archiveLogs: {{ .Values.artifactRepository.archiveLogs }}
+      {{- if $.Values.artifactRepository.archiveLogs }}
+      archiveLogs: {{ $.Values.artifactRepository.archiveLogs }}
       {{- end }}
-      {{- with .Values.artifactRepository.gcs }}
+      {{- with $.Values.artifactRepository.gcs }}
       gcs: {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
-      {{- with .Values.artifactRepository.azure }}
+      {{- with $.Values.artifactRepository.azure }}
       azure: {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
-      {{- if .Values.artifactRepository.s3 }}
+      {{- if $.Values.artifactRepository.s3 }}
       s3:
-        {{- if .Values.useStaticCredentials }}
+        {{- if $.Values.useStaticCredentials }}
         accessKeySecret:
-          key: {{ tpl .Values.artifactRepository.s3.accessKeySecret.key . }}
-          name: {{ tpl .Values.artifactRepository.s3.accessKeySecret.name . }}
+          key: {{ tpl $.Values.artifactRepository.s3.accessKeySecret.key . }}
+          name: {{ tpl $.Values.artifactRepository.s3.accessKeySecret.name . }}
         secretKeySecret:
-          key: {{ tpl .Values.artifactRepository.s3.secretKeySecret.key . }}
-          name: {{ tpl .Values.artifactRepository.s3.secretKeySecret.name . }}
+          key: {{ tpl $.Values.artifactRepository.s3.secretKeySecret.key . }}
+          name: {{ tpl $.Values.artifactRepository.s3.secretKeySecret.name . }}
         {{- end }}
         bucket: {{ tpl (.Values.artifactRepository.s3.bucket | default "") . }}
         endpoint: {{ tpl (.Values.artifactRepository.s3.endpoint | default "") . }}
-        insecure: {{ .Values.artifactRepository.s3.insecure }}
-        {{- if .Values.artifactRepository.s3.caSecret }}
+        insecure: {{ $.Values.artifactRepository.s3.insecure }}
+        {{- if $.Values.artifactRepository.s3.caSecret }}
         caSecret:
-          name: {{ tpl .Values.artifactRepository.s3.caSecret.name . }}
-          key: {{ tpl .Values.artifactRepository.s3.caSecret.key . }}
+          name: {{ tpl $.Values.artifactRepository.s3.caSecret.name . }}
+          key: {{ tpl $.Values.artifactRepository.s3.caSecret.key . }}
         {{- end }}
-        {{- if .Values.artifactRepository.s3.keyFormat }}
-        keyFormat: {{ .Values.artifactRepository.s3.keyFormat | quote }}
+        {{- if $.Values.artifactRepository.s3.keyFormat }}
+        keyFormat: {{ $.Values.artifactRepository.s3.keyFormat | quote }}
         {{- end }}
-        {{- if .Values.artifactRepository.s3.region }}
-        region: {{ tpl .Values.artifactRepository.s3.region $ }}
+        {{- if $.Values.artifactRepository.s3.region }}
+        region: {{ tpl $.Values.artifactRepository.s3.region $ }}
         {{- end }}
-        {{- if .Values.artifactRepository.s3.roleARN }}
-        roleARN: {{ .Values.artifactRepository.s3.roleARN }}
+        {{- if $.Values.artifactRepository.s3.roleARN }}
+        roleARN: {{ $.Values.artifactRepository.s3.roleARN }}
         {{- end }}
-        {{- if .Values.artifactRepository.s3.useSDKCreds }}
-        useSDKCreds: {{ .Values.artifactRepository.s3.useSDKCreds }}
+        {{- if $.Values.artifactRepository.s3.useSDKCreds }}
+        useSDKCreds: {{ $.Values.artifactRepository.s3.useSDKCreds }}
         {{- end }}
-        {{- with .Values.artifactRepository.s3.encryptionOptions }}
+        {{- with $.Values.artifactRepository.s3.encryptionOptions }}
         encryptionOptions:
           {{- toYaml . | nindent 10 }}
         {{- end }}
       {{- end }}
-      {{- if .Values.customArtifactRepository }}
-      {{- toYaml .Values.customArtifactRepository | nindent 6 }}
+      {{- if $.Values.customArtifactRepository }}
+      {{- toYaml $.Values.customArtifactRepository | nindent 6 }}
       {{- end }}
     {{- end }}
-    {{- if .Values.controller.metricsConfig.enabled }}
+    {{- if $controller.metricsConfig.enabled }}
     metricsConfig:
-      enabled: {{ .Values.controller.metricsConfig.enabled }}
-      path: {{ .Values.controller.metricsConfig.path }}
-      port: {{ .Values.controller.metricsConfig.port }}
-      {{- if .Values.controller.metricsConfig.metricsTTL }}
-      metricsTTL: {{ .Values.controller.metricsConfig.metricsTTL }}
+      enabled: {{ $controller.metricsConfig.enabled }}
+      path: {{ $controller.metricsConfig.path }}
+      port: {{ $controller.metricsConfig.port }}
+      {{- if $controller.metricsConfig.metricsTTL }}
+      metricsTTL: {{ $controller.metricsConfig.metricsTTL }}
       {{- end }}
-      ignoreErrors: {{ .Values.controller.metricsConfig.ignoreErrors }}
-      secure: {{ .Values.controller.metricsConfig.secure }}
+      ignoreErrors: {{ $controller.metricsConfig.ignoreErrors }}
+      secure: {{ $controller.metricsConfig.secure }}
     {{- end }}
-    {{- if .Values.controller.telemetryConfig.enabled }}
+    {{- if $controller.telemetryConfig.enabled }}
     telemetryConfig:
-      enabled: {{ .Values.controller.telemetryConfig.enabled }}
-      path: {{ .Values.controller.telemetryConfig.path }}
-      port: {{ .Values.controller.telemetryConfig.port }}
-      {{- if .Values.controller.telemetryConfig.metricsTTL }}
-      metricsTTL: {{ .Values.controller.telemetryConfig.metricsTTL }}
+      enabled: {{ $controller.telemetryConfig.enabled }}
+      path: {{ $controller.telemetryConfig.path }}
+      port: {{ $controller.telemetryConfig.port }}
+      {{- if $controller.telemetryConfig.metricsTTL }}
+      metricsTTL: {{ $controller.telemetryConfig.metricsTTL }}
       {{- end }}
-      ignoreErrors: {{ .Values.controller.telemetryConfig.ignoreErrors }}
-      secure: {{ .Values.controller.telemetryConfig.secure }}
+      ignoreErrors: {{ $controller.telemetryConfig.ignoreErrors }}
+      secure: {{ $controller.telemetryConfig.secure }}
     {{- end }}
-    {{- if .Values.controller.persistence }}
+    {{- if $controller.persistence }}
     persistence:
-{{ toYaml .Values.controller.persistence | indent 6 }}{{- end }}
-    {{- if .Values.controller.workflowDefaults }}
+{{ toYaml $controller.persistence | indent 6 }}{{- end }}
+    {{- if $controller.workflowDefaults }}
     workflowDefaults:
-{{ toYaml .Values.controller.workflowDefaults | indent 6 }}{{- end }}
-    {{- if .Values.server.sso.enabled }}
+{{ toYaml $controller.workflowDefaults | indent 6 }}{{- end }}
+    {{- if $.Values.server.sso.enabled }}
     sso:
-      issuer: {{ .Values.server.sso.issuer }}
+      issuer: {{ $.Values.server.sso.issuer }}
       clientId:
-        name: {{ .Values.server.sso.clientId.name }}
-        key: {{ .Values.server.sso.clientId.key }}
+        name: {{ $.Values.server.sso.clientId.name }}
+        key: {{ $.Values.server.sso.clientId.key }}
       clientSecret:
-        name: {{ .Values.server.sso.clientSecret.name }}
-        key: {{ .Values.server.sso.clientSecret.key }}
-      redirectUrl: {{ .Values.server.sso.redirectUrl | quote }}
+        name: {{ $.Values.server.sso.clientSecret.name }}
+        key: {{ $.Values.server.sso.clientSecret.key }}
+      redirectUrl: {{ $.Values.server.sso.redirectUrl | quote }}
       rbac:
-        enabled: {{ .Values.server.sso.rbac.enabled }}
-      {{- with .Values.server.sso.scopes }}
+        enabled: {{ $.Values.server.sso.rbac.enabled }}
+      {{- with $.Values.server.sso.scopes }}
       scopes: {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.sso.issuerAlias }}
+      {{- with $.Values.server.sso.issuerAlias }}
       issuerAlias: {{ toYaml . }}
       {{- end }}
-      {{- with .Values.server.sso.sessionExpiry }}
+      {{- with $.Values.server.sso.sessionExpiry }}
       sessionExpiry: {{ toYaml . }}
       {{- end }}
-      {{- with .Values.server.sso.customGroupClaimName }}
+      {{- with $.Values.server.sso.customGroupClaimName }}
       customGroupClaimName: {{ toYaml . }}
       {{- end }}
-      {{- with .Values.server.sso.userInfoPath }}
+      {{- with $.Values.server.sso.userInfoPath }}
       userInfoPath: {{ toYaml . }}
       {{- end }}
-      {{- with .Values.server.sso.insecureSkipVerify }}
+      {{- with $.Values.server.sso.insecureSkipVerify }}
       insecureSkipVerify: {{ toYaml . }}
       {{- end }}
-      {{- with .Values.server.sso.filterGroupsRegex }}
+      {{- with $.Values.server.sso.filterGroupsRegex }}
       filterGroupsRegex: {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- end }}
-    {{- with .Values.controller.workflowRestrictions }}
+    {{- with $controller.workflowRestrictions }}
     workflowRestrictions: {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- with .Values.controller.links }}
+    {{- with $controller.links }}
     links: {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- with .Values.controller.columns }}
+    {{- with $controller.columns }}
     columns: {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- with .Values.controller.navColor }}
+    {{- with $controller.navColor }}
     navColor: {{ . }}
     {{- end }}
-    {{- with .Values.controller.retentionPolicy }}
+    {{- with $controller.retentionPolicy }}
     retentionPolicy: {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- with .Values.emissary.images }}
+    {{- with $.Values.emissary.images }}
     images: {{- toYaml . | nindent 6 }}
     {{- end }}
     nodeEvents:
-      enabled: {{ .Values.controller.nodeEvents.enabled }}
-    {{- with .Values.controller.kubeConfig }}
+      enabled: {{ $controller.nodeEvents.enabled }}
+    {{- with $controller.kubeConfig }}
     kubeConfig: {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- with .Values.controller.podGCGracePeriodSeconds }}
+    {{- with $controller.podGCGracePeriodSeconds }}
     podGCGracePeriodSeconds: {{ . }}
     {{- end }}
-    {{- with .Values.controller.podGCDeleteDelayDuration }}
+    {{- with $controller.podGCDeleteDelayDuration }}
     podGCDeleteDelayDuration: {{ . }}
     {{- end }}
+{{ end }}
 {{- end }}

@@ -1,50 +1,52 @@
 {{- if and (or .Values.controller.metricsConfig.enabled .Values.controller.telemetryConfig.enabled) .Values.controller.serviceMonitor.enabled }}
+{{ $namespaces := keys (deepCopy $.Values.controllers | merge (dict (include "argo-workflows.namespace" $) $.Values.controller)) }}
+{{- $context := merge (dict "controller" $.Values.controller) $ }}
+
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "argo-workflows.controller.fullname" . }}
-  namespace: {{ default (include "argo-workflows.namespace" .) .Values.controller.serviceMonitor.namespace | quote }}
+  name: {{ template "argo-workflows.controller.fullname" $context }}
+  namespace: {{ default (include "argo-workflows.namespace" $) $.Values.controller.serviceMonitor.namespace | quote }}
   labels:
-    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-    {{- with .Values.controller.serviceMonitor.additionalLabels }}
+    {{- include "argo-workflows.labels" (dict "context" $context "component" $.Values.controller.name "name" $.Values.controller.name) | nindent 4 }}
+    {{- with $.Values.controller.serviceMonitor.additionalLabels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
   endpoints:
-  {{- if .Values.controller.metricsConfig.enabled }}
-    - port: {{ .Values.controller.metricsConfig.servicePortName }}
-      path: {{ .Values.controller.metricsConfig.path }}
+  {{- if $.Values.controller.metricsConfig.enabled }}
+    - port: {{ $.Values.controller.metricsConfig.servicePortName }}
+      path: {{ $.Values.controller.metricsConfig.path }}
       interval: 30s
-      {{- with .Values.controller.metricsConfig.relabelings }}
+      {{- with $.Values.controller.metricsConfig.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.metricsConfig.metricRelabelings }}
+      {{- with $.Values.controller.metricsConfig.metricRelabelings }}
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
   {{- end }}
-  {{- if .Values.controller.telemetryConfig.enabled }}
+  {{- if $.Values.controller.telemetryConfig.enabled }}
     - port: telemetry
-      path: {{ .Values.controller.telemetryConfig.path }}
+      path: {{ $.Values.controller.telemetryConfig.path }}
       interval: 30s
-      {{- with .Values.controller.metricsConfig.relabelings }}
+      {{- with $.Values.controller.metricsConfig.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.metricsConfig.metricRelabelings }}
+      {{- with $.Values.controller.metricsConfig.metricRelabelings }}
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
   {{- end }}
-  {{- with .Values.controller.metricsConfig.targetLabels }}
+  {{- with $.Values.controller.metricsConfig.targetLabels }}
   targetLabels:
     {{- toYaml . | nindent 8 }}
   {{- end }}
   namespaceSelector:
-    matchNames:
-      - {{ include "argo-workflows.namespace" . | quote }}
+    matchNames: {{ $namespaces | toYaml | nindent 6 }}
   selector:
     matchLabels:
-      {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
+      {{- include "argo-workflows.selectorLabels" (dict "context" $context "name" $.Values.controller.name) | nindent 6 }}
 {{- end }}

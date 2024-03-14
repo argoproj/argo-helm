@@ -1,20 +1,25 @@
-{{- if .Values.controller.pdb.enabled }}
+{{ $controllers := deepCopy $.Values.controllers | merge (dict (include "argo-workflows.namespace" $) $.Values.controller) }}
+{{ range $ns, $config := $controllers -}}
+{{ $controller := deepCopy $.Values.controller | merge $config -}}
+{{- $context := merge (dict "controller" $controller) $}}
+{{- if $controller.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "argo-workflows.controller.fullname" . }}
-  namespace: {{ include "argo-workflows.namespace" . | quote }}
+  name: {{ template "argo-workflows.controller.fullname" $context }}
+  namespace: {{ $ns | quote }}
   labels:
-    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- include "argo-workflows.labels" (dict "context" $context "component" $controller.name "name" $controller.name) | nindent 4 }}
 spec:
-  {{- if .Values.controller.pdb.minAvailable }}
-  minAvailable: {{ .Values.controller.pdb.minAvailable }}
-  {{- else if .Values.controller.pdb.maxUnavailable }}
-  maxUnavailable: {{ .Values.controller.pdb.maxUnavailable }}
+  {{- if $controller.pdb.minAvailable }}
+  minAvailable: {{ $controller.pdb.minAvailable }}
+  {{- else if $controller.pdb.maxUnavailable }}
+  maxUnavailable: {{ $controller.pdb.maxUnavailable }}
   {{- else }}
   minAvailable: 0
   {{- end }}
   selector:
     matchLabels:
-      {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
+      {{- include "argo-workflows.selectorLabels" (dict "context" $context "name" $controller.name) | nindent 6 }}
+{{- end }}
 {{- end }}

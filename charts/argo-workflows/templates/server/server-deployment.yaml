@@ -53,7 +53,7 @@ spec:
             {{- toYaml .Values.server.securityContext | nindent 12 }}
           args:
           - server
-          - --configmap={{ template "argo-workflows.controller.config-map.name" . }}
+          - --configmap={{ template "argo-workflows.controller.config-map.name" merge (dict "controller" .Values.controller) . }}
           {{- with .Values.server.extraArgs }}
             {{- toYaml . | nindent 10 }}
           {{- end }}

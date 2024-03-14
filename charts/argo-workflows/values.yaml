@@ -396,6 +396,9 @@ controller:
   # @default -- `5s` (Argo Workflows default)
   podGCDeleteDelayDuration: ""
 
+# namespace => controller-config map that to describes namespaced instances config, which overrides default controller config
+controllers: {}
+
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
   # -- imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`.

@@ -1,16 +1,22 @@
 {{- if .Values.controller.serviceAccount.create }}
+{{ $controllers := .Values.controllers | default (dict (include "argo-workflows.namespace" .) .Values.controller) -}}
+{{ range $ns, $config := $controllers -}}
+{{ $controller := deepCopy $.Values.controller | merge $config -}}
+{{- $context := merge (dict "controller" $controller) $ }}
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ template "argo-workflows.controllerServiceAccountName" . }}
-  namespace: {{ include "argo-workflows.namespace" . | quote }}
+  name: {{ template "argo-workflows.controllerServiceAccountName" $context }}
+  namespace: {{ $ns | quote }}
   labels:
-    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-  {{- with .Values.controller.serviceAccount.labels  }}
+    {{- include "argo-workflows.labels" (dict "context" $context "component" $controller.name "name" $controller.name) | nindent 4 }}
+  {{- with $controller.serviceAccount.labels  }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{ with .Values.controller.serviceAccount.annotations }}
+  {{ with $controller.serviceAccount.annotations }}
   annotations:
     {{- toYaml .| nindent 4 }}
   {{- end }}
+{{- end }}
 {{- end }}

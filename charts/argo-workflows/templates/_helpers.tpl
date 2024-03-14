@@ -11,7 +11,7 @@ Create argo workflows server name and version as used by the chart label.
 Create controller name and version as used by the chart label.
 */}}
 {{- define "argo-workflows.controller.fullname" -}}
-{{- printf "%s-%s" (include "argo-workflows.fullname" .) .Values.controller.name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" (include "argo-workflows.fullname" .) .controller.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -55,7 +55,7 @@ image.tag = v3.4.4@sha256:d06860f1394a94ac3ff8401126ef32ba28915aa6c3c982c7e607ea
 output    = v3.4.4
 */}}
 {{- define "argo-workflows.controller_chart_version_label" -}}
-{{- regexReplaceAll "[^a-zA-Z0-9-_.]+" (regexReplaceAll "@sha256:[a-f0-9]+" (default (include "argo-workflows.defaultTag" .) .Values.controller.image.tag) "") "" | trunc 63 | quote -}}
+{{- regexReplaceAll "[^a-zA-Z0-9-_.]+" (regexReplaceAll "@sha256:[a-f0-9]+" (default (include "argo-workflows.defaultTag" .) .controller.image.tag) "") "" | trunc 63 | quote -}}
 {{- end -}}
 
 {{/*
@@ -101,7 +101,7 @@ app.kubernetes.io/component: {{ .component }}
 Create the name of the controller configMap
 */}}
 {{- define "argo-workflows.controller.config-map.name" -}}
-{{- .Values.controller.configMap.name | default (printf "%s-%s" (include "argo-workflows.controller.fullname" .) "configmap") | trunc 63 | trimSuffix "-" -}}
+{{- .controller.configMap.name | default (printf "%s-%s" (include "argo-workflows.controller.fullname" .) "configmap") | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -119,10 +119,10 @@ Create the name of the server service account to use
 Create the name of the controller service account to use
 */}}
 {{- define "argo-workflows.controllerServiceAccountName" -}}
-{{- if .Values.controller.serviceAccount.create -}}
-    {{ default (include "argo-workflows.controller.fullname" .) .Values.controller.serviceAccount.name }}
+{{- if .controller.serviceAccount.create -}}
+    {{ default (include "argo-workflows.controller.fullname" .) .controller.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.controller.serviceAccount.name }}
+    {{ default "default" .serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 

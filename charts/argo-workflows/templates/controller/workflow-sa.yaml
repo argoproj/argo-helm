@@ -1,5 +1,11 @@
 {{- if .Values.workflow.serviceAccount.create -}}
-  {{- range $namespace := or .Values.singleNamespace false | ternary (list "") (append .Values.controller.workflowNamespaces (coalesce .Values.workflow.namespace (include "argo-workflows.namespace" .)) | uniq)  }}
+{{- $controllers := .Values.controllers | default (dict (include "argo-workflows.namespace" .) .Values.controller) }}
+{{- $workflowNamespaces := default list }}
+{{- range $config := values $controllers }}
+{{- $controller := deepCopy $.Values.controller | merge $config }}
+{{- $workflowNamespaces = concat $workflowNamespaces $controller.workflowNamespaces }}
+{{- end }}
+{{- range $ns := $workflowNamespaces }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -10,7 +16,7 @@ metadata:
   {{- with $.Values.workflow.serviceAccount.labels  }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-    {{- with $namespace }}
+    {{- with $ns }}
   namespace: {{ . }}
     {{- end }}
     {{- with $.Values.workflow.serviceAccount.annotations }}
