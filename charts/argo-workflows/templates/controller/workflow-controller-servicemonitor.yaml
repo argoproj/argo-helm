@@ -1,5 +1,7 @@
 {{- if and (or .Values.controller.metricsConfig.enabled .Values.controller.telemetryConfig.enabled) .Values.controller.serviceMonitor.enabled }}
-apiVersion: monitoring.coreos.com/v1
+{{- $prometheusApiVersion := .Values.controller.serviceMonitor.apiVersion -}}
+{{- if .Capabilities.APIVersions.Has $prometheusApiVersion }}
+apiVersion: {{ $prometheusApiVersion }}
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
@@ -47,4 +49,5 @@ spec:
   selector:
     matchLabels:
       {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
+{{- end }}
 {{- end }}

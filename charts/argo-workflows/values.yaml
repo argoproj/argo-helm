@@ -240,6 +240,8 @@ controller:
     additionalLabels: {}
     # -- Prometheus ServiceMonitor namespace
     namespace: "" # "monitoring"
+    # -- ApiVersion for the serviceMonitor resource
+    apiVersion: monitoring.coreos.com/v1
   serviceAccount:
     # -- Create a service account for the controller
     create: true
