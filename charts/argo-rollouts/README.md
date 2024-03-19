@@ -50,6 +50,7 @@ For full list of changes please check ArtifactHub [changelog].
 | extraObjects | list | `[]` | Additional manifests to deploy within the chart. A list of objects. |
 | fullnameOverride | string | `nil` | String to fully override "argo-rollouts.fullname" template |
 | global.deploymentAnnotations | object | `{}` | Annotations for all deployed Deployments |
+| global.deploymentLabels | object | `{}` | Labels for all deployed Deployments |
 | imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry. Registry secret names as an array. |
 | installCRDs | bool | `true` | Install and upgrade CRDs |
 | keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
@@ -82,6 +83,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.containerPorts.metrics | int | `8090` | Metrics container port |
 | controller.createClusterRole | bool | `true` | flag to enable creation of cluster controller role (requires cluster RBAC) |
 | controller.deploymentAnnotations | object | `{}` | Annotations to be added to the controller deployment |
+| controller.deploymentLabels | object | `{}` | Labels to be added to the controller deployment |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-controller.  A list of flags. |
 | controller.extraContainers | list | `[]` | Literal yaml for extra containers to be added to controller deployment. |
 | controller.extraEnv | list | `[]` | Additional environment variables for rollouts-controller. A list of name/value maps. |
@@ -138,6 +140,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.containerSecurityContext | object | `{}` | Security Context to set on container level |
 | dashboard.createClusterRole | bool | `true` | flag to enable creation of dashbord cluster role (requires cluster RBAC) |
 | dashboard.deploymentAnnotations | object | `{}` | Annotations to be added to the dashboard deployment |
+| dashboard.deploymentLabels | object | `{}` | Labels to be added to the dashboard deployment |
 | dashboard.enabled | bool | `false` | Deploy dashboard server |
 | dashboard.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-dashboard. A list of flags. |
 | dashboard.extraEnv | list | `[]` | Additional environment variables for rollouts-dashboard. A list of name/value maps. |

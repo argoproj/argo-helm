@@ -41,12 +41,16 @@ extraObjects: []
 global:
   # -- Annotations for all deployed Deployments
   deploymentAnnotations: {}
+  # -- Labels for all deployed Deployments
+  deploymentLabels: {}
 
 controller:
   # -- Value of label `app.kubernetes.io/component`
   component: rollouts-controller
   # -- Annotations to be added to the controller deployment
   deploymentAnnotations: {}
+  # -- Labels to be added to the controller deployment
+  deploymentLabels: {}
   # -- Annotations to be added to application controller pods
   podAnnotations: {}
   # -- [Node selector]
@@ -283,6 +287,8 @@ dashboard:
   component: rollouts-dashboard
   # -- Annotations to be added to the dashboard deployment
   deploymentAnnotations: {}
+  # -- Labels to be added to the dashboard deployment
+  deploymentLabels: {}
   # -- Annotations to be added to application dashboard pods
   podAnnotations: {}
   # -- [Node selector]
