@@ -28769,6 +28769,37 @@ entries:
   argocd-image-updater:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Properly quoting the config map values
+        - kind: fixed
+          description: Only adding a data field to argocd-image-updater-ssh-config when there's data to be added
+        - kind: changed
+          description: Only include config.argocd if config.applicationsAPIKind is set to 'argocd'
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v0.12.2
+    created: "2024-03-20T23:53:20.02446921Z"
+    description: A Helm chart for Argo CD Image Updater, a tool to automatically update
+      the container images of Kubernetes workloads which are managed by Argo CD
+    digest: b6103417a4f79bdfb6e17acd3ce8dde969d6ce53725ad9154cd966425973403c
+    home: https://github.com/argoproj-labs/argocd-image-updater
+    icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-image-updater
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-image-updater-0.9.6/argocd-image-updater-0.9.6.tgz
+    version: 0.9.6
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Allow overriding of .Release.Namespace with .Values.namespaceOverride
       artifacthub.io/signKey: |
@@ -30141,4 +30172,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-03-18T09:36:59.417678377Z"
+generated: "2024-03-20T23:53:20.025880334Z"
