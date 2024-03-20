@@ -9,11 +9,9 @@ metadata:
   {{- end }}
   name: {{ include "argo-rollouts.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
-  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.controller.deploymentLabels) }}
   labels:
-    {{- range $key, $value := . }}
+  {{- range $key, $value := (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.controller.deploymentLabels) }}
     {{ $key }}: {{ $value | quote }}
-    {{- end }}
   {{- end }}
     app.kubernetes.io/component: {{ .Values.controller.component }}
     {{- include "argo-rollouts.labels" . | nindent 4 }}
