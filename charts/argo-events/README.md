@@ -87,6 +87,7 @@ done
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
 | global.securityContext | object | `{}` | Toggle and define securityContext. See [values.yaml] |
 | nameOverride | string | `"argo-events"` | Provide a name in place of `argo-events` |
+| namespaceOverride | string | `.Release.Namespace` | Override the namespace |
 | openshift | bool | `false` | Deploy on OpenShift |
 
 ### Controller

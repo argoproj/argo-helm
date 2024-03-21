@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: events-webhook
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argo-events.namespace" . | quote }}
   labels:
     {{- include "argo-events.labels" (dict "context" . "component" .Values.webhook.name "name" .Values.webhook.name) | nindent 4 }}
     app.kubernetes.io/version: {{ include "argo-events.webhook_chart_version_label" . }}

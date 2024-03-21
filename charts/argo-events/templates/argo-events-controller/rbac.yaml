@@ -4,7 +4,7 @@ kind: {{ .Values.controller.rbac.namespaced | ternary "Role" "ClusterRole" }}
 metadata:
   name: {{ include "argo-events.controller.fullname" . }}
   {{- if .Values.controller.rbac.namespaced }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argo-events.namespace" . | quote }}
   {{- end }}
   labels:
     {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
@@ -122,5 +122,5 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ include "argo-events.controller.serviceAccountName" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argo-events.namespace" . | quote }}
 {{- end }}
