@@ -95,11 +95,22 @@ rules:
   - ""
   resources:
   - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
   - configmaps
   verbs:
   - get
   - list
   - watch
+{{- if .Values.providerRBAC.providers.gatewayAPI }}
+  - create
+  - update
+{{- end }}  
 # pod list/update needed for updating ephemeral data
 - apiGroups:
   - ""
@@ -259,11 +270,27 @@ rules:
 {{- if .Values.providerRBAC.providers.glooPlatform }}
   # Access needed when using the Gloo Platform provider
 - apiGroups:
-    - networking.gloo.solo.io
+  - networking.gloo.solo.io
   resources:
-    - routetables
+  - routetables
   verbs:
-    - '*'
+  - '*'
+{{- end }}
+{{- if .Values.providerRBAC.providers.gatewayAPI }}
+  # Access needed when using the Gateway API provider
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - httproutes
+  - tcproutes
+  - tlsroutes
+  - udproutes
+  - grpcroutes
+  verbs:
+  - get
+  - list
+  - watch
+  - update
 {{- end }}
 {{- end }}
 {{- end }}
