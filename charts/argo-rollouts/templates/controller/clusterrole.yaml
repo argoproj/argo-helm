@@ -258,23 +258,26 @@ rules:
 {{- if .Values.providerRBAC.providers.contour }}
   # Access needed when using the Contour provider
 - apiGroups:
-    - projectcontour.io
+  - projectcontour.io
   resources:
-    - httpproxies
+  - httpproxies
   verbs:
-    - get
-    - list
-    - watch
-    - update
+  - get
+  - list
+  - watch
+  - update
 {{- end }}
 {{- if .Values.providerRBAC.providers.glooPlatform }}
   # Access needed when using the Gloo Platform provider
 - apiGroups:
-    - networking.gloo.solo.io
+  - networking.gloo.solo.io
   resources:
-    - routetables
+  - routetables
   verbs:
-    - '*'
+  - '*'
+{{- end }}
+{{- with .Values.providerRBAC.additionalRules }}
+{{ toYaml .  }}
 {{- end }}
 {{- end }}
 {{- end }}
