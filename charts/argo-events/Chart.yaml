@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v1.9.1
 description: A Helm chart for Argo Events, the event-driven workflow automation framework
 name: argo-events
-version: 2.4.3
+version: 2.4.4
 home: https://github.com/argoproj/argo-helm
 icon: https://avatars.githubusercontent.com/u/30269780?s=200&v=4
 keywords:
@@ -18,5 +18,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: changed
-      description: Bump argo-events to v1.9.1
+    - kind: added
+      description: Support ability to set .Values.namespaceOverride
