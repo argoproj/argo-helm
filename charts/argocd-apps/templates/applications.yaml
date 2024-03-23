@@ -1,50 +1,50 @@
-{{- range .Values.applications }}
+{{- range $appName, $appData:= .Values.applications }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  {{- with .additionalAnnotations }}
+  {{- with $appData.additionalAnnotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-  {{- with .additionalLabels }}
+  {{- with $appData.additionalLabels }}
   labels:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: {{ .name }}
-  {{- with .namespace }}
+  name: {{ $appName }}
+  {{- with $appData.namespace }}
   namespace: {{ . }}
   {{- end }}
-  {{- with .finalizers }}
+  {{- with $appData.finalizers }}
   finalizers:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  project: {{ tpl .project $ }}
-  {{- with .source }}
+  project: {{ tpl $appData.project $ }}
+  {{- with $appData.source }}
   source:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .sources }}
+  {{- with $appData.sources }}
   sources:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   destination:
-    {{- toYaml .destination | nindent 4 }}
-  {{- with .syncPolicy }}
+    {{- toYaml $appData.destination | nindent 4 }}
+  {{- with $appData.syncPolicy }}
   syncPolicy:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .revisionHistoryLimit }}
+  {{- with $appData.revisionHistoryLimit }}
   revisionHistoryLimit: {{ . }}
   {{- end }}
-  {{- with .ignoreDifferences }}
+  {{- with $appData.ignoreDifferences }}
   ignoreDifferences:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .info }}
+  {{- with $appData.info }}
   info:
     {{- toYaml . | nindent 4 }}
   {{- end }}
