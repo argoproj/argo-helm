@@ -1,6 +1,5 @@
 itemTemplates:
-  first:
-    items:
+  - items:
       - name: my-appset
         generators: &generators
           - list:
@@ -30,8 +29,7 @@ itemTemplates:
             destination:
               server: "{{`{{cluster}}`}}"
               namespace: guestbook
-  second:
-    items:
+  - items:
       - name: my-appset
         generators:
           - list:

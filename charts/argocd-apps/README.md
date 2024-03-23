@@ -31,7 +31,7 @@ $ helm install my-release argo/argocd-apps
 | applications | object | `{}` (See [values.yaml]) | Deploy Argo CD Applications within this helm release |
 | applicationsets | object | `{}` (See [values.yaml]) | Deploy Argo CD ApplicationSets within this helm release |
 | extensions | object | `{}` (See [values.yaml]) | DEPRECATED - Please refer [Deprecation Notice](https://github.com/argoproj-labs/argocd-extensions?tab=readme-ov-file#deprecation-notice) for more info. |
-| itemTemplates | object | `{}` (See [values.yaml]) | Deploy Argo CD Applications/ApplicationSets/Projects within this helm release |
+| itemTemplates | list | `[]` (See [values.yaml]) | Deploy Argo CD Applications/ApplicationSets/Projects within this helm release |
 | projects | object | `{}` (See [values.yaml]) | Deploy Argo CD Projects within this helm release |
 
 ----------------------------------------------
