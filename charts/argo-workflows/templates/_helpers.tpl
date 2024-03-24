@@ -191,6 +191,17 @@ Return the appropriate apiVersion for GKE resources
 {{- end -}}
 
 {{/*
+Return the appropriate apiVersion for monitoring CRDs
+*/}}
+{{- define "argo-workflows.apiVersions.monitoring" -}}
+{{- if .Values.apiVersionOverrides.monitoring -}}
+{{- print .Values.apiVersionOverrides.monitoring -}}
+{{- else -}}
+{{- print "monitoring.coreos.com/v1" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Expand the namespace of the release.
 Allows overriding it for multi-namespace deployments in combined charts.
 */}}
