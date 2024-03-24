@@ -111,6 +111,7 @@ Fields to note:
 |-----|------|---------|-------------|
 | apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling rendered by this helm chart |
 | apiVersionOverrides.cloudgoogle | string | `""` | String to override apiVersion of GKE resources rendered by this helm chart |
+| apiVersionOverrides.monitoring | string | `""` | String to override apiVersion of monitoring CRDs (ServiceMonitor) rendered by this helm chart |
 | commonLabels | object | `{}` | Labels to set on all resources |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
@@ -212,7 +213,6 @@ Fields to note:
 | controller.serviceAnnotations | object | `{}` | Annotations to be applied to the controller Service |
 | controller.serviceLabels | object | `{}` | Optional labels to add to the controller Service |
 | controller.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
-| controller.serviceMonitor.apiVersion | string | `"monitoring.coreos.com/v1"` | ApiVersion for the serviceMonitor resource |
 | controller.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | controller.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | controller.serviceType | string | `"ClusterIP"` | Service type of the controller Service |

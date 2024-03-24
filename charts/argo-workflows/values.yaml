@@ -42,6 +42,8 @@ apiVersionOverrides:
   autoscaling: "" # autoscaling/v2
   # -- String to override apiVersion of GKE resources rendered by this helm chart
   cloudgoogle: "" # cloud.google.com/v1
+  # -- String to override apiVersion of monitoring CRDs (ServiceMonitor) rendered by this helm chart
+  monitoring: "" # monitoring.coreos.com/v1
 
 # -- Restrict Argo to operate only in a single namespace (the namespace of the
 # Helm release) by apply Roles and RoleBindings instead of the Cluster
@@ -240,8 +242,6 @@ controller:
     additionalLabels: {}
     # -- Prometheus ServiceMonitor namespace
     namespace: "" # "monitoring"
-    # -- ApiVersion for the serviceMonitor resource
-    apiVersion: monitoring.coreos.com/v1
   serviceAccount:
     # -- Create a service account for the controller
     create: true
