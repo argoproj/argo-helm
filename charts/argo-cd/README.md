@@ -928,11 +928,11 @@ NAME: my-release
 | server.certificateSecret.enabled | bool | `false` | Create argocd-server-tls secret |
 | server.certificateSecret.key | string | `""` | Private Key of the certificate |
 | server.certificateSecret.labels | object | `{}` | Labels to be added to argocd-server-tls secret |
+| server.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the server's ClusterRole resource |
+| server.clusterRoleRules.rules | list | `[]` | List of custom rules for the server's ClusterRole resource |
 | server.containerPorts.metrics | int | `8083` | Metrics container port |
 | server.containerPorts.server | int | `8080` | Server container port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
-| server.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the server's ClusterRole resource |
-| server.clusterRoleRules.rules | list | `[]` | List of custom rules for the server's ClusterRole resource |
 | server.deploymentAnnotations | object | `{}` | Annotations to be added to server Deployment |
 | server.deploymentStrategy | object | `{}` | Deployment strategy to be added to the server Deployment |
 | server.dnsConfig | object | `{}` | [DNS configuration] |
