@@ -6,6 +6,9 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 rules:
+  {{- if .Values.server.clusterRoleRules.enabled }}
+    {{- toYaml .Values.server.clusterRoleRules.rules | nindent 2 }}
+  {{- else }}
   - apiGroups:
       - '*'
     resources:
@@ -62,4 +65,5 @@ rules:
     verbs:
       {{/* supports triggering workflows from UI */}}
       - create
+  {{- end }}
 {{- end }}
