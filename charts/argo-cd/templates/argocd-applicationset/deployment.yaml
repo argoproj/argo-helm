@@ -302,9 +302,19 @@ spec:
           configMap:
             name: argocd-gpg-keys-cm
         - name: gpg-keyring
+          {{- if .Values.applicationSet.emptyDir.sizeLimit }}
+          emptyDir:
+            sizeLimit: {{ .Values.applicationSet.emptyDir.sizeLimit }}
+          {{- else }}
           emptyDir: {}
+          {{- end }}
         - name: tmp
+          {{- if .Values.applicationSet.emptyDir.sizeLimit }}
+          emptyDir:
+            sizeLimit: {{ .Values.applicationSet.emptyDir.sizeLimit }}
+          {{- else }}
           emptyDir: {}
+          {{- end }}
         - name: argocd-repo-server-tls
           secret:
             secretName: argocd-repo-server-tls
