@@ -101,6 +101,7 @@ config:
   applicationsAPIKind: ""
 
   # Described in detail here https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags
+  # Note: this is only relevant if config.applicationsAPIKind == 'argocd'
   argocd:
     # -- Use the gRPC-web protocol to connect to the Argo CD API
     grpcWeb: true
