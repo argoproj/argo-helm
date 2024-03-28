@@ -28,6 +28,9 @@ rules:
     verbs:
     - list
     - watch
+    {{- if (index .Values.configs.params "application.namespaces") }}
+    - create
+    {{- end }}
   {{- if .Values.notifications.cm.create }}
   - apiGroups:
     - ""
