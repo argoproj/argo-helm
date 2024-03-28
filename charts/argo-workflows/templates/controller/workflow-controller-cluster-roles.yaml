@@ -1,17 +1,18 @@
 {{- if .Values.controller.rbac.create }}
+{{- $context := merge (dict "controller" $.Values.controller) . }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- if .Values.singleNamespace }}
+{{- if and .Values.singleNamespace (eq (len .Values.controllers) 0) }}
 kind: Role
 {{- else }}
 kind: ClusterRole
 {{- end }}
 metadata:
-  name: {{ template "argo-workflows.controller.fullname" . }}
-  {{- if .Values.singleNamespace }}
+  name: {{ template "argo-workflows.controller.fullname" $context }}
+  {{- if and .Values.singleNamespace (eq (len .Values.controllers) 0) }}
   namespace: {{ include "argo-workflows.namespace" . | quote }}
   {{- end }}
   labels:
-    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- include "argo-workflows.labels" (dict "context" $context "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 rules:
 - apiGroups:
   - ""
@@ -203,9 +204,9 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "argo-workflows.controller.fullname" . }}-cluster-template
+  name: {{ template "argo-workflows.controller.fullname" $context }}-cluster-template
   labels:
-    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- include "argo-workflows.labels" (dict "context" $context "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 rules:
 - apiGroups:
   - argoproj.io

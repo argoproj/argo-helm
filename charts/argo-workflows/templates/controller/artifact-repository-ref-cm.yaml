@@ -1,12 +1,16 @@
 {{- range $cm_name, $cm_val := .Values.artifactRepositoryRef }}
+{{ $controllers := deepCopy $.Values.controllers | merge (dict (include "argo-workflows.namespace" $) $.Values.controller) }}
+{{ range $ns, $config := $controllers -}}
+{{ $controller := deepCopy $.Values.controller | merge $config -}}
+{{- $context := merge (dict "controller" $controller) $}}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $cm_name }}
-  namespace: {{ include "argo-workflows.namespace" $ | quote }}
+  namespace: {{ $ns | quote }}
   labels:
-    {{- include "argo-workflows.labels" (dict "context" $ "component" $.Values.controller.name "name" $cm_name) | nindent 4 }}
+    {{- include "argo-workflows.labels" (dict "context" $context "component" $controller.name "name" $cm_name) | nindent 4 }}
   {{- with $cm_val.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -16,4 +20,5 @@ data:
   {{- $data_key | nindent 2 }}: |
     {{- toYaml $data_val | nindent 4 }}
   {{- end }}
+{{- end }}
 {{- end }}

@@ -1,39 +1,45 @@
-{{- if or .Values.controller.metricsConfig.enabled .Values.controller.telemetryConfig.enabled }}
+{{ $controllers := deepCopy $.Values.controllers | merge (dict (include "argo-workflows.namespace" $) $.Values.controller) }}
+{{ range $ns, $config := $controllers -}}
+{{ $controller := deepCopy $.Values.controller | merge $config -}}
+{{- $context := merge (dict "controller" $controller) $}}
+{{- if or $controller.metricsConfig.enabled $controller.telemetryConfig.enabled }}
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "argo-workflows.controller.fullname" . }}
-  namespace: {{ include "argo-workflows.namespace" . | quote }}
+  name: {{ template "argo-workflows.controller.fullname" $context }}
+  namespace: {{ $ns | quote }}
   labels:
-    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ include "argo-workflows.controller_chart_version_label" . }}
-    {{- with .Values.controller.serviceLabels }}
+    {{- include "argo-workflows.labels" (dict "context" $context "component" $controller.name "name" $controller.name) | nindent 4 }}
+    app.kubernetes.io/version: {{ include "argo-workflows.controller_chart_version_label" $context }}
+    {{- with $controller.serviceLabels }}
       {{ toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.controller.serviceAnnotations }}
+  {{- with $controller.serviceAnnotations }}
   annotations:
     {{- toYaml . | nindent 4}}
   {{- end }}
 spec:
   ports:
-  {{- if .Values.controller.metricsConfig.enabled }}
-  - name: {{ .Values.controller.metricsConfig.servicePortName }}
-    port: {{ .Values.controller.metricsConfig.servicePort }}
+  {{- if $controller.metricsConfig.enabled }}
+  - name: {{ $controller.metricsConfig.servicePortName }}
+    port: {{ $controller.metricsConfig.servicePort }}
     protocol: TCP
-    targetPort: {{ .Values.controller.metricsConfig.port }}
+    targetPort: {{ $controller.metricsConfig.port }}
   {{- end }}
-  {{- if .Values.controller.telemetryConfig.enabled }}
-  - name: {{ .Values.controller.telemetryConfig.servicePortName }}
-    port: {{ .Values.controller.telemetryConfig.servicePort }}
+  {{- if $controller.telemetryConfig.enabled }}
+  - name: {{ $controller.telemetryConfig.servicePortName }}
+    port: {{ $controller.telemetryConfig.servicePort }}
     protocol: TCP
-    targetPort: {{ .Values.controller.telemetryConfig.port }}
+    targetPort: {{ $controller.telemetryConfig.port }}
   {{- end }}
   selector:
-    {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 4 }}
+    {{- include "argo-workflows.selectorLabels" (dict "context" $context "name" $controller.name) | nindent 4 }}
   sessionAffinity: None
-  type: {{ .Values.controller.serviceType }}
-  {{- if and (eq .Values.controller.serviceType "LoadBalancer") .Values.controller.loadBalancerSourceRanges }}
+  type: {{ $controller.serviceType }}
+  {{- if and (eq $controller.serviceType "LoadBalancer") $controller.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
-    {{- toYaml .Values.controller.loadBalancerSourceRanges | nindent 4 }}
+    {{- toYaml $controller.loadBalancerSourceRanges | nindent 4 }}
   {{- end }}
 {{- end -}}
+{{- end }}

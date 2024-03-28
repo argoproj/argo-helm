@@ -1,83 +1,88 @@
+{{ $controllers := .Values.controllers | default (dict (include "argo-workflows.namespace" .) .Values.controller) -}}
+{{ range $ns, $config := $controllers -}}
+{{ $controller := deepCopy $.Values.controller | merge $config -}}
+{{- $context := merge (dict "controller" $controller) $ }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "argo-workflows.controller.fullname" . }}
-  namespace: {{ include "argo-workflows.namespace" . | quote }}
+  name: {{ template "argo-workflows.controller.fullname" $context }}
+  namespace: {{ $ns | quote }}
   labels:
-    {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
-    app.kubernetes.io/version: {{ include "argo-workflows.controller_chart_version_label" . }}
-  {{- with .Values.controller.deploymentAnnotations }}
+    {{- include "argo-workflows.labels" (dict "context" $ "component" $controller.name "name" $controller.name) | nindent 4 }}
+    app.kubernetes.io/version: {{ include "argo-workflows.controller_chart_version_label" $context }}
+  {{- with $controller.deploymentAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  replicas: {{ .Values.controller.replicas }}
-  revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
+  replicas: {{ $controller.replicas }}
+  revisionHistoryLimit: {{ $controller.revisionHistoryLimit }}
   selector:
     matchLabels:
-      {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
+      {{- include "argo-workflows.selectorLabels" (dict "context" $ "name" $controller.name) | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
-        app.kubernetes.io/version: {{ include "argo-workflows.controller_chart_version_label" . }}
-        {{- with.Values.controller.podLabels }}
+        {{- include "argo-workflows.labels" (dict "context" $context "component" $controller.name "name" $controller.name) | nindent 8 }}
+        app.kubernetes.io/version: {{ include "argo-workflows.controller_chart_version_label" $context }}
+        {{- with $controller.podLabels }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.controller.podAnnotations }}
+      {{- with $controller.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      serviceAccountName: {{ template "argo-workflows.controllerServiceAccountName" . }}
-      {{- with .Values.controller.podSecurityContext }}
+      serviceAccountName: {{ template "argo-workflows.controllerServiceAccountName" $context }}
+      {{- with $controller.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.extraInitContainers }}
+      {{- with $controller.extraInitContainers }}
       initContainers:
         {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       containers:
         - name: controller
-          image: "{{- include "argo-workflows.image" (dict "context" . "image" .Values.controller.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.controller.image.tag }}"
-          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          image: "{{- include "argo-workflows.image" (dict "context" $context "image" $controller.image) }}:{{ default (include "argo-workflows.defaultTag" $context) $controller.image.tag }}"
+          imagePullPolicy: {{ $.Values.images.pullPolicy }}
           command: [ "workflow-controller" ]
           args:
           - "--configmap"
-          - "{{ template "argo-workflows.controller.config-map.name" . }}"
+          - "{{ template "argo-workflows.controller.config-map.name" $context }}"
           - "--executor-image"
-          - "{{- include "argo-workflows.image" (dict "context" . "image" .Values.executor.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.executor.image.tag }}"
+          - "{{- include "argo-workflows.image" (dict "context" $context "image" $.Values.executor.image) }}:{{ default (include "argo-workflows.defaultTag" $context) $.Values.executor.image.tag }}"
           - "--loglevel"
-          - "{{ .Values.controller.logging.level }}"
+          - "{{ $controller.logging.level }}"
           - "--gloglevel"
-          - "{{ .Values.controller.logging.globallevel }}"
+          - "{{ $controller.logging.globallevel }}"
           - "--log-format"
-          - "{{ .Values.controller.logging.format }}"
-          {{- if .Values.singleNamespace }}
+          - "{{ $controller.logging.format }}"
+          {{- if $.Values.singleNamespace }}
           - "--namespaced"
           {{- end }}
-          {{- with .Values.controller.workflowWorkers }}
+          {{- with $controller.workflowWorkers }}
           - "--workflow-workers"
           - {{ . | quote }}
           {{- end }}
-          {{- with .Values.controller.workflowTTLWorkers }}
+          {{- with $controller.workflowTTLWorkers }}
           - "--workflow-ttl-workers"
           - {{ . | quote }}
           {{- end }}
-          {{- with .Values.controller.podCleanupWorkers }}
+          {{- with $controller.podCleanupWorkers }}
           - "--pod-cleanup-workers"
           - {{ . | quote }}
           {{- end }}
-          {{- with .Values.controller.cronWorkflowWorkers }}
+          {{- with $controller.cronWorkflowWorkers }}
           - "--cron-workflow-workers"
           - {{ . | quote }}
           {{- end }}
-          {{- with .Values.controller.extraArgs }}
+          {{- with $controller.extraArgs }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
           securityContext:
-            {{- toYaml .Values.controller.securityContext | nindent 12 }}
+            {{- toYaml $controller.securityContext | nindent 12 }}
           env:
             - name: ARGO_NAMESPACE
               valueFrom:
@@ -89,58 +94,59 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.name
-          {{- if eq (int .Values.controller.replicas) 1 }}
+          {{- if eq (int $controller.replicas) 1 }}
             - name: LEADER_ELECTION_DISABLE
               value: "true"
           {{- end }}
-          {{- with .Values.controller.extraEnv }}
+          {{- with $controller.extraEnv }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
           resources:
-            {{- toYaml .Values.controller.resources | nindent 12 }}
-          {{- with .Values.controller.volumeMounts }}
+            {{- toYaml $controller.resources | nindent 12 }}
+          {{- with $controller.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 10 }}
           {{- end }}
           ports:
-            - name: {{ .Values.controller.metricsConfig.portName }}
-              containerPort: {{ .Values.controller.metricsConfig.port }}
+            - name: {{ $controller.metricsConfig.portName }}
+              containerPort: {{ $controller.metricsConfig.port }}
             - containerPort: 6060
-          livenessProbe: {{ .Values.controller.livenessProbe | toYaml | nindent 12 }}
-        {{- with .Values.controller.extraContainers }}
+          livenessProbe: {{ $controller.livenessProbe | toYaml | nindent 12 }}
+        {{- with $controller.extraContainers }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.images.pullSecrets }}
+      {{- with $.Values.images.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.volumes }}
+      {{- with $controller.volumes }}
       volumes:
         {{- toYaml . | nindent 6 }}
       {{- end }}
-      {{- with .Values.controller.nodeSelector }}
+      {{- with $controller.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.tolerations }}
+      {{- with $controller.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.affinity }}
+      {{- with $controller.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.topologySpreadConstraints }}
+      {{- with $controller.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- range $constraint := . }}
       - {{ toYaml $constraint | nindent 8 | trim }}
         {{- if not $constraint.labelSelector }}
         labelSelector:
           matchLabels:
-            {{- include "argo-workflows.selectorLabels" (dict "context" $ "name" $.Values.controller.name) | nindent 12 }}
+            {{- include "argo-workflows.selectorLabels" (dict "context" $ "name" $controller.name) | nindent 12 }}
         {{- end }}
         {{- end }}
       {{- end }}
-      {{- with .Values.controller.priorityClassName }}
+      {{- with $controller.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+{{- end }}
