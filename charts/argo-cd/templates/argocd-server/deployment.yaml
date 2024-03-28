@@ -442,12 +442,27 @@ spec:
       {{- end }}
       {{- if .Values.server.extensions.enabled }}
       - name: extensions
+        {{- if .Values.server.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.server.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       {{- end }}
       - name: plugins-home
+        {{- if .Values.server.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.server.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: tmp
+        {{- if .Values.server.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.server.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: ssh-known-hosts
         configMap:
           name: argocd-ssh-known-hosts-cm

@@ -733,6 +733,7 @@ NAME: my-release
 | controller.dnsConfig | object | `{}` | [DNS configuration] |
 | controller.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for application controller pods |
 | controller.dynamicClusterDistribution | bool | `false` | Enable dynamic cluster distribution (alpha) Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/dynamic-cluster-distribution |
+| controller.emptyDir.sizeLimit | string | `""` (defaults not set if not specified i.e. no size limit) | EmptyDir size limit for application controller |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to application controller |
@@ -827,6 +828,7 @@ NAME: my-release
 | repoServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the repo server Deployment |
 | repoServer.dnsConfig | object | `{}` | [DNS configuration] |
 | repoServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Repo server pods |
+| repoServer.emptyDir.sizeLimit | string | `""` (defaults not set if not specified i.e. no size limit) | EmptyDir size limit for repo server |
 | repoServer.env | list | `[]` | Environment variables to pass to repo server |
 | repoServer.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to repo server |
 | repoServer.existingVolumes | object | `{}` | Volumes to be used in replacement of emptydir on default volumes |
@@ -935,6 +937,7 @@ NAME: my-release
 | server.deploymentStrategy | object | `{}` | Deployment strategy to be added to the server Deployment |
 | server.dnsConfig | object | `{}` | [DNS configuration] |
 | server.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Server pods |
+| server.emptyDir.sizeLimit | string | `""` (defaults not set if not specified i.e. no size limit) | EmptyDir size limit for the Argo CD server |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
 | server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
 | server.extensions.containerSecurityContext | object | See [values.yaml] | Server UI extensions container-level security context |
@@ -1073,6 +1076,7 @@ NAME: my-release
 | dex.deploymentStrategy | object | `{}` | Deployment strategy to be added to the Dex server Deployment |
 | dex.dnsConfig | object | `{}` | [DNS configuration] |
 | dex.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Dex server pods |
+| dex.emptyDir.sizeLimit | string | `""` (defaults not set if not specified i.e. no size limit) | EmptyDir size limit for Dex server |
 | dex.enabled | bool | `true` | Enable dex |
 | dex.env | list | `[]` | Environment variables to pass to the Dex server |
 | dex.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Dex server |
@@ -1325,6 +1329,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.deploymentStrategy | object | `{}` | Deployment strategy to be added to the ApplicationSet controller Deployment |
 | applicationSet.dnsConfig | object | `{}` | [DNS configuration] |
 | applicationSet.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for ApplicationSet controller pods |
+| applicationSet.emptyDir.sizeLimit | string | `""` (defaults not set if not specified i.e. no size limit) | EmptyDir size limit for applicationSet controller |
 | applicationSet.enabled | bool | `true` | Enable ApplicationSet controller |
 | applicationSet.extraArgs | list | `[]` | ApplicationSet controller command line flags |
 | applicationSet.extraContainers | list | `[]` | Additional containers to be added to the ApplicationSet controller pod |
