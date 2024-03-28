@@ -48,6 +48,17 @@ rules:
       - list
       - update
       - watch
+  {{- if (index .Values.configs.params "application.namespaces") }}
+  - apiGroups:
+      - "argoproj.io"
+    resources:
+      - "applications"
+    verbs:
+      - create
+      - delete
+      - update
+      - patch
+  {{- end }}
   - apiGroups:
       - batch
     resources:
