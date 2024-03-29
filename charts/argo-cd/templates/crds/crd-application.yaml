@@ -1,20 +1,10 @@
-{{- if .Values.crds.install }}
+# https://raw.githubusercontent.com/argoproj/argo-cd/v2.10.5/manifests/crds/application-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  annotations:
-    {{- if .Values.crds.keep }}
-    "helm.sh/resource-policy": keep
-    {{- end }}
-    {{- with .Values.crds.annotations }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
   labels:
     app.kubernetes.io/name: applications.argoproj.io
     app.kubernetes.io/part-of: argocd
-    {{- with .Values.crds.additionalLabels }}
-      {{- toYaml . | nindent 4}}
-    {{- end }}
   name: applications.argoproj.io
 spec:
   group: argoproj.io
@@ -4947,4 +4937,3 @@ spec:
     served: true
     storage: true
     subresources: {}
-{{- end }}
