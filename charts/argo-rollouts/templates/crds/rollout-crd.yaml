@@ -1,9 +1,18 @@
-# https://raw.githubusercontent.com/argoproj/argo-rollouts/v1.6.6/manifests/crds/rollout-crd.yaml
+{{- if .Values.installCRDs }}
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.12.1
+    {{- if .Values.keepCRDs }}
+    "helm.sh/resource-policy": keep
+    {{- end }}
+    {{- if .Values.crdAnnotations }}
+    {{- toYaml .Values.crdAnnotations | nindent 4 }}
+    {{- end }}
+  labels:
+    app.kubernetes.io/name: argo-rollouts
+    app.kubernetes.io/part-of: argo-rollouts
   name: rollouts.argoproj.io
 spec:
   group: argoproj.io
@@ -3629,3 +3638,4 @@ spec:
         specReplicasPath: .spec.replicas
         statusReplicasPath: .status.HPAReplicas
       status: {}
+{{- end }}
