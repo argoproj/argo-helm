@@ -1154,6 +1154,10 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redis.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
+| redis.auth.configAnnotations | object | `{}` | Annotations to be added to Redis config secret |
+| redis.auth.enabled | bool | `false` | enable authentication for Redis. Passwords are auto-generated and stored in argocd-redis |
+| redis.auth.secretAnnotations | object | `{}` | Annotations to be added to Redis secret |
+| redis.auth.username | string | `"argocd"` | username for connecting to Redis |
 | redis.containerPorts.metrics | int | `9121` | Metrics container port |
 | redis.containerPorts.redis | int | `6379` | Redis container port |
 | redis.containerSecurityContext | object | See [values.yaml] | Redis container-level security context |
@@ -1183,6 +1187,7 @@ NAME: my-release
 | redis.exporter.readinessProbe.timeoutSeconds | int | `15` | Number of seconds after which the [probe] times out |
 | redis.exporter.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
+| redis.extraConfig | string | `""` | Redis extra configuration settings (https://redis.io/docs/management/config-file/) |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Redis image pull policy |
 | redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |

@@ -1163,6 +1163,20 @@ redis:
   # -- Redis name
   name: redis
 
+  # -- Redis extra configuration settings (https://redis.io/docs/management/config-file/)
+  extraConfig: ""
+
+  ## Redis authentication
+  auth:
+    # -- enable authentication for Redis. Passwords are auto-generated and stored in argocd-redis
+    enabled: false
+    # -- username for connecting to Redis
+    username: argocd
+    # -- Annotations to be added to Redis secret
+    secretAnnotations: {}
+    # -- Annotations to be added to Redis config secret
+    configAnnotations: {}
+
   ## Redis Pod Disruption Budget
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
   pdb:

@@ -1,0 +1,25 @@
+{{- $redisHa := index .Values "redis-ha" -}}
+{{- if and .Values.redis.enabled (or .Values.redis.auth.enabled .Values.redis.extraConfig) (not $redisHa.enabled) -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ include "argo-cd.redis.fullname" . }}-config"
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
+  {{- with .Values.redis.auth.secretAnnotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+data:
+  {{- if or .Values.redis.auth.enabled .Values.redis.extraConfig }}
+  redis.conf: |
+    {{- if .Values.redis.auth.enabled }}
+    aclfile /etc/redis/users.acl
+    {{- end }}
+    {{- .Values.redis.extraConfig | nindent 4 }}
+  {{- end }}
+{{- end }}
