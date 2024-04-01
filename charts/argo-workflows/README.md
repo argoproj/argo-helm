@@ -155,6 +155,7 @@ Fields to note:
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
 | controller.extraEnv | list | `[]` | Extra environment variables to provide to the controller container |
 | controller.extraInitContainers | list | `[]` | Enables init containers to be added to the controller deployment |
+| controller.headlessService | bool | `false` | Whether to use a headless service or not. |
 | controller.image.registry | string | `"quay.io"` | Registry to use for the controller |
 | controller.image.repository | string | `"argoproj/workflow-controller"` | Registry to use for the controller |
 | controller.image.tag | string | `""` | Image tag for the workflow controller. Defaults to `.Values.images.tag`. |

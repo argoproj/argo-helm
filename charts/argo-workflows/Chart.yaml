@@ -3,7 +3,7 @@ appVersion: v3.5.5
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.41.0
+version: 0.41.1
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -17,4 +17,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: added
-      description: Check Prometheus CRDs are available before creating Service Monitor resource(s)
+      description: Add the ability to use a headless service for the workflow controller
