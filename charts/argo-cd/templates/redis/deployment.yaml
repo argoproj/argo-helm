@@ -26,8 +26,9 @@ spec:
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.redis.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.redis.podAnnotations) }}
       annotations:
+        checksum/redis-config: {{ include (print $.Template.BasePath "/redis/secret.yaml") . | sha256sum }}
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.redis.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
@@ -59,6 +60,9 @@ spec:
         args:
         {{- with .Values.redis.extraArgs }}
           {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if or .Values.redis.auth.enabled .Values.redis.extraConfig }}
+        - /etc/redis/redis.conf
         {{- end }}
         - --save
         - ""
@@ -111,6 +115,11 @@ spec:
         volumeMounts:
           - mountPath: /health
             name: health
+        {{- if or .Values.redis.auth.enabled .Values.redis.extraConfig }}
+          - mountPath: /etc/redis
+            name: config
+            readOnly: true
+        {{- end }}
         {{- with .Values.redis.volumeMounts }}
           {{- toYaml . | nindent 10 }}
         {{- end }}
@@ -194,6 +203,17 @@ spec:
           configMap:
             name: {{ include "argo-cd.redis.fullname" . }}-health-configmap
             defaultMode: 493
+        {{- if or .Values.redis.auth.enabled .Values.redis.extraConfig }}
+        - name: config
+          projected:
+            sources:
+              - configMap:
+                  name: "{{ include "argo-cd.redis.fullname" . }}-config"
+              {{- if .Values.redis.auth.enabled }}
+              - secret:
+                  name: "{{ include "argo-cd.redis.fullname" . }}-users"
+              {{- end }}
+        {{- end }}
       {{- with .Values.redis.volumes }}
         {{- toYaml . | nindent 8}}
       {{- end }}
