@@ -1155,9 +1155,9 @@ NAME: my-release
 |-----|------|---------|-------------|
 | redis.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
 | redis.auth.configAnnotations | object | `{}` | Annotations to be added to Redis config secret |
-| redis.auth.enabled | bool | `false` | enable authentication for Redis. Passwords are auto-generated and stored in argocd-redis |
+| redis.auth.enabled | bool | `false` | Enable authentication for Redis. Passwords are auto-generated and stored in the Secret `argocd-redis`. If you're managing ArgoCD via ArgoCD you need to ignore the auto-generated password fields in `ignoreDifferences` , e.g. with ``` ignoreDifferences: - kind: Secret   name: argocd-redis   jsonPointers:     - /data/redis-password     - /data/redis-password-admin     - /data/redis-password-default ``` |
 | redis.auth.secretAnnotations | object | `{}` | Annotations to be added to Redis secret |
-| redis.auth.username | string | `"argocd"` | username for connecting to Redis |
+| redis.auth.username | string | `"argocd"` | Username for connecting to Redis |
 | redis.containerPorts.metrics | int | `9121` | Metrics container port |
 | redis.containerPorts.redis | int | `6379` | Redis container port |
 | redis.containerSecurityContext | object | See [values.yaml] | Redis container-level security context |
