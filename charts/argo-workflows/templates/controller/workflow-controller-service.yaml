@@ -32,7 +32,7 @@ spec:
     {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 4 }}
   sessionAffinity: None
   type: {{ .Values.controller.serviceType }}
-  {{- if and (eq .Values.controller.serviceType "ClusterIP") .Values.controller.headlessService }}
+  {{- if and (eq .Values.controller.serviceType "ClusterIP") .Values.controller.metricsConfig.headlessService }}
   clusterIP: None
   {{- end }}
   {{- if and (eq .Values.controller.serviceType "LoadBalancer") .Values.controller.loadBalancerSourceRanges }}
