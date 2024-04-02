@@ -170,6 +170,7 @@ Fields to note:
 | controller.logging.globallevel | string | `"0"` | Set the glog logging level |
 | controller.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | controller.metricsConfig.enabled | bool | `false` | Enables prometheus metrics server |
+| controller.metricsConfig.headlessService | bool | `false` | Flag to enable headless service |
 | controller.metricsConfig.ignoreErrors | bool | `false` | Flag that instructs prometheus to ignore metric emission errors. |
 | controller.metricsConfig.metricRelabelings | list | `[]` | ServiceMonitor metric relabel configs to apply to samples before ingestion |
 | controller.metricsConfig.metricsTTL | string | `""` | How often custom metrics are cleared from memory |
