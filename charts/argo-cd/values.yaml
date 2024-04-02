@@ -673,6 +673,13 @@ controller:
   #  - name: custom-tools
   #    emptyDir: {}
 
+  ## Application controller emptyDir volumes
+  emptyDir:
+    # -- EmptyDir size limit for application controller
+    # @default -- `""` (defaults not set if not specified i.e. no size limit)
+    sizeLimit: ""
+    # sizeLimit: "1Gi"
+
   # -- Annotations for the application controller StatefulSet
   statefulsetAnnotations: {}
 
@@ -988,6 +995,13 @@ dex:
 
   # -- Additional volumes to the dex pod
   volumes: []
+
+  ## Dex server emptyDir volumes
+  emptyDir:
+    # -- EmptyDir size limit for Dex server
+    # @default -- `""` (defaults not set if not specified i.e. no size limit)
+    sizeLimit: ""
+    # sizeLimit: "1Gi"
 
   # TLS certificate configuration via Secret
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#configuring-tls-to-argocd-dex-server
@@ -1744,6 +1758,13 @@ server:
   #  - name: custom-tools
   #    emptyDir: {}
 
+  ## Argo CD server emptyDir volumes
+  emptyDir:
+    # -- EmptyDir size limit for the Argo CD server
+    # @default -- `""` (defaults not set if not specified i.e. no size limit)
+    sizeLimit: ""
+    # sizeLimit: "1Gi"
+
   # -- Annotations to be added to server Deployment
   deploymentAnnotations: {}
 
@@ -2366,6 +2387,13 @@ repoServer:
   #    persistentVolumeClaim:
   #      claimName: pvc-argocd-repo-server-plugins
 
+  ## RepoServer emptyDir volumes
+  emptyDir:
+    # -- EmptyDir size limit for repo server
+    # @default -- `""` (defaults not set if not specified i.e. no size limit)
+    sizeLimit: ""
+    # sizeLimit: "1Gi"
+
   # -- Toggle the usage of a ephemeral Helm working directory
   useEphemeralHelmWorkingDir: true
 
@@ -2652,6 +2680,13 @@ applicationSet:
 
   # -- List of extra volumes to add
   extraVolumes: []
+
+  ## ApplicationSet controller emptyDir volumes
+  emptyDir:
+    # -- EmptyDir size limit for applicationSet controller
+    # @default -- `""` (defaults not set if not specified i.e. no size limit)
+    sizeLimit: ""
+    # sizeLimit: "1Gi"
 
   ## Metrics service configuration
   metrics:
