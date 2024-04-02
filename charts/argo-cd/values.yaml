@@ -2215,6 +2215,14 @@ server:
     # -- Termination policy of Openshift Route
     termination_policy: None
 
+  ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
+  ## Defaults to off
+  clusterRoleRules:
+    # -- Enable custom rules for the server's ClusterRole resource
+    enabled: false
+    # -- List of custom rules for the server's ClusterRole resource
+    rules: []
+
 ## Repo Server
 repoServer:
   # -- Repo server name
