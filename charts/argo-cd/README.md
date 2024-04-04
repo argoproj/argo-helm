@@ -725,6 +725,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
+| controller.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | controller.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the application controller's ClusterRole resource |
 | controller.clusterRoleRules.rules | list | `[]` | List of custom rules for the application controller's ClusterRole resource |
 | controller.containerPorts.metrics | int | `8082` | Metrics container port |
@@ -806,6 +807,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | repoServer.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
+| repoServer.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | repoServer.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. |
 | repoServer.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the repo server |
 | repoServer.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the repo server [HPA] |
@@ -903,6 +905,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | server.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
+| server.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | server.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. |
 | server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo CD server |
 | server.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the Argo CD server [HPA] |
@@ -1064,6 +1067,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | dex.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
+| dex.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | dex.certificateSecret.annotations | object | `{}` | Annotations to be added to argocd-dex-server-tls secret |
 | dex.certificateSecret.ca | string | `""` | Certificate authority. Required for self-signed certificates. |
 | dex.certificateSecret.crt | string | `""` | Certificate data. Must contain SANs of Dex service (ie: argocd-dex-server, argocd-dex-server.argo-cd.svc) |
@@ -1160,6 +1164,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redis.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
+| redis.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | redis.containerPorts.metrics | int | `9121` | Metrics container port |
 | redis.containerPorts.redis | int | `6379` | Redis container port |
 | redis.containerSecurityContext | object | See [values.yaml] | Redis container-level security context |
@@ -1310,6 +1315,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 |-----|------|---------|-------------|
 | applicationSet.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
 | applicationSet.allowAnyNamespace | bool | `false` | Enable ApplicationSet in any namespace feature |
+| applicationSet.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | applicationSet.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
 | applicationSet.certificate.annotations | object | `{}` | Annotations to be applied to the ApplicationSet Certificate |
 | applicationSet.certificate.domain | string | `""` (defaults to global.domain) | Certificate primary domain (commonName) |
@@ -1419,6 +1425,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 |-----|------|---------|-------------|
 | notifications.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
 | notifications.argocdUrl | string | `""` (defaults to https://`global.domain`) | Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates |
+| notifications.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | notifications.clusterRoleRules.rules | list | `[]` | List of custom rules for the notifications controller's ClusterRole resource |
 | notifications.cm.create | bool | `true` | Whether helm chart creates notifications controller config map |
 | notifications.containerPorts.metrics | int | `9001` | Metrics container port |
