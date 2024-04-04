@@ -251,6 +251,7 @@ Fields to note:
 |-----|------|---------|-------------|
 | executor.args | list | `[]` | Passes arguments to the executor processes |
 | executor.env | list | `[]` | Adds environment variables for the executor. |
+| executor.image.cmdArgDefinition | bool | `false` | if true image is defined as Controller's command line argument otherwise defined in ConfigMap. |
 | executor.image.pullPolicy | string | `""` | Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`. |
 | executor.image.registry | string | `"quay.io"` | Registry to use for the Workflow Executors |
 | executor.image.repository | string | `"argoproj/argoexec"` | Repository to use for the Workflow Executors |

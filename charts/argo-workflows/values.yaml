@@ -424,6 +424,8 @@ executor:
     tag: ""
     # -- Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`.
     pullPolicy: ""
+    # -- if true image is defined as Controller's command line argument otherwise defined in ConfigMap.
+    cmdArgDefinition: false
   # -- Resource limits and requests for the Workflow Executors
   resources: {}
   # -- Passes arguments to the executor processes

@@ -46,8 +46,10 @@ spec:
           args:
           - "--configmap"
           - "{{ template "argo-workflows.controller.config-map.name" . }}"
+          {{- if .Values.executor.image.cmdArgDefinition }}
           - "--executor-image"
           - "{{- include "argo-workflows.image" (dict "context" . "image" .Values.executor.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.executor.image.tag }}"
+          {{- end }}
           - "--loglevel"
           - "{{ .Values.controller.logging.level }}"
           - "--gloglevel"
