@@ -55,6 +55,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.controller.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.controller.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.controller.automountServiceAccountToken }}
       containers:
       - args:
         - /usr/local/bin/argocd-application-controller

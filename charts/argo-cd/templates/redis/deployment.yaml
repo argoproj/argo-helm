@@ -52,6 +52,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.redis.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.redis.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.redis.automountServiceAccountToken }}
       containers:
       - name: {{ .Values.redis.name }}
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
