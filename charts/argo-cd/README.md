@@ -1269,6 +1269,7 @@ The main options are listed here:
 | redis-ha.haproxy.containerSecurityContext | object | See [values.yaml] | HAProxy container-level security context |
 | redis-ha.haproxy.enabled | bool | `true` | Enabled HAProxy LoadBalancing/Proxy |
 | redis-ha.haproxy.hardAntiAffinity | bool | `true` | Whether the haproxy pods should be forced to run on separate nodes. |
+| redis-ha.haproxy.labels | object | `{"app.kubernetes.io/name":"argocd-redis-ha-haproxy"}` | Custom labels for the haproxy pod. This is relevant for Argo CD CLI. |
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
 | redis-ha.haproxy.tolerations | list | `[]` | [Tolerations] for use with node taints for haproxy pods. |
 | redis-ha.hardAntiAffinity | bool | `true` | Whether the Redis server pods should be forced to run on separate nodes. |
