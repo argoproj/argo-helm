@@ -768,6 +768,9 @@ controller:
     #   topologyKey: topology.kubernetes.io/zone
     #   whenUnsatisfiable: DoNotSchedule
 
+  # -- Automount API credentials for the Service Account into the pod.
+  automountServiceAccountToken: true
+
   serviceAccount:
     # -- Create a service account for the application controller
     create: true
@@ -1110,6 +1113,9 @@ dex:
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
 
+  # -- Automount API credentials for the Service Account into the pod.
+  automountServiceAccountToken: true
+
   serviceAccount:
     # -- Create dex service account
     create: true
@@ -1409,6 +1415,9 @@ redis:
 
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
+
+  # -- Automount API credentials for the Service Account into the pod.
+  automountServiceAccountToken: true
 
   serviceAccount:
     # -- Create a service account for the redis pod
@@ -2009,6 +2018,9 @@ server:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
+  # -- Automount API credentials for the Service Account into the pod.
+  automountServiceAccountToken: true
+
   serviceAccount:
     # -- Create server service account
     create: true
@@ -2586,6 +2598,9 @@ repoServer:
     # -- List of custom rules for the Repo server's Cluster Role resource
     rules: []
 
+  # -- Automount API credentials for the Service Account into the pod.
+  automountServiceAccountToken: true
+
   ## Repo server service account
   ## If create is set to true, make sure to uncomment the name and update the rbac section below
   serviceAccount:
@@ -2746,6 +2761,9 @@ applicationSet:
     port: 7000
     # -- ApplicationSet service port name
     portName: http-webhook
+
+  # -- Automount API credentials for the Service Account into the pod.
+  automountServiceAccountToken: true
 
   serviceAccount:
     # -- Create ApplicationSet controller service account
@@ -3207,6 +3225,9 @@ notifications:
   # -- Priority class for the notifications controller pods
   # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
+
+  # -- Automount API credentials for the Service Account into the pod.
+  automountServiceAccountToken: true
 
   serviceAccount:
     # -- Create notifications controller service account

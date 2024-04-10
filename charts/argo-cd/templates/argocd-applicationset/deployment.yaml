@@ -56,6 +56,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.applicationSet.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.applicationSet.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.applicationSet.automountServiceAccountToken }}
       containers:
         - name: {{ .Values.applicationSet.name }}
           image: {{ default .Values.global.image.repository .Values.applicationSet.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.applicationSet.image.tag }}
