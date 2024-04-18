@@ -44,6 +44,13 @@ extraEnv: []
   # - name: AWS_REGION
   #   value: "us-west-1"
 
+# -- Extra envFrom to pass to argocd-image-updater
+extraEnvFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
 # -- Extra K8s manifests to deploy for argocd-image-updater
 ## Note: Supports use of custom Helm templates
 extraObjects: []
