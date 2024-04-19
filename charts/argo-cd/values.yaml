@@ -799,6 +799,10 @@ controller:
       type: ClusterIP
       # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
       clusterIP: ""
+      # -- Metrics service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+      ipFamilyPolicy: ""
+      # -- Metrics service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+      ipFamilies: []
       # -- Metrics service annotations
       annotations: {}
       # -- Metrics service labels
@@ -1126,6 +1130,10 @@ dex:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
+  # -- Service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+  serviceIpFamilyPolicy: ""
+  # -- Service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+  serviceIpFamilies: []
   # -- Service port for HTTP access
   servicePortHttp: 5556
   # -- Service port name for HTTP access
@@ -1385,6 +1393,10 @@ redis:
       drop:
       - ALL
 
+  # -- Redis service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+  serviceIpFamilyPolicy: ""
+  # -- Redis service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+  serviceIpFamilies: []
   # -- Redis service port
   servicePort: 6379
 
@@ -1950,6 +1962,10 @@ server:
     labels: {}
     # -- Server service type
     type: ClusterIP
+    # -- Server service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+    ipFamilyPolicy: ""
+    # -- Server service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+    ipFamilies: []
     # -- Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort")
     nodePortHttp: 30080
     # -- Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort")
@@ -1984,6 +2000,10 @@ server:
       type: ClusterIP
       # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
       clusterIP: ""
+      # -- Metrics service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+      ipFamilyPolicy: ""
+      # -- Metrics service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+      ipFamilies: []
       # -- Metrics service annotations
       annotations: {}
       # -- Metrics service labels
@@ -2541,6 +2561,10 @@ repoServer:
     annotations: {}
     # -- Repo server service labels
     labels: {}
+    # -- Repo server service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+    ipFamilyPolicy: ""
+    # -- Repo server service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+    ipFamilies: []
     # -- Repo server service port
     port: 8081
     # -- Repo server service port name
@@ -2555,6 +2579,10 @@ repoServer:
       type: ClusterIP
       # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
       clusterIP: ""
+      # -- Metrics service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+      ipFamilyPolicy: ""
+      # -- Metrics service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+      ipFamilies: []
       # -- Metrics service annotations
       annotations: {}
       # -- Metrics service labels
@@ -2715,6 +2743,10 @@ applicationSet:
       type: ClusterIP
       # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
       clusterIP: ""
+      # -- Metrics service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+      ipFamilyPolicy: ""
+      # -- Metrics service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+      ipFamilies: []
       # -- Metrics service annotations
       annotations: {}
       # -- Metrics service labels
@@ -2757,6 +2789,10 @@ applicationSet:
     labels: {}
     # -- ApplicationSet service type
     type: ClusterIP
+    # -- ApplicationSet service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+    ipFamilyPolicy: ""
+    # -- ApplicationSet service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+    ipFamilies: []
     # -- ApplicationSet service port
     port: 7000
     # -- ApplicationSet service port name
@@ -3119,6 +3155,10 @@ notifications:
       type: ClusterIP
       # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
       clusterIP: ""
+      # -- Metrics service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+      ipFamilyPolicy: ""
+      # -- Metrics service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+      ipFamilies: []
       # -- Metrics service annotations
       annotations: {}
       # -- Metrics service labels

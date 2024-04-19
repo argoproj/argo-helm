@@ -24,6 +24,12 @@ spec:
   {{- if and .Values.controller.metrics.service.clusterIP (eq .Values.controller.metrics.service.type "ClusterIP") }}
   clusterIP: {{ .Values.controller.metrics.service.clusterIP }}
   {{- end }}
+  {{- if .Values.controller.metrics.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values.controller.metrics.service.ipFamilyPolicy }}
+  {{- end }}
+  {{- if .Values.controller.metrics.service.ipFamilies }}
+  ipFamilies: {{ .Values.controller.metrics.service.ipFamilies | toYaml | nindent 2 }}
+  {{- end }}
   ports:
   - name: {{ .Values.controller.metrics.service.portName }}
     protocol: TCP

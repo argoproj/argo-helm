@@ -16,6 +16,12 @@ metadata:
 {{- toYaml .Values.dex.metrics.service.labels | nindent 4 }}
 {{- end }}
 spec:
+{{- if .Values.dex.serviceIpFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values.dex.serviceIpFamilyPolicy }}
+{{- end }}
+{{- if .Values.dex.serviceIpFamilies }}
+  ipFamilies: {{ .Values.dex.serviceIpFamilies | toYaml | nindent 2 }}
+{{- end }}
   ports:
   - name: {{ .Values.dex.servicePortHttpName }}
     protocol: TCP

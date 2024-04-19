@@ -24,6 +24,12 @@ spec:
   {{- if and .Values.notifications.metrics.service.clusterIP (eq .Values.notifications.metrics.service.type "ClusterIP") }}
   clusterIP: {{ .Values.notifications.metrics.service.clusterIP }}
   {{- end }}
+  {{- if .Values.notifications.metrics.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values.notifications.metrics.service.ipFamilyPolicy }}
+  {{- end }}
+  {{- if .Values.notifications.metrics.service.ipFamilies }}
+  ipFamilies: {{ .Values.notifications.metrics.service.ipFamilies | toYaml | nindent 2 }}
+  {{- end }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 6 }}
   ports:

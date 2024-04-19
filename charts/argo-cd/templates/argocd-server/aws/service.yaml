@@ -9,6 +9,12 @@ metadata:
   name: {{ template "argo-cd.server.fullname" . }}-grpc
   namespace: {{ .Release.Namespace | quote }}
 spec:
+{{- if .Values.server.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values.server.service.ipFamilyPolicy }}
+{{- end }}
+{{- if .Values.server.service.ipFamilies }}
+  ipFamilies: {{ .Values.server.service.ipFamilies | toYaml | nindent 2 }}
+{{- end }}
   ports:
   - name: {{ .Values.server.service.servicePortHttpName }}
     protocol: TCP

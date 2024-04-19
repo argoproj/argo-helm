@@ -278,6 +278,11 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 6.8.0
+
+Added support for IPv4/IPv6 dual-stack networking.
+Please refer to [the docs](https://kubernetes.io/docs/concepts/services-networking/dual-stack/) for more information.
+
 ### 6.4.0
 
 Added support for application controller dynamic cluster distribution.
@@ -758,6 +763,8 @@ NAME: my-release
 | controller.metrics.scrapeTimeout | string | `""` | Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used. |
 | controller.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | controller.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
+| controller.metrics.service.ipFamilies | list | `[]` | Metrics service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| controller.metrics.service.ipFamilyPolicy | string | `""` | Metrics service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | controller.metrics.service.labels | object | `{}` | Metrics service labels |
 | controller.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | controller.metrics.service.servicePort | int | `8082` | Metrics service port |
@@ -851,6 +858,8 @@ NAME: my-release
 | repoServer.metrics.enabled | bool | `false` | Deploy metrics service |
 | repoServer.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | repoServer.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
+| repoServer.metrics.service.ipFamilies | list | `[]` | Metrics service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| repoServer.metrics.service.ipFamilyPolicy | string | `""` | Metrics service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | repoServer.metrics.service.labels | object | `{}` | Metrics service labels |
 | repoServer.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | repoServer.metrics.service.servicePort | int | `8084` | Metrics service port |
@@ -885,6 +894,8 @@ NAME: my-release
 | repoServer.replicas | int | `1` | The number of repo server pods to run |
 | repoServer.resources | object | `{}` | Resource limits and requests for the repo server pods |
 | repoServer.service.annotations | object | `{}` | Repo server service annotations |
+| repoServer.service.ipFamilies | list | `[]` | Repo server service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| repoServer.service.ipFamilyPolicy | string | `""` | Repo server service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | repoServer.service.labels | object | `{}` | Repo server service labels |
 | repoServer.service.port | int | `8081` | Repo server service port |
 | repoServer.service.portName | string | `"tcp-repo-server"` | Repo server service port name |
@@ -1000,6 +1011,8 @@ NAME: my-release
 | server.metrics.enabled | bool | `false` | Deploy metrics service |
 | server.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | server.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
+| server.metrics.service.ipFamilies | list | `[]` | Metrics service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| server.metrics.service.ipFamilyPolicy | string | `""` | Metrics service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | server.metrics.service.labels | object | `{}` | Metrics service labels |
 | server.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | server.metrics.service.servicePort | int | `8083` | Metrics service port |
@@ -1040,6 +1053,8 @@ NAME: my-release
 | server.service.annotations | object | `{}` | Server service annotations |
 | server.service.externalIPs | list | `[]` | Server service external IPs |
 | server.service.externalTrafficPolicy | string | `""` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
+| server.service.ipFamilies | list | `[]` | Server service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| server.service.ipFamilyPolicy | string | `""` | Server service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | server.service.labels | object | `{}` | Server service labels |
 | server.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | server.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
@@ -1146,6 +1161,8 @@ NAME: my-release
 | dex.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | dex.serviceAccount.create | bool | `true` | Create dex service account |
 | dex.serviceAccount.name | string | `"argocd-dex-server"` | Dex service account name |
+| dex.serviceIpFamilies | list | `[]` | Service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| dex.serviceIpFamilyPolicy | string | `""` | Service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | dex.servicePortGrpc | int | `5557` | Service port for gRPC access |
 | dex.servicePortGrpcName | string | `"grpc"` | Service port name for gRPC access |
 | dex.servicePortHttp | int | `5556` | Service port for HTTP access |
@@ -1247,6 +1264,8 @@ NAME: my-release
 | redis.serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account |
 | redis.serviceAccount.create | bool | `false` | Create a service account for the redis pod |
 | redis.serviceAccount.name | string | `""` | Service account name for redis pod |
+| redis.serviceIpFamilies | list | `[]` | Redis service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| redis.serviceIpFamilyPolicy | string | `""` | Redis service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | redis.servicePort | int | `6379` | Redis service port |
 | redis.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | redis.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
@@ -1372,6 +1391,8 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.metrics.enabled | bool | `false` | Deploy metrics service |
 | applicationSet.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | applicationSet.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
+| applicationSet.metrics.service.ipFamilies | list | `[]` | Metrics service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| applicationSet.metrics.service.ipFamilyPolicy | string | `""` | Metrics service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | applicationSet.metrics.service.labels | object | `{}` | Metrics service labels |
 | applicationSet.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | applicationSet.metrics.service.servicePort | int | `8080` | Metrics service port |
@@ -1406,6 +1427,8 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.replicas | int | `1` | The number of ApplicationSet controller pods to run |
 | applicationSet.resources | object | `{}` | Resource limits and requests for the ApplicationSet controller pods. |
 | applicationSet.service.annotations | object | `{}` | ApplicationSet service annotations |
+| applicationSet.service.ipFamilies | list | `[]` | ApplicationSet service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| applicationSet.service.ipFamilyPolicy | string | `""` | ApplicationSet service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | applicationSet.service.labels | object | `{}` | ApplicationSet service labels |
 | applicationSet.service.port | int | `7000` | ApplicationSet service port |
 | applicationSet.service.portName | string | `"http-webhook"` | ApplicationSet service port name |
@@ -1453,6 +1476,8 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | notifications.metrics.port | int | `9001` | Metrics port |
 | notifications.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | notifications.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
+| notifications.metrics.service.ipFamilies | list | `[]` | Metrics service ip families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| notifications.metrics.service.ipFamilyPolicy | string | `""` | Metrics service ip family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | notifications.metrics.service.labels | object | `{}` | Metrics service labels |
 | notifications.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | notifications.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
