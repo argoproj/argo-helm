@@ -67,6 +67,10 @@ spec:
       sources:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .plugin }}
+      plugin:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       destination:
         {{- toYaml .destination | nindent 8 }}
       {{- with .syncPolicy }}
