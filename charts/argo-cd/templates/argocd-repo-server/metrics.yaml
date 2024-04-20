@@ -24,11 +24,11 @@ spec:
   {{- if and .Values.repoServer.metrics.service.clusterIP (eq .Values.repoServer.metrics.service.type "ClusterIP") }}
   clusterIP: {{ .Values.repoServer.metrics.service.clusterIP }}
   {{- end }}
-  {{- if .Values.repoServer.metrics.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ .Values.repoServer.metrics.service.ipFamilyPolicy }}
+  {{- with .Values.repoServer.metrics.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ . }}
   {{- end }}
-  {{- if .Values.repoServer.metrics.service.ipFamilies }}
-  ipFamilies: {{ .Values.repoServer.metrics.service.ipFamilies | toYaml | nindent 2 }}
+  {{- with .Values.repoServer.metrics.service.ipFamilies }}
+  ipFamilies: {{ toYaml . | nindent 4 }}
   {{- end }}
   ports:
   - name: {{ .Values.repoServer.metrics.service.portName }}

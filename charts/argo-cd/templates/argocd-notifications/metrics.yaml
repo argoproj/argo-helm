@@ -24,11 +24,11 @@ spec:
   {{- if and .Values.notifications.metrics.service.clusterIP (eq .Values.notifications.metrics.service.type "ClusterIP") }}
   clusterIP: {{ .Values.notifications.metrics.service.clusterIP }}
   {{- end }}
-  {{- if .Values.notifications.metrics.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ .Values.notifications.metrics.service.ipFamilyPolicy }}
+  {{- with .Values.notifications.metrics.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ . }}
   {{- end }}
-  {{- if .Values.notifications.metrics.service.ipFamilies }}
-  ipFamilies: {{ .Values.notifications.metrics.service.ipFamilies | toYaml | nindent 2 }}
+  {{- with .Values.notifications.metrics.service.ipFamilies }}
+  ipFamilies: {{ toYaml . | nindent 4 }}
   {{- end }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 6 }}

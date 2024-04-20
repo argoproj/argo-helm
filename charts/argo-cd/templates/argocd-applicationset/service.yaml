@@ -17,11 +17,11 @@ metadata:
 {{- end }}
 spec:
   type: {{ .Values.applicationSet.service.type }}
-{{- if .Values.applicationSet.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ .Values.applicationSet.service.ipFamilyPolicy }}
+{{- with .Values.applicationSet.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ . }}
 {{- end }}
-{{- if .Values.applicationSet.service.ipFamilies }}
-  ipFamilies: {{ .Values.applicationSet.service.ipFamilies | toYaml | nindent 2 }}
+{{- with .Values.applicationSet.service.ipFamilies }}
+  ipFamilies: {{ toYaml . | nindent 4 }}
 {{- end }}
   ports:
   - name: {{ .Values.applicationSet.service.portName }}

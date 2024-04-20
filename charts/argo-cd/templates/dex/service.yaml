@@ -16,11 +16,11 @@ metadata:
 {{- toYaml .Values.dex.metrics.service.labels | nindent 4 }}
 {{- end }}
 spec:
-{{- if .Values.dex.serviceIpFamilyPolicy }}
-  ipFamilyPolicy: {{ .Values.dex.serviceIpFamilyPolicy }}
+{{- with .Values.dex.serviceIpFamilyPolicy }}
+  ipFamilyPolicy: {{ . }}
 {{- end }}
-{{- if .Values.dex.serviceIpFamilies }}
-  ipFamilies: {{ .Values.dex.serviceIpFamilies | toYaml | nindent 2 }}
+{{- with .Values.dex.serviceIpFamilies }}
+  ipFamilies: {{ toYaml . | nindent 4 }}
 {{- end }}
   ports:
   - name: {{ .Values.dex.servicePortHttpName }}

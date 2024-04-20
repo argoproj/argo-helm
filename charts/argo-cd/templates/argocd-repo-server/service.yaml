@@ -15,11 +15,11 @@ metadata:
   name: {{ template "argo-cd.repoServer.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
-{{- if .Values.repoServer.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ .Values.repoServer.service.ipFamilyPolicy }}
+{{- with .Values.repoServer.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ . }}
 {{- end }}
-{{- if .Values.repoServer.service.ipFamilies }}
-  ipFamilies: {{ .Values.repoServer.service.ipFamilies | toYaml | nindent 2 }}
+{{- with .Values.repoServer.service.ipFamilies }}
+  ipFamilies: {{ toYaml . | nindent 4 }}
 {{- end }}
   ports:
   - name: {{ .Values.repoServer.service.portName }}

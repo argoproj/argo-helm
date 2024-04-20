@@ -23,12 +23,11 @@ spec:
   type: {{ .Values.controller.metrics.service.type }}
   {{- if and .Values.controller.metrics.service.clusterIP (eq .Values.controller.metrics.service.type "ClusterIP") }}
   clusterIP: {{ .Values.controller.metrics.service.clusterIP }}
+  {{- with .Values.controller.metrics.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ . }}
   {{- end }}
-  {{- if .Values.controller.metrics.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ .Values.controller.metrics.service.ipFamilyPolicy }}
-  {{- end }}
-  {{- if .Values.controller.metrics.service.ipFamilies }}
-  ipFamilies: {{ .Values.controller.metrics.service.ipFamilies | toYaml | nindent 2 }}
+  {{- with .Values.controller.metrics.service.ipFamilies }}
+  ipFamilies: {{ toYaml . | nindent 4 }}
   {{- end }}
   ports:
   - name: {{ .Values.controller.metrics.service.portName }}

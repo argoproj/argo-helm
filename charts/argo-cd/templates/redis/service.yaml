@@ -17,11 +17,11 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- if .Values.redis.serviceIpFamilyPolicy }}
-  ipFamilyPolicy: {{ .Values.redis.serviceIpFamilyPolicy }}
+  {{- with .Values.redis.serviceIpFamilyPolicy }}
+  ipFamilyPolicy: {{ . }}
   {{- end }}
-  {{- if .Values.redis.serviceIpFamilies }}
-  ipFamilies: {{ .Values.redis.serviceIpFamilies | toYaml | nindent 2 }}
+  {{- with .Values.redis.serviceIpFamilies }}
+  ipFamilies: {{ toYaml . | nindent 4 }}
   {{- end }}
   ports:
   - name: redis

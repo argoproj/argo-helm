@@ -16,12 +16,12 @@ metadata:
 {{- end }}
 spec:
   type: {{ .Values.server.service.type }}
-{{- if .Values.server.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ .Values.server.service.ipFamilyPolicy }}
-{{- end }}
-{{- if .Values.server.service.ipFamilies }}
-  ipFamilies: {{ .Values.server.service.ipFamilies | toYaml | nindent 2 }}
-{{- end }}
+  {{- with .Values.server.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ . }}
+  {{- end }}
+  {{- with .Values.server.service.ipFamilies }}
+  ipFamilies: {{ toYaml . | nindent 4 }}
+  {{- end }}
   ports:
   - name: {{ .Values.server.service.servicePortHttpName }}
     protocol: TCP
