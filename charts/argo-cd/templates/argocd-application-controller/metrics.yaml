@@ -23,6 +23,7 @@ spec:
   type: {{ .Values.controller.metrics.service.type }}
   {{- if and .Values.controller.metrics.service.clusterIP (eq .Values.controller.metrics.service.type "ClusterIP") }}
   clusterIP: {{ .Values.controller.metrics.service.clusterIP }}
+  {{- end }}
   {{- with .Values.controller.metrics.service.ipFamilyPolicy }}
   ipFamilyPolicy: {{ . }}
   {{- end }}
