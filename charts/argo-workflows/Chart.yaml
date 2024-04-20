@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v3.5.5
+appVersion: v3.5.6
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.41.1
+version: 0.41.2
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -16,5 +16,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: added
-      description: Add the ability to use a headless service for the workflow controller
+    - kind: changed
+      description: Bump argo-workflows to v3.5.6
