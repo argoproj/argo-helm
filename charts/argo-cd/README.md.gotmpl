@@ -278,11 +278,6 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
-### 6.8.0
-
-Added support for IPv4/IPv6 dual-stack networking.
-Please refer to [the docs](https://kubernetes.io/docs/concepts/services-networking/dual-stack/) for more information.
-
 ### 6.4.0
 
 Added support for application controller dynamic cluster distribution.
