@@ -3,7 +3,7 @@ appVersion: v2.10.7
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 6.7.14
+version: 6.7.15
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -27,4 +27,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: Pre-set statusbadge.url value to global.domain value
+      description: Pre-set statusbadge.url to global.domain when statusbadge is enabled

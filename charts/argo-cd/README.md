@@ -663,6 +663,7 @@ NAME: my-release
 | configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` | The name of tracking label used by Argo CD for resource pruning |
 | configs.cm."exec.enabled" | bool | `false` | Enable exec feature in Argo UI |
 | configs.cm."server.rbac.log.enforce.enable" | bool | `false` | Enable logs RBAC enforcement |
+| configs.cm."statusbadge.enabled" | bool | `false` | Enable Status Badge |
 | configs.cm."timeout.hard.reconciliation" | string | `"0s"` | Timeout to refresh application data as well as target manifests cache |
 | configs.cm."timeout.reconciliation" | string | `"180s"` | Timeout to discover if a new manifests version got published to the repository |
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
