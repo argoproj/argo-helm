@@ -977,6 +977,7 @@ NAME: my-release
 | server.ingress.labels | object | `{}` | Additional ingress labels |
 | server.ingress.path | string | `"/"` | The path to Argo CD server |
 | server.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
+| server.ingress.secretName | string | `"argocd-server-tls"` | Defines the secret name for the ingress tls |
 | server.ingress.tls | bool | `false` | Enable TLS configuration for the hostname defined at `server.ingress.hostname` |
 | server.ingressGrpc.annotations | object | `{}` | Additional ingress annotations for dedicated [gRPC-ingress] |
 | server.ingressGrpc.enabled | bool | `false` | Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress] |
