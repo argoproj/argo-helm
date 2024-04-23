@@ -2051,6 +2051,10 @@ server:
     # -- Defines which ingress controller will implement the resource
     ingressClassName: ""
 
+    # -- Defines the secret name for the ingress tls
+
+    secretName: argocd-server-tls
+    
     # -- Argo CD server hostname
     # @default -- `""` (defaults to global.domain)
     hostname: ""
