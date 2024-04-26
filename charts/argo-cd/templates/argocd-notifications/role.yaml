@@ -37,7 +37,7 @@ rules:
 - apiGroups:
   - ""
   resourceNames:
-  - argocd-notifications-secret
+  - {{ .Values.notifications.secret.name }}
   resources:
   - secrets
   verbs:

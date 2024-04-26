@@ -55,6 +55,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.controller.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.controller.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.controller.automountServiceAccountToken }}
       containers:
       - args:
         - /usr/local/bin/argocd-application-controller
@@ -334,7 +335,13 @@ spec:
         {{- toYaml . | nindent 6 }}
       {{- end }}
       - name: argocd-home
+        {{- if .Values.controller.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.controller.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
+
       - name: argocd-repo-server-tls
         secret:
           secretName: argocd-repo-server-tls

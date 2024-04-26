@@ -59,6 +59,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.dex.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ template "argo-cd.dex.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.dex.automountServiceAccountToken }}
       containers:
       - name: {{ .Values.dex.name }}
         image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
@@ -187,9 +188,19 @@ spec:
       {{- end }}
       volumes:
       - name: static-files
+        {{- if .Values.dex.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.dex.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: dexconfig
+        {{- if .Values.dex.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.dex.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: argocd-dex-server-tls
         secret:
           secretName: argocd-dex-server-tls

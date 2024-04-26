@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "argo-events.controller.fullname" . }}-metrics
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argo-events.namespace" . | quote }}
   {{- with .Values.controller.metrics.service.annotations }}
   annotations:
     {{- range $key, $value := . }}

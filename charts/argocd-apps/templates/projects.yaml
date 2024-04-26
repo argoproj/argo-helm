@@ -1,72 +1,72 @@
-{{- range .Values.projects }}
+{{- range $projectName, $projectData := .Values.projects }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  {{- with .additionalAnnotations }}
+  {{- with $projectData.additionalAnnotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-  {{- with .additionalLabels }}
+  {{- with $projectData.additionalLabels }}
   labels:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: {{ .name }}
-  {{- with .namespace }}
+  name: {{ $projectName }}
+  {{- with $projectData.namespace }}
   namespace: {{ . }}
   {{- end }}
-  {{- with .finalizers }}
+  {{- with $projectData.finalizers }}
   finalizers:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with .permitOnlyProjectScopedClusters }}
+  {{- with $projectData.permitOnlyProjectScopedClusters }}
   permitOnlyProjectScopedClusters: {{ . }}
   {{- end }}
-  description: {{ .description }}
-  {{- with .sourceRepos }}
+  description: {{ $projectData.description }}
+  {{- with $projectData.sourceRepos }}
   sourceRepos:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .destinations }}
+  {{- with $projectData.destinations }}
   destinations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .clusterResourceWhitelist }}
+  {{- with $projectData.clusterResourceWhitelist }}
   clusterResourceWhitelist:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .clusterResourceBlacklist }}
+  {{- with $projectData.clusterResourceBlacklist }}
   clusterResourceBlacklist:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .namespaceResourceBlacklist }}
+  {{- with $projectData.namespaceResourceBlacklist }}
   namespaceResourceBlacklist:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .namespaceResourceWhitelist }}
+  {{- with $projectData.namespaceResourceWhitelist }}
   namespaceResourceWhitelist:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .orphanedResources }}
+  {{- with $projectData.orphanedResources }}
   orphanedResources:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .roles }}
+  {{- with $projectData.roles }}
   roles:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .syncWindows }}
+  {{- with $projectData.syncWindows }}
   syncWindows:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .signatureKeys }}
+  {{- with $projectData.signatureKeys }}
   signatureKeys:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .sourceNamespaces }}
+  {{- with $projectData.sourceNamespaces }}
   sourceNamespaces:
     {{- toYaml . | nindent 4 }}
   {{- end }}
