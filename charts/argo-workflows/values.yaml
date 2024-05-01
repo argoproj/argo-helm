@@ -69,6 +69,10 @@ workflow:
     # -- Adds Role and RoleBinding for the above specified service account to be able to run workflows.
     # A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below)
     create: true
+    # -- Extra service accounts to be added to the RoleBinding
+    serviceAccounts: []
+      # - name: my-service-account
+      #   namespace: my-namespace
 
 controller:
   image:
@@ -361,6 +365,10 @@ controller:
   clusterWorkflowTemplates:
     # -- Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates.
     enabled: true
+    # -- Extra service accounts to be added to the ClusterRoleBinding
+    serviceAccounts: []
+      # - name: my-service-account
+      #   namespace: my-namespace
   # -- Extra containers to be added to the controller deployment
   extraContainers: []
 
