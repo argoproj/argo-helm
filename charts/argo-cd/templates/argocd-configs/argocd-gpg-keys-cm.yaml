@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-gpg-keys-cm
-  namespace: {{ include "argo-events.namespace" . | quote }}
+  namespace: {{ include "argo-cd.namespace" . | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "name" "gpg-keys-cm") | nindent 4 }}
   {{- with .Values.configs.gpg.annotations }}
