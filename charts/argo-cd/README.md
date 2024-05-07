@@ -619,6 +619,7 @@ NAME: my-release
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
+| namespaceOverride | string | `.Release.Namespace` | Override the namespace |
 | openshift.enabled | bool | `false` | enables using arbitrary uid for argo repo server |
 
 ## Global Configs
