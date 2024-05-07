@@ -12,5 +12,5 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ include "argo-cd.notifications.serviceAccountName" . }}
-  namespace: {{ include "argo-events.namespace" . }}
+  namespace: {{ include "argo-cd.namespace" . }}
 {{- end }}

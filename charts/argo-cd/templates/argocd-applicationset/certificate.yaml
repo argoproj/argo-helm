@@ -9,7 +9,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ template "argo-cd.applicationSet.fullname" . }}
-  namespace: {{ include "argo-events.namespace" . | quote }}
+  namespace: {{ include "argo-cd.namespace" . | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
 spec:
