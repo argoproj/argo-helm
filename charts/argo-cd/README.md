@@ -232,7 +232,7 @@ server:
           port: 8080
       frontendConfig:
         redirectToHttps:
-          enabled: true
+          enabled: true 
       managedCertificate:
         enabled: true
 ```
