@@ -1,0 +1,11 @@
+# Test application controller dynamic cluster distribution
+crds:
+  keep: false
+
+controller:
+  dynamicClusterDistribution: true
+
+# these tests only support vanilla argo-cd
+# do not work for event reporter component
+eventReporter:
+  enabled: false

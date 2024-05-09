@@ -14,7 +14,7 @@ metadata:
       {{- toYaml . | nindent 4 }}
     {{- end }}
   name: {{ include "argocd-image-updater.fullname" . }}-metrics
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
 spec:
   ports:
     - name: metrics

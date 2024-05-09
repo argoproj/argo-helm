@@ -17,7 +17,7 @@ spec:
   strategy:
     {{- trim . | nindent 4 }}
   {{- end }}
-  replicas: {{ .Values.applicationSet.replicas | default .Values.applicationSet.replicaCount }}
+  replicas: {{ .Values.applicationSet.replicas }}
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
     matchLabels:
@@ -56,6 +56,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.applicationSet.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.applicationSet.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.applicationSet.automountServiceAccountToken }}
       containers:
         - name: {{ .Values.applicationSet.name }}
           image: {{ default .Values.global.image.repository .Values.applicationSet.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.applicationSet.image.tag }}
@@ -65,20 +66,6 @@ spec:
             - --metrics-addr=:{{ .Values.applicationSet.containerPorts.metrics }}
             - --probe-addr=:{{ .Values.applicationSet.containerPorts.probe }}
             - --webhook-addr=:{{ .Values.applicationSet.containerPorts.webhook }}
-            {{- with .Values.applicationSet.args.policy }}
-            - --policy={{ . }}
-            {{- end }}
-            {{- with .Values.applicationSet.args.dryRun }}
-            - --dry-run={{ . }}
-            {{- end }}
-            {{- with .Values.applicationSet.logFormat }}
-            - --logformat
-            - {{ . }}
-            {{- end }}
-            {{- with .Values.applicationSet.logLevel }}
-            - --loglevel
-            - {{ . }}
-            {{- end }}
             {{- with .Values.applicationSet.extraArgs }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -316,9 +303,19 @@ spec:
           configMap:
             name: argocd-gpg-keys-cm
         - name: gpg-keyring
+          {{- if .Values.applicationSet.emptyDir.sizeLimit }}
+          emptyDir:
+            sizeLimit: {{ .Values.applicationSet.emptyDir.sizeLimit }}
+          {{- else }}
           emptyDir: {}
+          {{- end }}
         - name: tmp
+          {{- if .Values.applicationSet.emptyDir.sizeLimit }}
+          emptyDir:
+            sizeLimit: {{ .Values.applicationSet.emptyDir.sizeLimit }}
+          {{- else }}
           emptyDir: {}
+          {{- end }}
         - name: argocd-repo-server-tls
           secret:
             secretName: argocd-repo-server-tls

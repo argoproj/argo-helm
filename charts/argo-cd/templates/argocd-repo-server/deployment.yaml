@@ -30,7 +30,7 @@ spec:
         {{- if .Values.repoServer.certificateSecret.enabled }}
         checksum/repo-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-repo-server-tls-secret.yaml") . | sha256sum }}
         {{- end }}
-        {{- if (hasKey .Values.server "configEnabled") | ternary .Values.server.configEnabled .Values.configs.cm.create }}
+        {{- if .Values.configs.cm.create }}
         checksum/cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | sha256sum }}
         {{- end }}
         {{- if .Values.configs.cmp.create }}
@@ -66,6 +66,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.repoServer.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.repoServer.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.repoServer.automountServiceAccountToken }}
       containers:
       - name: {{ .Values.repoServer.name }}
         image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}
@@ -74,14 +75,6 @@ spec:
         - /usr/local/bin/argocd-repo-server
         - --port={{ .Values.repoServer.containerPorts.server }}
         - --metrics-port={{ .Values.repoServer.containerPorts.metrics }}
-        {{- with .Values.repoServer.logFormat }}
-        - --logformat
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.repoServer.logLevel }}
-        - --loglevel
-        - {{ . | quote }}
-        {{- end }}
         {{- with .Values.repoServer.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -97,6 +90,8 @@ spec:
             value: {{ .Values.applicationVersioning.enabled | quote }}
           - name: CODEFRESH_APPVERSION_USE_APPCONFIG
             value: {{ .Values.applicationVersioning.useApplicationConfiguration | quote }}
+          - name: ARGOCD_REPO_SERVER_NAME
+            value: {{ template "argo-cd.repoServer.fullname" . }}
           - name: ARGOCD_RECONCILIATION_TIMEOUT
             valueFrom:
               configMapKeyRef:
@@ -416,26 +411,46 @@ spec:
         {{- if .Values.repoServer.existingVolumes.helmWorkingDir -}}
         {{ toYaml .Values.repoServer.existingVolumes.helmWorkingDir | nindent 8  }}
         {{- else }}
+          {{- if .Values.repoServer.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.repoServer.emptyDir.sizeLimit }}
+          {{- else }}
         emptyDir: {}
+          {{- end }}
         {{- end }}
       {{- end }}
       - name: plugins
         {{- if .Values.repoServer.existingVolumes.plugins -}}
         {{ toYaml .Values.repoServer.existingVolumes.plugins | nindent 8  }}
         {{- else }}
+          {{- if .Values.repoServer.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.repoServer.emptyDir.sizeLimit }}
+          {{- else }}
         emptyDir: {}
+          {{- end }}
         {{- end }}
       - name: var-files
         {{- if .Values.repoServer.existingVolumes.varFiles -}}
         {{ toYaml .Values.repoServer.existingVolumes.varFiles | nindent 8  }}
         {{- else }}
+          {{- if .Values.repoServer.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.repoServer.emptyDir.sizeLimit }}
+          {{- else }}
         emptyDir: {}
+          {{- end }}
         {{- end }}
       - name: tmp
         {{- if .Values.repoServer.existingVolumes.tmp -}}
         {{ toYaml .Values.repoServer.existingVolumes.tmp | nindent 8  }}
         {{- else }}
+          {{- if .Values.repoServer.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.repoServer.emptyDir.sizeLimit }}
+          {{- else }}
         emptyDir: {}
+          {{- end }}
         {{- end }}
       - name: ssh-known-hosts
         configMap:
@@ -450,7 +465,12 @@ spec:
         {{- if .Values.repoServer.existingVolumes.gpgKeyring -}}
         {{ toYaml .Values.repoServer.existingVolumes.gpgKeyring | nindent 8  }}
         {{- else }}
+          {{- if .Values.repoServer.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.repoServer.emptyDir.sizeLimit }}
+          {{- else }}
         emptyDir: {}
+          {{- end }}
         {{- end }}
       - name: argocd-repo-server-tls
         secret:

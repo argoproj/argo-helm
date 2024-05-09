@@ -63,7 +63,181 @@ applicationSet:
   replicas: 2
 ```
 
-### Synchronizing Changes from Original Repository
+## Ingress configuration
+
+Please refer to the [Operator Manual](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingress-configurationh) for details as the samples
+below corespond to their respective sections.
+
+### SSL-Passthrough
+
+The `tls: true` option will expect that the `argocd-server-tls` secret exists as Argo CD server loads TLS certificates from this place.
+
+```yaml
+global:
+  domain: argocd.example.com
+
+certificate:
+  enabled: true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    tls: true
+```
+
+### SSL Termination at Ingress Controller
+
+```yaml
+global:
+  domain: argocd.example.com
+
+configs:
+  params:
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    extraTls:
+      - hosts:
+        - argocd.example.com
+        # Based on the ingress controller used secret might be optional
+        secretName: wildcard-tls
+```
+
+> **Note:**
+> If you don't plan on using a wildcard certificate it's also possible to use `tls: true` without `extraTls` section.
+
+### Multiple ingress resources for gRPC protocol support
+
+Use `ingressGrpc` section if your ingress controller supports only a single protocol per Ingress resource (i.e.: Contour).
+
+```yaml
+global:
+  domain: argocd.example.com
+
+configs:
+  params:
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: contour-internal
+    extraTls:
+      - hosts:
+        - argocd.example.com
+        secretName: wildcard-tls
+
+   ingressGrpc:
+     enabled: true
+     ingressClassName: contour-internal
+     extraTls:
+      - hosts:
+        - grpc.argocd.example.com
+        secretName: wildcard-tls
+```
+
+### Multiple ingress domains
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "<my-issuer>"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    tls: true
+    extraHosts:
+      - name: argocd-alias.example.com
+        path: /
+```
+
+### AWS Application Load Balancer
+
+Refer to the Operator Manual for [AWS Application Load Balancer mode](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#aws-application-load-balancers-albs-and-classic-elb-http-mode).
+The provided example assumes you are using TLS off-loading via AWS ACM service.
+
+> **Note:**
+> Using `controller: aws` creates additional service for gRPC traffic and it's no longer need to use `ingressGrpc` configuration section.
+
+```yaml
+global:
+  domain: argocd.example.com
+
+configs:
+  params:
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
+    controller: aws
+    ingressClassName: alb
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internal
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/backend-protocol: HTTP
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":80}, {"HTTPS":443}]'
+      alb.ingress.kubernetes.io/ssl-redirect: '443'
+    aws:
+      serviceType: ClusterIP # <- Used with target-type: ip
+      backendProtocolVersion: GRPC
+```
+
+### GKE Application Load Balancer
+
+The implementation will populate `ingressClassName`, `networking.gke.io/managed-certificates` and `networking.gke.io/v1beta1.FrontendConfig` annotations
+automatically if you provide configuration for GKE resources.
+
+```yaml
+global:
+  domain: argocd.example.com
+
+configs:
+  params:
+    server.insecure: true
+
+server:
+  service:
+    annotations:
+      cloud.google.com/neg: '{"ingress": true}'
+      cloud.google.com/backend-config: '{"ports": {"http":"argocd-server"}}'
+
+  ingress:
+    enabled: true
+    controller: gke
+    gke:
+      backendConfig:
+        healthCheck:
+          checkIntervalSec: 30
+          timeoutSec: 5
+          healthyThreshold: 1
+          unhealthyThreshold: 2
+          type: HTTP
+          requestPath: /healthz
+          port: 8080
+      frontendConfig:
+        redirectToHttps:
+          enabled: true  
+      managedCertificate:
+        enabled: true
+```
+
+
+## Synchronizing Changes from Original Repository
 
 In the original [Argo CD repository](https://github.com/argoproj/argo-cd/) an [`manifests/install.yaml`](https://github.com/argoproj/argo-cd/blob/master/manifests/install.yaml) is generated using `kustomize`. It's the basis for the installation as [described in the docs](https://argo-cd.readthedocs.io/en/stable/getting_started/#1-install-argo-cd).
 
@@ -104,15 +278,51 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 6.4.0
+
+Added support for application controller dynamic cluster distribution.
+Please refer to [the docs](https://argo-cd.readthedocs.io/en/stable/operator-manual/dynamic-cluster-distribution) for more information.
+
+Added env variables to handle the non-standard names generated by the helm chart.
+Here are the [docs](https://argo-cd.readthedocs.io/en/release-2.9/user-guide/environment-variables/)
+and [code](https://github.com/argoproj/argo-cd/blob/99723143b96ceec9ef5b0a7feb7b4f4b0dce3497/common/common.go#L252)
+
+### 6.1.0
+
+Added support for global domain used by all components.
+
+### 6.0.0
+
+This version **removes support for**:
+
+* deprecated component options `logLevel` and `logFormat`
+* deprecated component arguments `<components>.args.<feature>` that were replaced with `configs.params`
+* deprecated configuration `server.config` that was replaced with `configs.cm`
+* deprecated configuration `server.rbacConfig` that was replaced with `configs.rbac`
+
+Major version also contains breaking **changes related to Argo CD Ingress** resources that were hard to extend and maintain for various ingress controller implementations.
+Please review your setup and adjust to new configuration options:
+
+* catch all rule was removed for security reasons. If you need this please use `server.ingress.extraRules` to provide ingress rule without hostname
+* ingress rule for `paths` changed to `path` as there is only single Argo CD backend path
+* ingress rule for `hosts` changed to `hostname` as there can be only single SSO redirect for given hostname
+* ingress TLS for server uses by default `argocd-server-tls` secret required by Argo CD server, additional ingresses are using `<hostname>-tls` secret when `tls: true`
+* additional hostnames and routing can be provided via `extraHosts` configuration section
+* additional TLS secrets can be provided via `extraTls` configuration section
+
+Please refer to [ingress configuration](#ingress-configuration) for examples.
+
 ### 5.53.0
 
 Argocd-repo-server can now optionally use Persistent Volumes for its mountpoints instead of only emptydir()
 
 ### 5.52.0
+
 Because [Argo CD Extensions] is now deprecated and no further changes will be made, we switched to [Argo CD Extension Installer], adding an Argo CD Extension Installer to init-container in the Argo CD API server.
 If you used old mechanism, please move to new mechanism. For more details, please refer `.Values.server.extensions` in values.yaml.
 
 ### 5.35.0
+
 This version supports Kubernetes version `>=1.23.0-0`. The current supported version of Kubernetes is v1.24 or later and we align with the Amazon EKS calendar, because many AWS users follow a conservative approach.
 
 Please see more information about EoL: [Amazon EKS EoL][EKS EoL].
@@ -455,28 +665,6 @@ NAME: my-release
 | {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
   {{- end }}
 {{- end }}
-
-### Using AWS ALB Ingress Controller With GRPC
-
-If you are using an AWS ALB Ingress controller, you will need to set `server.ingressGrpc.isAWSALB` to `true`. This will create a second service with the annotation `alb.ingress.kubernetes.io/backend-protocol-version: HTTP2` and modify the server ingress to add a condition annotation to route GRPC traffic to the new service.
-
-Example:
-
-```yaml
-server:
-  ingress:
-    enabled: true
-    annotations:
-      alb.ingress.kubernetes.io/backend-protocol: HTTPS
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-      alb.ingress.kubernetes.io/scheme: internal
-      alb.ingress.kubernetes.io/target-type: ip
-  ingressGrpc:
-    enabled: true
-    isAWSALB: true
-    awsALB:
-      serviceType: ClusterIP
-```
 
 ## Dex
 

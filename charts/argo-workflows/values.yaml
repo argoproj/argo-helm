@@ -26,6 +26,10 @@ nameOverride:
 # -- String to fully override "argo-workflows.fullname" template
 fullnameOverride:
 
+# -- Override the namespace
+# @default -- `.Release.Namespace`
+namespaceOverride: ""
+
 # -- Labels to set on all resources
 commonLabels: {}
 
@@ -38,6 +42,8 @@ apiVersionOverrides:
   autoscaling: "" # autoscaling/v2
   # -- String to override apiVersion of GKE resources rendered by this helm chart
   cloudgoogle: "" # cloud.google.com/v1
+  # -- String to override apiVersion of monitoring CRDs (ServiceMonitor) rendered by this helm chart
+  monitoring: "" # monitoring.coreos.com/v1
 
 # -- Restrict Argo to operate only in a single namespace (the namespace of the
 # Helm release) by apply Roles and RoleBindings instead of the Cluster
@@ -129,6 +135,8 @@ controller:
     servicePort: 8080
     # -- Service metrics port name
     servicePortName: metrics
+    # -- Flag to enable headless service
+    headlessService: false
     # -- ServiceMonitor relabel configs to apply to samples before scraping
     ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
     relabelings: []
@@ -692,7 +700,7 @@ server:
       name: argo-server-sso
       # -- Key of a secret to retrieve the app OIDC client secret
       key: client-secret
-    # - The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
+    # -- The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
     redirectUrl: ""
     rbac:
       # -- Adds ServiceAccount Policy to server (Cluster)Role.
@@ -775,6 +783,9 @@ artifactRepository:
     #   key: secretkey
     # # insecure will disable TLS. Primarily used for minio installs not configured with TLS
     # insecure: false
+    # caSecret:
+    #   name: ca-root
+    #   key: cert.pem
     # bucket:
     # endpoint:
     # region:

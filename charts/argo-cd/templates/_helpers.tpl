@@ -159,10 +159,14 @@ Create the name of the notifications service account to use
 {{- end -}}
 
 {{/*
-Argo Configuration Preset Values (Incluenced by Values configuration)
+Argo Configuration Preset Values (Influenced by Values configuration)
 */}}
 {{- define "argo-cd.config.cm.presets" -}}
 {{- $presets := dict -}}
+{{- $_ := set $presets "url" (printf "https://%s" .Values.global.domain) -}}
+{{- if index .Values.configs.cm "statusbadge.enabled" | eq true -}}
+{{- $_ := set $presets "statusbadge.url" (printf "https://%s/" .Values.global.domain) -}}
+{{- end -}}
 {{- if .Values.configs.styles -}}
 {{- $_ := set $presets "ui.cssurl" "./custom/custom.styles.css" -}}
 {{- end -}}
@@ -173,7 +177,7 @@ Argo Configuration Preset Values (Incluenced by Values configuration)
 Merge Argo Configuration with Preset Configuration
 */}}
 {{- define "argo-cd.config.cm" -}}
-{{- $config := (mergeOverwrite (deepCopy (omit .Values.configs.cm "create" "annotations")) (.Values.server.config | default dict))  -}}
+{{- $config := omit .Values.configs.cm "create" "annotations" -}}
 {{- $preset := include "argo-cd.config.cm.presets" . | fromYaml | default dict -}}
 {{- range $key, $value := mergeOverwrite $preset $config }}
 {{- $fmted := $value | toString }}

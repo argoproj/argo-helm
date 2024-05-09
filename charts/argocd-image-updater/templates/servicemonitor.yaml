@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "argocd-image-updater.fullname" . }}-metrics
-  namespace: {{ default .Release.Namespace .Values.metrics.serviceMonitor.namespace | quote }}
+  namespace: {{ default (include "argocd-image-updater.namespace" .) .Values.metrics.serviceMonitor.namespace | quote }}
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
     {{- with .Values.metrics.serviceMonitor.selector }}
@@ -29,7 +29,7 @@ spec:
       {{- end }}
   namespaceSelector:
     matchNames:
-      - {{ .Release.Namespace }}
+      - {{ include "argocd-image-updater.namespace" . | quote }}
   selector:
     matchLabels:
       {{- include "argocd-image-updater.selectorLabels" . | nindent 6 }}

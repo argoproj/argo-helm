@@ -5,19 +5,13 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "name" "tls-certs-cm") | nindent 4 }}
-  {{- with (mergeOverwrite (deepCopy .Values.configs.tls.annotations) (.Values.configs.tlsCertsAnnotations | default dict)) }}
+  {{- with .Values.configs.tls.annotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-{{- if hasKey .Values.configs "tlsCerts" }}
-  {{- with .Values.configs.tlsCerts }}
-    {{- toYaml . | nindent 0 }}
-  {{- end }}
-{{- else }}
 {{- with .Values.configs.tls.certificates }}
 data:
   {{- toYaml . | nindent 2 }}
-{{- end }}
 {{- end }}

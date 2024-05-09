@@ -1,9 +1,10 @@
-{{- if and (or .Values.controller.metricsConfig.enabled .Values.controller.telemetryConfig.enabled) .Values.controller.serviceMonitor.enabled }}
-apiVersion: monitoring.coreos.com/v1
+{{- $apiVersion := include "argo-workflows.apiVersions.monitoring" . }}
+{{- if and (.Capabilities.APIVersions.Has $apiVersion) (or .Values.controller.metricsConfig.enabled .Values.controller.telemetryConfig.enabled) .Values.controller.serviceMonitor.enabled }}
+apiVersion: {{ $apiVersion }}
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
-  namespace: {{ default .Release.Namespace .Values.controller.serviceMonitor.namespace | quote }}
+  namespace: {{ default (include "argo-workflows.namespace" .) .Values.controller.serviceMonitor.namespace | quote }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     {{- with .Values.controller.serviceMonitor.additionalLabels }}
@@ -43,7 +44,7 @@ spec:
   {{- end }}
   namespaceSelector:
     matchNames:
-      - {{ .Release.Namespace | quote }}
+      - {{ include "argo-workflows.namespace" . | quote }}
   selector:
     matchLabels:
       {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}

@@ -136,3 +136,11 @@ Define Pdb apiVersion
 {{- printf "policy/v1beta1" -}}
 {{- end }}
 {{- end }}
+
+{{/*
+Expand the namespace of the release.
+Allows overriding it for multi-namespace deployments in combined charts.
+*/}}
+{{- define "argo-events.namespace" -}}
+{{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
+{{- end }}

@@ -1,5 +1,5 @@
 {{- if .Values.workflow.rbac.create -}}
-  {{- range $namespace := or .Values.singleNamespace false | ternary (list "") (append .Values.controller.workflowNamespaces (coalesce .Values.workflow.namespace .Release.Namespace) | uniq)  }}
+  {{- range $namespace := or .Values.singleNamespace false | ternary (list "") (append .Values.controller.workflowNamespaces (coalesce .Values.workflow.namespace (include "argo-workflows.namespace" .)) | uniq)  }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
