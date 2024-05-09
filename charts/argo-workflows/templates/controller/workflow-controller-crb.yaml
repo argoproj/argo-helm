@@ -8,7 +8,7 @@ kind: ClusterRoleBinding
 metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
   {{- if .Values.singleNamespace }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argo-workflows.namespace" . | quote }}
   {{- end }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
@@ -23,7 +23,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ template "argo-workflows.controllerServiceAccountName" . }}
-    namespace: {{ .Release.Namespace | quote }}
+    namespace: {{ include "argo-workflows.namespace" . | quote }}
 
 {{- if .Values.controller.clusterWorkflowTemplates.enabled }}
 ---
@@ -40,6 +40,6 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ template "argo-workflows.controllerServiceAccountName" . }}
-    namespace: {{ .Release.Namespace | quote }}
+    namespace: {{ include "argo-workflows.namespace" . | quote }}
 {{- end }}
 {{- end }}

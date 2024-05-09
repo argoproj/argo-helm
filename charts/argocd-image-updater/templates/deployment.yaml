@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "argocd-image-updater.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
 spec:
@@ -103,6 +103,10 @@ spec:
                 optional: true
           {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- with .Values.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

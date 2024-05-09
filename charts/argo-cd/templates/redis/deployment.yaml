@@ -52,6 +52,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.redis.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.redis.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.redis.automountServiceAccountToken }}
       containers:
       - name: {{ .Values.redis.name }}
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
@@ -193,7 +194,7 @@ spec:
         - name: health
           configMap:
             name: {{ include "argo-cd.redis.fullname" . }}-health-configmap
-            defaultMode: 0755
+            defaultMode: 493
       {{- with .Values.redis.volumes }}
         {{- toYaml . | nindent 8}}
       {{- end }}

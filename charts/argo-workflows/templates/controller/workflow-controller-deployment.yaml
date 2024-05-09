@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "argo-workflows.controller.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argo-workflows.namespace" . | quote }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     app.kubernetes.io/version: {{ include "argo-workflows.controller_chart_version_label" . }}
@@ -89,6 +89,10 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.name
+          {{- if eq (int .Values.controller.replicas) 1 }}
+            - name: LEADER_ELECTION_DISABLE
+              value: "true"
+          {{- end }}
           {{- with .Values.controller.extraEnv }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

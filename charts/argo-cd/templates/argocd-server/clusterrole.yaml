@@ -1,5 +1,4 @@
-{{- $config := .Values.server.clusterAdminAccess | default dict -}}
-{{- if hasKey $config "enabled" | ternary $config.enabled .Values.createClusterRoles }}
+{{- if .Values.createClusterRoles }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -7,6 +6,9 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 rules:
+  {{- if .Values.server.clusterRoleRules.enabled }}
+    {{- toYaml .Values.server.clusterRoleRules.rules | nindent 2 }}
+  {{- else }}
   - apiGroups:
       - '*'
     resources:
@@ -31,7 +33,7 @@ rules:
       - pods/log
     verbs:
       - get
-  {{- if eq (toString (index (coalesce .Values.server.config .Values.configs.cm) "exec.enabled")) "true" }}
+  {{- if eq (toString (index .Values.configs.cm "exec.enabled")) "true" }}
   - apiGroups:
       - ""
     resources:
@@ -49,6 +51,17 @@ rules:
       - list
       - update
       - watch
+  {{- if (index .Values.configs.params "application.namespaces") }}
+  - apiGroups:
+      - "argoproj.io"
+    resources:
+      - "applications"
+    verbs:
+      - create
+      - delete
+      - update
+      - patch
+  {{- end }}
   - apiGroups:
       - batch
     resources:
@@ -63,4 +76,5 @@ rules:
     verbs:
       {{/* supports triggering workflows from UI */}}
       - create
+  {{- end }}
 {{- end }}

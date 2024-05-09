@@ -4,8 +4,8 @@ metadata:
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
   name: argocd-image-updater-ssh-config
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
+{{- with .Values.config.sshConfig }}
 data:
-  {{- with .Values.config.sshConfig }}
   {{- toYaml . | nindent 2 }}
-  {{- end }}
+{{- end }}

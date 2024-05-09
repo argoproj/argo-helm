@@ -17,6 +17,8 @@ imagePullSecrets: []
 nameOverride: ""
 # -- Global fullname (argocd-image-updater.fullname in _helpers.tpl) override
 fullnameOverride: ""
+# -- Global namespace (argocd-image-updater.namespace in _helpers.tpl) override
+namespaceOverride: ""
 
 # -- Extra arguments for argocd-image-updater not defined in `config.argocd`.
 # If a flag contains both key and value, they need to be split to a new entry
@@ -41,6 +43,13 @@ extraArgs: []
 extraEnv: []
   # - name: AWS_REGION
   #   value: "us-west-1"
+
+# -- Extra envFrom to pass to argocd-image-updater
+extraEnvFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
 # -- Extra K8s manifests to deploy for argocd-image-updater
 ## Note: Supports use of custom Helm templates
@@ -99,6 +108,7 @@ config:
   applicationsAPIKind: ""
 
   # Described in detail here https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags
+  # Note: this is only relevant if config.applicationsAPIKind == 'argocd'
   argocd:
     # -- Use the gRPC-web protocol to connect to the Argo CD API
     grpcWeb: true
@@ -178,6 +188,8 @@ serviceAccount:
   create: true
   # -- Annotations to add to the service account
   annotations: {}
+  # -- Labels to add to the service account
+  labels: {}
   # -- The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
