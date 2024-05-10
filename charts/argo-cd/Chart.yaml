@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.10.0
+appVersion: v2.11.0
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 6.0.14
+version: 6.8.2
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -18,7 +18,7 @@ maintainers:
     url: https://argoproj.github.io/
 dependencies:
   - name: redis-ha
-    version: 4.23.0
+    version: 4.26.1
     repository: https://dandydeveloper.github.io/charts/
     condition: redis-ha.enabled
 annotations:

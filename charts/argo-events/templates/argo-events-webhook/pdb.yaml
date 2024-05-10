@@ -3,7 +3,7 @@ apiVersion: {{ template "argo-events.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
   name: {{ template "argo-events.webhook.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argo-events.namespace" . | quote }}
   labels:
     {{- include "argo-events.labels" (dict "context" . "component" .Values.webhook.name "name" .Values.webhook.name) | nindent 4 }}
     {{- with .Values.webhook.pdb.labels }}

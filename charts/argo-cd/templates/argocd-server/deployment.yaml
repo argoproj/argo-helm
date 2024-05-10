@@ -60,6 +60,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.server.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.server.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.server.automountServiceAccountToken }}
       containers:
       - name: {{ .Values.server.name }}
         image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.server.image.tag }}
@@ -75,6 +76,8 @@ spec:
           {{- with (concat .Values.global.env .Values.server.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+          - name: ARGOCD_SERVER_NAME
+            value: {{ template "argo-cd.server.fullname" . }}
           - name: ARGOCD_SERVER_INSECURE
             valueFrom:
               configMapKeyRef:
@@ -452,12 +455,27 @@ spec:
       {{- end }}
       {{- if .Values.server.extensions.enabled }}
       - name: extensions
+        {{- if .Values.server.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.server.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       {{- end }}
       - name: plugins-home
+        {{- if .Values.server.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.server.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: tmp
+        {{- if .Values.server.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.server.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: ssh-known-hosts
         configMap:
           name: argocd-ssh-known-hosts-cm

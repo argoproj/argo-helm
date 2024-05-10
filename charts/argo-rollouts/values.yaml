@@ -41,14 +41,20 @@ extraObjects: []
 global:
   # -- Annotations for all deployed Deployments
   deploymentAnnotations: {}
+  # -- Labels for all deployed Deployments
+  deploymentLabels: {}
 
 controller:
   # -- Value of label `app.kubernetes.io/component`
   component: rollouts-controller
   # -- Annotations to be added to the controller deployment
   deploymentAnnotations: {}
+  # -- Labels to be added to the controller deployment
+  deploymentLabels: {}
   # -- Annotations to be added to application controller pods
   podAnnotations: {}
+  # -- Labels to be added to the application controller pods
+  podLabels: {}
   # -- [Node selector]
   nodeSelector: {}
   # -- [Tolerations] for use with node taints
@@ -273,6 +279,10 @@ providerRBAC:
     contour: true
     # -- Adds RBAC rules for the Gloo Platform provider, see `https://github.com/argoproj-labs/rollouts-plugin-trafficrouter-glooplatform/blob/main/README.md`
     glooPlatform: true
+    # -- Adds RBAC rules for the Gateway API provider
+    gatewayAPI: true
+  # -- Additional RBAC rules for others providers
+  additionalRules: []
 
 dashboard:
   # -- Deploy dashboard server
@@ -283,8 +293,12 @@ dashboard:
   component: rollouts-dashboard
   # -- Annotations to be added to the dashboard deployment
   deploymentAnnotations: {}
+  # -- Labels to be added to the dashboard deployment
+  deploymentLabels: {}
   # -- Annotations to be added to application dashboard pods
   podAnnotations: {}
+  # -- Labels to be added to the application dashboard pods
+  podLabels: {}
   # -- [Node selector]
   nodeSelector: {}
   # -- [Tolerations] for use with node taints

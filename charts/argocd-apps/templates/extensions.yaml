@@ -1,25 +1,25 @@
-{{- range .Values.extensions }}
+{{- range $extensionName, $extensionData:= .Values.extensions }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ArgoCDExtension
 metadata:
-  name: {{ .name }}
-  {{- with .namespace }}
+  name: {{ $extensionName }}
+  {{- with $extensionData.namespace }}
   namespace: {{ . }}
   {{- end }}
   finalizers:
     - extensions-finalizer.argocd.argoproj.io
-  {{- with .additionalLabels }}
+  {{- with $extensionData.additionalLabels }}
   labels:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .additionalAnnotations }}
+  {{- with $extensionData.additionalAnnotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-{{- with .sources }}
+{{- with $extensionData.sources }}
 spec:
   sources:
     {{- toYaml . | nindent 4 }}

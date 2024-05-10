@@ -66,6 +66,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.repoServer.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.repoServer.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.repoServer.automountServiceAccountToken }}
       containers:
       - name: {{ .Values.repoServer.name }}
         image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}
@@ -85,6 +86,8 @@ spec:
           - name: USER_NAME
             value: argocd
           {{- end }}
+          - name: ARGOCD_REPO_SERVER_NAME
+            value: {{ template "argo-cd.repoServer.fullname" . }}
           - name: ARGOCD_RECONCILIATION_TIMEOUT
             valueFrom:
               configMapKeyRef:
@@ -277,6 +280,12 @@ spec:
                 key: reposerver.git.request.timeout
                 name: argocd-cmd-params-cm
                 optional: true
+          - name: ARGOCD_REVISION_CACHE_LOCK_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.revision.cache.lock.timeout
+                name: argocd-cmd-params-cm
+                optional: true
           {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
           - name: HELM_CACHE_HOME
             value: /helm-working-dir
@@ -404,26 +413,46 @@ spec:
         {{- if .Values.repoServer.existingVolumes.helmWorkingDir -}}
         {{ toYaml .Values.repoServer.existingVolumes.helmWorkingDir | nindent 8  }}
         {{- else }}
+          {{- if .Values.repoServer.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.repoServer.emptyDir.sizeLimit }}
+          {{- else }}
         emptyDir: {}
+          {{- end }}
         {{- end }}
       {{- end }}
       - name: plugins
         {{- if .Values.repoServer.existingVolumes.plugins -}}
         {{ toYaml .Values.repoServer.existingVolumes.plugins | nindent 8  }}
         {{- else }}
+          {{- if .Values.repoServer.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.repoServer.emptyDir.sizeLimit }}
+          {{- else }}
         emptyDir: {}
+          {{- end }}
         {{- end }}
       - name: var-files
         {{- if .Values.repoServer.existingVolumes.varFiles -}}
         {{ toYaml .Values.repoServer.existingVolumes.varFiles | nindent 8  }}
         {{- else }}
+          {{- if .Values.repoServer.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.repoServer.emptyDir.sizeLimit }}
+          {{- else }}
         emptyDir: {}
+          {{- end }}
         {{- end }}
       - name: tmp
         {{- if .Values.repoServer.existingVolumes.tmp -}}
         {{ toYaml .Values.repoServer.existingVolumes.tmp | nindent 8  }}
         {{- else }}
+          {{- if .Values.repoServer.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.repoServer.emptyDir.sizeLimit }}
+          {{- else }}
         emptyDir: {}
+          {{- end }}
         {{- end }}
       - name: ssh-known-hosts
         configMap:
@@ -438,7 +467,12 @@ spec:
         {{- if .Values.repoServer.existingVolumes.gpgKeyring -}}
         {{ toYaml .Values.repoServer.existingVolumes.gpgKeyring | nindent 8  }}
         {{- else }}
+          {{- if .Values.repoServer.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.repoServer.emptyDir.sizeLimit }}
+          {{- else }}
         emptyDir: {}
+          {{- end }}
         {{- end }}
       - name: argocd-repo-server-tls
         secret:

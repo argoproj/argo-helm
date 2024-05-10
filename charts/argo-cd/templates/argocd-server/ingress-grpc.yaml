@@ -1,5 +1,5 @@
-{{- if and .Values.server.ingressGrpc.enabled (eq .Values.server.ingress.controller "generic") -}}
-{{- $hostname := .Values.server.ingressGrpc.hostname | default (printf "grpc.%s" .Values.server.ingress.hostname) -}}
+{{- if .Values.server.ingressGrpc.enabled -}}
+{{- $hostname := printf "grpc.%s" (.Values.server.ingress.hostname | default .Values.global.domain) -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -21,11 +21,11 @@ spec:
   ingressClassName: {{ . }}
   {{- end }}
   rules:
-    - host: {{ $hostname }}
+    - host: {{ .Values.server.ingressGrpc.hostname | default $hostname }}
       http:
         paths:
           {{- with .Values.server.ingressGrpc.extraPaths }}
-            {{- toYaml . | nindent 10 }}
+            {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
           - path: {{ .Values.server.ingressGrpc.path }}
             pathType: {{ .Values.server.ingressGrpc.pathType }}
@@ -47,13 +47,13 @@ spec:
                   number: {{ $.Values.server.service.servicePortHttps }}
     {{- end }}
     {{- with .Values.server.ingressGrpc.extraRules }}
-      {{- toYaml . | nindent 4 }}
+      {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
   {{- if or .Values.server.ingressGrpc.tls .Values.server.ingressGrpc.extraTls }}
   tls:
     {{- if .Values.server.ingressGrpc.tls }}
     - hosts:
-      - {{ $hostname }}
+      - {{ .Values.server.ingressGrpc.hostname | default $hostname }}
       secretName: argocd-server-grpc-tls
     {{- end }}
     {{- with .Values.server.ingressGrpc.extraTls }}

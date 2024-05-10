@@ -6,6 +6,9 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 rules:
+  {{- if .Values.server.clusterRoleRules.enabled }}
+    {{- toYaml .Values.server.clusterRoleRules.rules | nindent 2 }}
+  {{- else }}
   - apiGroups:
       - '*'
     resources:
@@ -48,6 +51,17 @@ rules:
       - list
       - update
       - watch
+  {{- if (index .Values.configs.params "application.namespaces") }}
+  - apiGroups:
+      - "argoproj.io"
+    resources:
+      - "applications"
+    verbs:
+      - create
+      - delete
+      - update
+      - patch
+  {{- end }}
   - apiGroups:
       - batch
     resources:
@@ -62,4 +76,5 @@ rules:
     verbs:
       {{/* supports triggering workflows from UI */}}
       - create
+  {{- end }}
 {{- end }}
