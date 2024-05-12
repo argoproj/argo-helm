@@ -31,7 +31,6 @@ data:
   {{- with .Values.notifications.triggers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-
   {{- with .Values.cfNotifications.notifiers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
