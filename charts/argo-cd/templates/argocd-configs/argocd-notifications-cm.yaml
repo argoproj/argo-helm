@@ -12,6 +12,9 @@ data:
     {{- with .Values.notifications.context }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
+    {{- with .Values.cf-notifications.context }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.notifications.notifiers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
