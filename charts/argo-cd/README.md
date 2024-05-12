@@ -611,86 +611,90 @@ NAME: my-release
 | apiVersionOverrides | object | `{}` |  |
 | applicationVersioning.enabled | bool | `true` | enables the Codefresh application versioning feature |
 | applicationVersioning.useApplicationConfiguration | bool | `true` | use ApplicationConfiguration CRD to manage application versioning |
-| codefresh.eventReporter.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
-| codefresh.eventReporter.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the event reporter's ClusterRole resource |
-| codefresh.eventReporter.clusterRoleRules.rules | list | `[]` | List of custom rules for the event reporter's ClusterRole resource |
-| codefresh.eventReporter.containerPorts.health | int | `8088` |  |
-| codefresh.eventReporter.containerPorts.metrics | int | `8087` | Metrics container port |
-| codefresh.eventReporter.containerSecurityContext | object | See [values.yaml] | Event reporter container-level security context |
-| codefresh.eventReporter.dnsConfig | object | `{}` | [DNS configuration] |
-| codefresh.eventReporter.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for event reporter pods |
-| codefresh.eventReporter.enabled | bool | `true` |  |
-| codefresh.eventReporter.env | list | `[]` | Environment variables to pass to event reporter |
-| codefresh.eventReporter.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to event reporter |
-| codefresh.eventReporter.extraArgs | list | `[]` | Additional command line arguments to pass to event reporter |
-| codefresh.eventReporter.extraContainers | list | `[]` | Additional containers to be added to the event reporter pod |
-| codefresh.eventReporter.hostNetwork | bool | `false` | Host Network for event reporter pods |
-| codefresh.eventReporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the event reporter |
-| codefresh.eventReporter.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the event reporter |
-| codefresh.eventReporter.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the event reporter |
-| codefresh.eventReporter.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
-| codefresh.eventReporter.initContainers | list | `[]` | Init containers to add to the event reporter pod |
-| codefresh.eventReporter.metrics.applicationLabels.enabled | bool | `false` | Enables additional labels in argocd_app_labels metric |
-| codefresh.eventReporter.metrics.applicationLabels.labels | list | `[]` | Additional labels |
-| codefresh.eventReporter.metrics.enabled | bool | `false` | Deploy metrics service |
-| codefresh.eventReporter.metrics.rules.additionalLabels | object | `{}` | PrometheusRule labels |
-| codefresh.eventReporter.metrics.rules.annotations | object | `{}` | PrometheusRule annotations |
-| codefresh.eventReporter.metrics.rules.enabled | bool | `false` | Deploy a PrometheusRule for the event reporter |
-| codefresh.eventReporter.metrics.rules.namespace | string | `""` | PrometheusRule namespace |
-| codefresh.eventReporter.metrics.rules.selector | object | `{}` | PrometheusRule selector |
-| codefresh.eventReporter.metrics.rules.spec | list | `[]` | PrometheusRule.Spec for the event reporter |
-| codefresh.eventReporter.metrics.service.annotations | object | `{}` | Metrics service annotations |
-| codefresh.eventReporter.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
-| codefresh.eventReporter.metrics.service.labels | object | `{}` | Metrics service labels |
-| codefresh.eventReporter.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
-| codefresh.eventReporter.metrics.service.servicePort | int | `8087` | Metrics service port |
-| codefresh.eventReporter.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
-| codefresh.eventReporter.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
-| codefresh.eventReporter.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
-| codefresh.eventReporter.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
-| codefresh.eventReporter.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
-| codefresh.eventReporter.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
-| codefresh.eventReporter.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
-| codefresh.eventReporter.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| codefresh.eventReporter.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
-| codefresh.eventReporter.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
-| codefresh.eventReporter.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
-| codefresh.eventReporter.name | string | `"event-reporter"` |  |
-| codefresh.eventReporter.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
-| codefresh.eventReporter.pdb.annotations | object | `{}` | Annotations to be added to event reporter pdb |
-| codefresh.eventReporter.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the event reporter |
-| codefresh.eventReporter.pdb.labels | object | `{}` | Labels to be added to event reporter pdb |
-| codefresh.eventReporter.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
-| codefresh.eventReporter.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
-| codefresh.eventReporter.podAnnotations | object | `{}` | Annotations to be added to event reporter pods |
-| codefresh.eventReporter.podLabels | object | `{}` | Labels to be added to event reporter pods |
-| codefresh.eventReporter.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the event reporter pods |
-| codefresh.eventReporter.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
-| codefresh.eventReporter.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
-| codefresh.eventReporter.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
-| codefresh.eventReporter.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
-| codefresh.eventReporter.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| codefresh.eventReporter.replicas | int | `3` |  |
-| codefresh.eventReporter.resources | object | `{}` | Resource limits and requests for the event reporter pods |
-| codefresh.eventReporter.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
-| codefresh.eventReporter.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
-| codefresh.eventReporter.serviceAccount.create | bool | `true` | Create a service account for the event reporter |
-| codefresh.eventReporter.serviceAccount.labels | object | `{}` | Labels applied to created service account |
-| codefresh.eventReporter.serviceAccount.name | string | `"event-reporter"` | Service account name |
-| codefresh.eventReporter.statefulsetAnnotations | object | `{}` | Annotations for the event reporter StatefulSet |
-| codefresh.eventReporter.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
-| codefresh.eventReporter.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
-| codefresh.eventReporter.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the event reporter |
-| codefresh.eventReporter.version | string | `"v2"` |  |
-| codefresh.eventReporter.volumeMounts | list | `[]` | Additional volumeMounts to the event reporter main container |
-| codefresh.eventReporter.volumes | list | `[]` | Additional volumes to the event reporter pod |
-| codefresh.promotions.notifications | object | `{}` |  |
+| codefresh.promotions.notifications.context | object | `{}` |  |
+| codefresh.promotions.notifications.notifigers | object | `{}` |  |
+| codefresh.promotions.notifications.subscriptions | list | `[]` |  |
+| codefresh.promotions.notifications.templates | object | `{}` |  |
+| codefresh.promotions.notifications.triggers | object | `{}` |  |
 | crds.additionalLabels | object | `{}` | Addtional labels to be added to all CRDs |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `false` | Create aggregated roles that extend existing cluster roles to interact with argo-cd resources |
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
+| eventReporter.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
+| eventReporter.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the event reporter's ClusterRole resource |
+| eventReporter.clusterRoleRules.rules | list | `[]` | List of custom rules for the event reporter's ClusterRole resource |
+| eventReporter.containerPorts.health | int | `8088` |  |
+| eventReporter.containerPorts.metrics | int | `8087` | Metrics container port |
+| eventReporter.containerSecurityContext | object | See [values.yaml] | Event reporter container-level security context |
+| eventReporter.dnsConfig | object | `{}` | [DNS configuration] |
+| eventReporter.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for event reporter pods |
+| eventReporter.enabled | bool | `true` |  |
+| eventReporter.env | list | `[]` | Environment variables to pass to event reporter |
+| eventReporter.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to event reporter |
+| eventReporter.extraArgs | list | `[]` | Additional command line arguments to pass to event reporter |
+| eventReporter.extraContainers | list | `[]` | Additional containers to be added to the event reporter pod |
+| eventReporter.hostNetwork | bool | `false` | Host Network for event reporter pods |
+| eventReporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the event reporter |
+| eventReporter.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the event reporter |
+| eventReporter.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the event reporter |
+| eventReporter.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
+| eventReporter.initContainers | list | `[]` | Init containers to add to the event reporter pod |
+| eventReporter.metrics.applicationLabels.enabled | bool | `false` | Enables additional labels in argocd_app_labels metric |
+| eventReporter.metrics.applicationLabels.labels | list | `[]` | Additional labels |
+| eventReporter.metrics.enabled | bool | `false` | Deploy metrics service |
+| eventReporter.metrics.rules.additionalLabels | object | `{}` | PrometheusRule labels |
+| eventReporter.metrics.rules.annotations | object | `{}` | PrometheusRule annotations |
+| eventReporter.metrics.rules.enabled | bool | `false` | Deploy a PrometheusRule for the event reporter |
+| eventReporter.metrics.rules.namespace | string | `""` | PrometheusRule namespace |
+| eventReporter.metrics.rules.selector | object | `{}` | PrometheusRule selector |
+| eventReporter.metrics.rules.spec | list | `[]` | PrometheusRule.Spec for the event reporter |
+| eventReporter.metrics.service.annotations | object | `{}` | Metrics service annotations |
+| eventReporter.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
+| eventReporter.metrics.service.labels | object | `{}` | Metrics service labels |
+| eventReporter.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
+| eventReporter.metrics.service.servicePort | int | `8087` | Metrics service port |
+| eventReporter.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
+| eventReporter.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
+| eventReporter.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
+| eventReporter.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
+| eventReporter.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
+| eventReporter.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
+| eventReporter.metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
+| eventReporter.metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
+| eventReporter.metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
+| eventReporter.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
+| eventReporter.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
+| eventReporter.name | string | `"event-reporter"` |  |
+| eventReporter.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
+| eventReporter.pdb.annotations | object | `{}` | Annotations to be added to event reporter pdb |
+| eventReporter.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the event reporter |
+| eventReporter.pdb.labels | object | `{}` | Labels to be added to event reporter pdb |
+| eventReporter.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
+| eventReporter.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| eventReporter.podAnnotations | object | `{}` | Annotations to be added to event reporter pods |
+| eventReporter.podLabels | object | `{}` | Labels to be added to event reporter pods |
+| eventReporter.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the event reporter pods |
+| eventReporter.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| eventReporter.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| eventReporter.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| eventReporter.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| eventReporter.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
+| eventReporter.replicas | int | `3` |  |
+| eventReporter.resources | object | `{}` | Resource limits and requests for the event reporter pods |
+| eventReporter.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
+| eventReporter.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| eventReporter.serviceAccount.create | bool | `true` | Create a service account for the event reporter |
+| eventReporter.serviceAccount.labels | object | `{}` | Labels applied to created service account |
+| eventReporter.serviceAccount.name | string | `"event-reporter"` | Service account name |
+| eventReporter.statefulsetAnnotations | object | `{}` | Annotations for the event reporter StatefulSet |
+| eventReporter.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
+| eventReporter.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| eventReporter.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the event reporter |
+| eventReporter.version | string | `"v2"` |  |
+| eventReporter.volumeMounts | list | `[]` | Additional volumeMounts to the event reporter main container |
+| eventReporter.volumes | list | `[]` | Additional volumes to the event reporter pod |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |

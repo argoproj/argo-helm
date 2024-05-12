@@ -12,10 +12,10 @@ data:
     {{- with (merge .Values.notifications.context .Values.codefresh.promotions.notifications.context) }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with $notifiers }}
+  {{- with (merge .Values.notifications.notifiers .Values.codefresh.promotions.notifications.notifiers) }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- with (append .Values.notifications.subscriptions .Values.codefresh.promotions.notifications.subscriptions) }}
+  {{- with (concat .Values.notifications.subscriptions .Values.codefresh.promotions.notifications.subscriptions) }}
   subscriptions: |
     {{- toYaml . | nindent 4 }}
   {{- end }}
