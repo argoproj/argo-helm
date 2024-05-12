@@ -1,10 +1,4 @@
 {{- if and .Values.notifications.enabled .Values.notifications.cm.create }}
-  {{- $subscriptions := slice }}
-  {{- range $key, $value := .Values.notifications.subscriptions }}
-    {{- $subscriptions = append $subscriptions $key }}
-  {{- end }}
-
-  {{- $subscriptions = append $subscriptions .Values.codefresh.promotions.notifications.subscriptions }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -21,7 +15,7 @@ data:
   {{- with $notifiers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- with $subscriptions }}
+  {{- with (append .Values.notifications.subscriptions .Values.codefresh.promotions.notifications.subscriptions) }}
   subscriptions: |
     {{- toYaml . | nindent 4 }}
   {{- end }}

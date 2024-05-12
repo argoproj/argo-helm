@@ -3543,285 +3543,286 @@ notifications:
     # defaultTriggers: |
     #   - on-sync-status-unknown
 
-codefresh:
-  eventReporter:
-    # Enabled we need to skip argo-cd chart tests for this component
-    enabled: true
-    # Version we need to dynamically switch between old and new version
-    # one will be just hanging and the second one working
-    # possible values: v1, v2
-    version: v2
+
+eventReporter:
+  # Enabled we need to skip argo-cd chart tests for this component
+  enabled: true
+  # Version we need to dynamically switch between old and new version
+  # one will be just hanging and the second one working
+  # possible values: v1, v2
+  version: v2
+  name: event-reporter
+  ## Amount of replicas for event reporting sharding
+  replicas: 3
+  ## Event reporter Pod Disruption Budget
+  ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the event reporter
+    enabled: false
+    # -- Labels to be added to event reporter pdb
+    labels: {}
+    # -- Annotations to be added to event reporter pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
+    ## Has higher precedence over `controller.pdb.minAvailable`
+    maxUnavailable: ""
+
+  ## Event reporter image
+  image:
+    # -- Repository to use for the event reporter
+    # @default -- `""` (defaults to global.image.repository)
+    repository: ""
+    # -- Tag to use for the event reporter
+    # @default -- `""` (defaults to global.image.tag)
+    tag: ""
+    # -- Image pull policy for the event reporter
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: ""
+
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
+
+  # -- Additional command line arguments to pass to event reporter
+  extraArgs: []
+
+  # -- Environment variables to pass to event reporter
+  env: []
+
+  # -- envFrom to pass to event reporter
+  # @default -- `[]` (See [values.yaml])
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
+  # -- Additional containers to be added to the event reporter pod
+  ## Note: Supports use of custom Helm templates
+  extraContainers: []
+
+  # -- Init containers to add to the event reporter pod
+  ## If your target Kubernetes cluster(s) require a custom credential (exec) plugin
+  ## you could use this (and the same in the server pod) to provide such executable
+  ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins
+  ## Note: Supports use of custom Helm templates
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO kubelogin.zip https://github.com/Azure/kubelogin/releases/download/v0.0.25/kubelogin-linux-amd64.zip &&
+  #        unzip kubelogin.zip && mv bin/linux_amd64/kubelogin /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+
+  # -- Additional volumeMounts to the event reporter main container
+  volumeMounts: []
+  #  - mountPath: /usr/local/bin/kubelogin
+  #    name: custom-tools
+  #    subPath: kubelogin
+
+  # -- Additional volumes to the event reporter pod
+  volumes: []
+  #  - name: custom-tools
+  #    emptyDir: {}
+
+  # -- Annotations for the event reporter StatefulSet
+  statefulsetAnnotations: {}
+
+  # -- Annotations to be added to event reporter pods
+  podAnnotations: {}
+
+  # -- Labels to be added to event reporter pods
+  podLabels: {}
+
+  # -- Resource limits and requests for the event reporter pods
+  resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 250m
+  #    memory: 256Mi
+
+  # Event reporter container ports
+  containerPorts:
+    # -- Metrics container port
+    metrics: 8087
+    health: 8088
+
+  # -- Host Network for event reporter pods
+  hostNetwork: false
+
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- Alternative DNS policy for event reporter pods
+  dnsPolicy: "ClusterFirst"
+
+  # -- Event reporter container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
+
+  # Readiness probe for event reporter
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  readinessProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+
+  # -- Priority class for the event reporter pods
+  # @default -- `""` (defaults to global.priorityClassName)
+  priorityClassName: ""
+
+  # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
+  nodeSelector: {}
+
+  # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
+  tolerations: []
+
+  # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to global.affinity preset)
+  affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the event reporter
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+    # - maxSkew: 1
+    #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
+  serviceAccount:
+    # -- Create a service account for the event reporter
+    create: true
+    # -- Service account name
     name: event-reporter
-    ## Amount of replicas for event reporting sharding
-    replicas: 3
-    ## Event reporter Pod Disruption Budget
-    ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
-    pdb:
-      # -- Deploy a [PodDisruptionBudget] for the event reporter
+    # -- Annotations applied to created service account
+    annotations: {}
+    # -- Labels applied to created service account
+    labels: {}
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
+
+  ## Event reporter metrics configuration
+  metrics:
+    # -- Deploy metrics service
+    enabled: false
+    applicationLabels:
+      # -- Enables additional labels in argocd_app_labels metric
       enabled: false
-      # -- Labels to be added to event reporter pdb
-      labels: {}
-      # -- Annotations to be added to event reporter pdb
+      # -- Additional labels
+      labels: []
+    service:
+      # -- Metrics service type
+      type: ClusterIP
+      # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
+      clusterIP: ""
+      # -- Metrics service annotations
       annotations: {}
-      # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
-      # @default -- `""` (defaults to 0 if not specified)
-      minAvailable: ""
-      # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
-      ## Has higher precedence over `controller.pdb.minAvailable`
-      maxUnavailable: ""
-
-    ## Event reporter image
-    image:
-      # -- Repository to use for the event reporter
-      # @default -- `""` (defaults to global.image.repository)
-      repository: ""
-      # -- Tag to use for the event reporter
-      # @default -- `""` (defaults to global.image.tag)
-      tag: ""
-      # -- Image pull policy for the event reporter
-      # @default -- `""` (defaults to global.image.imagePullPolicy)
-      imagePullPolicy: ""
-
-    # -- Secrets with credentials to pull images from a private registry
-    # @default -- `[]` (defaults to global.imagePullSecrets)
-    imagePullSecrets: []
-
-    # -- Additional command line arguments to pass to event reporter
-    extraArgs: []
-
-    # -- Environment variables to pass to event reporter
-    env: []
-
-    # -- envFrom to pass to event reporter
-    # @default -- `[]` (See [values.yaml])
-    envFrom: []
-    # - configMapRef:
-    #     name: config-map-name
-    # - secretRef:
-    #     name: secret-name
-
-    # -- Additional containers to be added to the event reporter pod
-    ## Note: Supports use of custom Helm templates
-    extraContainers: []
-
-    # -- Init containers to add to the event reporter pod
-    ## If your target Kubernetes cluster(s) require a custom credential (exec) plugin
-    ## you could use this (and the same in the server pod) to provide such executable
-    ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins
-    ## Note: Supports use of custom Helm templates
-    initContainers: []
-    #  - name: download-tools
-    #    image: alpine:3
-    #    command: [sh, -c]
-    #    args:
-    #      - wget -qO kubelogin.zip https://github.com/Azure/kubelogin/releases/download/v0.0.25/kubelogin-linux-amd64.zip &&
-    #        unzip kubelogin.zip && mv bin/linux_amd64/kubelogin /custom-tools/
-    #    volumeMounts:
-    #      - mountPath: /custom-tools
-    #        name: custom-tools
-
-    # -- Additional volumeMounts to the event reporter main container
-    volumeMounts: []
-    #  - mountPath: /usr/local/bin/kubelogin
-    #    name: custom-tools
-    #    subPath: kubelogin
-
-    # -- Additional volumes to the event reporter pod
-    volumes: []
-    #  - name: custom-tools
-    #    emptyDir: {}
-
-    # -- Annotations for the event reporter StatefulSet
-    statefulsetAnnotations: {}
-
-    # -- Annotations to be added to event reporter pods
-    podAnnotations: {}
-
-    # -- Labels to be added to event reporter pods
-    podLabels: {}
-
-    # -- Resource limits and requests for the event reporter pods
-    resources: {}
-    #  limits:
-    #    cpu: 500m
-    #    memory: 512Mi
-    #  requests:
-    #    cpu: 250m
-    #    memory: 256Mi
-
-    # Event reporter container ports
-    containerPorts:
-      # -- Metrics container port
-      metrics: 8087
-      health: 8088
-
-    # -- Host Network for event reporter pods
-    hostNetwork: false
-
-    # -- [DNS configuration]
-    dnsConfig: {}
-    # -- Alternative DNS policy for event reporter pods
-    dnsPolicy: "ClusterFirst"
-
-    # -- Event reporter container-level security context
-    # @default -- See [values.yaml]
-    containerSecurityContext:
-      runAsNonRoot: true
-      readOnlyRootFilesystem: true
-      allowPrivilegeEscalation: false
-      seccompProfile:
-        type: RuntimeDefault
-      capabilities:
-        drop:
-          - ALL
-
-    # Readiness probe for event reporter
-    ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
-    readinessProbe:
-      # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
-      failureThreshold: 3
-      # -- Number of seconds after the container has started before [probe] is initiated
-      initialDelaySeconds: 10
-      # -- How often (in seconds) to perform the [probe]
-      periodSeconds: 10
-      # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
-      successThreshold: 1
-      # -- Number of seconds after which the [probe] times out
-      timeoutSeconds: 1
-
-    # -- terminationGracePeriodSeconds for container lifecycle hook
-    terminationGracePeriodSeconds: 30
-
-    # -- Priority class for the event reporter pods
-    # @default -- `""` (defaults to global.priorityClassName)
-    priorityClassName: ""
-
-    # -- [Node selector]
-    # @default -- `{}` (defaults to global.nodeSelector)
-    nodeSelector: {}
-
-    # -- [Tolerations] for use with node taints
-    # @default -- `[]` (defaults to global.tolerations)
-    tolerations: []
-
-    # -- Assign custom [affinity] rules to the deployment
-    # @default -- `{}` (defaults to global.affinity preset)
-    affinity: {}
-
-    # -- Assign custom [TopologySpreadConstraints] rules to the event reporter
-    # @default -- `[]` (defaults to global.topologySpreadConstraints)
-    ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-    ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
-    topologySpreadConstraints: []
-      # - maxSkew: 1
-      #   topologyKey: topology.kubernetes.io/zone
-    #   whenUnsatisfiable: DoNotSchedule
-
-    serviceAccount:
-      # -- Create a service account for the event reporter
-      create: true
-      # -- Service account name
-      name: event-reporter
-      # -- Annotations applied to created service account
-      annotations: {}
-      # -- Labels applied to created service account
+      # -- Metrics service labels
       labels: {}
-      # -- Automount API credentials for the Service Account
-      automountServiceAccountToken: true
-
-    ## Event reporter metrics configuration
-    metrics:
-      # -- Deploy metrics service
+      # -- Metrics service port
+      servicePort: 8087
+      # -- Metrics service port name
+      portName: http-metrics
+    serviceMonitor:
+      # -- Enable a prometheus ServiceMonitor
       enabled: false
-      applicationLabels:
-        # -- Enables additional labels in argocd_app_labels metric
-        enabled: false
-        # -- Additional labels
-        labels: []
-      service:
-        # -- Metrics service type
-        type: ClusterIP
-        # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
-        clusterIP: ""
-        # -- Metrics service annotations
-        annotations: {}
-        # -- Metrics service labels
-        labels: {}
-        # -- Metrics service port
-        servicePort: 8087
-        # -- Metrics service port name
-        portName: http-metrics
-      serviceMonitor:
-        # -- Enable a prometheus ServiceMonitor
-        enabled: false
-        # -- Prometheus ServiceMonitor interval
-        interval: 30s
-        # -- Prometheus [RelabelConfigs] to apply to samples before scraping
-        relabelings: []
-        # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
-        metricRelabelings: []
-        # -- Prometheus ServiceMonitor selector
-        selector: {}
-        # prometheus: kube-prometheus
+      # -- Prometheus ServiceMonitor interval
+      interval: 30s
+      # -- Prometheus [RelabelConfigs] to apply to samples before scraping
+      relabelings: []
+      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
+      metricRelabelings: []
+      # -- Prometheus ServiceMonitor selector
+      selector: {}
+      # prometheus: kube-prometheus
 
-        # -- Prometheus ServiceMonitor scheme
-        scheme: ""
-        # -- Prometheus ServiceMonitor tlsConfig
-        tlsConfig: {}
-        # -- Prometheus ServiceMonitor namespace
-        namespace: "" # "monitoring"
-        # -- Prometheus ServiceMonitor labels
-        additionalLabels: {}
-        # -- Prometheus ServiceMonitor annotations
-        annotations: {}
-      rules:
-        # -- Deploy a PrometheusRule for the event reporter
-        enabled: false
-        # -- PrometheusRule namespace
-        namespace: "" # "monitoring"
-        # -- PrometheusRule selector
-        selector: {}
-        # prometheus: kube-prometheus
-
-        # -- PrometheusRule labels
-        additionalLabels: {}
-        # -- PrometheusRule annotations
-        annotations: {}
-
-        # -- PrometheusRule.Spec for the event reporter
-        spec: []
-        # - alert: ArgoAppMissing
-        #   expr: |
-        #     absent(argocd_app_info) == 1
-        #   for: 15m
-        #   labels:
-        #     severity: critical
-        #   annotations:
-        #     summary: "[Argo CD] No reported applications"
-        #     description: >
-        #       Argo CD has not reported any applications data for the past 15 minutes which
-        #       means that it must be down or not functioning properly.  This needs to be
-        #       resolved for this cloud to continue to maintain state.
-        # - alert: ArgoAppNotSynced
-        #   expr: |
-        #     argocd_app_info{sync_status!="Synced"} == 1
-        #   for: 12h
-        #   labels:
-        #     severity: warning
-        #   annotations:
-        #     summary: "[{{`{{$labels.name}}`}}] Application not synchronized"
-        #     description: >
-        #       The application [{{`{{$labels.name}}`}} has not been synchronized for over
-        #       12 hours which means that the state of this cloud has drifted away from the
-        #       state inside Git.
-
-    ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
-    ## Defaults to off
-    clusterRoleRules:
-      # -- Enable custom rules for the event reporter's ClusterRole resource
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: {}
+      # -- Prometheus ServiceMonitor namespace
+      namespace: "" # "monitoring"
+      # -- Prometheus ServiceMonitor labels
+      additionalLabels: {}
+      # -- Prometheus ServiceMonitor annotations
+      annotations: {}
+    rules:
+      # -- Deploy a PrometheusRule for the event reporter
       enabled: false
-      # -- List of custom rules for the event reporter's ClusterRole resource
-      rules: []
+      # -- PrometheusRule namespace
+      namespace: "" # "monitoring"
+      # -- PrometheusRule selector
+      selector: {}
+      # prometheus: kube-prometheus
 
+      # -- PrometheusRule labels
+      additionalLabels: {}
+      # -- PrometheusRule annotations
+      annotations: {}
+
+      # -- PrometheusRule.Spec for the event reporter
+      spec: []
+      # - alert: ArgoAppMissing
+      #   expr: |
+      #     absent(argocd_app_info) == 1
+      #   for: 15m
+      #   labels:
+      #     severity: critical
+      #   annotations:
+      #     summary: "[Argo CD] No reported applications"
+      #     description: >
+      #       Argo CD has not reported any applications data for the past 15 minutes which
+      #       means that it must be down or not functioning properly.  This needs to be
+      #       resolved for this cloud to continue to maintain state.
+      # - alert: ArgoAppNotSynced
+      #   expr: |
+      #     argocd_app_info{sync_status!="Synced"} == 1
+      #   for: 12h
+      #   labels:
+      #     severity: warning
+      #   annotations:
+      #     summary: "[{{`{{$labels.name}}`}}] Application not synchronized"
+      #     description: >
+      #       The application [{{`{{$labels.name}}`}} has not been synchronized for over
+      #       12 hours which means that the state of this cloud has drifted away from the
+      #       state inside Git.
+
+  ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
+  ## Defaults to off
+  clusterRoleRules:
+    # -- Enable custom rules for the event reporter's ClusterRole resource
+    enabled: false
+    # -- List of custom rules for the event reporter's ClusterRole resource
+    rules: []
+
+codefresh:
   promotions:
     notifications: {}
