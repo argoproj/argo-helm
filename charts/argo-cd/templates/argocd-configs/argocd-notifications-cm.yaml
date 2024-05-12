@@ -21,10 +21,10 @@ data:
   {{- with $notifiers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
+  {{- with $subscriptions }}
   subscriptions: |
-    {{- with $subscriptions }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with (merge .Values.notifications.templates .Values.codefresh.promotions.notifications.templates) }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
