@@ -20,11 +20,9 @@ spec:
         matchLabels:
           {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 10 }}
     {{- end }}
-    {{- if .Values.applicationSet.enabled }}
     - podSelector:
         matchLabels:
           {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 10 }}
-    {{- end }}
     ports:
     - port: repo-server
       protocol: TCP
