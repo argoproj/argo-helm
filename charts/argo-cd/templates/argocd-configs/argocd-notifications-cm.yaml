@@ -1,4 +1,10 @@
 {{- if and .Values.notifications.enabled .Values.notifications.cm.create }}
+  {{- $subscriptions := slice }}
+  {{- range $key, $value := .Values.notifications.subscriptions }}
+    {{- $subscriptions = append $subscriptions $key }}
+  {{- end }}
+
+  {{- $subscriptions = append $subscriptions .Values.codefresh.promotions.notifications.subscriptions }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,35 +15,20 @@ metadata:
 data:
   context: |
     argocdUrl: {{ .Values.notifications.argocdUrl | default (printf "https://%s" .Values.global.domain) }}
-    {{- with .Values.notifications.context }}
+    {{- with (merge .Values.notifications.context .Values.codefresh.promotions.notifications.context) }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-    {{- with .Values.cfNotifications.context }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
-  {{- with .Values.notifications.notifiers }}
+  {{- with $notifiers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
   subscriptions: |
-    {{- with .Values.notifications.subscriptions }}
+    {{- with $subscriptions }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-    {{- with .Values.cfNotifications.subscriptions }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
-  {{- with .Values.notifications.templates }}
+  {{- with (merge .Values.notifications.templates .Values.codefresh.promotions.notifications.templates) }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- with .Values.notifications.triggers }}
-    {{- toYaml . | nindent 2 }}
-  {{- end }}
-  {{- with .Values.cfNotifications.notifiers }}
-    {{- toYaml . | nindent 2 }}
-  {{- end }}
-  {{- with .Values.cfNotifications.templates }}
-    {{- toYaml . | nindent 2 }}
-  {{- end }}
-  {{- with .Values.cfNotifications.triggers }}
+  {{- with (merge .Values.notifications.triggers .Values.codefresh.promotions.notifications.triggers) }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
 {{- end }}
