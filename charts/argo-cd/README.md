@@ -611,6 +611,7 @@ NAME: my-release
 | apiVersionOverrides | object | `{}` |  |
 | applicationVersioning.enabled | bool | `true` | enables the Codefresh application versioning feature |
 | applicationVersioning.useApplicationConfiguration | bool | `true` | use ApplicationConfiguration CRD to manage application versioning |
+| cfNotifications | object | `{}` |  |
 | crds.additionalLabels | object | `{}` | Addtional labels to be added to all CRDs |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |

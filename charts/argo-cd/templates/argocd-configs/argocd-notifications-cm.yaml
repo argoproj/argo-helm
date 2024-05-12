@@ -12,7 +12,7 @@ data:
     {{- with .Values.notifications.context }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-    {{- with .Values.cf-notifications.context }}
+    {{- with .Values.cfNotifications.context }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- with .Values.notifications.notifiers }}
@@ -22,7 +22,7 @@ data:
     {{- with .Values.notifications.subscriptions }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-    {{- with .Values.cf-notifications.subscriptions }}
+    {{- with .Values.cfNotifications.subscriptions }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- with .Values.notifications.templates }}
@@ -32,13 +32,13 @@ data:
     {{- toYaml . | nindent 2 }}
   {{- end }}
 
-  {{- with .Values.cf-notifications.notifiers }}
+  {{- with .Values.cfNotifications.notifiers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- with .Values.cf-notifications.templates }}
+  {{- with .Values.cfNotifications.templates }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- with .Values.cf-notifications.triggers }}
+  {{- with .Values.cfNotifications.triggers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
 {{- end }}
