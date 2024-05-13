@@ -1044,7 +1044,7 @@ NAME: my-release
 | server.route.termination_type | string | `"passthrough"` | Termination type of Openshift Route |
 | server.service.annotations | object | `{}` | Server service annotations |
 | server.service.externalIPs | list | `[]` | Server service external IPs |
-| server.service.externalTrafficPolicy | string | `""` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
+| server.service.externalTrafficPolicy | string | `"Cluster"` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
 | server.service.labels | object | `{}` | Server service labels |
 | server.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | server.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
@@ -1053,8 +1053,9 @@ NAME: my-release
 | server.service.servicePortHttp | int | `80` | Server service http port |
 | server.service.servicePortHttpName | string | `"http"` | Server service http port name, can be used to route traffic via istio |
 | server.service.servicePortHttps | int | `443` | Server service https port |
+| server.service.servicePortHttpsAppProtocol | string | `""` | Server service https port appProtocol |
 | server.service.servicePortHttpsName | string | `"https"` | Server service https port name, can be used to route traffic via istio |
-| server.service.sessionAffinity | string | `""` | Used to maintain session affinity. Supports `ClientIP` and `None` |
+| server.service.sessionAffinity | string | `"None"` | Used to maintain session affinity. Supports `ClientIP` and `None` |
 | server.service.type | string | `"ClusterIP"` | Server service type |
 | server.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | server.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
