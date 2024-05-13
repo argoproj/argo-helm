@@ -9,20 +9,20 @@ metadata:
 data:
   context: |
     argocdUrl: {{ .Values.notifications.argocdUrl | default (printf "https://%s" .Values.global.domain) }}
-    {{- with .Values.notifications.context }}
+    {{- with (merge .Values.notifications.context .Values.codefresh.promotions.notifications.context) }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.notifications.notifiers }}
+  {{- with (merge .Values.notifications.notifiers .Values.codefresh.promotions.notifications.notifiers) }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- with .Values.notifications.subscriptions }}
+  {{- with (concat .Values.notifications.subscriptions .Values.codefresh.promotions.notifications.subscriptions) }}
   subscriptions: |
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.notifications.templates }}
+  {{- with (merge .Values.notifications.templates .Values.codefresh.promotions.notifications.templates) }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- with .Values.notifications.triggers }}
+  {{- with (merge .Values.notifications.triggers .Values.codefresh.promotions.notifications.triggers) }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
 {{- end }}
