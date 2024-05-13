@@ -95,6 +95,18 @@ spec:
                 key: git.email
                 name: argocd-image-updater-config
                 optional: true
+        - name: GIT_COMMIT_SIGNING_KEY
+          valueFrom:
+            configMapKeyRef:
+              key: git.commit-signing-key
+              name: argocd-image-updater-config
+              optional: true
+        - name: GIT_COMMIT_SIGN_OFF
+          valueFrom:
+            configMapKeyRef:
+              key: git.commit-sign-off
+              name: argocd-image-updater-config
+              optional: true
           - name: IMAGE_UPDATER_KUBE_EVENTS
             valueFrom:
               configMapKeyRef:

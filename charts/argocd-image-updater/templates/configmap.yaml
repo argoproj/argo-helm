@@ -27,6 +27,12 @@ data:
   {{- with .Values.config.gitCommitMail }}
   git.email: {{ . | quote }}
   {{- end }}
+  {{- with .Values.config.gitCommitSigningKey }}
+  git.commit-signing-key: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.config.gitCommitSignOff }}
+  git.commit-sign-off: {{ . | quote }}
+  {{- end }}
   {{- with .Values.config.gitCommitTemplate }}
   git.commit-message-template: |
     {{- nindent 4 . }}
