@@ -8,7 +8,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ include "argo-cd.applicationSet.fullname" . }}
-  namespace: {{ include "argo-cd.namespace" . | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
 spec:
