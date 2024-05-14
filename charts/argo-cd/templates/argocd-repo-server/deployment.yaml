@@ -268,6 +268,12 @@ spec:
                 key: reposerver.git.request.timeout
                 name: argocd-cmd-params-cm
                 optional: true
+          - name: ARGOCD_REVISION_CACHE_LOCK_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.revision.cache.lock.timeout
+                name: argocd-cmd-params-cm
+                optional: true
           {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
           - name: HELM_CACHE_HOME
             value: /helm-working-dir
