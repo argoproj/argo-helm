@@ -218,3 +218,11 @@ Merge Argo Params Configuration with Preset Configuration
 {{ $key }}: {{ toString $value | toYaml }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Expand the namespace of the release.
+Allows overriding it for multi-namespace deployments in combined charts.
+*/}}
+{{- define "argo-cd.namespace" -}}
+{{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
+{{- end }}
