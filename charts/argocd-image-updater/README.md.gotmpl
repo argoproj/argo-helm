@@ -64,6 +64,69 @@ If you need support for ECR, you can reference this issue, [Support ECR authenti
 
 The `config.registries` value can be used exactly as it looks in the documentation as it gets dumped directly into a configmap in this chart.
 
+### Commit Signing
+
+Commit signing requires the repository be accessed using HTTPS or SSH with a user account.
+Repositories accessed using a GitHub App can not be verified when using the git command line at this time.
+
+Each Git commit associated with an author's name and email address can be signed via a public SSH key or GPG key.
+Commit signing requires a bot account with a GPG or SSH key and the username and email address configured to match the bot account.
+
+
+Commit Sign Off can be enabled by setting `git.commit-sign-off: "true"`
+
+**SSH:**
+
+Both private and public keys must be mounted and accessible on the `argocd-image-updater` pod.
+
+Set `git.commit-signing-key` `argocd-image-updater-config` ConfigMap to the path of your public key:
+
+```yaml
+data:
+  git.commit-sign-off: "true"
+  git.commit-signing-key: /app/.ssh/id_rsa.pub
+```
+
+The matching private key must be available in the same location.
+
+Create a new SSH secret or add the public key to your existing SSH secret:
+```bash
+kubectl -n argocd-image-updater create secret generic ssh-git-creds \
+  --from-file=sshPrivateKey=~/.ssh/id_rsa \
+  --from-file=sshPublicKey=~/.ssh/id_rsa.pub
+```
+
+**GPG:**
+
+The GPG private key must be installed and available in the `argocd-image-updater` pod.
+Set `git.commit-signing-key` in the `argocd-image-updater-config` ConfigMap to the GPG key ID you want to use:
+
+```yaml
+data:
+  git.commit-sign-off: "true"
+  git.commit-signing-key: 3AA5C34371567BD2
+```
+
+Volume configuration must be added to mount your SSH signing keys:
+
+```yaml
+volumeMounts:
+- name: ssh-signing-key
+  mountPath: /app/.ssh/id_rsa
+  readOnly: true
+  subPath: sshPrivateKey
+- name: ssh-signing-key
+  mountPath: /app/.ssh/id_rsa.pub
+  readOnly: true
+  subPath: sshPublicKey
+
+volumes:
+- name: ssh-signing-key
+  secret:
+    secretName: ssh-git-creds
+  optional: true
+```
+
 {{ template "chart.valuesSection" . }}
 
 ----------------------------------------------
