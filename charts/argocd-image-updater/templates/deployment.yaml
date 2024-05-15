@@ -34,8 +34,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          command:
-            - /usr/local/bin/argocd-image-updater
+          args:
             - run
             {{- with .Values.extraArgs }}
               {{- toYaml . | nindent 12 }}
@@ -142,6 +141,8 @@ spec:
             name: ssh-known-hosts
           - mountPath: /app/.ssh
             name: ssh-config
+          - mountPath: /tmp
+            name: tmp
           {{- if .Values.authScripts.enabled }}
           - mountPath: /scripts
             name: authscripts
@@ -175,6 +176,8 @@ spec:
           name: argocd-image-updater-ssh-config
           optional: true
         name: ssh-config
+      - emptyDir: {}
+        name: tmp
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 6}}
       {{- end }}

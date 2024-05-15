@@ -114,7 +114,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | rbac.enabled | bool | `true` | Enable RBAC creation |
 | replicaCount | int | `1` | Replica count for the deployment. It is not advised to run more than one replica. |
 | resources | object | `{}` | Pod memory and cpu resource settings for the deployment |
-| securityContext | object | `{}` | Security context settings for the deployment |
+| securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Security context settings for the deployment |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.labels | object | `{}` | Labels to add to the service account |
