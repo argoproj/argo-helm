@@ -135,8 +135,6 @@ spec:
           volumeMounts:
           - mountPath: /app/config
             name: image-updater-conf
-          - mountPath: /tmp
-            name: tmp-dir
           - mountPath: /app/config/ssh
             name: ssh-known-hosts
           - mountPath: /app/.ssh
@@ -166,8 +164,6 @@ spec:
           name: argocd-image-updater-authscripts
         name: authscripts
       {{- end }}
-      - emptyDir: {}
-        name: tmp-dir
       - configMap:
           name: argocd-ssh-known-hosts-cm
           optional: true
