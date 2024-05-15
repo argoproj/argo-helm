@@ -109,3 +109,11 @@ Return the appropriate apiVersion for pod disruption budget
 {{- print "policy/v1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Expand the namespace of the release.
+Allows overriding it for multi-namespace deployments in combined charts.
+*/}}
+{{- define "argo-rollouts.namespace" -}}
+{{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
+{{- end }}
