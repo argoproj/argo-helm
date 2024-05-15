@@ -719,6 +719,19 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
   {{- end }}
 {{- end }}
 
+### Redis secret-init
+
+The helm chart deploys a Job to setup a random password which is used to secure the Redis. The Redis password is stored in Kubernetes secret `argocd-redis` with key `auth` in the namespace where Argo CD is installed.
+If you use an External Redis (See Option 3 above), this Job is not deployed.
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+{{- range .Values }}
+  {{- if hasPrefix "redisSecretInit" .Key }}
+| {{ .Key }} | {{ .Type }} | {{ if .Default }}{{ .Default }}{{ else }}{{ .AutoDefault }}{{ end }} | {{ if .Description }}{{ .Description }}{{ else }}{{ .AutoDescription }}{{ end }} |
+  {{- end }}
+{{- end }}
+
 ## ApplicationSet
 
 | Key | Type | Default | Description |

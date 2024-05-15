@@ -1342,8 +1342,10 @@ The main options are listed here:
 |-----|------|---------|-------------|
 | redis-ha.additionalAffinities | object | `{}` | Additional affinities to add to the Redis server pods. |
 | redis-ha.affinity | string | `""` | Assign custom [affinity] rules to the Redis pods. |
+| redis-ha.auth | bool | `true` | Configures redis-ha with AUTH |
 | redis-ha.containerSecurityContext | object | See [values.yaml] | Redis HA statefulset container-level security context |
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
+| redis-ha.existingSecret | string | `"argocd-redis"` | Existing Secret to use for redis-ha authentication. By default the redis-secret-init Job is generating this Secret. |
 | redis-ha.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
 | redis-ha.exporter.image | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
 | redis-ha.exporter.tag | string | `"1.58.0"` | Tag to use for the redis-exporter |
@@ -1386,6 +1388,29 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | externalRedis.port | int | `6379` | External Redis server port |
 | externalRedis.secretAnnotations | object | `{}` | External Redis Secret annotations |
 | externalRedis.username | string | `""` | External Redis username |
+
+### Redis secret-init
+
+The helm chart deploys a Job to setup a random password which is used to secure the Redis. The Redis password is stored in Kubernetes secret `argocd-redis` with key `auth` in the namespace where Argo CD is installed.
+If you use an External Redis (See Option 3 above), this Job is not deployed.
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| redisSecretInit.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
+| redisSecretInit.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis secret-init Job |
+| redisSecretInit.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Redis secret-init Job |
+| redisSecretInit.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Redis secret-init Job |
+| redisSecretInit.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
+| redisSecretInit.jobAnnotations | object | `{}` | Annotations to be added to the Redis secret-init Job |
+| redisSecretInit.name | string | `"redis-secret-init"` | Redis secret-init name |
+| redisSecretInit.podAnnotations | object | `{}` | Annotations to be added to the Redis secret-init Job |
+| redisSecretInit.podLabels | object | `{}` | Labels to be added to the Redis secret-init Job |
+| redisSecretInit.resources | object | `{}` | Resource limits and requests for Redis secret-init Job |
+| redisSecretInit.securityContext | object | `{}` | Redis secret-init Job pod-level security context |
+| redisSecretInit.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
+| redisSecretInit.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| redisSecretInit.serviceAccount.create | bool | `true` | Create a service account for the redis pod |
+| redisSecretInit.serviceAccount.name | string | `""` | Service account name for redis pod |
 
 ## ApplicationSet
 
