@@ -80,6 +80,14 @@ For full list of changes please check ArtifactHub [changelog].
 |-----|------|---------|-------------|
 | containerSecurityContext | object | `{}` | Security Context to set on container level |
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| controller.autoscaling | object | `{"behavior":{},"enabled":false,"maxReplicas":10,"metrics":[],"minReplicas":2,"targetCPUUtilizationPercentage":80,"targetMemoryUtilizationPercentage":80}` | Argo Rollouts controller HPA |
+| controller.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. |
+| controller.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Rollouts controller |
+| controller.autoscaling.maxReplicas | int | `10` | Maximum number of replicas for the Argo Rollouts controller [HPA] |
+| controller.autoscaling.metrics | list | `[]` | Configures custom HPA metrics for the Argo Rollouts controller Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ |
+| controller.autoscaling.minReplicas | int | `2` | Minimum number of replicas for the Argo Rollouts controller [HPA] |
+| controller.autoscaling.targetCPUUtilizationPercentage | int | `80` | Average CPU utilization percentage for the Argo Rollouts controller [HPA] |
+| controller.autoscaling.targetMemoryUtilizationPercentage | int | `80` | Average memory utilization percentage for the Argo Rollouts controller [HPA] |
 | controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
 | controller.containerPorts.healthz | int | `8080` | Healthz container port |
 | controller.containerPorts.metrics | int | `8090` | Metrics container port |
