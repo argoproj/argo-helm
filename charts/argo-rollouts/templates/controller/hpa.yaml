@@ -3,9 +3,10 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "argo-rollouts.fullname" . }}
-  namespace: {{ include  "argo-rollouts.namespace" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
-    {{- include "argo-rollouts.labels" (dict "context" .) | nindent 4 }}
+    app.kubernetes.io/component: {{ .Values.controller.component }}
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

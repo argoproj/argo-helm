@@ -61,12 +61,36 @@ controller:
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
   affinity: {}
+  # -- Argo Rollouts controller HPA
   autoscaling:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 2
+    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Rollouts controller
+    enabled: false
+    # -- Minimum number of replicas for the Argo Rollouts controller [HPA]
+    minReplicas: 2
+    # -- Maximum number of replicas for the Argo Rollouts controller [HPA]
+    maxReplicas: 10
+    # -- Average CPU utilization percentage for the Argo Rollouts controller [HPA]
     targetCPUUtilizationPercentage: 80
+    # -- Average memory utilization percentage for the Argo Rollouts controller [HPA]
     targetMemoryUtilizationPercentage: 80
+    # -- Configures the scaling behavior of the target in both Up and Down directions.
+    behavior: {}
+      # scaleDown:
+      #  stabilizationWindowSeconds: 300
+      #  policies:
+      #   - type: Pods
+      #     value: 1
+      #     periodSeconds: 180
+      # scaleUp:
+      #   stabilizationWindowSeconds: 300
+      #   policies:
+      #   - type: Pods
+      #     value: 2
+      #     periodSeconds: 60
+    # -- Configures custom HPA metrics for the Argo Rollouts controller
+    # Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+    metrics: []
+
   logging:
     # -- Set the logging level (one of: `debug`, `info`, `warn`, `error`)
     level: info
