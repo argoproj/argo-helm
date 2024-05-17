@@ -24,12 +24,7 @@ spec:
   {{- if and .Values.notifications.metrics.service.clusterIP (eq .Values.notifications.metrics.service.type "ClusterIP") }}
   clusterIP: {{ .Values.notifications.metrics.service.clusterIP }}
   {{- end }}
-  {{- with .Values.notifications.metrics.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ . }}
-  {{- end }}
-  {{- with .Values.notifications.metrics.service.ipFamilies }}
-  ipFamilies: {{ toYaml . | nindent 4 }}
-  {{- end }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 6 }}
   ports:

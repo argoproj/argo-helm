@@ -16,12 +16,7 @@ metadata:
 {{- end }}
 spec:
   type: {{ .Values.server.service.type }}
-  {{- with .Values.server.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ . }}
-  {{- end }}
-  {{- with .Values.server.service.ipFamilies }}
-  ipFamilies: {{ toYaml . | nindent 4 }}
-  {{- end }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name: {{ .Values.server.service.servicePortHttpName }}
     protocol: TCP

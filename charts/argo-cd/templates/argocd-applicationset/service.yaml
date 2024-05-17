@@ -17,12 +17,7 @@ metadata:
 {{- end }}
 spec:
   type: {{ .Values.applicationSet.service.type }}
-{{- with .Values.applicationSet.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ . }}
-{{- end }}
-{{- with .Values.applicationSet.service.ipFamilies }}
-  ipFamilies: {{ toYaml . | nindent 4 }}
-{{- end }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name: {{ .Values.applicationSet.service.portName }}
     port: {{ .Values.applicationSet.service.port }}

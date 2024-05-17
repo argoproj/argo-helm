@@ -217,3 +217,15 @@ Merge Argo Params Configuration with Preset Configuration
 {{ $key }}: {{ toString $value | toYaml }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Dual stack definition
+*/}}
+{{- define "argo-cd.dualStack" -}}
+{{- with .Values.global.dualStack.ipFamilyPolicy }}
+ipFamilyPolicy: {{ . }}
+{{- end }}
+{{- with .Values.global.dualStack.ipFamilies }}
+ipFamilies: {{ toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}

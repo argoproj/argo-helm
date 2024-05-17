@@ -17,12 +17,7 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- with .Values.redis.serviceIpFamilyPolicy }}
-  ipFamilyPolicy: {{ . }}
-  {{- end }}
-  {{- with .Values.redis.serviceIpFamilies }}
-  ipFamilies: {{ toYaml . | nindent 4 }}
-  {{- end }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name: redis
     port: {{ .Values.redis.servicePort }}

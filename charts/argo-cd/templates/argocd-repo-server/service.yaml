@@ -15,12 +15,7 @@ metadata:
   name: {{ template "argo-cd.repoServer.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
-{{- with .Values.repoServer.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ . }}
-{{- end }}
-{{- with .Values.repoServer.service.ipFamilies }}
-  ipFamilies: {{ toYaml . | nindent 4 }}
-{{- end }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name: {{ .Values.repoServer.service.portName }}
     protocol: TCP

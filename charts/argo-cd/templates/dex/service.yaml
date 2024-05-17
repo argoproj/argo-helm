@@ -16,12 +16,7 @@ metadata:
 {{- toYaml .Values.dex.metrics.service.labels | nindent 4 }}
 {{- end }}
 spec:
-{{- with .Values.dex.serviceIpFamilyPolicy }}
-  ipFamilyPolicy: {{ . }}
-{{- end }}
-{{- with .Values.dex.serviceIpFamilies }}
-  ipFamilies: {{ toYaml . | nindent 4 }}
-{{- end }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name: {{ .Values.dex.servicePortHttpName }}
     protocol: TCP

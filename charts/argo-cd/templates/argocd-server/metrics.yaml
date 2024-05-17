@@ -24,12 +24,7 @@ spec:
   {{- if and .Values.server.metrics.service.clusterIP (eq .Values.server.metrics.service.type "ClusterIP") }}
   clusterIP: {{ .Values.server.metrics.service.clusterIP }}
   {{- end }}
-  {{- with .Values.server.metrics.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ . }}
-  {{- end }}
-  {{- with .Values.server.metrics.service.ipFamilies }}
-  ipFamilies: {{ toYaml . | nindent 4 }}
-  {{- end }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name: {{ .Values.server.metrics.service.portName }}
     protocol: TCP
