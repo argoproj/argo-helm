@@ -34,7 +34,7 @@ spec:
       labels:
         {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ .Values.controller.component }}
-        {{- range $key, $value := .Values.podLabels }}
+        {{- range $key, $value := (mergeOverwrite (deepCopy .Values.podLabels) .Values.controller.podLabels) }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
     spec:

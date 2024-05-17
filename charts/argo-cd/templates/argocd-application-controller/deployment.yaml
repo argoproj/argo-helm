@@ -9,7 +9,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ template "argo-cd.controller.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 spec:
@@ -267,6 +267,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: controller.diff.server.side
+                optional: true
+          - name: ARGOCD_IGNORE_NORMALIZER_JQ_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.ignore.normalizer.jq.timeout
                 optional: true
         {{- with .Values.controller.envFrom }}
         envFrom:

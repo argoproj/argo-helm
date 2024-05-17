@@ -41,5 +41,10 @@ subjects:
   - kind: ServiceAccount
     name: {{ template "argo-workflows.controllerServiceAccountName" . }}
     namespace: {{ include "argo-workflows.namespace" . | quote }}
+{{- range .Values.controller.clusterWorkflowTemplates.serviceAccounts }}
+  - kind: ServiceAccount
+    name: {{ .name }}
+    namespace: {{ .namespace | quote }}
+{{- end }}
 {{- end }}
 {{- end }}
