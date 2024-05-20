@@ -11,9 +11,7 @@ rules:
   - argoproj.io
   resources:
   - applications
-  {{- if .Values.applicationSet.enabled }}
   - applicationsets
-  {{- end }}
   - appprojects
   verbs:
   - get
@@ -33,9 +31,7 @@ rules:
   - argoproj.io
   resources:
   - applications
-  {{- if .Values.applicationSet.enabled }}
   - applicationsets
-  {{- end }}
   - appprojects
   verbs:
   - create
@@ -60,9 +56,7 @@ rules:
   - argoproj.io
   resources:
   - applications
-  {{- if .Values.applicationSet.enabled }}
   - applicationsets
-  {{- end }}
   - appprojects
   verbs:
   - create
