@@ -65,8 +65,14 @@ spec:
         - ""
         - --appendonly
         - "no"
-        {{- with (concat .Values.global.env .Values.redis.env) }}
+        - --requirepass $(REDIS_PASSWORD)
         env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: argocd-redis
+              key: auth
+        {{- with (concat .Values.global.env .Values.redis.env) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- with .Values.redis.envFrom }}
