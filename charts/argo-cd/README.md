@@ -1365,6 +1365,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | redisSecretInit.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redisSecretInit.jobAnnotations | object | `{}` | Annotations to be added to the Redis secret-init Job |
 | redisSecretInit.name | string | `"redis-secret-init"` | Redis secret-init name |
+| redisSecretInit.nodeSelector | object | `{}` (defaults to global.nodeSelector) | Node selector to be added to the Redis secret-init Job |
 | redisSecretInit.podAnnotations | object | `{}` | Annotations to be added to the Redis secret-init Job |
 | redisSecretInit.podLabels | object | `{}` | Labels to be added to the Redis secret-init Job |
 | redisSecretInit.resources | object | `{}` | Resource limits and requests for Redis secret-init Job |
@@ -1373,6 +1374,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | redisSecretInit.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | redisSecretInit.serviceAccount.create | bool | `true` | Create a service account for the redis pod |
 | redisSecretInit.serviceAccount.name | string | `""` | Service account name for redis pod |
+| redisSecretInit.tolerations | list | `[]` (defaults to global.tolerations) | Tolerations to be added to the Redis secret-init Job |
 
 ## ApplicationSet
 
