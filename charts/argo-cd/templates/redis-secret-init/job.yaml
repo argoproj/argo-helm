@@ -49,6 +49,9 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.redisSecretInit.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       restartPolicy: OnFailure
       {{- with .Values.redisSecretInit.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
