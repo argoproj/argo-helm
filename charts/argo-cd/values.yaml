@@ -1662,6 +1662,13 @@ redisSecretInit:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
+  # -- Node selector to be added to the Redis secret-init Job
+  # @default -- `{}` (defaults to global.nodeSelector)
+  nodeSelector: {}
+
+  # -- Tolerations to be added to the Redis secret-init Job
+  # @default -- `[]` (defaults to global.tolerations)
+  tolerations: []
 
 ## Server
 server:
