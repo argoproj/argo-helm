@@ -1601,6 +1601,8 @@ externalRedis:
   secretAnnotations: {}
 
 redisSecretInit:
+  # -- Enable Redis secret initialization. If disabled, secret must be provisioned by alternative methods
+  enabled: true
   # -- Redis secret-init name
   name: redis-secret-init
 
