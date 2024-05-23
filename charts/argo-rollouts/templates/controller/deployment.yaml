@@ -23,6 +23,7 @@ spec:
   strategy:
     type: Recreate
   replicas: {{ .Values.controller.replicas }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   template:
     metadata:
       {{- with (mergeOverwrite (deepCopy .Values.podAnnotations) .Values.controller.podAnnotations) }}
