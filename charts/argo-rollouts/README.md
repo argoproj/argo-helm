@@ -51,6 +51,7 @@ For full list of changes please check ArtifactHub [changelog].
 | fullnameOverride | string | `nil` | String to fully override "argo-rollouts.fullname" template |
 | global.deploymentAnnotations | object | `{}` | Annotations for all deployed Deployments |
 | global.deploymentLabels | object | `{}` | Labels for all deployed Deployments |
+| global.revisionHistoryLimit | int | `10` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
 | imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry. Registry secret names as an array. |
 | installCRDs | bool | `true` | Install and upgrade CRDs |
 | keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
@@ -121,7 +122,6 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.readinessProbe | object | See [values.yaml] | Configure readiness [probe] for the controller |
 | controller.replicas | int | `2` | The number of controller pods to run |
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
-| controller.revisionHistoryLimit | int | `10` | The number of revisions to keep |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the controller |
 | controller.trafficRouterPlugins | object | `{}` | Configures 3rd party traffic router plugins for controller |
@@ -176,7 +176,6 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.readonly | bool | `false` | Set cluster role to readonly |
 | dashboard.replicas | int | `1` | The number of dashboard pods to run |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
-| dashboard.revisionHistoryLimit | int | `10` | The number of revisions to keep |
 | dashboard.service.annotations | object | `{}` | Service annotations |
 | dashboard.service.externalIPs | list | `[]` | Dashboard service external IPs |
 | dashboard.service.labels | object | `{}` | Service labels |

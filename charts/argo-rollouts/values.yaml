@@ -43,6 +43,8 @@ global:
   deploymentAnnotations: {}
   # -- Labels for all deployed Deployments
   deploymentLabels: {}
+  # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
+  revisionHistoryLimit: 10
 
 controller:
   # -- Value of label `app.kubernetes.io/component`
@@ -90,8 +92,6 @@ controller:
     tag: ""
     # -- Image pull policy
     pullPolicy: IfNotPresent
-  # -- The number of revisions to keep
-  revisionHistoryLimit: 10
 
   # -- Additional command line arguments to pass to rollouts-controller.  A list of flags.
   extraArgs: []
@@ -338,8 +338,6 @@ dashboard:
     tag: ""
     # -- Image pull policy
     pullPolicy: IfNotPresent
-  # -- The number of revisions to keep
-  revisionHistoryLimit: 10
   # -- Additional command line arguments to pass to rollouts-dashboard. A list of flags.
   extraArgs: []
   # -- Additional environment variables for rollouts-dashboard. A list of name/value maps.
