@@ -695,7 +695,7 @@ NAME: my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
+| configs.clusterCredentials | object | `{}` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.cm."admin.enabled" | bool | `true` | Enable local admin user |
 | configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` | The name of tracking label used by Argo CD for resource pruning |
 | configs.cm."exec.enabled" | bool | `false` | Enable exec feature in Argo UI |

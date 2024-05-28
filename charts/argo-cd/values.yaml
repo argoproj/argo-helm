@@ -418,13 +418,13 @@ configs:
       #       command: [sh, -c, find . -name env.yaml]
 
   # -- Provide one or multiple [external cluster credentials]
-  # @default -- `[]` (See [values.yaml])
+  # @default -- `{}` (See [values.yaml])
   ## Ref:
   ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
   ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/security/#external-cluster-credentials
   ## - https://argo-cd.readthedocs.io/en/stable/user-guide/projects/#project-scoped-repositories-and-clusters
-  clusterCredentials: []
-    # - name: mycluster
+  clusterCredentials: {}
+    # mycluster:
     #   server: https://mycluster.example.com
     #   labels: {}
     #   annotations: {}
@@ -433,7 +433,7 @@ configs:
     #     tlsClientConfig:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
-    # - name: mycluster2
+    # mycluster2:
     #   server: https://mycluster2.example.com
     #   labels: {}
     #   annotations: {}
@@ -444,7 +444,7 @@ configs:
     #     tlsClientConfig:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
-    # - name: mycluster3-project-scoped
+    # mycluster3-project-scoped:
     #   server: https://mycluster3.example.com
     #   labels: {}
     #   annotations: {}
