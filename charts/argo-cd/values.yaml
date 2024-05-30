@@ -823,6 +823,8 @@ controller:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Disable API check to enable servicemonitor
+      disableAPICheck: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
@@ -915,6 +917,8 @@ dex:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Disable API check to enable servicemonitor
+      disableAPICheck: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
@@ -1470,6 +1474,8 @@ redis:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Disable API check to enable servicemonitor
+      disableAPICheck: false
       # -- Interval at which metrics should be scraped
       interval: 30s
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
@@ -2094,6 +2100,8 @@ server:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Disable API check to enable servicemonitor
+      disableAPICheck: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
@@ -2665,6 +2673,8 @@ repoServer:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Disable API check to enable servicemonitor
+      disableAPICheck: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
@@ -2822,6 +2832,8 @@ applicationSet:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Disable API check to enable servicemonitor
+      disableAPICheck: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
@@ -3224,6 +3236,8 @@ notifications:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Disable API check to enable servicemonitor
+      disableAPICheck: false
       # -- Prometheus ServiceMonitor selector
       selector: {}
         # prometheus: kube-prometheus
