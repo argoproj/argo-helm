@@ -16,6 +16,7 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.server.service.type }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   {{- with .Values.server.service.externalIPs }}
   externalIPs: {{ . }}
   {{- end }}

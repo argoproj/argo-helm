@@ -98,6 +98,13 @@ global:
   #   hostnames:
   #   - git.myhostname
 
+  # Configure dual-stack used by all component services
+  dualStack:
+    # -- IP family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+    ipFamilyPolicy: ""
+    # -- IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+    ipFamilies: []
+
   # Default network policy rules used by all components
   networkPolicy:
     # -- Create NetworkPolicy objects for all components

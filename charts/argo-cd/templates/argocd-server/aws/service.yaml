@@ -9,6 +9,7 @@ metadata:
   name: {{ template "argo-cd.server.fullname" . }}-grpc
   namespace: {{ include  "argo-cd.namespace" . }}
 spec:
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name: {{ .Values.server.service.servicePortHttpName }}
     protocol: TCP

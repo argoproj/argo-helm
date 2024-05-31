@@ -24,6 +24,7 @@ spec:
   {{- if and .Values.notifications.metrics.service.clusterIP (eq .Values.notifications.metrics.service.type "ClusterIP") }}
   clusterIP: {{ .Values.notifications.metrics.service.clusterIP }}
   {{- end }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 6 }}
   ports:
