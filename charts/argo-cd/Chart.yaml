@@ -3,7 +3,7 @@ appVersion: v2.11.2
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 7.0.0
+version: 7.0.1
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -28,3 +28,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: Represent cluster credentials as a map
+    - kind: added
+      description: Add option to disable API checks in all servicemonitor
