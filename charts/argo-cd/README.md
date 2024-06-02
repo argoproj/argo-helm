@@ -278,6 +278,10 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 7.0.0
+
+`configs.clusterCredentials` is now a map instead of array
+
 ### 6.10.0
 
 This version introduces authentication for Redis to mitigate GHSA-9766-5277-j5hr.
