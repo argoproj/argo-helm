@@ -1990,8 +1990,6 @@ server:
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
     enabled: false
-    # -- The name of the Secret that will be automatically created and managed by this Certificate resource
-    secretName: argocd-server-tls
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
     domain: ""
@@ -2994,8 +2992,6 @@ applicationSet:
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
     enabled: false
-    # -- The name of the Secret that will be automatically created and managed by this Certificate resource
-    secretName: argocd-applicationset-controller-tls
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
     domain: ""
