@@ -4,13 +4,14 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "argo-cd.redis.fullname" . }}-health-configmap
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
 data:
   redis_liveness.sh: |
     response=$(
       redis-cli \
+        -a "${REDIS_PASSWORD}" --no-auth-warning \
         -h localhost \
         -p {{ .Values.redis.containerPorts.redis }} \
         ping
@@ -23,6 +24,7 @@ data:
   redis_readiness.sh: |
     response=$(
       redis-cli \
+        -a "${REDIS_PASSWORD}" --no-auth-warning \
         -h localhost \
         -p {{ .Values.redis.containerPorts.redis }} \
         ping

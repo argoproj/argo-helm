@@ -8,7 +8,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ template "argo-cd.repoServer.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
 spec:
@@ -175,15 +175,19 @@ spec:
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
                 key: redis-username
                 optional: true
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
+                {{- if .Values.externalRedis.host }}
                 key: redis-password
                 optional: true
+                {{- else }}
+                key: auth
+                {{- end }}
           - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
             valueFrom:
               configMapKeyRef:
@@ -266,6 +270,12 @@ spec:
             valueFrom:
               configMapKeyRef:
                 key: reposerver.git.request.timeout
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_REVISION_CACHE_LOCK_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.revision.cache.lock.timeout
                 name: argocd-cmd-params-cm
                 optional: true
           {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
