@@ -100,6 +100,10 @@ controller:
     accessAllSecrets: false
     # -- Allows controller to create and update ConfigMaps. Enables memoization feature
     writeConfigMaps: false
+    # -- Extra service accounts to be added to the RoleBinding
+    serviceAccounts: []
+      # - name: my-service-account
+      #   namespace: my-namespace
 
   configMap:
     # -- Create a ConfigMap for the controller
@@ -467,6 +471,10 @@ server:
   rbac:
     # -- Adds Role and RoleBinding for the server.
     create: true
+    # -- Extra service accounts to be added to the RoleBinding
+    serviceAccounts: []
+      # - name: my-service-account
+      #   namespace: my-namespace
   # -- Servers container-level security context
   securityContext:
     readOnlyRootFilesystem: false
@@ -691,6 +699,10 @@ server:
     enabled: true
     # -- Give the server permissions to edit ClusterWorkflowTemplates.
     enableEditing: true
+    # -- Extra service accounts to be added to the ClusterRoleBinding
+    serviceAccounts: []
+      # - name: my-service-account
+      #   namespace: my-namespace
 
   # SSO configuration when SSO is specified as a server auth mode.
   sso:

@@ -24,7 +24,11 @@ subjects:
 - kind: ServiceAccount
   name: {{ template "argo-workflows.serverServiceAccountName" . }}
   namespace: {{ include "argo-workflows.namespace" . | quote }}
-
+{{- range .Values.server.rbac.serviceAccounts }}
+- kind: ServiceAccount
+  name: {{ .name }}
+  namespace: {{ .namespace | quote }}
+{{- end }}
 {{- if .Values.server.clusterWorkflowTemplates.enabled }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -41,5 +45,10 @@ subjects:
 - kind: ServiceAccount
   name: {{ template "argo-workflows.serverServiceAccountName" . }}
   namespace: {{ include "argo-workflows.namespace" . | quote }}
+{{- range .Values.server.clusterWorkflowTemplates.serviceAccounts }}
+- kind: ServiceAccount
+  name: {{ .name }}
+  namespace: {{ .namespace | quote }}
+{{- end }}
 {{- end -}}
 {{- end -}}

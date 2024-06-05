@@ -202,6 +202,7 @@ Fields to note:
 | controller.rbac.accessAllSecrets | bool | `false` | Allows controller to get, list and watch all k8s secrets. Can only be used if secretWhitelist is empty. |
 | controller.rbac.create | bool | `true` | Adds Role and RoleBinding for the controller. |
 | controller.rbac.secretWhitelist | list | `[]` | Allows controller to get, list, and watch certain k8s secrets |
+| controller.rbac.serviceAccounts | list | `[]` | Extra service accounts to be added to the RoleBinding |
 | controller.rbac.writeConfigMaps | bool | `false` | Allows controller to create and update ConfigMaps. Enables memoization feature |
 | controller.replicas | int | `1` | The number of controller pods to run |
 | controller.resourceRateLimit | object | `{}` | Globally limits the rate at which pods are created. This is intended to mitigate flooding of the Kubernetes API server by workflows with a large amount of parallel nodes. |
@@ -282,6 +283,7 @@ Fields to note:
 | server.baseHref | string | `"/"` | Value for base href in index.html. Used if the server is running behind reverse proxy under subpath different from /. |
 | server.clusterWorkflowTemplates.enableEditing | bool | `true` | Give the server permissions to edit ClusterWorkflowTemplates. |
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
+| server.clusterWorkflowTemplates.serviceAccounts | list | `[]` | Extra service accounts to be added to the ClusterRoleBinding |
 | server.deploymentAnnotations | object | `{}` | optional map of annotations to be applied to the ui Deployment |
 | server.enabled | bool | `true` | Deploy the Argo Server |
 | server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary. |
@@ -314,6 +316,7 @@ Fields to note:
 | server.podSecurityContext | object | `{}` | SecurityContext to set on the server pods |
 | server.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages |
 | server.rbac.create | bool | `true` | Adds Role and RoleBinding for the server. |
+| server.rbac.serviceAccounts | list | `[]` | Extra service accounts to be added to the RoleBinding |
 | server.replicas | int | `1` | The number of server pods to run |
 | server.resources | object | `{}` | Resource limits and requests for the server |
 | server.revisionHistoryLimit | int | `10` | The number of revisions to keep. |
