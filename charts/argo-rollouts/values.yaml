@@ -240,13 +240,14 @@ podSecurityContext:
   runAsNonRoot: true
 
 # -- Security Context to set on container level
-containerSecurityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  seccompProfile:
+    type: RuntimeDefault
 
 # -- Annotations to be added to the Rollout service
 serviceAnnotations: {}
