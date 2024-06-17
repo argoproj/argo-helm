@@ -3,7 +3,7 @@ appVersion: v3.5.7
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.41.8
+version: 0.41.9
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -17,4 +17,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: changed BASE_HREF to ARGO_BASE_HREF for forward compat
+      description: reverted the BASE_HREF change, will add back during 3.6 upgrade
