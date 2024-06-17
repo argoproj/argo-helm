@@ -102,7 +102,6 @@ spec:
                 key: token
                 name: codefresh-token
           {{- if or .Values.global.codefresh.tls.caCerts.secret.create .Values.global.codefresh.tls.caCerts.secretKeyRef }}
-            {{- $name := .Values.global.codefresh.tls.caCerts.secret.create | ternary "codefresh-tls-certs" .Values.global.codefresh.tls.caCerts.secretKeyRef.name }}
             {{- $key := .Values.global.codefresh.tls.caCerts.secret.create | ternary (default "ca-bundle.crt" .Values.global.codefresh.tls.caCerts.secret.key) .Values.global.codefresh.tls.caCerts.secretKeyRef.key }}
           - name: CODEFRESH_SSL_CERT_PATH
             value: /app/config/codefresh-tls-certs/{{ $key }}
