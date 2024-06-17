@@ -101,6 +101,11 @@ spec:
               secretKeyRef:
                 key: token
                 name: codefresh-token
+          {{- if or .Values.global.codefresh.tls.caCerts.secret.create .Values.global.codefresh.tls.caCerts.secretKeyRef }}
+            {{- $key := .Values.global.codefresh.tls.caCerts.secret.create | ternary (default "ca-bundle.crt" .Values.global.codefresh.tls.caCerts.secret.key) .Values.global.codefresh.tls.caCerts.secretKeyRef.key }}
+          - name: CODEFRESH_SSL_CERT_PATH
+            value: /app/config/codefresh-tls-certs/{{ $key }}
+          {{- end }}
           # todo: clean up
           - name: EVENT_REPORTER_INSECURE
             valueFrom:
@@ -218,7 +223,7 @@ spec:
           successThreshold: {{ .Values.eventReporter.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.eventReporter.readinessProbe.failureThreshold }}
         resources:
-          {{- toYaml .Values.eventReporter.resources | nindent 10 }}
+          {{- toYaml .Values.eventReporter.resources | nindent 12 }}
         {{- with .Values.eventReporter.containerSecurityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
@@ -226,6 +231,11 @@ spec:
         volumeMounts:
         {{- with .Values.eventReporter.volumeMounts }}
           {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if or .Values.global.codefresh.tls.caCerts.secret.create .Values.global.codefresh.tls.caCerts.secretKeyRef}}
+        - name: codefresh-tls-certs
+          mountPath: /app/config/codefresh-tls-certs
+          readOnly: true
         {{- end }}
         - name: argocd-repo-server-tls
           mountPath: /app/config/server/tls
@@ -264,6 +274,13 @@ spec:
       volumes:
       {{- with .Values.eventReporter.volumes }}
         {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- if or .Values.global.codefresh.tls.caCerts.secret.create .Values.global.codefresh.tls.caCerts.secretKeyRef }}
+      - name: codefresh-tls-certs
+        secret:
+          secretName: {{ .Values.global.codefresh.tls.caCerts.secret.create | ternary "codefresh-tls-certs" .Values.global.codefresh.tls.caCerts.secretKeyRef.name }}
+          defaultMode: 420
+          optional: true
       {{- end }}
       - emptyDir: { }
         name: plugins-home
