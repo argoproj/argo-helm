@@ -278,6 +278,42 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 6.10.0
+
+This version introduces authentication for Redis to mitigate GHSA-9766-5277-j5hr.
+
+#### How to rotate Redis secret?
+
+Upstream steps in the [FAQ] are not enough, since we chose a different approach.
+(We use a Kubernetes Job with [Chart Hooks] to create the auth secret `argocd-redis`.)
+
+Steps to roteate the secret when using the helm chart (bold step is additional to upstream):
+* Delete `argocd-redis` secret in the namespace where Argo CD is installed.
+  ```bash
+  kubectl delete secret argocd-redis -n <argocd namesapce>
+  ```
+* **Perform a helm upgrade**
+  ```bash
+  helm upgrade argocd argo/argo-cd --reuse-values --wait
+  ```
+* If you are running Redis in HA mode, restart Redis in HA.
+  ```bash
+  kubectl rollout restart deployment argocd-redis-ha-haproxy
+  kubectl rollout restart statefulset argocd-redis-ha-server
+  ```
+* If you are running Redis in non-HA mode, restart Redis.
+  ```bash
+  kubectl rollout restart deployment argocd-redis
+  ```
+* Restart other components.
+  ```bash
+  kubectl rollout restart deployment argocd-server argocd-repo-server
+  kubectl rollout restart statefulset argocd-application-controller
+  ```
+
+### 6.9.0
+ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9). 
+
 ### 6.4.0
 
 Added support for application controller dynamic cluster distribution.
@@ -694,6 +730,7 @@ NAME: my-release
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
+| namespaceOverride | string | `.Release.Namespace` | Override the namespace |
 | openshift.enabled | bool | `false` | enables using arbitrary uid for argo repo server |
 
 ## Global Configs
@@ -1117,7 +1154,7 @@ NAME: my-release
 | server.route.termination_type | string | `"passthrough"` | Termination type of Openshift Route |
 | server.service.annotations | object | `{}` | Server service annotations |
 | server.service.externalIPs | list | `[]` | Server service external IPs |
-| server.service.externalTrafficPolicy | string | `""` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
+| server.service.externalTrafficPolicy | string | `"Cluster"` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
 | server.service.labels | object | `{}` | Server service labels |
 | server.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | server.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
@@ -1126,8 +1163,9 @@ NAME: my-release
 | server.service.servicePortHttp | int | `80` | Server service http port |
 | server.service.servicePortHttpName | string | `"http"` | Server service http port name, can be used to route traffic via istio |
 | server.service.servicePortHttps | int | `443` | Server service https port |
+| server.service.servicePortHttpsAppProtocol | string | `""` | Server service https port appProtocol |
 | server.service.servicePortHttpsName | string | `"https"` | Server service https port name, can be used to route traffic via istio |
-| server.service.sessionAffinity | string | `""` | Used to maintain session affinity. Supports `ClientIP` and `None` |
+| server.service.sessionAffinity | string | `"None"` | Used to maintain session affinity. Supports `ClientIP` and `None` |
 | server.service.type | string | `"ClusterIP"` | Server service type |
 | server.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | server.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
@@ -1397,20 +1435,24 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redisSecretInit.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
+| redisSecretInit.enabled | bool | `true` | Enable Redis secret initialization. If disabled, secret must be provisioned by alternative methods |
 | redisSecretInit.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis secret-init Job |
 | redisSecretInit.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Redis secret-init Job |
 | redisSecretInit.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Redis secret-init Job |
 | redisSecretInit.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redisSecretInit.jobAnnotations | object | `{}` | Annotations to be added to the Redis secret-init Job |
 | redisSecretInit.name | string | `"redis-secret-init"` | Redis secret-init name |
+| redisSecretInit.nodeSelector | object | `{}` (defaults to global.nodeSelector) | Node selector to be added to the Redis secret-init Job |
 | redisSecretInit.podAnnotations | object | `{}` | Annotations to be added to the Redis secret-init Job |
 | redisSecretInit.podLabels | object | `{}` | Labels to be added to the Redis secret-init Job |
+| redisSecretInit.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for Redis secret-init Job |
 | redisSecretInit.resources | object | `{}` | Resource limits and requests for Redis secret-init Job |
 | redisSecretInit.securityContext | object | `{}` | Redis secret-init Job pod-level security context |
 | redisSecretInit.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | redisSecretInit.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | redisSecretInit.serviceAccount.create | bool | `true` | Create a service account for the redis pod |
 | redisSecretInit.serviceAccount.name | string | `""` | Service account name for redis pod |
+| redisSecretInit.tolerations | list | `[]` (defaults to global.tolerations) | Tolerations to be added to the Redis secret-init Job |
 
 ## ApplicationSet
 
@@ -1442,7 +1484,6 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.dnsConfig | object | `{}` | [DNS configuration] |
 | applicationSet.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for ApplicationSet controller pods |
 | applicationSet.emptyDir.sizeLimit | string | `""` (defaults not set if not specified i.e. no size limit) | EmptyDir size limit for applicationSet controller |
-| applicationSet.enabled | bool | `true` | Enable ApplicationSet controller |
 | applicationSet.extraArgs | list | `[]` | ApplicationSet controller command line flags |
 | applicationSet.extraContainers | list | `[]` | Additional containers to be added to the ApplicationSet controller pod |
 | applicationSet.extraEnv | list | `[]` | Environment variables to pass to the ApplicationSet controller |
@@ -1604,8 +1645,10 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [BackendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/concepts/backendconfig#backendconfigspec_v1beta1_cloudgooglecom
 [CSS styles]: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-cd?modal=changelog
+[Chart Hooks]: https://helm.sh/docs/topics/charts_hooks/
 [DNS configuration]: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 [external cluster credentials]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
+[FAQ]: https://argo-cd.readthedocs.io/en/stable/faq/
 [FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
 [declarative setup]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup
 [gRPC-ingress]: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/

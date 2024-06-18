@@ -134,6 +134,7 @@ Fields to note:
 |-----|------|---------|-------------|
 | workflow.namespace | string | `nil` | Deprecated; use controller.workflowNamespaces instead. |
 | workflow.rbac.create | bool | `true` | Adds Role and RoleBinding for the above specified service account to be able to run workflows. A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below) |
+| workflow.rbac.serviceAccounts | list | `[]` | Extra service accounts to be added to the RoleBinding |
 | workflow.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | workflow.serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
 | workflow.serviceAccount.labels | object | `{}` | Labels applied to created service account |
@@ -146,6 +147,7 @@ Fields to note:
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` | Assign custom [affinity] rules |
 | controller.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates. |
+| controller.clusterWorkflowTemplates.serviceAccounts | list | `[]` | Extra service accounts to be added to the ClusterRoleBinding |
 | controller.columns | list | `[]` | Configure Argo Server to show custom [columns] |
 | controller.configMap.create | bool | `true` | Create a ConfigMap for the controller |
 | controller.configMap.name | string | `""` | ConfigMap name |

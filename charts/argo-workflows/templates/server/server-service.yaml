@@ -7,6 +7,9 @@ metadata:
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     app.kubernetes.io/version: {{ include "argo-workflows.server_chart_version_label" . }}
+    {{- with .Values.server.serviceLabels }}
+      {{ toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.server.serviceAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

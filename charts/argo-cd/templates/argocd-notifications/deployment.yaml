@@ -9,7 +9,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ include "argo-cd.notifications.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
 spec:
@@ -65,7 +65,7 @@ spec:
             - --metrics-port={{ .Values.notifications.containerPorts.metrics }}
             - --loglevel={{ default .Values.global.logging.level .Values.notifications.logLevel }}
             - --logformat={{ default .Values.global.logging.format .Values.notifications.logFormat }}
-            - --namespace={{ .Release.Namespace }}
+            - --namespace={{ include "argo-cd.namespace" . }}
             - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
             - --secret-name={{ .Values.notifications.secret.name }}
             {{- range .Values.notifications.extraArgs }}

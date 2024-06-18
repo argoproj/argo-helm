@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
   name: {{ template "argo-cd.repoServer.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
 spec:
   ingress:
   - from:
@@ -20,11 +20,9 @@ spec:
         matchLabels:
           {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 10 }}
     {{- end }}
-    {{- if .Values.applicationSet.enabled }}
     - podSelector:
         matchLabels:
           {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 10 }}
-    {{- end }}
     ports:
     - port: repo-server
       protocol: TCP

@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "argo-cd.applicationSet.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
 roleRef:
@@ -13,5 +13,5 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ template "argo-cd.applicationSet.serviceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+    namespace: {{ include "argo-cd.namespace" . }}
 {{- end }}

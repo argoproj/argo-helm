@@ -24,6 +24,7 @@ spec:
   strategy:
     type: Recreate
   replicas: {{ .Values.dashboard.replicas }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   template:
     metadata:
       {{- with (mergeOverwrite (deepCopy .Values.podAnnotations) .Values.dashboard.podAnnotations) }}
@@ -35,7 +36,7 @@ spec:
       labels:
         {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ .Values.dashboard.component }}
-        {{- range $key, $value := .Values.podLabels }}
+        {{- range $key, $value := (mergeOverwrite (deepCopy .Values.podLabels) .Values.dashboard.podLabels) }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
     spec:

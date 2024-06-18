@@ -215,6 +215,7 @@ NOTE: Configuration keys must be stored as dict because YAML treats dot as separ
 {{- $_ := set $presets "repo.server" (printf "%s:%s" (include "argo-cd.repoServer.fullname" .) (.Values.repoServer.service.port | toString)) -}}
 {{- $_ := set $presets "server.repo.server.strict.tls" (.Values.repoServer.certificateSecret.enabled | toString ) -}}
 {{- $_ := set $presets "redis.server" (include "argo-cd.redis.server" .) -}}
+{{- $_ := set $presets "applicationsetcontroller.enable.leader.election" (gt ((.Values.applicationSet.replicas | default .Values.applicationSet.replicaCount) | int64) 1) -}}
 {{- if .Values.dex.enabled -}}
 {{- $_ := set $presets "server.dex.server" (include "argo-cd.dex.server" .) -}}
 {{- $_ := set $presets "server.dex.server.strict.tls" .Values.dex.certificateSecret.enabled -}}
@@ -222,9 +223,6 @@ NOTE: Configuration keys must be stored as dict because YAML treats dot as separ
 {{- range $component := tuple "applicationsetcontroller" "controller" "server" "reposerver" -}}
 {{- $_ := set $presets (printf "%s.log.format" $component) $.Values.global.logging.format -}}
 {{- $_ := set $presets (printf "%s.log.level" $component) $.Values.global.logging.level -}}
-{{- end -}}
-{{- if .Values.applicationSet.enabled -}}
-{{- $_ := set $presets "applicationsetcontroller.enable.leader.election" (gt ((.Values.applicationSet.replicas | default .Values.applicationSet.replicaCount) | int64) 1) -}}
 {{- end -}}
 {{- toYaml $presets }}
 {{- end -}}
@@ -239,6 +237,14 @@ Merge Argo Params Configuration with Preset Configuration
 {{ $key }}: {{ toString $value | toYaml }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Expand the namespace of the release.
+Allows overriding it for multi-namespace deployments in combined charts.
+*/}}
+{{- define "argo-cd.namespace" -}}
+{{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
+{{- end }}
 
 {{/*
 Create event reporter name and version as used by the chart label.
