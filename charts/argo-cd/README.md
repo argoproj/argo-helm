@@ -969,6 +969,7 @@ NAME: my-release
 | server.certificate.renewBefore | string | `""` (defaults to 360h = 15d if not specified) | How long before the expiry a certificate should be renewed. |
 | server.certificate.secretName | string | `"argocd-server-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
 | server.certificate.usages | list | `[]` | Usages for the certificate |
+| server.certificate.secretTemplateAnnotations | object | `{}` | Annotations that allow the certificate to be composed from data residing in existing Kubernetes Resources |
 | server.certificateSecret.annotations | object | `{}` | Annotations to be added to argocd-server-tls secret |
 | server.certificateSecret.crt | string | `""` | Certificate data |
 | server.certificateSecret.enabled | bool | `false` | Create argocd-server-tls secret |
