@@ -1,9 +1,9 @@
-{{- if and .Values.applicationSet.enabled .Values.applicationSet.metrics.enabled }}
+{{- if .Values.applicationSet.metrics.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "argo-cd.applicationSet.fullname" . }}-metrics
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" "metrics") | nindent 4 }}
     {{- with .Values.applicationSet.metrics.service.labels }}
@@ -24,6 +24,7 @@ spec:
   {{- if and .Values.applicationSet.metrics.service.clusterIP (eq .Values.applicationSet.metrics.service.type "ClusterIP") }}
   clusterIP: {{ .Values.applicationSet.metrics.service.clusterIP }}
   {{- end }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name:  {{ .Values.applicationSet.metrics.service.portName }}
     protocol: TCP

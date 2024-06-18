@@ -69,6 +69,10 @@ workflow:
     # -- Adds Role and RoleBinding for the above specified service account to be able to run workflows.
     # A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below)
     create: true
+    # -- Extra service accounts to be added to the RoleBinding
+    serviceAccounts: []
+      # - name: my-service-account
+      #   namespace: my-namespace
 
 controller:
   image:
@@ -198,7 +202,7 @@ controller:
   workflowDefaults: {}
   #   spec:
   #     ttlStrategy:
-  #       secondsAfterCompletion: 84600
+  #       secondsAfterCompletion: 86400
   #     # Ref: https://argo-workflows.readthedocs.io/en/stable/artifact-repository-ref/
   #     artifactRepositoryRef:
   #       configMap: my-artifact-repository # default is "artifact-repositories"
@@ -361,6 +365,10 @@ controller:
   clusterWorkflowTemplates:
     # -- Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates.
     enabled: true
+    # -- Extra service accounts to be added to the ClusterRoleBinding
+    serviceAccounts: []
+      # - name: my-service-account
+      #   namespace: my-namespace
   # -- Extra containers to be added to the controller deployment
   extraContainers: []
 
@@ -700,7 +708,7 @@ server:
       name: argo-server-sso
       # -- Key of a secret to retrieve the app OIDC client secret
       key: client-secret
-    # - The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
+    # -- The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
     redirectUrl: ""
     rbac:
       # -- Adds ServiceAccount Policy to server (Cluster)Role.

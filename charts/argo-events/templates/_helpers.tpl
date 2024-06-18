@@ -104,6 +104,9 @@ helm.sh/chart: {{ include "argo-events.chart" .context }}
 {{ include "argo-events.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
 app.kubernetes.io/managed-by: {{ .context.Release.Service }}
 app.kubernetes.io/part-of: argo-events
+{{- with .context.Values.global.additionalLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end }}
 
 {{/*

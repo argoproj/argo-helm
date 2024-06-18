@@ -12,5 +12,5 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ include "argo-cd.server.serviceAccountName" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ include "argo-cd.namespace" . }}
 {{- end }}
