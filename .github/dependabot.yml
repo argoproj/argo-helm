@@ -6,3 +6,11 @@ updates:
     schedule:
       interval: weekly
       day: "saturday"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      dependencies:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"

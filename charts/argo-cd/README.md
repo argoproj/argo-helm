@@ -1081,6 +1081,7 @@ NAME: my-release
 | server.service.externalIPs | list | `[]` | Server service external IPs |
 | server.service.externalTrafficPolicy | string | `"Cluster"` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
 | server.service.labels | object | `{}` | Server service labels |
+| server.service.loadBalancerClass | string | `""` | The class of the load balancer implementation |
 | server.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | server.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
 | server.service.nodePortHttp | int | `30080` | Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort") |
