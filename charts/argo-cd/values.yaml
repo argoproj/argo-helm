@@ -2029,6 +2029,8 @@ server:
     # -- Usages for the certificate
     ### Ref: https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.KeyUsage
     usages: []
+    # -- Annotations that allow the certificate to be composed from data residing in existing Kubernetes Resources
+    secretTemplateAnnotations: {}
 
   # TLS certificate configuration via Secret
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
