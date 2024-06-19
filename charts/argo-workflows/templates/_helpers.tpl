@@ -94,6 +94,7 @@ app.kubernetes.io/name: {{ include "argo-workflows.name" .context }}-{{ .name }}
 app.kubernetes.io/instance: {{ .context.Release.Name }}
 {{- if .component }}
 app.kubernetes.io/component: {{ .component }}
+app: {{ .component }}
 {{- end }}
 {{- end }}
 
