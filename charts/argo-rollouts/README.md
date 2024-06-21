@@ -179,6 +179,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.service.annotations | object | `{}` | Service annotations |
 | dashboard.service.externalIPs | list | `[]` | Dashboard service external IPs |
 | dashboard.service.labels | object | `{}` | Service labels |
+| dashboard.service.loadBalancerClass | string | `""` | The class of the load balancer implementation |
 | dashboard.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | dashboard.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
 | dashboard.service.nodePort | int | `nil` | Service nodePort |
