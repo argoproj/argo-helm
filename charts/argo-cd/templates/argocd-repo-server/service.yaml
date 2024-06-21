@@ -15,6 +15,7 @@ metadata:
   name: {{ template "argo-cd.repoServer.fullname" . }}
   namespace: {{ include  "argo-cd.namespace" . }}
 spec:
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name: {{ .Values.repoServer.service.portName }}
     protocol: TCP

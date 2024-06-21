@@ -98,6 +98,13 @@ global:
   #   hostnames:
   #   - git.myhostname
 
+  # Configure dual-stack used by all component services
+  dualStack:
+    # -- IP family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+    ipFamilyPolicy: ""
+    # -- IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+    ipFamilies: []
+
   # Default network policy rules used by all components
   networkPolicy:
     # -- Create NetworkPolicy objects for all components
@@ -418,13 +425,13 @@ configs:
       #       command: [sh, -c, find . -name env.yaml]
 
   # -- Provide one or multiple [external cluster credentials]
-  # @default -- `[]` (See [values.yaml])
+  # @default -- `{}` (See [values.yaml])
   ## Ref:
   ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
   ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/security/#external-cluster-credentials
   ## - https://argo-cd.readthedocs.io/en/stable/user-guide/projects/#project-scoped-repositories-and-clusters
-  clusterCredentials: []
-    # - name: mycluster
+  clusterCredentials: {}
+    # mycluster:
     #   server: https://mycluster.example.com
     #   labels: {}
     #   annotations: {}
@@ -433,7 +440,7 @@ configs:
     #     tlsClientConfig:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
-    # - name: mycluster2
+    # mycluster2:
     #   server: https://mycluster2.example.com
     #   labels: {}
     #   annotations: {}
@@ -444,7 +451,7 @@ configs:
     #     tlsClientConfig:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
-    # - name: mycluster3-project-scoped
+    # mycluster3-project-scoped:
     #   server: https://mycluster3.example.com
     #   labels: {}
     #   annotations: {}
@@ -1547,6 +1554,12 @@ redis-ha:
     containerSecurityContext:
       readOnlyRootFilesystem: true
 
+  # -- Configures redis-ha with AUTH
+  auth: true
+  # -- Existing Secret to use for redis-ha authentication.
+  # By default the redis-secret-init Job is generating this Secret.
+  existingSecret: argocd-redis
+
   # -- Whether the Redis server pods should be forced to run on separate nodes.
   hardAntiAffinity: true
 
@@ -1593,6 +1606,82 @@ externalRedis:
   existingSecret: ""
   # -- External Redis Secret annotations
   secretAnnotations: {}
+
+redisSecretInit:
+  # -- Enable Redis secret initialization. If disabled, secret must be provisioned by alternative methods
+  enabled: true
+  # -- Redis secret-init name
+  name: redis-secret-init
+
+  image:
+    # -- Repository to use for the Redis secret-init Job
+    # @default -- `""` (defaults to global.image.repository)
+    repository: "" # defaults to global.image.repository
+    # -- Tag to use for the Redis secret-init Job
+    # @default -- `""` (defaults to global.image.tag)
+    tag: "" # defaults to global.image.tag
+    # -- Image pull policy for the Redis secret-init Job
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: "" # IfNotPresent
+
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
+
+  # -- Annotations to be added to the Redis secret-init Job
+  jobAnnotations: {}
+
+  # -- Annotations to be added to the Redis secret-init Job
+  podAnnotations: {}
+
+  # -- Labels to be added to the Redis secret-init Job
+  podLabels: {}
+
+  # -- Resource limits and requests for Redis secret-init Job
+  resources: {}
+  #  limits:
+  #    cpu: 200m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 64Mi
+
+  # -- Application controller container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- Redis secret-init Job pod-level security context
+  securityContext: {}
+
+  serviceAccount:
+    # -- Create a service account for the redis pod
+    create: true
+    # -- Service account name for redis pod
+    name: ""
+    # -- Annotations applied to created service account
+    annotations: {}
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
+
+  # -- Priority class for Redis secret-init Job
+  # @default -- `""` (defaults to global.priorityClassName)
+  priorityClassName: ""
+
+  # -- Node selector to be added to the Redis secret-init Job
+  # @default -- `{}` (defaults to global.nodeSelector)
+  nodeSelector: {}
+
+  # -- Tolerations to be added to the Redis secret-init Job
+  # @default -- `[]` (defaults to global.tolerations)
+  tolerations: []
 
 ## Server
 server:
@@ -1901,8 +1990,6 @@ server:
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
     enabled: false
-    # -- The name of the Secret that will be automatically created and managed by this Certificate resource
-    secretName: argocd-server-tls
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
     domain: ""
@@ -1940,6 +2027,8 @@ server:
     # -- Usages for the certificate
     ### Ref: https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.KeyUsage
     usages: []
+    # -- Annotations that allow the certificate to be composed from data residing in existing Kubernetes Resources
+    secretTemplateAnnotations: {}
 
   # TLS certificate configuration via Secret
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
@@ -1978,6 +2067,8 @@ server:
     # -- Server service https port appProtocol
     ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol
     servicePortHttpsAppProtocol: ""
+    # -- The class of the load balancer implementation
+    loadBalancerClass: ""
     # -- LoadBalancer will get created with the IP specified in this field
     loadBalancerIP: ""
     # -- Source IP ranges to allow access to service from
@@ -2905,8 +2996,6 @@ applicationSet:
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
     enabled: false
-    # -- The name of the Secret that will be automatically created and managed by this Certificate resource
-    secretName: argocd-applicationset-controller-tls
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
     domain: ""

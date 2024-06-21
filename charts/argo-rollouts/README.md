@@ -51,6 +51,7 @@ For full list of changes please check ArtifactHub [changelog].
 | fullnameOverride | string | `nil` | String to fully override "argo-rollouts.fullname" template |
 | global.deploymentAnnotations | object | `{}` | Annotations for all deployed Deployments |
 | global.deploymentLabels | object | `{}` | Labels for all deployed Deployments |
+| global.revisionHistoryLimit | int | `10` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
 | imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry. Registry secret names as an array. |
 | installCRDs | bool | `true` | Install and upgrade CRDs |
 | keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
@@ -78,7 +79,7 @@ For full list of changes please check ArtifactHub [changelog].
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| containerSecurityContext | object | `{}` | Security Context to set on container level |
+| containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Security Context to set on container level |
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
 | controller.containerPorts.healthz | int | `8080` | Healthz container port |

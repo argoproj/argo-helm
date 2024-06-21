@@ -86,6 +86,25 @@ Create the name of the redis service account to use
 {{- end -}}
 {{- end -}}
 
+
+{{/*
+Create Redis secret-init name
+*/}}
+{{- define "argo-cd.redisSecretInit.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.redisSecretInit.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create the name of the Redis secret-init service account to use
+*/}}
+{{- define "argo-cd.redisSecretInit.serviceAccountName" -}}
+{{- if .Values.redisSecretInit.serviceAccount.create -}}
+    {{ default (include "argo-cd.redisSecretInit.fullname" .) .Values.redis.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.redisSecretInit.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
 {{/*
 Create argocd server name and version as used by the chart label.
 */}}
@@ -225,4 +244,16 @@ Allows overriding it for multi-namespace deployments in combined charts.
 */}}
 {{- define "argo-cd.namespace" -}}
 {{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
+Dual stack definition
+*/}}
+{{- define "argo-cd.dualStack" -}}
+{{- with .Values.global.dualStack.ipFamilyPolicy }}
+ipFamilyPolicy: {{ . }}
+{{- end }}
+{{- with .Values.global.dualStack.ipFamilies }}
+ipFamilies: {{ toYaml . | nindent 4 }}
+{{- end }}
 {{- end }}

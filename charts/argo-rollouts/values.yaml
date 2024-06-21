@@ -43,6 +43,8 @@ global:
   deploymentAnnotations: {}
   # -- Labels for all deployed Deployments
   deploymentLabels: {}
+  # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
+  revisionHistoryLimit: 10
 
 controller:
   # -- Value of label `app.kubernetes.io/component`
@@ -238,13 +240,14 @@ podSecurityContext:
   runAsNonRoot: true
 
 # -- Security Context to set on container level
-containerSecurityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  seccompProfile:
+    type: RuntimeDefault
 
 # -- Annotations to be added to the Rollout service
 serviceAnnotations: {}

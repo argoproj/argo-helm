@@ -278,6 +278,39 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 6.10.0
+
+This version introduces authentication for Redis to mitigate GHSA-9766-5277-j5hr.
+
+#### How to rotate Redis secret?
+
+Upstream steps in the [FAQ] are not enough, since we chose a different approach.
+(We use a Kubernetes Job with [Chart Hooks] to create the auth secret `argocd-redis`.)
+
+Steps to roteate the secret when using the helm chart (bold step is additional to upstream):
+* Delete `argocd-redis` secret in the namespace where Argo CD is installed.
+  ```bash
+  kubectl delete secret argocd-redis -n <argocd namesapce>
+  ```
+* **Perform a helm upgrade**
+  ```bash
+  helm upgrade argocd argo/argo-cd --reuse-values --wait
+  ```
+* If you are running Redis in HA mode, restart Redis in HA.
+  ```bash
+  kubectl rollout restart deployment argocd-redis-ha-haproxy
+  kubectl rollout restart statefulset argocd-redis-ha-server
+  ```
+* If you are running Redis in non-HA mode, restart Redis.
+  ```bash
+  kubectl rollout restart deployment argocd-redis
+  ```
+* Restart other components.
+  ```bash
+  kubectl rollout restart deployment argocd-server argocd-repo-server
+  kubectl rollout restart statefulset argocd-application-controller
+  ```
+
 ### 6.9.0
 ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9). 
 
@@ -638,6 +671,8 @@ NAME: my-release
 | global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
 | global.deploymentStrategy | object | `{}` | Deployment strategy for the all deployed Deployments |
 | global.domain | string | `"argocd.example.com"` | Default domain used by all components |
+| global.dualStack.ipFamilies | list | `[]` | IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| global.dualStack.ipFamilyPolicy | string | `""` | IP family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | global.env | list | `[]` | Environment variables to pass to all deployed Deployments |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
@@ -662,7 +697,7 @@ NAME: my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
+| configs.clusterCredentials | object | `{}` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.cm."admin.enabled" | bool | `true` | Enable local admin user |
 | configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` | The name of tracking label used by Argo CD for resource pruning |
 | configs.cm."exec.enabled" | bool | `false` | Enable exec feature in Argo UI |
@@ -932,7 +967,7 @@ NAME: my-release
 | server.certificate.privateKey.rotationPolicy | string | `"Never"` | Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always` |
 | server.certificate.privateKey.size | int | `2048` | Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored. |
 | server.certificate.renewBefore | string | `""` (defaults to 360h = 15d if not specified) | How long before the expiry a certificate should be renewed. |
-| server.certificate.secretName | string | `"argocd-server-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
+| server.certificate.secretTemplateAnnotations | object | `{}` | Annotations that allow the certificate to be composed from data residing in existing Kubernetes Resources |
 | server.certificate.usages | list | `[]` | Usages for the certificate |
 | server.certificateSecret.annotations | object | `{}` | Annotations to be added to argocd-server-tls secret |
 | server.certificateSecret.crt | string | `""` | Certificate data |
@@ -1047,6 +1082,7 @@ NAME: my-release
 | server.service.externalIPs | list | `[]` | Server service external IPs |
 | server.service.externalTrafficPolicy | string | `"Cluster"` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
 | server.service.labels | object | `{}` | Server service labels |
+| server.service.loadBalancerClass | string | `""` | The class of the load balancer implementation |
 | server.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | server.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
 | server.service.nodePortHttp | int | `30080` | Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort") |
@@ -1271,8 +1307,10 @@ The main options are listed here:
 |-----|------|---------|-------------|
 | redis-ha.additionalAffinities | object | `{}` | Additional affinities to add to the Redis server pods. |
 | redis-ha.affinity | string | `""` | Assign custom [affinity] rules to the Redis pods. |
+| redis-ha.auth | bool | `true` | Configures redis-ha with AUTH |
 | redis-ha.containerSecurityContext | object | See [values.yaml] | Redis HA statefulset container-level security context |
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
+| redis-ha.existingSecret | string | `"argocd-redis"` | Existing Secret to use for redis-ha authentication. By default the redis-secret-init Job is generating this Secret. |
 | redis-ha.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
 | redis-ha.exporter.image | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
 | redis-ha.exporter.tag | string | `"1.58.0"` | Tag to use for the redis-exporter |
@@ -1316,6 +1354,33 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | externalRedis.secretAnnotations | object | `{}` | External Redis Secret annotations |
 | externalRedis.username | string | `""` | External Redis username |
 
+### Redis secret-init
+
+The helm chart deploys a Job to setup a random password which is used to secure the Redis. The Redis password is stored in Kubernetes secret `argocd-redis` with key `auth` in the namespace where Argo CD is installed.
+If you use an External Redis (See Option 3 above), this Job is not deployed.
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| redisSecretInit.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
+| redisSecretInit.enabled | bool | `true` | Enable Redis secret initialization. If disabled, secret must be provisioned by alternative methods |
+| redisSecretInit.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis secret-init Job |
+| redisSecretInit.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Redis secret-init Job |
+| redisSecretInit.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Redis secret-init Job |
+| redisSecretInit.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
+| redisSecretInit.jobAnnotations | object | `{}` | Annotations to be added to the Redis secret-init Job |
+| redisSecretInit.name | string | `"redis-secret-init"` | Redis secret-init name |
+| redisSecretInit.nodeSelector | object | `{}` (defaults to global.nodeSelector) | Node selector to be added to the Redis secret-init Job |
+| redisSecretInit.podAnnotations | object | `{}` | Annotations to be added to the Redis secret-init Job |
+| redisSecretInit.podLabels | object | `{}` | Labels to be added to the Redis secret-init Job |
+| redisSecretInit.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for Redis secret-init Job |
+| redisSecretInit.resources | object | `{}` | Resource limits and requests for Redis secret-init Job |
+| redisSecretInit.securityContext | object | `{}` | Redis secret-init Job pod-level security context |
+| redisSecretInit.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
+| redisSecretInit.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| redisSecretInit.serviceAccount.create | bool | `true` | Create a service account for the redis pod |
+| redisSecretInit.serviceAccount.name | string | `""` | Service account name for redis pod |
+| redisSecretInit.tolerations | list | `[]` (defaults to global.tolerations) | Tolerations to be added to the Redis secret-init Job |
+
 ## ApplicationSet
 
 | Key | Type | Default | Description |
@@ -1336,7 +1401,6 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | applicationSet.certificate.privateKey.rotationPolicy | string | `"Never"` | Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always` |
 | applicationSet.certificate.privateKey.size | int | `2048` | Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored. |
 | applicationSet.certificate.renewBefore | string | `""` (defaults to 360h = 15d if not specified) | How long before the expiry a certificate should be renewed. |
-| applicationSet.certificate.secretName | string | `"argocd-applicationset-controller-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
 | applicationSet.containerPorts.metrics | int | `8080` | Metrics container port |
 | applicationSet.containerPorts.probe | int | `8081` | Probe container port |
 | applicationSet.containerPorts.webhook | int | `7000` | Webhook container port |
@@ -1507,8 +1571,10 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [BackendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/concepts/backendconfig#backendconfigspec_v1beta1_cloudgooglecom
 [CSS styles]: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-cd?modal=changelog
+[Chart Hooks]: https://helm.sh/docs/topics/charts_hooks/
 [DNS configuration]: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 [external cluster credentials]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
+[FAQ]: https://argo-cd.readthedocs.io/en/stable/faq/
 [FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
 [declarative setup]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup
 [gRPC-ingress]: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
