@@ -58,6 +58,7 @@ For full list of changes please check ArtifactHub [changelog].
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `nil` | String to partially override "argo-rollouts.fullname" template |
 | notifications.notifiers | object | `{}` | Configures notification services |
+| notifications.secret.annotations | object | `{}` | Annotations to be added to the notifications secret |
 | notifications.secret.create | bool | `false` | Whether to create notifications secret |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the notifications secret |
 | notifications.templates | object | `{}` | Notification templates |
