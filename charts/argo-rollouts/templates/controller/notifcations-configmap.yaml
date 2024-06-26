@@ -17,6 +17,6 @@ data:
     {{- toYaml . | nindent 2 }}
   {{- end }}
   {{- with .Values.notifications.subscriptions }}
-  subscriptions:
+  subscriptions: |
     {{- toYaml . | nindent 4 }}
   {{- end }}
