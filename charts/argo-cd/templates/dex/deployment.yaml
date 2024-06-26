@@ -9,7 +9,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ template "argo-cd.dex.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
 spec:
@@ -26,6 +26,9 @@ spec:
     metadata:
       annotations:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- if (index .Values.configs.cm "dex.config") }}
+        checksum/cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | sha256sum }}
+        {{- end }}
         {{- if .Values.dex.certificateSecret.enabled }}
         checksum/dex-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-dex-server-tls-secret.yaml") . | sha256sum }}
         {{- end }}

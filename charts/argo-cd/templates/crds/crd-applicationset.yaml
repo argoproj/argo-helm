@@ -1,4 +1,4 @@
-{{- if and .Values.crds.install .Values.applicationSet.enabled }}
+{{- if .Values.crds.install }}
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -269,6 +269,8 @@ spec:
                                           items:
                                             type: string
                                           type: array
+                                        labelWithoutSelector:
+                                          type: boolean
                                         namePrefix:
                                           type: string
                                         nameSuffix:
@@ -485,6 +487,8 @@ spec:
                                             items:
                                               type: string
                                             type: array
+                                          labelWithoutSelector:
+                                            type: boolean
                                           namePrefix:
                                             type: string
                                           nameSuffix:
@@ -860,6 +864,8 @@ spec:
                                           items:
                                             type: string
                                           type: array
+                                        labelWithoutSelector:
+                                          type: boolean
                                         namePrefix:
                                           type: string
                                         nameSuffix:
@@ -1076,6 +1082,8 @@ spec:
                                             items:
                                               type: string
                                             type: array
+                                          labelWithoutSelector:
+                                            type: boolean
                                           namePrefix:
                                             type: string
                                           nameSuffix:
@@ -1455,6 +1463,8 @@ spec:
                                           items:
                                             type: string
                                           type: array
+                                        labelWithoutSelector:
+                                          type: boolean
                                         namePrefix:
                                           type: string
                                         nameSuffix:
@@ -1671,6 +1681,8 @@ spec:
                                             items:
                                               type: string
                                             type: array
+                                          labelWithoutSelector:
+                                            type: boolean
                                           namePrefix:
                                             type: string
                                           nameSuffix:
@@ -2030,6 +2042,8 @@ spec:
                                           items:
                                             type: string
                                           type: array
+                                        labelWithoutSelector:
+                                          type: boolean
                                         namePrefix:
                                           type: string
                                         nameSuffix:
@@ -2246,6 +2260,8 @@ spec:
                                             items:
                                               type: string
                                             type: array
+                                          labelWithoutSelector:
+                                            type: boolean
                                           namePrefix:
                                             type: string
                                           nameSuffix:
@@ -2627,6 +2643,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -2843,6 +2861,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -3218,6 +3238,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -3434,6 +3456,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -3813,6 +3837,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -4029,6 +4055,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -4388,6 +4416,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -4604,6 +4634,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -4971,6 +5003,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -5187,6 +5221,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -5736,6 +5772,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -5952,6 +5990,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -6496,6 +6536,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -6712,6 +6754,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -7085,6 +7129,8 @@ spec:
                                           items:
                                             type: string
                                           type: array
+                                        labelWithoutSelector:
+                                          type: boolean
                                         namePrefix:
                                           type: string
                                         nameSuffix:
@@ -7301,6 +7347,8 @@ spec:
                                             items:
                                               type: string
                                             type: array
+                                          labelWithoutSelector:
+                                            type: boolean
                                           namePrefix:
                                             type: string
                                           nameSuffix:
@@ -7684,6 +7732,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -7900,6 +7950,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -8275,6 +8327,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -8491,6 +8545,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -8870,6 +8926,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -9086,6 +9144,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -9445,6 +9505,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -9661,6 +9723,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -10028,6 +10092,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -10244,6 +10310,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -10793,6 +10861,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -11009,6 +11079,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -11553,6 +11625,8 @@ spec:
                                                     items:
                                                       type: string
                                                     type: array
+                                                  labelWithoutSelector:
+                                                    type: boolean
                                                   namePrefix:
                                                     type: string
                                                   nameSuffix:
@@ -11769,6 +11843,8 @@ spec:
                                                       items:
                                                         type: string
                                                       type: array
+                                                    labelWithoutSelector:
+                                                      type: boolean
                                                     namePrefix:
                                                       type: string
                                                     nameSuffix:
@@ -12146,6 +12222,8 @@ spec:
                                           items:
                                             type: string
                                           type: array
+                                        labelWithoutSelector:
+                                          type: boolean
                                         namePrefix:
                                           type: string
                                         nameSuffix:
@@ -12362,6 +12440,8 @@ spec:
                                             items:
                                               type: string
                                             type: array
+                                          labelWithoutSelector:
+                                            type: boolean
                                           namePrefix:
                                             type: string
                                           nameSuffix:
@@ -12728,6 +12808,8 @@ spec:
                                           items:
                                             type: string
                                           type: array
+                                        labelWithoutSelector:
+                                          type: boolean
                                         namePrefix:
                                           type: string
                                         nameSuffix:
@@ -12944,6 +13026,8 @@ spec:
                                             items:
                                               type: string
                                             type: array
+                                          labelWithoutSelector:
+                                            type: boolean
                                           namePrefix:
                                             type: string
                                           nameSuffix:
@@ -13493,6 +13577,8 @@ spec:
                                           items:
                                             type: string
                                           type: array
+                                        labelWithoutSelector:
+                                          type: boolean
                                         namePrefix:
                                           type: string
                                         nameSuffix:
@@ -13709,6 +13795,8 @@ spec:
                                             items:
                                               type: string
                                             type: array
+                                          labelWithoutSelector:
+                                            type: boolean
                                           namePrefix:
                                             type: string
                                           nameSuffix:
@@ -14253,6 +14341,8 @@ spec:
                                           items:
                                             type: string
                                           type: array
+                                        labelWithoutSelector:
+                                          type: boolean
                                         namePrefix:
                                           type: string
                                         nameSuffix:
@@ -14469,6 +14559,8 @@ spec:
                                             items:
                                               type: string
                                             type: array
+                                          labelWithoutSelector:
+                                            type: boolean
                                           namePrefix:
                                             type: string
                                           nameSuffix:
@@ -14917,6 +15009,8 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                              labelWithoutSelector:
+                                type: boolean
                               namePrefix:
                                 type: string
                               nameSuffix:
@@ -15133,6 +15227,8 @@ spec:
                                   items:
                                     type: string
                                   type: array
+                                labelWithoutSelector:
+                                  type: boolean
                                 namePrefix:
                                   type: string
                                 nameSuffix:

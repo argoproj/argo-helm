@@ -13,7 +13,7 @@ metadata:
 {{- toYaml . | nindent 4 }}
 {{- end }}
   name: {{ template "argo-cd.repoServer.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
 spec:
   ports:
   - name: {{ .Values.repoServer.service.portName }}

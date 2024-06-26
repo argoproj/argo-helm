@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ include "argo-cd.dex.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
 roleRef:
@@ -13,5 +13,5 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ include "argo-cd.dex.serviceAccountName" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ include "argo-cd.namespace" . }}
 {{- end }}

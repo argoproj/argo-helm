@@ -1,9 +1,9 @@
-{{- if and .Values.applicationSet.enabled .Values.global.networkPolicy.create (or .Values.applicationSet.metrics.enabled .Values.applicationSet.ingress.enabled) }}
+{{- if and .Values.global.networkPolicy.create (or .Values.applicationSet.metrics.enabled .Values.applicationSet.ingress.enabled) }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ template "argo-cd.applicationSet.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
 spec:
