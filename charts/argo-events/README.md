@@ -65,11 +65,51 @@ done
 | configs.jetstream.streamConfig.maxBytes | string | `"1GB"` |  |
 | configs.jetstream.streamConfig.maxMsgs | int | `1000000` | Maximum number of messages before expiring oldest message |
 | configs.jetstream.streamConfig.replicas | int | `3` | Number of replicas, defaults to 3 and requires minimal 3 |
-| configs.jetstream.versions[0].configReloaderImage | string | `"natsio/nats-server-config-reloader:latest"` |  |
-| configs.jetstream.versions[0].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:latest"` |  |
-| configs.jetstream.versions[0].natsImage | string | `"nats:latest"` |  |
+| configs.jetstream.versions[0].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.14.0"` |  |
+| configs.jetstream.versions[0].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.14.0"` |  |
+| configs.jetstream.versions[0].natsImage | string | `"nats:2.10.10"` |  |
 | configs.jetstream.versions[0].startCommand | string | `"/nats-server"` |  |
 | configs.jetstream.versions[0].version | string | `"latest"` |  |
+| configs.jetstream.versions[1].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[1].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[1].natsImage | string | `"nats:2.8.1"` |  |
+| configs.jetstream.versions[1].startCommand | string | `"/nats-server"` |  |
+| configs.jetstream.versions[1].version | string | `"2.8.1"` |  |
+| configs.jetstream.versions[2].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[2].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[2].natsImage | string | `"nats:2.8.1-alpine"` |  |
+| configs.jetstream.versions[2].startCommand | string | `"nats-server"` |  |
+| configs.jetstream.versions[2].version | string | `"2.8.1-alpine"` |  |
+| configs.jetstream.versions[3].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[3].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[3].natsImage | string | `"nats:2.8.2"` |  |
+| configs.jetstream.versions[3].startCommand | string | `"/nats-server"` |  |
+| configs.jetstream.versions[3].version | string | `"2.8.2"` |  |
+| configs.jetstream.versions[4].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[4].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[4].natsImage | string | `"nats:2.8.2-alpine"` |  |
+| configs.jetstream.versions[4].startCommand | string | `"nats-server"` |  |
+| configs.jetstream.versions[4].version | string | `"2.8.2-alpine"` |  |
+| configs.jetstream.versions[5].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[5].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[5].natsImage | string | `"nats:2.9.1"` |  |
+| configs.jetstream.versions[5].startCommand | string | `"/nats-server"` |  |
+| configs.jetstream.versions[5].version | string | `"2.9.1"` |  |
+| configs.jetstream.versions[6].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[6].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[6].natsImage | string | `"nats:2.9.12"` |  |
+| configs.jetstream.versions[6].startCommand | string | `"/nats-server"` |  |
+| configs.jetstream.versions[6].version | string | `"2.9.12"` |  |
+| configs.jetstream.versions[7].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
+| configs.jetstream.versions[7].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.9.1"` |  |
+| configs.jetstream.versions[7].natsImage | string | `"nats:2.9.16"` |  |
+| configs.jetstream.versions[7].startCommand | string | `"/nats-server"` |  |
+| configs.jetstream.versions[7].version | string | `"2.9.16"` |  |
+| configs.jetstream.versions[8].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.14.0"` |  |
+| configs.jetstream.versions[8].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.14.0"` |  |
+| configs.jetstream.versions[8].natsImage | string | `"nats:2.10.10"` |  |
+| configs.jetstream.versions[8].startCommand | string | `"/nats-server"` |  |
+| configs.jetstream.versions[8].version | string | `"2.10.10"` |  |
 | configs.nats.versions | list | See [values.yaml] | Supported versions of NATS event bus |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
