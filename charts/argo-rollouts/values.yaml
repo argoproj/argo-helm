@@ -120,6 +120,7 @@ controller:
   #  limits:
   #    cpu: 100m
   #    memory: 128Mi
+  #    ephemeral-storage: 1Gi
   #  requests:
   #    cpu: 50m
   #    memory: 64Mi
@@ -479,3 +480,11 @@ notifications:
     # trigger.on-purple: |
     #   - send: [my-purple-template]
     #     when: rollout.spec.template.spec.containers[0].image == 'argoproj/rollouts-demo:purple'
+
+  # -- The subscriptions define the subscriptions to the triggers in a general way for all rollouts
+  subscriptions: []
+    # - recipients:
+    #   - slack:<channel>
+    #   triggers:
+    #   - on-rollout-completed
+    #   - on-rollout-aborted
