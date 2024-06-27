@@ -2151,6 +2151,55 @@ server:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
+  # Argo CD server Gateway API HTTPRoute configuration
+  # NOTE: Alpha feature, gRPC & TLS pass-through will not work
+  gatewayAPI:
+    # -- Enable a Gateway API resources for the Argo CD server
+    enabled: true
+    # -- Additional route labels
+    labels: {}
+    # -- Additional route annotations
+    annotations: {}
+
+    # -- Defines which Gateway will implement the resource
+    gateway: ""
+
+    # -- Defines which Gateway section will implement the resource
+    gatewaySection: ""
+
+    # -- Argo CD server hostname
+    # @default -- `""` (defaults to global.domain)
+    hostname: ""
+
+    # -- The path to Argo CD server
+    path: /
+
+    # -- HTTP reoute path type. Either 'Exact' or `PathPrefix`
+    pathType: PathPrefix
+
+    # -- The list of additional hostnames to be covered by API Gateway record
+    extraHosts: []
+
+    # -- Additional API Gateway paths
+    # @default -- `[]` (See [values.yaml])
+    ## Note: Supports use of custom Helm templates
+    extraPaths: []
+      # - type: PathPrefix
+      #   value: /*
+
+    # -- Additional routing rules
+    # @default -- `[]` (See [values.yaml])
+    ## Note: Supports use of custom Helm templates
+    extraRules: []
+      # - matches:
+      #   - path:
+      #       type: PathPrefix
+      #       value: /
+      #     backendRefs:
+      #       - name: '{{ include "argo-cd.server.fullname" . }}'
+      #         port: '{{ .Values.server.service.servicePortHttpName }}'
+
+
   # Argo CD server ingress configuration
   ingress:
     # -- Enable an ingress resource for the Argo CD server
