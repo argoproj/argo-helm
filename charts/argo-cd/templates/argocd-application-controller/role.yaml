@@ -43,3 +43,17 @@ rules:
   - get
   - list
   - watch
+{{- if and (not .Values.createClusterRoles) .Values.controller.dynamicClusterDistribution }}
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  resourceNames:
+  - argocd-app-controller-shard-cm
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+{{- end }}

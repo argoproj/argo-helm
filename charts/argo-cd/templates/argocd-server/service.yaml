@@ -16,6 +16,7 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.server.service.type }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   {{- with .Values.server.service.externalIPs }}
   externalIPs: {{ . }}
   {{- end }}
@@ -23,6 +24,9 @@ spec:
   externalTrafficPolicy: {{ .Values.server.service.externalTrafficPolicy }}
   {{- end }}
   {{- if eq .Values.server.service.type "LoadBalancer" }}
+  {{- with .Values.server.service.loadBalancerClass }}
+  loadBalancerClass: {{ . }}
+  {{- end }}
   {{- with .Values.server.service.loadBalancerIP }}
   loadBalancerIP: {{ . }}
   {{- end }}

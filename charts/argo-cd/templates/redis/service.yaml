@@ -17,6 +17,7 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name: redis
     port: {{ .Values.redis.servicePort }}

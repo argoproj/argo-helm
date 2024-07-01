@@ -24,6 +24,7 @@ spec:
   {{- if and .Values.server.metrics.service.clusterIP (eq .Values.server.metrics.service.type "ClusterIP") }}
   clusterIP: {{ .Values.server.metrics.service.clusterIP }}
   {{- end }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name: {{ .Values.server.metrics.service.portName }}
     protocol: TCP

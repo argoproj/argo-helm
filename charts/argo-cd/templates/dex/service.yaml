@@ -16,6 +16,7 @@ metadata:
 {{- toYaml .Values.dex.metrics.service.labels | nindent 4 }}
 {{- end }}
 spec:
+  {{- include "argo-cd.dualStack" . | indent 2 }}
   ports:
   - name: {{ .Values.dex.servicePortHttpName }}
     protocol: TCP
