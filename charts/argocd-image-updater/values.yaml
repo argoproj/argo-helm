@@ -133,6 +133,12 @@ config:
   # -- Changing the Git commit message
   gitCommitTemplate: ""
 
+  # -- Path to public SSH key mounted in container, or GPG key ID used to sign commits
+  gitCommitSigningKey: ""
+
+  # -- Enables sign off on commits
+  gitCommitSignOff: false
+
   # -- Argo CD Image Update log level
   logLevel: "info"
 
