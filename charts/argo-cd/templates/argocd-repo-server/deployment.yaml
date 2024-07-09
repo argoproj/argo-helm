@@ -290,6 +290,12 @@ spec:
                 key: reposerver.revision.cache.lock.timeout
                 name: argocd-cmd-params-cm
                 optional: true
+          - name: ARGOCD_REPO_SERVER_INCLUDE_HIDDEN_DIRECTORIES
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.include.hidden.directories
+                name: argocd-cmd-params-cm
+                optional: true
           {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
           - name: HELM_CACHE_HOME
             value: /helm-working-dir
