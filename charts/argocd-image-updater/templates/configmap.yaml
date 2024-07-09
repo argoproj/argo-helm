@@ -37,6 +37,9 @@ data:
   {{- with .Values.config.gitCommitSignOff }}
   git.commit-sign-off: {{ . | quote }}
   {{- end }}
+  {{- with .Values.config.gitCommitSigningMethod }}
+  git.commit-signing-method: {{ . | quote }}
+  {{- end }}
   kube.events: {{ .Values.config.disableKubeEvents | quote }}
   {{- with .Values.config.registries }}
   registries.conf: |
