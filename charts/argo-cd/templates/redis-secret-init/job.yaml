@@ -3,7 +3,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "argo-cd.redisSecretInit.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . | quote }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation

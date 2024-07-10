@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-cd.notifications.fullname" . }}
-  namespace: {{ default .Release.Namespace .Values.notifications.metrics.serviceMonitor.namespace | quote }}
+  namespace: {{ default (include  "argo-cd.namespace" .) .Values.notifications.metrics.serviceMonitor.namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
     {{- with .Values.notifications.metrics.serviceMonitor.selector }}
