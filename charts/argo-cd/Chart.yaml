@@ -3,7 +3,7 @@ appVersion: v2.11.4
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 7.3.5
+version: 7.3.6
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -27,4 +27,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: Address oversights of feature `namespaceOverride`
+      description: Address inconsistent redis-secret-init ServiceAccount handling

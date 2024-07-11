@@ -99,7 +99,7 @@ Create the name of the Redis secret-init service account to use
 */}}
 {{- define "argo-cd.redisSecretInit.serviceAccountName" -}}
 {{- if .Values.redisSecretInit.serviceAccount.create -}}
-    {{ default (include "argo-cd.redisSecretInit.fullname" .) .Values.redis.serviceAccount.name }}
+    {{ default (include "argo-cd.redisSecretInit.fullname" .) .Values.redisSecretInit.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.redisSecretInit.serviceAccount.name }}
 {{- end -}}
