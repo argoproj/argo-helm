@@ -68,6 +68,7 @@ rules:
   - get
   - list
   - watch
+  - update
 # services patch needed to update selector of canary/stable/active/preview services
 # services create needed to create and delete services for experiments
 - apiGroups:
@@ -110,7 +111,7 @@ rules:
 {{- if .Values.providerRBAC.providers.gatewayAPI }}
   - create
   - update
-{{- end }}  
+{{- end }}
 # pod list/update needed for updating ephemeral data
 - apiGroups:
   - ""
@@ -292,6 +293,9 @@ rules:
   - list
   - watch
   - update
+{{- end }}
+{{- with .Values.providerRBAC.additionalRules }}
+{{ toYaml .  }}
 {{- end }}
 {{- end }}
 {{- end }}
