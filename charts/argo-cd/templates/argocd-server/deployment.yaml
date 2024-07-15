@@ -66,7 +66,6 @@ spec:
         image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.server.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
         args:
-        - /usr/local/bin/argocd-server
         - --port={{ .Values.server.containerPorts.server }}
         - --metrics-port={{ .Values.server.containerPorts.metrics }}
         {{- with .Values.server.extraArgs }}
