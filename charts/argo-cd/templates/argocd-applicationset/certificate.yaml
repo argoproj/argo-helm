@@ -9,14 +9,14 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ template "argo-cd.applicationSet.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
 spec:
   secretName: {{ .Values.applicationSet.certificate.secretName }}
-  commonName: {{ .Values.applicationSet.certificate.domain | quote }}
+  commonName: {{ .Values.applicationSet.certificate.domain | default .Values.global.domain }}
   dnsNames:
-    - {{ .Values.applicationSet.certificate.domain | quote }}
+    - {{ .Values.applicationSet.certificate.domain | default .Values.global.domain }}
     {{- range .Values.applicationSet.certificate.additionalHosts }}
     - {{ . | quote }}
     {{- end }}

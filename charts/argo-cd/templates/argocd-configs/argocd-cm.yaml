@@ -1,12 +1,12 @@
-{{- if (hasKey .Values.server "configEnabled") | ternary .Values.server.configEnabled .Values.configs.cm.create }}
+{{- if .Values.configs.cm.create }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-cm
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" "cm") | nindent 4 }}
-  {{- with (mergeOverwrite (deepCopy .Values.configs.cm.annotations) (.Values.server.configAnnotations | default dict)) }}
+  {{- with .Values.configs.cm.annotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}

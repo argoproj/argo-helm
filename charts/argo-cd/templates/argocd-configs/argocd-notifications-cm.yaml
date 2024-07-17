@@ -3,12 +3,12 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-notifications-cm
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
 data:
   context: |
-    argocdUrl: {{ .Values.notifications.argocdUrl | quote }}
+    argocdUrl: {{ .Values.notifications.argocdUrl | default (printf "https://%s" .Values.global.domain) }}
     {{- with .Values.notifications.context }}
       {{- toYaml . | nindent 4 }}
     {{- end }}

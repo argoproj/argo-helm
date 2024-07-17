@@ -1,18 +1,18 @@
-{{- if (hasKey .Values.server "rbacConfigCreate") | ternary .Values.server.rbacConfigCreate .Values.configs.rbac.create }}
+{{- if .Values.configs.rbac.create }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-rbac-cm
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" "rbac-cm") | nindent 4 }}
-  {{- with (mergeOverwrite (deepCopy .Values.configs.rbac.annotations) (.Values.server.rbacConfigAnnotations | default dict)) }}
+  {{- with .Values.configs.rbac.annotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-{{- with (mergeOverwrite (deepCopy (omit .Values.configs.rbac "create" "annotations")) (.Values.server.rbacConfig | default dict)) }}
+{{- with (omit .Values.configs.rbac "create" "annotations") }}
 data:
   {{- toYaml . | nindent 2 }}
 {{- end }}
