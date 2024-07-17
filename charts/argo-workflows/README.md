@@ -231,7 +231,7 @@ Fields to note:
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the workflow controller |
 | controller.volumeMounts | list | `[]` | Additional volume mounts to the controller main container |
 | controller.volumes | list | `[]` | Additional volumes to the controller pod |
-| controller.workflowDefaults | object | `{"spec":{"podGC":{"strategy":"OnWorkflowCompletion"},"ttlStrategy":{"secondsAfterCompletion":86400,"secondsAfterFailure":86400,"secondsAfterSuccess":86400}}}` | Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level. Only valid for 2.7+ |
+| controller.workflowDefaults | object | `{"spec":{"podGC":{"strategy":"OnWorkflowCompletion"},"ttlStrategy":{"secondsAfterCompletion":86400,"secondsAfterFailure":86400}}}` | Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level. Only valid for 2.7+ |
 | controller.workflowNamespaces | list | `["default"]` | Specify all namespaces where this workflow controller instance will manage workflows. This controls where the service account and RBAC resources will be created. Only valid when singleNamespace is false. |
 | controller.workflowRestrictions | object | `{}` | Restricts the Workflows that the controller will process. Only valid for 2.9+ |
 | controller.workflowTTLWorkers | string | `nil` | Number of workflow TTL workers |
