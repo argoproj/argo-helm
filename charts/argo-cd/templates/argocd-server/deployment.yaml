@@ -250,12 +250,24 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
+                optional: true
                 {{- if .Values.externalRedis.host }}
                 key: redis-password
-                optional: true
                 {{- else }}
                 key: auth
                 {{- end }}
+          - name: REDIS_SENTINEL_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                key: redis-sentinel-username
+                optional: true
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                key: redis-sentinel-password
+                optional: true
           - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
             valueFrom:
               configMapKeyRef:

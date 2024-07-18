@@ -461,6 +461,16 @@ configs:
     #     tlsClientConfig:
     #       insecure: false
     #       caData: "<base64 encoded certificate>"
+    # mycluster4-sharded:
+    #   shard: 1
+    #   server: https://mycluster4.example.com
+    #   labels: {}
+    #   annotations: {}
+    #   config:
+    #     bearerToken: "<authentication token>"
+    #     tlsClientConfig:
+    #       insecure: false
+    #       caData: "<base64 encoded certificate>"
 
   # -- Repository credentials to be used as Templates for other repos
   ## Creates a secret for each key/value specified below to create repository credentials
@@ -1601,7 +1611,7 @@ externalRedis:
   password: ""
   # -- External Redis server port
   port: 6379
-  # -- The name of an existing secret with Redis credentials (must contain key `redis-password`).
+  # -- The name of an existing secret with Redis (must contain key `redis-password`) and Sentinel credentials.
   # When it's set, the `externalRedis.password` parameter is ignored
   existingSecret: ""
   # -- External Redis Secret annotations
@@ -1990,8 +2000,6 @@ server:
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
     enabled: false
-    # -- The name of the Secret that will be automatically created and managed by this Certificate resource
-    secretName: argocd-server-tls
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
     domain: ""
@@ -2029,6 +2037,8 @@ server:
     # -- Usages for the certificate
     ### Ref: https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.KeyUsage
     usages: []
+    # -- Annotations that allow the certificate to be composed from data residing in existing Kubernetes Resources
+    secretTemplateAnnotations: {}
 
   # TLS certificate configuration via Secret
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
@@ -2996,8 +3006,6 @@ applicationSet:
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
     enabled: false
-    # -- The name of the Secret that will be automatically created and managed by this Certificate resource
-    secretName: argocd-applicationset-controller-tls
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
     domain: ""
