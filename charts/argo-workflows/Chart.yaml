@@ -1,10 +1,10 @@
 apiVersion: v2
-appVersion: v3.5.4-cap-CR-22243
+appVersion: v3.5.8-cap-CR-22608
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.40.9-1-v3.5.4-cap-CR-22243
-icon: https://argoproj.github.io/argo-workflows/assets/logo.png
+version: 0.41.11-v3.5.8-cap-CR-22608
+icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
   - https://github.com/argoproj/argo-workflows
@@ -16,5 +16,27 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
+    - kind: fixed
+      description: Add `app:` label to components to match upstream
+    - kind: changed
+      description: Bump argo-workflows to v3.5.8-cap-CR-22608
+    - kind: fixed
+      description: Add missing serviceLabels to server service
+    - kind: fixed
+      description: Correct sample of secondsAfterCompletion
     - kind: added
-      description: Add MySQL persistence support explicitly on README
+      description: Added option to add service accounts to RoleBindings
+    - kind: changed
+      description: Fix hyphen typo in values.yaml comments
+    - kind: added
+      description: Add the ability to use a headless service for the workflow controller
+    - kind: added
+      description: Check Prometheus CRDs are available before creating Service Monitor resource(s)
+    - kind: added
+      description: Support namespaceOverride
+    - kind: added
+      description: Disable leader election if only 1 repl of the Workflow Controller
+    - kind: fixed
+      description: Add caSecret in the artifactory.s3 configuration values.
+    - kind: fixed
+      description: Update argo-workflows documentation links to readthedocs

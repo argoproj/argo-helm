@@ -1,11 +1,13 @@
-{{- if .Values.server.GKEbackendConfig.enabled }}
-apiVersion: {{ include "argo-cd.apiVersions.cloudgoogle" . }}
+{{- if and .Values.server.ingress.enabled (eq .Values.server.ingress.controller "gke") .Values.server.ingress.gke.backendConfig }}
+apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
-  name: {{ template "argo-cd.server.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+{{- with .Values.server.ingress.gke.backendConfig }}
 spec:
-  {{- toYaml .Values.server.GKEbackendConfig.spec | nindent 2 }}
+  {{- toYaml . | nindent 2 }}
+{{- end }}
 {{- end }}

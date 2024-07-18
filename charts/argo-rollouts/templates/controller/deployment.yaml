@@ -10,6 +10,9 @@ metadata:
   name: {{ include "argo-rollouts.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
+  {{- range $key, $value := (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.controller.deploymentLabels) }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
     app.kubernetes.io/component: {{ .Values.controller.component }}
     {{- include "argo-rollouts.labels" . | nindent 4 }}
 spec:
@@ -18,8 +21,9 @@ spec:
       app.kubernetes.io/component: {{ .Values.controller.component }}
       {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
   strategy:
-    type: Recreate
+    type: RollingUpdate
   replicas: {{ .Values.controller.replicas }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   template:
     metadata:
       {{- with (mergeOverwrite (deepCopy .Values.podAnnotations) .Values.controller.podAnnotations) }}
@@ -31,7 +35,7 @@ spec:
       labels:
         {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ .Values.controller.component }}
-        {{- range $key, $value := .Values.podLabels }}
+        {{- range $key, $value := (mergeOverwrite (deepCopy .Values.podLabels) .Values.controller.podLabels) }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
     spec:

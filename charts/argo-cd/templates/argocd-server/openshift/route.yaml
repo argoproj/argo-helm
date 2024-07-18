@@ -3,7 +3,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: {{ template "argo-cd.server.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 {{- with .Values.server.route.annotations }}
@@ -13,7 +13,7 @@ metadata:
     {{- end }}
 {{- end }}
 spec:
-  host: {{ .Values.server.route.hostname | quote }}
+  host: {{ .Values.server.route.hostname | default .Values.global.domain | quote }}
   to:
     kind: Service
     name: {{ template "argo-cd.server.fullname" . }}

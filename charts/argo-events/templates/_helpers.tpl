@@ -104,6 +104,9 @@ helm.sh/chart: {{ include "argo-events.chart" .context }}
 {{ include "argo-events.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
 app.kubernetes.io/managed-by: {{ .context.Release.Service }}
 app.kubernetes.io/part-of: argo-events
+{{- with .context.Values.global.additionalLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -135,4 +138,12 @@ Define Pdb apiVersion
 {{- else }}
 {{- printf "policy/v1beta1" -}}
 {{- end }}
+{{- end }}
+
+{{/*
+Expand the namespace of the release.
+Allows overriding it for multi-namespace deployments in combined charts.
+*/}}
+{{- define "argo-events.namespace" -}}
+{{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
 {{- end }}

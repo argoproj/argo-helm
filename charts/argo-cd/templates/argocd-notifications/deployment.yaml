@@ -9,7 +9,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ include "argo-cd.notifications.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
 spec:
@@ -55,6 +55,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.notifications.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.notifications.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.notifications.automountServiceAccountToken }}
       containers:
         - name: {{ .Values.notifications.name }}
           image: {{ default .Values.global.image.repository .Values.notifications.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.notifications.image.tag }}
@@ -64,8 +65,9 @@ spec:
             - --metrics-port={{ .Values.notifications.containerPorts.metrics }}
             - --loglevel={{ default .Values.global.logging.level .Values.notifications.logLevel }}
             - --logformat={{ default .Values.global.logging.format .Values.notifications.logFormat }}
-            - --namespace={{ .Release.Namespace }}
+            - --namespace={{ include "argo-cd.namespace" . }}
             - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
+            - --secret-name={{ .Values.notifications.secret.name }}
             {{- range .Values.notifications.extraArgs }}
             - {{ . | squote }}
             {{- end }}
@@ -89,6 +91,12 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: application.namespaces
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_NOTIFICATION_CONTROLLER_SELF_SERVICE_NOTIFICATION_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: notificationscontroller.selfservice.enabled
                   name: argocd-cmd-params-cm
                   optional: true
           {{- with .Values.notifications.extraEnvFrom }}

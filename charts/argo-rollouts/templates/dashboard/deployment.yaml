@@ -11,6 +11,9 @@ metadata:
   name: {{ include "argo-rollouts.fullname" . }}-dashboard
   namespace: {{ .Release.Namespace | quote }}
   labels:
+  {{- range $key, $value := (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.dashboard.deploymentLabels) }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
     app.kubernetes.io/component: {{ .Values.dashboard.component }}
     {{- include "argo-rollouts.labels" . | nindent 4 }}
 spec:
@@ -21,6 +24,7 @@ spec:
   strategy:
     type: Recreate
   replicas: {{ .Values.dashboard.replicas }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   template:
     metadata:
       {{- with (mergeOverwrite (deepCopy .Values.podAnnotations) .Values.dashboard.podAnnotations) }}
@@ -32,7 +36,7 @@ spec:
       labels:
         {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ .Values.dashboard.component }}
-        {{- range $key, $value := .Values.podLabels }}
+        {{- range $key, $value := (mergeOverwrite (deepCopy .Values.podLabels) .Values.dashboard.podLabels) }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
     spec:

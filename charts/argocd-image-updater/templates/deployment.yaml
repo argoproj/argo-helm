@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "argocd-image-updater.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
 spec:
@@ -34,8 +34,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          command:
-            - /usr/local/bin/argocd-image-updater
+          args:
             - run
             {{- with .Values.extraArgs }}
               {{- toYaml . | nindent 12 }}
@@ -104,6 +103,10 @@ spec:
           {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+          {{- with .Values.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -132,12 +135,12 @@ spec:
           volumeMounts:
           - mountPath: /app/config
             name: image-updater-conf
-          - mountPath: /tmp
-            name: tmp-dir
           - mountPath: /app/config/ssh
             name: ssh-known-hosts
           - mountPath: /app/.ssh
             name: ssh-config
+          - mountPath: /tmp
+            name: tmp
           {{- if .Values.authScripts.enabled }}
           - mountPath: /scripts
             name: authscripts
@@ -161,8 +164,6 @@ spec:
           name: argocd-image-updater-authscripts
         name: authscripts
       {{- end }}
-      - emptyDir: {}
-        name: tmp-dir
       - configMap:
           name: argocd-ssh-known-hosts-cm
           optional: true
@@ -171,6 +172,8 @@ spec:
           name: argocd-image-updater-ssh-config
           optional: true
         name: ssh-config
+      - emptyDir: {}
+        name: tmp
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 6}}
       {{- end }}

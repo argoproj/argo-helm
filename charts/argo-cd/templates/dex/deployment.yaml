@@ -9,7 +9,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ template "argo-cd.dex.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
 spec:
@@ -26,6 +26,9 @@ spec:
     metadata:
       annotations:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- if (index .Values.configs.cm "dex.config") }}
+        checksum/cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | sha256sum }}
+        {{- end }}
         {{- if .Values.dex.certificateSecret.enabled }}
         checksum/dex-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-dex-server-tls-secret.yaml") . | sha256sum }}
         {{- end }}
@@ -59,6 +62,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.dex.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ template "argo-cd.dex.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.dex.automountServiceAccountToken }}
       containers:
       - name: {{ .Values.dex.name }}
         image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
@@ -99,8 +103,9 @@ spec:
         {{- if .Values.dex.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: /healthz/live
-            port: metrics
+            path: {{ .Values.dex.livenessProbe.httpPath }}
+            port: {{ .Values.dex.livenessProbe.httpPort }}
+            scheme: {{ .Values.dex.livenessProbe.httpScheme }}
           initialDelaySeconds: {{ .Values.dex.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.dex.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.dex.livenessProbe.timeoutSeconds }}
@@ -110,8 +115,9 @@ spec:
         {{- if .Values.dex.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: /healthz/ready
-            port: metrics
+            path: {{ .Values.dex.readinessProbe.httpPath }}
+            port: {{ .Values.dex.readinessProbe.httpPort }}
+            scheme: {{ .Values.dex.readinessProbe.httpScheme }}
           initialDelaySeconds: {{ .Values.dex.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.dex.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.dex.readinessProbe.timeoutSeconds }}
@@ -185,9 +191,19 @@ spec:
       {{- end }}
       volumes:
       - name: static-files
+        {{- if .Values.dex.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.dex.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: dexconfig
+        {{- if .Values.dex.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.dex.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: argocd-dex-server-tls
         secret:
           secretName: argocd-dex-server-tls

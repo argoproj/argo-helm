@@ -5,33 +5,35 @@ metadata:
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
   name: argocd-image-updater-config
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
 data:
   {{- with .Values.config.applicationsAPIKind }}
-  applications_api: {{ . }}
+  applications_api: {{ . | quote }}
+  {{- if eq . "argocd" }}
+  argocd.grpc_web: {{ $.Values.config.argocd.grpcWeb | quote }}
+  {{- with $.Values.config.argocd.serverAddress }}
+  argocd.server_addr: {{ . | quote }}
   {{- end }}
-  argocd.grpc_web: {{ .Values.config.argocd.grpcWeb | quote }}
-  {{- with .Values.config.argocd.serverAddress }}
-  argocd.server_addr: {{ . }}
+  argocd.insecure: {{ $.Values.config.argocd.insecure | quote }}
+  argocd.plaintext: {{ $.Values.config.argocd.plaintext | quote }}
+  {{- end -}}
   {{- end }}
-  argocd.insecure: {{ .Values.config.argocd.insecure | quote }}
-  argocd.plaintext: {{ .Values.config.argocd.plaintext | quote }}
   {{- with .Values.config.logLevel }}
-  log.level: {{ . }}
+  log.level: {{ . | quote }}
   {{- end }}
   {{- with .Values.config.gitCommitUser }}
-  git.user: {{ . }}
+  git.user: {{ . | quote }}
   {{- end }}
   {{- with .Values.config.gitCommitMail }}
-  git.email: {{ . }}
+  git.email: {{ . | quote }}
   {{- end }}
   {{- with .Values.config.gitCommitTemplate }}
   git.commit-message-template: |
     {{- nindent 4 . }}
   {{- end }}
   kube.events: {{ .Values.config.disableKubeEvents | quote }}
+  {{- with .Values.config.registries }}
   registries.conf: |
-    {{- with .Values.config.registries }}
-      registries:
-        {{- toYaml . | nindent 6 }}
-    {{- end }}
+    registries:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}

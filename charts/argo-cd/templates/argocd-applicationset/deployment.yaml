@@ -1,4 +1,3 @@
-{{- if .Values.applicationSet.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,7 +8,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ include "argo-cd.applicationSet.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
 spec:
@@ -17,7 +16,7 @@ spec:
   strategy:
     {{- trim . | nindent 4 }}
   {{- end }}
-  replicas: {{ .Values.applicationSet.replicas | default .Values.applicationSet.replicaCount }}
+  replicas: {{ .Values.applicationSet.replicas }}
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
     matchLabels:
@@ -56,6 +55,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.applicationSet.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.applicationSet.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.applicationSet.automountServiceAccountToken }}
       containers:
         - name: {{ .Values.applicationSet.name }}
           image: {{ default .Values.global.image.repository .Values.applicationSet.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.applicationSet.image.tag }}
@@ -65,20 +65,6 @@ spec:
             - --metrics-addr=:{{ .Values.applicationSet.containerPorts.metrics }}
             - --probe-addr=:{{ .Values.applicationSet.containerPorts.probe }}
             - --webhook-addr=:{{ .Values.applicationSet.containerPorts.webhook }}
-            {{- with .Values.applicationSet.args.policy }}
-            - --policy={{ . }}
-            {{- end }}
-            {{- with .Values.applicationSet.args.dryRun }}
-            - --dry-run={{ . }}
-            {{- end }}
-            {{- with .Values.applicationSet.logFormat }}
-            - --logformat
-            - {{ . }}
-            {{- end }}
-            {{- with .Values.applicationSet.logLevel }}
-            - --loglevel
-            - {{ . }}
-            {{- end }}
             {{- with .Values.applicationSet.extraArgs }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -210,6 +196,12 @@ spec:
                   name: argocd-cmd-params-cm
                   key: applicationsetcontroller.allowed.scm.providers
                   optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_SCM_PROVIDERS
+              valueFrom:
+                configMapKeyRef:
+                  name: argocd-cmd-params-cm
+                  key: applicationsetcontroller.enable.scm.providers
+                  optional: true
           {{- with .Values.applicationSet.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
@@ -310,9 +302,19 @@ spec:
           configMap:
             name: argocd-gpg-keys-cm
         - name: gpg-keyring
+          {{- if .Values.applicationSet.emptyDir.sizeLimit }}
+          emptyDir:
+            sizeLimit: {{ .Values.applicationSet.emptyDir.sizeLimit }}
+          {{- else }}
           emptyDir: {}
+          {{- end }}
         - name: tmp
+          {{- if .Values.applicationSet.emptyDir.sizeLimit }}
+          emptyDir:
+            sizeLimit: {{ .Values.applicationSet.emptyDir.sizeLimit }}
+          {{- else }}
           emptyDir: {}
+          {{- end }}
         - name: argocd-repo-server-tls
           secret:
             secretName: argocd-repo-server-tls
@@ -329,4 +331,3 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       dnsPolicy: {{ .Values.applicationSet.dnsPolicy }}
-{{- end }}

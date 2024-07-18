@@ -1,5 +1,4 @@
-{{- $config := .Values.repoServer.clusterAdminAccess | default dict -}}
-{{- if hasKey $config "enabled" | ternary $config.enabled .Values.createClusterRoles }}
+{{- if and .Values.createClusterRoles .Values.repoServer.clusterRoleRules.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -7,8 +6,8 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
 rules:
-  {{- if .Values.repoServer.clusterRoleRules.enabled }}
-    {{- toYaml .Values.repoServer.clusterRoleRules.rules | nindent 2 }}
+  {{- with .Values.repoServer.clusterRoleRules.rules }}
+    {{- toYaml . | nindent 2 }}
   {{- else }}
   - apiGroups:
     - '*'

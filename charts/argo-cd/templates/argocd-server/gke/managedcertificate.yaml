@@ -1,12 +1,15 @@
-{{- if .Values.server.GKEmanagedCertificate.enabled }}
+{{- if and .Values.server.ingress.enabled (eq .Values.server.ingress.controller "gke") .Values.server.ingress.gke.managedCertificate.create }}
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
-  name: {{ template "argo-cd.server.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
   domains:
-    {{- with .Values.server.GKEmanagedCertificate.domains }}
-    {{- toYaml . | nindent 4 }}
+    - {{ .Values.server.ingress.hostname | default .Values.global.domain }}
+    {{- with .Values.server.ingress.gke.managedCertificate.extraDomains }}
+      {{- toYaml . | nindent 4 }}
     {{- end }}
 {{- end }}

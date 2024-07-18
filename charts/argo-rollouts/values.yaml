@@ -41,14 +41,22 @@ extraObjects: []
 global:
   # -- Annotations for all deployed Deployments
   deploymentAnnotations: {}
+  # -- Labels for all deployed Deployments
+  deploymentLabels: {}
+  # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
+  revisionHistoryLimit: 10
 
 controller:
   # -- Value of label `app.kubernetes.io/component`
   component: rollouts-controller
   # -- Annotations to be added to the controller deployment
   deploymentAnnotations: {}
+  # -- Labels to be added to the controller deployment
+  deploymentLabels: {}
   # -- Annotations to be added to application controller pods
   podAnnotations: {}
+  # -- Labels to be added to the application controller pods
+  podLabels: {}
   # -- [Node selector]
   nodeSelector: {}
   # -- [Tolerations] for use with node taints
@@ -232,13 +240,14 @@ podSecurityContext:
   runAsNonRoot: true
 
 # -- Security Context to set on container level
-containerSecurityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  seccompProfile:
+    type: RuntimeDefault
 
 # -- Annotations to be added to the Rollout service
 serviceAnnotations: {}
@@ -273,6 +282,10 @@ providerRBAC:
     contour: true
     # -- Adds RBAC rules for the Gloo Platform provider, see `https://github.com/argoproj-labs/rollouts-plugin-trafficrouter-glooplatform/blob/main/README.md`
     glooPlatform: true
+    # -- Adds RBAC rules for the Gateway API provider
+    gatewayAPI: true
+  # -- Additional RBAC rules for others providers
+  additionalRules: []
 
 dashboard:
   # -- Deploy dashboard server
@@ -283,8 +296,12 @@ dashboard:
   component: rollouts-dashboard
   # -- Annotations to be added to the dashboard deployment
   deploymentAnnotations: {}
+  # -- Labels to be added to the dashboard deployment
+  deploymentLabels: {}
   # -- Annotations to be added to application dashboard pods
   podAnnotations: {}
+  # -- Labels to be added to the application dashboard pods
+  podLabels: {}
   # -- [Node selector]
   nodeSelector: {}
   # -- [Tolerations] for use with node taints

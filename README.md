@@ -42,3 +42,63 @@ Please refer to [SECURITY.md](SECURITY.md) for details on how to report security
 ### Changelog
 
 Releases are managed independently for each helm chart, and changelogs are tracked on each release. Read more about this process [here](https://github.com/argoproj/argo-helm/blob/main/CONTRIBUTING.md#changelog).
+
+## Charts use Helm "Capabilities"
+
+Our charts make use of the Helm built-in object "Capabilities":
+> This provides information about what capabilities the Kubernetes cluster supports.  
+> *Source: https://helm.sh/docs/chart_template_guide/builtin_objects/*
+
+Today we use:
+
+- `.Capabilities.APIVersions.Has` mostly to determine whether the CRDs for ServiceMonitors (from prometheus-operator) exists inside the cluster
+- `.Capabilities.KubeVersion.Version` to handle correct apiVersion of a specific resource kind (eg. "policy/v1" vs. "policy/v1beta1")
+
+If you use the charts only to template the manifests, without installing (`helm install ..`), you need to make sure that Helm (or the Helm SDK) receives the available APIs from your Kubernetes cluster.
+
+For this you need to pass the `--api-versions` parameter to the `helm template` command:
+
+```bash
+helm template argocd \
+  oci://ghcr.io/argoproj/argo-helm/argo-cd \
+  --api-versions monitoring.coreos.com/v1 \
+  --values my-argocd-values.yaml
+```
+
+If you use other tools like [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/builtins/) or [helmfile](https://helmfile.readthedocs.io/en/latest/#configuration) to render it, there are equivalent options.
+
+Example with Kustomize:
+
+```yaml
+# kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+- name: argo-cd
+  repo: oci://ghcr.io/argoproj/argo-helm
+  version: x.y.z
+  releaseName: argocd
+  apiVersions:
+  - monitoring.coreos.com/v1
+  valuesFile: my-argocd-values.yaml
+```
+
+Example with helmfile:
+
+```yaml
+# helmfile.yaml
+repositories:
+  - name: argo
+    url: https://argoproj.github.io/argo-helm
+
+apiVersions:
+  - monitoring.coreos.com/v1
+
+releases:
+  - name: argocd
+    namespace: argocd
+    chart: argo/argo-cd
+    values:
+      - my-argocd-values.yaml
+```

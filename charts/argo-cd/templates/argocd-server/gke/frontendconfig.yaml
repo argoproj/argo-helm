@@ -1,11 +1,13 @@
-{{- if .Values.server.GKEfrontendConfig.enabled }}
+{{- if and .Values.server.ingress.enabled (eq .Values.server.ingress.controller "gke") .Values.server.ingress.gke.frontendConfig }}
 apiVersion: networking.gke.io/v1beta1
 kind: FrontendConfig
 metadata:
-  name: {{ template "argo-cd.server.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+{{- with .Values.server.ingress.gke.frontendConfig }}
 spec:
-  {{- toYaml .Values.server.GKEfrontendConfig.spec | nindent 2 }}
+  {{- toYaml . | nindent 2 }}
+{{- end }}
 {{- end }}

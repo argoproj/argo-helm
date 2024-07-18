@@ -4,7 +4,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $cm_name }}
-  namespace: {{ $.Release.Namespace | quote }}
+  namespace: {{ include "argo-workflows.namespace" $ | quote }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" $ "component" $.Values.controller.name "name" $cm_name) | nindent 4 }}
   {{- with $cm_val.annotations }}

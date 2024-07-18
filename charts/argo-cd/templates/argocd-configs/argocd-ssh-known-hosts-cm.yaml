@@ -2,10 +2,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-ssh-known-hosts-cm
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "name" "ssh-known-hosts-cm") | nindent 4 }}
-  {{- with (mergeOverwrite (deepCopy .Values.configs.ssh.annotations) (.Values.configs.knownHostsAnnotations | default dict)) }}
+  {{- with .Values.configs.ssh.annotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
@@ -13,11 +13,7 @@ metadata:
   {{- end }}
 data:
   ssh_known_hosts: |
-    {{- if hasKey .Values.configs "knownHosts" }}
-      {{- .Values.configs.knownHosts.data.ssh_known_hosts | nindent 4 }}
-    {{- else }}
-      {{- .Values.configs.ssh.knownHosts | nindent 4 }}
-    {{- end }}
+    {{- .Values.configs.ssh.knownHosts | nindent 4 }}
     {{- with .Values.configs.ssh.extraHosts }}
       {{- . | nindent 4 }}
     {{- end }}

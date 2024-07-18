@@ -1,3 +1,4 @@
+{{- if not .Values.controller.dynamicClusterDistribution | default false }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -8,13 +9,12 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ template "argo-cd.controller.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 spec:
   replicas: {{ .Values.controller.replicas }}
-  # TODO: Remove for breaking release as history limit cannot be patched
-  revisionHistoryLimit: 5
+  revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit | default .Values.global.revisionHistoryLimit }}
   serviceName: {{ include "argo-cd.controller.fullname" . }}
   selector:
     matchLabels:
@@ -23,7 +23,7 @@ spec:
     metadata:
       annotations:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
-        {{- if (hasKey .Values.server "configEnabled") | ternary .Values.server.configEnabled .Values.configs.cm.create }}
+        {{- if .Values.configs.cm.create }}
         checksum/cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | sha256sum }}
         {{- end }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.controller.podAnnotations) }}
@@ -56,6 +56,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.controller.terminationGracePeriodSeconds }}
       {{- end }}
       serviceAccountName: {{ include "argo-cd.controller.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.controller.automountServiceAccountToken }}
       containers:
       - args:
         - /usr/local/bin/argocd-application-controller
@@ -65,38 +66,6 @@ spec:
         - --metrics-application-labels
         - {{ . }}
         {{- end }}
-        {{- end }}
-        {{- with .Values.controller.args.statusProcessors }}
-        - --status-processors
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.operationProcessors }}
-        - --operation-processors
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.appResyncPeriod }}
-        - --app-resync
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.appHardResyncPeriod }}
-        - --app-hard-resync
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.selfHealTimeout }}
-        - --self-heal-timeout-seconds
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.args.repoServerTimeoutSeconds }}
-        - --repo-server-timeout-seconds
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.logFormat }}
-        - --logformat
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.controller.logLevel }}
-        - --loglevel
-        - {{ . | quote }}
         {{- end }}
         {{- with .Values.controller.extraArgs }}
           {{- toYaml . | nindent 8 }}
@@ -110,6 +79,8 @@ spec:
           {{- end }}
           - name: ARGOCD_CONTROLLER_REPLICAS
             value: {{ .Values.controller.replicas | quote }}
+          - name: ARGOCD_APPLICATION_CONTROLLER_NAME
+            value: {{ template "argo-cd.controller.fullname" . }}
           - name: ARGOCD_RECONCILIATION_TIMEOUT
             valueFrom:
               configMapKeyRef:
@@ -121,6 +92,18 @@ spec:
               configMapKeyRef:
                 name: argocd-cm
                 key: timeout.hard.reconciliation
+                optional: true
+          - name: ARGOCD_RECONCILIATION_JITTER
+            valueFrom:
+              configMapKeyRef:
+                key: timeout.reconciliation.jitter
+                name: argocd-cm
+                optional: true
+          - name: ARGOCD_REPO_ERROR_GRACE_PERIOD_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.repo.error.grace.period.seconds
                 optional: true
           - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER
             valueFrom:
@@ -215,15 +198,19 @@ spec:
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
                 key: redis-username
                 optional: true
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
+                {{- if .Values.externalRedis.host }}
                 key: redis-password
                 optional: true
+                {{- else }}
+                key: auth
+                {{- end }}
           - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
             valueFrom:
               configMapKeyRef:
@@ -235,6 +222,18 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: otlp.address
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_OTLP_INSECURE
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.insecure
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_OTLP_HEADERS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.headers
                 optional: true
           - name: ARGOCD_APPLICATION_NAMESPACES
             valueFrom:
@@ -253,6 +252,30 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: controller.kubectl.parallelism.limit
+                optional: true
+          - name: ARGOCD_K8SCLIENT_RETRY_MAX
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.k8sclient.retry.max
+                optional: true
+          - name: ARGOCD_K8SCLIENT_RETRY_BASE_BACKOFF
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.k8sclient.retry.base.backoff
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SERVER_SIDE_DIFF
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.diff.server.side
+                optional: true
+          - name: ARGOCD_IGNORE_NORMALIZER_JQ_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.ignore.normalizer.jq.timeout
                 optional: true
         {{- with .Values.controller.envFrom }}
         envFrom:
@@ -321,7 +344,12 @@ spec:
         {{- toYaml . | nindent 6 }}
       {{- end }}
       - name: argocd-home
+        {{- if .Values.controller.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.controller.emptyDir.sizeLimit }}
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       - name: argocd-repo-server-tls
         secret:
           secretName: argocd-repo-server-tls
@@ -341,3 +369,4 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       dnsPolicy: {{ .Values.controller.dnsPolicy }}
+{{- end }}

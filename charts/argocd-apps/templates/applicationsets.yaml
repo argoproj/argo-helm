@@ -1,40 +1,43 @@
-
-{{- range .Values.applicationsets }}
+{{- range $appSetName, $appSetData:= .Values.applicationsets }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  {{- with .additionalAnnotations }}
+  {{- with $appSetData.additionalAnnotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-  {{- with .additionalLabels }}
+  {{- with $appSetData.additionalLabels }}
   labels:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: {{ .name }}
-  {{- with .namespace }}
+  name: {{ $appSetName }}
+  {{- with $appSetData.namespace }}
   namespace: {{ . }}
   {{- end }}
 spec:
-  {{- if hasKey . "goTemplate" }}
-  goTemplate: {{ .goTemplate }}
+  {{- if hasKey $appSetData "goTemplate" }}
+  goTemplate: {{ $appSetData.goTemplate }}
   {{- end }}
-  {{- with .generators }}
+  {{- with $appSetData.generators }}
   generators:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .strategy }}
+  {{- with $appSetData.ignoreApplicationDifferences }}
+  ignoreApplicationDifferences:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $appSetData.strategy }}
   strategy:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .syncPolicy }}
+  {{- with $appSetData.syncPolicy }}
   syncPolicy:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .template }}
+  {{- with $appSetData.template }}
   template:
     {{- with .metadata }}
     metadata:
@@ -79,5 +82,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- end -}}
+  {{- end }}
+  {{- with $appSetData.templatePatch }}
+  templatePatch: |
+    {{- . | nindent 4 }}
   {{- end }}
 {{- end }}
