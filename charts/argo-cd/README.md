@@ -683,6 +683,8 @@ NAME: my-release
 | global.logging.level | string | `"info"` | Set the global logging level. One of: `debug`, `info`, `warn` or `error` |
 | global.networkPolicy.create | bool | `false` | Create NetworkPolicy objects for all components |
 | global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
+| global.networkPolicy.egress.create | `bool` | `false` | Create egress NetworkPolicy rules for all components. |
+| global.networkPolicy.egress.ipBlock | `list` | `[]` | List of egress IP blocks and ports. Each block specifies a CIDR and associated ports. |
 | global.nodeSelector | object | `{}` | Default node selector for all components |
 | global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
 | global.podLabels | object | `{}` | Labels for the all deployed pods |

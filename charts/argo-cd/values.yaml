@@ -111,6 +111,23 @@ global:
     create: false
     # -- Default deny all ingress traffic
     defaultDenyIngress: false
+    # -- egress rules for all components
+    egress:
+      create: false
+      # ipBlock:
+      #   - cidr: 192.168.1.0/24
+      #     ports:
+      #       - port: 443
+      #         protocol: TCP
+      #       - port: 80
+      #         protocol: TCP
+      #   - cidr: 172.16.0.0/16
+      #     ports:
+      #       - port: 53
+      #         protocol: UDP
+      #       - port: 5432
+      #         protocol: TCP
+
 
   # -- Default priority class for all components
   priorityClassName: ""
