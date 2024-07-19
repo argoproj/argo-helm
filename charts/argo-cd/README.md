@@ -278,6 +278,31 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 7.0.0
+
+We changed the type of `.Values.configs.clusterCredentials` from `list` to `object`.
+If you used the value, please migrate like below.
+
+```yaml
+# before
+configs:
+  clusterCredentials:
+    - mycluster:
+      server: https://mycluster.example.com
+      labels: {}
+      annotations: {}
+      # ...
+
+# after
+configs:
+  clusterCredentials:
+    mycluster:
+      server: https://mycluster.example.com
+      labels: {}
+      annotations: {}
+      # ...
+```
+
 ### 6.10.0
 
 This version introduces authentication for Redis to mitigate GHSA-9766-5277-j5hr.
