@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.11-2024.7.3-c0941bcb4
+appVersion: v2.11-2024.7.20-8eb51f7a6
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 6.11.1-4-cap-2.11-2024.7.3-c0941bcb4
+version: 6.11.1-5-cap-2.11-2024.7.20-8eb51f7a6
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -26,7 +26,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: changed
-      description: Upgrade argo-cd to v2.11-2024.7.3-c0941bcb4 with fix - report application event from queue instead of requesting actual state again which potentially means doesn't get same data as in original event
     - kind: fixed
-      description: Event reporter selector labeles
+      description: Improve processing of webhook events
