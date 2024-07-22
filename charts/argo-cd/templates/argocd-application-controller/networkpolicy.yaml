@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
   name: {{ template "argo-cd.controller.fullname" . }}
-  namespace: {{ include  "argo-cd.namespace" . }}
+  namespace: {{ include "argo-cd.namespace" . }}
 spec:
   ingress:
   - from:
@@ -17,4 +17,18 @@ spec:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
   policyTypes:
   - Ingress
+  {{- if .Values.global.networkPolicy.egress.create }}
+  - Egress
+  egress:
+    {{- range .Values.global.networkPolicy.egress.ipBlock }}
+    - to:
+        - ipBlock:
+            cidr: {{ .cidr }}
+      ports:
+        {{- range .ports }}
+        - port: {{ .port }}
+          protocol: {{ .protocol | default "TCP" }}
+        {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}

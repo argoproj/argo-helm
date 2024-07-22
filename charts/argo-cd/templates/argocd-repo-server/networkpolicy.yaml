@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
   name: {{ template "argo-cd.repoServer.fullname" . }}
-  namespace: {{ include  "argo-cd.namespace" . }}
+  namespace: {{ include "argo-cd.namespace" . }}
 spec:
   ingress:
   - from:
@@ -37,4 +37,20 @@ spec:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 6 }}
   policyTypes:
   - Ingress
+  {{- if .Values.global.networkPolicy.egress.create }}
+  - Egress
+  egress:
+    {{- if .Values.global.networkPolicy.egress.ipBlock }}
+    {{- range .Values.global.networkPolicy.egress.ipBlock }}
+    - to:
+        - ipBlock:
+            cidr: {{ .cidr | default "0.0.0.0/0" }}
+      ports:
+        {{- range .ports }}
+        - port: {{ .port }}
+          protocol: {{ .protocol | default "TCP" }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}

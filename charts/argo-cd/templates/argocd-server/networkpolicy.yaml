@@ -5,13 +5,29 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
   name: {{ template "argo-cd.server.fullname" . }}
-  namespace: {{ include  "argo-cd.namespace" . }}
+  namespace: {{ include "argo-cd.namespace" . }}
 spec:
   ingress:
-  - {}
+  - {}  
   podSelector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}
   policyTypes:
   - Ingress
+  {{- if .Values.global.networkPolicy.egress.create }}
+  - Egress
+  egress:
+    {{- if .Values.global.networkPolicy.egress.ipBlock }}
+    {{- range .Values.global.networkPolicy.egress.ipBlock }}
+    - to:
+        - ipBlock:
+            cidr: {{ .cidr }}
+      ports:
+        {{- range .ports }}
+        - port: {{ .port }}
+          protocol: {{ .protocol | default "TCP" }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}
