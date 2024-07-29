@@ -449,6 +449,10 @@ dashboard:
   volumeMounts: []
 
 notifications:
+  configmap:
+    # -- Whether to create notifications configmap
+    create: true
+
   secret:
     # -- Whether to create notifications secret
     create: false
