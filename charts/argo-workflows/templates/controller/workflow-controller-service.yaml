@@ -35,8 +35,13 @@ spec:
   {{- if and (eq .Values.controller.serviceType "ClusterIP") .Values.controller.metricsConfig.headlessService }}
   clusterIP: None
   {{- end }}
-  {{- if and (eq .Values.controller.serviceType "LoadBalancer") .Values.controller.loadBalancerSourceRanges }}
+  {{- if eq .Values.controller.serviceType "LoadBalancer" }}
+  {{- with .Values.controller.loadBalancerClass }}
+  loadBalancerClass: {{ . }}
+  {{- end }}
+  {{- if .Values.controller.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
     {{- toYaml .Values.controller.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
   {{- end }}
 {{- end -}}
