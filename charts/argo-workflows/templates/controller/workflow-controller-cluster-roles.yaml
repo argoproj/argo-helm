@@ -70,6 +70,13 @@ rules:
   - delete
   - create
 - apiGroups:
+    - argoproj.io
+  resources:
+    - workflowtasksets/status
+    - workflowartifactgctasks/status
+  verbs:
+    - patch
+- apiGroups:
   - argoproj.io
   resources:
   - workflowtemplates
