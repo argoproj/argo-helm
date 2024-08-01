@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-cd.repoServer.fullname" . }}
-  namespace: {{ default .Release.Namespace .Values.repoServer.metrics.serviceMonitor.namespace | default }}
+  namespace: {{ default (include  "argo-cd.namespace" .) .Values.repoServer.metrics.serviceMonitor.namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
     {{- with .Values.repoServer.metrics.serviceMonitor.selector }}
