@@ -25948,6 +25948,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Avoid empty namespace in role binding when singleNamespace is true
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.5.10
+    created: "2024-08-02T10:42:58.51938222Z"
+    description: A Helm chart for Argo Workflows
+    digest: 9e5335a97927aea1377c15dd91956b34a1e9bd1dea041643db295b1b9e552d45
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.41.14/argo-workflows-0.41.14.tgz
+    version: 0.41.14
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Bump argo-workflows to v3.5.10
       artifacthub.io/signKey: |
@@ -32741,4 +32765,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-08-01T07:19:03.032602306Z"
+generated: "2024-08-02T10:42:58.521148401Z"
