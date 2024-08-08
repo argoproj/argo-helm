@@ -207,10 +207,10 @@ spec:
                 name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
                 {{- if .Values.externalRedis.host }}
                 key: redis-password
+                optional: true
                 {{- else }}
                 key: auth
                 {{- end }}
-                optional: true
           - name: REDIS_SENTINEL_USERNAME
             valueFrom:
               secretKeyRef:
