@@ -57,6 +57,7 @@ For full list of changes please check ArtifactHub [changelog].
 | keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `nil` | String to partially override "argo-rollouts.fullname" template |
+| notifications.configmap.create | bool | `true` | Whether to create notifications configmap |
 | notifications.notifiers | object | `{}` | Configures notification services |
 | notifications.secret.annotations | object | `{}` | Annotations to be added to the notifications secret |
 | notifications.secret.create | bool | `false` | Whether to create notifications secret |
