@@ -262,3 +262,14 @@ Create the name of the Argo CD server service account to use
     {{ default "default" .Values.eventReporter.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Helper template to set argocd server url in event reporter
+*/}}
+{{- define "argo-cd.eventReporter.argocd-server-adress" -}}
+  {{- $port := .Values.server.service.servicePortHttps }}
+  {{- if (index .Values.configs.params "server.insecure") }}
+    {{- $port = .Values.server.service.servicePortHttp }}
+  {{- end }}
+  {{- printf "%s:%v" (include "argo-cd.server.fullname" .) $port }}
+{{- end -}}
