@@ -264,7 +264,7 @@ Create the name of the Argo CD server service account to use
 {{- end -}}
 
 {{/*
-Helper template to set repo server url in event reporter
+Helper template to set argocd server url in event reporter
 */}}
 {{- define "argo-cd.eventReporter.argocd-server-adress" -}}
   {{- $port := .Values.server.service.servicePortHttps }}
