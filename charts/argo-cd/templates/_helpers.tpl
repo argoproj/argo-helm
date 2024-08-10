@@ -270,7 +270,6 @@ Helper template to set argocd server url in event reporter
   {{- $port := .Values.server.service.servicePortHttps }}
   {{- if (index .Values.configs.params "server.insecure") }}
     {{- $port = .Values.server.service.servicePortHttp }}
-    {{- $protocol = "http"}}
   {{- end }}
   {{- printf "%s:%v" (include "argo-cd.server.fullname" .) $port }}
 {{- end -}}
