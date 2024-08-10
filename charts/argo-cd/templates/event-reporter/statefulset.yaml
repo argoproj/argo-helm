@@ -73,8 +73,6 @@ spec:
           {{- end }}
           - name: EVENT_REPORTER_APPLICATION_SERVER
             value: {{ include "argo-cd.eventReporter.argocd-server-adress" . }}
-          - name: EVENT_REPORTER_REPO_SERVER
-            value: {{ include "argo-cd.eventReporter.argocd-repo-server-adress" . }}
           - name: EVENT_REPORTER_REPLICAS
             value: {{ .Values.eventReporter.replicas | quote }}
           - name: ARGOCD_APPLICATION_NAMESPACES

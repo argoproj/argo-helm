@@ -274,11 +274,3 @@ Helper template to set argocd server url in event reporter
   {{- end }}
   {{- printf "%s:%v" (include "argo-cd.server.fullname" .) $port }}
 {{- end -}}
-
-{{/*
-Helper template to set repo server url in event reporter
-*/}}
-{{- define "argo-cd.eventReporter.argocd-repo-server-adress" -}}
-  {{- $port := .Values.repoServer.service.port }}
-  {{- printf "%s:%v" (include "argo-cd.repoServer.fullname" .) $port }}
-{{- end -}}
