@@ -113,7 +113,7 @@ Return the appropriate apiVersion for pod disruption budget
 {{/*
 Return the rules for controller's Role and ClusterRole
 */}}
-{{- define "argo-rollouts.controller.roleRuls" -}}
+{{- define "argo-rollouts.controller.roleRules" -}}
 - apiGroups:
   - argoproj.io
   resources:

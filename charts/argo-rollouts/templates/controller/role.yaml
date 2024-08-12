@@ -8,5 +8,5 @@ metadata:
     app.kubernetes.io/component: {{ .Values.controller.component }}
     {{- include "argo-rollouts.labels" . | nindent 4 }}
 rules:
-  {{- include "argo-rollouts.controller.roleRuls" . | nindent 2 }}
+  {{- include "argo-rollouts.controller.roleRules" . | nindent 2 }}
 {{- end }}
