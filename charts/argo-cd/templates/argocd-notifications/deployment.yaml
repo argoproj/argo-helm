@@ -107,6 +107,7 @@ spec:
           - name: metrics
             containerPort: {{ .Values.notifications.containerPorts.metrics }}
             protocol: TCP
+          {{- if .Values.notifications.livenessProbe.enabled }}
           livenessProbe:
             tcpSocket:
               port: metrics
@@ -115,6 +116,8 @@ spec:
             timeoutSeconds: {{ .Values.notifications.livenessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.notifications.livenessProbe.successThreshold }}
             failureThreshold: {{ .Values.notifications.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.notifications.readinessProbe.enabled }}
           readinessProbe:
             tcpSocket:
               port: metrics
@@ -123,6 +126,7 @@ spec:
             timeoutSeconds: {{ .Values.notifications.readinessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.notifications.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.notifications.readinessProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.notifications.resources | nindent 12 }}
           {{- with .Values.notifications.containerSecurityContext }}
