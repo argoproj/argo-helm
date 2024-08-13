@@ -85,6 +85,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.gitCommitTemplate | string | `""` | Changing the Git commit message |
 | config.gitCommitUser | string | `""` | Username to use for Git commits |
 | config.logLevel | string | `"info"` | Argo CD Image Update log level |
+| config.namespaced | string | `"true"` | Check annotations in ArgoCD namespace only (if true) or in all namespaces (if false) |
 | config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/) |
 | config.sshConfig | object | `{}` | Argo CD Image Updater ssh client parameter configuration. |
 | extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry |

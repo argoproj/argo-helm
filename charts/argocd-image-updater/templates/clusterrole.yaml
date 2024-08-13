@@ -1,0 +1,36 @@
+{{- if .Values.rbac.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argocd-image-updater-clusterrole
+  labels:
+    {{ include "argocd-image-updater.labels" . | nindent 4 }}
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - delete
+      - get
+      - patch
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - applications
+      - applicationsets
+    verbs:
+      - get
+      - list
+      - update
+      - patch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+{{- end }}
