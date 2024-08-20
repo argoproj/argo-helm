@@ -174,6 +174,7 @@ Return the rules for controller's Role and ClusterRole
   - get
   - list
   - watch
+  - update
 # services patch needed to update selector of canary/stable/active/preview services
 # services create needed to create and delete services for experiments
 - apiGroups:
