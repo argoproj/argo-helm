@@ -149,6 +149,7 @@ Fields to note:
 | controller.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates. |
 | controller.clusterWorkflowTemplates.serviceAccounts | list | `[]` | Extra service accounts to be added to the ClusterRoleBinding |
 | controller.columns | list | `[]` | Configure Argo Server to show custom [columns] |
+| controller.configMap.annotations | object | `{}` | ConfigMap annotations |
 | controller.configMap.create | bool | `true` | Create a ConfigMap for the controller |
 | controller.configMap.name | string | `""` | ConfigMap name |
 | controller.cronWorkflowWorkers | string | `nil` | Number of cron workflow workers Only valid for 3.5+ |
