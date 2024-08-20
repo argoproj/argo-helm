@@ -76,6 +76,8 @@ spec:
           {{- with (concat .Values.global.env .Values.server.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+          - name: ARGOCD_API_SERVER_REPLICAS
+            value: {{ (ternary .Values.server.autoscaling.minReplicas .Values.server.replicas .Values.server.autoscaling.enabled) | quote }}
           - name: ARGOCD_SERVER_NAME
             value: {{ template "argo-cd.server.fullname" . }}
           - name: ARGOCD_SERVER_INSECURE
