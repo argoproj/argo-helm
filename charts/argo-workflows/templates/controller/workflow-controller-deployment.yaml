@@ -24,8 +24,9 @@ spec:
         {{- with.Values.controller.podLabels }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.controller.podAnnotations }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/controller/workflow-controller-config-map.yaml") . | sha256sum }}
+      {{- with .Values.controller.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
