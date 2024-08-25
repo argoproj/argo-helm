@@ -2,8 +2,8 @@ apiVersion: v2
 name: argocd-image-updater
 description: A Helm chart for Argo CD Image Updater, a tool to automatically update the container images of Kubernetes workloads which are managed by Argo CD
 type: application
-version: 0.10.2
-appVersion: v0.13.1
+version: 0.11.0
+appVersion: v0.14.0
 home: https://github.com/argoproj-labs/argocd-image-updater
 icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
 keywords:
@@ -18,5 +18,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Fixed a URL in values.yaml comments
+    - kind: changed
+      description: Bump argocd-image-updater to v0.14.0

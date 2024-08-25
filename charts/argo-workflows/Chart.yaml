@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v3.5.8
+appVersion: v3.5.10
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.41.11
+version: 0.42.0
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -16,5 +16,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Add `app:` label to components to match upstream
+    - kind: added
+      description: Added support for setting annotations on argo workflows controller configmap

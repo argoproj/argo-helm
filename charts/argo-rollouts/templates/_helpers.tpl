@@ -109,3 +109,311 @@ Return the appropriate apiVersion for pod disruption budget
 {{- print "policy/v1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the rules for controller's Role and ClusterRole
+*/}}
+{{- define "argo-rollouts.controller.roleRules" -}}
+- apiGroups:
+  - argoproj.io
+  resources:
+  - rollouts
+  - rollouts/status
+  - rollouts/finalizers
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - analysisruns
+  - analysisruns/finalizers
+  - experiments
+  - experiments/finalizers
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - argoproj.io
+  resources:
+  - analysistemplates
+  - clusteranalysistemplates
+  verbs:
+  - get
+  - list
+  - watch
+# replicaset access needed for managing ReplicaSets
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+# deployments and podtemplates read access needed for workload reference support
+- apiGroups:
+  - ""
+  - apps
+  resources:
+  - deployments
+  - podtemplates
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+# services patch needed to update selector of canary/stable/active/preview services
+# services create needed to create and delete services for experiments
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+  - create
+  - delete
+# leases create/get/update needed for leader election
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - get
+  - update
+# secret read access to run analysis templates which reference secrets
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+{{- if .Values.providerRBAC.providers.gatewayAPI }}
+  - create
+  - update
+{{- end }}
+# pod list/update needed for updating ephemeral data
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - list
+  - update
+  - watch
+# pods eviction needed for restart
+- apiGroups:
+  - ""
+  resources:
+  - pods/eviction
+  verbs:
+  - create
+# event write needed for emitting events
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - update
+  - patch
+# ingress patch needed for managing ingress annotations, create needed for nginx canary
+- apiGroups:
+  - networking.k8s.io
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+# job access needed for analysis template job metrics
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+{{- if .Values.providerRBAC.enabled }}
+{{- if .Values.providerRBAC.providers.istio }}
+# virtualservice/destinationrule access needed for using the Istio provider
+- apiGroups:
+  - networking.istio.io
+  resources:
+  - virtualservices
+  - destinationrules
+  verbs:
+  - watch
+  - get
+  - update
+  - patch
+  - list
+{{- end }}
+{{- if .Values.providerRBAC.providers.smi }}
+# trafficsplit access needed for using the SMI provider
+- apiGroups:
+  - split.smi-spec.io
+  resources:
+  - trafficsplits
+  verbs:
+  - create
+  - watch
+  - get
+  - update
+  - patch
+{{- end }}
+{{- if .Values.providerRBAC.providers.ambassador }}
+# ambassador access needed for Ambassador provider
+- apiGroups:
+  - getambassador.io
+  - x.getambassador.io
+  resources:
+  - mappings
+  - ambassadormappings
+  verbs:
+  - create
+  - watch
+  - get
+  - update
+  - list
+  - delete
+{{- end }}
+{{- if .Values.providerRBAC.providers.awsLoadBalancerController }}
+# Endpoints and TargetGroupBindings needed for ALB target group verification when using AWS Load Balancer Controller
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - get
+- apiGroups:
+  - elbv2.k8s.aws
+  resources:
+  - targetgroupbindings
+  verbs:
+  - list
+  - get
+{{- end }}
+{{- if .Values.providerRBAC.providers.awsAppMesh }}
+# AppMesh virtualservices/virtualrouter CRD read-only access needed for using the App Mesh provider
+- apiGroups:
+  - appmesh.k8s.aws
+  resources:
+  - virtualservices
+  verbs:
+  - watch
+  - get
+  - list
+# AppMesh virtualnode CRD r/w access needed for using the App Mesh provider
+- apiGroups:
+  - appmesh.k8s.aws
+  resources:
+  - virtualnodes
+  - virtualrouters
+  verbs:
+  - watch
+  - get
+  - list
+  - update
+  - patch
+{{- end }}
+{{- if .Values.providerRBAC.providers.traefik }}
+# Traefik access needed when using the Traefik provider
+- apiGroups:
+  - traefik.containo.us
+  - traefik.io
+  resources:
+  - traefikservices
+  verbs:
+  - watch
+  - get
+  - update
+{{- end }}
+{{- if .Values.providerRBAC.providers.apisix }}
+# Access needed when using the Apisix provider
+- apiGroups:
+  - apisix.apache.org
+  resources:
+  - apisixroutes
+  verbs:
+  - watch
+  - get
+  - update
+{{- end }}
+{{- if .Values.providerRBAC.providers.contour }}
+  # Access needed when using the Contour provider
+- apiGroups:
+  - projectcontour.io
+  resources:
+  - httpproxies
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+{{- end }}
+{{- if .Values.providerRBAC.providers.glooPlatform }}
+  # Access needed when using the Gloo Platform provider
+- apiGroups:
+  - networking.gloo.solo.io
+  resources:
+  - routetables
+  verbs:
+  - '*'
+{{- end }}
+{{- if .Values.providerRBAC.providers.gatewayAPI }}
+  # Access needed when using the Gateway API provider
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - httproutes
+  - tcproutes
+  - tlsroutes
+  - udproutes
+  - grpcroutes
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+{{- end }}
+{{- with .Values.providerRBAC.additionalRules }}
+{{ toYaml .  }}
+{{- end }}
+{{- end }}
+{{- end -}}
