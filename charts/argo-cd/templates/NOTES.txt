@@ -1,6 +1,6 @@
 In order to access the server UI you have the following options:
 
-1. kubectl port-forward service/{{ include "argo-cd.fullname" . }}-server -n {{ .Release.Namespace }} 8080:443
+1. kubectl port-forward service/{{ include "argo-cd.fullname" . }}-server -n {{ include  "argo-cd.namespace" . }} 8080:443
 
     and then open the browser on http://localhost:8080 and accept the certificate
 
@@ -12,7 +12,7 @@ In order to access the server UI you have the following options:
 {{ if eq (toString (index .Values.configs.cm "admin.enabled")) "true" -}}
 After reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:
 
-kubectl -n {{ .Release.Namespace }} get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+kubectl -n {{ include  "argo-cd.namespace" . }} get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
 (You should delete the initial secret afterwards as suggested by the Getting Started Guide: https://argo-cd.readthedocs.io/en/stable/getting_started/#4-login-using-the-cli)
 {{ else if or (index .Values.configs.cm "dex.config") (index .Values.configs.cm "oidc.config") -}}

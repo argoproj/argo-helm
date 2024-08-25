@@ -278,6 +278,31 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 7.0.0
+
+We changed the type of `.Values.configs.clusterCredentials` from `list` to `object`.
+If you used the value, please migrate like below.
+
+```yaml
+# before
+configs:
+  clusterCredentials:
+    - mycluster:
+      server: https://mycluster.example.com
+      labels: {}
+      annotations: {}
+      # ...
+
+# after
+configs:
+  clusterCredentials:
+    mycluster:
+      server: https://mycluster.example.com
+      labels: {}
+      annotations: {}
+      # ...
+```
+
 ### 6.10.0
 
 This version introduces authentication for Redis to mitigate GHSA-9766-5277-j5hr.
@@ -622,7 +647,7 @@ server:
 
 ## Prerequisites
 
-- Kubernetes: `>=1.23.0-0`
+- Kubernetes: `>=1.25.0-0`
   - We align with [Amazon EKS calendar][EKS EoL] because there are many AWS users and it's a conservative approach.
   - Please check [Support Matrix of Argo CD][Kubernetes Compatibility Matrix] for official info.
 - Helm v3.0.0+
@@ -1347,7 +1372,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| externalRedis.existingSecret | string | `""` | The name of an existing secret with Redis credentials (must contain key `redis-password`). When it's set, the `externalRedis.password` parameter is ignored |
+| externalRedis.existingSecret | string | `""` | The name of an existing secret with Redis (must contain key `redis-password`) and Sentinel credentials. When it's set, the `externalRedis.password` parameter is ignored |
 | externalRedis.host | string | `""` | External Redis server host |
 | externalRedis.password | string | `""` | External Redis password |
 | externalRedis.port | int | `6379` | External Redis server port |
@@ -1517,6 +1542,12 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the notifications controller |
 | notifications.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | notifications.initContainers | list | `[]` | Init containers to add to the notifications controller pod |
+| notifications.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for notifications controller Pods |
+| notifications.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| notifications.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| notifications.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| notifications.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| notifications.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | notifications.logFormat | string | `""` (defaults to global.logging.format) | Notifications controller log format. Either `text` or `json` |
 | notifications.logLevel | string | `""` (defaults to global.logging.level) | Notifications controller log level. One of: `debug`, `info`, `warn`, `error` |
 | notifications.metrics.enabled | bool | `false` | Enables prometheus metrics server |
@@ -1545,6 +1576,12 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the notifications controller Pods |
 | notifications.podLabels | object | `{}` | Labels to be applied to the notifications controller Pods |
 | notifications.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the notifications controller pods |
+| notifications.readinessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for notifications controller Pods |
+| notifications.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| notifications.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| notifications.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| notifications.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| notifications.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | notifications.resources | object | `{}` | Resource limits and requests for the notifications controller |
 | notifications.secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
 | notifications.secret.create | bool | `true` | Whether helm chart creates notifications controller secret |

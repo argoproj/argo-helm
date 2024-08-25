@@ -4,7 +4,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-cd.redis.fullname" . }}
-  namespace: {{ default .Release.Namespace .Values.redis.metrics.serviceMonitor.namespace | quote }}
+  namespace: {{ default (include  "argo-cd.namespace" .) .Values.redis.metrics.serviceMonitor.namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
     {{- with .Values.redis.metrics.serviceMonitor.selector }}
