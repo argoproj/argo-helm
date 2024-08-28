@@ -661,7 +661,6 @@ NAME: my-release
 | eventReporter.containerSecurityContext | object | See [values.yaml] | Event reporter container-level security context |
 | eventReporter.dnsConfig | object | `{}` | [DNS configuration] |
 | eventReporter.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for event reporter pods |
-| eventReporter.enabled | bool | `true` |  |
 | eventReporter.env | list | `[]` | Environment variables to pass to event reporter |
 | eventReporter.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to event reporter |
 | eventReporter.extraArgs | list | `[]` | Additional command line arguments to pass to event reporter |
@@ -723,7 +722,6 @@ NAME: my-release
 | eventReporter.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | eventReporter.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | eventReporter.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the event reporter |
-| eventReporter.version | string | `"v2"` |  |
 | eventReporter.volumeMounts | list | `[]` | Additional volumeMounts to the event reporter main container |
 | eventReporter.volumes | list | `[]` | Additional volumes to the event reporter pod |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |

@@ -1,4 +1,3 @@
-{{- if .Values.eventReporter.enabled }}
 {{- $config := .Values.eventReporter.clusterAdminAccess | default dict -}}
 {{- if hasKey $config "enabled" | ternary $config.enabled .Values.createClusterRoles }}
 apiVersion: rbac.authorization.k8s.io/v1
@@ -15,5 +14,4 @@ subjects:
 - kind: ServiceAccount
   name: {{ include "argo-cd.eventReporterServiceAccountName" . }}
   namespace: {{ .Release.Namespace }}
-{{- end }}
 {{- end }}
