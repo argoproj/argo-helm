@@ -107,7 +107,7 @@ config:
   # -- API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`)
   applicationsAPIKind: ""
 
-  # Described in detail here https://argocd-image-updater.readthedocs.io/en/stable/install/running/#flags
+  # Described in detail here https://argocd-image-updater.readthedocs.io/en/stable/install/reference/#flags
   # Note: this is only relevant if config.applicationsAPIKind == 'argocd'
   argocd:
     # -- Use the gRPC-web protocol to connect to the Argo CD API
@@ -132,6 +132,15 @@ config:
 
   # -- Changing the Git commit message
   gitCommitTemplate: ""
+
+  # -- Path to public SSH key mounted in container, or GPG key ID used to sign commits
+  gitCommitSigningKey: ""
+
+  # -- Enables sign off on commits
+  gitCommitSignOff: false
+
+  # -- Method used to sign Git commits. `openpgp` or `ssh`
+  gitCommitSigningMethod: ""
 
   # -- Argo CD Image Update log level
   logLevel: "info"

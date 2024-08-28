@@ -21,7 +21,7 @@ spec:
       app.kubernetes.io/component: {{ .Values.controller.component }}
       {{- include "argo-rollouts.selectorLabels" . | nindent 6 }}
   strategy:
-    type: Recreate
+    type: RollingUpdate
   replicas: {{ .Values.controller.replicas }}
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   template:
@@ -80,8 +80,12 @@ spec:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
-        {{- with .Values.controller.volumeMounts }}
         volumeMounts:
+        - name: plugin-bin
+          mountPath: /home/argo-rollouts/plugin-bin
+        - name: tmp
+          mountPath: /tmp
+        {{- with .Values.controller.volumeMounts }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.controller.extraContainers }}
@@ -120,7 +124,11 @@ spec:
       {{- with .Values.controller.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
-      {{- with .Values.controller.volumes }}
       volumes:
+      - name: plugin-bin
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+      {{- with .Values.controller.volumes }}
         {{- toYaml . | nindent 6 }}
       {{- end }}

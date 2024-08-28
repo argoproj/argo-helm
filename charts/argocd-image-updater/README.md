@@ -79,6 +79,9 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.argocd.token | string | `""` | If specified, the secret with Argo CD API key will be created. |
 | config.disableKubeEvents | bool | `false` | Disable kubernetes events |
 | config.gitCommitMail | string | `""` | E-Mail address to use for Git commits |
+| config.gitCommitSignOff | bool | `false` | Enables sign off on commits |
+| config.gitCommitSigningKey | string | `""` | Path to public SSH key mounted in container, or GPG key ID used to sign commits |
+| config.gitCommitSigningMethod | string | `""` | Method used to sign Git commits. `openpgp` or `ssh` |
 | config.gitCommitTemplate | string | `""` | Changing the Git commit message |
 | config.gitCommitUser | string | `""` | Username to use for Git commits |
 | config.logLevel | string | `"info"` | Argo CD Image Update log level |

@@ -278,6 +278,31 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 7.0.0
+
+We changed the type of `.Values.configs.clusterCredentials` from `list` to `object`.
+If you used the value, please migrate like below.
+
+```yaml
+# before
+configs:
+  clusterCredentials:
+    - mycluster:
+      server: https://mycluster.example.com
+      labels: {}
+      annotations: {}
+      # ...
+
+# after
+configs:
+  clusterCredentials:
+    mycluster:
+      server: https://mycluster.example.com
+      labels: {}
+      annotations: {}
+      # ...
+```
+
 ### 6.10.0
 
 This version introduces authentication for Redis to mitigate GHSA-9766-5277-j5hr.
@@ -622,7 +647,7 @@ server:
 
 ## Prerequisites
 
-- Kubernetes: `>=1.23.0-0`
+- Kubernetes: `>=1.25.0-0`
   - We align with [Amazon EKS calendar][EKS EoL] because there are many AWS users and it's a conservative approach.
   - Please check [Support Matrix of Argo CD][Kubernetes Compatibility Matrix] for official info.
 - Helm v3.0.0+
@@ -744,6 +769,8 @@ NAME: my-release
 | global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
 | global.deploymentStrategy | object | `{}` | Deployment strategy for the all deployed Deployments |
 | global.domain | string | `"argocd.example.com"` | Default domain used by all components |
+| global.dualStack.ipFamilies | list | `[]` | IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| global.dualStack.ipFamilyPolicy | string | `""` | IP family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | global.env | list | `[]` | Environment variables to pass to all deployed Deployments |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
@@ -768,7 +795,7 @@ NAME: my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| configs.clusterCredentials | list | `[]` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
+| configs.clusterCredentials | object | `{}` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.cm."admin.enabled" | bool | `true` | Enable local admin user |
 | configs.cm."application.instanceLabelKey" | string | Defaults to app.kubernetes.io/instance | The name of tracking label used by Argo CD for resource pruning |
 | configs.cm."exec.enabled" | bool | `false` | Enable exec feature in Argo UI |
@@ -1039,7 +1066,7 @@ NAME: my-release
 | server.certificate.privateKey.rotationPolicy | string | `"Never"` | Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always` |
 | server.certificate.privateKey.size | int | `2048` | Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored. |
 | server.certificate.renewBefore | string | `""` (defaults to 360h = 15d if not specified) | How long before the expiry a certificate should be renewed. |
-| server.certificate.secretName | string | `"argocd-server-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
+| server.certificate.secretTemplateAnnotations | object | `{}` | Annotations that allow the certificate to be composed from data residing in existing Kubernetes Resources |
 | server.certificate.usages | list | `[]` | Usages for the certificate |
 | server.certificateSecret.annotations | object | `{}` | Annotations to be added to argocd-server-tls secret |
 | server.certificateSecret.crt | string | `""` | Certificate data |
@@ -1154,6 +1181,7 @@ NAME: my-release
 | server.service.externalIPs | list | `[]` | Server service external IPs |
 | server.service.externalTrafficPolicy | string | `"Cluster"` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
 | server.service.labels | object | `{}` | Server service labels |
+| server.service.loadBalancerClass | string | `""` | The class of the load balancer implementation |
 | server.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | server.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
 | server.service.nodePortHttp | int | `30080` | Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort") |
@@ -1418,7 +1446,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| externalRedis.existingSecret | string | `""` | The name of an existing secret with Redis credentials (must contain key `redis-password`). When it's set, the `externalRedis.password` parameter is ignored |
+| externalRedis.existingSecret | string | `""` | The name of an existing secret with Redis (must contain key `redis-password`) and Sentinel credentials. When it's set, the `externalRedis.password` parameter is ignored |
 | externalRedis.host | string | `""` | External Redis server host |
 | externalRedis.password | string | `""` | External Redis password |
 | externalRedis.port | int | `6379` | External Redis server port |
@@ -1472,7 +1500,6 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.certificate.privateKey.rotationPolicy | string | `"Never"` | Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always` |
 | applicationSet.certificate.privateKey.size | int | `2048` | Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored. |
 | applicationSet.certificate.renewBefore | string | `""` (defaults to 360h = 15d if not specified) | How long before the expiry a certificate should be renewed. |
-| applicationSet.certificate.secretName | string | `"argocd-applicationset-controller-tls"` | The name of the Secret that will be automatically created and managed by this Certificate resource |
 | applicationSet.containerPorts.metrics | int | `8080` | Metrics container port |
 | applicationSet.containerPorts.probe | int | `8081` | Probe container port |
 | applicationSet.containerPorts.webhook | int | `7000` | Webhook container port |
@@ -1589,6 +1616,12 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the notifications controller |
 | notifications.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | notifications.initContainers | list | `[]` | Init containers to add to the notifications controller pod |
+| notifications.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for notifications controller Pods |
+| notifications.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| notifications.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| notifications.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| notifications.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| notifications.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | notifications.logFormat | string | `""` (defaults to global.logging.format) | Notifications controller log format. Either `text` or `json` |
 | notifications.logLevel | string | `""` (defaults to global.logging.level) | Notifications controller log level. One of: `debug`, `info`, `warn`, `error` |
 | notifications.metrics.enabled | bool | `false` | Enables prometheus metrics server |
@@ -1617,6 +1650,12 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the notifications controller Pods |
 | notifications.podLabels | object | `{}` | Labels to be applied to the notifications controller Pods |
 | notifications.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the notifications controller pods |
+| notifications.readinessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for notifications controller Pods |
+| notifications.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| notifications.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| notifications.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| notifications.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| notifications.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | notifications.resources | object | `{}` | Resource limits and requests for the notifications controller |
 | notifications.secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
 | notifications.secret.create | bool | `true` | Whether helm chart creates notifications controller secret |
