@@ -77,7 +77,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the Argo CD API instead of TLS. |
 | config.argocd.serverAddress | string | `""` | Connect to the Argo CD API server at server address |
 | config.argocd.token | string | `""` | If specified, the secret with Argo CD API key will be created. |
-| config.disableKubeEvents | bool | `false` | Disable kubernetes events |
+| config.enableKubeEvents | bool | `false` | Enable kubernetes events |
 | config.gitCommitMail | string | `""` | E-Mail address to use for Git commits |
 | config.gitCommitSignOff | bool | `false` | Enables sign off on commits |
 | config.gitCommitSigningKey | string | `""` | Path to public SSH key mounted in container, or GPG key ID used to sign commits |

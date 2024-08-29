@@ -40,7 +40,7 @@ data:
   {{- with .Values.config.gitCommitSigningMethod }}
   git.commit-signing-method: {{ . | quote }}
   {{- end }}
-  kube.events: {{ .Values.config.disableKubeEvents | quote }}
+  kube.events: {{ .Values.config.enableKubeEvents | quote }}
   {{- with .Values.config.registries }}
   registries.conf: |
     registries:
