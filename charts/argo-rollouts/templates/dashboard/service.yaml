@@ -22,6 +22,9 @@ spec:
   externalIPs: {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- if eq .Values.dashboard.service.type "LoadBalancer" }}
+    {{- with .Values.dashboard.service.loadBalancerClass }}
+  loadBalancerClass: {{ . }}
+    {{- end }}
     {{- with .Values.dashboard.service.loadBalancerIP }}
   loadBalancerIP: {{ . | quote }}
     {{- end }}
