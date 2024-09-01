@@ -297,6 +297,8 @@ controller:
   serviceAnnotations: {}
   # -- Optional labels to add to the controller Service
   serviceLabels: {}
+  # -- The class of the load balancer implementation
+  loadBalancerClass: ""
   # -- Source ranges to allow access to service from. Only applies to service type `LoadBalancer`
   loadBalancerSourceRanges: []
 
@@ -508,6 +510,8 @@ server:
   serviceAnnotations: {}
   # -- Optional labels to add to the UI Service
   serviceLabels: {}
+  # -- The class of the load balancer implementation
+  loadBalancerClass: ""
   # -- Static IP address to assign to loadBalancer service type `LoadBalancer`
   loadBalancerIP: ""
   # -- Source ranges to allow access to service from. Only applies to service type `LoadBalancer`
