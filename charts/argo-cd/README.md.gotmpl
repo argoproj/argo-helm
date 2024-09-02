@@ -315,7 +315,7 @@ Upstream steps in the [FAQ] are not enough, since we chose a different approach.
 Steps to roteate the secret when using the helm chart (bold step is additional to upstream):
 * Delete `argocd-redis` secret in the namespace where Argo CD is installed. 
   ```bash
-  kubectl delete secret argocd-redis -n <argocd namesapce>
+  kubectl delete secret argocd-redis -n <argocd namespace>
   ```
 * **Perform a helm upgrade**
   ```bash
