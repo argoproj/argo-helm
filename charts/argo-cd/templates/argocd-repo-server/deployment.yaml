@@ -293,7 +293,7 @@ spec:
               secretKeyRef:
                 key: token
                 name: codefresh-token
-                optional: true
+                optional: {{ not .Values.applicationVersioning.enabled }}
           {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
           - name: HELM_CACHE_HOME
             value: /helm-working-dir
