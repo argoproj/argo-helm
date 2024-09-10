@@ -231,7 +231,7 @@ server:
           port: 8080
       frontendConfig:
         redirectToHttps:
-          enabled: true  
+          enabled: true
       managedCertificate:
         enabled: true
 ```
@@ -278,6 +278,10 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 7.6.0
+
+Added support to override application controller sync wave delay.
+
 ### 7.0.0
 
 We changed the type of `.Values.configs.clusterCredentials` from `list` to `object`.
@@ -313,7 +317,7 @@ Upstream steps in the [FAQ] are not enough, since we chose a different approach.
 (We use a Kubernetes Job with [Chart Hooks] to create the auth secret `argocd-redis`.)
 
 Steps to roteate the secret when using the helm chart (bold step is additional to upstream):
-* Delete `argocd-redis` secret in the namespace where Argo CD is installed. 
+* Delete `argocd-redis` secret in the namespace where Argo CD is installed.
   ```bash
   kubectl delete secret argocd-redis -n <argocd namespace>
   ```
@@ -337,7 +341,7 @@ Steps to roteate the secret when using the helm chart (bold step is additional t
   ```
 
 ### 6.9.0
-ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9).  
+ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9).
 
 ### 6.4.0
 
@@ -396,7 +400,7 @@ In case the manifests are updated before moving to Argo CD v2.8, the containers 
 
 ### 5.26.0
 
-This version adds support for Config Management Plugins using the sidecar model and configured in a ConfigMap named `argocd-cmp-cm`. 
+This version adds support for Config Management Plugins using the sidecar model and configured in a ConfigMap named `argocd-cmp-cm`.
 Users will need to migrate from the previous `argocd-cm` ConfigMap method to using the sidecar method before Argo CD v2.8. See the [Argo CD CMP migration guide](https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/#migrating-from-argocd-cm-plugins) for more specifics.
 
 To migrate your plugins, you can now set the `configs.cmp.create` to `true` and move your plugins from `configs.cm` to `configs.cmp.plugins`.

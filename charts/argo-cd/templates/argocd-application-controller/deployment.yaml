@@ -290,6 +290,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: controller.ignore.normalizer.jq.timeout
                 optional: true
+          - name: ARGOCD_SYNC_WAVE_DELAY
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.sync.wave.delay
+                optional: true
         {{- with .Values.controller.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}

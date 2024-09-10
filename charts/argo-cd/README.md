@@ -232,7 +232,7 @@ server:
           port: 8080
       frontendConfig:
         redirectToHttps:
-          enabled: true 
+          enabled: true
       managedCertificate:
         enabled: true
 ```
@@ -277,6 +277,10 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
+
+### 7.6.0
+
+Added support to override application controller sync wave delay.
 
 ### 7.0.0
 
@@ -337,7 +341,7 @@ Steps to roteate the secret when using the helm chart (bold step is additional t
   ```
 
 ### 6.9.0
-ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9). 
+ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9).
 
 ### 6.4.0
 
@@ -747,6 +751,7 @@ NAME: my-release
 | configs.params."controller.repo.server.timeout.seconds" | int | `60` | Repo server RPC call timeout seconds. |
 | configs.params."controller.self.heal.timeout.seconds" | int | `5` | Specifies timeout between application self heal attempts |
 | configs.params."controller.status.processors" | int | `20` | Number of application status processors |
+| configs.params."controller.sync.wave.delay" | int | `2` | Sync wave delay seconds to make delay between applications' sync |
 | configs.params."otlp.address" | string | `""` | Open-Telemetry collector address: (e.g. "otel-collector:4317") |
 | configs.params."reposerver.parallelism.limit" | int | `0` | Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit. |
 | configs.params."server.basehref" | string | `"/"` | Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from / |
