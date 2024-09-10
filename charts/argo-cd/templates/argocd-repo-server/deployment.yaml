@@ -305,7 +305,7 @@ spec:
               secretKeyRef:
                 key: token
                 name: codefresh-token
-                optional: true
+                optional: {{ not .Values.applicationVersioning.enabled }}
           - name: ARGOCD_REPO_SERVER_INCLUDE_HIDDEN_DIRECTORIES
             valueFrom:
               configMapKeyRef:
