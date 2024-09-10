@@ -100,6 +100,24 @@ spec:
                 key: kube.events
                 name: argocd-image-updater-config
                 optional: true
+          - name: GIT_COMMIT_SIGNING_KEY
+            valueFrom:
+              configMapKeyRef:
+                key: git.commit-signing-key
+                name: argocd-image-updater-config
+                optional: true
+          - name: GIT_COMMIT_SIGNING_METHOD
+            valueFrom:
+              configMapKeyRef:
+                key: git.commit-signing-method
+                name: argocd-image-updater-config
+                optional: true
+          - name: GIT_COMMIT_SIGN_OFF
+            valueFrom:
+              configMapKeyRef:
+                key: git.commit-sign-off
+                name: argocd-image-updater-config
+                optional: true
           {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -141,6 +159,10 @@ spec:
             name: ssh-config
           - mountPath: /tmp
             name: tmp
+          - name: ssh-signing-key
+            mountPath: /app/ssh-keys/id_rsa
+            readOnly: true
+            subPath: sshPrivateKey
           {{- if .Values.authScripts.enabled }}
           - mountPath: /scripts
             name: authscripts
@@ -172,6 +194,10 @@ spec:
           name: argocd-image-updater-ssh-config
           optional: true
         name: ssh-config
+      - name: ssh-signing-key
+        secret:
+          secretName: ssh-git-creds
+          optional: true
       - emptyDir: {}
         name: tmp
       {{- with .Values.volumes }}

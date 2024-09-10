@@ -99,7 +99,7 @@ Create the name of the Redis secret-init service account to use
 */}}
 {{- define "argo-cd.redisSecretInit.serviceAccountName" -}}
 {{- if .Values.redisSecretInit.serviceAccount.create -}}
-    {{ default (include "argo-cd.redisSecretInit.fullname" .) .Values.redis.serviceAccount.name }}
+    {{ default (include "argo-cd.redisSecretInit.fullname" .) .Values.redisSecretInit.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.redisSecretInit.serviceAccount.name }}
 {{- end -}}
@@ -183,7 +183,7 @@ Argo Configuration Preset Values (Influenced by Values configuration)
 {{- define "argo-cd.config.cm.presets" -}}
 {{- $presets := dict -}}
 {{- $_ := set $presets "url" (printf "https://%s" .Values.global.domain) -}}
-{{- if index .Values.configs.cm "statusbadge.enabled" | eq true -}}
+{{- if eq (toString (index .Values.configs.cm "statusbadge.enabled")) "true" -}}
 {{- $_ := set $presets "statusbadge.url" (printf "https://%s/" .Values.global.domain) -}}
 {{- end -}}
 {{- if .Values.configs.styles -}}
@@ -244,6 +244,18 @@ Allows overriding it for multi-namespace deployments in combined charts.
 */}}
 {{- define "argo-cd.namespace" -}}
 {{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
+Dual stack definition
+*/}}
+{{- define "argo-cd.dualStack" -}}
+{{- with .Values.global.dualStack.ipFamilyPolicy }}
+ipFamilyPolicy: {{ . }}
+{{- end }}
+{{- with .Values.global.dualStack.ipFamilies }}
+ipFamilies: {{ toYaml . | nindent 4 }}
+{{- end }}
 {{- end }}
 
 {{/*

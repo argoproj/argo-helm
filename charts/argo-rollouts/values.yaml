@@ -120,6 +120,7 @@ controller:
   #  limits:
   #    cpu: 100m
   #    memory: 128Mi
+  #    ephemeral-storage: 1Gi
   #  requests:
   #    cpu: 50m
   #    memory: 64Mi
@@ -240,13 +241,14 @@ podSecurityContext:
   runAsNonRoot: true
 
 # -- Security Context to set on container level
-containerSecurityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  seccompProfile:
+    type: RuntimeDefault
 
 # -- Annotations to be added to the Rollout service
 serviceAnnotations: {}
@@ -447,12 +449,18 @@ dashboard:
   volumeMounts: []
 
 notifications:
+  configmap:
+    # -- Whether to create notifications configmap
+    create: true
+
   secret:
     # -- Whether to create notifications secret
     create: false
     # -- Generic key:value pairs to be inserted into the notifications secret
     items: {}
       # slack-token:
+    # -- Annotations to be added to the notifications secret
+    annotations: {}
 
   # -- Configures notification services
   notifiers: {}
@@ -476,3 +484,11 @@ notifications:
     # trigger.on-purple: |
     #   - send: [my-purple-template]
     #     when: rollout.spec.template.spec.containers[0].image == 'argoproj/rollouts-demo:purple'
+
+  # -- The subscriptions define the subscriptions to the triggers in a general way for all rollouts
+  subscriptions: []
+    # - recipients:
+    #   - slack:<channel>
+    #   triggers:
+    #   - on-rollout-completed
+    #   - on-rollout-aborted

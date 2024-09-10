@@ -17,7 +17,9 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ $.Values.workflow.serviceAccount.name }}
-    namespace: {{ $namespace }}
+    {{- with $namespace }}
+    namespace: {{ . }}
+    {{- end }}
   {{- range $.Values.workflow.rbac.serviceAccounts }}
   - kind: ServiceAccount
     name: {{ .name }}
