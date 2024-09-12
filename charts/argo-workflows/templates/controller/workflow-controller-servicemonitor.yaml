@@ -24,6 +24,9 @@ spec:
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.controller.metricsConfig.honorLabels }}
+      honorLabels: true
+      {{- end }}
   {{- end }}
   {{- if .Values.controller.telemetryConfig.enabled }}
     - port: telemetry
@@ -36,6 +39,9 @@ spec:
       {{- with .Values.controller.metricsConfig.metricRelabelings }}
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.controller.metricsConfig.honorLabels }}
+      honorLabels: true
       {{- end }}
   {{- end }}
   {{- with .Values.controller.metricsConfig.targetLabels }}
