@@ -60,7 +60,7 @@ For full list of changes please check ArtifactHub [changelog].
 | notifications.configmap.create | bool | `true` | Whether to create notifications configmap |
 | notifications.notifiers | object | `{}` | Configures notification services |
 | notifications.secret.annotations | object | `{}` | Annotations to be added to the notifications secret |
-| notifications.secret.create | bool | `false` | Whether to create notifications secret |
+| notifications.secret.create | bool | `false` | Whether to create notifications secret. |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the notifications secret |
 | notifications.subscriptions | list | `[]` | The subscriptions define the subscriptions to the triggers in a general way for all rollouts |
 | notifications.templates | object | `{}` | Notification templates |
