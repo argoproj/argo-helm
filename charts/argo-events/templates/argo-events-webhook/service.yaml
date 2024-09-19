@@ -8,7 +8,7 @@ metadata:
     {{- include "argo-events.labels" (dict "context" . "name" .Values.webhook.name) | nindent 4 }}
 spec:
   ports:
-  - port: 443
+  - port: {{ int .Values.webhook.port }}
     targetPort: webhook
   selector:
     {{- include "argo-events.selectorLabels" (dict "context" $ "name" $.Values.webhook.name) | nindent 4 }}
