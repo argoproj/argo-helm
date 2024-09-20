@@ -41,6 +41,9 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.server.runtimeClassName | default .Values.global.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
       {{- with .Values.server.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
