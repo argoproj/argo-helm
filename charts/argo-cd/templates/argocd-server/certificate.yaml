@@ -13,13 +13,13 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
+  {{- with .Values.server.certificate.secretTemplateAnnotations }}
   secretTemplate:
-    {{- with .Values.server.certificate.secretTemplateAnnotations }}
     annotations:
       {{- range $key, $value := . }}
       {{ $key }}: {{ $value | quote }}
       {{- end }}
-    {{- end }} 
+  {{- end }} 
   secretName: argocd-server-tls
   commonName: {{ .Values.server.certificate.domain | default .Values.global.domain }}
   dnsNames:

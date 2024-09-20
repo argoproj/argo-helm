@@ -149,6 +149,7 @@ Fields to note:
 | controller.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the controller to access ClusterWorkflowTemplates. |
 | controller.clusterWorkflowTemplates.serviceAccounts | list | `[]` | Extra service accounts to be added to the ClusterRoleBinding |
 | controller.columns | list | `[]` | Configure Argo Server to show custom [columns] |
+| controller.configMap.annotations | object | `{}` | ConfigMap annotations |
 | controller.configMap.create | bool | `true` | Create a ConfigMap for the controller |
 | controller.configMap.name | string | `""` | ConfigMap name |
 | controller.cronWorkflowWorkers | string | `nil` | Number of cron workflow workers Only valid for 3.5+ |
@@ -167,12 +168,14 @@ Fields to note:
 | controller.kubeConfig | object | `{}` (See [values.yaml]) | Configure when workflow controller runs in a different k8s cluster with the workflow workloads, or needs to communicate with the k8s apiserver using an out-of-cluster kubeconfig secret. |
 | controller.links | list | `[]` | Configure Argo Server to show custom [links] |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
+| controller.loadBalancerClass | string | `""` | The class of the load balancer implementation |
 | controller.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
 | controller.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
 | controller.logging.globallevel | string | `"0"` | Set the glog logging level |
 | controller.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | controller.metricsConfig.enabled | bool | `false` | Enables prometheus metrics server |
 | controller.metricsConfig.headlessService | bool | `false` | Flag to enable headless service |
+| controller.metricsConfig.honorLabels | bool | `false` | When true, honorLabels preserves the metric’s labels when they collide with the target’s labels. |
 | controller.metricsConfig.ignoreErrors | bool | `false` | Flag that instructs prometheus to ignore metric emission errors. |
 | controller.metricsConfig.metricRelabelings | list | `[]` | ServiceMonitor metric relabel configs to apply to samples before ingestion |
 | controller.metricsConfig.metricsTTL | string | `""` | How often custom metrics are cleared from memory |
@@ -301,6 +304,7 @@ Fields to note:
 | server.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
 | server.ingress.paths | list | `["/"]` | List of ingress paths |
 | server.ingress.tls | list | `[]` | Ingress TLS configuration |
+| server.loadBalancerClass | string | `""` | The class of the load balancer implementation |
 | server.loadBalancerIP | string | `""` | Static IP address to assign to loadBalancer service type `LoadBalancer` |
 | server.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
 | server.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |

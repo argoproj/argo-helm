@@ -37,6 +37,9 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.controller.runtimeClassName | default .Values.global.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
       {{- with .Values.controller.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -207,10 +210,10 @@ spec:
                 name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
                 {{- if .Values.externalRedis.host }}
                 key: redis-password
+                optional: true
                 {{- else }}
                 key: auth
                 {{- end }}
-                optional: true
           - name: REDIS_SENTINEL_USERNAME
             valueFrom:
               secretKeyRef:

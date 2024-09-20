@@ -278,6 +278,31 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 7.0.0
+
+We changed the type of `.Values.configs.clusterCredentials` from `list` to `object`.
+If you used the value, please migrate like below.
+
+```yaml
+# before
+configs:
+  clusterCredentials:
+    - mycluster:
+      server: https://mycluster.example.com
+      labels: {}
+      annotations: {}
+      # ...
+
+# after
+configs:
+  clusterCredentials:
+    mycluster:
+      server: https://mycluster.example.com
+      labels: {}
+      annotations: {}
+      # ...
+```
+
 ### 6.10.0
 
 This version introduces authentication for Redis to mitigate GHSA-9766-5277-j5hr.
@@ -290,7 +315,7 @@ Upstream steps in the [FAQ] are not enough, since we chose a different approach.
 Steps to roteate the secret when using the helm chart (bold step is additional to upstream):
 * Delete `argocd-redis` secret in the namespace where Argo CD is installed.
   ```bash
-  kubectl delete secret argocd-redis -n <argocd namesapce>
+  kubectl delete secret argocd-redis -n <argocd namespace>
   ```
 * **Perform a helm upgrade**
   ```bash
@@ -622,7 +647,7 @@ server:
 
 ## Prerequisites
 
-- Kubernetes: `>=1.23.0-0`
+- Kubernetes: `>=1.25.0-0`
   - We align with [Amazon EKS calendar][EKS EoL] because there are many AWS users and it's a conservative approach.
   - Please check [Support Matrix of Argo CD][Kubernetes Compatibility Matrix] for official info.
 - Helm v3.0.0+
@@ -688,6 +713,7 @@ NAME: my-release
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
 | global.priorityClassName | string | `""` | Default priority class for all components |
 | global.revisionHistoryLimit | int | `3` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
+| global.runtimeClassName | string | `""` | Runtime class name for all components |
 | global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
 | global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
 | global.tolerations | list | `[]` | Default tolerations for all components |
@@ -831,6 +857,7 @@ NAME: my-release
 | controller.replicas | int | `1` | The number of application controller pods to run. Additional replicas will cause sharding of managed clusters across number of replicas. |
 | controller.resources | object | `{}` | Resource limits and requests for the application controller pods |
 | controller.revisionHistoryLimit | int | `5` | Maximum number of controller revisions that will be maintained in StatefulSet history |
+| controller.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the application controller |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the application controller |
@@ -925,6 +952,7 @@ NAME: my-release
 | repoServer.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | repoServer.replicas | int | `1` | The number of repo server pods to run |
 | repoServer.resources | object | `{}` | Resource limits and requests for the repo server pods |
+| repoServer.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the repo server |
 | repoServer.service.annotations | object | `{}` | Repo server service annotations |
 | repoServer.service.labels | object | `{}` | Repo server service labels |
 | repoServer.service.port | int | `8081` | Repo server service port |
@@ -1078,6 +1106,7 @@ NAME: my-release
 | server.route.hostname | string | `""` | Hostname of OpenShift Route |
 | server.route.termination_policy | string | `"None"` | Termination policy of Openshift Route |
 | server.route.termination_type | string | `"passthrough"` | Termination type of Openshift Route |
+| server.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the Argo CD server |
 | server.service.annotations | object | `{}` | Server service annotations |
 | server.service.externalIPs | list | `[]` | Server service external IPs |
 | server.service.externalTrafficPolicy | string | `"Cluster"` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
@@ -1185,6 +1214,7 @@ NAME: my-release
 | dex.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | dex.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | dex.resources | object | `{}` | Resource limits and requests for dex |
+| dex.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for Dex |
 | dex.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | dex.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | dex.serviceAccount.create | bool | `true` | Create dex service account |
@@ -1283,6 +1313,7 @@ NAME: my-release
 | redis.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | redis.readinessProbe.timeoutSeconds | int | `15` | Number of seconds after which the [probe] times out |
 | redis.resources | object | `{}` | Resource limits and requests for redis |
+| redis.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for redis |
 | redis.securityContext | object | See [values.yaml] | Redis pod-level security context |
 | redis.service.annotations | object | `{}` | Redis service annotations |
 | redis.service.labels | object | `{}` | Additional redis service labels |
@@ -1475,6 +1506,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | applicationSet.replicas | int | `1` | The number of ApplicationSet controller pods to run |
 | applicationSet.resources | object | `{}` | Resource limits and requests for the ApplicationSet controller pods. |
+| applicationSet.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the ApplicationSet controller |
 | applicationSet.service.annotations | object | `{}` | ApplicationSet service annotations |
 | applicationSet.service.labels | object | `{}` | ApplicationSet service labels |
 | applicationSet.service.port | int | `7000` | ApplicationSet service port |
@@ -1517,6 +1549,12 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the notifications controller |
 | notifications.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | notifications.initContainers | list | `[]` | Init containers to add to the notifications controller pod |
+| notifications.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for notifications controller Pods |
+| notifications.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| notifications.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| notifications.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| notifications.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| notifications.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | notifications.logFormat | string | `""` (defaults to global.logging.format) | Notifications controller log format. Either `text` or `json` |
 | notifications.logLevel | string | `""` (defaults to global.logging.level) | Notifications controller log level. One of: `debug`, `info`, `warn`, `error` |
 | notifications.metrics.enabled | bool | `false` | Enables prometheus metrics server |
@@ -1545,7 +1583,14 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the notifications controller Pods |
 | notifications.podLabels | object | `{}` | Labels to be applied to the notifications controller Pods |
 | notifications.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the notifications controller pods |
+| notifications.readinessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for notifications controller Pods |
+| notifications.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| notifications.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| notifications.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| notifications.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| notifications.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | notifications.resources | object | `{}` | Resource limits and requests for the notifications controller |
+| notifications.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the notifications controller |
 | notifications.secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
 | notifications.secret.create | bool | `true` | Whether helm chart creates notifications controller secret |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the secret |
