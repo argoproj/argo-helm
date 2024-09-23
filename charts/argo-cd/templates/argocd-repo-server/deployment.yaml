@@ -47,6 +47,9 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.repoServer.runtimeClassName | default .Values.global.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
       {{- with .Values.repoServer.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -182,9 +185,9 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
-                optional: true
                 {{- if .Values.externalRedis.host }}
                 key: redis-password
+                optional: true
                 {{- else }}
                 key: auth
                 {{- end }}
@@ -288,6 +291,12 @@ spec:
             valueFrom:
               configMapKeyRef:
                 key: reposerver.revision.cache.lock.timeout
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_REPO_SERVER_INCLUDE_HIDDEN_DIRECTORIES
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.include.hidden.directories
                 name: argocd-cmd-params-cm
                 optional: true
           {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}

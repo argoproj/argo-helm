@@ -13,6 +13,7 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redisSecretInit.name "name" .Values.redisSecretInit.name) | nindent 4 }}
 spec:
+  ttlSecondsAfterFinished: 60
   template:
     metadata:
       labels:
@@ -29,7 +30,7 @@ spec:
     spec:
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
-        {{ toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
       - command:

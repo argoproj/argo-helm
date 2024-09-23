@@ -6,6 +6,10 @@ metadata:
   namespace: {{ include "argo-workflows.namespace" . | quote }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.controller.name "name" "cm") | nindent 4 }}
+  {{- with .Values.controller.configMap.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 data:
   config: |
     {{- if .Values.controller.instanceID.enabled }}

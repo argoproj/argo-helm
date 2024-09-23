@@ -57,9 +57,10 @@ For full list of changes please check ArtifactHub [changelog].
 | keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `nil` | String to partially override "argo-rollouts.fullname" template |
+| notifications.configmap.create | bool | `true` | Whether to create notifications configmap |
 | notifications.notifiers | object | `{}` | Configures notification services |
 | notifications.secret.annotations | object | `{}` | Annotations to be added to the notifications secret |
-| notifications.secret.create | bool | `false` | Whether to create notifications secret |
+| notifications.secret.create | bool | `false` | Whether to create notifications secret. |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the notifications secret |
 | notifications.subscriptions | list | `[]` | The subscriptions define the subscriptions to the triggers in a general way for all rollouts |
 | notifications.templates | object | `{}` | Notification templates |
@@ -181,6 +182,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.service.annotations | object | `{}` | Service annotations |
 | dashboard.service.externalIPs | list | `[]` | Dashboard service external IPs |
 | dashboard.service.labels | object | `{}` | Service labels |
+| dashboard.service.loadBalancerClass | string | `""` | The class of the load balancer implementation |
 | dashboard.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | dashboard.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
 | dashboard.service.nodePort | int | `nil` | Service nodePort |
