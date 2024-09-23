@@ -14,10 +14,10 @@ subjects:
   name: {{ include "argo-cd.controller.serviceAccountName" . }}
   namespace: {{ include "argo-cd.namespace" . }}
 {{- if .Values.configs.params.applicationsetcontroller.namespaces }}
-{{- range .Values.configs.params.applicationsetcontroller.namespaces }}
+{{- range (split "," .Values.configs.params.applicationsetcontroller.namespaces) }}
 - kind: ServiceAccount
   name: {{ include "argo-cd.controller.serviceAccountName" $root }}
-  namespace: {{ . }}
+  namespace: {{ . | trim }}
 {{- end }}
 {{- end }}
 {{- end }}

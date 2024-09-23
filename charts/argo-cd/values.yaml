@@ -279,11 +279,8 @@ configs:
     # -- Enables use of the Progressive Syncs capability
     applicationsetcontroller.enable.progressive.syncs: false
 
-    # When specifying multiple namespaces, specify them in array form
-    applicationsetcontroller.namespaces: []
-    # - namespace1
-    # - namespace2
-    # - namespace3
+    # When specifying multiple namespaces, specify them as a comma-separated string
+    applicationsetcontroller.namespaces: "namespace1, namespace2"
 
     # -- Enables [Applications in any namespace]
     ## List of additional namespaces where applications may be created in and reconciled from.
