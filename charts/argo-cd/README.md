@@ -1418,7 +1418,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | applicationSet.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
-| applicationSet.allowAnyNamespace | bool | `true` | Enable ApplicationSet in any namespace feature |
+| applicationSet.allowAnyNamespace | bool | `false` | Enable ApplicationSet in any namespace feature |
 | applicationSet.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | applicationSet.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
 | applicationSet.certificate.annotations | object | `{}` | Annotations to be applied to the ApplicationSet Certificate |
