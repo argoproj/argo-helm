@@ -742,6 +742,7 @@ NAME: my-release
 | configs.gpg.keys | object | `{}` (See [values.yaml]) | [GnuPG] public keys to add to the keyring |
 | configs.params."application.namespaces" | string | `""` | Enables [Applications in any namespace] |
 | configs.params."applicationsetcontroller.enable.progressive.syncs" | bool | `false` | Enables use of the Progressive Syncs capability |
+| configs.params."applicationsetcontroller.namespaces" | string | `""` | A list of glob patterns specifying where to look for ApplicationSet resources. (e.g. `"namespace1, namespace2"`) |
 | configs.params."applicationsetcontroller.policy" | string | `"sync"` | Modify how application is synced between the generator and the cluster. One of: `sync`, `create-only`, `create-update`, `create-delete` |
 | configs.params."controller.ignore.normalizer.jq.timeout" | string | `"1s"` | JQ Path expression timeout |
 | configs.params."controller.operation.processors" | int | `10` | Number of application operation processors |
@@ -1417,7 +1418,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | applicationSet.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
-| applicationSet.allowAnyNamespace | bool | `false` | Enable ApplicationSet in any namespace feature |
+| applicationSet.allowAnyNamespace | bool | `true` | Enable ApplicationSet in any namespace feature |
 | applicationSet.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | applicationSet.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
 | applicationSet.certificate.annotations | object | `{}` | Annotations to be applied to the ApplicationSet Certificate |
