@@ -1588,6 +1588,41 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Align imagePullSecrets for redis-secret-init Job with other manifests
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v2.12.3
+    created: "2024-09-25T22:05:13.379287585Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.27.6
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 1c34a200b9477e944c22ec5d0a8b3235b05d9188926712144960b32557aa5fd3
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-7.6.4/argo-cd-7.6.4.tgz
+    version: 7.6.4
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Add conditional handling of multiple namespaces in ClusterRoleBinding for ApplicationSet controller.
       artifacthub.io/signKey: |
@@ -33542,4 +33577,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-09-25T15:18:13.656827164Z"
+generated: "2024-09-25T22:05:13.381438936Z"
