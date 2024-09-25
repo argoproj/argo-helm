@@ -713,6 +713,7 @@ NAME: my-release
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
 | global.priorityClassName | string | `""` | Default priority class for all components |
 | global.revisionHistoryLimit | int | `3` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
+| global.runtimeClassName | string | `""` | Runtime class name for all components |
 | global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
 | global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
 | global.tolerations | list | `[]` | Default tolerations for all components |
@@ -741,6 +742,7 @@ NAME: my-release
 | configs.gpg.keys | object | `{}` (See [values.yaml]) | [GnuPG] public keys to add to the keyring |
 | configs.params."application.namespaces" | string | `""` | Enables [Applications in any namespace] |
 | configs.params."applicationsetcontroller.enable.progressive.syncs" | bool | `false` | Enables use of the Progressive Syncs capability |
+| configs.params."applicationsetcontroller.namespaces" | string | `""` | A list of glob patterns specifying where to look for ApplicationSet resources. (e.g. `"namespace1, namespace2"`) |
 | configs.params."applicationsetcontroller.policy" | string | `"sync"` | Modify how application is synced between the generator and the cluster. One of: `sync`, `create-only`, `create-update`, `create-delete` |
 | configs.params."controller.ignore.normalizer.jq.timeout" | string | `"1s"` | JQ Path expression timeout |
 | configs.params."controller.operation.processors" | int | `10` | Number of application operation processors |
@@ -856,6 +858,7 @@ NAME: my-release
 | controller.replicas | int | `1` | The number of application controller pods to run. Additional replicas will cause sharding of managed clusters across number of replicas. |
 | controller.resources | object | `{}` | Resource limits and requests for the application controller pods |
 | controller.revisionHistoryLimit | int | `5` | Maximum number of controller revisions that will be maintained in StatefulSet history |
+| controller.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the application controller |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the application controller |
@@ -950,6 +953,7 @@ NAME: my-release
 | repoServer.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | repoServer.replicas | int | `1` | The number of repo server pods to run |
 | repoServer.resources | object | `{}` | Resource limits and requests for the repo server pods |
+| repoServer.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the repo server |
 | repoServer.service.annotations | object | `{}` | Repo server service annotations |
 | repoServer.service.labels | object | `{}` | Repo server service labels |
 | repoServer.service.port | int | `8081` | Repo server service port |
@@ -1103,6 +1107,7 @@ NAME: my-release
 | server.route.hostname | string | `""` | Hostname of OpenShift Route |
 | server.route.termination_policy | string | `"None"` | Termination policy of Openshift Route |
 | server.route.termination_type | string | `"passthrough"` | Termination type of Openshift Route |
+| server.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the Argo CD server |
 | server.service.annotations | object | `{}` | Server service annotations |
 | server.service.externalIPs | list | `[]` | Server service external IPs |
 | server.service.externalTrafficPolicy | string | `"Cluster"` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
@@ -1210,6 +1215,7 @@ NAME: my-release
 | dex.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | dex.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | dex.resources | object | `{}` | Resource limits and requests for dex |
+| dex.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for Dex |
 | dex.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | dex.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | dex.serviceAccount.create | bool | `true` | Create dex service account |
@@ -1308,6 +1314,7 @@ NAME: my-release
 | redis.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | redis.readinessProbe.timeoutSeconds | int | `15` | Number of seconds after which the [probe] times out |
 | redis.resources | object | `{}` | Resource limits and requests for redis |
+| redis.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for redis |
 | redis.securityContext | object | See [values.yaml] | Redis pod-level security context |
 | redis.service.annotations | object | `{}` | Redis service annotations |
 | redis.service.labels | object | `{}` | Additional redis service labels |
@@ -1500,6 +1507,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | applicationSet.replicas | int | `1` | The number of ApplicationSet controller pods to run |
 | applicationSet.resources | object | `{}` | Resource limits and requests for the ApplicationSet controller pods. |
+| applicationSet.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the ApplicationSet controller |
 | applicationSet.service.annotations | object | `{}` | ApplicationSet service annotations |
 | applicationSet.service.labels | object | `{}` | ApplicationSet service labels |
 | applicationSet.service.port | int | `7000` | ApplicationSet service port |
@@ -1583,6 +1591,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | notifications.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | notifications.resources | object | `{}` | Resource limits and requests for the notifications controller |
+| notifications.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the notifications controller |
 | notifications.secret.annotations | object | `{}` | key:value pairs of annotations to be added to the secret |
 | notifications.secret.create | bool | `true` | Whether helm chart creates notifications controller secret |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the secret |
