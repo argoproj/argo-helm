@@ -15,7 +15,7 @@ subjects:
     namespace: {{ include "argo-cd.namespace" . }}
 {{- $namespaces := index .Values.configs.params "applicationsetcontroller.namespaces" -}}
 {{- range $namespace := (split "," $namespaces) }}
-  {{- if $namespaces }}
+  {{- if $namespace }}
   - kind: ServiceAccount
     name: {{ include "argo-cd.applicationSet.serviceAccountName" $ }}
     namespace: {{ $namespace | trim | quote }}
