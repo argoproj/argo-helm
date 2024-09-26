@@ -3957,13 +3957,13 @@ acrController:
   replicas: 1
   ## ACR controller image
   image:
-    # -- Repository to use for the event reporter
+    # -- Repository to use for the acr controller
     # @default -- `""` (defaults to global.image.repository)
     repository: ""
-    # -- Tag to use for the event reporter
+    # -- Tag to use for the acr controller
     # @default -- `""` (defaults to global.image.tag)
     tag: ""
-    # -- Image pull policy for the event reporter
+    # -- Image pull policy for the acr controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
 
@@ -3971,13 +3971,13 @@ acrController:
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
 
-  # -- Additional command line arguments to pass to event reporter
+  # -- Additional command line arguments to pass to acr controller
   extraArgs: []
 
-  # -- Environment variables to pass to event reporter
+  # -- Environment variables to pass to acr controller
   env: []
 
-  # -- envFrom to pass to event reporter
+  # -- envFrom to pass to acr controller
   # @default -- `[]` (See [values.yaml])
   envFrom: []
   # - configMapRef:
@@ -3985,11 +3985,11 @@ acrController:
   # - secretRef:
   #     name: secret-name
 
-  # -- Additional containers to be added to the event reporter pod
+  # -- Additional containers to be added to the acr controller pod
   ## Note: Supports use of custom Helm templates
   extraContainers: []
 
-  # -- Init containers to add to the event reporter pod
+  # -- Init containers to add to the acr controller pod
   ## If your target Kubernetes cluster(s) require a custom credential (exec) plugin
   ## you could use this (and the same in the server pod) to provide such executable
   ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins
@@ -4005,27 +4005,27 @@ acrController:
   #      - mountPath: /custom-tools
   #        name: custom-tools
 
-  # -- Additional volumeMounts to the event reporter main container
+  # -- Additional volumeMounts to the acr controller main container
   volumeMounts: []
   #  - mountPath: /usr/local/bin/kubelogin
   #    name: custom-tools
   #    subPath: kubelogin
 
-  # -- Additional volumes to the event reporter pod
+  # -- Additional volumes to the acr controller pod
   volumes: []
   #  - name: custom-tools
   #    emptyDir: {}
 
-  # -- Annotations for the event reporter StatefulSet
+  # -- Annotations for the acr controller StatefulSet
   statefulsetAnnotations: {}
 
-  # -- Annotations to be added to event reporter pods
+  # -- Annotations to be added to acr controller pods
   podAnnotations: {}
 
-  # -- Labels to be added to event reporter pods
+  # -- Labels to be added to acr controller pods
   podLabels: {}
 
-  # -- Resource limits and requests for the event reporter pods
+  # -- Resource limits and requests for the acr controller pods
   resources: {}
   #  limits:
   #    cpu: 500m
@@ -4034,19 +4034,19 @@ acrController:
   #    cpu: 250m
   #    memory: 256Mi
 
-  # Event reporter container ports
+  # ACR controller container ports
   containerPorts:
     health: 8090
 
-  # -- Host Network for event reporter pods
+  # -- Host Network for acr controller pods
   hostNetwork: false
 
   # -- [DNS configuration]
   dnsConfig: {}
-  # -- Alternative DNS policy for event reporter pods
+  # -- Alternative DNS policy for acr controller pods
   dnsPolicy: "ClusterFirst"
 
-  # -- Event reporter container-level security context
+  # -- acr controller container-level security context
   # @default -- See [values.yaml]
   containerSecurityContext:
     runAsNonRoot: true
@@ -4058,7 +4058,7 @@ acrController:
       drop:
         - ALL
 
-  # Readiness probe for event reporter
+  # Readiness probe for acr controller
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
   readinessProbe:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
@@ -4075,7 +4075,7 @@ acrController:
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
 
-  # -- Priority class for the event reporter pods
+  # -- Priority class for the acr controller pods
   # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
 
@@ -4091,7 +4091,7 @@ acrController:
   # @default -- `{}` (defaults to global.affinity preset)
   affinity: {}
 
-  # -- Assign custom [TopologySpreadConstraints] rules to the event reporter
+  # -- Assign custom [TopologySpreadConstraints] rules to the acr controller
   # @default -- `[]` (defaults to global.topologySpreadConstraints)
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
@@ -4101,7 +4101,7 @@ acrController:
   #   whenUnsatisfiable: DoNotSchedule
 
   serviceAccount:
-    # -- Create a service account for the event reporter
+    # -- Create a service account for the acr controller
     create: true
     # -- Service account name
     name: acr-controller
@@ -4115,7 +4115,7 @@ acrController:
   ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
   ## Defaults to off
   clusterRoleRules:
-    # -- Enable custom rules for the event reporter's ClusterRole resource
+    # -- Enable custom rules for the acr controller's ClusterRole resource
     enabled: false
-    # -- List of custom rules for the event reporter's ClusterRole resource
+    # -- List of custom rules for the acr controller's ClusterRole resource
     rules: []
