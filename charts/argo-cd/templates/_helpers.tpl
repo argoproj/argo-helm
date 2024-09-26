@@ -297,7 +297,7 @@ Helper template to set argocd server url in event reporter
   */}}
 {{- define "argo-cd.acrControllerServiceAccountName" -}}
 {{- if .Values.acrController.serviceAccount.create -}}
-{{ default (include "argo-cd.event-reporter.fullname" .) .Values.acrController.serviceAccount.name }}
+{{ default (include "argo-cd.acr-controller.fullname" .) .Values.acrController.serviceAccount.name }}
 {{- else -}}
 {{ default "default" .Values.acrController.serviceAccount.name }}
 {{- end -}}
