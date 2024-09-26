@@ -13,7 +13,19 @@ server:
           - name: EXTENSION_CHECKSUM_URL
             value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension_checksums.txt
 
-# these tests only support vanilla argo-cd
-# do not work for event reporter component
-eventReporter:
-  enabled: false
+# needed for correct work of event reporter component
+extraObjects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: argocd-token
+    type: Opaque
+    data:
+      token: c29tZS10ZXN0LXBhc3N3b3Jk # some-test-password
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: codefresh-token
+    type: Opaque
+    data:
+      token: c29tZS10ZXN0LXBhc3N3b3Jk # some-test-password

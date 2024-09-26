@@ -99,7 +99,7 @@ Create the name of the Redis secret-init service account to use
 */}}
 {{- define "argo-cd.redisSecretInit.serviceAccountName" -}}
 {{- if .Values.redisSecretInit.serviceAccount.create -}}
-    {{ default (include "argo-cd.redisSecretInit.fullname" .) .Values.redis.serviceAccount.name }}
+    {{ default (include "argo-cd.redisSecretInit.fullname" .) .Values.redisSecretInit.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.redisSecretInit.serviceAccount.name }}
 {{- end -}}
@@ -183,7 +183,7 @@ Argo Configuration Preset Values (Influenced by Values configuration)
 {{- define "argo-cd.config.cm.presets" -}}
 {{- $presets := dict -}}
 {{- $_ := set $presets "url" (printf "https://%s" .Values.global.domain) -}}
-{{- if index .Values.configs.cm "statusbadge.enabled" | eq true -}}
+{{- if eq (toString (index .Values.configs.cm "statusbadge.enabled")) "true" -}}
 {{- $_ := set $presets "statusbadge.url" (printf "https://%s/" .Values.global.domain) -}}
 {{- end -}}
 {{- if .Values.configs.styles -}}
@@ -247,6 +247,18 @@ Allows overriding it for multi-namespace deployments in combined charts.
 {{- end }}
 
 {{/*
+Dual stack definition
+*/}}
+{{- define "argo-cd.dualStack" -}}
+{{- with .Values.global.dualStack.ipFamilyPolicy }}
+ipFamilyPolicy: {{ . }}
+{{- end }}
+{{- with .Values.global.dualStack.ipFamilies }}
+ipFamilies: {{ toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}
+
+{{/*
 Create event reporter name and version as used by the chart label.
 */}}
 {{- define "argo-cd.event-reporter.fullname" -}}
@@ -261,4 +273,15 @@ Create the name of the Argo CD server service account to use
 {{- else -}}
     {{ default "default" .Values.eventReporter.serviceAccount.name }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Helper template to set argocd server url in event reporter
+*/}}
+{{- define "argo-cd.eventReporter.argocd-server-adress" -}}
+  {{- $port := .Values.server.service.servicePortHttps }}
+  {{- if (index .Values.configs.params "server.insecure") }}
+    {{- $port = .Values.server.service.servicePortHttp }}
+  {{- end }}
+  {{- printf "%s:%v" (include "argo-cd.server.fullname" .) $port }}
 {{- end -}}

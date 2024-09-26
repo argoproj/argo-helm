@@ -7,5 +7,18 @@ controller:
 
 # these tests only support vanilla argo-cd
 # do not work for event reporter component
-eventReporter:
-  enabled: false
+extraObjects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: argocd-token
+    type: Opaque
+    data:
+      token: c29tZS10ZXN0LXBhc3N3b3Jk # some-test-password
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: codefresh-token
+    type: Opaque
+    data:
+      token: c29tZS10ZXN0LXBhc3N3b3Jk # some-test-password

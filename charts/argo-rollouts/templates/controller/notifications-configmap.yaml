@@ -1,3 +1,4 @@
+{{ if .Values.notifications.configmap.create }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -16,3 +17,8 @@ data:
   {{- with .Values.notifications.triggers }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
+  {{- with .Values.notifications.subscriptions }}
+  subscriptions: |
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

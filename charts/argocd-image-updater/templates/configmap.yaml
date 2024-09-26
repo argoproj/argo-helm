@@ -31,6 +31,15 @@ data:
   git.commit-message-template: |
     {{- nindent 4 . }}
   {{- end }}
+  {{- with .Values.config.gitCommitSigningKey }}
+  git.commit-signing-key: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.config.gitCommitSignOff }}
+  git.commit-sign-off: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.config.gitCommitSigningMethod }}
+  git.commit-signing-method: {{ . | quote }}
+  {{- end }}
   kube.events: {{ .Values.config.disableKubeEvents | quote }}
   {{- with .Values.config.registries }}
   registries.conf: |
