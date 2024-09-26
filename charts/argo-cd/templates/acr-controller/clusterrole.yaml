@@ -12,15 +12,15 @@ rules:
     {{- toYaml .Values.acrController.clusterRoleRules.rules | nindent 2 }}
   {{- else }}
   - apiGroups:
-    - '*'
+      - argoproj.io
     resources:
-    - '*'
+      - applications
     verbs:
-    - '*'
-  - nonResourceURLs:
-    - '*'
-    verbs:
-    - '*'
-  {{- end }}
+      - get
+      - list
+      - watch
+      - patch
+      - update
+{{- end }}
 {{- end }}
 {{- end }}
