@@ -669,6 +669,47 @@ NAME: my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| acrController.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
+| acrController.clusterRoleRules.enabled | bool | `false` | Enable custom rules for the acr controller's ClusterRole resource |
+| acrController.clusterRoleRules.rules | list | `[]` | List of custom rules for the acr controller's ClusterRole resource |
+| acrController.containerPorts.health | int | `8090` |  |
+| acrController.containerSecurityContext | object | See [values.yaml] | acr controller container-level security context |
+| acrController.dnsConfig | object | `{}` | [DNS configuration] |
+| acrController.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for acr controller pods |
+| acrController.enabled | bool | `false` |  |
+| acrController.env | list | `[]` | Environment variables to pass to acr controller |
+| acrController.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to acr controller |
+| acrController.extraArgs | list | `[]` | Additional command line arguments to pass to acr controller |
+| acrController.extraContainers | list | `[]` | Additional containers to be added to the acr controller pod |
+| acrController.hostNetwork | bool | `false` | Host Network for acr controller pods |
+| acrController.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the acr controller |
+| acrController.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the acr controller |
+| acrController.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the acr controller |
+| acrController.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
+| acrController.initContainers | list | `[]` | Init containers to add to the acr controller pod |
+| acrController.name | string | `"acr-controller"` |  |
+| acrController.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
+| acrController.podAnnotations | object | `{}` | Annotations to be added to acr controller pods |
+| acrController.podLabels | object | `{}` | Labels to be added to acr controller pods |
+| acrController.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the acr controller pods |
+| acrController.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| acrController.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| acrController.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| acrController.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| acrController.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
+| acrController.replicas | int | `1` |  |
+| acrController.resources | object | `{}` | Resource limits and requests for the acr controller pods |
+| acrController.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
+| acrController.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| acrController.serviceAccount.create | bool | `true` | Create a service account for the acr controller |
+| acrController.serviceAccount.labels | object | `{}` | Labels applied to created service account |
+| acrController.serviceAccount.name | string | `"acr-controller"` | Service account name |
+| acrController.statefulsetAnnotations | object | `{}` | Annotations for the acr controller StatefulSet |
+| acrController.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
+| acrController.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| acrController.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the acr controller |
+| acrController.volumeMounts | list | `[]` | Additional volumeMounts to the acr controller main container |
+| acrController.volumes | list | `[]` | Additional volumes to the acr controller pod |
 | apiVersionOverrides | object | `{}` |  |
 | applicationVersioning.enabled | bool | `true` | enables the Codefresh application versioning feature |
 | applicationVersioning.useApplicationConfiguration | bool | `true` | use ApplicationConfiguration CRD to manage application versioning |
