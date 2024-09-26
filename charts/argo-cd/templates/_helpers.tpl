@@ -285,3 +285,20 @@ Helper template to set argocd server url in event reporter
   {{- end }}
   {{- printf "%s:%v" (include "argo-cd.server.fullname" .) $port }}
 {{- end -}}
+
+{{/*
+  Create acr controller name and version as used by the chart label.
+*/}}
+{{- define "argo-cd.acr-controller.fullname" -}}
+{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.acrController.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{/*
+  Create the name of the acr controller service account to use
+  */}}
+{{- define "argo-cd.acrControllerServiceAccountName" -}}
+{{- if .Values.acrController.serviceAccount.create -}}
+{{ default (include "argo-cd.acr-controller.fullname" .) .Values.acrController.serviceAccount.name }}
+{{- else -}}
+{{ default "default" .Values.acrController.serviceAccount.name }}
+{{- end -}}
+{{- end -}}

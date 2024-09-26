@@ -3948,3 +3948,174 @@ eventReporter:
     enabled: false
     # -- List of custom rules for the event reporter's ClusterRole resource
     rules: []
+
+acrController:
+  # Enabled we need to skip argo-cd chart tests for this component
+  enabled: false
+  name: acr-controller
+  ## Amount of replicas for event reporting sharding
+  replicas: 1
+  ## ACR controller image
+  image:
+    # -- Repository to use for the acr controller
+    # @default -- `""` (defaults to global.image.repository)
+    repository: ""
+    # -- Tag to use for the acr controller
+    # @default -- `""` (defaults to global.image.tag)
+    tag: ""
+    # -- Image pull policy for the acr controller
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: ""
+
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
+
+  # -- Additional command line arguments to pass to acr controller
+  extraArgs: []
+
+  # -- Environment variables to pass to acr controller
+  env: []
+
+  # -- envFrom to pass to acr controller
+  # @default -- `[]` (See [values.yaml])
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
+  # -- Additional containers to be added to the acr controller pod
+  ## Note: Supports use of custom Helm templates
+  extraContainers: []
+
+  # -- Init containers to add to the acr controller pod
+  ## If your target Kubernetes cluster(s) require a custom credential (exec) plugin
+  ## you could use this (and the same in the server pod) to provide such executable
+  ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins
+  ## Note: Supports use of custom Helm templates
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3
+  #    command: [sh, -c]
+  #    args:
+  #      - wget -qO kubelogin.zip https://github.com/Azure/kubelogin/releases/download/v0.0.25/kubelogin-linux-amd64.zip &&
+  #        unzip kubelogin.zip && mv bin/linux_amd64/kubelogin /custom-tools/
+  #    volumeMounts:
+  #      - mountPath: /custom-tools
+  #        name: custom-tools
+
+  # -- Additional volumeMounts to the acr controller main container
+  volumeMounts: []
+  #  - mountPath: /usr/local/bin/kubelogin
+  #    name: custom-tools
+  #    subPath: kubelogin
+
+  # -- Additional volumes to the acr controller pod
+  volumes: []
+  #  - name: custom-tools
+  #    emptyDir: {}
+
+  # -- Annotations for the acr controller StatefulSet
+  statefulsetAnnotations: {}
+
+  # -- Annotations to be added to acr controller pods
+  podAnnotations: {}
+
+  # -- Labels to be added to acr controller pods
+  podLabels: {}
+
+  # -- Resource limits and requests for the acr controller pods
+  resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 250m
+  #    memory: 256Mi
+
+  # ACR controller container ports
+  containerPorts:
+    health: 8090
+
+  # -- Host Network for acr controller pods
+  hostNetwork: false
+
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- Alternative DNS policy for acr controller pods
+  dnsPolicy: "ClusterFirst"
+
+  # -- acr controller container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
+
+  # Readiness probe for acr controller
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  readinessProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+
+  # -- Priority class for the acr controller pods
+  # @default -- `""` (defaults to global.priorityClassName)
+  priorityClassName: ""
+
+  # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
+  nodeSelector: {}
+
+  # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
+  tolerations: []
+
+  # -- Assign custom [affinity] rules to the deployment
+  # @default -- `{}` (defaults to global.affinity preset)
+  affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the acr controller
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
+  serviceAccount:
+    # -- Create a service account for the acr controller
+    create: true
+    # -- Service account name
+    name: acr-controller
+    # -- Annotations applied to created service account
+    annotations: {}
+    # -- Labels applied to created service account
+    labels: {}
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
+
+  ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
+  ## Defaults to off
+  clusterRoleRules:
+    # -- Enable custom rules for the acr controller's ClusterRole resource
+    enabled: false
+    # -- List of custom rules for the acr controller's ClusterRole resource
+    rules: []

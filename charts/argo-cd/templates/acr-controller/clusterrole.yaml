@@ -1,0 +1,26 @@
+{{- if .Values.acrController.enabled }}
+{{- $config := .Values.acrController.clusterAdminAccess | default dict -}}
+{{- if hasKey $config "enabled" | ternary $config.enabled .Values.createClusterRoles }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "argo-cd.acr-controller.fullname" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.acrController.name "name" .Values.acrController.name) | nindent 4 }}
+rules:
+  {{- if .Values.acrController.clusterRoleRules.enabled }}
+    {{- toYaml .Values.acrController.clusterRoleRules.rules | nindent 2 }}
+  {{- else }}
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - applications
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
+      - update
+{{- end }}
+{{- end }}
+{{- end }}
