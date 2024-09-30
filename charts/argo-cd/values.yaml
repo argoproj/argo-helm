@@ -228,6 +228,25 @@ configs:
     #     - profile
     #     - email
 
+    # Extension Configuration
+    ## Ref: https://argo-cd.readthedocs.io/en/latest/developer-guide/extensions/proxy-extensions/
+    # extension.config: |
+    #   extensions:
+    #   - name: httpbin
+    #     backend:
+    #       connectionTimeout: 2s
+    #       keepAlive: 15s
+    #       idleConnectionTimeout: 60s
+    #       maxIdleConnections: 30
+    #       services:
+    #       - url: http://httpbin.org
+    #         headers:
+    #         - name: some-header
+    #           value: '$some.argocd.secret.key'
+    #         cluster:
+    #           name: some-cluster
+    #           server: https://some-cluster
+
   # Argo CD configuration parameters
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml
   params:
@@ -266,6 +285,8 @@ configs:
     server.disable.auth: false
     # -- Enable GZIP compression
     server.enable.gzip: true
+    # -- Enable proxy extension feature. (proxy extension is in Alpha phase)
+    server.enable.proxy.extension: false
     # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
     server.x.frame.options: sameorigin
 
