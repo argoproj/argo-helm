@@ -1,0 +1,5 @@
+{{- if .Values.checkDeprecation }}
+   {{- if .Values.server.config }}
+      {{ fail "`server.config` does no longer exist. It has been renamed to `configs`" }}
+   {{- end }}
+{{- end }}
