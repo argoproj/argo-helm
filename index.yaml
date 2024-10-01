@@ -31653,6 +31653,31 @@ entries:
   argocd-apps:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: allow setting applicationset finalizers
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    created: "2024-10-01T06:03:46.911463838Z"
+    description: A Helm chart for managing additional Argo CD Applications and Projects
+    digest: 3c4ea87f2e5ae8a4904db097151da8944158f3ccf8149535d7b336875fedef37
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-apps
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-apps-2.0.2/argocd-apps-2.0.2.tgz
+    version: 2.0.2
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: not rendering empty app description
       artifacthub.io/signKey: |
@@ -33706,4 +33731,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-09-30T18:24:54.540184552Z"
+generated: "2024-10-01T06:03:46.913191261Z"
