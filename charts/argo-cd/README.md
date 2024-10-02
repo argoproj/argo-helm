@@ -670,6 +670,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | apiVersionOverrides | object | `{}` |  |
+| checkDeprecation | bool | `false` | Checks if any deprecated values are used |
 | crds.additionalLabels | object | `{}` | Addtional labels to be added to all CRDs |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
