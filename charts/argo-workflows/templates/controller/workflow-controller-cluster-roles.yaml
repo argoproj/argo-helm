@@ -198,7 +198,7 @@ rules:
   - watch
 {{- end }}
 
-{{- if .Values.controller.clusterWorkflowTemplates.enabled }}
+{{- if and .Values.controller.clusterWorkflowTemplates.enabled (not .Values.singleNamespace) }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
