@@ -26744,6 +26744,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Avoid to create ClusterRole for cluster template when singleNamespace
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.5.11
+    created: "2024-10-02T00:47:03.734006859Z"
+    description: A Helm chart for Argo Workflows
+    digest: d0630643c37df4fe545c31e3cf797b6bb2e81868c0b4d16b52b0079fcf189c66
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.42.5/argo-workflows-0.42.5.tgz
+    version: 0.42.5
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Scrape interval for metrics and telemetry data can now be set
       artifacthub.io/signKey: |
@@ -33731,4 +33755,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-10-01T06:03:46.913191261Z"
+generated: "2024-10-02T00:47:03.735914324Z"
