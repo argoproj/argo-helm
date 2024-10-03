@@ -56,11 +56,9 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.acrController.image.imagePullPolicy }}
         name: {{ .Values.acrController.name }}
         env:
-          {{- with (concat .Values.global.env .Values.acrController.env) }}
-            {{- toYaml . | nindent 10 }}
-          {{- end }}
-            - name: ARGOCD_SERVER
-              value: "http://argocd-server:80"
+            {{- with (concat .Values.global.env .Values.acrController.env) }}
+              {{- toYaml . | nindent 10 }}
+            {{- end }}
             - name: ARGOCD_TOKEN
               valueFrom:
                 secretKeyRef:
