@@ -1725,6 +1725,9 @@ redisSecretInit:
   # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
 
+  # -- Assign custom [affinity] rules to the Redis secret-init Job
+  affinity: {}
+
   # -- Node selector to be added to the Redis secret-init Job
   # @default -- `{}` (defaults to global.nodeSelector)
   nodeSelector: {}
