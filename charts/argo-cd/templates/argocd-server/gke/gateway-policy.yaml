@@ -18,7 +18,7 @@ metadata:
 spec:
   default:
     {{- with .Values.server.gateway.gke.GCPGatewayPolicy.spec.default }}
-      {{- toYaml . | nindent 6 }}
+      {{- tpl (toYaml .) $ | nindent 6 }}
     {{- end }}
   targetRef:
     group: gateway.networking.k8s.io

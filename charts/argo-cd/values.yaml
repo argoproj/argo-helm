@@ -2162,8 +2162,6 @@ server:
     ## With `None`, the gateway is supposed to already exist and no specific object will be created
     ## Additional configuration might be required in related configuration sections for `gke`
     controller: None
-    # Argo CD server Gateway API HTTPRoute configuration
-    # NOTE: Alpha feature, gRPC & TLS pass-through will not work
     # -- Additional gateway labels
     labels: {}
     # -- Additional gateway annotations
@@ -2171,8 +2169,7 @@ server:
     #  networking.gke.io/certmap: "CERTIFICATE_MAP"
     gatewayClassName: ""
     # @default -- `""` (See [values.yaml])
-    # gatewayClassName: gke-l7-global-external-managed
-    # gatewayClassName: gke-l7-rilb
+    ## Example: gatewayClassName: gke-l7-global-external-managed
     listeners:
       - name: http
         protocol: HTTP
@@ -2188,34 +2185,41 @@ server:
       #       from: Same
     gke:
       GCPGatewayPolicy:
-        # -- Additional gateway labels
+        # -- Additional gateway policy labels
         labels: {}
-        # -- Additional gateway annotations
+        # -- Additional gateway policy annotations
         annotations: {}
         spec:
+          # @default -- `{}`
+          ## Note: default spec for GCPGatewayPolicy
           default: {}
       GCPBackendPolicy:
-        # -- Additional gateway labels
+        # -- Additional backend policy labels
         labels: {}
-        # -- Additional gateway annotations
+        # -- Additional backend policy annotations
         annotations: {}
         spec:
+          # @default -- `{}` (See [values.yaml])
+          ## Note: default spec for GCPBackendPolicy
           default: {}
       HealthCheckPolicy:
-        # -- Additional gateway labels
+        # -- Additional heath check policy labels
         labels: {}
-        # -- Additional gateway annotations
+        # -- Additional heath check policy annotations
         annotations: {}
         spec:
+          # @default -- `` (See [values.yaml])
+          ## Note: default spec for HealthCheckPolicy. Logs enabled and Heath check on argo server service
           default:
             logConfig:
               enabled: true
-          config:
-            type: HTTP
-            httpHealthCheck:
-              port: '{{ .Values.server.service.servicePortHttp }}'
-              requestPath: "/"
-
+            config:
+              type: HTTP
+              httpHealthCheck:
+                port: 80
+                requestPath: "/"
+    # Argo CD server Gateway API HTTPRoute configuration
+    # NOTE: Alpha feature, gRPC & TLS pass-through will not work
     httpRoute:
       # -- Enable a Gateway HTTP route resources for the Argo CD server
       enabled: "{{ .Values.server.gateway.enabled | default false }}"
