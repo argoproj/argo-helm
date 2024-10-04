@@ -2,8 +2,8 @@
 kind: Gateway
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
-  name: {{ .Values.server.gateway.name | default (include "argo-cd.server.fullname" .) }}
-  namespace: {{ .Values.server.gateway.namespace | default .Release.Namespace }}
+  name: {{ tpl (toString .Values.server.gateway.name) . }}
+  namespace: {{ tpl (toString .Values.server.gateway.namespace) . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     {{- with .Values.server.gateway.labels }}

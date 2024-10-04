@@ -2158,11 +2158,11 @@ server:
     ## Note: you can already have an existing Gateway and just wanted to add a route and backend policy to that Gateway, let false in that case
     enabled: false
     # -- Name of the gateway
-    # @default -- `""` (calculated with template "argo-cd.server.fullname") (See [values.yaml])
-    name: ""
+    # @default -- `'{{ include "argo-cd.server.fullname" . }}'` (See [values.yaml])
+    name: '{{ include "argo-cd.server.fullname" . }}'
     # -- Name of the namespace gateway
-    # @default -- `.Release.Namespace` (See [values.yaml])
-    namespace: ""
+    # @default -- `'{{ include  "argo-cd.namespace" . }}'` (See [values.yaml])
+    namespace: '{{ include  "argo-cd.namespace" . }}'
     # -- Specific implementation for gateway controller. Only `None` and `gke` are supported.
     ## With `None`, the gateway is supposed to already exist and no specific object will be created
     ## Additional configuration might be required in related configuration sections for `gke`

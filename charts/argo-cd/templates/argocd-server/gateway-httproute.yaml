@@ -3,7 +3,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: {{ include "argo-cd.server.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     {{- with .Values.server.gateway.httpRoute.labels }}
@@ -19,8 +19,8 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: {{ .Values.server.gateway.name | default (include "argo-cd.server.fullname" .) }}
-      namespace: {{ .Values.server.gateway.namespace | default .Release.Namespace }}
+      name: {{ tpl (toString .Values.server.gateway.name) . }}
+      namespace: {{ tpl (toString .Values.server.gateway.namespace) . }}
       {{- with .Values.server.gateway.httpRoute.gatewaySection }}
       sectionName: {{ . }}
       {{- end }}
