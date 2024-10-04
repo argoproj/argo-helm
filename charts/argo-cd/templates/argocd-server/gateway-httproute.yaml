@@ -30,7 +30,7 @@ spec:
       {{- toYaml . | nindent 4 }}
     {{- end }}
   rules:
-    {{- with .Values.server.ingress.extraRules }}
+    {{- with .Values.server.gateway.httpRoute.extraRules }}
       {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
     - matches:
