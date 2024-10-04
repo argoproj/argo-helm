@@ -127,6 +127,8 @@ controller:
     enabled: false
     # -- Path is the path where metrics are emitted. Must start with a "/".
     path: /metrics
+    # -- Frequency at which prometheus scrapes metrics
+    interval: 30s
     # -- Port is the port where metrics are emitted
     port: 9090
     # -- How often custom metrics are cleared from memory
@@ -143,6 +145,9 @@ controller:
     servicePortName: metrics
     # -- Flag to enable headless service
     headlessService: false
+    # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#honorlabels
+    honorLabels: false
     # -- ServiceMonitor relabel configs to apply to samples before scraping
     ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
     relabelings: []
@@ -231,6 +236,8 @@ controller:
     enabled: false
     # -- telemetry path
     path: /telemetry
+    # -- Frequency at which prometheus scrapes telemetry data
+    interval: 30s
     # -- telemetry container port
     port: 8081
     # -- How often custom metrics are cleared from memory

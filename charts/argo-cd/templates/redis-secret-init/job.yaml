@@ -28,9 +28,9 @@ spec:
         {{- end }}
       {{- end }}
     spec:
-      {{- with .Values.global.imagePullSecrets }}
+      {{- with .Values.redisSecretInit.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
-        {{ toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
       - command:
@@ -54,6 +54,10 @@ spec:
       priorityClassName: {{ . }}
       {{- end }}
       restartPolicy: OnFailure
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.redisSecretInit) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
       {{- with .Values.redisSecretInit.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

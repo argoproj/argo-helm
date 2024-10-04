@@ -15,7 +15,7 @@ spec:
   {{- if .Values.controller.metricsConfig.enabled }}
     - port: {{ .Values.controller.metricsConfig.servicePortName }}
       path: {{ .Values.controller.metricsConfig.path }}
-      interval: 30s
+      interval: {{ .Values.controller.metricsConfig.interval }}
       {{- with .Values.controller.metricsConfig.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}
@@ -24,11 +24,12 @@ spec:
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      honorLabels: {{ .Values.controller.metricsConfig.honorLabels }}
   {{- end }}
   {{- if .Values.controller.telemetryConfig.enabled }}
     - port: telemetry
       path: {{ .Values.controller.telemetryConfig.path }}
-      interval: 30s
+      interval: {{ .Values.controller.telemetryConfig.interval }}
       {{- with .Values.controller.metricsConfig.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}
@@ -37,6 +38,7 @@ spec:
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      honorLabels: {{ .Values.controller.metricsConfig.honorLabels }}
   {{- end }}
   {{- with .Values.controller.metricsConfig.targetLabels }}
   targetLabels:

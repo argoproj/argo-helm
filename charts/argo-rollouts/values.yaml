@@ -456,7 +456,8 @@ notifications:
     create: true
 
   secret:
-    # -- Whether to create notifications secret
+    # -- Whether to create notifications secret.
+    ## If you want to manually create secret, do not forget to add proper label to it: "app.kubernetes.io/component: {{ .Values.controller.component }}".
     create: false
     # -- Generic key:value pairs to be inserted into the notifications secret
     items: {}
