@@ -3,7 +3,7 @@ kind: Gateway
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
   name: {{ .Values.server.gateway.name | default (include "argo-cd.server.fullname" .) }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ .Values.server.gateway.namespace | default .Release.Namespace }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     {{- with .Values.server.gateway.labels }}

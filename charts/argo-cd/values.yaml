@@ -2157,9 +2157,12 @@ server:
     # -- enable a gateway resource for ArgoCD
     ## Note: you can already have an existing Gateway and just wanted to add a route and backend policy to that Gateway, let false in that case
     enabled: false
-    # -- Name of the new gateway
+    # -- Name of the gateway
     # @default -- `""` (calculated with template "argo-cd.server.fullname") (See [values.yaml])
     name: ""
+    # -- Name of the namespace gateway
+    # @default -- `.Release.Namespace` (See [values.yaml])
+    namespace: ""
     # -- Specific implementation for gateway controller. Only `None` and `gke` are supported.
     ## With `None`, the gateway is supposed to already exist and no specific object will be created
     ## Additional configuration might be required in related configuration sections for `gke`

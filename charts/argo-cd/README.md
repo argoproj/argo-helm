@@ -1046,7 +1046,8 @@ NAME: my-release
 | server.gateway.httpRoute.pathType | string | `PathPrefix` (See [values.yaml]) | HTTP reoute path type. Either 'Exact' or `PathPrefix` |
 | server.gateway.labels | object | `{}` | Additional gateway labels |
 | server.gateway.listeners | list | Listen on http. | Gateway listeners |
-| server.gateway.name | string | `""` (calculated with template "argo-cd.server.fullname") (See [values.yaml]) | Name of the new gateway |
+| server.gateway.name | string | `""` (calculated with template "argo-cd.server.fullname") (See [values.yaml]) | Name of the gateway |
+| server.gateway.namespace | string | `.Release.Namespace` (See [values.yaml]) | Name of the namespace gateway |
 | server.hostNetwork | bool | `false` | Host Network for Server pods |
 | server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Argo CD server |
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
