@@ -2168,10 +2168,15 @@ server:
     labels: {}
     # -- Additional gateway annotations
     annotations: {}
-    #  networking.gke.io/certmap: "CERTIFICATE_MAP"
-    gatewayClassName: ""
+      #networking.gke.io/certmap: "CERTIFICATE_MAP_NAME"
+
+    # -- Getaway class name
     # @default -- `""` (See [values.yaml])
     ## Example: gatewayClassName: gke-l7-global-external-managed
+    gatewayClassName: ""
+    # -- Gateway listeners
+    # @default -- Listen on http.
+    ## Notes: Enabled https required ssl configuration depending on your k8s environment
     listeners:
       - name: http
         protocol: HTTP
@@ -2188,30 +2193,36 @@ server:
     gke:
       GCPGatewayPolicy:
         # -- Additional gateway policy labels
+        # @default -- `{}` (See [values.yaml])
         labels: {}
         # -- Additional gateway policy annotations
+        # @default -- `{}` (See [values.yaml])
         annotations: {}
         spec:
-          # @default -- `{}`
-          ## Note: default spec for GCPGatewayPolicy
+          # -- Default spec for GCPGatewayPolicy
+          # @default -- `{}` (See [values.yaml])
           default: {}
       GCPBackendPolicy:
         # -- Additional backend policy labels
+        # @default -- `{}` (See [values.yaml])
         labels: {}
         # -- Additional backend policy annotations
+        # @default -- `{}` (See [values.yaml])
         annotations: {}
         spec:
+          # -- Default spec for GCPBackendPolicy
           # @default -- `{}` (See [values.yaml])
-          ## Note: default spec for GCPBackendPolicy
           default: {}
       HealthCheckPolicy:
         # -- Additional heath check policy labels
+        # @default -- `{}` (See [values.yaml])
         labels: {}
         # -- Additional heath check policy annotations
+        # @default -- `{}` (See [values.yaml])
         annotations: {}
         spec:
-          # @default -- `` (See [values.yaml])
-          ## Note: default spec for HealthCheckPolicy. Logs enabled and Heath check on argo server service
+          # -- Default spec for GCP HealthCheckPolicy
+          # @default -- Logs enabled and Heath check on argo server service (See [values.yaml])
           default:
             logConfig:
               enabled: true
@@ -2224,16 +2235,21 @@ server:
     # NOTE: Alpha feature, gRPC & TLS pass-through will not work
     httpRoute:
       # -- Enable a Gateway HTTP route resources for the Argo CD server
-      enabled: "{{ .Values.server.gateway.enabled | default false }}"
+      # @default -- Same value than server.gateway.enabled (See [values.yaml])
+      enabled: "{{ .Values.server.gateway.enabled }}"
       # -- Additional route labels
+      # @default -- `{}` (See [values.yaml])
       labels: {}
       # -- Additional route annotations
+      # @default -- `{}` (See [values.yaml])
       annotations: {}
 
       # -- Defines which Gateway will implement the resource
+      # @default -- `""` (See [values.yaml])
       gateway: ""
 
       # -- Defines which Gateway section will implement the resource
+      # @default -- `""` (See [values.yaml])
       gatewaySection: ""
 
       # -- Argo CD server hostname
@@ -2241,12 +2257,15 @@ server:
       hostname: ""
 
       # -- The path to Argo CD server
+      # @default -- `/` (See [values.yaml])
       path: /
 
       # -- HTTP reoute path type. Either 'Exact' or `PathPrefix`
+      # @default -- `PathPrefix` (See [values.yaml])
       pathType: PathPrefix
 
       # -- The list of additional hostnames to be covered by API Gateway record
+      # @default -- `[]` (See [values.yaml])
       extraHosts: []
 
       # -- Additional API Gateway paths

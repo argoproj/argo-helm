@@ -1020,6 +1020,33 @@ NAME: my-release
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
+| server.gateway.annotations | object | `{}` | Additional gateway annotations |
+| server.gateway.controller | string | `"None"` | Specific implementation for gateway controller. Only `None` and `gke` are supported. |
+| server.gateway.enabled | bool | `false` | enable a gateway resource for ArgoCD |
+| server.gateway.gatewayClassName | string | `""` (See [values.yaml]) | Getaway class name |
+| server.gateway.gke.GCPBackendPolicy.annotations | object | `{}` (See [values.yaml]) | Additional backend policy annotations |
+| server.gateway.gke.GCPBackendPolicy.labels | object | `{}` (See [values.yaml]) | Additional backend policy labels |
+| server.gateway.gke.GCPBackendPolicy.spec.default | object | `{}` (See [values.yaml]) | Default spec for GCPBackendPolicy |
+| server.gateway.gke.GCPGatewayPolicy.annotations | object | `{}` (See [values.yaml]) | Additional gateway policy annotations |
+| server.gateway.gke.GCPGatewayPolicy.labels | object | `{}` (See [values.yaml]) | Additional gateway policy labels |
+| server.gateway.gke.GCPGatewayPolicy.spec.default | object | `{}` (See [values.yaml]) | Default spec for GCPGatewayPolicy |
+| server.gateway.gke.HealthCheckPolicy.annotations | object | `{}` (See [values.yaml]) | Additional heath check policy annotations |
+| server.gateway.gke.HealthCheckPolicy.labels | object | `{}` (See [values.yaml]) | Additional heath check policy labels |
+| server.gateway.gke.HealthCheckPolicy.spec.default | object | Logs enabled and Heath check on argo server service (See [values.yaml]) | Default spec for GCP HealthCheckPolicy |
+| server.gateway.httpRoute.annotations | object | `{}` (See [values.yaml]) | Additional route annotations |
+| server.gateway.httpRoute.enabled | string | Same value than server.gateway.enabled (See [values.yaml]) | Enable a Gateway HTTP route resources for the Argo CD server |
+| server.gateway.httpRoute.extraHosts | list | `[]` (See [values.yaml]) | The list of additional hostnames to be covered by API Gateway record |
+| server.gateway.httpRoute.extraPaths | list | `[]` (See [values.yaml]) | Additional API Gateway paths |
+| server.gateway.httpRoute.extraRules | list | `[]` (See [values.yaml]) | Additional routing rules |
+| server.gateway.httpRoute.gateway | string | `""` (See [values.yaml]) | Defines which Gateway will implement the resource |
+| server.gateway.httpRoute.gatewaySection | string | `""` (See [values.yaml]) | Defines which Gateway section will implement the resource |
+| server.gateway.httpRoute.hostname | string | `""` (defaults to global.domain) | Argo CD server hostname |
+| server.gateway.httpRoute.labels | object | `{}` (See [values.yaml]) | Additional route labels |
+| server.gateway.httpRoute.path | string | `/` (See [values.yaml]) | The path to Argo CD server |
+| server.gateway.httpRoute.pathType | string | `PathPrefix` (See [values.yaml]) | HTTP reoute path type. Either 'Exact' or `PathPrefix` |
+| server.gateway.labels | object | `{}` | Additional gateway labels |
+| server.gateway.listeners | list | Listen on http. | Gateway listeners |
+| server.gateway.name | string | `""` (calculated with template "argo-cd.server.fullname") (See [values.yaml]) | Name of the new gateway |
 | server.hostNetwork | bool | `false` | Host Network for Server pods |
 | server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Argo CD server |
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
