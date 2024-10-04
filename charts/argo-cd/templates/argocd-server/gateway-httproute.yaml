@@ -1,4 +1,4 @@
-{{- if .Values.server.gatewayAPI.enabled }}
+{{- if eq (tpl (toString .Values.server.gateway.httpRoute.enabled) .) "true" }}
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -6,10 +6,10 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
-    {{- with .Values.server.gatewayAPI.labels }}
+    {{- with .Values.server.gateway.httpRoute.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.server.gatewayAPI.annotations }}
+  {{- with .Values.server.gateway.httpRoute.annotations }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
@@ -19,13 +19,13 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: {{ .Values.server.gatewayAPI.gateway }}
-      {{- with .Values.server.gatewayAPI.gatewaySection }}
+      name: {{ tpl .Values.server.gateway.name . }}
+      {{- with .Values.server.gateway.httpRoute.gatewaySection }}
       sectionName: {{ . }}
       {{- end }}
   hostnames:
-    - {{ .Values.server.gatewayAPI.hostname | default .Values.global.domain }}
-    {{- with .Values.server.gatewayAPI.extraHosts }}
+    - {{ .Values.server.gateway.httpRoute.hostname | default .Values.global.domain }}
+    {{- with .Values.server.gateway.httpRoute.extraHosts }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
   rules:
@@ -34,11 +34,11 @@ spec:
     {{- end }}
     - matches:
         - path:
-            type: {{ .Values.server.gatewayAPI.pathType }}
-            value: {{ .Values.server.gatewayAPI.path }}
-        {{- range .Values.server.gatewayAPI.extraPaths }}
+            type: {{ .Values.server.gateway.httpRoute.pathType }}
+            value: {{ .Values.server.gateway.httpRoute.path }}
+        {{- range .Values.server.gateway.httpRoute.extraPaths }}
         - path:
-            type: {{ .type | default $.Values.gatewayAPI.pathType }}
+            type: {{ .type | default $.Values.server.gateway.httpRoute.pathType }}
             value: {{ .value }}
         {{- end }}
       backendRefs:

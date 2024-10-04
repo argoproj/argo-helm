@@ -2151,53 +2151,116 @@ server:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
 
-  # Argo CD server Gateway API HTTPRoute configuration
+  # Argo CD server Gateway API configuration
   # NOTE: Alpha feature, gRPC & TLS pass-through will not work
-  gatewayAPI:
-    # -- Enable a Gateway API resources for the Argo CD server
+  gateway:
+    # -- enable a gateway resource for ArgoCD
+    ## Note: you can already have an existing Gateway and just wanted to add a route and backend policy to that Gateway, let false in that case
     enabled: false
-    # -- Additional route labels
+    name: '{{ include "argo-cd.server.fullname" . }}'
+    # -- Specific implementation for gateway controller. Only `None` and `gke` are supported.
+    ## With `None`, the gateway is supposed to already exist and no specific object will be created
+    ## Additional configuration might be required in related configuration sections for `gke`
+    controller: None
+    # Argo CD server Gateway API HTTPRoute configuration
+    # NOTE: Alpha feature, gRPC & TLS pass-through will not work
+    # -- Additional gateway labels
     labels: {}
-    # -- Additional route annotations
+    # -- Additional gateway annotations
     annotations: {}
+    #  networking.gke.io/certmap: "CERTIFICATE_MAP"
+    gatewayClassName: ""
+    # @default -- `""` (See [values.yaml])
+    # gatewayClassName: gke-l7-global-external-managed
+    # gatewayClassName: gke-l7-rilb
+    listeners:
+      - name: http
+        protocol: HTTP
+        port: 80
+        allowedRoutes:
+          namespaces:
+            from: Same
+      # - name: https
+      #   protocol: HTTPS
+      #   port: 443
+      #   allowedRoutes:
+      #     namespaces:
+      #       from: Same
+    gke:
+      GCPGatewayPolicy:
+        # -- Additional gateway labels
+        labels: {}
+        # -- Additional gateway annotations
+        annotations: {}
+        spec:
+          default: {}
+      GCPBackendPolicy:
+        # -- Additional gateway labels
+        labels: {}
+        # -- Additional gateway annotations
+        annotations: {}
+        spec:
+          default: {}
+      HealthCheckPolicy:
+        # -- Additional gateway labels
+        labels: {}
+        # -- Additional gateway annotations
+        annotations: {}
+        spec:
+          default:
+            logConfig:
+              enabled: true
+          config:
+            type: HTTP
+            httpHealthCheck:
+              port: '{{ .Values.server.service.servicePortHttp }}'
+              requestPath: "/"
 
-    # -- Defines which Gateway will implement the resource
-    gateway: ""
+    httpRoute:
+      # -- Enable a Gateway HTTP route resources for the Argo CD server
+      enabled: "{{ .Values.server.gateway.enabled | default false }}"
+      # -- Additional route labels
+      labels: {}
+      # -- Additional route annotations
+      annotations: {}
 
-    # -- Defines which Gateway section will implement the resource
-    gatewaySection: ""
+      # -- Defines which Gateway will implement the resource
+      gateway: ""
 
-    # -- Argo CD server hostname
-    # @default -- `""` (defaults to global.domain)
-    hostname: ""
+      # -- Defines which Gateway section will implement the resource
+      gatewaySection: ""
 
-    # -- The path to Argo CD server
-    path: /
+      # -- Argo CD server hostname
+      # @default -- `""` (defaults to global.domain)
+      hostname: ""
 
-    # -- HTTP reoute path type. Either 'Exact' or `PathPrefix`
-    pathType: PathPrefix
+      # -- The path to Argo CD server
+      path: /
 
-    # -- The list of additional hostnames to be covered by API Gateway record
-    extraHosts: []
+      # -- HTTP reoute path type. Either 'Exact' or `PathPrefix`
+      pathType: PathPrefix
 
-    # -- Additional API Gateway paths
-    # @default -- `[]` (See [values.yaml])
-    ## Note: Supports use of custom Helm templates
-    extraPaths: []
-      # - type: PathPrefix
-      #   value: /*
+      # -- The list of additional hostnames to be covered by API Gateway record
+      extraHosts: []
 
-    # -- Additional routing rules
-    # @default -- `[]` (See [values.yaml])
-    ## Note: Supports use of custom Helm templates
-    extraRules: []
-      # - matches:
-      #   - path:
-      #       type: PathPrefix
-      #       value: /
-      #     backendRefs:
-      #       - name: '{{ include "argo-cd.server.fullname" . }}'
-      #         port: '{{ .Values.server.service.servicePortHttpName }}'
+      # -- Additional API Gateway paths
+      # @default -- `[]` (See [values.yaml])
+      ## Note: Supports use of custom Helm templates
+      extraPaths: []
+        # - type: PathPrefix
+        #   value: /*
+
+      # -- Additional routing rules
+      # @default -- `[]` (See [values.yaml])
+      ## Note: Supports use of custom Helm templates
+      extraRules: []
+        # - matches:
+        #   - path:
+        #       type: PathPrefix
+        #       value: /
+        #     backendRefs:
+        #       - name: '{{ include "argo-cd.server.fullname" . }}'
+        #         port: '{{ .Values.server.service.servicePortHttpName }}'
 
 
   # Argo CD server ingress configuration
