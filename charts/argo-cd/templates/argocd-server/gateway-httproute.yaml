@@ -19,7 +19,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: {{ tpl .Values.server.gateway.name . }}
+      name: {{ .Values.server.gateway.name | default (include "argo-cd.server.fullname" .) }}
       {{- with .Values.server.gateway.httpRoute.gatewaySection }}
       sectionName: {{ . }}
       {{- end }}
