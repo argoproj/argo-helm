@@ -88,6 +88,12 @@ spec:
                   name: argocd-cmd-params-cm
                   key: acr.listen.address
                   optional: true
+            - name: ARGOCD_SERVER_ROOTPATH
+              valueFrom:
+                configMapKeyRef:
+                  key: server.rootpath
+                  name: argocd-cmd-params-cm
+                  optional: true
         {{- with .Values.acrController.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
