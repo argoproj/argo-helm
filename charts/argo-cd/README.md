@@ -1043,7 +1043,6 @@ NAME: my-release
 | server.gateway.httpRoute.extraHosts | list | `[]` (See [values.yaml]) | The list of additional hostnames to be covered by API Gateway record |
 | server.gateway.httpRoute.extraPaths | list | `[]` (See [values.yaml]) | Additional API Gateway paths |
 | server.gateway.httpRoute.extraRules | list | `[]` (See [values.yaml]) | Additional routing rules |
-| server.gateway.httpRoute.gateway | string | `""` (See [values.yaml]) | Defines which Gateway will implement the resource |
 | server.gateway.httpRoute.gatewaySection | string | `""` (See [values.yaml]) | Defines which Gateway section will implement the resource |
 | server.gateway.httpRoute.hostname | string | `""` (defaults to global.domain) | Argo CD server hostname |
 | server.gateway.httpRoute.labels | object | `{}` (See [values.yaml]) | Additional route labels |
