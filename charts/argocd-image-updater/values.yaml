@@ -145,6 +145,9 @@ config:
   # -- Argo CD Image Update log level
   logLevel: "info"
 
+  # -- Check annotations in ArgoCD namespace only (if true) or in all namespaces (if false)
+  namespaced : "true"
+
   # -- Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/)
   registries: []
     # - name: Docker Hub
