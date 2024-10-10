@@ -1,0 +1,27 @@
+{{- if and (eq .Values.server.gateway.controller "gke") (eq (tpl (toString .Values.server.gateway.httpRoute.enabled) .) "true") }}
+apiVersion: networking.gke.io/v1
+kind: GCPBackendPolicy
+metadata:
+  name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    {{- with .Values.server.gateway.gke.GCPBackendPolicy.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.server.gateway.gke.GCPBackendPolicy.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  default:
+    {{- with .Values.server.gateway.gke.GCPBackendPolicy.spec.default }}
+      {{- tpl (toYaml .) $ | nindent 6 }}
+    {{- end }}
+  targetRef:
+    group: ""
+    kind: Service
+    name: {{ template "argo-cd.server.fullname" . }}
+{{- end }}

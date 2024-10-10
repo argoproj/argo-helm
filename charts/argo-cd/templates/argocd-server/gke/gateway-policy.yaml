@@ -1,0 +1,27 @@
+{{- if and .Values.server.gateway.enabled (eq .Values.server.gateway.controller "gke") }}
+apiVersion: networking.gke.io/v1
+kind: GCPGatewayPolicy
+metadata:
+  name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ tpl (toString .Values.server.gateway.namespace) . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    {{- with .Values.server.gateway.gke.GCPGatewayPolicy.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.server.gateway.gke.GCPGatewayPolicy.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  default:
+    {{- with .Values.server.gateway.gke.GCPGatewayPolicy.spec.default }}
+      {{- tpl (toYaml .) $ | nindent 6 }}
+    {{- end }}
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: {{ tpl (toString .Values.server.gateway.name) . }}
+{{- end }}
