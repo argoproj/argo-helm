@@ -278,6 +278,10 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 7.6.9
+
+We have added the permission for the application controller on the applicationsets, to be able to create them in the target clusters.
+
 ### 7.0.0
 
 We changed the type of `.Values.configs.clusterCredentials` from `list` to `object`.
