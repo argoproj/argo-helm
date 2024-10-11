@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.12-2024.10.5-66e1e38fa
+appVersion: v2.12-2024.10.11-4a252db7c
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 7.4.7-4-cap-2.12-2024.10.5-66e1e38fa
+version: 7.4.7-5-cap-2.12-2024.10.11-4a252db7c
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -27,4 +27,8 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: Added env variable for acr controller to retrieve server.rootpath from params ConfigMap
+      description: support for arrays in promotion versionSource
+    - kind: changed
+      description: getting version based on synced revision
+    - kind: changed
+      description: suppress 'version not found' error message when version configuration is not provided
