@@ -46,3 +46,4 @@ data:
     registries:
       {{- toYaml . | nindent 6 }}
   {{- end }}
+  namespaced: {{ .Values.config.namespaced | quote }}
