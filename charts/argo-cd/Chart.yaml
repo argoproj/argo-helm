@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.12-2024.10.11-4a252db7c
+appVersion: v2.12-2024.10.17-36fb3f0d1
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 7.4.7-5-cap-2.12-2024.10.11-4a252db7c
+version: 7.4.7-5-cap-2.12-2024.10.17-36fb3f0d1
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -32,3 +32,9 @@ annotations:
       description: getting version based on synced revision
     - kind: changed
       description: suppress 'version not found' error message when version configuration is not provided
+    - kind: changed
+      description: merge https://github.com/argoproj/argo-cd/pull/19799 to fork
+    - kind: changed
+      description: acr controller minor fixes
+    
+    
