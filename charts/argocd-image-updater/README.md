@@ -87,6 +87,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.logLevel | string | `"info"` | Argo CD Image Update log level |
 | config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/) |
 | config.sshConfig | object | `{}` | Argo CD Image Updater ssh client parameter configuration. |
+| createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
 | extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry |
 | extraEnv | list | `[]` | Extra environment variables for argocd-image-updater |
 | extraEnvFrom | list | `[]` | Extra envFrom to pass to argocd-image-updater |
