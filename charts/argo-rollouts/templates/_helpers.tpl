@@ -386,6 +386,7 @@ Return the rules for controller's Role and ClusterRole
   - list
   - watch
   - update
+  - patch
 {{- end }}
 {{- if .Values.providerRBAC.providers.glooPlatform }}
   # Access needed when using the Gloo Platform provider
