@@ -20,6 +20,11 @@ fullnameOverride: ""
 # -- Global namespace (argocd-image-updater.namespace in _helpers.tpl) override
 namespaceOverride: ""
 
+# -- Create cluster roles for cluster-wide installation.
+## Used when you manage applications in the same cluster where Argo CD Image Updater runs.
+## If you want to use this, please set `.Values.rbac.enabled` true as well.
+createClusterRoles: true
+
 # -- Extra arguments for argocd-image-updater not defined in `config.argocd`.
 # If a flag contains both key and value, they need to be split to a new entry
 extraArgs: []
