@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v2.12-2024.10.17-36fb3f0d1
+appVersion: v2.12.3-2024.10.28-20100fc54
 kubeVersion: ">=1.23.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 7.4.7-5-cap-2.12-2024.10.17-36fb3f0d1
+version: 7.4.7-5-cap-2.12.3-2024.10.28-20100fc54
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -26,7 +26,7 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: changed
-      description: merge https://github.com/argoproj/argo-cd/pull/19799 to fork
-    - kind: changed
-      description: acr controller minor fixes
+    - kind: added
+      description: added warning conditions reporting
+    - kind: fixed
+      description: failures in update revision for path should not affect sync
