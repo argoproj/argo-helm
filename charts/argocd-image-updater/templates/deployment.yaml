@@ -82,6 +82,12 @@ spec:
                 key: log.level
                 name: argocd-image-updater-config
                 optional: true
+          - name: ARGOCD_LOGLEVEL
+            valueFrom:
+              configMapKeyRef:
+                key: log.level
+                name: argocd-image-updater-config
+                optional: true
           - name: GIT_COMMIT_USER
             valueFrom:
               configMapKeyRef:
