@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
-  name: {{ include "argocd-image-updater.fullname" . }}-sshconfig
+  name: {{ include "argocd-image-updater.fullname" . }}-ssh-config
   namespace: {{ include "argocd-image-updater.namespace" . | quote }}
 {{- with .Values.config.sshConfig }}
 data:
