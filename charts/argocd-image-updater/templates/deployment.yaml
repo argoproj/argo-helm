@@ -74,7 +74,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: argocd.token
-                name:{{ include "argocd-image-updater.fullname" . }}-secret
+                name: {{ include "argocd-image-updater.fullname" . }}-secret
                 optional: true
           - name: IMAGE_UPDATER_LOGLEVEL
             valueFrom:
@@ -191,7 +191,7 @@ spec:
           optional: true
         name: ssh-known-hosts
       - configMap:
-          name: {{ include "argocd-image-updater.fullname" . }}-sshconfig
+          name: {{ include "argocd-image-updater.fullname" . }}-ssh-config
           optional: true
         name: ssh-config
       - name: ssh-signing-key
