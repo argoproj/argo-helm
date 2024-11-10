@@ -41,6 +41,7 @@ spec:
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      honorLabels: {{ .Values.notifications.metrics.serviceMonitor.honorLabels }}
   namespaceSelector:
     matchNames:
       - {{ include "argo-cd.namespace" . }}
