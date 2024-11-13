@@ -134,6 +134,7 @@ For full list of changes please check ArtifactHub [changelog].
 | podLabels | object | `{}` | Labels to be added to the Rollout pods |
 | podSecurityContext | object | `{"runAsNonRoot":true}` | Security Context to set on pod level |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.automount | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | serviceAnnotations | object | `{}` | Annotations to be added to the Rollout service |
@@ -191,6 +192,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.service.targetPort | int | `3100` | Service target port |
 | dashboard.service.type | string | `"ClusterIP"` | Sets the type of the Service |
 | dashboard.serviceAccount.annotations | object | `{}` | Annotations to add to the dashboard service account |
+| dashboard.serviceAccount.automount | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | dashboard.serviceAccount.create | bool | `true` | Specifies whether a dashboard service account should be created |
 | dashboard.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | dashboard.tolerations | list | `[]` | [Tolerations] for use with node taints |
