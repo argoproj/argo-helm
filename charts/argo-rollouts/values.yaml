@@ -229,6 +229,8 @@ serviceAccount:
   # -- The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
+  # -- Specifies wether a service account should be automounted
+  automount: true
 
 # -- Annotations to be added to all CRDs
 crdAnnotations: {}
@@ -384,7 +386,9 @@ dashboard:
     # -- The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name: ""
-
+    # -- Specifies wether a service account should be automounted
+    automount: true
+  
   ## Configure Pod Disruption Budget for the dashboard
   pdb:
     # -- Labels to be added to dashboard [Pod Disruption Budget]
