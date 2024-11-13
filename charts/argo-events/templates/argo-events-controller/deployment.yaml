@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/argo-events-controller/config.yaml") . | sha256sum }}
+        checksum/config: {{ (include (print $.Template.BasePath "/argo-events-controller/config.yaml") . | fromYaml).data | toYaml | sha256sum }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.controller.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
