@@ -23,7 +23,7 @@ spec:
       annotations:
         checksum/cmd-params: {{ include "argo-cd.config.params" . | sha256sum }}
         {{- if .Values.configs.cm.create }}
-        checksum/cm: {{ (include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | fromYaml).data | toYaml | sha256sum }}
+        checksum/cm: {{ include "argo-cd.config.cm" . | sha256sum }}
         {{- end }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.controller.podAnnotations) }}
         {{- range $key, $value := . }}
