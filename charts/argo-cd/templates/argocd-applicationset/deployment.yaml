@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cmd-params: {{ (include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | fromYaml).data | toYaml | sha256sum }}
+        checksum/cmd-params: {{ include "argo-cd.config.params" . | sha256sum }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.applicationSet.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}

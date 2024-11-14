@@ -25,12 +25,12 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cmd-params: {{ (include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | fromYaml).data | toYaml | sha256sum }}
+        checksum/cmd-params: {{ include "argo-cd.config.params" . | sha256sum }}
         {{- if (index .Values.configs.cm "dex.config") }}
-        checksum/cm: {{ (include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | fromYaml).data | toYaml | sha256sum }}
+        checksum/cm: {{ include "argo-cd.config.cm" . | sha256sum }}
         {{- end }}
         {{- if .Values.dex.certificateSecret.enabled }}
-        checksum/dex-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-dex-server-tls-secret.yaml") . | sha256sum }}
+        checksum/dex-server-tls: {{ (include (print $.Template.BasePath "/argocd-configs/argocd-dex-server-tls-secret.yaml") . | fromYaml).data | toYaml | sha256sum }}
         {{- end }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.dex.podAnnotations) }}
         {{- range $key, $value := . }}

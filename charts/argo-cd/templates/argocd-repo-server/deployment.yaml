@@ -26,12 +26,12 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cmd-params: {{ (include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | fromYaml).data | toYaml | sha256sum }}
+        checksum/cmd-params: {{ include "argo-cd.config.params" . | sha256sum }}
         {{- if .Values.repoServer.certificateSecret.enabled }}
         checksum/repo-server-tls: {{ (include (print $.Template.BasePath "/argocd-configs/argocd-repo-server-tls-secret.yaml") . | fromYaml).data | toYaml | sha256sum }}
         {{- end }}
         {{- if .Values.configs.cm.create }}
-        checksum/cm: {{ (include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | fromYaml).data | toYaml | sha256sum }}
+        checksum/cm: {{ include "argo-cd.config.cm" . | sha256sum }}
         {{- end }}
         {{- if .Values.configs.cmp.create }}
         checksum/cmp-cm: {{ (include (print $.Template.BasePath "/argocd-configs/argocd-cmp-cm.yaml") . | fromYaml).data | toYaml | sha256sum }}
