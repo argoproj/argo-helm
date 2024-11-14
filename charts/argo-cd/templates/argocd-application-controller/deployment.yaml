@@ -21,7 +21,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cmd-params: {{ (include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | fromYaml).data | toYaml | sha256sum }}
+        checksum/cmd-params: {{ include "argo-cd.config.params" . | sha256sum }}
         {{- if .Values.configs.cm.create }}
         checksum/cm: {{ (include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | fromYaml).data | toYaml | sha256sum }}
         {{- end }}
