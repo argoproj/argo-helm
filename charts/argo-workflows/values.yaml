@@ -345,6 +345,9 @@ controller:
     # minAvailable: 1
     # maxUnavailable: 1
 
+    # -- [unhealthyPodEvictionPolicy] generally available since k8s v1.31+
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
+
   # -- [Node selector]
   nodeSelector:
     kubernetes.io/os: linux
