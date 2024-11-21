@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v1.7.2
 description: A Helm chart for Argo Rollouts
 name: argo-rollouts
-version: 2.37.8
+version: 2.38.0
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
 keywords:
@@ -19,4 +19,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: Fixed rendering of plugins in the ConfigMap
+      description: Updated plugin values.yaml example and it's implementation to not need to include the stringification or the plugins block that it used to
