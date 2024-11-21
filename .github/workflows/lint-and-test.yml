@@ -41,7 +41,7 @@ jobs:
         uses: helm/chart-testing-action@e6669bcd63d7cb57cb4380c33043eebe5d111992 # v2.6.1
         with:
           # Note: Also update in scripts/lint.sh
-          version: v3.10.0
+          version: v3.11.0
 
       - name: List changed charts
         id: list-changed
@@ -74,7 +74,6 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         with:
           config: .github/configs/kind-config.yaml
-
       - name: Deploy latest ArgoCD CRDs when testing ArgoCD extensions
         if: |
           contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater') ||
