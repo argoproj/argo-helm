@@ -74,7 +74,15 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         with:
           config: .github/configs/kind-config.yaml
-
+      - name: Remove old cache
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          releases=$(helm list --all-namespaces -q)
+          for release in $releases; do
+            namespace=$(helm list --all-namespaces -q | grep "^$release" | awk '{print $2}')
+            echo "Uninstalling release $release in namespace $namespace"
+            helm uninstall $release -n $namespace
+          done
       - name: Deploy latest ArgoCD CRDs when testing ArgoCD extensions
         if: |
           contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater') ||
@@ -96,7 +104,6 @@ jobs:
           kubectl create namespace redis
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm install redis bitnami/redis --wait --namespace redis --set auth.password=argocd --set architecture=standalone
-
       - name: Run chart-testing (install)
         run: ct install --config ./.github/configs/ct-install.yaml
         if: steps.list-changed.outputs.changed == 'true'
