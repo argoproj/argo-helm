@@ -24743,6 +24743,32 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: fixed
+          description: Updated plugin values.yaml example and it's implementation to not need to include the stringification or the plugins block that it used to
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.7.2
+    created: "2024-11-21T13:03:09.54078898Z"
+    description: A Helm chart for Argo Rollouts
+    digest: e58ec2ce9cfcf712bd79c1315fc96d1aa4906783c6b51b446c98658ff96564e4
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-rollouts
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-rollouts
+    sources:
+    - https://github.com/argoproj/argo-rollouts
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-rollouts-2.38.0/argo-rollouts-2.38.0.tgz
+    version: 2.38.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: fixed
           description: Fixed rendering of plugins in the ConfigMap
       artifacthub.io/signKey: |
         fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
@@ -34316,4 +34342,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-11-21T12:43:13.768780063Z"
+generated: "2024-11-21T13:03:09.542325273Z"
