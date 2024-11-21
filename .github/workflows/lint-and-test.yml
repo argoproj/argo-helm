@@ -100,8 +100,12 @@ jobs:
         run: |
           echo "Disk usage of charts/argo-workflows..."
           du -sh charts/argo-workflows
+          echo "Disk usage of charts/argo-workflows/templates..."
+          du -sh charts/argo-workflows/templates
           echo "contents of charts/argo-workflows..."
-          ls -la charts/argo-workflows
+          ls -lah charts/argo-workflows
+          echo "contents of charts/argo-workflows/templates..."
+          ls -lah charts/argo-workflows/templates
 
       - name: Run chart-testing (install)
         run: ct install --config ./.github/configs/ct-install.yaml
