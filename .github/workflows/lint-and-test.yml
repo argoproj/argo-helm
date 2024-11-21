@@ -96,21 +96,6 @@ jobs:
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm install redis bitnami/redis --wait --namespace redis --set auth.password=argocd --set architecture=standalone
 
-      - name: debug
-        run: |
-          echo "Disk usage of charts/argo-workflows..."
-          du -sh charts/argo-workflows
-          echo "Disk usage of charts/argo-workflows/templates..."
-          du -sh charts/argo-workflows/templates
-          echo "Largest files in charts/argo-workflows..."
-          #du -a charts/argo-workflows/ | sort -n -rh | head -n 5
-          find charts/argo-workflows/ -type f -exec du -Sh {} + | sort -rh | head -n 5
-          echo "---"
-          echo "contents of charts/argo-workflows..."
-          ls -lah charts/argo-workflows
-          echo "contents of charts/argo-workflows/templates..."
-          ls -lah charts/argo-workflows/templates
-
       - name: Run chart-testing (install)
         run: ct install --config ./.github/configs/ct-install.yaml
         if: steps.list-changed.outputs.changed == 'true'
