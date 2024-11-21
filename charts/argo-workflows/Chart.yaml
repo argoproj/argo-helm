@@ -3,7 +3,7 @@ appVersion: v3.6.0
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.43.0
+version: 0.44.0
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -16,5 +16,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: changed
-      description: Upgrade Argo Workflows to v3.6.0
+    - kind: fixed
+      description: Remove excessive RBAC privileges from workflow-role.
