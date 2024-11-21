@@ -27120,6 +27120,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Remove excessive RBAC privileges from workflow-role.
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.6.0
+    created: "2024-11-21T08:59:16.97408009Z"
+    description: A Helm chart for Argo Workflows
+    digest: e77b902899982f87e0d8860bf7cf586a0c2632c2201a0cef0065ae4436d34501
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.44.0/argo-workflows-0.44.0.tgz
+    version: 0.44.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Upgrade Argo Workflows to v3.6.0
       artifacthub.io/signKey: |
@@ -34257,4 +34281,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2024-11-21T08:27:23.134475175Z"
+generated: "2024-11-21T08:59:16.976157172Z"
