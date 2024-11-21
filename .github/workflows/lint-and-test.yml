@@ -95,6 +95,14 @@ jobs:
           kubectl create namespace redis
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm install redis bitnami/redis --wait --namespace redis --set auth.password=argocd --set architecture=standalone
+
+      - name: debug
+        run: |
+          echo "Disk usage of charts/argo-workflows..."
+          du -sh charts/argo-workflows
+          echo "contents of charts/argo-workflows..."
+          ls -la charts/argo-workflows
+
       - name: Run chart-testing (install)
         run: ct install --config ./.github/configs/ct-install.yaml
         if: steps.list-changed.outputs.changed == 'true'
