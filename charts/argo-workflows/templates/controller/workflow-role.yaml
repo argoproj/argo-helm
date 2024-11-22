@@ -18,21 +18,6 @@ rules:
     verbs:
       - create
       - patch
-  - apiGroups:
-      - argoproj.io
-    resources:
-      - workflowtasksets
-      - workflowartifactgctasks
-    verbs:
-      - list
-      - watch
-  - apiGroups:
-      - argoproj.io
-    resources:
-      - workflowtasksets/status
-      - workflowartifactgctasks/status
-    verbs:
-      - patch
   {{- end }}
 
 {{- end }}
