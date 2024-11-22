@@ -69,6 +69,10 @@ workflow:
     # -- Adds Role and RoleBinding for the above specified service account to be able to run workflows.
     # A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below)
     create: true
+    # -- Allows permissions for the Argo Agent. Only required if using http/plugin templates
+    agentPermissions: false
+    # -- Allows permissions for the Argo Artifact GC pod. Only required if using artifact gc
+    artifactGC: false
     # -- Extra service accounts to be added to the RoleBinding
     serviceAccounts: []
       # - name: my-service-account
