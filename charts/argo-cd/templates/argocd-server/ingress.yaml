@@ -63,7 +63,7 @@ spec:
       secretName: argocd-server-tls
     {{- end }}
     {{- with .Values.server.ingress.extraTls }}
-      {{- toYaml . | nindent 4 }}
+      {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
   {{- end }}
 {{- end }}
