@@ -410,7 +410,7 @@ spec:
           protocol: TCP
         livenessProbe:
           httpGet:
-            path: /healthz?full=true
+            path: /healthz
             port: server
           initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
@@ -419,7 +419,7 @@ spec:
           failureThreshold: {{ .Values.server.livenessProbe.failureThreshold }}
         readinessProbe:
           httpGet:
-            path: /healthz
+            path: /healthz?full=true
             port: server
           initialDelaySeconds: {{ .Values.server.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.readinessProbe.periodSeconds }}
