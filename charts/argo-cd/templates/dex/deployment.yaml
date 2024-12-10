@@ -43,6 +43,9 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.dex.runtimeClassName | default .Values.global.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
       {{- with .Values.dex.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -80,6 +83,18 @@ spec:
           {{- with (concat .Values.global.env .Values.dex.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+          - name: ARGOCD_DEX_SERVER_LOGFORMAT
+            valueFrom:
+              configMapKeyRef:
+                key: dexserver.log.format
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_DEX_SERVER_LOGLEVEL
+            valueFrom:
+              configMapKeyRef:
+                key: dexserver.log.level
+                name: argocd-cmd-params-cm
+                optional: true
           - name: ARGOCD_DEX_SERVER_DISABLE_TLS
             valueFrom:
               configMapKeyRef:

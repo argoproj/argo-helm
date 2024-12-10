@@ -69,6 +69,10 @@ workflow:
     # -- Adds Role and RoleBinding for the above specified service account to be able to run workflows.
     # A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below)
     create: true
+    # -- Allows permissions for the Argo Agent. Only required if using http/plugin templates
+    agentPermissions: false
+    # -- Allows permissions for the Argo Artifact GC pod. Only required if using artifact gc
+    artifactGC: false
     # -- Extra service accounts to be added to the RoleBinding
     serviceAccounts: []
       # - name: my-service-account
@@ -106,6 +110,8 @@ controller:
     create: true
     # -- ConfigMap name
     name: ""
+    # -- ConfigMap annotations
+    annotations: {}
 
   # -- Limits the maximum number of incomplete workflows in a namespace
   namespaceParallelism:
@@ -125,6 +131,8 @@ controller:
     enabled: false
     # -- Path is the path where metrics are emitted. Must start with a "/".
     path: /metrics
+    # -- Frequency at which prometheus scrapes metrics
+    interval: 30s
     # -- Port is the port where metrics are emitted
     port: 9090
     # -- How often custom metrics are cleared from memory
@@ -141,6 +149,9 @@ controller:
     servicePortName: metrics
     # -- Flag to enable headless service
     headlessService: false
+    # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
+    ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#honorlabels
+    honorLabels: false
     # -- ServiceMonitor relabel configs to apply to samples before scraping
     ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
     relabelings: []
@@ -234,6 +245,8 @@ controller:
     enabled: false
     # -- telemetry path
     path: /telemetry
+    # -- Frequency at which prometheus scrapes telemetry data
+    interval: 30s
     # -- telemetry container port
     port: 8081
     # -- How often custom metrics are cleared from memory
@@ -300,6 +313,8 @@ controller:
   serviceAnnotations: {}
   # -- Optional labels to add to the controller Service
   serviceLabels: {}
+  # -- The class of the load balancer implementation
+  loadBalancerClass: ""
   # -- Source ranges to allow access to service from. Only applies to service type `LoadBalancer`
   loadBalancerSourceRanges: []
 
@@ -511,6 +526,8 @@ server:
   serviceAnnotations: {}
   # -- Optional labels to add to the UI Service
   serviceLabels: {}
+  # -- The class of the load balancer implementation
+  loadBalancerClass: ""
   # -- Static IP address to assign to loadBalancer service type `LoadBalancer`
   loadBalancerIP: ""
   # -- Source ranges to allow access to service from. Only applies to service type `LoadBalancer`
@@ -751,6 +768,12 @@ server:
 
   # -- Enables init containers to be added to the server deployment
   extraInitContainers: []
+
+  # -- Specify postStart and preStop lifecycle hooks for server container
+  lifecycle: {}
+
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
 
 # -- Array of extra K8s manifests to deploy
 extraObjects: []

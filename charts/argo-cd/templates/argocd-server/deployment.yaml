@@ -41,6 +41,9 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.server.runtimeClassName | default .Values.global.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
       {{- with .Values.server.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -250,12 +253,12 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
-                optional: true
                 {{- if .Values.externalRedis.host }}
                 key: redis-password
                 {{- else }}
                 key: auth
                 {{- end }}
+                optional: true
           - name: REDIS_SENTINEL_USERNAME
             valueFrom:
               secretKeyRef:
@@ -340,6 +343,36 @@ spec:
                 name: argocd-cmd-params-cm
                 key: server.api.content.types
                 optional: true
+          - name: ARGOCD_SERVER_WEBHOOK_PARALLELISM_LIMIT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.webhook.parallelism.limit
+                optional: true
+          - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_NEW_GIT_FILE_GLOBBING
+            valueFrom:
+              configMapKeyRef:
+                key: applicationsetcontroller.enable.new.git.file.globbing
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_APPLICATIONSET_CONTROLLER_SCM_ROOT_CA_PATH
+            valueFrom:
+              configMapKeyRef:
+                key: applicationsetcontroller.scm.root.ca.path
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_APPLICATIONSET_CONTROLLER_ALLOWED_SCM_PROVIDERS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: applicationsetcontroller.allowed.scm.providers
+                optional: true
+          - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_SCM_PROVIDERS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: applicationsetcontroller.enable.scm.providers
+                optional: true
         {{- with .Values.server.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
@@ -362,6 +395,8 @@ spec:
           name: styles
         - mountPath: /tmp
           name: tmp
+        - name: argocd-cmd-params-cm
+          mountPath: /home/argocd/params
         {{- if .Values.server.extensions.enabled }}
         - mountPath: /tmp/extensions
           name: extensions
@@ -510,6 +545,13 @@ spec:
             path: tls.crt
           - key: ca.crt
             path: ca.crt
+      - name: argocd-cmd-params-cm
+        configMap:
+          optional: true
+          name: argocd-cmd-params-cm
+          items:
+          - key: server.profile.enabled
+            path: profiler.enabled
       {{- if .Values.server.hostNetwork }}
       hostNetwork: {{ .Values.server.hostNetwork }}
       {{- end }}

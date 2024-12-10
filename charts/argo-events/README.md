@@ -60,11 +60,13 @@ done
 |-----|------|---------|-------------|
 | configs.jetstream.settings.maxFileStore | int | `-1` | Maximum size of the file storage (e.g. 20G) |
 | configs.jetstream.settings.maxMemoryStore | int | `-1` | Maximum size of the memory storage (e.g. 1G) |
+| configs.jetstream.streamConfig.discard | int | `0` | 0: DiscardOld, 1: DiscardNew |
 | configs.jetstream.streamConfig.duplicates | string | `"300s"` | Not documented at the moment |
 | configs.jetstream.streamConfig.maxAge | string | `"72h"` | Maximum age of existing messages, i.e. “72h”, “4h35m” |
 | configs.jetstream.streamConfig.maxBytes | string | `"1GB"` |  |
 | configs.jetstream.streamConfig.maxMsgs | int | `1000000` | Maximum number of messages before expiring oldest message |
 | configs.jetstream.streamConfig.replicas | int | `3` | Number of replicas, defaults to 3 and requires minimal 3 |
+| configs.jetstream.streamConfig.retention | int | `0` | 0: Limits, 1: Interest, 2: WorkQueue |
 | configs.jetstream.versions[0].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.14.0"` |  |
 | configs.jetstream.versions[0].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.14.0"` |  |
 | configs.jetstream.versions[0].natsImage | string | `"nats:2.10.10"` |  |

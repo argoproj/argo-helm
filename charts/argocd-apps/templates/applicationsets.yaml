@@ -17,6 +17,10 @@ metadata:
   {{- with $appSetData.namespace }}
   namespace: {{ . }}
   {{- end }}
+  {{- with $appSetData.finalizers }}
+  finalizers:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   {{- if hasKey $appSetData "goTemplate" }}
   goTemplate: {{ $appSetData.goTemplate }}

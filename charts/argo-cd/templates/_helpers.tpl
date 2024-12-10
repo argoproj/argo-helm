@@ -183,7 +183,7 @@ Argo Configuration Preset Values (Influenced by Values configuration)
 {{- define "argo-cd.config.cm.presets" -}}
 {{- $presets := dict -}}
 {{- $_ := set $presets "url" (printf "https://%s" .Values.global.domain) -}}
-{{- if index .Values.configs.cm "statusbadge.enabled" | eq true -}}
+{{- if eq (toString (index .Values.configs.cm "statusbadge.enabled")) "true" -}}
 {{- $_ := set $presets "statusbadge.url" (printf "https://%s/" .Values.global.domain) -}}
 {{- end -}}
 {{- if .Values.configs.styles -}}

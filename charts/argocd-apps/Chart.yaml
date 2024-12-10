@@ -2,7 +2,7 @@ apiVersion: v2
 name: argocd-apps
 description: A Helm chart for managing additional Argo CD Applications and Projects
 type: application
-version: 2.0.0
+version: 2.0.2
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 keywords:
@@ -18,4 +18,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: added
-      description: make the chart use maps instead of lists
+      description: allow setting applicationset finalizers
