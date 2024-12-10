@@ -118,7 +118,7 @@ rules:
     - patch
     - delete
 
-{{- if .Values.server.clusterWorkflowTemplates.enabled }}
+{{- if and .Values.server.clusterWorkflowTemplates.enabled (not .Values.singleNamespace) }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

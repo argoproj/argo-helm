@@ -94,6 +94,10 @@ configs:
       replicas: 3
       # -- Not documented at the moment
       duplicates: 300s
+      # -- 0: Limits, 1: Interest, 2: WorkQueue
+      retention: 0
+      # -- 0: DiscardOld, 1: DiscardNew
+      discard: 0
     # Supported versions of JetStream eventbus
     versions:
       - version: latest

@@ -14,25 +14,24 @@ rules:
     resources:
       - '*'
     verbs:
-      - delete
-      - get
-      - patch
+      - delete  # supports deletion a live object in UI
+      - get     # supports viewing live object manifest in UI
+      - patch   # supports `argocd app patch`
+      - list    # supports `argocd appset generate` with cluster generator
   - apiGroups:
       - ""
     resources:
       - events
     verbs:
-      - list
-      {{- if (index .Values.configs.params "application.namespaces") }}
+      - list    # supports listing events in UI
       - create
-      {{- end }}
   - apiGroups:
       - ""
     resources:
       - pods
       - pods/log
     verbs:
-      - get
+      - get     # supports viewing pod logs from UI
   {{- if eq (toString (index .Values.configs.cm "exec.enabled")) "true" }}
   - apiGroups:
       - ""

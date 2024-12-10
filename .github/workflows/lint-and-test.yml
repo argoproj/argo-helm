@@ -13,7 +13,7 @@ jobs:
       options: --user 1001
     steps:
       - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Run ah lint
         working-directory: ./charts
         run: ah lint
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
 
@@ -32,7 +32,7 @@ jobs:
           version: v3.10.1 # Also update in publish.yaml
 
       - name: Set up python
-        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
         with:
           python-version: 3.9
 
@@ -41,7 +41,7 @@ jobs:
         uses: helm/chart-testing-action@e6669bcd63d7cb57cb4380c33043eebe5d111992 # v2.6.1
         with:
           # Note: Also update in scripts/lint.sh
-          version: v3.10.0
+          version: v3.11.0
 
       - name: List changed charts
         id: list-changed
@@ -72,6 +72,14 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         with:
           config: .github/configs/kind-config.yaml
+      - name: Deploy latest ArgoCD CRDs when testing ArgoCD extensions
+        if: |
+          contains(steps.list-changed.outputs.changed_charts, 'argocd-image-updater') ||
+          contains(steps.list-changed.outputs.changed_charts, 'argocd-apps')
+        run: |
+          helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
+          helm dependency build charts/argo-cd/
+          helm template charts/argo-cd/ --set server.extensions.enabled=true -s templates/crds/* | kubectl apply -f -
 
       - name: Skip HPA tests of ArgoCD
         if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')

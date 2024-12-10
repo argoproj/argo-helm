@@ -17,21 +17,14 @@ rules:
       - get
       - list
       - watch
-  - apiGroups:
-      - argoproj.io
-    resources:
-      - applications
-    verbs:
-      - get
-      - list
-      - update
-      - patch
+  {{- if not .Values.createClusterRoles }}
   - apiGroups:
       - ""
     resources:
       - events
     verbs:
       - create
+  {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -43,6 +36,48 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
+  name: {{ include "argocd-image-updater.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "argocd-image-updater.serviceAccountName" . }}
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
+{{- end }}
+---
+{{- if and .Values.rbac.enabled .Values.createClusterRoles }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    {{- include "argocd-image-updater.labels" . | nindent 4 }}
+  name: {{ include "argocd-image-updater.fullname" . }}
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
+rules:
+  - apiGroups:
+    - ""
+    resources:
+      - events
+    verbs:
+      - create
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - applications
+    verbs:
+      - get
+      - list
+      - update
+      - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    {{- include "argocd-image-updater.labels" . | nindent 4 }}
+  name: {{ include "argocd-image-updater.fullname" . }}
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
   name: {{ include "argocd-image-updater.fullname" . }}
 subjects:
 - kind: ServiceAccount

@@ -31,6 +31,7 @@ spec:
       metricRelabelings:
         {{- toYaml . |nindent 8 }}
       {{- end }}
+      honorLabels: {{ .Values.dex.metrics.serviceMonitor.honorLabels }}
       {{- with .Values.dex.metrics.serviceMonitor.scheme }}
       scheme: {{ . }}
       {{- end }}
