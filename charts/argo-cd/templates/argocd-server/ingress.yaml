@@ -9,7 +9,7 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     {{- with .Values.server.ingress.labels }}
-      {{- toYaml . | nindent 4 }}
+      {{- tpl (toYaml .) . | nindent 4 }}
     {{- end }}
   {{- with .Values.server.ingress.annotations }}
   annotations:
@@ -19,28 +19,28 @@ metadata:
   {{- end }}
 spec:
   {{- with .Values.server.ingress.ingressClassName }}
-  ingressClassName: {{ . }}
+  ingressClassName: {{ tpl . $ }}
   {{- end }}
   rules:
-    - host: {{ .Values.server.ingress.hostname | default .Values.global.domain }}
+    - host: {{ tpl (.Values.server.ingress.hostname | default .Values.global.domain) $ }}
       http:
         paths:
           {{- with .Values.server.ingress.extraPaths }}
             {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
-          - path: {{ .Values.server.ingress.path }}
-            pathType: {{ $.Values.server.ingress.pathType }}
+          - path: {{ tpl .Values.server.ingress.path $ }}
+            pathType: {{ tpl .Values.server.ingress.pathType $ }}
             backend:
               service:
                 name: {{ include "argo-cd.server.fullname" . }}
                 port:
                   number: {{ $servicePort }}
     {{- range .Values.server.ingress.extraHosts }}
-    - host: {{ .name | quote }}
+    - host: {{ tpl .name $ | quote }}
       http:
         paths:
-          - path: {{ default $.Values.server.ingress.path .path }}
-            pathType: {{ default $.Values.server.ingress.pathType .pathType }}
+          - path: {{ tpl (default $.Values.server.ingress.path .path) $ }}
+            pathType: {{ tpl (default $.Values.server.ingress.pathType .pathType) $ }}
             backend:
               service:
                 name: {{ include "argo-cd.server.fullname" $ }}
@@ -54,10 +54,10 @@ spec:
   tls:
     {{- if .Values.server.ingress.tls }}
     - hosts:
-      - {{ .Values.server.ingress.hostname | default .Values.global.domain }}
+      - {{ tpl (.Values.server.ingress.hostname | default .Values.global.domain) $ }}
       {{- range .Values.server.ingress.extraHosts }}
         {{- if .name }}
-      -  {{ .name }}
+      - {{ tpl .name $ }}
         {{- end }}
       {{- end }}
       secretName: argocd-server-tls
