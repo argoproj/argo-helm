@@ -783,6 +783,7 @@ NAME: my-release
 | configs.secret.gogsSecret | string | `""` | Shared secret for authenticating Gogs webhook events |
 | configs.secret.labels | object | `{}` | Labels to be added to argocd-secret |
 | configs.ssh.annotations | object | `{}` | Annotations to be added to argocd-ssh-known-hosts-cm configmap |
+| configs.ssh.create | bool | `true` | Specifies if the argocd-ssh-known-hosts-cm configmap should be created by Helm. |
 | configs.ssh.extraHosts | string | `""` | Additional known hosts for private repositories |
 | configs.ssh.knownHosts | string | See [values.yaml] | Known hosts to be added to the known host list by default. |
 | configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |

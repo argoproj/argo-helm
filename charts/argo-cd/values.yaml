@@ -371,6 +371,9 @@ configs:
   # SSH known hosts for Git repositories
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#ssh-known-host-public-keys
   ssh:
+    # -- Specifies if the argocd-ssh-known-hosts-cm configmap should be created by Helm.
+    create: true
+
     # -- Annotations to be added to argocd-ssh-known-hosts-cm configmap
     annotations: {}
 
