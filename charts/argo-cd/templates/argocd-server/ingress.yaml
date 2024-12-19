@@ -28,8 +28,8 @@ spec:
           {{- with .Values.server.ingress.extraPaths }}
             {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
-          - path: {{ tpl .Values.server.ingress.path $ }}
-            pathType: {{ tpl .Values.server.ingress.pathType $ }}
+          - path: {{ .Values.server.ingress.path }}
+            pathType: {{ $.Values.server.ingress.pathType }}
             backend:
               service:
                 name: {{ include "argo-cd.server.fullname" . }}
@@ -39,8 +39,8 @@ spec:
     - host: {{ tpl .name $ | quote }}
       http:
         paths:
-          - path: {{ tpl (default $.Values.server.ingress.path .path) $ }}
-            pathType: {{ tpl (default $.Values.server.ingress.pathType .pathType) $ }}
+          - path: {{ default $.Values.server.ingress.path .path }}
+            pathType: {{ default $.Values.server.ingress.pathType .pathType }}
             backend:
               service:
                 name: {{ include "argo-cd.server.fullname" $ }}
