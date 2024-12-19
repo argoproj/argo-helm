@@ -3843,6 +3843,13 @@ eventReporter:
     #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
+  # Configuration of sources-server using
+  sourcesServer:
+    # -- Use sources-server logic instead of repo-server
+    enabled: false
+    # -- base URL of sources-server
+    baseURL: "http://sources-server"
+
   serviceAccount:
     # -- Create a service account for the event reporter
     create: true
