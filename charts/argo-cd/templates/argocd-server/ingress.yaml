@@ -14,7 +14,7 @@ metadata:
   {{- with .Values.server.ingress.annotations }}
   annotations:
     {{- range $key, $value := . }}
-    {{ $key }}: {{ $value | quote }}
+    {{ $key }}: {{ tpl $value $ | quote }}
     {{- end }}
   {{- end }}
 spec:
