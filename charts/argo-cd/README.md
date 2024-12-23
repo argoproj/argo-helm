@@ -784,6 +784,8 @@ NAME: my-release
 | eventReporter.serviceAccount.create | bool | `true` | Create a service account for the event reporter |
 | eventReporter.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | eventReporter.serviceAccount.name | string | `"event-reporter"` | Service account name |
+| eventReporter.sourcesServer.baseURL | string | `"http://sources-server"` | base URL of sources-server |
+| eventReporter.sourcesServer.enabled | bool | `false` | Use sources-server logic instead of repo-server |
 | eventReporter.statefulsetAnnotations | object | `{}` | Annotations for the event reporter StatefulSet |
 | eventReporter.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | eventReporter.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |

@@ -70,6 +70,10 @@ spec:
           {{- with (concat .Values.global.env .Values.eventReporter.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+          - name: SOURCES_SERVER_ENABLED
+            value: {{ .Values.eventReporter.sourcesServer.enabled | quote }}
+          - name: SOURCES_SERVER_BASE_URL
+            value: {{ .Values.eventReporter.sourcesServer.baseURL | quote }}
           - name: EVENT_REPORTER_APPLICATION_SERVER
             value: {{ include "argo-cd.eventReporter.argocd-server-adress" . }}
           - name: EVENT_REPORTER_REPLICAS
