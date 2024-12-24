@@ -22,7 +22,7 @@ spec:
   ingressClassName: {{ tpl . $ }}
   {{- end }}
   rules:
-    - host: {{ tpl (.Values.server.ingress.hostname | default .Values.global.domain) $ }}
+    - host: {{ tpl (.Values.server.ingress.hostname) $ | default .Values.global.domain }}
       http:
         paths:
           {{- with .Values.server.ingress.extraPaths }}
