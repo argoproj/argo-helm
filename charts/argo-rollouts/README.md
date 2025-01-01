@@ -98,6 +98,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.image.repository | string | `"argoproj/argo-rollouts"` | Repository to use |
 | controller.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
 | controller.initContainers | list | `[]` | Init containers to add to the rollouts controller pod |
+| controller.lifecycle | object | `{}` | Specify lifecycle hooks for the  controller |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
 | controller.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
 | controller.logging.kloglevel | string | `"0"` | Set the klog logging level |
@@ -125,6 +126,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.readinessProbe | object | See [values.yaml] | Configure readiness [probe] for the controller |
 | controller.replicas | int | `2` | The number of controller pods to run |
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
+| controller.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the controller |
 | controller.trafficRouterPlugins | list | `[]` | Configures 3rd party traffic router plugins for controller |
