@@ -27534,6 +27534,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Support ephemeral credentials for s3 artifact repository
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.6.2
+    created: "2025-01-03T15:16:17.982508932Z"
+    description: A Helm chart for Argo Workflows
+    digest: d30622a0ef9d4ebbff9514f3afc8dffd85c0394a202bbbf55f6e2aa51daf2177
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.45.3/argo-workflows-0.45.3.tgz
+    version: 0.45.3
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Reference to ingress link was fixed
       artifacthub.io/signKey: |
@@ -34818,4 +34842,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2025-01-03T14:07:46.189968806Z"
+generated: "2025-01-03T15:16:17.985675493Z"
