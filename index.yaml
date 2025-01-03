@@ -25041,6 +25041,34 @@ entries:
   argo-rollouts:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Add lifecycle settings for controller
+        - kind: added
+          description: Add terminationGracePeriodSeconds for controller
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.7.2
+    created: "2025-01-03T14:07:46.188387968Z"
+    description: A Helm chart for Argo Rollouts
+    digest: 114b212af58d678d34a0efe7580dc05518d527f56f697d553284e60187adb4c5
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-rollouts
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-rollouts
+    sources:
+    - https://github.com/argoproj/argo-rollouts
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-rollouts-2.38.2/argo-rollouts-2.38.2.tgz
+    version: 2.38.2
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Correct outdated URL for ingress
       artifacthub.io/signKey: |
@@ -34790,4 +34818,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2025-01-02T06:18:18.446743361Z"
+generated: "2025-01-03T14:07:46.189968806Z"
