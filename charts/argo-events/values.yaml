@@ -243,7 +243,7 @@ controller:
     # runAsNonRoot: true
 
   ## Readiness and liveness probes for default backend
-  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   readinessProbe:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
@@ -281,7 +281,7 @@ controller:
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the events controller
-  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
   # - maxSkew: 1
@@ -409,7 +409,7 @@ webhook:
     # runAsNonRoot: true
 
   ## Readiness and liveness probes for default backend
-  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   readinessProbe:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
@@ -447,7 +447,7 @@ webhook:
   affinity: {}
 
   # -- Assign custom [TopologySpreadConstraints] rules to the event controller
-  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
   topologySpreadConstraints: []
   # - maxSkew: 1

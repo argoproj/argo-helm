@@ -24,6 +24,15 @@ rules:
       - events
     verbs:
       - create
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - applications
+    verbs:
+      - get
+      - list
+      - update
+      - patch
   {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
