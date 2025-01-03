@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v1.7.2
 description: A Helm chart for Argo Rollouts
 name: argo-rollouts
-version: 2.38.1
+version: 2.38.2
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
 keywords:
@@ -18,5 +18,7 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Correct outdated URL for ingress
+    - kind: added
+      description: Add lifecycle settings for controller
+    - kind: added
+      description: Add terminationGracePeriodSeconds for controller
