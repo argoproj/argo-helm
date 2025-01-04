@@ -78,6 +78,9 @@ spec:
           {{- toYaml .Values.controller.readinessProbe | nindent 10 }}
         securityContext:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
+        {{- with .Values.controller.lifecycle }}
+        lifecycle: {{ toYaml . | nindent 10 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
         volumeMounts:
@@ -101,6 +104,9 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.controller.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
       {{- if .Values.controller.tolerations }}
       tolerations:
         {{- toYaml .Values.controller.tolerations | nindent 8 }}

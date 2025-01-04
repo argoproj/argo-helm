@@ -79,6 +79,10 @@ controller:
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+  # -- Specify lifecycle hooks for the  controller
+  lifecycle: {}
   # -- [priorityClassName] for the controller
   priorityClassName: ""
   # -- The number of controller pods to run
