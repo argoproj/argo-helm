@@ -99,7 +99,7 @@
     },
     {
       "matchPackagePatterns": ["argoprojlabs/argocd-extension-installer"],
-      "commitMessagePrefix": "chore({{{replace 'argoprojlabs/' '' depName}}}):",
+      "commitMessagePrefix": "chore({{{replace '*' 'argo-cd' depName}}}):",
       "postUpgradeTasks": {
         "commands": ["./scripts/renovate-bump-version.sh {{depName}}"]
       }
@@ -110,7 +110,7 @@
     },
     {
       "matchPackagePatterns": ["public.ecr.aws/bitnami/redis-exporter"],
-      "commitMessagePrefix": "chore({{{replace 'public.ecr.aws/' '' depName}}}):",
+      "commitMessagePrefix": "chore({{{replace '*' 'argo-cd' depName}}}):",
       "postUpgradeTasks": {
         "commands": ["./scripts/renovate-bump-version.sh {{depName}}"]
       }
