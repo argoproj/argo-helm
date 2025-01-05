@@ -102,6 +102,13 @@
       "enabled": false
     },
     {
+      "matchPackagePatterns": ["public.ecr.aws/bitnami/redis-exporter"],
+      "commitMessagePrefix": "chore({{{replace 'public.ecr.aws/' '' depName}}}):",
+      "postUpgradeTasks": {
+        "commands": ["./scripts/renovate-bump-version.sh {{depName}}"]
+      }
+    },
+    {
       "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
       "extends": ["schedule:monthly"]
     }
