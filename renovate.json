@@ -98,6 +98,13 @@
       }
     },
     {
+      "matchPackagePatterns": ["argoprojlabs/argocd-extension-installer"],
+      "commitMessagePrefix": "chore({{{replace 'argoprojlabs/' '' depName}}}):",
+      "postUpgradeTasks": {
+        "commands": ["./scripts/renovate-bump-version.sh {{depName}}"]
+      }
+    },
+    {
       "matchPackagePatterns": ["redis-ha"],
       "enabled": false
     },

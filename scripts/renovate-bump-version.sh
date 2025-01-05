@@ -10,7 +10,14 @@ chartName=$(echo "$depName" | sed -e "s+^argoproj/++" -e "s+^argoproj-labs/++")
 echo "Changed chart name is: $chartName"
 echo "----------------------------------------"
 
-parentDir="charts/${chartName}"
+case "${chartName}" in
+  *"redis"*|*"argocd-extension-installer")
+    parentDir="charts/argo-cd"
+    ;;
+  *)
+    parentDir="charts/${chartName}"
+    ;;
+esac
 
 # Bump the chart version by one patch version
 version=$(grep '^version:' "${parentDir}/Chart.yaml" | awk '{print $2}')
