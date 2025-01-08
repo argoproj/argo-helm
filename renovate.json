@@ -5,12 +5,14 @@
   },
   "extends": [
     "config:recommended",
-    "docker:enableMajor"
+    "docker:enableMajor",
+    ":gitSignOff"
   ],
   "labels": ["renovate"],
   "includePaths": [
     "**/charts/argo-workflows/Chart.yaml",
     "**/charts/argo-cd/Chart.yaml",
+    "**/charts/argo-cd/values.yaml",
     "**/charts/argo-events/Chart.yaml",
     "**/charts/argo-rollouts/Chart.yaml",
     "**/charts/argocd-image-updater/Chart.yaml",
@@ -98,6 +100,13 @@
     {
       "matchPackagePatterns": ["redis-ha"],
       "enabled": false
+    },
+    {
+      "matchPackagePatterns": ["public.ecr.aws/bitnami/redis-exporter"],
+      "commitMessagePrefix": "chore({{{replace 'public.ecr.aws/' '' depName}}}):",
+      "postUpgradeTasks": {
+        "commands": ["./scripts/renovate-bump-version.sh {{depName}}"]
+      }
     },
     {
       "matchPackageNames": ["ghcr.io/renovatebot/renovate"],

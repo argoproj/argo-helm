@@ -1,0 +1,29 @@
+{{- if .Values.workflow.rbac.artifactGC -}}
+  {{- range $namespace := or .Values.singleNamespace false | ternary (list "") (append .Values.controller.workflowNamespaces (coalesce .Values.workflow.namespace (include "argo-workflows.namespace" .)) | uniq)  }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "argo-workflows.fullname" $ }}-wf-artifactgc
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" $ "component" $.Values.controller.name "name" $.Values.controller.name) | nindent 4 }}
+    {{- with $namespace }}
+  namespace: {{ . }}
+    {{- end }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ template "argo-workflows.fullname" $ }}-wf-artifactgc
+subjects:
+  - kind: ServiceAccount
+    name: {{ $.Values.workflow.serviceAccount.name }}
+    {{- with $namespace }}
+    namespace: {{ . }}
+    {{- end }}
+  {{- range $.Values.workflow.rbac.serviceAccounts }}
+  - kind: ServiceAccount
+    name: {{ .name }}
+    namespace: {{ .namespace | quote }}
+  {{- end }}
+  {{- end }}
+{{- end }}

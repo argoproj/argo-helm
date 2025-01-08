@@ -37,6 +37,9 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.controller.runtimeClassName | default .Values.global.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
       {{- with .Values.controller.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -153,6 +156,24 @@ spec:
                 name: argocd-cmd-params-cm
                 key: controller.self.heal.timeout.seconds
                 optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_TIMEOUT_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.self.heal.backoff.timeout.seconds
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_FACTOR
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.self.heal.backoff.factor
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_CAP_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.self.heal.backoff.cap.seconds
+                optional: true
           - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_PLAINTEXT
             valueFrom:
               configMapKeyRef:
@@ -207,10 +228,10 @@ spec:
                 name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
                 {{- if .Values.externalRedis.host }}
                 key: redis-password
-                optional: true
                 {{- else }}
                 key: auth
                 {{- end }}
+                optional: true
           - name: REDIS_SENTINEL_USERNAME
             valueFrom:
               secretKeyRef:
@@ -321,6 +342,8 @@ spec:
           name: argocd-repo-server-tls
         - mountPath: /home/argocd
           name: argocd-home
+        - name: argocd-cmd-params-cm
+          mountPath: /home/argocd/params
       {{- with .Values.controller.extraContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
@@ -373,6 +396,13 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
+      - name: argocd-cmd-params-cm
+        configMap:
+          optional: true
+          name: argocd-cmd-params-cm
+          items:
+          - key: controller.profile.enabled
+            path: profiler.enabled
       {{- if .Values.controller.hostNetwork }}
       hostNetwork: {{ .Values.controller.hostNetwork }}
       {{- end }}

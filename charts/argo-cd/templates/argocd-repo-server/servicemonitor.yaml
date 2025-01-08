@@ -34,6 +34,7 @@ spec:
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      honorLabels: {{ .Values.repoServer.metrics.serviceMonitor.honorLabels }}
       {{- with .Values.repoServer.metrics.serviceMonitor.scheme }}
       scheme: {{ . }}
       {{- end }}
