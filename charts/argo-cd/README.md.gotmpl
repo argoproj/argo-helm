@@ -190,7 +190,7 @@ server:
       alb.ingress.kubernetes.io/scheme: internal
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/backend-protocol: HTTP
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":80}, {"HTTPS":443}]'
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'
       alb.ingress.kubernetes.io/ssl-redirect: '443'
     aws:
       serviceType: ClusterIP # <- Used with target-type: ip
