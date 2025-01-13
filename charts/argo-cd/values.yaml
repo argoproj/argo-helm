@@ -412,6 +412,9 @@ configs:
       #   ...
       #   -----END CERTIFICATE-----
 
+    # -- Specifies if the argocd-tls-certs-cm configmap should be created by Helm.
+    create: true
+
   # ConfigMap for Config Management Plugins
   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/
   cmp:
