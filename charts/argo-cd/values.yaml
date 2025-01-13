@@ -303,7 +303,10 @@ configs:
     # @default -- `""` (default is only the ns where the controller is installed)
     ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Appset-Any-Namespace/
     applicationsetcontroller.namespaces: ""
-
+    # -- Enables caching of github api requests
+    applicationsetcontroller.enable.github.caching: false
+    # -- Max items to store in the github lru cache
+    applicationsetcontroller.github.cache.size: 1000
     # -- Enables [Applications in any namespace]
     ## List of additional namespaces where applications may be created in and reconciled from.
     ## The namespace where Argo CD is installed to will always be allowed.
