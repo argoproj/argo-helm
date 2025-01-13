@@ -211,6 +211,18 @@ spec:
                   name: argocd-cmd-params-cm
                   key: applicationsetcontroller.webhook.parallelism.limit
                   optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_GITHUB_CACHE
+              valueFrom:
+                configMapKeyRef:
+                  name: argocd-cmd-params-cm
+                  key: applicationsetcontroller.enable.github.cache
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_GITHUB_CACHE_SIZE
+              valueFrom:
+                configMapKeyRef:
+                  name: argocd-cmd-params-cm
+                  key: applicationsetcontroller.github.cache.size
+                  optional: true
           {{- with .Values.applicationSet.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
