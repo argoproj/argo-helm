@@ -36,6 +36,9 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.applicationSet.runtimeClassName | default .Values.global.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
       {{- with .Values.applicationSet.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -201,6 +204,12 @@ spec:
                 configMapKeyRef:
                   name: argocd-cmd-params-cm
                   key: applicationsetcontroller.enable.scm.providers
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_WEBHOOK_PARALLELISM_LIMIT
+              valueFrom:
+                configMapKeyRef:
+                  name: argocd-cmd-params-cm
+                  key: applicationsetcontroller.webhook.parallelism.limit
                   optional: true
           {{- with .Values.applicationSet.extraEnvFrom }}
           envFrom:

@@ -79,6 +79,10 @@ controller:
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+  # -- Specify lifecycle hooks for the  controller
+  lifecycle: {}
   # -- [priorityClassName] for the controller
   priorityClassName: ""
   # -- The number of controller pods to run
@@ -209,17 +213,15 @@ controller:
 
   # -- Configures 3rd party metric providers for controller
   ## Ref: https://argo-rollouts.readthedocs.io/en/stable/analysis/plugins/
-  metricProviderPlugins: {}
-    # metricProviderPlugins: |-
-    #   - name: "argoproj-labs/sample-prometheus" # name of the plugin, it must match the name required by the plugin so that it can find its configuration
-    #     location: "file://./my-custom-plugin" # supports http(s):// urls and file://
+  metricProviderPlugins: []
+    # - name: "argoproj-labs/sample-prometheus" # name of the plugin, it must match the name required by the plugin so that it can find its configuration
+    #   location: "file://./my-custom-plugin" # supports http(s):// urls and file://
 
   # -- Configures 3rd party traffic router plugins for controller
   ## Ref: https://argo-rollouts.readthedocs.io/en/stable/features/traffic-management/plugins/
-  trafficRouterPlugins: {}
-    # trafficRouterPlugins: |-
-    #   - name: "argoproj-labs/sample-nginx" # name of the plugin, it must match the name required by the plugin so it can find it's configuration
-    #     location: "file://./my-custom-plugin" # supports http(s):// urls and file://
+  trafficRouterPlugins: []
+    # - name: "argoproj-labs/sample-nginx" # name of the plugin, it must match the name required by the plugin so it can find it's configuration
+    #   location: "file://./my-custom-plugin" # supports http(s):// urls and file://
 
 serviceAccount:
   # -- Specifies whether a service account should be created
@@ -356,6 +358,8 @@ dashboard:
   service:
     # -- Sets the type of the Service
     type: ClusterIP
+    # -- The class of the load balancer implementation
+    loadBalancerClass: ""
     # -- LoadBalancer will get created with the IP specified in this field
     loadBalancerIP: ""
     # -- Source IP ranges to allow access to service from
@@ -397,7 +401,7 @@ dashboard:
     maxUnavailable: # 0
 
   ## Ingress configuration.
-  ## ref: https://kubernetes.io/docs/user-guide/ingress/
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   ##
   ingress:
     # -- Enable dashboard ingress support
@@ -454,7 +458,8 @@ notifications:
     create: true
 
   secret:
-    # -- Whether to create notifications secret
+    # -- Whether to create notifications secret.
+    ## If you want to manually create secret, do not forget to add proper label to it: "app.kubernetes.io/component: {{ .Values.controller.component }}".
     create: false
     # -- Generic key:value pairs to be inserted into the notifications secret
     items: {}

@@ -36,6 +36,9 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.notifications.runtimeClassName | default .Values.global.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
       {{- with .Values.notifications.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -97,6 +100,12 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: notificationscontroller.selfservice.enabled
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_NOTIFICATION_CONTROLLER_REPO_SERVER_PLAINTEXT
+              valueFrom:
+                configMapKeyRef:
+                  key: notificationscontroller.repo.server.plaintext
                   name: argocd-cmd-params-cm
                   optional: true
           {{- with .Values.notifications.extraEnvFrom }}

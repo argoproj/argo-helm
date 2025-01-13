@@ -95,7 +95,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-            - name: BASE_HREF
+            - name: ARGO_BASE_HREF
               value: {{ .Values.server.baseHref | quote }}
           {{- with .Values.server.extraEnv }}
             {{- toYaml . | nindent 12 }}
@@ -108,9 +108,16 @@ spec:
           {{- with .Values.server.volumeMounts }}
             {{- toYaml . | nindent 10}}
           {{- end }}
+          {{- with .Values.server.lifecycle }}
+          lifecycle:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         {{- with .Values.server.extraContainers }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+      {{- with .Values.server.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
       {{- with .Values.images.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

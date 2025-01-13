@@ -60,7 +60,7 @@ For full list of changes please check ArtifactHub [changelog].
 | notifications.configmap.create | bool | `true` | Whether to create notifications configmap |
 | notifications.notifiers | object | `{}` | Configures notification services |
 | notifications.secret.annotations | object | `{}` | Annotations to be added to the notifications secret |
-| notifications.secret.create | bool | `false` | Whether to create notifications secret |
+| notifications.secret.create | bool | `false` | Whether to create notifications secret. |
 | notifications.secret.items | object | `{}` | Generic key:value pairs to be inserted into the notifications secret |
 | notifications.subscriptions | list | `[]` | The subscriptions define the subscriptions to the triggers in a general way for all rollouts |
 | notifications.templates | object | `{}` | Notification templates |
@@ -98,11 +98,12 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.image.repository | string | `"argoproj/argo-rollouts"` | Repository to use |
 | controller.image.tag | string | `""` | Overrides the image tag (default is the chart appVersion) |
 | controller.initContainers | list | `[]` | Init containers to add to the rollouts controller pod |
+| controller.lifecycle | object | `{}` | Specify lifecycle hooks for the  controller |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
 | controller.logging.format | string | `"text"` | Set the logging format (one of: `text`, `json`) |
 | controller.logging.kloglevel | string | `"0"` | Set the klog logging level |
 | controller.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
-| controller.metricProviderPlugins | object | `{}` | Configures 3rd party metric providers for controller |
+| controller.metricProviderPlugins | list | `[]` | Configures 3rd party metric providers for controller |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
 | controller.metrics.service.annotations | object | `{}` | Service annotations |
 | controller.metrics.service.port | int | `8090` | Metrics service port |
@@ -125,9 +126,10 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.readinessProbe | object | See [values.yaml] | Configure readiness [probe] for the controller |
 | controller.replicas | int | `2` | The number of controller pods to run |
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
+| controller.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the controller |
-| controller.trafficRouterPlugins | object | `{}` | Configures 3rd party traffic router plugins for controller |
+| controller.trafficRouterPlugins | list | `[]` | Configures 3rd party traffic router plugins for controller |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to add to the controller container |
 | controller.volumes | list | `[]` | Additional volumes to add to the controller pod |
 | podAnnotations | object | `{}` | Annotations for the all deployed pods |
@@ -182,6 +184,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.service.annotations | object | `{}` | Service annotations |
 | dashboard.service.externalIPs | list | `[]` | Dashboard service external IPs |
 | dashboard.service.labels | object | `{}` | Service labels |
+| dashboard.service.loadBalancerClass | string | `""` | The class of the load balancer implementation |
 | dashboard.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | dashboard.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
 | dashboard.service.nodePort | int | `nil` | Service nodePort |
