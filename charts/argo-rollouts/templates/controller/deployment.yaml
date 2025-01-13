@@ -31,9 +31,7 @@ spec:
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-        {{/* Add the checksum of the ConfigMap to the annotations */}}
-        {{/* This ensures that ConfigMap changes trigger a rolling update */}}
-        configmap-checksum: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/cm: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       {{- end }}
       labels:
         {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}

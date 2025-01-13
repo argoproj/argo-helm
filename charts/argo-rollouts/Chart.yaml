@@ -18,7 +18,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: added
-      description: Add lifecycle settings for controller
-    - kind: added
-      description: Add terminationGracePeriodSeconds for controller
+    - kind: changed
+      description: argo-rollouts will re-deploy if changes are made to the argo-rollouts configmap.
