@@ -78,6 +78,9 @@ spec:
         - /usr/local/bin/argocd-repo-server
         - --port={{ .Values.repoServer.containerPorts.server }}
         - --metrics-port={{ .Values.repoServer.containerPorts.metrics }}
+        {{- with .Values.externalRedis.tls }}
+        - --redis-use-tls={{ . }}
+        {{- end }}
         {{- with .Values.repoServer.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
