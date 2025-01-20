@@ -1663,6 +1663,9 @@ externalRedis:
   # -- The name of an existing secret with Redis (must contain key `redis-password`) and Sentinel credentials.
   # When it's set, the `externalRedis.password` parameter is ignored
   existingSecret: ""
+  # -- Use TLS to connect to Redis
+  # when set to true, it passes redis-use-tls flag to the repo-server, application controller, and server pods args
+  tls: false
   # -- External Redis Secret annotations
   secretAnnotations: {}
 
