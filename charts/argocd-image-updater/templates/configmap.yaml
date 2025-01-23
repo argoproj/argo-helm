@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
-  name: {{ include "argocd-image-updater.fullname" . }}-config
+  name: {{ .Values.config.name }}
   namespace: {{ include "argocd-image-updater.namespace" . | quote }}
 data:
   {{- with .Values.config.applicationsAPIKind }}
