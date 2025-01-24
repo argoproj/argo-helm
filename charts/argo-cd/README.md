@@ -278,6 +278,10 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 7.7.17
+
+In clusterCredentials, key is used as the name of the cluster that will be registered in argocd. We have simplified the above condition by removing the require function.
+
 ### 7.0.0
 
 We changed the type of `.Values.configs.clusterCredentials` from `list` to `object`.
