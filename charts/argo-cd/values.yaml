@@ -175,6 +175,10 @@ configs:
     # -- The name of tracking label used by Argo CD for resource pruning
     application.instanceLabelKey: argocd.argoproj.io/instance
 
+    # -- Enable control of the service account used for the sync operation
+    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/app-sync-using-impersonation/
+    application.sync.impersonation.enabled: "false"
+
     # -- Enable logs RBAC enforcement
     ## Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.3-2.4/#enable-logs-rbac-enforcement
     server.rbac.log.enforce.enable: false
