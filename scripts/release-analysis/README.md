@@ -19,3 +19,9 @@ docker run --rm -e GITHUB_TOKEN=$GITHUB_TOKEN -v ${PWD}:/app team-helm-analysis
 ```
 
 You should get 3 csvs and 4 graphs once this completes. It takes around 5 mins to run.
+
+
+## Linting
+I ran megalinter against this just to give some confidence that it's not completely broken. It's not perfect, but it's something.
+
+Run megalinter locally against this directory with: `docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:rw -v $(pwd):/tmp/lint:rw oxsecurity/megalinter:v8`
