@@ -4,7 +4,7 @@ Compare the time of the upstream release to the time of the equivalent Helm Char
 
 
 ## How to run
-This is quite github-api-intensive, so ou'll need a github PAT
+This is quite github-api-intensive, so you'll need a github PAT
 
 ```bash
 # Build the container
