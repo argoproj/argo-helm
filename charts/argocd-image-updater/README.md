@@ -70,6 +70,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes affinity settings for the deployment |
 | authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts` |
+| authScripts.name | string | `"argocd-image-updater-authscripts"` | Name of the authentication scripts ConfigMap |
 | authScripts.scripts | object | `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents |
 | config.applicationsAPIKind | string | `""` | API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`) |
 | config.argocd.grpcWeb | bool | `true` | Use the gRPC-web protocol to connect to the Argo CD API |
@@ -77,6 +78,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the Argo CD API instead of TLS. |
 | config.argocd.serverAddress | string | `""` | Connect to the Argo CD API server at server address |
 | config.argocd.token | string | `""` | If specified, the secret with Argo CD API key will be created. |
+| config.argocd.tokenSecretName | string | `"argocd-image-updater-secret"` | Name of the Secret containing the token |
 | config.disableKubeEvents | bool | `false` | Disable kubernetes events |
 | config.gitCommitMail | string | `""` | E-Mail address to use for Git commits |
 | config.gitCommitSignOff | bool | `false` | Enables sign off on commits |
@@ -85,8 +87,10 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.gitCommitTemplate | string | `""` | Changing the Git commit message |
 | config.gitCommitUser | string | `""` | Username to use for Git commits |
 | config.logLevel | string | `"info"` | Argo CD Image Update log level |
+| config.name | string | `"argocd-image-updater-config"` | Name of the ConfigMap |
 | config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/) |
-| config.sshConfig | object | `{}` | Argo CD Image Updater ssh client parameter configuration. |
+| config.sshConfig.config | string | `""` | Argo CD Image Updater ssh client parameter configuration. |
+| config.sshConfig.name | string | `"argocd-image-updater-ssh-config"` | Name of the sshConfig ConfigMap |
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
 | extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry |
 | extraEnv | list | `[]` | Extra environment variables for argocd-image-updater |
