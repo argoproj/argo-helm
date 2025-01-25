@@ -1,11 +1,17 @@
+{{- $sshConfig := omit .Values.config.sshConfig "name" }}
+{{- range $key, $val := $sshConfig }}
+  {{- if not $val }}
+  {{ $_ := unset $sshConfig $key }}
+  {{- end }}
+{{- end }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
-  name: argocd-image-updater-ssh-config
+  name: {{ .Values.config.sshConfig.name }}
   namespace: {{ include "argocd-image-updater.namespace" . | quote }}
-{{- with .Values.config.sshConfig }}
+{{- with $sshConfig }}
 data:
   {{- toYaml . | nindent 2 }}
 {{- end }}
