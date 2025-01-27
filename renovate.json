@@ -90,7 +90,7 @@
       ],
       "commitMessagePrefix": "chore({{parentDir}}):",
       "postUpgradeTasks": {
-        "commands": ["./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{{lookup (split depName '/') @last}}} -v {{newVersion}}"]
+        "commands": ["./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{ depName }} -v {{newVersion}}"]
       }
     },
     {

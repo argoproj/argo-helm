@@ -19,6 +19,9 @@ if [ -z "${dependency_name}" ] || [ -z "${dependency_version}" ] || [ -z "${char
 fi
 
 chart_yaml_path="charts/${chart}/Chart.yaml"
+# Split dependency by '/' and only use last element
+# This way we can drop prefixes like "argoproj/..." , "argoproj-labs/..." , "quay.io/foo/..."
+dependency_name="${dependency_name##*/}"
 
 # Bump the chart version by one patch version
 version=$(grep '^version:' "${chart_yaml_path}" | awk '{print $2}')
