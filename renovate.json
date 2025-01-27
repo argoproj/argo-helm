@@ -91,7 +91,10 @@
       ],
       "commitMessagePrefix": "chore({{parentDir}}):",
       "postUpgradeTasks": {
-        "commands": ["./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}}"]
+        "commands": [
+          "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}}",
+          "./scripts/helm-docs.sh"
+        ]
       }
     },
     {
