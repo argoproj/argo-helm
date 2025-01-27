@@ -93,7 +93,8 @@
       "postUpgradeTasks": {
         "commands": [
           "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}}",
-          "./scripts/helm-docs.sh"
+          "go install github.com/norwoodj/helm-docs/cmd/helm-docs@v1.9.1",
+          "helm-docs"
         ]
       }
     },
