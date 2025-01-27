@@ -1,31 +1,38 @@
 #!/bin/bash
-depName="${1}"
-if [ -z "${depName}" ]; then
-  echo "Missing argument 'depName'" >&2
-  echo "Example usage: $0 argoproj/argo-cd" >&2
+while getopts c:d:v: opt; do
+  case ${opt} in
+    c) chart=${OPTARG} ;;
+    d) dependency_name=${OPTARG} ;;
+    v) dependency_version=${OPTARG} ;;
+    *)
+      echo 'Usage:' >&2
+      echo '-c: chart       Related Helm chart name' >&2
+      echo '-d  dependency  Name of the updated dependency' >&2
+      echo '-v  version     New version of the updated dependency' >&2
+      exit 1
+  esac
+done
+
+if [ -z "${dependency_name}" ] || [ -z "${dependency_version}" ] || [ -z "${chart}" ] ; then
+  echo 'Missing relevant CLI flag(s).' >&2
   exit 1
 fi
 
-chartName=$(echo "$depName" | sed -e "s+^argoproj/++" -e "s+^argoproj-labs/++")
-echo "Changed chart name is: $chartName"
-echo "----------------------------------------"
-
-parentDir="charts/${chartName}"
+chart_yaml_path="charts/${chart}/Chart.yaml"
 
 # Bump the chart version by one patch version
-version=$(grep '^version:' "${parentDir}/Chart.yaml" | awk '{print $2}')
+version=$(grep '^version:' "${chart_yaml_path}" | awk '{print $2}')
 major=$(echo "${version}" | cut -d. -f1)
 minor=$(echo "${version}" | cut -d. -f2)
 patch=$(echo "${version}" | cut -d. -f3)
 patch=$((patch + 1))
-sed -i "s/^version:.*/version: ${major}.${minor}.${patch}/g" "${parentDir}/Chart.yaml"
+sed -i "s/^version:.*/version: ${major}.${minor}.${patch}/g" "${chart_yaml_path}"
 
 # Add a changelog entry
-appVersion=$(grep '^appVersion:' "${parentDir}/Chart.yaml" | awk '{print $2}')
-sed -i -e '/^  artifacthub.io\/changes: |/,$ d' "${parentDir}/Chart.yaml"
+sed -i -e '/^  artifacthub.io\/changes: |/,$ d' "${chart_yaml_path}"
 {
   echo "  artifacthub.io/changes: |"
   echo "    - kind: changed"
-  echo "      description: Bump ${chartName} to ${appVersion}"
-} >> "${parentDir}/Chart.yaml"
-cat "${parentDir}/Chart.yaml"
+  echo "      description: Bump ${dependency_name} to ${dependency_version}"
+} >> "${chart_yaml_path}"
+cat "${chart_yaml_path}"
