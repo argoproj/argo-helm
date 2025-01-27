@@ -726,7 +726,7 @@ NAME: my-release
 | configs.clusterCredentials | object | `{}` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.cm."admin.enabled" | bool | `true` | Enable local admin user |
 | configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` | The name of tracking label used by Argo CD for resource pruning |
-| configs.cm."application.sync.impersonation.enabled" | string | `"false"` | Enable control of the service account used for the sync operation |
+| configs.cm."application.sync.impersonation.enabled" | bool | `false` | Enable control of the service account used for the sync operation (alpha) |
 | configs.cm."exec.enabled" | bool | `false` | Enable exec feature in Argo UI |
 | configs.cm."server.rbac.log.enforce.enable" | bool | `false` | Enable logs RBAC enforcement |
 | configs.cm."statusbadge.enabled" | bool | `false` | Enable Status Badge |
