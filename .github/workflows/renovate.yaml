@@ -32,6 +32,7 @@ jobs:
           # renovate: datasource=docker depName=ghcr.io/renovatebot/renovate
           renovate-version: 39.86.4
           token: '${{ steps.get_token.outputs.token }}'
+          mount-docker-socket: true
         env:
           LOG_LEVEL: 'debug'
           RENOVATE_REPOSITORIES: '${{ github.repository }}'
