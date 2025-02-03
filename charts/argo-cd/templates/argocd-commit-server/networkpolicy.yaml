@@ -1,5 +1,6 @@
-kind: NetworkPolicy
+{{- if .Values.global.networkPolicy.create }}
 apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
   name: {{ template "argo-cd.commitServer.fullname" . }}
   namespace: {{ include  "argo-cd.namespace" . }}
@@ -21,3 +22,4 @@ spec:
         - namespaceSelector: { }
       ports:
         - port: 8087
+{{- end }}
