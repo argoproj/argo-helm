@@ -146,10 +146,14 @@ spec:
         {{- with .Values.commitServer.extraVolumeMounts }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- if .Values.configs.ssh.create }}
         - name: ssh-known-hosts
           mountPath: /app/config/ssh
+        {{- end }}
+        {{- if .Values.configs.tls.create }}
         - name: tls-certs
           mountPath: /app/config/tls
+        {{- end }}
         - name: gpg-keys
           mountPath: /app/config/gpg/source
         - name: gpg-keyring
@@ -178,12 +182,16 @@ spec:
         {{- with .Values.commitServer.extraVolumes }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- if .Values.configs.ssh.create }}
         - name: ssh-known-hosts
           configMap:
             name: argocd-ssh-known-hosts-cm
+        {{- end }}
+        {{- if .Values.configs.tls.create }}
         - name: tls-certs
           configMap:
             name: argocd-tls-certs-cm
+        {{- end }}
         - name: gpg-keys
           configMap:
             name: argocd-gpg-keys-cm

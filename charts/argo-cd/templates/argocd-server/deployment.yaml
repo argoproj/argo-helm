@@ -387,10 +387,14 @@ spec:
         {{- with .Values.server.volumeMounts }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- if .Values.configs.ssh.create }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
+        {{- end }}
+        {{- if .Values.configs.tls.create }}
         - mountPath: /app/config/tls
           name: tls-certs
+        {{- end }}
         - mountPath: /app/config/server/tls
           name: argocd-repo-server-tls
         - mountPath: /app/config/dex/tls
@@ -521,12 +525,16 @@ spec:
         {{- else }}
         emptyDir: {}
         {{- end }}
+      {{- if .Values.configs.ssh.create }}
       - name: ssh-known-hosts
         configMap:
           name: argocd-ssh-known-hosts-cm
+      {{- end }}
+      {{- if .Values.configs.tls.create }}
       - name: tls-certs
         configMap:
           name: argocd-tls-certs-cm
+      {{- end }}
       - name: styles
         configMap:
           name: argocd-styles-cm
