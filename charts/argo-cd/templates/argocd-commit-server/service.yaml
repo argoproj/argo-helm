@@ -1,3 +1,4 @@
+{{- if .Values.commitServer.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -26,3 +27,4 @@ spec:
     targetPort: 8087
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.commitServer.name) | nindent 4 }}
+{{- end }}

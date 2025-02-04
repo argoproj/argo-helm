@@ -1,3 +1,4 @@
+{{- if .Values.commitServer.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -229,3 +230,4 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       dnsPolicy: {{ .Values.commitServer.dnsPolicy }}
+{{- end }}
