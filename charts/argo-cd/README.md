@@ -708,7 +708,7 @@ NAME: my-release
 | global.logging.level | string | `"info"` | Set the global logging level. One of: `debug`, `info`, `warn` or `error` |
 | global.networkPolicy.create | bool | `false` | Create NetworkPolicy objects for all components |
 | global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
-| global.nodeSelector | object | `{}` | Default node selector for all components |
+| global.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | Default node selector for all components |
 | global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
 | global.priorityClassName | string | `""` | Default priority class for all components |
@@ -1621,6 +1621,65 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | notifications.triggers | object | `{}` | The trigger defines the condition when the notification should be sent |
 
+## Commit server (Manifest Hydrator)
+
+The Argo CD Commit Server provides push access to git repositories for hydrated manifests.
+
+To read more about this component, please read [Argo CD Manifest Hydrator] and [Manifest Hydrator].
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| commitServer.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
+| commitServer.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account into the pod. |
+| commitServer.containerSecurityContext | object | See [values.yaml] | commit server container-level security context |
+| commitServer.deploymentAnnotations | object | `{}` | Annotations to be added to commit server Deployment |
+| commitServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the commit server Deployment |
+| commitServer.dnsConfig | object | `{}` | [DNS configuration] |
+| commitServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for commit server pods |
+| commitServer.enabled | bool | `false` | Enable commit server |
+| commitServer.extraArgs | list | `[]` | commit server command line flags |
+| commitServer.extraEnv | list | `[]` | Environment variables to pass to the commit server |
+| commitServer.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the commit server |
+| commitServer.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
+| commitServer.extraVolumes | list | `[]` | List of extra volumes to add |
+| commitServer.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the commit server |
+| commitServer.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the commit server |
+| commitServer.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the commit server |
+| commitServer.livenessProbe.enabled | bool | `true` | Enable Kubernetes liveness probe for commit server |
+| commitServer.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| commitServer.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |
+| commitServer.livenessProbe.periodSeconds | int | `30` | How often (in seconds) to perform the [probe] |
+| commitServer.livenessProbe.timeoutSeconds | int | `5` | Number of seconds after which the [probe] times out |
+| commitServer.metrics.enabled | bool | `false` | Enables prometheus metrics server |
+| commitServer.metrics.service.annotations | object | `{}` | Metrics service annotations |
+| commitServer.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
+| commitServer.metrics.service.labels | object | `{}` | Metrics service labels |
+| commitServer.metrics.service.portName | string | `"metrics"` | Metrics service port name |
+| commitServer.metrics.service.servicePort | int | `8087` | Metrics service port |
+| commitServer.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
+| commitServer.name | string | `"commit-server"` | Commit server name |
+| commitServer.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
+| commitServer.podAnnotations | object | `{}` | Annotations for the commit server pods |
+| commitServer.podLabels | object | `{}` | Labels for the commit server pods |
+| commitServer.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the commit server pods |
+| commitServer.readinessProbe.enabled | bool | `true` | Enable Kubernetes liveness probe for commit server |
+| commitServer.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| commitServer.readinessProbe.initialDelaySeconds | int | `5` | Number of seconds after the container has started before [probe] is initiated |
+| commitServer.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| commitServer.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
+| commitServer.resources | object | `{}` | Resource limits and requests for the commit server pods. |
+| commitServer.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the commit server |
+| commitServer.service.annotations | object | `{}` | commit server service annotations |
+| commitServer.service.labels | object | `{}` | commit server service labels |
+| commitServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
+| commitServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| commitServer.serviceAccount.create | bool | `true` | Create commit server service account |
+| commitServer.serviceAccount.labels | object | `{}` | Labels applied to created service account |
+| commitServer.serviceAccount.name | string | `"argocd-commit-server"` | commit server service account name |
+| commitServer.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
+| commitServer.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| commitServer.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the commit server |
+
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/helm-docs)
 
@@ -1653,3 +1712,5 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [Applications in any namespace]: https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/#applications-in-any-namespace
 [Argo CD Extensions]: https://github.com/argoproj-labs/argocd-extensions?tab=readme-ov-file#deprecation-notice
 [Argo CD Extension Installer]: https://github.com/argoproj-labs/argocd-extension-installer
+[Argo CD Manifest Hydrator]: https://argo-cd.readthedocs.io/en/stable/proposals/manifest-hydrator/
+[Manifest Hydrator]: https://github.com/argoproj/argo-cd/blob/master/docs/proposals/manifest-hydrator.md

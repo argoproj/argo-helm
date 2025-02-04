@@ -1,0 +1,35 @@
+{{- if and .Values.commitServer.enabled .Values.commitServer.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "argo-cd.commitServer.fullname" . }}-metrics
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.commitServer.name "name" "metrics") | nindent 4 }}
+    {{- with .Values.commitServer.metrics.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.commitServer.metrics.service.annotations .Values.global.addPrometheusAnnotations }}
+  annotations:
+    {{- if .Values.global.addPrometheusAnnotations }}
+    prometheus.io/port: {{ .Values.commitServer.metrics.service.servicePort | quote }}
+    prometheus.io/scrape: "true"
+    {{- end }}
+    {{- range $key, $value := .Values.commitServer.metrics.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.commitServer.metrics.service.type }}
+  {{- if and .Values.commitServer.metrics.service.clusterIP (eq .Values.commitServer.metrics.service.type "ClusterIP") }}
+  clusterIP: {{ .Values.commitServer.metrics.service.clusterIP }}
+  {{- end }}
+  {{- include "argo-cd.dualStack" . | indent 2 }}
+  ports:
+  - name:  {{ .Values.commitServer.metrics.service.portName }}
+    protocol: TCP
+    port: {{ .Values.commitServer.metrics.service.servicePort }}
+    targetPort: 8087
+  selector:
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.commitServer.name) | nindent 4 }}
+{{- end }}
