@@ -1636,7 +1636,7 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the commit server Deployment |
 | commitServer.dnsConfig | object | `{}` | [DNS configuration] |
 | commitServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for commit server pods |
-| commitServer.enabled | bool | `true` | Enable commit server |
+| commitServer.enabled | bool | `false` | Enable commit server |
 | commitServer.extraArgs | list | `[]` | commit server command line flags |
 | commitServer.extraEnv | list | `[]` | Environment variables to pass to the commit server |
 | commitServer.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the commit server |
