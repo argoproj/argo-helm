@@ -21,10 +21,6 @@ spec:
     protocol: TCP
     port: 8086
     targetPort: 8086
-  - name: metrics
-    protocol: TCP
-    port: 8087
-    targetPort: 8087
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.commitServer.name) | nindent 4 }}
 {{- end }}

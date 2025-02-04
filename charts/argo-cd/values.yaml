@@ -3796,6 +3796,23 @@ commitServer:
   # -- List of extra volumes to add
   extraVolumes: []
 
+  metrics:
+    # -- Enables prometheus metrics server
+    enabled: false
+    service:
+      # -- Metrics service type
+      type: ClusterIP
+      # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
+      clusterIP: ""
+      # -- Metrics service annotations
+      annotations: {}
+      # -- Metrics service labels
+      labels: {}
+      # -- Metrics service port
+      servicePort: 8087
+      # -- Metrics service port name
+      portName: metrics
+
   ## commit server service configuration
   service:
     # -- commit server service annotations

@@ -1650,6 +1650,13 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |
 | commitServer.livenessProbe.periodSeconds | int | `30` | How often (in seconds) to perform the [probe] |
 | commitServer.livenessProbe.timeoutSeconds | int | `5` | Number of seconds after which the [probe] times out |
+| commitServer.metrics.enabled | bool | `false` | Enables prometheus metrics server |
+| commitServer.metrics.service.annotations | object | `{}` | Metrics service annotations |
+| commitServer.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
+| commitServer.metrics.service.labels | object | `{}` | Metrics service labels |
+| commitServer.metrics.service.portName | string | `"metrics"` | Metrics service port name |
+| commitServer.metrics.service.servicePort | int | `8087` | Metrics service port |
+| commitServer.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | commitServer.name | string | `"commit-server"` | Commit server name |
 | commitServer.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | commitServer.podAnnotations | object | `{}` | Annotations for the commit server pods |
