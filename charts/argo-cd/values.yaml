@@ -3790,6 +3790,12 @@ commitServer:
     # - secretRef:
     #     name: secret-name
 
+  # -- List of extra mounts to add (normally used with extraVolumes)
+  extraVolumeMounts: []
+
+  # -- List of extra volumes to add
+  extraVolumes: []
+
   ## commit server service configuration
   service:
     # -- commit server service annotations

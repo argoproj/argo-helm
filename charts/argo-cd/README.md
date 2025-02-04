@@ -1640,6 +1640,8 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.extraArgs | list | `[]` | commit server command line flags |
 | commitServer.extraEnv | list | `[]` | Environment variables to pass to the commit server |
 | commitServer.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the commit server |
+| commitServer.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
+| commitServer.extraVolumes | list | `[]` | List of extra volumes to add |
 | commitServer.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the commit server |
 | commitServer.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the commit server |
 | commitServer.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the commit server |

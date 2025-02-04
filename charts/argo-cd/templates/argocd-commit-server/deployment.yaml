@@ -143,6 +143,9 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
+        {{- with .Values.commitServer.extraVolumeMounts }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         - name: ssh-known-hosts
           mountPath: /app/config/ssh
         - name: tls-certs
@@ -172,6 +175,9 @@ spec:
         - mountPath: /var/run/argocd
           name: var-files
       volumes:
+        {{- with .Values.commitServer.extraVolumes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         - name: ssh-known-hosts
           configMap:
             name: argocd-ssh-known-hosts-cm
