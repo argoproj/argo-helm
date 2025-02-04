@@ -1658,7 +1658,6 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.readinessProbe.initialDelaySeconds | int | `5` | Number of seconds after the container has started before [probe] is initiated |
 | commitServer.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | commitServer.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| commitServer.replicas | int | `1` | The number of commit server pods to run |
 | commitServer.resources | object | `{}` | Resource limits and requests for the commit server pods. |
 | commitServer.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the commit server |
 | commitServer.service.annotations | object | `{}` | commit server service annotations |
