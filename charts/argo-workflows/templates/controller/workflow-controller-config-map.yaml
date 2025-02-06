@@ -31,7 +31,7 @@ data:
     {{- with .Values.controller.initialDelay }}
     initialDelay: {{ . }}
     {{- end }}
-    {{- if or .Values.mainContainer.resources .Values.mainContainer.env .Values.mainContainer.envFrom .Values.mainContainer.securityContext}}
+    {{- if or .Values.images.pullPolicy .Values.mainContainer}}
     mainContainer:
       imagePullPolicy: {{ default (.Values.images.pullPolicy) .Values.mainContainer.imagePullPolicy }}
       {{- with .Values.mainContainer.resources }}
@@ -47,7 +47,7 @@ data:
       securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- end }}
-    {{- if or .Values.executor.resources .Values.executor.env .Values.executor.args .Values.executor.securityContext}}
+    {{- if or .Values.images.pullPolicy .Values.executor}}
     executor:
       imagePullPolicy: {{ default (.Values.images.pullPolicy) .Values.executor.image.pullPolicy }}
       {{- with .Values.executor.resources }}
