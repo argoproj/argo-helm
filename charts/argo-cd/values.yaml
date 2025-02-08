@@ -2141,6 +2141,9 @@ server:
     # -- Server service https port appProtocol
     ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol
     servicePortHttpsAppProtocol: ""
+    # -- Enable the HTTPS service port (disable for GKE ingress)
+    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#creating-a-service
+    servicePortHttpsEnabled: true
     # -- The class of the load balancer implementation
     loadBalancerClass: ""
     # -- LoadBalancer will get created with the IP specified in this field

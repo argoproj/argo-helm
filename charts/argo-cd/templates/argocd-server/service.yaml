@@ -44,6 +44,7 @@ spec:
     {{- if eq .Values.server.service.type "NodePort" }}
     nodePort: {{ .Values.server.service.nodePortHttp }}
     {{- end }}
+  {{- if .Values.server.service.servicePortHttpsEnabled }}
   - name: {{ .Values.server.service.servicePortHttpsName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttps }}
@@ -56,4 +57,4 @@ spec:
     {{- end }}
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 4 }}
-
+  {{- end }}
