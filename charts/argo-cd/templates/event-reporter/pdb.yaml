@@ -1,4 +1,4 @@
-{{- if .Values.eventReporter.pdb.enabled }}
+{{- if and .Values.eventReporter.enabled .Values.eventReporter.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:

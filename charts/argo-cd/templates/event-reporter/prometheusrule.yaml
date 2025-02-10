@@ -1,4 +1,4 @@
-{{- if and .Values.eventReporter.metrics.enabled .Values.eventReporter.metrics.rules.enabled }}
+{{- if and .Values.eventReporter.enabled .Values.eventReporter.metrics.enabled .Values.eventReporter.metrics.rules.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:

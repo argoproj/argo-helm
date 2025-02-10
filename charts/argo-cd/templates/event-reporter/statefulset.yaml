@@ -1,3 +1,4 @@
+{{- if .Values.eventReporter.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -322,3 +323,4 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       dnsPolicy: {{ .Values.eventReporter.dnsPolicy }}
+{{- end }}

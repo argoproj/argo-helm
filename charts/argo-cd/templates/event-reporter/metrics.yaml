@@ -1,4 +1,4 @@
-{{- if .Values.eventReporter.metrics.enabled }}
+{{- if and .Values.eventReporter.enabled .Values.eventReporter.metrics.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
