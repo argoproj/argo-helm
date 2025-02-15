@@ -119,7 +119,8 @@ global:
   priorityClassName: ""
 
   # -- Default node selector for all components
-  nodeSelector: {}
+  nodeSelector:
+    kubernetes.io/os: linux
 
   # -- Default tolerations for all components
   tolerations: []
@@ -174,6 +175,10 @@ configs:
 
     # -- The name of tracking label used by Argo CD for resource pruning
     application.instanceLabelKey: argocd.argoproj.io/instance
+
+    # -- Enable control of the service account used for the sync operation (alpha)
+    ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/app-sync-using-impersonation/
+    application.sync.impersonation.enabled: false
 
     # -- Enable logs RBAC enforcement
     ## Ref: https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.3-2.4/#enable-logs-rbac-enforcement
@@ -1284,7 +1289,7 @@ redis:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.4.1-alpine
+    tag: 7.4.2-alpine
     # -- Redis image pull policy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1300,7 +1305,7 @@ redis:
       # -- Repository to use for the redis-exporter
       repository: public.ecr.aws/bitnami/redis-exporter
       # -- Tag to use for the redis-exporter
-      tag: 1.58.0
+      tag: 1.67.0
       # -- Image pull policy for the redis-exporter
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
@@ -1570,7 +1575,7 @@ redis-ha:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.4.1-alpine
+    tag: 7.4.2-alpine
   ## Prometheus redis-exporter sidecar
   exporter:
     # -- Enable Prometheus redis-exporter sidecar
@@ -3745,3 +3750,183 @@ notifications:
     # For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/triggers/#default-triggers
     # defaultTriggers: |
     #   - on-sync-status-unknown
+
+commitServer:
+  # -- Enable commit server
+  enabled: false
+
+  # -- Commit server name
+  name: commit-server
+
+  # -- Runtime class name for the commit server
+  # @default -- `""` (defaults to global.runtimeClassName)
+  runtimeClassName: ""
+
+  ## commit server controller image
+  image:
+    # -- Repository to use for the commit server
+    # @default -- `""` (defaults to global.image.repository)
+    repository: ""
+    # -- Tag to use for the commit server
+    # @default -- `""` (defaults to global.image.tag)
+    tag: ""
+    # -- Image pull policy for the commit server
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: ""
+
+  # -- commit server command line flags
+  extraArgs: []
+
+  # -- Environment variables to pass to the commit server
+  extraEnv: []
+    # - name: "MY_VAR"
+    #   value: "value"
+
+  # -- envFrom to pass to the commit server
+  # @default -- `[]` (See [values.yaml])
+  extraEnvFrom: []
+    # - configMapRef:
+    #     name: config-map-name
+    # - secretRef:
+    #     name: secret-name
+
+  # -- List of extra mounts to add (normally used with extraVolumes)
+  extraVolumeMounts: []
+
+  # -- List of extra volumes to add
+  extraVolumes: []
+
+  metrics:
+    # -- Enables prometheus metrics server
+    enabled: false
+    service:
+      # -- Metrics service type
+      type: ClusterIP
+      # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
+      clusterIP: ""
+      # -- Metrics service annotations
+      annotations: {}
+      # -- Metrics service labels
+      labels: {}
+      # -- Metrics service port
+      servicePort: 8087
+      # -- Metrics service port name
+      portName: metrics
+
+  ## commit server service configuration
+  service:
+    # -- commit server service annotations
+    annotations: {}
+    # -- commit server service labels
+    labels: {}
+
+  # -- Automount API credentials for the Service Account into the pod.
+  automountServiceAccountToken: false
+
+  serviceAccount:
+    # -- Create commit server service account
+    create: true
+    # -- commit server service account name
+    name: argocd-commit-server
+    # -- Annotations applied to created service account
+    annotations: {}
+    # -- Labels applied to created service account
+    labels: {}
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: true
+
+  # -- Annotations to be added to commit server Deployment
+  deploymentAnnotations: {}
+
+  # -- Annotations for the commit server pods
+  podAnnotations: {}
+
+  # -- Labels for the commit server pods
+  podLabels: {}
+
+  # -- Resource limits and requests for the commit server pods.
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- Alternative DNS policy for commit server pods
+  dnsPolicy: "ClusterFirst"
+
+  # -- commit server container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    seccompProfile:
+      type: RuntimeDefault
+
+  ## Probes for commit server (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  readinessProbe:
+    # -- Enable Kubernetes liveness probe for commit server
+    enabled: true
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 5
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+
+  livenessProbe:
+    # -- Enable Kubernetes liveness probe for commit server
+    enabled: true
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 30
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 30
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 5
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+
+  # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
+  nodeSelector: {}
+
+  # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
+  tolerations: []
+
+  # -- Assign custom [affinity] rules
+  # @default -- `{}` (defaults to global.affinity preset)
+  affinity: {}
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the commit server
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+    # - maxSkew: 1
+    #   topologyKey: topology.kubernetes.io/zone
+    #   whenUnsatisfiable: DoNotSchedule
+
+  # -- Deployment strategy to be added to the commit server Deployment
+  deploymentStrategy: {}
+    # type: RollingUpdate
+    # rollingUpdate:
+    #   maxSurge: 25%
+    #   maxUnavailable: 25%
+
+  # -- Priority class for the commit server pods
+  # @default -- `""` (defaults to global.priorityClassName)
+  priorityClassName: ""

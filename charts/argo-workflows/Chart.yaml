@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v3.6.2
+appVersion: v3.6.4
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.45.4
+version: 0.45.6
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -15,9 +15,6 @@ annotations:
   artifacthub.io/signKey: |
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
-  artifacthub.io/changes: |
-    - kind: added
-      description: Support configuring workflow events in the controller
   artifacthub.io/changes: |
     - kind: fixed
       description: Update the SSO configuration instructions to reflect the correct field name
