@@ -310,6 +310,14 @@ Fields to note:
 | server.ingress.paths | list | `["/"]` | List of ingress paths |
 | server.ingress.tls | list | `[]` | Ingress TLS configuration |
 | server.lifecycle | object | `{}` | Specify postStart and preStop lifecycle hooks for server container |
+| server.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for server |
+| server.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| server.livenessProbe.httpGet.path | string | `"/"` | Http path to use for the liveness probe |
+| server.livenessProbe.httpGet.port | int | `2746` | Http port to use for the liveness probe |
+| server.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| server.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| server.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| server.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | server.loadBalancerClass | string | `""` | The class of the load balancer implementation |
 | server.loadBalancerIP | string | `""` | Static IP address to assign to loadBalancer service type `LoadBalancer` |
 | server.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |
@@ -324,15 +332,6 @@ Fields to note:
 | server.podSecurityContext | object | `{}` | SecurityContext to set on the server pods |
 | server.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages |
 | server.rbac.create | bool | `true` | Adds Role and RoleBinding for the server. |
-| server.readinessProbe | object | See [values.yaml] | Configure readiness [probe] for the server |
-| server.readinessProbe.enabled | bool | `false` | Enable Kubernetes readiness probe for server |
-| server.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
-| server.readinessProbe.httpGet.path | string | `"/"` | Http path to use for the readiness probe |
-| server.readinessProbe.httpGet.port | int | `2746` | Http port to use for the readiness probe |
-| server.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
-| server.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
-| server.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
-| server.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | server.replicas | int | `1` | The number of server pods to run |
 | server.resources | object | `{}` | Resource limits and requests for the server |
 | server.revisionHistoryLimit | int | `10` | The number of revisions to keep. |

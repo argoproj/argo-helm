@@ -776,15 +776,15 @@ server:
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
 
-  # -- Configure readiness [probe] for the server
-  # @default -- See [values.yaml]
-  readinessProbe:
-    # -- Enable Kubernetes readiness probe for server
+  ## livenessProbe for server
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  livenessProbe:
+    # -- Enable Kubernetes liveness probe for server
     enabled: false
     httpGet:
-      # -- Http port to use for the readiness probe
+      # -- Http port to use for the liveness probe
       port: 2746
-      # -- Http path to use for the readiness probe
+      # -- Http path to use for the liveness probe
       path: /
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3

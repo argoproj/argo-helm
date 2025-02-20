@@ -87,16 +87,21 @@ spec:
               {{- end }}
             initialDelaySeconds: 10
             periodSeconds: 20
-          {{- if .Values.server.readinessProbe.enabled }}
-          readinessProbe:
+          {{- if .Values.server.livenessProbe.enabled }}
+          livenessProbe:
             httpGet:
-              path: {{ .Values.server.readinessProbe.httpGet.path }}
-              port: {{ .Values.server.readinessProbe.httpGet.port }}
-            initialDelaySeconds: {{ .Values.server.readinessProbe.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
-            periodSeconds: {{ .Values.server.readinessProbe.periodSeconds }}
-            successThreshold: {{ .Values.server.readinessProbe.successThreshold }}
-            failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
+              path: {{ .Values.server.livenessProbe.httpGet.path }}
+              port: {{ .Values.server.livenessProbe.httpGet.port }}
+              {{- if .Values.server.secure }}
+              scheme: HTTPS
+              {{- else }}
+              scheme: HTTP
+              {{- end }}
+            initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.server.livenessProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
+            successThreshold: {{ .Values.server.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.server.livenessProbe.failureThreshold }}
           {{- end }}
           env:
             - name: IN_CLUSTER
