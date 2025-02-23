@@ -679,6 +679,8 @@ NAME: my-release
 
 ## Global Configs
 
+NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm ConfigMap.
+
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}
