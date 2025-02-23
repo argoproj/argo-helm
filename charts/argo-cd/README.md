@@ -685,6 +685,8 @@ NAME: my-release
 
 ## Global Configs
 
+NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm ConfigMap.
+
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | global.addPrometheusAnnotations | bool | `false` | Add Prometheus scrape annotations to all metrics services. This can be used as an alternative to the ServiceMonitors. |
