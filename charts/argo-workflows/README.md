@@ -310,6 +310,14 @@ Fields to note:
 | server.ingress.paths | list | `["/"]` | List of ingress paths |
 | server.ingress.tls | list | `[]` | Ingress TLS configuration |
 | server.lifecycle | object | `{}` | Specify postStart and preStop lifecycle hooks for server container |
+| server.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for server |
+| server.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| server.livenessProbe.httpGet.path | string | `"/"` | Http path to use for the liveness probe |
+| server.livenessProbe.httpGet.port | int | `2746` | Http port to use for the liveness probe |
+| server.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| server.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| server.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| server.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | server.loadBalancerClass | string | `""` | The class of the load balancer implementation |
 | server.loadBalancerIP | string | `""` | Static IP address to assign to loadBalancer service type `LoadBalancer` |
 | server.loadBalancerSourceRanges | list | `[]` | Source ranges to allow access to service from. Only applies to service type `LoadBalancer` |

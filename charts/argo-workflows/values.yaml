@@ -776,6 +776,27 @@ server:
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
 
+  ## livenessProbe for server
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  livenessProbe:
+    # -- Enable Kubernetes liveness probe for server
+    enabled: false
+    httpGet:
+      # -- Http port to use for the liveness probe
+      port: 2746
+      # -- Http path to use for the liveness probe
+      path: /
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+
 # -- Array of extra K8s manifests to deploy
 extraObjects: []
   # - apiVersion: secrets-store.csi.x-k8s.io/v1
