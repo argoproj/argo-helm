@@ -373,6 +373,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: applicationsetcontroller.enable.scm.providers
                 optional: true
+          - name: ARGOCD_HYDRATOR_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: hydrator.enabled
+                optional: true
         {{- with .Values.server.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}

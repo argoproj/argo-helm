@@ -1,0 +1,26 @@
+{{- if .Values.commitServer.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "argo-cd.commitServer.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.commitServer.name "name" .Values.commitServer.name) | nindent 4 }}
+    {{- with .Values.commitServer.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.commitServer.service.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  ports:
+  - name: server
+    protocol: TCP
+    port: 8086
+    targetPort: 8086
+  selector:
+    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.commitServer.name) | nindent 4 }}
+{{- end }}
