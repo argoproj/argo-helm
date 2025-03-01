@@ -223,7 +223,7 @@ spec:
         {{- if not $constraint.labelSelector }}
         labelSelector:
           matchLabels:
-            {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.commitServer.name) | nindent 12 }}
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.commitServer.name) | nindent 12 }}
         {{- end }}
         {{- end }}
       {{- end }}
