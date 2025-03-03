@@ -1674,6 +1674,8 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the commit server |
 | commitServer.service.annotations | object | `{}` | commit server service annotations |
 | commitServer.service.labels | object | `{}` | commit server service labels |
+| commitServer.service.port | int | `8086` | commit server service port |
+| commitServer.service.portName | string | `"server"` | commit server service port name |
 | commitServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | commitServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | commitServer.serviceAccount.create | bool | `true` | Create commit server service account |

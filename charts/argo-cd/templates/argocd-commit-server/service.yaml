@@ -17,10 +17,10 @@ metadata:
   {{- end }}
 spec:
   ports:
-  - name: server
+  - name: {{ .Values.commitServer.service.portName }}
     protocol: TCP
-    port: 8086
-    targetPort: 8086
+    port: {{ .Values.commitServer.service.port }}
+    targetPort: server
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.commitServer.name) | nindent 4 }}
 {{- end }}
