@@ -18,9 +18,9 @@ rules:
     verbs:
       - create
       - patch
-    {{- with $.Values.workflow.rbac.rules }}
-      {{- toYaml . | nindent 2 }}
-    {{- end }}
+  {{- with $.Values.workflow.rbac.rules }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
   {{- end }}
 
 {{- end }}
