@@ -8,6 +8,16 @@ metadata:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
 - apiGroups:
+    - ""
+  resources:
+    - events
+    - pods
+    - pods/log
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
   - argoproj.io
   resources:
   - workflows
@@ -39,6 +49,16 @@ metadata:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
 rules:
+- apiGroups:
+    - ""
+  resources:
+    - events
+    - pods
+    - pods/log
+  verbs:
+    - get
+    - list
+    - watch
 - apiGroups:
   - argoproj.io
   resources:
@@ -76,6 +96,16 @@ metadata:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
+- apiGroups:
+    - ""
+  resources:
+    - events
+    - pods
+    - pods/log
+  verbs:
+    - get
+    - list
+    - watch
 - apiGroups:
   - argoproj.io
   resources:
