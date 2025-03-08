@@ -10,7 +10,7 @@ spec:
   selector:
     matchLabels:
       {{- include "argo-events.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
-  revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ default 5 .Values.controller.revisionHistoryLimit }}
   replicas: {{ .Values.controller.replicas }}
   template:
     metadata:
