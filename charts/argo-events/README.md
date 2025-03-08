@@ -180,6 +180,7 @@ done
 | controller.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | controller.replicas | int | `1` | The number of events controller pods to run. |
 | controller.resources | object | `{}` | Resource limits and requests for the events controller pods |
+| controller.revisionHistoryLimit | int | `5` | The number of replicasets history to keep |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the events controller |
@@ -222,6 +223,7 @@ done
 | webhook.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
 | webhook.replicas | int | `1` | The number of webhook pods to run. |
 | webhook.resources | object | `{}` | Resource limits and requests for the event controller pods |
+| webhook.revisionHistoryLimit | int | `5` | The number of replicasets history to keep |
 | webhook.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | webhook.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | webhook.serviceAccount.create | bool | `true` | Create a service account for the admission webhook |

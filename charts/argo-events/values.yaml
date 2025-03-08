@@ -201,6 +201,9 @@ controller:
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
 
+  # -- The number of replicasets history to keep
+  revisionHistoryLimit: 5
+
   # -- The number of events controller pods to run.
   replicas: 1
 
@@ -362,6 +365,9 @@ webhook:
     # -- Image pull policy for the event controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
+
+  # -- The number of replicasets history to keep
+  revisionHistoryLimit: 5
 
   # -- The number of webhook pods to run.
   replicas: 1
