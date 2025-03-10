@@ -11,7 +11,7 @@ spec:
   selector:
     matchLabels:
       {{- include "argo-events.selectorLabels" (dict "context" . "name" .Values.webhook.name) | nindent 6 }}
-  revisionHistoryLimit: 5
+  revisionHistoryLimit: {{ .Values.webhook.revisionHistoryLimit }}
   replicas: {{ .Values.webhook.replicas }}
   template:
     metadata:
