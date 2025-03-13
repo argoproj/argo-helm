@@ -11,6 +11,10 @@ data:
   metricProviderPlugins: |-
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .Values.controller.stepPlugins }}
+  stepPlugins: |-
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with .Values.controller.trafficRouterPlugins }}
   trafficRouterPlugins: |-
     {{- toYaml . | nindent 4 }}
