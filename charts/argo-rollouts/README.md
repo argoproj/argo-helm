@@ -126,6 +126,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.readinessProbe | object | See [values.yaml] | Configure readiness [probe] for the controller |
 | controller.replicas | int | `2` | The number of controller pods to run |
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
+| controller.stepPlugins | list | `[]` | Configures 3rd party stepPlugins for controller |
 | controller.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the controller |
