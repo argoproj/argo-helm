@@ -66,11 +66,15 @@ spec:
           args:
             - /usr/local/bin/argocd-notifications
             - --metrics-port={{ .Values.notifications.containerPorts.metrics }}
-            - --loglevel={{ default .Values.global.logging.level .Values.notifications.logLevel }}
-            - --logformat={{ default .Values.global.logging.format .Values.notifications.logFormat }}
             - --namespace={{ include "argo-cd.namespace" . }}
             - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
             - --secret-name={{ .Values.notifications.secret.name }}
+            {{- with .Values.notifications.logLevel }}
+            - --loglevel={{ . | quote }}
+            {{- end }}
+            {{- with .Values.notifications.logFormat }}
+            - --logformat={{ . | quote }}
+            {{- end }}
             {{- range .Values.notifications.extraArgs }}
             - {{ . | squote }}
             {{- end }}
