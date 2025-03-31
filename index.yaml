@@ -1588,6 +1588,49 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Fixed the log level and log format override for components "dexserver" and "notificationscontroller"
+        - kind: deprecated
+          description: Value `notifications.logLevel` is depreacted in favor of `configs.params."notificationscontroller.log.level"`
+        - kind: deprecated
+          description: Value `notifications.logFormat` is depreacted in favor of `configs.params."notificationscontroller.log.format"`
+        - kind: deprecated
+          description: Value `dex.logLevel` is depreacted in favor of `configs.params."dexserver.log.level"`
+        - kind: deprecated
+          description: Value `dex.logFormat` is depreacted in favor of `configs.params."dexserver.log.format"`
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v2.14.8
+    created: "2025-03-31T20:39:34.305120003Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.33.2
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 3414e61091928a38eadc777552bb645fb5905e97a22d974a74b01b3f0dbdc6a2
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-7.8.16/argo-cd-7.8.16.tgz
+    version: 7.8.16
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Upgrade redis-ha
       artifacthub.io/signKey: |
@@ -36245,4 +36288,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2025-03-29T03:01:01.478473505Z"
+generated: "2025-03-31T20:39:34.307244871Z"
