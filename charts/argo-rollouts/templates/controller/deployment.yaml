@@ -31,6 +31,7 @@ spec:
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
+        checksum/cm: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       {{- end }}
       labels:
         {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
