@@ -26,13 +26,13 @@ spec:
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   template:
     metadata:
-      {{- with (mergeOverwrite (deepCopy .Values.podAnnotations) .Values.controller.podAnnotations) }}
       annotations:
+        {{- with (mergeOverwrite (deepCopy .Values.podAnnotations) .Values.controller.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-        checksum/cm: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-      {{- end }}
+        {{- end }}
+        checksum/cm: {{ include (print $.Template.BasePath "/controller/configmap.yaml") . | sha256sum }}
       labels:
         {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ .Values.controller.component }}
