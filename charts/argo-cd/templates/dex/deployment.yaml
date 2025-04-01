@@ -73,10 +73,10 @@ spec:
         command:
         - /shared/argocd-dex
         {{- with .Values.dex.logLevel }}
-        - --loglevel={{ . | quote }}
+        - --loglevel={{ . }}
         {{- end }}
         {{- with .Values.dex.logFormat }}
-        - --logformat={{ . | quote }}
+        - --logformat={{ . }}
         {{- end }}
         args:
         - rundex

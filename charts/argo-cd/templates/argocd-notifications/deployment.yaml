@@ -70,10 +70,10 @@ spec:
             - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
             - --secret-name={{ .Values.notifications.secret.name }}
             {{- with .Values.notifications.logLevel }}
-            - --loglevel={{ . | quote }}
+            - --loglevel={{ . }}
             {{- end }}
             {{- with .Values.notifications.logFormat }}
-            - --logformat={{ . | quote }}
+            - --logformat={{ . }}
             {{- end }}
             {{- range .Values.notifications.extraArgs }}
             - {{ . | squote }}
