@@ -26207,6 +26207,32 @@ entries:
   argo-rollouts:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: argo-rollouts will re-deploy if changes are made to the argo-rollouts configmap.
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.8.2
+    created: "2025-04-01T21:37:10.368026221Z"
+    description: A Helm chart for Argo Rollouts
+    digest: cd98e31a06211b7567c87250630c93775386c84907bf72d6b5707a9bede09a46
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-rollouts
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-rollouts
+    sources:
+    - https://github.com/argoproj/argo-rollouts
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-rollouts-2.39.5/argo-rollouts-2.39.5.tgz
+    version: 2.39.5
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: argo-rollouts will re-deploy if changes are made to the argo-rollouts configmap.
       artifacthub.io/signKey: |
@@ -36384,4 +36410,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2025-04-01T14:46:12.415331751Z"
+generated: "2025-04-01T21:37:10.369725889Z"
