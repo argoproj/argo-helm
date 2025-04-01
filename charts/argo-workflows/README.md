@@ -116,7 +116,7 @@ Fields to note:
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
-| createAggregateRoles | bool | `true` | Create clusterroles that extend existing clusterroles to interact with argo-cd crds |
+| createAggregateRoles | bool | `true` | Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs. |
 | emissary.images | list | `[]` | The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used. |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `nil` | String to fully override "argo-workflows.fullname" template |
@@ -136,6 +136,7 @@ Fields to note:
 | workflow.rbac.agentPermissions | bool | `false` | Allows permissions for the Argo Agent. Only required if using http/plugin templates |
 | workflow.rbac.artifactGC | bool | `false` | Allows permissions for the Argo Artifact GC pod. Only required if using artifact gc |
 | workflow.rbac.create | bool | `true` | Adds Role and RoleBinding for the above specified service account to be able to run workflows. A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below) |
+| workflow.rbac.rules | list | `[]` | Additional rules for the service account that runs the workflows. |
 | workflow.rbac.serviceAccounts | list | `[]` | Extra service accounts to be added to the RoleBinding |
 | workflow.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | workflow.serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
