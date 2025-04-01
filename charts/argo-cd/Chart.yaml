@@ -3,7 +3,7 @@ appVersion: v2.14.8
 kubeVersion: ">=1.25.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 7.8.16
+version: 7.8.17
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -27,12 +27,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: Fixed the log level and log format override for components "dexserver" and "notificationscontroller"
-    - kind: deprecated
-      description: Value `notifications.logLevel` is depreacted in favor of `configs.params."notificationscontroller.log.level"`
-    - kind: deprecated
-      description: Value `notifications.logFormat` is depreacted in favor of `configs.params."notificationscontroller.log.format"`
-    - kind: deprecated
-      description: Value `dex.logLevel` is depreacted in favor of `configs.params."dexserver.log.level"`
-    - kind: deprecated
-      description: Value `dex.logFormat` is depreacted in favor of `configs.params."dexserver.log.format"`
+      description: Moved to oliver006/redis_exporter to support mutli-arch images
