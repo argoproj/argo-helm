@@ -3,7 +3,7 @@ appVersion: v2.14.8
 kubeVersion: ">=1.25.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 7.8.19
+version: 7.8.20
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -27,4 +27,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: Moved to oliver006/redis_exporter to support multi-arch images (also for non-HA redis)
+      description: Correct oliver006/redis_exporter image tag
