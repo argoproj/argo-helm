@@ -94,12 +94,6 @@ spec:
                 key: git.email
                 name: {{ .Values.config.name }}
                 optional: true
-          - name: IMAGE_UPDATER_KUBE_EVENTS
-            valueFrom:
-              configMapKeyRef:
-                key: kube.events
-                name: {{ .Values.config.name }}
-                optional: true
           - name: GIT_COMMIT_SIGNING_KEY
             valueFrom:
               configMapKeyRef:
@@ -116,6 +110,18 @@ spec:
             valueFrom:
               configMapKeyRef:
                 key: git.commit-sign-off
+                name: {{ .Values.config.name }}
+                optional: true
+          - name: IMAGE_UPDATER_KUBE_EVENTS
+            valueFrom:
+              configMapKeyRef:
+                key: kube.events
+                name: {{ .Values.config.name }}
+                optional: true
+          - name: ARGOCD_LOGLEVEL
+            valueFrom:
+              configMapKeyRef:
+                key: log.level
                 name: {{ .Values.config.name }}
                 optional: true
           {{- with .Values.extraEnv }}
