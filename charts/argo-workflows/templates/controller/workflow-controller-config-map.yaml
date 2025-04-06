@@ -200,6 +200,8 @@ data:
     {{- end }}
     nodeEvents:
       enabled: {{ .Values.controller.nodeEvents.enabled }}
+    workflowEvents:
+      enabled: {{ .Values.controller.workflowEvents.enabled }}
     {{- with .Values.controller.kubeConfig }}
     kubeConfig: {{- toYaml . | nindent 6 }}
     {{- end }}

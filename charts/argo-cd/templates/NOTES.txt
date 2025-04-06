@@ -1,3 +1,15 @@
+{{- if .Values.notifications.logLevel }}
+DEPRECATED option notifications.logLevel - Use `configs.params."notificationscontroller.log.level"`
+{{- end }}
+{{- if .Values.notifications.logFormat }}
+DEPRECATED option notifications.logFormat - Use `configs.params."notificationscontroller.log.format"`
+{{- end }}
+{{- if .Values.dex.logLevel }}
+DEPRECATED option dex.logLevel - Use `configs.params."dexserver.log.level"`
+{{- end }}
+{{- if .Values.dex.logFormat }}
+DEPRECATED option dex.logFormat - Use `configs.params."dexserver.log.format"`
+{{- end }}
 In order to access the server UI you have the following options:
 
 1. kubectl port-forward service/{{ include "argo-cd.fullname" . }}-server -n {{ include  "argo-cd.namespace" . }} 8080:443

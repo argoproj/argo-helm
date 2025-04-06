@@ -44,79 +44,85 @@ spec:
             valueFrom:
               configMapKeyRef:
                 key: applications_api
-                name: argocd-image-updater-config
+                name: {{ .Values.config.name }}
                 optional: true
           - name: ARGOCD_GRPC_WEB
             valueFrom:
               configMapKeyRef:
                 key: argocd.grpc_web
-                name: argocd-image-updater-config
+                name: {{ .Values.config.name }}
                 optional: true
           - name: ARGOCD_SERVER
             valueFrom:
               configMapKeyRef:
                 key: argocd.server_addr
-                name: argocd-image-updater-config
+                name: {{ .Values.config.name }}
                 optional: true
           - name: ARGOCD_INSECURE
             valueFrom:
               configMapKeyRef:
                 key: argocd.insecure
-                name: argocd-image-updater-config
+                name: {{ .Values.config.name }}
                 optional: true
           - name: ARGOCD_PLAINTEXT
             valueFrom:
               configMapKeyRef:
                 key: argocd.plaintext
-                name: argocd-image-updater-config
+                name: {{ .Values.config.name }}
                 optional: true
           - name: ARGOCD_TOKEN
             valueFrom:
               secretKeyRef:
                 key: argocd.token
-                name: argocd-image-updater-secret
+                name: {{ .Values.config.argocd.tokenSecretName }}
                 optional: true
           - name: IMAGE_UPDATER_LOGLEVEL
             valueFrom:
               configMapKeyRef:
                 key: log.level
-                name: argocd-image-updater-config
+                name: {{ .Values.config.name }}
                 optional: true
           - name: GIT_COMMIT_USER
             valueFrom:
               configMapKeyRef:
                 key: git.user
-                name: argocd-image-updater-config
+                name: {{ .Values.config.name }}
                 optional: true
           - name: GIT_COMMIT_EMAIL
             valueFrom:
               configMapKeyRef:
                 key: git.email
-                name: argocd-image-updater-config
-                optional: true
-          - name: IMAGE_UPDATER_KUBE_EVENTS
-            valueFrom:
-              configMapKeyRef:
-                key: kube.events
-                name: argocd-image-updater-config
+                name: {{ .Values.config.name }}
                 optional: true
           - name: GIT_COMMIT_SIGNING_KEY
             valueFrom:
               configMapKeyRef:
                 key: git.commit-signing-key
-                name: argocd-image-updater-config
+                name: {{ .Values.config.name }}
                 optional: true
           - name: GIT_COMMIT_SIGNING_METHOD
             valueFrom:
               configMapKeyRef:
                 key: git.commit-signing-method
-                name: argocd-image-updater-config
+                name: {{ .Values.config.name }}
                 optional: true
           - name: GIT_COMMIT_SIGN_OFF
             valueFrom:
               configMapKeyRef:
                 key: git.commit-sign-off
-                name: argocd-image-updater-config
+                name: {{ .Values.config.name }}
+                optional: true
+          - name: IMAGE_UPDATER_KUBE_EVENTS
+            valueFrom:
+              configMapKeyRef:
+                key: kube.events
+                name: {{ .Values.config.name }}
+                optional: true
+          - name: ARGOCD_LOGLEVEL
+            valueFrom:
+              configMapKeyRef:
+                key: log.level
+                name: {{ .Values.config.name }}
                 optional: true
           {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 10 }}
@@ -177,13 +183,13 @@ spec:
             path: registries.conf
           - key: git.commit-message-template
             path: commit.template
-          name: argocd-image-updater-config
+          name: {{ .Values.config.name }}
           optional: true
         name: image-updater-conf
       {{- if .Values.authScripts.enabled }}
       - configMap:
           defaultMode: 0777
-          name: argocd-image-updater-authscripts
+          name: {{ .Values.authScripts.name }}
         name: authscripts
       {{- end }}
       - configMap:
@@ -191,7 +197,7 @@ spec:
           optional: true
         name: ssh-known-hosts
       - configMap:
-          name: argocd-image-updater-ssh-config
+          name: {{ .Values.config.sshConfig.name }}
           optional: true
         name: ssh-config
       - name: ssh-signing-key
