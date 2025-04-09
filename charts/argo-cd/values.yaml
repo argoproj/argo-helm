@@ -1515,7 +1515,7 @@ redis:
     # -- Annotations applied to created service account
     annotations: {}
     # -- Automount API credentials for the Service Account
-    automountServiceAccountToken: false
+    automountServiceAccountToken: true
 
   service:
     # -- Redis service annotations
@@ -3825,7 +3825,7 @@ commitServer:
     labels: {}
 
   # -- Automount API credentials for the Service Account into the pod.
-  automountServiceAccountToken: false
+  automountServiceAccountToken: true
 
   serviceAccount:
     # -- Create commit server service account

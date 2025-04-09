@@ -1329,7 +1329,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | redis.service.annotations | object | `{}` | Redis service annotations |
 | redis.service.labels | object | `{}` | Additional redis service labels |
 | redis.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
-| redis.serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account |
+| redis.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | redis.serviceAccount.create | bool | `false` | Create a service account for the redis pod |
 | redis.serviceAccount.name | string | `""` | Service account name for redis pod |
 | redis.servicePort | int | `6379` | Redis service port |
@@ -1629,7 +1629,7 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | commitServer.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
-| commitServer.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account into the pod. |
+| commitServer.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | commitServer.containerSecurityContext | object | See [values.yaml] | commit server container-level security context |
 | commitServer.deploymentAnnotations | object | `{}` | Annotations to be added to commit server Deployment |
 | commitServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the commit server Deployment |
