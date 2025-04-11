@@ -1623,6 +1623,11 @@ redis-ha:
     # @default -- See [values.yaml]
     containerSecurityContext:
       readOnlyRootFilesystem: true
+    timeout:
+      # -- HAProxy server connection timeout
+      server: 1860s
+      # -- HAProxy client connection timeout
+      client: 1860s
 
   # -- Configures redis-ha with AUTH
   auth: true
