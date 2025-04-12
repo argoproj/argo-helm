@@ -278,6 +278,9 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 7.9.0
+In order to align the default value of `automountServiceAccountToken`, we changed `redis.serviceAccount.automountServiceAccountToken` and `commitServer.automountServiceAccountToken` to `true` .
+
 ### 7.0.0
 
 We changed the type of `.Values.configs.clusterCredentials` from `list` to `object`.
