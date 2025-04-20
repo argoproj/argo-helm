@@ -26,6 +26,8 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
+    - kind: chore
+      description: downgraded helm/chart-releaser-action to v1.5.0 to avoid issue https://github.com/helm/chart-releaser-action/issues/171
     - kind: changed
       description: bumped argo-cd to v2.14.9-2025-04-20-584fc7f3
     - kind: fixed
@@ -76,4 +78,3 @@ annotations:
       description: Added conditional around argocd-tls-certs-cm.yaml helm creation
     - kind: fixed
       description: Correct ingress listen-ports example
-
