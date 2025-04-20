@@ -182,19 +182,11 @@ spec:
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
-                key: redis-username
-                optional: true
+                {{- include "argo-cd.redisUsernameSecretRef" . | nindent 16 }}
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
-                {{- if .Values.externalRedis.host }}
-                key: redis-password
-                {{- else }}
-                key: auth
-                {{- end }}
-                optional: true
+                {{- include "argo-cd.redisPasswordSecretRef" . | nindent 16 }}
           - name: REDIS_SENTINEL_USERNAME
             valueFrom:
               secretKeyRef:
@@ -242,6 +234,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: reposerver.plugin.tar.exclusions
+                optional: true
+          - name: ARGOCD_REPO_SERVER_PLUGIN_USE_MANIFEST_GENERATE_PATHS
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.plugin.use.manifest.generate.paths
+                name: argocd-cmd-params-cm
                 optional: true
           - name: ARGOCD_REPO_SERVER_ALLOW_OUT_OF_BOUNDS_SYMLINKS
             valueFrom:

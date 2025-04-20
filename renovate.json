@@ -83,30 +83,24 @@
         "argoproj/argo-workflows",
         "argoproj/argo-cd",
         "argoproj/argo-events",
-        "argoproj/argo-rollouts"
+        "argoproj/argo-rollouts",
+        "argoproj-labs/argocd-image-updater",
+        "argoprojlabs/argocd-extension-installer",
+        "public.ecr.aws/docker/library/redis",
+        "ghcr.io/dexidp/dex",
+        "ghcr.io/oliver006/redis_exporter"
       ],
-      "commitMessagePrefix": "chore({{{replace 'argoproj/' '' depName}}}):",
+      "commitMessagePrefix": "chore({{parentDir}}):",
       "postUpgradeTasks": {
-        "commands": ["./scripts/renovate-bump-version.sh {{depName}}"]
-      }
-    },
-    {
-      "matchPackagePatterns": ["argoproj-labs/argocd-image-updater"],
-      "commitMessagePrefix": "chore({{{replace 'argoproj-labs/' '' depName}}}):",
-      "postUpgradeTasks": {
-        "commands": ["./scripts/renovate-bump-version.sh {{depName}}"]
+        "commands": [
+          "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}}",
+          "./scripts/helm-docs.sh"
+        ]
       }
     },
     {
       "matchPackagePatterns": ["redis-ha"],
       "enabled": false
-    },
-    {
-      "matchPackagePatterns": ["public.ecr.aws/bitnami/redis-exporter"],
-      "commitMessagePrefix": "chore({{{replace 'public.ecr.aws/' '' depName}}}):",
-      "postUpgradeTasks": {
-        "commands": ["./scripts/renovate-bump-version.sh {{depName}}"]
-      }
     },
     {
       "matchPackageNames": ["ghcr.io/renovatebot/renovate"],

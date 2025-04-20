@@ -1,0 +1,238 @@
+{{- if .Values.commitServer.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.commitServer.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  name: {{ template "argo-cd.commitServer.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.commitServer.name "name" .Values.commitServer.name) | nindent 4 }}
+spec:
+  {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.commitServer.deploymentStrategy) }}
+  strategy:
+    {{- trim . | nindent 4 }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.commitServer.name) | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.commitServer.podAnnotations) }}
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+      labels:
+        {{- include "argo-cd.labels" (dict "context" . "component" .Values.commitServer.name "name" .Values.commitServer.name) | nindent 8 }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.commitServer.podLabels) }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.commitServer.runtimeClassName | default .Values.global.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
+      {{- with .Values.commitServer.imagePullSecrets | default .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.commitServer.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      {{- with .Values.commitServer.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
+      serviceAccountName: {{ include "argo-cd.commitServer.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.commitServer.automountServiceAccountToken }}
+      containers:
+      - name: {{ .Values.commitServer.name }}
+        image: {{ default .Values.global.image.repository .Values.commitServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.commitServer.image.tag }}
+        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.commitServer.image.imagePullPolicy }}
+        args:
+        - /usr/local/bin/argocd-commit-server
+        {{- with .Values.commitServer.extraArgs }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        env:
+          {{- with (concat .Values.global.env .Values.commitServer.extraEnv) }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          - name: ARGOCD_COMMIT_SERVER_LISTEN_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: commitserver.listen.address
+                optional: true
+          - name: ARGOCD_COMMIT_SERVER_METRICS_LISTEN_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: commitserver.metrics.listen.address
+                optional: true
+          - name: ARGOCD_COMMIT_SERVER_LOGFORMAT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: commitserver.log.format
+                optional: true
+          - name: ARGOCD_COMMIT_SERVER_LOGLEVEL
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: commitserver.log.level
+                optional: true
+          - name: ARGOCD_LOG_FORMAT_TIMESTAMP
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: log.format.timestamp
+                optional: true
+        {{- with .Values.commitServer.envFrom }}
+        envFrom:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        ports:
+        - containerPort: 8086
+          name: server
+          protocol: TCP
+        - containerPort: 8087
+          name: metrics
+          protocol: TCP
+        {{- if .Values.commitServer.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: /healthz?full=true
+            port: 8087
+          initialDelaySeconds: {{ .Values.commitServer.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.commitServer.livenessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.commitServer.livenessProbe.failureThreshold }}
+          timeoutSeconds: {{ .Values.commitServer.livenessProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.commitServer.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8087
+          initialDelaySeconds: {{ .Values.commitServer.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.commitServer.readinessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.commitServer.readinessProbe.failureThreshold }}
+          timeoutSeconds: {{ .Values.commitServer.readinessProbe.timeoutSeconds }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.commitServer.resources | nindent 10 }}
+        {{- with .Values.commitServer.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.commitServer.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+        {{- with .Values.commitServer.extraVolumeMounts }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: ssh-known-hosts
+          mountPath: /app/config/ssh
+        - name: tls-certs
+          mountPath: /app/config/tls
+        - name: gpg-keys
+          mountPath: /app/config/gpg/source
+        - name: gpg-keyring
+          mountPath: /app/config/gpg/keys
+        # We need a writeable temp directory for the askpass socket file.
+        - name: tmp
+          mountPath: /tmp
+      initContainers:
+      - command:
+        - /bin/cp
+        - -n
+        - /usr/local/bin/argocd
+        - /var/run/argocd/argocd-cmp-server
+        image: {{ default .Values.global.image.repository .Values.commitServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.commitServer.image.tag }}
+        name: copyutil
+        resources:
+          {{- toYaml .Values.commitServer.resources | nindent 10 }}
+        {{- with .Values.commitServer.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+        - mountPath: /var/run/argocd
+          name: var-files
+      volumes:
+        {{- with .Values.commitServer.extraVolumes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: ssh-known-hosts
+          configMap:
+            name: argocd-ssh-known-hosts-cm
+        - name: tls-certs
+          configMap:
+            name: argocd-tls-certs-cm
+        - name: gpg-keys
+          configMap:
+            name: argocd-gpg-keys-cm
+        - name: gpg-keyring
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: argocd-commit-server-tls
+          secret:
+            secretName: argocd-commit-server-tls
+            optional: true
+            items:
+            - key: tls.crt
+              path: tls.crt
+            - key: tls.key
+              path: tls.key
+            - key: ca.crt
+              path: ca.crt
+        - emptyDir: {}
+          name: var-files
+      {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.commitServer) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.commitServer.nodeSelector | default .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.commitServer.tolerations | default .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.commitServer.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "argo-cd.selectorLabels" (dict "context" $ "name" $.Values.commitServer.name) | nindent 12 }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- if .Values.commitServer.hostNetwork }}
+      hostNetwork: {{ .Values.commitServer.hostNetwork }}
+      {{- end }}
+      {{- with .Values.commitServer.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.commitServer.dnsPolicy }}
+{{- end }}
