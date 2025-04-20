@@ -59,7 +59,8 @@ jobs:
           PGP_PASSPHRASE: "${{ secrets.PGP_PASSPHRASE }}"
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
+        # currently there is a bug on 1.7.0 version (https://github.com/helm/chart-releaser-action/issues/171) - it's marked as closed, but the script returns 1 if skip_packaging is set to true
+        uses: helm/chart-releaser-action@be16258da8010256c6e82849661221415f031968 # v1.5.0
         with:
           config: "./.github/configs/cr.yaml"
           skip_packaging: true
