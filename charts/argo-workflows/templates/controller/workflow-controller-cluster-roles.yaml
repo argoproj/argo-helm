@@ -184,6 +184,7 @@ rules:
   verbs:
   - get
   resourceNames:
+  {{- /* for HTTP templates */}}
   - argo-workflows-agent-ca-certificates
 {{- with .Values.controller.rbac.secretWhitelist }}
 - apiGroups:
