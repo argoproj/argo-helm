@@ -743,12 +743,32 @@ controller:
   #  - mountPath: /usr/local/bin/kubelogin
   #    name: custom-tools
   #    subPath: kubelogin
+  #  - mountPath: /var/run/secrets/kubernetes.io/serviceaccount # Default location of the Service Account token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller
+  #    name: kube-api-access-argocd
+  #    readOnly: true
 
   # -- Additional volumes to the application controller pod
   volumes: []
   #  - name: custom-tools
   #    emptyDir: {}
-
+  #  - name: kube-api-access-argocd #Mount manually the SA token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#tokenrequest-api
+  #    projected:
+  #      defaultMode: 420 # decimal equivalent of octal 0644
+  #      sources:
+  #        - serviceAccountToken:
+  #            expirationSeconds: 3607 #The Service Account token is valid for an hour. The token is automatically renewed.
+  #            path: token
+  #        - configMap:
+  #            items:
+  #              - key: ca.crt
+  #                path: ca.crt
+  #            name: kube-root-ca.crt
+  #        - downwardAPI:
+  #            items:
+  #              - fieldRef:
+  #                  apiVersion: v1
+  #                  fieldPath: metadata.namespace
+  #                path: namespace
   ## Application controller emptyDir volumes
   emptyDir:
     # -- EmptyDir size limit for application controller
@@ -845,6 +865,7 @@ controller:
     #   whenUnsatisfiable: DoNotSchedule
 
   # -- Automount API credentials for the Service Account into the pod.
+  # If set to `false`, please ensure the credentials expected by the Kubernetes client-go is provided. Review the example given in the `volumes` and `volumeMounts`
   automountServiceAccountToken: true
 
   serviceAccount:
@@ -1079,9 +1100,30 @@ dex:
 
   # -- Additional volumeMounts to the dex main container
   volumeMounts: []
+  #  - mountPath: /var/run/secrets/kubernetes.io/serviceaccount # Default location of the Service Account token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller
+  #    name: kube-api-access-argocd
+  #    readOnly: true
 
   # -- Additional volumes to the dex pod
   volumes: []
+  #  - name: kube-api-access-argocd #Mount manually the SA token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#tokenrequest-api
+  #    projected:
+  #      defaultMode: 420 # decimal equivalent of octal 0644
+  #      sources:
+  #        - serviceAccountToken:
+  #            expirationSeconds: 3607 #The Service Account token is valid for an hour. The token is automatically renewed.
+  #            path: token
+  #        - configMap:
+  #            items:
+  #              - key: ca.crt
+  #                path: ca.crt
+  #            name: kube-root-ca.crt
+  #        - downwardAPI:
+  #            items:
+  #              - fieldRef:
+  #                  apiVersion: v1
+  #                  fieldPath: metadata.namespace
+  #                path: namespace
 
   ## Dex server emptyDir volumes
   emptyDir:
@@ -1198,6 +1240,7 @@ dex:
   terminationGracePeriodSeconds: 30
 
   # -- Automount API credentials for the Service Account into the pod.
+  # If set to `false`, please ensure the credentials expected by the Kubernetes client-go is provided. Review the example given in the `volumes` and `volumeMounts`
   automountServiceAccountToken: true
 
   serviceAccount:
@@ -1423,9 +1466,30 @@ redis:
 
   # -- Additional volumeMounts to the redis container
   volumeMounts: []
+  #  - mountPath: /var/run/secrets/kubernetes.io/serviceaccount # Default location of the Service Account token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller
+  #    name: kube-api-access-argocd
+  #    readOnly: true
 
   # -- Additional volumes to the redis pod
   volumes: []
+  #  - name: kube-api-access-argocd #Mount manually the SA token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#tokenrequest-api
+  #    projected:
+  #      defaultMode: 420 # decimal equivalent of octal 0644
+  #      sources:
+  #        - serviceAccountToken:
+  #            expirationSeconds: 3607 #The Service Account token is valid for an hour. The token is automatically renewed.
+  #            path: token
+  #        - configMap:
+  #            items:
+  #              - key: ca.crt
+  #                path: ca.crt
+  #            name: kube-root-ca.crt
+  #        - downwardAPI:
+  #            items:
+  #              - fieldRef:
+  #                  apiVersion: v1
+  #                  fieldPath: metadata.namespace
+  #                path: namespace
 
   # -- Annotations to be added to the Redis server Deployment
   deploymentAnnotations: {}
@@ -1506,6 +1570,7 @@ redis:
   terminationGracePeriodSeconds: 30
 
   # -- Automount API credentials for the Service Account into the pod.
+  # If set to `false`, please ensure the credentials expected by the Kubernetes client-go is provided. Review the example given in the `volumes` and `volumeMounts`
   automountServiceAccountToken: true
 
   serviceAccount:
@@ -1945,11 +2010,32 @@ server:
   #  - mountPath: /usr/local/bin/kubelogin
   #    name: custom-tools
   #    subPath: kubelogin
+  #  - mountPath: /var/run/secrets/kubernetes.io/serviceaccount # Default location of the Service Account token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller
+  #    name: kube-api-access-argocd
+  #    readOnly: true
 
   # -- Additional volumes to the server pod
   volumes: []
   #  - name: custom-tools
   #    emptyDir: {}
+  #  - name: kube-api-access-argocd #Mount manually the SA token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#tokenrequest-api
+  #    projected:
+  #      defaultMode: 420 # decimal equivalent of octal 0644
+  #      sources:
+  #        - serviceAccountToken:
+  #            expirationSeconds: 3607 #The Service Account token is valid for an hour. The token is automatically renewed.
+  #            path: token
+  #        - configMap:
+  #            items:
+  #              - key: ca.crt
+  #                path: ca.crt
+  #            name: kube-root-ca.crt
+  #        - downwardAPI:
+  #            items:
+  #              - fieldRef:
+  #                  apiVersion: v1
+  #                  fieldPath: metadata.namespace
+  #                path: namespace
 
   ## Argo CD server emptyDir volumes
   emptyDir:
@@ -2209,6 +2295,7 @@ server:
       annotations: {}
 
   # -- Automount API credentials for the Service Account into the pod.
+  # If set to `false`, please ensure the credentials expected by the Kubernetes client-go is provided. Review the example given in the `volumes` and `volumeMounts`
   automountServiceAccountToken: true
 
   serviceAccount:
@@ -2569,6 +2656,9 @@ repoServer:
 
   # -- Additional volumeMounts to the repo server main container
   volumeMounts: []
+  #  - mountPath: /var/run/secrets/kubernetes.io/serviceaccount # Default location of the Service Account token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller
+  #    name: kube-api-access-argocd
+  #    readOnly: true
 
   # -- Additional volumes to the repo server pod
   volumes: []
@@ -2577,6 +2667,24 @@ repoServer:
   #      name: argocd-cmp-cm
   #  - name: cmp-tmp
   #    emptyDir: {}
+  #  - name: kube-api-access-argocd #Mount manually the SA token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#tokenrequest-api
+  #    projected:
+  #      defaultMode: 420 # decimal equivalent of octal 0644
+  #      sources:
+  #        - serviceAccountToken:
+  #            expirationSeconds: 3607 #The Service Account token is valid for an hour. The token is automatically renewed.
+  #            path: token
+  #        - configMap:
+  #            items:
+  #              - key: ca.crt
+  #                path: ca.crt
+  #            name: kube-root-ca.crt
+  #        - downwardAPI:
+  #            items:
+  #              - fieldRef:
+  #                  apiVersion: v1
+  #                  fieldPath: metadata.namespace
+  #                path: namespace
 
   # -- Volumes to be used in replacement of emptydir on default volumes
   existingVolumes: {}
@@ -2795,6 +2903,7 @@ repoServer:
     rules: []
 
   # -- Automount API credentials for the Service Account into the pod.
+  # If set to `false`, please ensure the credentials expected by the Kubernetes client-go is provided. Review the example given in the `volumes` and `volumeMounts`
   automountServiceAccountToken: true
 
   ## Repo server service account
@@ -2892,9 +3001,30 @@ applicationSet:
 
   # -- List of extra mounts to add (normally used with extraVolumes)
   extraVolumeMounts: []
+  #  - mountPath: /var/run/secrets/kubernetes.io/serviceaccount # Default location of the Service Account token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller
+  #    name: kube-api-access-argocd
+  #    readOnly: true
 
   # -- List of extra volumes to add
   extraVolumes: []
+  #  - name: kube-api-access-argocd #Mount manually the SA token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#tokenrequest-api
+  #    projected:
+  #      defaultMode: 420 # decimal equivalent of octal 0644
+  #      sources:
+  #        - serviceAccountToken:
+  #            expirationSeconds: 3607 #The Service Account token is valid for an hour. The token is automatically renewed.
+  #            path: token
+  #        - configMap:
+  #            items:
+  #              - key: ca.crt
+  #                path: ca.crt
+  #            name: kube-root-ca.crt
+  #        - downwardAPI:
+  #            items:
+  #              - fieldRef:
+  #                  apiVersion: v1
+  #                  fieldPath: metadata.namespace
+  #                path: namespace
 
   ## ApplicationSet controller emptyDir volumes
   emptyDir:
@@ -2962,6 +3092,7 @@ applicationSet:
     portName: http-webhook
 
   # -- Automount API credentials for the Service Account into the pod.
+  # If set to `false`, please ensure the credentials expected by the Kubernetes client-go is provided. Review the example given in the `volumes` and `volumeMounts`
   automountServiceAccountToken: true
 
   serviceAccount:
@@ -3271,9 +3402,30 @@ notifications:
 
   # -- List of extra mounts to add (normally used with extraVolumes)
   extraVolumeMounts: []
+  #  - mountPath: /var/run/secrets/kubernetes.io/serviceaccount # Default location of the Service Account token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller
+  #    name: kube-api-access-argocd
+  #    readOnly: true
 
   # -- List of extra volumes to add
   extraVolumes: []
+  #  - name: kube-api-access-argocd #Mount manually the SA token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#tokenrequest-api
+  #    projected:
+  #      defaultMode: 420 # decimal equivalent of octal 0644
+  #      sources:
+  #        - serviceAccountToken:
+  #            expirationSeconds: 3607 #The Service Account token is valid for an hour. The token is automatically renewed.
+  #            path: token
+  #        - configMap:
+  #            items:
+  #              - key: ca.crt
+  #                path: ca.crt
+  #            name: kube-root-ca.crt
+  #        - downwardAPI:
+  #            items:
+  #              - fieldRef:
+  #                  apiVersion: v1
+  #                  fieldPath: metadata.namespace
+  #                path: namespace
 
   # -- Define user-defined context
   ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/templates/#defining-user-defined-context
@@ -3461,6 +3613,7 @@ notifications:
   priorityClassName: ""
 
   # -- Automount API credentials for the Service Account into the pod.
+  # If set to `false`, please ensure the credentials expected by the Kubernetes client-go is provided. Review the example given in the `volumes` and `volumeMounts`
   automountServiceAccountToken: true
 
   serviceAccount:
@@ -3798,9 +3951,30 @@ commitServer:
 
   # -- List of extra mounts to add (normally used with extraVolumes)
   extraVolumeMounts: []
+  #  - mountPath: /var/run/secrets/kubernetes.io/serviceaccount # Default location of the Service Account token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller
+  #    name: kube-api-access-argocd
+  #    readOnly: true
 
   # -- List of extra volumes to add
   extraVolumes: []
+  #  - name: kube-api-access-argocd #Mount manually the SA token as per described under: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#tokenrequest-api
+  #    projected:
+  #      defaultMode: 420 # decimal equivalent of octal 0644
+  #      sources:
+  #        - serviceAccountToken:
+  #            expirationSeconds: 3607 #The Service Account token is valid for an hour. The token is automatically renewed.
+  #            path: token
+  #        - configMap:
+  #            items:
+  #              - key: ca.crt
+  #                path: ca.crt
+  #            name: kube-root-ca.crt
+  #        - downwardAPI:
+  #            items:
+  #              - fieldRef:
+  #                  apiVersion: v1
+  #                  fieldPath: metadata.namespace
+  #                path: namespace
 
   metrics:
     # -- Enables prometheus metrics server
@@ -3827,6 +4001,7 @@ commitServer:
     labels: {}
 
   # -- Automount API credentials for the Service Account into the pod.
+  # If set to `false`, please ensure the credentials expected by the Kubernetes client-go is provided. Review the example given in the `volumes` and `volumeMounts`
   automountServiceAccountToken: false
 
   serviceAccount:
