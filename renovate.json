@@ -86,10 +86,26 @@
         "argoproj/argo-rollouts",
         "argoproj-labs/argocd-image-updater",
         "argoprojlabs/argocd-extension-installer",
-        "public.ecr.aws/docker/library/redis",
         "ghcr.io/dexidp/dex",
         "ghcr.io/oliver006/redis_exporter"
       ],
+      "commitMessagePrefix": "chore({{parentDir}}):",
+      "postUpgradeTasks": {
+        "commands": [
+          "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}}",
+          "./scripts/helm-docs.sh"
+        ]
+      }
+    },
+    {
+      "matchPackageNames": [
+        "public.ecr.aws/docker/library/redis"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "allowedVersions": "< 7.4",
+      "description": ["With version 7.4, Redis is moving away from the BSD 3-Clause License"],
       "commitMessagePrefix": "chore({{parentDir}}):",
       "postUpgradeTasks": {
         "commands": [
