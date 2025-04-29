@@ -266,6 +266,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: otlp.headers
                 optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_OTLP_ATTRS
+            valueFrom:
+              configMapKeyRef:
+                key: otlp.attrs
+                name: argocd-cmd-params-cm
+                optional: true
           - name: ARGOCD_APPLICATION_NAMESPACES
             valueFrom:
               configMapKeyRef:
