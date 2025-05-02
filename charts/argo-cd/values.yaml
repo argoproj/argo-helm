@@ -1293,7 +1293,8 @@ redis:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.4.2-alpine
+    ## Do not upgrade to >= 7.4.0, otherwise you are no longer using an open source version of Redis
+    tag: 7.2.8-alpine
     # -- Redis image pull policy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1579,7 +1580,8 @@ redis-ha:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.4.2-alpine
+    ## Do not upgrade to >= 7.4.0, otherwise you are no longer using an open source version of Redis
+    tag: 7.2.8-alpine
   ## Prometheus redis-exporter sidecar
   exporter:
     # -- Enable Prometheus redis-exporter sidecar
