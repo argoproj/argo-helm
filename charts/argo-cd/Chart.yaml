@@ -3,7 +3,7 @@ appVersion: v2.14.9-2025-04-23-4de04dd8
 kubeVersion: ">=1.25.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 7.8.23-2-cap-v2.14.9-2025-04-23-4de04dd8
+version: 7.8.23-3-cap-v2.14.9-2025-04-23-4de04dd8
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -27,54 +27,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: downgraded helm/chart-releaser-action to v1.5.0 to avoid issue https://github.com/helm/chart-releaser-action/issues/171
-    - kind: changed
-      description: bumped argo-cd to v2.14.9-2025-04-20-584fc7f3
-    - kind: fixed
-      description: Secret for embedded Redis deployments now always uses the same name and key
-    - kind: fixed
-      description: Make code clearer when Redis Secret is optional
-    - kind: fixed
-      description: Correct oliver006/redis_exporter image tag
-    - kind: fixed
-      description: Moved to oliver006/redis_exporter to support multi-arch images (also for non-HA redis)
-    - kind: fixed
-      description: Remove quotation marks around loglevel and logformat CLI args
-    - kind: fixed
-      description: Fixed the log level and log format override for components "dexserver" and "notificationscontroller"
-    - kind: deprecated
-      description: Value `notifications.logLevel` is depreacted in favor of `configs.params."notificationscontroller.log.level"`
-    - kind: deprecated
-      description: Value `notifications.logFormat` is depreacted in favor of `configs.params."notificationscontroller.log.format"`
-    - kind: deprecated
-      description: Value `dex.logLevel` is depreacted in favor of `configs.params."dexserver.log.level"`
-    - kind: deprecated
-      description: Value `dex.logFormat` is depreacted in favor of `configs.params."dexserver.log.format"`
-    - kind: changed
-      description: Upgrade redis-ha
-    - kind: changed
-      description: Bump redis-exporter to 1.69.0
-    - kind: fixed
-      description: Fixed broken topologySpreadConstraints template in commitServer component
-    - kind: added
-      description: Added a comment how to pass values into argocd-cm ConfigMap
-    - kind: added
-      description: Support controller.sync.timeout.seconds
-    - kind: changed
-      description: Bump dex version to v2.42.0
-    - kind: fixed
-      description: Create ServiceMonitor for dex only if dex is enabled
-    - kind: fixed
-      description: Fixed typo in README
-    - kind: fixed
-      description: remove required function in $cluster_key from clusterCredentials
-    - kind: changed
-      description: Bump redis to 7.4.2
-    - kind: added
-      description: Add feature toggle to ArgoCD configmap allowing sync impersonation
-    - kind: fixed
-      description: Address ingress regression of PR #3081, use toString before tpl function
-    - kind: added
-      description: Added conditional around argocd-tls-certs-cm.yaml helm creation
-    - kind: fixed
-      description: Correct ingress listen-ports example
+      description: removed event-reporter resources

@@ -317,34 +317,6 @@ optional: true
 {{- end -}}
 
 {{/*
-Create event reporter name and version as used by the chart label.
-*/}}
-{{- define "argo-cd.event-reporter.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.eventReporter.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{/*
-Create the name of the Argo CD server service account to use
-*/}}
-{{- define "argo-cd.eventReporterServiceAccountName" -}}
-{{- if .Values.eventReporter.serviceAccount.create -}}
-    {{ default (include "argo-cd.event-reporter.fullname" .) .Values.eventReporter.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.eventReporter.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Helper template to set argocd server url in event reporter
-*/}}
-{{- define "argo-cd.eventReporter.argocd-server-adress" -}}
-  {{- $port := .Values.server.service.servicePortHttps }}
-  {{- if (index .Values.configs.params "server.insecure") }}
-    {{- $port = .Values.server.service.servicePortHttp }}
-  {{- end }}
-  {{- printf "%s:%v" (include "argo-cd.server.fullname" .) $port }}
-{{- end -}}
-
-{{/*
   Create acr controller name and version as used by the chart label.
 */}}
 {{- define "argo-cd.acr-controller.fullname" -}}
