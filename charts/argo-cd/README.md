@@ -766,6 +766,15 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` | The name of tracking label used by Argo CD for resource pruning |
 | configs.cm."application.sync.impersonation.enabled" | bool | `false` | Enable control of the service account used for the sync operation (alpha) |
 | configs.cm."exec.enabled" | bool | `false` | Enable exec feature in Argo UI |
+| configs.cm."resource.customizations.ignoreResourceUpdates.ConfigMap" | string | See [values.yaml] | Ignore the cluster-autoscaler status |
+| configs.cm."resource.customizations.ignoreResourceUpdates.Endpoints" | string | See [values.yaml] | Ignores update if Endpoints is not excluded globally |
+| configs.cm."resource.customizations.ignoreResourceUpdates.all" | string | See [values.yaml] | Ignoring status for all resources. An update will still be sent if the status update causes the health to change. |
+| configs.cm."resource.customizations.ignoreResourceUpdates.apps_ReplicaSet" | string | See [values.yaml] | Ignore the common scaling annotations |
+| configs.cm."resource.customizations.ignoreResourceUpdates.argoproj.io_Application" | string | See [values.yaml] | Some Application fields are generated and not related to the application updates itself |
+| configs.cm."resource.customizations.ignoreResourceUpdates.argoproj.io_Rollout" | string | See [values.yaml] | Ignore Argo Rollouts generated fields |
+| configs.cm."resource.customizations.ignoreResourceUpdates.autoscaling_HorizontalPodAutoscaler" | string | See [values.yaml] | Legacy annotations used on HPA autoscaling/v1 |
+| configs.cm."resource.customizations.ignoreResourceUpdates.discovery.k8s.io_EndpointSlice" | string | See [values.yaml] | Ignores update if EndpointSlice is not excluded globally |
+| configs.cm."resource.exclusions" | string | See [values.yaml] | Resource Exclusion/Inclusion |
 | configs.cm."server.rbac.log.enforce.enable" | bool | `false` | Enable logs RBAC enforcement |
 | configs.cm."statusbadge.enabled" | bool | `false` | Enable Status Badge |
 | configs.cm."timeout.hard.reconciliation" | string | `"0s"` | Timeout to refresh application data as well as target manifests cache |
