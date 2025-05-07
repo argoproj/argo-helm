@@ -118,7 +118,7 @@ Fields to note:
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `true` | Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs. |
 | emissary.images | list | `[]` | The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used. |
-| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
+| extraObjects | list | `[]` | Array of extra kubernetes manifests to deploy |
 | fullnameOverride | string | `nil` | String to fully override "argo-workflows.fullname" template |
 | images.pullPolicy | string | `"Always"` | imagePullPolicy to apply to all containers |
 | images.pullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry |
@@ -168,7 +168,7 @@ Fields to note:
 | controller.instanceID.enabled | bool | `false` | Configures the controller to filter workflow submissions to only those which have a matching instanceID attribute. |
 | controller.instanceID.explicitID | string | `""` | Use a custom instanceID |
 | controller.instanceID.useReleaseName | bool | `false` | Use ReleaseName as instanceID |
-| controller.kubeConfig | object | `{}` (See [values.yaml]) | Configure when workflow controller runs in a different k8s cluster with the workflow workloads, or needs to communicate with the k8s apiserver using an out-of-cluster kubeconfig secret. |
+| controller.kubeConfig | object | `{}` (See [values.yaml]) | Configure when workflow controller runs in a different kubernetes cluster with the workflow workloads, or needs to communicate with the kubernetes apiserver using an out-of-cluster kubeconfig secret. |
 | controller.links | list | `[]` | Configure Argo Server to show custom [links] |
 | controller.livenessProbe | object | See [values.yaml] | Configure liveness [probe] for the controller |
 | controller.loadBalancerClass | string | `""` | The class of the load balancer implementation |
@@ -206,9 +206,9 @@ Fields to note:
 | controller.podLabels | object | `{}` | Optional labels to add to the controller pods |
 | controller.podSecurityContext | object | `{}` | SecurityContext to set on the controller pods |
 | controller.priorityClassName | string | `""` | Leverage a PriorityClass to ensure your pods survive resource shortages. |
-| controller.rbac.accessAllSecrets | bool | `false` | Allows controller to get, list and watch all k8s secrets. Can only be used if secretWhitelist is empty. |
+| controller.rbac.accessAllSecrets | bool | `false` | Allows controller to get, list and watch all kubernetes secrets. Can only be used if secretWhitelist is empty. |
 | controller.rbac.create | bool | `true` | Adds Role and RoleBinding for the controller. |
-| controller.rbac.secretWhitelist | list | `[]` | Allows controller to get, list, and watch certain k8s secrets |
+| controller.rbac.secretWhitelist | list | `[]` | Allows controller to get, list, and watch certain kubernetes secrets |
 | controller.rbac.writeConfigMaps | bool | `false` | Allows controller to create and update ConfigMaps. Enables memoization feature |
 | controller.replicas | int | `1` | The number of controller pods to run |
 | controller.resourceRateLimit | object | `{}` | Globally limits the rate at which pods are created. This is intended to mitigate flooding of the Kubernetes API server by workflows with a large amount of parallel nodes. |
