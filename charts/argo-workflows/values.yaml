@@ -100,9 +100,9 @@ controller:
   rbac:
     # -- Adds Role and RoleBinding for the controller.
     create: true
-    # -- Allows controller to get, list, and watch certain k8s secrets
+    # -- Allows controller to get, list, and watch certain kubernetes secrets
     secretWhitelist: []
-    # -- Allows controller to get, list and watch all k8s secrets. Can only be used if secretWhitelist is empty.
+    # -- Allows controller to get, list and watch all kubernetes secrets. Can only be used if secretWhitelist is empty.
     accessAllSecrets: false
     # -- Allows controller to create and update ConfigMaps. Enables memoization feature
     writeConfigMaps: false
@@ -400,18 +400,18 @@ controller:
 
   nodeEvents:
     # -- Enable to emit events on node completion.
-    ## This can take up a lot of space in k8s (typically etcd) resulting in errors when trying to create new events:
+    ## This can take up a lot of space in kubernetes (typically etcd) resulting in errors when trying to create new events:
     ## "Unable to create audit event: etcdserver: mvcc: database space exceeded"
     enabled: true
 
   workflowEvents:
     # -- Enable to emit events on workflow status changes.
-    ## This can take up a lot of space in k8s (typically etcd), resulting in errors when trying to create new events:
+    ## This can take up a lot of space in kubernetes (typically etcd), resulting in errors when trying to create new events:
     ## "Unable to create audit event: etcdserver: mvcc: database space exceeded"
     enabled: true
 
-  # -- Configure when workflow controller runs in a different k8s cluster with the workflow workloads,
-  # or needs to communicate with the k8s apiserver using an out-of-cluster kubeconfig secret.
+  # -- Configure when workflow controller runs in a different kubernetes cluster with the workflow workloads,
+  # or needs to communicate with the kubernetes apiserver using an out-of-cluster kubeconfig secret.
   # @default -- `{}` (See [values.yaml])
   kubeConfig: {}
     # # name of the kubeconfig secret, may not be empty when kubeConfig specified
@@ -799,7 +799,7 @@ server:
     # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
     successThreshold: 1
 
-# -- Array of extra K8s manifests to deploy
+# -- Array of extra kubernetes manifests to deploy
 extraObjects: []
   # - apiVersion: secrets-store.csi.x-k8s.io/v1
   #   kind: SecretProviderClass
@@ -862,8 +862,8 @@ artifactRepository:
     # bucket: <project>-argo
     # keyFormat: "{{ \"{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}\" }}"
     # # serviceAccountKeySecret is a secret selector.
-    # # It references the k8s secret named 'my-gcs-credentials'.
-    # # This secret is expected to have have the key 'serviceAccountKey',
+    # # It references the kubernetes secret named 'my-gcs-credentials'.
+    # # This secret is expected to have the key 'serviceAccountKey',
     # # containing the base64 encoded credentials
     # # to the bucket.
     # #
@@ -879,7 +879,7 @@ artifactRepository:
     # container: my-container-name
     # blobNameFormat: path/in/container
     # # accountKeySecret is a secret selector.
-    # # It references the k8s secret named 'my-azure-storage-credentials'.
+    # # It references the kubernetes secret named 'my-azure-storage-credentials'.
     # # This secret is expected to have have the key 'account-access-key',
     # # containing the base64 encoded credentials to the storage account.
     # # If a managed identity has been assigned to the machines running the
@@ -935,8 +935,8 @@ artifactRepositoryRef: {}
   #        endpoint: http://oss-cn-zhangjiakou-internal.aliyuncs.com
   #        bucket: $mybucket
   #        # accessKeySecret and secretKeySecret are secret selectors.
-  #        # It references the k8s secret named 'bucket-workflow-artifect-credentials'.
-  #        # This secret is expected to have have the keys 'accessKey'
+  #        # It references the kubernetes secret named 'bucket-workflow-artifect-credentials'.
+  #        # This secret is expected to have the keys 'accessKey'
   #        # and 'secretKey', containing the base64 encoded credentials
   #        # to the bucket.
   #        accessKeySecret:
