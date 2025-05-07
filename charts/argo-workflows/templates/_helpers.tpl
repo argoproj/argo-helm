@@ -112,7 +112,7 @@ Create the name of the server service account to use
 {{- if .Values.server.serviceAccount.create -}}
     {{ default (include "argo-workflows.server.fullname" .) .Values.server.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.server.serviceAccount.name }}
+    {{- "default" -}}
 {{- end -}}
 {{- end -}}
 
@@ -123,7 +123,7 @@ Create the name of the controller service account to use
 {{- if .Values.controller.serviceAccount.create -}}
     {{ default (include "argo-workflows.controller.fullname" .) .Values.controller.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.controller.serviceAccount.name }}
+    {{- "default" -}}
 {{- end -}}
 {{- end -}}
 
