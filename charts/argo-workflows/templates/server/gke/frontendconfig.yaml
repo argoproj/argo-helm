@@ -1,4 +1,4 @@
-{{- if .Values.server.GKEfrontendConfig.enabled }}
+{{- if and .Values.server.enabled .Values.server.GKEfrontendConfig.enabled }}
 apiVersion: networking.gke.io/v1beta1
 kind: FrontendConfig
 metadata:
