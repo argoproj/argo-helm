@@ -128,11 +128,11 @@ spec:
       {{- with .Values.server.volumes }}
         {{- toYaml . | nindent 6}}
       {{- end }}
-      {{- with .Values.server.nodeSelector }}
+      {{- with .Values.server.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.tolerations }}
+      {{- with .Values.server.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

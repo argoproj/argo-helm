@@ -118,11 +118,11 @@ spec:
       volumes:
         {{- toYaml . | nindent 6 }}
       {{- end }}
-      {{- with .Values.controller.nodeSelector }}
+      {{- with .Values.controller.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controller.tolerations }}
+      {{- with .Values.controller.tolerations | default .Values.global.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
