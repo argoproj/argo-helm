@@ -196,7 +196,7 @@ Fields to note:
 | controller.namespaceParallelism | string | `nil` | Limits the maximum number of incomplete workflows in a namespace |
 | controller.navColor | string | `""` | Set ui navigation bar background color |
 | controller.nodeEvents.enabled | bool | `true` | Enable to emit events on node completion. |
-| controller.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
+| controller.nodeSelector | object | `{}` | [Node selector] |
 | controller.parallelism | string | `nil` | parallelism dictates how many workflows can be running at the same time |
 | controller.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the controller pods |
 | controller.persistence | object | `{}` | enable Workflow Archive to store the status of workflows. Postgres and MySQL (>= 5.7.8) are available. |
@@ -318,7 +318,7 @@ Fields to note:
 | server.logging.globallevel | string | `"0"` | Set the glog logging level |
 | server.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | server.name | string | `"server"` | Server name string |
-| server.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
+| server.nodeSelector | object | `{}` | [Node selector] |
 | server.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the server pods |
 | server.podAnnotations | object | `{}` | optional map of annotations to be applied to the ui Pods |
 | server.podLabels | object | `{}` | Optional labels to add to the UI pods |
