@@ -305,6 +305,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: otlp.headers
                 optional: true
+          - name: ARGOCD_SERVER_OTLP_ATTRS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.attrs
+                optional: true
           - name: ARGOCD_APPLICATION_NAMESPACES
             valueFrom:
               configMapKeyRef:
@@ -370,6 +376,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: hydrator.enabled
+                optional: true
+          - name: ARGOCD_SYNC_WITH_REPLACE_ALLOWED
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.sync.replace.allowed
                 optional: true
         {{- with .Values.server.envFrom }}
         envFrom:
