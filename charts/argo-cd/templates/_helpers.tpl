@@ -280,12 +280,13 @@ ipFamilies: {{ toYaml . | nindent 4 }}
 secretKeyRef of env variable REDIS_USERNAME
 */}}
 {{- define "argo-cd.redisUsernameSecretRef" -}}
-    {{- if and .Values.externalRedis.host -}}
-name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+    {{- if .Values.externalRedis.host -}}
+name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
 key: redis-username
-optional: true
+optional: {{ if .Values.externalRedis.username }}false{{ else }}true{{ end }}
+
     {{- else -}}
-name: {{ include "argo-cd.redis.fullname" . }}
+name: "argocd-redis"
 key: redis-username
 optional: true
     {{- end -}}
