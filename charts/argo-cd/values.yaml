@@ -219,8 +219,15 @@ configs:
     # oidc.config: |
     #   name: AzureAD
     #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
-    #   clientID: CLIENT_ID
+    #   clientID: aaaabbbbccccddddeee
     #   clientSecret: $oidc.azuread.clientSecret
+
+    # Some OIDC providers require a separate clientID for different callback URLs.
+    # For example, if configuring Argo CD with self-hosted Dex, you will need a separate client ID
+    # for the 'localhost' (CLI) client to Dex. This field is optional. If omitted, the CLI will
+    # use the same clientID as the Argo CD server
+    #   cliClientID: vvvvwwwwxxxxyyyyzzzz
+
     #   rootCA: |
     #     -----BEGIN CERTIFICATE-----
     #     ... encoded certificate data here ...
@@ -233,13 +240,23 @@ configs:
     #   allowedAudiences:
     #     - aaaabbbbccccddddeee
     #     - qqqqwwwweeeerrrrttt
+
+    # Optional set of OIDC claims to request on the ID token.
     #   requestedIDTokenClaims:
     #     groups:
     #       essential: true
+
+    # Optional set of OIDC scopes to request. If omitted, defaults to: ["openid", "profile", "email", "groups"]
     #   requestedScopes:
     #     - openid
     #     - profile
     #     - email
+
+    # PKCE authentication flow processes authorization flow from browser only - default false
+    # uses the clientID
+    # make sure the Identity Provider (IdP) is public and doesn't need clientSecret
+    # make sure the Identity Provider (IdP) has this redirect URI registered: https://argocd.example.com/pkce/verify
+    #   enablePKCEAuthentication: true
 
     # Extension Configuration
     ## Ref: https://argo-cd.readthedocs.io/en/latest/developer-guide/extensions/proxy-extensions/
