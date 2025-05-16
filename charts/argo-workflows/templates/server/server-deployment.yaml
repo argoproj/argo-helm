@@ -27,9 +27,14 @@ spec:
         {{- with .Values.server.podLabels }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.server.podAnnotations }}
+      {{- if or  .Values.server.podAnnotations .Values.controller.configMap.create }}
       annotations:
+        {{- with .Values.server.podAnnotations }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.controller.configMap.create }}
+        checksum/cm: {{ include (print $.Template.BasePath "/controller/workflow-controller-config-map.yaml") . | sha256sum }}
+        {{- end }}
       {{- end }}
     spec:
       serviceAccountName: {{ template "argo-workflows.serverServiceAccountName" . }}
