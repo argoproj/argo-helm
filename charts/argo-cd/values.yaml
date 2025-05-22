@@ -1732,6 +1732,10 @@ redis-ha:
   haproxy:
     # -- Enabled HAProxy LoadBalancing/Proxy
     enabled: true
+    # -- HAProxy image
+    image:
+      repository: public.ecr.aws/docker/library/haproxy
+      tag: 3.0.8-alpine
     # --  Custom labels for the haproxy pod. This is relevant for Argo CD CLI.
     labels:
       app.kubernetes.io/name: argocd-redis-ha-haproxy
