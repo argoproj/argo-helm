@@ -21,12 +21,12 @@ fullnameOverride: ""
 namespaceOverride: ""
 
 # -- Create cluster roles for cluster-wide installation.
-## Used when you manage applications in the same cluster where Argo CD Image Updater runs.
-## If you want to use this, please set `.Values.rbac.enabled` true as well.
+# | Used when you manage applications in the same cluster where Argo CD Image Updater runs.
+# | If you want to use this, please set `.Values.rbac.enabled` true as well.
 createClusterRoles: true
 
 # -- Extra arguments for argocd-image-updater not defined in `config.argocd`.
-# If a flag contains both key and value, they need to be split to a new entry
+# | If a flag contains both key and value, they need to be split to a new entry
 extraArgs: []
   # - --disable-kubernetes
   # - --dry-run
@@ -45,8 +45,8 @@ extraArgs: []
   # - /app/config/registries.conf
 
 # -- Extra environment variables for argocd-image-updater.
-#    These variables are also available to the authentication scripts mounted under /scripts,
-#    provided 'authScripts.enabled' is set to 'true'.
+# | These variables are also available to the authentication scripts mounted under /scripts,
+# | provided 'authScripts.enabled' is set to 'true'.
 extraEnv: []
   # - name: AWS_REGION
   #   value: "us-west-1"
@@ -63,7 +63,7 @@ extraEnvFrom: []
   #     name: secret-name
 
 # -- Extra K8s manifests to deploy for argocd-image-updater
-## Note: Supports use of custom Helm templates
+# | Note: Supports use of custom Helm templates
 extraObjects: []
   # - apiVersion: secrets-store.csi.x-k8s.io/v1
   #   kind: SecretProviderClass
@@ -205,14 +205,14 @@ config:
 # refer to https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/#specifying-credentials-for-accessing-container-registries for more info
 authScripts:
   # -- Set to 'true' to enable mounting the defined authentication scripts.
-  #    If enabled, the scripts will be mounted at `/scripts` within the pod.
+  # | If enabled, the scripts will be mounted at `/scripts` within the pod.
   enabled: false
   # -- Name of the authentication scripts ConfigMap
   name: argocd-image-updater-authscripts
   # -- Map of key-value pairs where the key consists of the name of the script and the value the contents.
-  #    Expect the script to output Docker credentials in the form: <username>:<password>
-  #    Authentication scripts can be used for various cloud providers like ECR or Azure Workload Identity.
-  #    For Azure Workload Identity, you can place your authentication script here to handle token acquisition.
+  # | Expect the script to output Docker credentials in the form: <username>:<password>
+  # | Authentication scripts can be used for various cloud providers like ECR or Azure Workload Identity.
+  # | For Azure Workload Identity, you can place your authentication script here to handle token acquisition.
   scripts: {}
     # auth1.sh: |
     #   #!/bin/sh
@@ -221,7 +221,7 @@ authScripts:
     #   #!/bin/sh
     #   echo "auth script 2 here"
     # azure-workload-identity.sh: |
-    #   #!/bin/sh
+    #   #!/bin:sh
     #   # Example script for Azure Workload Identity.
     #   # This script would typically use environment variables set by the workload identity
     #   # to acquire an Azure AD token and authenticate with Azure Container Registry (ACR).
@@ -231,12 +231,12 @@ serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
   # -- Annotations to add to the service account, useful for integrating with
-  #    platforms like Azure Workload Identity.
+  # | platforms like Azure Workload Identity.
   annotations: {}
   # Example for Azure Workload Identity:
     # azure.workload.identity/client-id: "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
   # -- Labels to add to the service account, useful for integration with
-  #    platforms like Azure Workload Identity.
+  # | platforms like Azure Workload Identity.
   labels: {}
   # Example for Azure Workload Identity:
   #  azure.workload.identity/use: "true"
@@ -248,7 +248,7 @@ serviceAccount:
 podAnnotations: {}
 
 # -- Labels to apply to the pods, useful for integrating with
-#    platforms like Azure Workload Identity.
+# | platforms like Azure Workload Identity.
 podLabels: {}
   # azure.workload.identity/use: "true"
 
