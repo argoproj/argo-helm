@@ -91,11 +91,11 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/). |
 | config.sshConfig.config | string | `""` | Argo CD Image Updater ssh client parameter configuration. |
 | config.sshConfig.name | string | `"argocd-image-updater-ssh-config"` | Name of the sshConfig ConfigMap |
-| createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. Used when you manage applications in the same cluster where Argo CD Image Updater runs. If you want to use this, please set `.Values.rbac.enabled` true as well. |
+| createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
 | extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry. |
-| extraEnv | list | `[]` | Extra environment variables for argocd-image-updater. These variables are also available to the authentication scripts mounted under /scripts, provided 'authScripts.enabled' is set to 'true'. |
+| extraEnv | list | `[]` | Extra environment variables for argocd-image-updater. |
 | extraEnvFrom | list | `[]` | Extra envFrom to pass to argocd-image-updater |
-| extraObjects | list | `[]` | Extra K8s manifests to deploy for argocd-image-updater. Note: Supports use of custom Helm templates. |
+| extraObjects | list | `[]` | Extra K8s manifests to deploy for argocd-image-updater. |
 | fullnameOverride | string | `""` | Global fullname (argocd-image-updater.fullname in _helpers.tpl) override |
 | image.pullPolicy | string | `"Always"` | Default image pull policy |
 | image.repository | string | `"quay.io/argoprojlabs/argocd-image-updater"` | Default image repository |
