@@ -68,10 +68,6 @@ The `config.registries` value can be used exactly as it looks in the documentati
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{}` | Kubernetes affinity settings for the deployment |
-| authScripts.enabled | bool | `false` | Set to 'true' to enable mounting the defined authentication scripts. If enabled, the scripts will be mounted at `/scripts` within the pod. |
-| authScripts.name | string | `"argocd-image-updater-authscripts"` | Name of the authentication scripts ConfigMap |
-| authScripts.scripts | object | `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents. Expect the script to output Docker credentials in the form: <username>:<password> Authentication scripts can be used for various cloud providers like ECR or Azure Workload Identity. For Azure Workload Identity, you can place your authentication script here to handle token acquisition. |
 | config.applicationsAPIKind | string | `""` | API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`) |
 | config.argocd.grpcWeb | bool | `true` | Use the gRPC-web protocol to connect to the Argo CD API |
 | config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
@@ -88,46 +84,21 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.gitCommitUser | string | `""` | Username to use for Git commits |
 | config.logLevel | string | `"info"` | Argo CD Image Update log level |
 | config.name | string | `"argocd-image-updater-config"` | Name of the ConfigMap |
-| config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/) |
-| config.sshConfig.config | string | `""` | Argo CD Image Updater ssh client parameter configuration. |
-| config.sshConfig.name | string | `"argocd-image-updater-ssh-config"` | Name of the sshConfig ConfigMap |
-| createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
-| extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry |
-| extraEnv | list | `[]` | Extra environment variables for argocd-image-updater. |
+| config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/). |
+| createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. Used when you manage applications in the same cluster where Argo CD Image Updater runs. If you want to use this, please set `.Values.rbac.enabled` true as well. |
+| extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry. |
+| extraEnv | list | `[]` | Extra environment variables for argocd-image-updater. These variables are also available to the authentication scripts mounted under /scripts, provided 'authScripts.enabled' is set to 'true'. |
 | extraEnvFrom | list | `[]` | Extra envFrom to pass to argocd-image-updater |
-| extraObjects | list | `[]` | Extra K8s manifests to deploy for argocd-image-updater. |
+| extraObjects | list | `[]` | Extra K8s manifests to deploy for argocd-image-updater. Note: Supports use of custom Helm templates. |
 | fullnameOverride | string | `""` | Global fullname (argocd-image-updater.fullname in _helpers.tpl) override |
 | image.pullPolicy | string | `"Always"` | Default image pull policy |
 | image.repository | string | `"quay.io/argoprojlabs/argocd-image-updater"` | Default image repository |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | imagePullSecrets | list | `[]` | ImagePullSecrets for the image updater deployment |
 | initContainers | list | `[]` | Init containers to add to the image updater pod |
-| metrics.enabled | bool | `false` | Deploy metrics service |
-| metrics.service.annotations | object | `{}` | Metrics service annotations |
-| metrics.service.labels | object | `{}` | Metrics service labels |
-| metrics.service.servicePort | int | `8081` | Metrics service port |
-| metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
-| metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
-| metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
-| metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
-| metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
-| metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
-| metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | nameOverride | string | `""` | Global name (argocd-image-updater.name in _helpers.tpl) override |
 | namespaceOverride | string | `""` | Global namespace (argocd-image-updater.namespace in _helpers.tpl) override |
-| nodeSelector | object | `{}` | Kubernetes nodeSelector settings for the deployment |
-| podAnnotations | object | `{}` | Pod Annotations for the deployment |
-| podLabels | object | `{}` | Labels to apply to the pods, useful for integrating with platforms like Azure Workload Identity. |
-| podSecurityContext | object | `{}` | Pod security context settings for the deployment |
-| rbac.enabled | bool | `true` | Enable RBAC creation |
 | replicaCount | int | `1` | Replica count for the deployment. It is not advised to run more than one replica. |
-| resources | object | `{}` | Pod memory and cpu resource settings for the deployment |
-| securityContext | object | See [values.yaml] | Security context settings for the deployment |
-| serviceAccount.annotations | object | `{}` | Annotations to add to the service account, useful for integrating with platforms like Azure Workload Identity. |
-| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| serviceAccount.labels | object | `{}` | Labels to add to the service account, useful for integration with platforms like Azure Workload Identity. |
-| serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| tolerations | list | `[]` | Kubernetes toleration settings for the deployment |
 | updateStrategy | object | `{"type":"Recreate"}` | The deployment strategy to use to replace existing pods with new ones |
 | volumeMounts | list | `[]` | Additional volumeMounts to the image updater main container |
 | volumes | list | `[]` | Additional volumes to the image updater pod |
