@@ -20,10 +20,13 @@ fullnameOverride: ""
 # -- Global namespace (argocd-image-updater.namespace in _helpers.tpl) override
 namespaceOverride: ""
 
-# -- Create cluster roles for cluster-wide installation. Used when you manage applications in the same cluster where Argo CD Image Updater runs. If you want to use this, please set `.Values.rbac.enabled` true as well.
+# -- Create cluster roles for cluster-wide installation.
+## Used when you manage applications in the same cluster where Argo CD Image Updater runs.
+## If you want to use this, please set `.Values.rbac.enabled` true as well.
 createClusterRoles: true
 
-# -- Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry
+# -- Extra arguments for argocd-image-updater not defined in `config.argocd`.
+# If a flag contains both key and value, they need to be split to a new entry
 extraArgs: []
   # - --disable-kubernetes
   # - --dry-run
@@ -41,7 +44,8 @@ extraArgs: []
   # - --registries-conf-path
   # - /app/config/registries.conf
 
-# -- Extra environment variables for argocd-image-updater. These variables are also available to the authentication scripts mounted under /scripts, provided 'authScripts.enabled' is set to 'true'.
+# -- Extra environment variables for argocd-image-updater.
+## These variables are also available to the authentication scripts mounted under /scripts, provided 'authScripts.enabled' is set to 'true'.
 extraEnv: []
   # - name: AWS_REGION
   #   value: "us-west-1"
@@ -57,7 +61,8 @@ extraEnvFrom: []
   # - secretRef:
   #     name: secret-name
 
-# -- Extra K8s manifests to deploy for argocd-image-updater. Note: Supports use of custom Helm templates
+# -- Extra K8s manifests to deploy for argocd-image-updater.
+## Note: Supports use of custom Helm templates
 extraObjects: []
   # - apiVersion: secrets-store.csi.x-k8s.io/v1
   #   kind: SecretProviderClass
