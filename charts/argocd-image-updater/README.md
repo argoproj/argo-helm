@@ -69,7 +69,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes affinity settings for the deployment |
-| authScripts.enabled | bool | `false` | Set to 'true' to enable mounting the defined authentication scripts. If enabled, the scripts will be mounted at `/scripts` within the pod. |
+| authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts` |
 | authScripts.name | string | `"argocd-image-updater-authscripts"` | Name of the authentication scripts ConfigMap |
 | authScripts.scripts | object | `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents.  |
 | config.applicationsAPIKind | string | `""` | API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`) |
@@ -117,15 +117,15 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | namespaceOverride | string | `""` | Global namespace (argocd-image-updater.namespace in _helpers.tpl) override |
 | nodeSelector | object | `{}` | Kubernetes nodeSelector settings for the deployment |
 | podAnnotations | object | `{}` | Pod Annotations for the deployment |
-| podLabels | object | `{}` | Labels to apply to the pods, useful for integrating with platforms like Azure Workload Identity |
+| podLabels | object | `{}` | Labels to apply to the pods |
 | podSecurityContext | object | `{}` | Pod security context settings for the deployment |
 | rbac.enabled | bool | `true` | Enable RBAC creation |
 | replicaCount | int | `1` | Replica count for the deployment. It is not advised to run more than one replica. |
 | resources | object | `{}` | Pod memory and cpu resource settings for the deployment |
 | securityContext | object | See [values.yaml] | Security context settings for the deployment |
-| serviceAccount.annotations | object | `{}` | Annotations to add to the service account, useful for integrating with platforms like Azure Workload Identity |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| serviceAccount.labels | object | `{}` | Labels to add to the service account, useful for integration with platforms like Azure Workload Identity |
+| serviceAccount.labels | object | `{}` | Labels to add to the service account |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template. |
 | tolerations | list | `[]` | Kubernetes toleration settings for the deployment |
 | updateStrategy | object | `{"type":"Recreate"}` | The deployment strategy to use to replace existing pods with new ones |
