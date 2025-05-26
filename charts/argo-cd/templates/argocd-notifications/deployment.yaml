@@ -66,11 +66,15 @@ spec:
           args:
             - /usr/local/bin/argocd-notifications
             - --metrics-port={{ .Values.notifications.containerPorts.metrics }}
-            - --loglevel={{ default .Values.global.logging.level .Values.notifications.logLevel }}
-            - --logformat={{ default .Values.global.logging.format .Values.notifications.logFormat }}
             - --namespace={{ include "argo-cd.namespace" . }}
             - --argocd-repo-server={{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
             - --secret-name={{ .Values.notifications.secret.name }}
+            {{- with .Values.notifications.logLevel }}
+            - --loglevel={{ . }}
+            {{- end }}
+            {{- with .Values.notifications.logFormat }}
+            - --logformat={{ . }}
+            {{- end }}
             {{- range .Values.notifications.extraArgs }}
             - {{ . | squote }}
             {{- end }}
@@ -89,6 +93,12 @@ spec:
                 configMapKeyRef:
                   key: notificationscontroller.log.format
                   name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_LOG_FORMAT_TIMESTAMP
+              valueFrom:
+                configMapKeyRef:
+                  name: argocd-cmd-params-cm
+                  key: log.format.timestamp
                   optional: true
             - name: ARGOCD_APPLICATION_NAMESPACES
               valueFrom:

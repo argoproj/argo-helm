@@ -109,6 +109,8 @@ volumes: []
   #    emptyDir: {}
 
 config:
+  # -- Name of the ConfigMap
+  name: argocd-image-updater-config
   # -- API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`)
   applicationsAPIKind: ""
 
@@ -125,6 +127,8 @@ config:
     plaintext: false
     # -- If specified, the secret with Argo CD API key will be created.
     token: ""
+    # -- Name of the Secret containing the token
+    tokenSecretName: "argocd-image-updater-secret"
 
   # -- Disable kubernetes events
   disableKubeEvents: false
@@ -175,9 +179,11 @@ config:
     #   credentials: ext:/scripts/auth1.sh
     #   credsexpire: 10h
 
-  # -- Argo CD Image Updater ssh client parameter configuration.
   sshConfig:
-    {}
+    # -- Name of the sshConfig ConfigMap
+    name: argocd-image-updater-ssh-config
+    # -- Argo CD Image Updater ssh client parameter configuration.
+    config: ""
     #  config: |
     #    Host *
     #          PubkeyAcceptedAlgorithms +ssh-rsa
@@ -188,6 +194,8 @@ config:
 authScripts:
   # -- Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts`
   enabled: false
+  # -- Name of the authentication scripts ConfigMap
+  name: argocd-image-updater-authscripts
   # -- Map of key-value pairs where the key consists of the name of the script and the value the contents
   scripts: {}
     # auth1.sh: |

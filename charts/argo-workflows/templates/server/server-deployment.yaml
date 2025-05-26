@@ -27,9 +27,14 @@ spec:
         {{- with .Values.server.podLabels }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.server.podAnnotations }}
+      {{- if or  .Values.server.podAnnotations .Values.controller.configMap.create }}
       annotations:
+        {{- with .Values.server.podAnnotations }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.controller.configMap.create }}
+        checksum/cm: {{ include (print $.Template.BasePath "/controller/workflow-controller-config-map.yaml") . | sha256sum }}
+        {{- end }}
       {{- end }}
     spec:
       serviceAccountName: {{ template "argo-workflows.serverServiceAccountName" . }}
@@ -87,6 +92,22 @@ spec:
               {{- end }}
             initialDelaySeconds: 10
             periodSeconds: 20
+          {{- if .Values.server.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.server.livenessProbe.httpGet.path }}
+              port: {{ .Values.server.livenessProbe.httpGet.port }}
+              {{- if .Values.server.secure }}
+              scheme: HTTPS
+              {{- else }}
+              scheme: HTTP
+              {{- end }}
+            initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.server.livenessProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
+            successThreshold: {{ .Values.server.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.server.livenessProbe.failureThreshold }}
+          {{- end }}
           env:
             - name: IN_CLUSTER
               value: "true"

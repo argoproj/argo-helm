@@ -10,7 +10,7 @@ spec:
   selector:
     matchLabels:
       {{- include "argo-events.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
-  revisionHistoryLimit: 5
+  revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
   replicas: {{ .Values.controller.replicas }}
   template:
     metadata:
@@ -108,6 +108,10 @@ spec:
       {{- with .Values.controller.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end -}}
+      {{- with .Values.controller.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.controller.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

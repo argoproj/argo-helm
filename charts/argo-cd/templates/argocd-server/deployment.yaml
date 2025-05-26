@@ -246,19 +246,11 @@ spec:
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
-                key: redis-username
-                optional: true
+                {{- include "argo-cd.redisUsernameSecretRef" . | nindent 16 }}
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
-                {{- if .Values.externalRedis.host }}
-                key: redis-password
-                {{- else }}
-                key: auth
-                {{- end }}
-                optional: true
+                {{- include "argo-cd.redisPasswordSecretRef" . | nindent 16 }}
           - name: REDIS_SENTINEL_USERNAME
             valueFrom:
               secretKeyRef:
@@ -312,6 +304,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: otlp.headers
+                optional: true
+          - name: ARGOCD_SERVER_OTLP_ATTRS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.attrs
                 optional: true
           - name: ARGOCD_APPLICATION_NAMESPACES
             valueFrom:
@@ -372,6 +370,18 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: applicationsetcontroller.enable.scm.providers
+                optional: true
+          - name: ARGOCD_HYDRATOR_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: hydrator.enabled
+                optional: true
+          - name: ARGOCD_SYNC_WITH_REPLACE_ALLOWED
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.sync.replace.allowed
                 optional: true
         {{- with .Values.server.envFrom }}
         envFrom:

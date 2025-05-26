@@ -191,7 +191,7 @@ server:
       alb.ingress.kubernetes.io/scheme: internal
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/backend-protocol: HTTP
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":80}, {"HTTPS":443}]'
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'
       alb.ingress.kubernetes.io/ssl-redirect: '443'
     aws:
       serviceType: ClusterIP # <- Used with target-type: ip
@@ -278,6 +278,42 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 8.0.0
+
+In this release we upgrade the Helm chart to deploy the next major version of Argo CD (v3.0.0).
+Please carefully read at least those resources:
+- [v2.14 to 3.0 upgrade instructions]
+- [Argo CD v3.0 Release Blog Post]
+
+### 7.9.0
+
+Chart versions from >= 7.7.2 and < 7.9.0 are using a Redis version which is no longer using an open source version of Redis.
+Thus we downgraded Redis to latest available 7.2 (from 7.4) to be in-line with upstream manifests and fully honor
+[CNCF Allowlist License Policy].
+
+**Users using redis-ha may encounter issues** which can be resolved by either deleting all redis-ha pods after the
+deployment/upgrade:
+
+```bash
+kubectl delete pods -l app=redis-ha
+```
+
+Or alternatively by temporary switching to a single redis installation, then back to HA.
+1. Evaluate current chart version in use
+   ```bash
+   $ helm ls
+   NAME  	NAMESPACE	REVISION	UPDATED                              	STATUS  	CHART         	APP VERSION
+   argocd	argocd   	3       	2025-04-29 00:07:43.099922 +0200 CEST	deployed	argo-cd-7.8.28	v2.14.11
+   ```
+2. Switch to single redis
+   ```bash
+   helm upgrade argocd argo/argo-cd --version <your current chart version> --reuse-values --set redis-ha.enabled=false
+   ```
+3. Upgrade to chart version 7.9 or newer and re-enable redis HA again
+   ```bash
+   helm upgrade argocd argo/argo-cd --version 7.9.0 --reuse-values --set redis-ha.enabled=true
+   ```
+
 ### 7.0.0
 
 We changed the type of `.Values.configs.clusterCredentials` from `list` to `object`.
@@ -312,7 +348,7 @@ This version introduces authentication for Redis to mitigate GHSA-9766-5277-j5hr
 Upstream steps in the [FAQ] are not enough, since we chose a different approach.
 (We use a Kubernetes Job with [Chart Hooks] to create the auth secret `argocd-redis`.)
 
-Steps to roteate the secret when using the helm chart (bold step is additional to upstream):
+Steps to rotate the secret when using the helm chart (bold step is additional to upstream):
 * Delete `argocd-redis` secret in the namespace where Argo CD is installed.
   ```bash
   kubectl delete secret argocd-redis -n <argocd namespace>
@@ -685,6 +721,8 @@ NAME: my-release
 
 ## Global Configs
 
+NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm ConfigMap.
+
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | global.addPrometheusAnnotations | bool | `false` | Add Prometheus scrape annotations to all metrics services. This can be used as an alternative to the ServiceMonitors. |
@@ -708,7 +746,7 @@ NAME: my-release
 | global.logging.level | string | `"info"` | Set the global logging level. One of: `debug`, `info`, `warn` or `error` |
 | global.networkPolicy.create | bool | `false` | Create NetworkPolicy objects for all components |
 | global.networkPolicy.defaultDenyIngress | bool | `false` | Default deny all ingress traffic |
-| global.nodeSelector | object | `{}` | Default node selector for all components |
+| global.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | Default node selector for all components |
 | global.podAnnotations | object | `{}` | Annotations for the all deployed pods |
 | global.podLabels | object | `{}` | Labels for the all deployed pods |
 | global.priorityClassName | string | `""` | Default priority class for all components |
@@ -726,7 +764,17 @@ NAME: my-release
 | configs.clusterCredentials | object | `{}` (See [values.yaml]) | Provide one or multiple [external cluster credentials] |
 | configs.cm."admin.enabled" | bool | `true` | Enable local admin user |
 | configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` | The name of tracking label used by Argo CD for resource pruning |
+| configs.cm."application.sync.impersonation.enabled" | bool | `false` | Enable control of the service account used for the sync operation (alpha) |
 | configs.cm."exec.enabled" | bool | `false` | Enable exec feature in Argo UI |
+| configs.cm."resource.customizations.ignoreResourceUpdates.ConfigMap" | string | See [values.yaml] | Ignore the cluster-autoscaler status |
+| configs.cm."resource.customizations.ignoreResourceUpdates.Endpoints" | string | See [values.yaml] | Ignores update if Endpoints is not excluded globally |
+| configs.cm."resource.customizations.ignoreResourceUpdates.all" | string | See [values.yaml] | Ignoring status for all resources. An update will still be sent if the status update causes the health to change. |
+| configs.cm."resource.customizations.ignoreResourceUpdates.apps_ReplicaSet" | string | See [values.yaml] | Ignore the common scaling annotations |
+| configs.cm."resource.customizations.ignoreResourceUpdates.argoproj.io_Application" | string | See [values.yaml] | Some Application fields are generated and not related to the application updates itself |
+| configs.cm."resource.customizations.ignoreResourceUpdates.argoproj.io_Rollout" | string | See [values.yaml] | Ignore Argo Rollouts generated fields |
+| configs.cm."resource.customizations.ignoreResourceUpdates.autoscaling_HorizontalPodAutoscaler" | string | See [values.yaml] | Legacy annotations used on HPA autoscaling/v1 |
+| configs.cm."resource.customizations.ignoreResourceUpdates.discovery.k8s.io_EndpointSlice" | string | See [values.yaml] | Ignores update if EndpointSlice is not excluded globally |
+| configs.cm."resource.exclusions" | string | See [values.yaml] | Resource Exclusion/Inclusion |
 | configs.cm."server.rbac.log.enforce.enable" | bool | `false` | Enable logs RBAC enforcement |
 | configs.cm."statusbadge.enabled" | bool | `false` | Enable Status Badge |
 | configs.cm."timeout.hard.reconciliation" | string | `"0s"` | Timeout to refresh application data as well as target manifests cache |
@@ -749,6 +797,7 @@ NAME: my-release
 | configs.params."controller.repo.server.timeout.seconds" | int | `60` | Repo server RPC call timeout seconds. |
 | configs.params."controller.self.heal.timeout.seconds" | int | `5` | Specifies timeout between application self heal attempts |
 | configs.params."controller.status.processors" | int | `20` | Number of application status processors |
+| configs.params."controller.sync.timeout.seconds" | int | `0` | Specifies the timeout after which a sync would be terminated. 0 means no timeout |
 | configs.params."otlp.address" | string | `""` | Open-Telemetry collector address: (e.g. "otel-collector:4317") |
 | configs.params."reposerver.parallelism.limit" | int | `0` | Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit. |
 | configs.params."server.basehref" | string | `"/"` | Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from / |
@@ -783,11 +832,13 @@ NAME: my-release
 | configs.secret.gogsSecret | string | `""` | Shared secret for authenticating Gogs webhook events |
 | configs.secret.labels | object | `{}` | Labels to be added to argocd-secret |
 | configs.ssh.annotations | object | `{}` | Annotations to be added to argocd-ssh-known-hosts-cm configmap |
+| configs.ssh.create | bool | `true` | Specifies if the argocd-ssh-known-hosts-cm configmap should be created by Helm. |
 | configs.ssh.extraHosts | string | `""` | Additional known hosts for private repositories |
 | configs.ssh.knownHosts | string | See [values.yaml] | Known hosts to be added to the known host list by default. |
 | configs.styles | string | `""` (See [values.yaml]) | Define custom [CSS styles] for your argo instance. This setting will automatically mount the provided CSS and reference it in the argo configuration. |
 | configs.tls.annotations | object | `{}` | Annotations to be added to argocd-tls-certs-cm configmap |
 | configs.tls.certificates | object | `{}` (See [values.yaml]) | TLS certificates for Git repositories |
+| configs.tls.create | bool | `true` | Specifies if the argocd-tls-certs-cm configmap should be created by Helm. |
 
 ## Argo CD Controller
 
@@ -1023,7 +1074,7 @@ NAME: my-release
 | server.extensions.extensionList | list | `[]` (See [values.yaml]) | Extensions for Argo CD |
 | server.extensions.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for extensions |
 | server.extensions.image.repository | string | `"quay.io/argoprojlabs/argocd-extension-installer"` | Repository to use for extension installer image |
-| server.extensions.image.tag | string | `"v0.0.5"` | Tag to use for extension installer image |
+| server.extensions.image.tag | string | `"v0.0.8"` | Tag to use for extension installer image |
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
@@ -1167,7 +1218,7 @@ NAME: my-release
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
-| dex.image.tag | string | `"v2.41.1"` | Dex image tag |
+| dex.image.tag | string | `"v2.43.1"` | Dex image tag |
 | dex.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
@@ -1183,8 +1234,6 @@ NAME: my-release
 | dex.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | dex.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | dex.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| dex.logFormat | string | `""` (defaults to global.logging.format) | Dex log format. Either `text` or `json` |
-| dex.logLevel | string | `""` (defaults to global.logging.level) | Dex log level. One of: `debug`, `info`, `warn`, `error` |
 | dex.metrics.enabled | bool | `false` | Deploy metrics service |
 | dex.metrics.service.annotations | object | `{}` | Metrics service annotations |
 | dex.metrics.service.labels | object | `{}` | Metrics service labels |
@@ -1257,8 +1306,8 @@ NAME: my-release
 | redis.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
 | redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
-| redis.exporter.image.repository | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
-| redis.exporter.image.tag | string | `"1.58.0"` | Tag to use for the redis-exporter |
+| redis.exporter.image.repository | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
+| redis.exporter.image.tag | string | `"v1.73.0"` | Tag to use for the redis-exporter |
 | redis.exporter.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis exporter |
 | redis.exporter.livenessProbe.failureThreshold | int | `5` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | redis.exporter.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |
@@ -1276,7 +1325,7 @@ NAME: my-release
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Redis image pull policy |
 | redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
-| redis.image.tag | string | `"7.4.1-alpine"` | Redis tag |
+| redis.image.tag | string | `"7.2.8-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis server |
@@ -1350,8 +1399,8 @@ The main options are listed here:
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
 | redis-ha.existingSecret | string | `"argocd-redis"` | Existing Secret to use for redis-ha authentication. By default the redis-secret-init Job is generating this Secret. |
 | redis-ha.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
-| redis-ha.exporter.image | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
-| redis-ha.exporter.tag | string | `"1.58.0"` | Tag to use for the redis-exporter |
+| redis-ha.exporter.image | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
+| redis-ha.exporter.tag | string | `"v1.69.0"` | Tag to use for the redis-exporter |
 | redis-ha.haproxy.additionalAffinities | object | `{}` | Additional affinities to add to the haproxy pods. |
 | redis-ha.haproxy.affinity | string | `""` | Assign custom [affinity] rules to the haproxy pods. |
 | redis-ha.haproxy.containerSecurityContext | object | See [values.yaml] | HAProxy container-level security context |
@@ -1362,7 +1411,7 @@ The main options are listed here:
 | redis-ha.haproxy.tolerations | list | `[]` | [Tolerations] for use with node taints for haproxy pods. |
 | redis-ha.hardAntiAffinity | bool | `true` | Whether the Redis server pods should be forced to run on separate nodes. |
 | redis-ha.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
-| redis-ha.image.tag | string | `"7.4.1-alpine"` | Redis tag |
+| redis-ha.image.tag | string | `"7.2.8-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistence on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
@@ -1564,8 +1613,6 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | notifications.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | notifications.livenessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| notifications.logFormat | string | `""` (defaults to global.logging.format) | Notifications controller log format. Either `text` or `json` |
-| notifications.logLevel | string | `""` (defaults to global.logging.level) | Notifications controller log level. One of: `debug`, `info`, `warn`, `error` |
 | notifications.metrics.enabled | bool | `false` | Enables prometheus metrics server |
 | notifications.metrics.port | int | `9001` | Metrics port |
 | notifications.metrics.service.annotations | object | `{}` | Metrics service annotations |
@@ -1618,30 +1665,89 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | notifications.triggers | object | `{}` | The trigger defines the condition when the notification should be sent |
 
+## Commit server (Manifest Hydrator)
+
+The Argo CD Commit Server provides push access to git repositories for hydrated manifests.
+
+To read more about this component, please read [Argo CD Manifest Hydrator] and [Manifest Hydrator].
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| commitServer.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
+| commitServer.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account into the pod. |
+| commitServer.containerSecurityContext | object | See [values.yaml] | commit server container-level security context |
+| commitServer.deploymentAnnotations | object | `{}` | Annotations to be added to commit server Deployment |
+| commitServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the commit server Deployment |
+| commitServer.dnsConfig | object | `{}` | [DNS configuration] |
+| commitServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for commit server pods |
+| commitServer.enabled | bool | `false` | Enable commit server |
+| commitServer.extraArgs | list | `[]` | commit server command line flags |
+| commitServer.extraEnv | list | `[]` | Environment variables to pass to the commit server |
+| commitServer.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the commit server |
+| commitServer.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
+| commitServer.extraVolumes | list | `[]` | List of extra volumes to add |
+| commitServer.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the commit server |
+| commitServer.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the commit server |
+| commitServer.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the commit server |
+| commitServer.livenessProbe.enabled | bool | `true` | Enable Kubernetes liveness probe for commit server |
+| commitServer.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| commitServer.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |
+| commitServer.livenessProbe.periodSeconds | int | `30` | How often (in seconds) to perform the [probe] |
+| commitServer.livenessProbe.timeoutSeconds | int | `5` | Number of seconds after which the [probe] times out |
+| commitServer.metrics.enabled | bool | `false` | Enables prometheus metrics server |
+| commitServer.metrics.service.annotations | object | `{}` | Metrics service annotations |
+| commitServer.metrics.service.clusterIP | string | `""` | Metrics service clusterIP. `None` makes a "headless service" (no virtual IP) |
+| commitServer.metrics.service.labels | object | `{}` | Metrics service labels |
+| commitServer.metrics.service.portName | string | `"metrics"` | Metrics service port name |
+| commitServer.metrics.service.servicePort | int | `8087` | Metrics service port |
+| commitServer.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
+| commitServer.name | string | `"commit-server"` | Commit server name |
+| commitServer.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
+| commitServer.podAnnotations | object | `{}` | Annotations for the commit server pods |
+| commitServer.podLabels | object | `{}` | Labels for the commit server pods |
+| commitServer.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the commit server pods |
+| commitServer.readinessProbe.enabled | bool | `true` | Enable Kubernetes liveness probe for commit server |
+| commitServer.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| commitServer.readinessProbe.initialDelaySeconds | int | `5` | Number of seconds after the container has started before [probe] is initiated |
+| commitServer.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
+| commitServer.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
+| commitServer.resources | object | `{}` | Resource limits and requests for the commit server pods. |
+| commitServer.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the commit server |
+| commitServer.service.annotations | object | `{}` | commit server service annotations |
+| commitServer.service.labels | object | `{}` | commit server service labels |
+| commitServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
+| commitServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| commitServer.serviceAccount.create | bool | `true` | Create commit server service account |
+| commitServer.serviceAccount.labels | object | `{}` | Labels applied to created service account |
+| commitServer.serviceAccount.name | string | `"argocd-commit-server"` | commit server service account name |
+| commitServer.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
+| commitServer.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
+| commitServer.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the commit server |
+
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/helm-docs)
 
 [Argo CD RBAC policy]: https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/
-[affinity]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-[BackendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/concepts/backendconfig#backendconfigspec_v1beta1_cloudgooglecom
+[affinity]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+[BackendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-configuration#backendconfigspec_v1beta1_cloudgooglecom
 [CSS styles]: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-cd?modal=changelog
 [Chart Hooks]: https://helm.sh/docs/topics/charts_hooks/
 [DNS configuration]: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 [external cluster credentials]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
 [FAQ]: https://argo-cd.readthedocs.io/en/stable/faq/
-[FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_frontendconfig_parameters
+[FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-configuration#configuring_ingress_features_through_frontendconfig_parameters
 [declarative setup]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup
 [gRPC-ingress]: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
 [GnuPG]: https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/
 [HPA]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 [MetricRelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
-[Node selector]: https://kubernetes.io/docs/user-guide/node-selection/
+[Node selector]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
 [PodDisruptionBudget]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets
 [probe]: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
 [RelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
-[Tolerations]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-[TopologySpreadConstraints]: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+[Tolerations]: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+[TopologySpreadConstraints]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
 [values.yaml]: values.yaml
 [v2.2 to 2.3 upgrade instructions]: https://github.com/argoproj/argo-cd/blob/v2.3.0/docs/operator-manual/upgrading/2.2-2.3.md
 [tini]: https://github.com/argoproj/argo-cd/pull/12707
@@ -1650,3 +1756,8 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [Applications in any namespace]: https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/#applications-in-any-namespace
 [Argo CD Extensions]: https://github.com/argoproj-labs/argocd-extensions?tab=readme-ov-file#deprecation-notice
 [Argo CD Extension Installer]: https://github.com/argoproj-labs/argocd-extension-installer
+[Argo CD Manifest Hydrator]: https://argo-cd.readthedocs.io/en/stable/proposals/manifest-hydrator/
+[Manifest Hydrator]: https://github.com/argoproj/argo-cd/blob/master/docs/proposals/manifest-hydrator.md
+[CNCF Allowlist License Policy]: https://github.com/cncf/foundation/blob/main/allowed-third-party-license-policy.md#cncf-allowlist-license-policy
+[v2.14 to 3.0 upgrade instructions]: https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/2.14-3.0/
+[Argo CD v3.0 Release Blog Post]: https://blog.argoproj.io/argo-cd-v3-0-release-candidate-a0b933f4e58f

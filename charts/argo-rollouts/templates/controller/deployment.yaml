@@ -26,12 +26,13 @@ spec:
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   template:
     metadata:
-      {{- with (mergeOverwrite (deepCopy .Values.podAnnotations) .Values.controller.podAnnotations) }}
       annotations:
+        {{- with (mergeOverwrite (deepCopy .Values.podAnnotations) .Values.controller.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-      {{- end }}
+        {{- end }}
+        checksum/cm: {{ include (print $.Template.BasePath "/controller/configmap.yaml") . | sha256sum }}
       labels:
         {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ .Values.controller.component }}
@@ -78,6 +79,9 @@ spec:
           {{- toYaml .Values.controller.readinessProbe | nindent 10 }}
         securityContext:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
+        {{- with .Values.controller.lifecycle }}
+        lifecycle: {{ toYaml . | nindent 10 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
         volumeMounts:
@@ -101,6 +105,9 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.controller.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
       {{- if .Values.controller.tolerations }}
       tolerations:
         {{- toYaml .Values.controller.tolerations | nindent 8 }}

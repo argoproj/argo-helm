@@ -79,6 +79,10 @@ controller:
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+  # -- Specify lifecycle hooks for the  controller
+  lifecycle: {}
   # -- [priorityClassName] for the controller
   priorityClassName: ""
   # -- The number of controller pods to run
@@ -211,6 +215,12 @@ controller:
   ## Ref: https://argo-rollouts.readthedocs.io/en/stable/analysis/plugins/
   metricProviderPlugins: []
     # - name: "argoproj-labs/sample-prometheus" # name of the plugin, it must match the name required by the plugin so that it can find its configuration
+    #   location: "file://./my-custom-plugin" # supports http(s):// urls and file://
+
+  # -- Configures 3rd party stepPlugins for controller
+  ## Ref: https://argo-rollouts.readthedocs.io/en/stable/features/canary/plugins/
+  stepPlugins: []
+    # - name: "argoproj-labs/step-exec" # name of the plugin, it must match the name required by the plugin so it can find it's configuration
     #   location: "file://./my-custom-plugin" # supports http(s):// urls and file://
 
   # -- Configures 3rd party traffic router plugins for controller
@@ -397,7 +407,7 @@ dashboard:
     maxUnavailable: # 0
 
   ## Ingress configuration.
-  ## ref: https://kubernetes.io/docs/user-guide/ingress/
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   ##
   ingress:
     # -- Enable dashboard ingress support

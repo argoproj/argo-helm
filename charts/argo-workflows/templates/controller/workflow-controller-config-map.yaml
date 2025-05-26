@@ -83,6 +83,11 @@ data:
         secretKeySecret:
           key: {{ tpl .Values.artifactRepository.s3.secretKeySecret.key . }}
           name: {{ tpl .Values.artifactRepository.s3.secretKeySecret.name . }}
+        {{- if .Values.artifactRepository.s3.sessionTokenSecret }}
+        sessionTokenSecret:
+          key: {{ tpl .Values.artifactRepository.s3.sessionTokenSecret.key . }}
+          name: {{ tpl .Values.artifactRepository.s3.sessionTokenSecret.name . }}
+        {{- end }}
         {{- end }}
         bucket: {{ tpl (.Values.artifactRepository.s3.bucket | default "") . }}
         endpoint: {{ tpl (.Values.artifactRepository.s3.endpoint | default "") . }}
@@ -195,6 +200,8 @@ data:
     {{- end }}
     nodeEvents:
       enabled: {{ .Values.controller.nodeEvents.enabled }}
+    workflowEvents:
+      enabled: {{ .Values.controller.workflowEvents.enabled }}
     {{- with .Values.controller.kubeConfig }}
     kubeConfig: {{- toYaml . | nindent 6 }}
     {{- end }}
