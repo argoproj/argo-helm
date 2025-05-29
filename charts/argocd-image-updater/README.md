@@ -71,7 +71,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | affinity | object | `{}` | Kubernetes affinity settings for the deployment |
 | authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts` |
 | authScripts.name | string | `"argocd-image-updater-authscripts"` | Name of the authentication scripts ConfigMap |
-| authScripts.scripts | object | `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents |
+| authScripts.scripts | object | `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents. |
 | config.applicationsAPIKind | string | `""` | API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`) |
 | config.argocd.grpcWeb | bool | `true` | Use the gRPC-web protocol to connect to the Argo CD API |
 | config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
@@ -88,14 +88,14 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.gitCommitUser | string | `""` | Username to use for Git commits |
 | config.logLevel | string | `"info"` | Argo CD Image Update log level |
 | config.name | string | `"argocd-image-updater-config"` | Name of the ConfigMap |
-| config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/) |
-| config.sshConfig.config | string | `""` | Argo CD Image Updater ssh client parameter configuration. |
+| config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/). |
+| config.sshConfig.config | string | `""` | Argo CD Image Updater ssh client parameter configuration |
 | config.sshConfig.name | string | `"argocd-image-updater-ssh-config"` | Name of the sshConfig ConfigMap |
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
-| extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry |
-| extraEnv | list | `[]` | Extra environment variables for argocd-image-updater |
+| extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry. |
+| extraEnv | list | `[]` | Extra environment variables for argocd-image-updater. |
 | extraEnvFrom | list | `[]` | Extra envFrom to pass to argocd-image-updater |
-| extraObjects | list | `[]` | Extra K8s manifests to deploy for argocd-image-updater |
+| extraObjects | list | `[]` | Extra K8s manifests to deploy for argocd-image-updater. |
 | fullnameOverride | string | `""` | Global fullname (argocd-image-updater.fullname in _helpers.tpl) override |
 | image.pullPolicy | string | `"Always"` | Default image pull policy |
 | image.repository | string | `"quay.io/argoprojlabs/argocd-image-updater"` | Default image repository |
@@ -126,7 +126,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.labels | object | `{}` | Labels to add to the service account |
-| serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template. |
 | tolerations | list | `[]` | Kubernetes toleration settings for the deployment |
 | updateStrategy | object | `{"type":"Recreate"}` | The deployment strategy to use to replace existing pods with new ones |
 | volumeMounts | list | `[]` | Additional volumeMounts to the image updater main container |

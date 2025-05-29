@@ -26,7 +26,7 @@ namespaceOverride: ""
 createClusterRoles: true
 
 # -- Extra arguments for argocd-image-updater not defined in `config.argocd`.
-# If a flag contains both key and value, they need to be split to a new entry
+# If a flag contains both key and value, they need to be split to a new entry.
 extraArgs: []
   # - --disable-kubernetes
   # - --dry-run
@@ -44,10 +44,15 @@ extraArgs: []
   # - --registries-conf-path
   # - /app/config/registries.conf
 
-# -- Extra environment variables for argocd-image-updater
+# -- Extra environment variables for argocd-image-updater.
+## These variables are also available to the authentication scripts mounted under /scripts, provided 'authScripts.enabled' is set to 'true'.
 extraEnv: []
   # - name: AWS_REGION
   #   value: "us-west-1"
+  # - name: ACR1_NAME
+  #   value: "acr1.azurecr.io"
+  # - name: ACR1_CLIENT_ID
+  #   value: "00000000-0000-0000-0000-000000000000"
 
 # -- Extra envFrom to pass to argocd-image-updater
 extraEnvFrom: []
@@ -56,8 +61,8 @@ extraEnvFrom: []
   # - secretRef:
   #     name: secret-name
 
-# -- Extra K8s manifests to deploy for argocd-image-updater
-## Note: Supports use of custom Helm templates
+# -- Extra K8s manifests to deploy for argocd-image-updater.
+## Note: Supports use of custom Helm templates.
 extraObjects: []
   # - apiVersion: secrets-store.csi.x-k8s.io/v1
   #   kind: SecretProviderClass
@@ -154,7 +159,7 @@ config:
   # -- Argo CD Image Update log level
   logLevel: "info"
 
-  # -- Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/)
+  # -- Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/).
   registries: []
     # - name: Docker Hub
     #   api_url: https://registry-1.docker.io
@@ -178,25 +183,34 @@ config:
     #   insecure: no
     #   credentials: ext:/scripts/auth1.sh
     #   credsexpire: 10h
+    # - name: Azure Container Registry
+    #   api_url: https://acr1.azurecr.io
+    #   prefix: acr1.azurecr.io
+    #   ping: yes
+    #   credentials: ext:/scripts/azure-workload-identity.sh
+    #   credsexpire: 1h
 
   sshConfig:
     # -- Name of the sshConfig ConfigMap
     name: argocd-image-updater-ssh-config
-    # -- Argo CD Image Updater ssh client parameter configuration.
+    # -- Argo CD Image Updater ssh client parameter configuration
     config: ""
     #  config: |
     #    Host *
     #          PubkeyAcceptedAlgorithms +ssh-rsa
     #          HostkeyAlgorithms +ssh-rsa
 
-# whether to mount authentication scripts, if enabled, the authentication scripts will be mounted on /scripts that can be used to authenticate with registries (ECR)
+# whether to mount authentication scripts, if enabled, the authentication scripts will be mounted on /scripts that can be used to authenticate with registries (Azure, ECR)
 # refer to https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/#specifying-credentials-for-accessing-container-registries for more info
 authScripts:
   # -- Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts`
   enabled: false
   # -- Name of the authentication scripts ConfigMap
   name: argocd-image-updater-authscripts
-  # -- Map of key-value pairs where the key consists of the name of the script and the value the contents
+  # -- Map of key-value pairs where the key consists of the name of the script and the value the contents.
+  ## Expect the script to output Docker credentials in the form: <username>:<password>
+  ## Authentication scripts can be used for various cloud providers like ECR or Azure Workload Identity.
+  ## For Azure Workload Identity, you can place your authentication script here to handle token acquisition.
   scripts: {}
     # auth1.sh: |
     #   #!/bin/sh
@@ -204,16 +218,26 @@ authScripts:
     # auth2.sh: |
     #   #!/bin/sh
     #   echo "auth script 2 here"
+    # azure-workload-identity.sh: |
+    #   #!/bin:sh
+    #   # Example script for Azure Workload Identity.
+    #   # This script would typically use environment variables set by the workload identity
+    #   # to acquire an Azure AD token and authenticate with Azure Container Registry (ACR).
+    #   # It should output the Docker username and password on stdout, e.g., '00000000-0000-0000-0000-000000000000:<token>'
 
 serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
   # -- Annotations to add to the service account
   annotations: {}
+  # Example for Azure Workload Identity:
+    # azure.workload.identity/client-id: "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
   # -- Labels to add to the service account
   labels: {}
+  # Example for Azure Workload Identity:
+  #  azure.workload.identity/use: "true"
   # -- The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  # If not set and create is true, a name is generated using the fullname template.
   name: ""
 
 # -- Pod Annotations for the deployment
@@ -221,6 +245,7 @@ podAnnotations: {}
 
 # -- Pod Labels for the deployment
 podLabels: {}
+  # azure.workload.identity/use: "true"
 
 # -- Pod security context settings for the deployment
 podSecurityContext: {}
