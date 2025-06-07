@@ -1,4 +1,4 @@
-{{- if .Values.server.ingress.enabled -}}
+{{- if and .Values.server.enabled .Values.server.ingress.enabled -}}
 {{- $serviceName := include "argo-workflows.server.fullname" . -}}
 {{- $servicePort := .Values.server.servicePort -}}
 {{- $paths := .Values.server.ingress.paths -}}
