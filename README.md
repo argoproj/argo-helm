@@ -14,6 +14,18 @@ Argo Helm is a collection of **community maintained** charts for [https://argopr
 helm repo add argo https://argoproj.github.io/argo-helm
 ```
 
+Update the charts:
+
+```bash
+helm repo update argo
+```
+
+To list all available latest version charts in the `argo` repository:
+
+```bash
+helm search repo argo
+```
+
 ## Contributing
 
 We'd love to have you contribute! Please refer to our [contribution guidelines](CONTRIBUTING.md) for details.
