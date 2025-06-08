@@ -863,7 +863,7 @@ artifactRepository:
     # keyFormat: "{{ \"{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}\" }}"
     # # serviceAccountKeySecret is a secret selector.
     # # It references the k8s secret named 'my-gcs-credentials'.
-    # # This secret is expected to have have the key 'serviceAccountKey',
+    # # This secret is expected to have the key 'serviceAccountKey',
     # # containing the base64 encoded credentials
     # # to the bucket.
     # #
@@ -880,7 +880,7 @@ artifactRepository:
     # blobNameFormat: path/in/container
     # # accountKeySecret is a secret selector.
     # # It references the k8s secret named 'my-azure-storage-credentials'.
-    # # This secret is expected to have have the key 'account-access-key',
+    # # This secret is expected to have the key 'account-access-key',
     # # containing the base64 encoded credentials to the storage account.
     # # If a managed identity has been assigned to the machines running the
     # # workflow (e.g., https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
@@ -936,7 +936,7 @@ artifactRepositoryRef: {}
   #        bucket: $mybucket
   #        # accessKeySecret and secretKeySecret are secret selectors.
   #        # It references the k8s secret named 'bucket-workflow-artifect-credentials'.
-  #        # This secret is expected to have have the keys 'accessKey'
+  #        # This secret is expected to have the keys 'accessKey'
   #        # and 'secretKey', containing the base64 encoded credentials
   #        # to the bucket.
   #        accessKeySecret:
