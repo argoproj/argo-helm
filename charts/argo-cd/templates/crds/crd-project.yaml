@@ -10,6 +10,7 @@ metadata:
       {{- toYaml . | nindent 4 }}
     {{- end }}
   labels:
+    {{- include "argo-cd.labels" (dict "context" .) | nindent 4 }}
     app.kubernetes.io/name: appprojects.argoproj.io
     app.kubernetes.io/part-of: argocd
     {{- with .Values.crds.additionalLabels }}

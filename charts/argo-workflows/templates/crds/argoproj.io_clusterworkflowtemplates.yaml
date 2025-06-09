@@ -11,6 +11,8 @@ metadata:
     {{- with .Values.crds.annotations }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" .) | nindent 4 }}
 spec:
   group: argoproj.io
   names:
