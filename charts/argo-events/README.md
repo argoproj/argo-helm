@@ -202,6 +202,14 @@ done
 | webhook.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the event controller |
 | webhook.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the event controller |
 | webhook.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the event controller |
+| webhook.ingress.annotations | object | `{}` | Ingress annotations |
+| webhook.ingress.className | string | `""` | Ingress class name |
+| webhook.ingress.enabled | bool | `false` | Enable ingress for the admission webhook |
+| webhook.ingress.host | string | `""` | Ingress host |
+| webhook.ingress.labels | object | `{}` | Ingress labels |
+| webhook.ingress.path | string | `"/"` | Ingress path |
+| webhook.ingress.pathType | string | `"ImplementationSpecific"` | Ingress path type |
+| webhook.ingress.tls | list | `[]` | Ingress TLS configuration |
 | webhook.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | webhook.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | webhook.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
