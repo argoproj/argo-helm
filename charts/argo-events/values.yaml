@@ -481,3 +481,24 @@ webhook:
     annotations: {}
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
+
+  ingress:
+    # -- Enable ingress for the admission webhook
+    enabled: false
+    # -- Ingress class name
+    className: ""
+    # -- Ingress host
+    host: ""
+    # -- Ingress path
+    path: /
+    # -- Ingress path type
+    pathType: ImplementationSpecific
+    # -- Ingress TLS configuration
+    tls: []
+      # - hosts:
+      #   - example.com
+      #   secretName: example-tls
+    # -- Ingress annotations
+    annotations: {}
+    # -- Ingress labels
+    labels: {}

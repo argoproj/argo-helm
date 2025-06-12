@@ -1,0 +1,35 @@
+{{- if .Values.webhook.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: events-webhook-ingress
+  namespace: {{ .Release.Namespace }}
+  {{- if .Values.webhook.ingress.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.webhook.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
+  labels:
+    {{- include "argo-events.labels" . | nindent 4 }}
+    {{- if .Values.webhook.ingress.labels }}
+    {{- toYaml .Values.webhook.ingress.labels | nindent 4 }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.webhook.ingress.className }}
+  rules:
+    - host: {{ .Values.webhook.ingress.host }}
+      http:
+        paths:
+          - path: {{ .Values.webhook.ingress.path }}
+            pathType: {{ .Values.webhook.ingress.pathType }}
+            backend:
+              service:
+                name: events-webhook
+                port:
+                  number: {{ int .Values.webhook.port }}
+  {{- if .Values.webhook.ingress.tls }}
+  tls:
+    {{- toYaml .Values.webhook.ingress.tls | nindent 4 }}
+  {{- end }}
+{{- end }}
