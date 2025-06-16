@@ -23,3 +23,6 @@ spec:
     targetPort: repo-server
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 4 }}
+  {{- if .Values.repoServer.service.trafficDistribution }}
+  trafficDistribution: {{ .Values.repoServer.service.trafficDistribution }}
+  {{- end }}
