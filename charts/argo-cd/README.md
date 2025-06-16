@@ -1013,6 +1013,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | repoServer.service.labels | object | `{}` | Repo server service labels |
 | repoServer.service.port | int | `8081` | Repo server service port |
 | repoServer.service.portName | string | `"tcp-repo-server"` | Repo server service port name |
+| repoServer.service.trafficDistribution | string | `""` | Traffic distribution preference for the repo server service. If the field is not set, the implementation will apply its default routing strategy. |
 | repoServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | repoServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | repoServer.serviceAccount.create | bool | `true` | Create repo server service account |
