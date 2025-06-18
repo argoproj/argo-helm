@@ -12,6 +12,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.commitServer.name "name" .Values.commitServer.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.commitServer.deploymentLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.commitServer.deploymentStrategy) }}
   strategy:
