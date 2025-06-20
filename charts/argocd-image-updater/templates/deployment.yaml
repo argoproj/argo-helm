@@ -225,3 +225,6 @@ spec:
       initContainers:
         {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}

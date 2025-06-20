@@ -732,6 +732,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | global.affinity.podAntiAffinity | string | `"soft"` | Default pod anti-affinity rules. Either: `none`, `soft` or `hard` |
 | global.certificateAnnotations | object | `{}` | Annotations for the all deployed Certificates |
 | global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
+| global.deploymentLabels | object | `{}` | Labels for the all deployed Deployments |
 | global.deploymentStrategy | object | `{}` | Deployment strategy for the all deployed Deployments |
 | global.domain | string | `"argocd.example.com"` | Default domain used by all components |
 | global.dualStack.ipFamilies | list | `[]` | IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
@@ -852,6 +853,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | controller.containerPorts.metrics | int | `8082` | Metrics container port |
 | controller.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
 | controller.deploymentAnnotations | object | `{}` | Annotations for the application controller Deployment |
+| controller.deploymentLabels | object | `{}` | Labels for the application controller Deployment |
 | controller.dnsConfig | object | `{}` | [DNS configuration] |
 | controller.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for application controller pods |
 | controller.dynamicClusterDistribution | bool | `false` | Enable dynamic cluster distribution (alpha) Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/dynamic-cluster-distribution |
@@ -950,6 +952,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | repoServer.containerPorts.server | int | `8081` | Repo server container port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
 | repoServer.deploymentAnnotations | object | `{}` | Annotations to be added to repo server Deployment |
+| repoServer.deploymentLabels | object | `{}` | Labels for the repo server Deployment |
 | repoServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the repo server Deployment |
 | repoServer.dnsConfig | object | `{}` | [DNS configuration] |
 | repoServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Repo server pods |
@@ -1065,6 +1068,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | server.containerPorts.server | int | `8080` | Server container port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
 | server.deploymentAnnotations | object | `{}` | Annotations to be added to server Deployment |
+| server.deploymentLabels | object | `{}` | Labels for the server Deployment |
 | server.deploymentStrategy | object | `{}` | Deployment strategy to be added to the server Deployment |
 | server.dnsConfig | object | `{}` | [DNS configuration] |
 | server.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Server pods |
@@ -1209,6 +1213,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | dex.containerPorts.metrics | int | `5558` | Metrics container port |
 | dex.containerSecurityContext | object | See [values.yaml] | Dex container-level security context |
 | dex.deploymentAnnotations | object | `{}` | Annotations to be added to the Dex server Deployment |
+| dex.deploymentLabels | object | `{}` | Labels for the Dex server Deployment |
 | dex.deploymentStrategy | object | `{}` | Deployment strategy to be added to the Dex server Deployment |
 | dex.dnsConfig | object | `{}` | [DNS configuration] |
 | dex.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Dex server pods |
@@ -1299,6 +1304,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | redis.containerPorts.redis | int | `6379` | Redis container port |
 | redis.containerSecurityContext | object | See [values.yaml] | Redis container-level security context |
 | redis.deploymentAnnotations | object | `{}` | Annotations to be added to the Redis server Deployment |
+| redis.deploymentLabels | object | `{}` | Labels for the Redis server Deployment |
 | redis.dnsConfig | object | `{}` | [DNS configuration] |
 | redis.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Redis server pods |
 | redis.enabled | bool | `true` | Enable redis |
@@ -1497,6 +1503,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.containerPorts.webhook | int | `7000` | Webhook container port |
 | applicationSet.containerSecurityContext | object | See [values.yaml] | ApplicationSet controller container-level security context |
 | applicationSet.deploymentAnnotations | object | `{}` | Annotations to be added to ApplicationSet controller Deployment |
+| applicationSet.deploymentLabels | object | `{}` | Labels for the ApplicationSet controller Deployment |
 | applicationSet.deploymentStrategy | object | `{}` | Deployment strategy to be added to the ApplicationSet controller Deployment |
 | applicationSet.dnsConfig | object | `{}` | [DNS configuration] |
 | applicationSet.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for ApplicationSet controller pods |
@@ -1595,6 +1602,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.context | object | `{}` | Define user-defined context |
 | notifications.deploymentAnnotations | object | `{}` | Annotations to be applied to the notifications controller Deployment |
+| notifications.deploymentLabels | object | `{}` | Labels for the notifications controller Deployment |
 | notifications.deploymentStrategy | object | `{"type":"Recreate"}` | Deployment strategy to be added to the notifications controller Deployment |
 | notifications.dnsConfig | object | `{}` | [DNS configuration] |
 | notifications.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for notifications controller Pods |
@@ -1680,6 +1688,7 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account into the pod. |
 | commitServer.containerSecurityContext | object | See [values.yaml] | commit server container-level security context |
 | commitServer.deploymentAnnotations | object | `{}` | Annotations to be added to commit server Deployment |
+| commitServer.deploymentLabels | object | `{}` | Labels for the commit server Deployment |
 | commitServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the commit server Deployment |
 | commitServer.dnsConfig | object | `{}` | [DNS configuration] |
 | commitServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for commit server pods |

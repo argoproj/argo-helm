@@ -11,6 +11,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.applicationSet.deploymentLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.applicationSet.deploymentStrategy) }}
   strategy:
