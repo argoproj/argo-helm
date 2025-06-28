@@ -817,6 +817,31 @@ controller:
     ## Has higher precedence over `controller.pdb.minAvailable`
     maxUnavailable: ""
 
+  ## Application controller Vertical Pod Autoscaler
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
+  vpa:
+    # -- Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the application controller
+    enabled: false
+    # -- Labels to be added to application controller vpa
+    labels: {}
+    # -- Annotations to be added to application controller vpa
+    annotations: {}
+    # -- One of the VPA operation modes
+    ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically
+    ## Note: Recreate update mode requires more than one replica unless the min-replicas VPA controller flag is overridden
+    updateMode: Initial
+    # -- Controls how VPA computes the recommended resources for application controller container
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/examples/hamster.yaml
+    containerPolicy: {}
+      # controlledResources: ["cpu", "memory"]
+      # minAllowed:
+      #   cpu: 250m
+      #   memory: 256Mi
+      # maxAllowed:
+      #   cpu: 1
+      #   memory: 1Gi
+
+
   ## Application controller image
   image:
     # -- Repository to use for the application controller
