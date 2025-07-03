@@ -1975,6 +1975,16 @@ server:
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
 
+  command:
+    - /bin/sh
+  args:
+    - -c
+    - |
+      exec env REDIS_TEST_PASSWORD=$(cat /mnt/secrets/redis-password/_k8s_argocd_redis_password) \
+        /usr/local/bin/argocd-server \
+        --port=8080 \
+        --metrics-port=8083
+
   # -- Additional command line arguments to pass to Argo CD server
   extraArgs: []
 
