@@ -417,3 +417,10 @@ Return the rules for controller's Role and ClusterRole
 {{- end }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Expand the namespace of the release.
+*/}}
+{{- define "argo-rollouts.namespace" -}}
+{{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
+{{- end }}
