@@ -9,7 +9,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ include "argo-rollouts.fullname" . }}-dashboard
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argo-rollouts.namespace" . | quote }}
   labels:
   {{- range $key, $value := (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.dashboard.deploymentLabels) }}
     {{ $key }}: {{ $value | quote }}
