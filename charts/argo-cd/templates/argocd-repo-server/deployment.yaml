@@ -300,6 +300,12 @@ spec:
                 key: reposerver.git.request.timeout
                 name: argocd-cmd-params-cm
                 optional: true
+          - name: ARGOCD_GIT_SAFE_DIRECTORIES
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.git.safe.directories
+                name: argocd-cmd-params-cm
+                optional: true
           - name: ARGOCD_REVISION_CACHE_LOCK_TIMEOUT
             valueFrom:
               configMapKeyRef:
