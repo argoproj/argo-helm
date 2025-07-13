@@ -1,4 +1,4 @@
-{{- if (default .Values.global.networkPolicy.create .Values.controller.networkPolicy.create)}}
+{{- if (hasKey .Values.controller.networkPolicy "create" | ternary .Values.controller.networkPolicy.create .Values.global.networkPolicy.create)}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
