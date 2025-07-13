@@ -1090,6 +1090,11 @@ controller:
     # -- List of custom rules for the application controller's ClusterRole resource
     rules: []
 
+  ## -- Default network policy rules used by application controller
+  # @default -- `{}` (defaults to global.networkPolicy.create)
+  networkPolicy: {}
+  #   create: true # Toggle default NetworkPolicy for application controller
+
 ## Dex
 dex:
   # -- Enable dex
@@ -1388,6 +1393,11 @@ dex:
     # rollingUpdate:
     #   maxSurge: 25%
     #   maxUnavailable: 25%
+
+  ## -- Default network policy rules used by Dex server
+  # @default -- `{}` (defaults to global.networkPolicy.create)
+  networkPolicy: {}
+  #   create: true # Toggle default NetworkPolicy for Dex server
 
   # DEPRECATED - Use configs.params to override
   # -- Dex log format. Either `text` or `json`
@@ -1708,6 +1718,11 @@ redis:
       additionalLabels: {}
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
+
+  ## -- Default network policy rules used by redis
+  # @default -- `{}` (defaults to global.networkPolicy.create)
+  networkPolicy: {}
+  #   create: true # Toggle default NetworkPolicy for redis
 
 ## Redis-HA subchart replaces custom redis deployment when `redis-ha.enabled=true`
 # Ref: https://github.com/DandyDeveloper/charts/blob/master/charts/redis-ha/values.yaml
@@ -2575,6 +2590,11 @@ server:
     # -- List of custom rules for the server's ClusterRole resource
     rules: []
 
+  ## -- Default network policy rules used by ArgoCD Server
+  # @default -- `{}` (defaults to global.networkPolicy.create)
+  networkPolicy: {}
+  #   create: true # Toggle default NetworkPolicy for ArgoCD Server
+
 ## Repo Server
 repoServer:
   # -- Repo server name
@@ -2974,6 +2994,11 @@ repoServer:
   #     - list
   #     - watch
 
+  ## -- Default network policy rules used by repo server
+  # @default -- `{}` (defaults to global.networkPolicy.create)
+  networkPolicy: {}
+  #   create: true # Toggle default NetworkPolicy for repo server
+
 ## ApplicationSet controller
 applicationSet:
   # -- ApplicationSet controller name string
@@ -3346,6 +3371,12 @@ applicationSet:
       #     - argocd-applicationset.example.com
   # -- Enable ApplicationSet in any namespace feature
   allowAnyNamespace: false
+
+  ## -- Default network policy rules used by ApplicationSet controller
+  # @default -- `{}` (defaults to global.networkPolicy.create)
+  networkPolicy: {}
+  #   create: true # Toggle default NetworkPolicy for ApplicationSet controller
+
 ## Notifications controller
 notifications:
   # -- Enable notifications controller
@@ -3915,6 +3946,11 @@ notifications:
     # defaultTriggers: |
     #   - on-sync-status-unknown
 
+  ## -- Default network policy rules used by notifications controller
+  # @default -- `{}` (defaults to global.networkPolicy.create)
+  networkPolicy: {}
+  #   create: true # Toggle default NetworkPolicy for notifications controller
+
 commitServer:
   # -- Enable commit server
   enabled: false
@@ -4101,3 +4137,8 @@ commitServer:
   # -- Priority class for the commit server pods
   # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
+
+  ## -- Default network policy rules used by commit server
+  # @default -- `{}` (defaults to global.networkPolicy.create)
+  networkPolicy: {}
+  #   create: true # Toggle default NetworkPolicy for commit server
