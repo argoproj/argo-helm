@@ -45,7 +45,7 @@ spec:
               service:
                 name: {{ $serviceName }}
                 port:
-                  {{- if kindIs "int" $servicePort }}
+                  {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
                   {{- else }}
                   name: {{ $servicePort }}
@@ -72,7 +72,7 @@ spec:
               service:
                 name: {{ $serviceName }}
                 port:
-                  {{- if kindIs "int" $servicePort }}
+                  {{- if kindIs "float64" $servicePort }}
                   number: {{ $servicePort }}
                   {{- else }}
                   name: {{ $servicePort }}
