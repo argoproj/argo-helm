@@ -45,10 +45,10 @@ spec:
               service:
                 name: {{ $serviceName }}
                 port:
-                  {{- if kindIs "int" $servicePort }}
-                  number: {{ $servicePort }}
-                  {{- else }}
+                  {{- if kindIs "string" $servicePort }}
                   name: {{ $servicePort }}
+                  {{- else }}
+                  number: {{ $servicePort }}
                   {{- end }}
               {{- else }}
               serviceName: {{ $serviceName }}
@@ -72,10 +72,10 @@ spec:
               service:
                 name: {{ $serviceName }}
                 port:
-                  {{- if kindIs "int" $servicePort }}
-                  number: {{ $servicePort }}
-                  {{- else }}
+                  {{- if kindIs "string" $servicePort }}
                   name: {{ $servicePort }}
+                  {{- else }}
+                  number: {{ $servicePort }}
                   {{- end }}
               {{- else }}
               serviceName: {{ $serviceName }}
