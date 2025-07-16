@@ -30178,6 +30178,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: compatability with Helm 3.18+
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.6.10
+    created: "2025-07-16T14:10:43.289690009Z"
+    description: A Helm chart for Argo Workflows
+    digest: 80e9ffdfc4a8f7ec9e50d2bfcece2bae6ba76dc5d4af06638dddb717c0b8bad7
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.45.20/argo-workflows-0.45.20.tgz
+    version: 0.45.20
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: added option to specify the scheme for service monitor
       artifacthub.io/signKey: |
@@ -38005,4 +38029,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2025-07-15T14:04:05.125396524Z"
+generated: "2025-07-16T14:10:43.291587472Z"
