@@ -1090,10 +1090,11 @@ controller:
     # -- List of custom rules for the application controller's ClusterRole resource
     rules: []
 
-  # -- Default network policy rules used by application controller
-  # @default -- `{}` (defaults to global.networkPolicy.create)
-  networkPolicy: {}
-  #   create: true # Toggle default NetworkPolicy for application controller
+  # -- Default application controller's network policy
+  networkPolicy:
+    # -- Default network policy rules used by application controller
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
 
 ## Dex
 dex:
@@ -1394,10 +1395,11 @@ dex:
     #   maxSurge: 25%
     #   maxUnavailable: 25%
 
-  # -- Default network policy rules used by Dex server
-  # @default -- `{}` (defaults to global.networkPolicy.create)
-  networkPolicy: {}
-  #   create: true # Toggle default NetworkPolicy for Dex server
+  # -- Default Dex server's network policy
+  networkPolicy:
+    # -- Default network policy rules used by Dex server
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
 
   # DEPRECATED - Use configs.params to override
   # -- Dex log format. Either `text` or `json`
@@ -1719,10 +1721,11 @@ redis:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
-  # -- Default network policy rules used by redis
-  # @default -- `{}` (defaults to global.networkPolicy.create)
-  networkPolicy: {}
-  #   create: true # Toggle default NetworkPolicy for redis
+  # -- Default redis's network policy
+  networkPolicy:
+    # -- Default network policy rules used by redis
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
 
 ## Redis-HA subchart replaces custom redis deployment when `redis-ha.enabled=true`
 # Ref: https://github.com/DandyDeveloper/charts/blob/master/charts/redis-ha/values.yaml
@@ -2590,10 +2593,11 @@ server:
     # -- List of custom rules for the server's ClusterRole resource
     rules: []
 
-  # -- Default network policy rules used by ArgoCD Server
-  # @default -- `{}` (defaults to global.networkPolicy.create)
-  networkPolicy: {}
-  #   create: true # Toggle default NetworkPolicy for ArgoCD Server
+  # -- Default ArgoCD Server's network policy
+  networkPolicy:
+    # -- Default network policy rules used by ArgoCD Server
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
 
 ## Repo Server
 repoServer:
@@ -2994,10 +2998,11 @@ repoServer:
   #     - list
   #     - watch
 
-  # -- Default network policy rules used by repo server
-  # @default -- `{}` (defaults to global.networkPolicy.create)
-  networkPolicy: {}
-  #   create: true # Toggle default NetworkPolicy for repo server
+  # -- Default repo server's network policy
+  networkPolicy:
+    # -- Default network policy rules used by repo server
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
 
 ## ApplicationSet controller
 applicationSet:
@@ -3372,10 +3377,11 @@ applicationSet:
   # -- Enable ApplicationSet in any namespace feature
   allowAnyNamespace: false
 
-  # -- Default network policy rules used by ApplicationSet controller
-  # @default -- `{}` (defaults to global.networkPolicy.create)
-  networkPolicy: {}
-  #   create: true # Toggle default NetworkPolicy for ApplicationSet controller
+  # -- Default ApplicationSet controller's network policy
+  networkPolicy:
+    # -- Default network policy rules used by ApplicationSet controller
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
 
 ## Notifications controller
 notifications:
@@ -3946,10 +3952,11 @@ notifications:
     # defaultTriggers: |
     #   - on-sync-status-unknown
 
-  # -- Default network policy rules used by notifications controller
-  # @default -- `{}` (defaults to global.networkPolicy.create)
-  networkPolicy: {}
-  #   create: true # Toggle default NetworkPolicy for notifications controller
+  # -- Default notifications controller's network policy
+  networkPolicy:
+    # -- Default network policy rules used by notifications controller
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
 
 commitServer:
   # -- Enable commit server
@@ -4138,7 +4145,8 @@ commitServer:
   # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
 
-  # -- Default network policy rules used by commit server
-  # @default -- `{}` (defaults to global.networkPolicy.create)
-  networkPolicy: {}
-  #   create: true # Toggle default NetworkPolicy for commit server
+  # -- Default commit server's network policy
+  networkPolicy:
+    # -- Default network policy rules used by commit server
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
