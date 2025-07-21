@@ -1090,7 +1090,7 @@ controller:
     # -- List of custom rules for the application controller's ClusterRole resource
     rules: []
 
-  # -- Default application controller's network policy
+  # Default application controller's network policy
   networkPolicy:
     # -- Default network policy rules used by application controller
     # @default -- `false` (defaults to global.networkPolicy.create)
@@ -1395,7 +1395,7 @@ dex:
     #   maxSurge: 25%
     #   maxUnavailable: 25%
 
-  # -- Default Dex server's network policy
+  # Default Dex server's network policy
   networkPolicy:
     # -- Default network policy rules used by Dex server
     # @default -- `false` (defaults to global.networkPolicy.create)
@@ -1721,7 +1721,7 @@ redis:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
-  # -- Default redis's network policy
+  # Default redis's network policy
   networkPolicy:
     # -- Default network policy rules used by redis
     # @default -- `false` (defaults to global.networkPolicy.create)
@@ -2593,7 +2593,7 @@ server:
     # -- List of custom rules for the server's ClusterRole resource
     rules: []
 
-  # -- Default ArgoCD Server's network policy
+  # Default ArgoCD Server's network policy
   networkPolicy:
     # -- Default network policy rules used by ArgoCD Server
     # @default -- `false` (defaults to global.networkPolicy.create)
@@ -2998,7 +2998,7 @@ repoServer:
   #     - list
   #     - watch
 
-  # -- Default repo server's network policy
+  # Default repo server's network policy
   networkPolicy:
     # -- Default network policy rules used by repo server
     # @default -- `false` (defaults to global.networkPolicy.create)
@@ -3377,7 +3377,7 @@ applicationSet:
   # -- Enable ApplicationSet in any namespace feature
   allowAnyNamespace: false
 
-  # -- Default ApplicationSet controller's network policy
+  # Default ApplicationSet controller's network policy
   networkPolicy:
     # -- Default network policy rules used by ApplicationSet controller
     # @default -- `false` (defaults to global.networkPolicy.create)
@@ -3952,7 +3952,7 @@ notifications:
     # defaultTriggers: |
     #   - on-sync-status-unknown
 
-  # -- Default notifications controller's network policy
+  # Default notifications controller's network policy
   networkPolicy:
     # -- Default network policy rules used by notifications controller
     # @default -- `false` (defaults to global.networkPolicy.create)
@@ -4145,7 +4145,7 @@ commitServer:
   # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
 
-  # -- Default commit server's network policy
+  # Default commit server's network policy
   networkPolicy:
     # -- Default network policy rules used by commit server
     # @default -- `false` (defaults to global.networkPolicy.create)
