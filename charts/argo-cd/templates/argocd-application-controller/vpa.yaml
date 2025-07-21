@@ -1,0 +1,33 @@
+{{- if and (.Values.controller.vpa) (.Values.controller.vpa.enabled) }}
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ include "argo-cd.controller.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- with .Values.controller.vpa.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.controller.vpa.annotations }}
+  annnotaions:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    {{- if .Values.controller.dynamicClusterDistribution }}
+    kind: Deployment
+    {{- else }}
+    kind: StatefulSet
+    {{- end }}
+    name: {{ template "argo-cd.controller.fullname" . }}
+  updatePolicy:
+    updateMode: {{ .Values.controller.vpa.updateMode }}
+  resourcePolicy:
+    containerPolicies:
+    - containerName: {{ .Values.controller.name }}
+    {{ with .Values.controller.vpa.containerPolicy }}
+    {{- toYaml . | nindent 6 }}
+    {{- end }}
+{{- end }}
