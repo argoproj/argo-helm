@@ -922,6 +922,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | controller.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | controller.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | controller.name | string | `"application-controller"` | Application controller name string |
+| controller.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by application controller |
 | controller.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | controller.pdb.annotations | object | `{}` | Annotations to be added to application controller pdb |
 | controller.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the application controller |
@@ -1019,6 +1020,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | repoServer.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | repoServer.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | repoServer.name | string | `"repo-server"` | Repo server name |
+| repoServer.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by repo server |
 | repoServer.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | repoServer.pdb.annotations | object | `{}` | Annotations to be added to repo server pdb |
 | repoServer.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the repo server |
@@ -1172,6 +1174,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | server.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | server.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | server.name | string | `"server"` | Argo CD server name |
+| server.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by ArgoCD Server |
 | server.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | server.pdb.annotations | object | `{}` | Annotations to be added to Argo CD server pdb |
 | server.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Argo CD server |
@@ -1282,6 +1285,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | dex.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | dex.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | dex.name | string | `"dex-server"` | Dex name |
+| dex.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by Dex server |
 | dex.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | dex.pdb.annotations | object | `{}` | Annotations to be added to Dex server pdb |
 | dex.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Dex server |
@@ -1386,6 +1390,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | redis.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | redis.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | redis.name | string | `"redis"` | Redis name |
+| redis.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by redis |
 | redis.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | redis.pdb.annotations | object | `{}` | Annotations to be added to Redis pdb |
 | redis.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Redis |
@@ -1582,6 +1587,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | applicationSet.name | string | `"applicationset-controller"` | ApplicationSet controller name string |
+| applicationSet.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by ApplicationSet controller |
 | applicationSet.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | applicationSet.pdb.annotations | object | `{}` | Annotations to be added to ApplicationSet controller pdb |
 | applicationSet.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the ApplicationSet controller |
@@ -1666,6 +1672,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | notifications.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
+| notifications.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by notifications controller |
 | notifications.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | notifications.notifiers | object | See [values.yaml] | Configures notification services such as slack, email or custom webhook |
 | notifications.pdb.annotations | object | `{}` | Annotations to be added to notifications controller pdb |
@@ -1739,6 +1746,7 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.metrics.service.servicePort | int | `8087` | Metrics service port |
 | commitServer.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | commitServer.name | string | `"commit-server"` | Commit server name |
+| commitServer.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by commit server |
 | commitServer.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | commitServer.podAnnotations | object | `{}` | Annotations for the commit server pods |
 | commitServer.podLabels | object | `{}` | Labels for the commit server pods |
