@@ -241,7 +241,7 @@ NOTE: Configuration keys must be stored as dict because YAML treats dot as separ
 {{- if .Values.commitServer.enabled -}}
 {{- $_ := set $presets "commit.server" (printf "%s:%s" (include "argo-cd.commitServer.fullname" .) (.Values.commitServer.service.port | toString)) -}}
 {{- end -}}
-{{- range $component := tuple "applicationsetcontroller" "controller" "server" "reposerver" "notificationscontroller" "dexserver" -}}
+{{- range $component := tuple "applicationsetcontroller" "controller" "server" "reposerver" "notificationscontroller" "dexserver" "commitserver" -}}
 {{- $_ := set $presets (printf "%s.log.format" $component) $.Values.global.logging.format -}}
 {{- $_ := set $presets (printf "%s.log.level" $component) $.Values.global.logging.level -}}
 {{- end -}}
