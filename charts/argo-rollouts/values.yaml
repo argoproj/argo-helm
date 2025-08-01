@@ -49,6 +49,18 @@ global:
   deploymentLabels: {}
   # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
   revisionHistoryLimit: 10
+  # -- Specifies the deployment DNS configuration for controller and dashboard.
+  dnsConfig: {}
+  # nameservers:
+  #   - 1.2.3.4
+  # searches:
+  #   - ns1.svc.cluster-domain.example
+  #   - my.dns.search.suffix
+  # options:
+  #   - name: ndots
+  #     value: "1"
+  #   - name: attempts
+  #     value: "3"
 
 controller:
   # -- Value of label `app.kubernetes.io/component`

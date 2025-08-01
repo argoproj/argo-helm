@@ -81,6 +81,10 @@ spec:
       tolerations:
         {{- toYaml .Values.dashboard.tolerations | nindent 8 }}
       {{- end }}
+      {{- with .Values.global.dnsConfig }}
+      dnsConfig:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- if .Values.dashboard.affinity }}
       affinity:
         {{- toYaml .Values.dashboard.affinity | nindent 8 }}
