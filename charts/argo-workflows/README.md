@@ -338,6 +338,7 @@ Fields to note:
 | server.replicas | int | `1` | The number of server pods to run |
 | server.resources | object | `{}` | Resource limits and requests for the server |
 | server.revisionHistoryLimit | int | `10` | The number of revisions to keep. |
+| server.rootPath | string | `"/"` | Path prefix for server endpoints. Used if the server is running behind reverse proxy under subpath different from /. |
 | server.secure | bool | `false` | Run the argo server in "secure" mode. Configure this value instead of `--secure` in extraArgs. |
 | server.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":false,"runAsNonRoot":true}` | Servers container-level security context |
 | server.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |

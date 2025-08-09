@@ -83,7 +83,7 @@ spec:
             containerPort: 2746
           readinessProbe:
             httpGet:
-              path: /
+              path: {{ .Values.server.rootPath }}
               port: 2746
               {{- if .Values.server.secure }}
               scheme: HTTPS
@@ -118,6 +118,8 @@ spec:
                   fieldPath: metadata.namespace
             - name: ARGO_BASE_HREF
               value: {{ .Values.server.baseHref | quote }}
+            - name: ARGO_ROOT_PATH
+              value: {{ .Values.server.rootPath | quote }}
           {{- with .Values.server.extraEnv }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
