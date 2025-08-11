@@ -149,6 +149,8 @@ controller:
     servicePort: 8080
     # -- Service metrics port name
     servicePortName: metrics
+    # -- serviceMonitor scheme
+    scheme: http
     # -- Flag to enable headless service
     headlessService: false
     # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
@@ -163,6 +165,7 @@ controller:
     # -- ServiceMonitor will add labels from the service to the Prometheus metric
     ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
     targetLabels: []
+
   # -- the controller container's securityContext
   securityContext:
     readOnlyRootFilesystem: true
@@ -256,6 +259,8 @@ controller:
     servicePort: 8081
     # -- telemetry service port name
     servicePortName: telemetry
+    # -- telemetry serviceMonitor scheme to use
+    scheme: http
   serviceMonitor:
     # -- Enable a prometheus ServiceMonitor
     enabled: false
@@ -263,6 +268,7 @@ controller:
     additionalLabels: {}
     # -- Prometheus ServiceMonitor namespace
     namespace: "" # "monitoring"
+
   serviceAccount:
     # -- Create a service account for the controller
     create: true
