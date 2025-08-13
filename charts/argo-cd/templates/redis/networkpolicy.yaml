@@ -10,9 +10,11 @@ metadata:
 spec:
   ingress:
   - from:
+    {{- if .Values.server.enabled }}
     - podSelector:
         matchLabels:
           {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 10 }}
+    {{- end }}
     - podSelector:
         matchLabels:
           {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 10 }}
