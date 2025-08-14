@@ -51,9 +51,10 @@ rules:
       - watch
   {{- if (index .Values.configs.params "application.namespaces") }}
   - apiGroups:
-      - "argoproj.io"
+      - argoproj.io
     resources:
-      - "applications"
+      - applications
+      - applicationsets
     verbs:
       - create
       - delete
