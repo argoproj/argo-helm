@@ -4,7 +4,7 @@ metadata:
   name: {{ include "argo-events.controller.fullname" . }}
   namespace: {{ include "argo-events.namespace" . | quote }}
   labels:
-    {{- include "argo-events.labels" (dict "context" . "name" .Values.controller.name) | nindent 4 }}
+    {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 data:
   controller-config.yaml: |
     eventBus:
