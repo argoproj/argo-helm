@@ -9,7 +9,7 @@ metadata:
     {{- end }}
   {{- end }}
   name: {{ include "argo-rollouts.fullname" . }}-dashboard
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argo-rollouts.namespace" . | quote }}
   labels:
   {{- range $key, $value := (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.dashboard.deploymentLabels) }}
     {{ $key }}: {{ $value | quote }}
@@ -80,6 +80,10 @@ spec:
       {{- if .Values.dashboard.tolerations }}
       tolerations:
         {{- toYaml .Values.dashboard.tolerations | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.dnsConfig }}
+      dnsConfig:
+      {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- if .Values.dashboard.affinity }}
       affinity:

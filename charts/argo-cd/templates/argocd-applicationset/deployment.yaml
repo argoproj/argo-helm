@@ -11,6 +11,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.applicationSet.deploymentLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.applicationSet.deploymentStrategy) }}
   strategy:
@@ -133,6 +136,12 @@ spec:
                   key: applicationsetcontroller.log.level
                   name: argocd-cmd-params-cm
                   optional: true
+            - name: ARGOCD_LOG_FORMAT_TIMESTAMP
+              valueFrom:
+                configMapKeyRef:
+                  name: argocd-cmd-params-cm
+                  key: log.format.timestamp
+                  optional: true
             - name: ARGOCD_APPLICATIONSET_CONTROLLER_DRY_RUN
               valueFrom:
                 configMapKeyRef:
@@ -210,6 +219,12 @@ spec:
                 configMapKeyRef:
                   name: argocd-cmd-params-cm
                   key: applicationsetcontroller.enable.scm.providers
+                  optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_GITHUB_API_METRICS
+              valueFrom:
+                configMapKeyRef:
+                  name: argocd-cmd-params-cm
+                  key: applicationsetcontroller.enable.github.api.metrics
                   optional: true
             - name: ARGOCD_APPLICATIONSET_CONTROLLER_WEBHOOK_PARALLELISM_LIMIT
               valueFrom:

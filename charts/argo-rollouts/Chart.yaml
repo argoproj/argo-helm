@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: v1.8.2
+appVersion: v1.8.3
 description: A Helm chart for Argo Rollouts
 name: argo-rollouts
-version: 2.39.5
+version: 2.40.3
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
 keywords:
@@ -18,5 +18,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: argo-rollouts will re-deploy if changes are made to the argo-rollouts configmap.
+    - kind: added
+      description: support dnsConfig for controller and dashboard pods
