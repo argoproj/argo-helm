@@ -29,7 +29,7 @@ spec:
   sessionAffinity: None
   type: {{ .Values.server.serviceType }}
   {{- if eq .Values.server.serviceType "LoadBalancer" }}
-  {{- with .Values.controller.loadBalancerClass }}
+  {{- with .Values.server.loadBalancerClass }}
   loadBalancerClass: {{ . }}
   {{- end }}
   {{- with .Values.server.loadBalancerIP }}
