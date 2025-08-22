@@ -160,23 +160,6 @@ spec:
         # We need a writeable temp directory for the askpass socket file.
         - name: tmp
           mountPath: /tmp
-      initContainers:
-      - command:
-        - /bin/cp
-        - -n
-        - /usr/local/bin/argocd
-        - /var/run/argocd/argocd-cmp-server
-        image: {{ default .Values.global.image.repository .Values.commitServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.commitServer.image.tag }}
-        name: copyutil
-        resources:
-          {{- toYaml .Values.commitServer.resources | nindent 10 }}
-        {{- with .Values.commitServer.containerSecurityContext }}
-        securityContext:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
-        volumeMounts:
-        - mountPath: /var/run/argocd
-          name: var-files
       volumes:
         {{- with .Values.commitServer.extraVolumes }}
           {{- toYaml . | nindent 8 }}
@@ -205,8 +188,6 @@ spec:
               path: tls.key
             - key: ca.crt
               path: ca.crt
-        - emptyDir: {}
-          name: var-files
       {{- with include "argo-cd.affinity" (dict "context" . "component" .Values.commitServer) }}
       affinity:
         {{- trim . | nindent 8 }}
