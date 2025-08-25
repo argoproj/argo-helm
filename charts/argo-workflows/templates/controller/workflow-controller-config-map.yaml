@@ -180,6 +180,9 @@ data:
       filterGroupsRegex: {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- end }}
+    {{- if .Values.controller.synchronization }}
+    synchronization:
+{{ toYaml .Values.controller.synchronization | indent 6 }}{{- end }}
     {{- with .Values.controller.workflowRestrictions }}
     workflowRestrictions: {{- toYaml . | nindent 6 }}
     {{- end }}
