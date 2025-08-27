@@ -437,6 +437,41 @@ controller:
   # @default -- `5s` (Argo Workflows default)
   podGCDeleteDelayDuration: ""
 
+  # -- enable Synchronization to use a database.  Postgres and MySQL (>= 5.7.8) are available.
+  ## Ref: https://argo-workflows.readthedocs.io/en/latest/workflow-controller-configmap/#syncconfig
+  synchronization: {}
+  # controllerName: argo-workflows
+  # connectionPool:
+  #   maxIdleConns: 100
+  #   maxOpenConns: 0
+  # postgresql:
+  #   host: localhost
+  #   port: 5432
+  #   database: postgres
+  #   tableName: argo_workflows
+  #   # the database secrets must be in the same namespace of the controller
+  #   userNameSecret:
+  #     name: argo-postgres-config
+  #     key: username
+  #   passwordSecret:
+  #     name: argo-postgres-config
+  #     key: password
+  #   ssl: true
+  #   # sslMode must be one of: disable, require, verify-ca, verify-full
+  #   # you can find more information about those ssl options here: https://godoc.org/github.com/lib/pq
+  #   sslMode: require
+  # mysql:
+  #   host: localhost
+  #   port: 3306
+  #   database: argo
+  #   tableName: argo_workflows
+  #   userNameSecret:
+  #     name: argo-mysql-config
+  #     key: username
+  #   passwordSecret:
+  #     name: argo-mysql-config
+  #     key: password
+
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
   # -- imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`.
