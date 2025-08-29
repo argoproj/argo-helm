@@ -17,9 +17,9 @@ spec:
               {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 14 }}
       ports:
         - protocol: TCP
-          port: 8086
+          port: server
     - from:
         - namespaceSelector: { }
       ports:
-        - port: 8087
+        - port: metrics
 {{- end }}
