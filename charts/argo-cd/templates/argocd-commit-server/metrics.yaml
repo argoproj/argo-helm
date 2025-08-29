@@ -29,7 +29,7 @@ spec:
   - name:  {{ .Values.commitServer.metrics.service.portName }}
     protocol: TCP
     port: {{ .Values.commitServer.metrics.service.servicePort }}
-    targetPort: 8087
+    targetPort: metrics
   selector:
     {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.commitServer.name) | nindent 4 }}
 {{- end }}

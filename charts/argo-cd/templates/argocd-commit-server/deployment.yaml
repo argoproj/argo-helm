@@ -119,7 +119,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /healthz?full=true
-            port: 8087
+            port: metrics
           initialDelaySeconds: {{ .Values.commitServer.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.commitServer.livenessProbe.periodSeconds }}
           failureThreshold: {{ .Values.commitServer.livenessProbe.failureThreshold }}
@@ -129,7 +129,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /healthz
-            port: 8087
+            port: metrics
           initialDelaySeconds: {{ .Values.commitServer.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.commitServer.readinessProbe.periodSeconds }}
           failureThreshold: {{ .Values.commitServer.readinessProbe.failureThreshold }}
