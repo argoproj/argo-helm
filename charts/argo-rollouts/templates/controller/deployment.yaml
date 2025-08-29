@@ -49,7 +49,7 @@ spec:
       - image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ default .Chart.AppVersion .Values.controller.image.tag }}"
         args:
         - --healthzPort={{ .Values.controller.containerPorts.healthz }}
-        - --metricsport={{ .Values.controller.containerPorts.metrics }}
+        - --metricsPort={{ .Values.controller.containerPorts.metrics }}
         - "--loglevel={{ .Values.controller.logging.level }}"
         - "--logformat={{ .Values.controller.logging.format }}"
         - "--kloglevel={{ .Values.controller.logging.kloglevel }}"
