@@ -316,7 +316,7 @@ Fields to note:
 | server.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for server |
 | server.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.livenessProbe.httpGet.path | string | `"/"` | Http path to use for the liveness probe |
-| server.livenessProbe.httpGet.port | int | `2746` | Http port to use for the liveness probe |
+| server.livenessProbe.httpGet.port | string | `"web"` | Http port to use for the liveness probe |
 | server.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | server.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | server.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |

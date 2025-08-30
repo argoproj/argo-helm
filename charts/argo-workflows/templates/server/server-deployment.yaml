@@ -84,7 +84,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: 2746
+              port: web
               {{- if .Values.server.secure }}
               scheme: HTTPS
               {{- else }}
