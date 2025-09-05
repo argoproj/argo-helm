@@ -22,17 +22,13 @@ Consequently, **we do not provide bug fixes or security patches for older versio
 We strongly encourage all users to upgrade to the latest version to benefit from the most recent features, bug fixes, and security patches.
 
 ### For Users Unable to Upgrade
-If you are unable to upgrade to the latest version due to specific constraints, you can manually override the image tag to use a specific version.
+If you are unable to upgrade to the latest version due to specific constraints, please follow the below to patch.
 
-Example for [argo-cd](https://github.com/argoproj/argo-helm/blob/15658c3c0aeaa2f8fc5ef77555c78e5ce2256e12/charts/argo-cd/values.yaml#L62):
-```yaml
-global:
-  image:
-    tag: v3.1.3
-```
+1. Please upgrade Helm Chart to the latest version for your minor version. e.g: If you used `v8.2.0`, please update to `v8.2.6`, the latest version of `v8.2.x`.
+2. Please override the image tag (`.global.image.tag`) to use a specific version.
 
 ### How You Can Help
-This policy may evolve as our team grows. If you are interested in becoming a maintainer and helping us expand our support capabilities, we encourage you to read our [contribution guidelines](CONTRIBUTING.md).
+This policy may evolve as our team grows. If you are interested in joining our team and helping us expand our support capabilities, we encourage you to read the [Community Membership](https://github.com/argoproj/argoproj/blob/main/community/membership.md).
 
 ## Contributing
 
