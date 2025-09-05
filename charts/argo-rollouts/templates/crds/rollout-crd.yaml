@@ -13,6 +13,7 @@ metadata:
   labels:
     app.kubernetes.io/name: argo-rollouts
     app.kubernetes.io/part-of: argo-rollouts
+    {{- include "argo-rollouts.labels" . | nindent 4 }}
   name: rollouts.argoproj.io
 spec:
   group: argoproj.io
