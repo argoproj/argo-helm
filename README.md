@@ -21,6 +21,19 @@ Consequently, **we do not provide bug fixes or security patches for older versio
 
 We strongly encourage all users to upgrade to the latest version to benefit from the most recent features, bug fixes, and security patches.
 
+### For Users Unable to Upgrade
+If you are unable to upgrade to the latest version due to specific constraints, you can manually override the image tag to use a specific version.
+
+Example for [argo-cd](https://github.com/argoproj/argo-helm/blob/15658c3c0aeaa2f8fc5ef77555c78e5ce2256e12/charts/argo-cd/values.yaml#L62):
+```yaml
+global:
+  image:
+    tag: v3.1.3
+```
+
+### How You Can Help
+This policy may evolve as our team grows. If you are interested in becoming a maintainer and helping us expand our support capabilities, we encourage you to read our [contribution guidelines](CONTRIBUTING.md).
+
 ## Contributing
 
 We'd love to have you contribute! Please refer to our [contribution guidelines](CONTRIBUTING.md) for details.
