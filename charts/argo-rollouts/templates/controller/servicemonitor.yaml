@@ -17,6 +17,11 @@ metadata:
 spec:
   endpoints:
   - port: {{ .Values.controller.metrics.service.portName }}
+    {{- if .Values.controller.metrics.serviceMonitor.tlsConfig }}
+    scheme: https
+    tlsConfig:
+      {{- toYaml .Values.controller.metrics.serviceMonitor.tlsConfig | nindent 6 }}
+    {{- end }}
     {{- with .Values.controller.metrics.serviceMonitor.relabelings }}
     relabelings:
       {{- toYaml . | nindent 6 }}
