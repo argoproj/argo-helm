@@ -86,6 +86,7 @@ For full list of changes please check ArtifactHub [changelog].
 |-----|------|---------|-------------|
 | containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Security Context to set on container level |
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| controller.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the controller pod. |
 | controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
 | controller.containerPorts.healthz | int | `8080` | Healthz container port |
 | controller.containerPorts.metrics | int | `8090` | Metrics container port |
@@ -139,6 +140,7 @@ For full list of changes please check ArtifactHub [changelog].
 | podLabels | object | `{}` | Labels to be added to the Rollout pods |
 | podSecurityContext | object | `{"runAsNonRoot":true}` | Security Context to set on pod level |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the controller Service Account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | serviceAnnotations | object | `{}` | Annotations to be added to the Rollout service |
@@ -148,6 +150,7 @@ For full list of changes please check ArtifactHub [changelog].
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | dashboard.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| dashboard.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the dashboard pod. |
 | dashboard.component | string | `"rollouts-dashboard"` | Value of label `app.kubernetes.io/component` |
 | dashboard.containerSecurityContext | object | `{}` | Security Context to set on container level |
 | dashboard.createClusterRole | bool | `true` | flag to enable creation of dashbord cluster role (requires cluster RBAC) |
@@ -196,6 +199,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.service.targetPort | int | `3100` | Service target port |
 | dashboard.service.type | string | `"ClusterIP"` | Sets the type of the Service |
 | dashboard.serviceAccount.annotations | object | `{}` | Annotations to add to the dashboard service account |
+| dashboard.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the dashboard Service Account |
 | dashboard.serviceAccount.create | bool | `true` | Specifies whether a dashboard service account should be created |
 | dashboard.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | dashboard.tolerations | list | `[]` | [Tolerations] for use with node taints |
