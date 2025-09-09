@@ -14,6 +14,25 @@ Argo Helm is a collection of **community maintained** charts for [https://argopr
 helm repo add argo https://argoproj.github.io/argo-helm
 ```
 
+## Version Support Policy
+As our project is maintained by a small team, we must focus our limited resources on following upstream projects and ensuring the stability of the latest version.
+
+Consequently, **we do not provide bug fixes or security patches for older versions.** Our official support is limited to **the latest version of the upstream projects** only.
+
+We strongly encourage all users to upgrade to the latest version to benefit from the most recent features, bug fixes, and security patches.
+
+### For Users Unable to Upgrade
+> **Warning:**
+> This doesn't work all the time. We strongly recommend upgrading Helm Chart to the latest version.
+
+If you are unable to upgrade to the latest version due to specific constraints, please follow the below to patch.
+
+1. Upgrade Helm Chart to the latest version for your minor version. e.g: If you used `v8.2.0`, update to `v8.2.6`, the latest version of `v8.2.x`.
+2. Override the image tag (`.global.image.tag`) to use a specific version.
+
+### How You Can Help
+This policy may evolve as our team grows. If you are interested in joining our team and helping us expand our support capabilities, we encourage you to read the [Community Membership Guide](https://github.com/argoproj/argoproj/blob/main/community/membership.md) for details.
+
 ## Contributing
 
 We'd love to have you contribute! Please refer to our [contribution guidelines](CONTRIBUTING.md) for details.
@@ -24,9 +43,9 @@ Some users would prefer to install the CRDs _outside_ of the chart. You can disa
 
 Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations). Our CRDs have been moved to `<chart>/templates` to address this design decision.
 
-If you are using versions of a chart that have the CRDs in the root of the chart or have elected to manage the Argo CRDs outside of the chart, please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from the upstream project repo:
+If you are using versions of a chart that have the CRDs in the root of the chart or have elected to manage the Argo CRDs outside of the chart, please use `kubectl` to upgrade CRDs manually from `templates/crds` folder or via the manifests from the upstream project repo:
 
-Example:
+Example for Argo CD:
 
 ```bash
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVersion>"
