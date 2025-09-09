@@ -31,7 +31,7 @@ If you are unable to upgrade to the latest version due to specific constraints, 
 2. Override the image tag (`.global.image.tag`) to use a specific version.
 
 ### How You Can Help
-This policy may evolve as our team grows. If you are interested in joining our team and helping us expand our support capabilities, we encourage you to read the [Community Membership](https://github.com/argoproj/argoproj/blob/main/community/membership.md) for details.
+This policy may evolve as our team grows. If you are interested in joining our team and helping us expand our support capabilities, we encourage you to read the [Community Membership Guide](https://github.com/argoproj/argoproj/blob/main/community/membership.md) for details.
 
 ## Contributing
 
