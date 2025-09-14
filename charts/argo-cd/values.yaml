@@ -434,6 +434,8 @@ configs:
     ## ApplicationSet Properties
     # -- Modify how application is synced between the generator and the cluster. One of: `sync`, `create-only`, `create-update`, `create-delete`
     applicationsetcontroller.policy: sync
+    # -- Enables override of the policy above per ApplicationSet using syncPolicy.applicationsSync.
+    applicationsetcontroller.enable.policy.override: true
     # -- Enables use of the Progressive Syncs capability
     applicationsetcontroller.enable.progressive.syncs: false
     # -- A list of glob patterns specifying where to look for ApplicationSet resources. (e.g. `"argocd,argocd-appsets-*"`)
