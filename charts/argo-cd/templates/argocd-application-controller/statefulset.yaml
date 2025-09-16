@@ -429,8 +429,13 @@ spec:
         {{- else }}
         emptyDir: {}
         {{- end }}
-      - emptyDir: {}
-        name: argocd-application-controller-tmp
+      - name: argocd-application-controller-tmp
+        {{- if .Values.controller.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.controller.emptyDir.sizeLimit }}
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
       - name: argocd-repo-server-tls
         secret:
           secretName: argocd-repo-server-tls
