@@ -953,6 +953,11 @@ NAME: my-release
 | controller.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to the application controller main container |
 | controller.volumes | list | `[]` | Additional volumes to the application controller pod |
+| controller.vpa.annotations | object | `{}` | Annotations to be added to application controller vpa |
+| controller.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for application controller container |
+| controller.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the application controller |
+| controller.vpa.labels | object | `{}` | Labels to be added to application controller vpa |
+| controller.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Argo Repo Server
 
