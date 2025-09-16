@@ -238,7 +238,10 @@ NOTE: Configuration keys must be stored as dict because YAML treats dot as separ
 {{- $_ := set $presets "server.dex.server" (include "argo-cd.dex.server" .) -}}
 {{- $_ := set $presets "server.dex.server.strict.tls" .Values.dex.certificateSecret.enabled -}}
 {{- end -}}
-{{- range $component := tuple "applicationsetcontroller" "controller" "server" "reposerver" "notificationscontroller" "dexserver" -}}
+{{- if .Values.commitServer.enabled -}}
+{{- $_ := set $presets "commit.server" (printf "%s:%s" (include "argo-cd.commitServer.fullname" .) (.Values.commitServer.service.port | toString)) -}}
+{{- end -}}
+{{- range $component := tuple "applicationsetcontroller" "controller" "server" "reposerver" "notificationscontroller" "dexserver" "commitserver" -}}
 {{- $_ := set $presets (printf "%s.log.format" $component) $.Values.global.logging.format -}}
 {{- $_ := set $presets (printf "%s.log.level" $component) $.Values.global.logging.level -}}
 {{- end -}}
@@ -280,12 +283,13 @@ ipFamilies: {{ toYaml . | nindent 4 }}
 secretKeyRef of env variable REDIS_USERNAME
 */}}
 {{- define "argo-cd.redisUsernameSecretRef" -}}
-    {{- if and .Values.externalRedis.host -}}
-name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+    {{- if .Values.externalRedis.host -}}
+name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
 key: redis-username
-optional: true
+optional: {{ if .Values.externalRedis.username }}false{{ else }}true{{ end }}
+
     {{- else -}}
-name: {{ include "argo-cd.redis.fullname" . }}
+name: "argocd-redis"
 key: redis-username
 optional: true
     {{- end -}}

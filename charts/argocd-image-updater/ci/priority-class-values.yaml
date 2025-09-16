@@ -1,8 +1,5 @@
-# Test with dashboard enabled
+# Test with extraObjects enabled
 # Do not deploy the CRDs as they are already present from the previous test
 installCRDs: false
 
-dashboard:
-  enabled: true
-  ingress:
-    enabled: true
+priorityClassName: system-node-critical
