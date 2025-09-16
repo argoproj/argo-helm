@@ -1,4 +1,4 @@
-{{- if and .Values.notifications.enabled .Values.global.networkPolicy.create .Values.notifications.metrics.enabled }}
+{{- if and .Values.notifications.enabled (or .Values.notifications.networkPolicy.create .Values.global.networkPolicy.create) .Values.notifications.metrics.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
