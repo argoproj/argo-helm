@@ -12,7 +12,9 @@ metadata:
       {{- toYaml . | nindent 4 }}
     {{- end }}
   annotations:
-    ingressClassName: "gce"
+    {{- with .Values.server.ingress.ingressClassName }}
+    kubernetes.io/ingress.class: {{ . }}
+    {{- end }}
     {{- if .Values.server.ingress.gke.managedCertificate.create }}
     networking.gke.io/managed-certificates: {{ include "argo-cd.server.fullname" . }}
     {{- end }}
@@ -23,9 +25,6 @@ metadata:
     {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
-  {{- with .Values.server.ingress.ingressClassName }}
-  ingressClassName: {{ . }}
-  {{- end }}
   rules:
     - host: {{ .Values.server.ingress.hostname | default .Values.global.domain }}
       http:

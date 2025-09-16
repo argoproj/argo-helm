@@ -6,6 +6,10 @@ Argo Helm is a collection of **community maintained** charts. Therefore we rely 
 
 All submissions, including submissions by project members, require review. We use GitHub pull requests for this purpose. Consult [GitHub Help](https://help.github.com/articles/about-pull-requests/) for more information on using pull requests. See the above stated requirements for PR on this project.
 
+> **Note**
+> Please create a separate Pull Request for each chart.
+> e.g: If your changes involve both argo-cd and argo-rollouts, please submit one PR for argo-cd and another separate.
+
 ### Pull Request Title Linting
 
 We lint the title of your pull request to ensure it follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.  This is done using GitHub actions and the [action-semantic-pull-request](.github/workflows/pr-title.yml) workflow. We require the scope of the change to be included in the title.  The scope should be the name of the chart you are changing.  For example, if you are changing the `argo-cd` chart, the title of your pull request should be `fix(argo-cd): Fix typo in values.yaml`.

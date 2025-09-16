@@ -35,7 +35,7 @@ crds:
   keep: true
   # -- Annotations to be added to all CRDs
   annotations: {}
-  # -- Addtional labels to be added to all CRDs
+  # -- Additional labels to be added to all CRDs
   additionalLabels: {}
 
 ## Globally shared configuration
@@ -78,6 +78,9 @@ global:
 
   # -- Annotations for the all deployed Deployments
   deploymentAnnotations: {}
+
+  # -- Labels for the all deployed Deployments
+  deploymentLabels: {}
 
   # -- Annotations for the all deployed pods
   podAnnotations: {}
@@ -444,6 +447,8 @@ configs:
     server.enable.gzip: true
     # -- Enable proxy extension feature. (proxy extension is in Alpha phase)
     server.enable.proxy.extension: false
+    # -- Enable the hydrator feature (hydrator is in Alpha phase)
+    hydrator.enabled: false
     # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
     server.x.frame.options: sameorigin
 
@@ -912,6 +917,9 @@ controller:
   # -- Annotations for the application controller Deployment
   deploymentAnnotations: {}
 
+  # -- Labels for the application controller Deployment
+  deploymentLabels: {}
+
   # -- Annotations to be added to application controller pods
   podAnnotations: {}
 
@@ -1107,6 +1115,12 @@ controller:
     # -- List of custom rules for the application controller's ClusterRole resource
     rules: []
 
+  # Default application controller's network policy
+  networkPolicy:
+    # -- Default network policy rules used by application controller
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
+
 ## Dex
 dex:
   # -- Enable dex
@@ -1178,7 +1192,7 @@ dex:
     # -- Dex image repository
     repository: ghcr.io/dexidp/dex
     # -- Dex image tag
-    tag: v2.42.1
+    tag: v2.44.0
     # -- Dex imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1259,6 +1273,9 @@ dex:
 
   # -- Annotations to be added to the Dex server Deployment
   deploymentAnnotations: {}
+
+  # -- Labels for the Dex server Deployment
+  deploymentLabels: {}
 
   # -- Annotations to be added to the Dex server pods
   podAnnotations: {}
@@ -1403,6 +1420,12 @@ dex:
     #   maxSurge: 25%
     #   maxUnavailable: 25%
 
+  # Default Dex server's network policy
+  networkPolicy:
+    # -- Default network policy rules used by Dex server
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
+
   # DEPRECATED - Use configs.params to override
   # -- Dex log format. Either `text` or `json`
   # @default -- `""` (defaults to global.logging.format)
@@ -1441,7 +1464,7 @@ redis:
   ## Redis image
   image:
     # -- Redis repository
-    repository: public.ecr.aws/docker/library/redis
+    repository: ecr-public.aws.com/docker/library/redis
     # -- Redis tag
     ## Do not upgrade to >= 7.4.0, otherwise you are no longer using an open source version of Redis
     tag: 7.2.8-alpine
@@ -1460,7 +1483,7 @@ redis:
       # -- Repository to use for the redis-exporter
       repository: ghcr.io/oliver006/redis_exporter
       # -- Tag to use for the redis-exporter
-      tag: v1.71.0
+      tag: v1.77.0
       # -- Image pull policy for the redis-exporter
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
@@ -1580,6 +1603,9 @@ redis:
 
   # -- Annotations to be added to the Redis server Deployment
   deploymentAnnotations: {}
+
+  # -- Labels for the Redis server Deployment
+  deploymentLabels: {}
 
   # -- Annotations to be added to the Redis server pods
   podAnnotations: {}
@@ -1720,6 +1746,12 @@ redis:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
+  # Default redis's network policy
+  networkPolicy:
+    # -- Default network policy rules used by redis
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
+
 ## Redis-HA subchart replaces custom redis deployment when `redis-ha.enabled=true`
 # Ref: https://github.com/DandyDeveloper/charts/blob/master/charts/redis-ha/values.yaml
 redis-ha:
@@ -1728,7 +1760,7 @@ redis-ha:
   ## Redis image
   image:
     # -- Redis repository
-    repository: public.ecr.aws/docker/library/redis
+    repository: ecr-public.aws.com/docker/library/redis
     # -- Redis tag
     ## Do not upgrade to >= 7.4.0, otherwise you are no longer using an open source version of Redis
     tag: 7.2.8-alpine
@@ -1739,7 +1771,7 @@ redis-ha:
     # -- Repository to use for the redis-exporter
     image: ghcr.io/oliver006/redis_exporter
     # -- Tag to use for the redis-exporter
-    tag: v1.69.0
+    tag: v1.75.0
   persistentVolume:
     # -- Configures persistence on Redis nodes
     enabled: false
@@ -1760,6 +1792,9 @@ redis-ha:
     # --  Custom labels for the haproxy pod. This is relevant for Argo CD CLI.
     labels:
       app.kubernetes.io/name: argocd-redis-ha-haproxy
+    image:
+      # -- HAProxy Image Repository
+      repository: ecr-public.aws.com/docker/library/haproxy
     metrics:
       # -- HAProxy enable prometheus metric scraping
       enabled: true
@@ -1824,8 +1859,8 @@ externalRedis:
   password: ""
   # -- External Redis server port
   port: 6379
-  # -- The name of an existing secret with Redis (must contain key `redis-password`) and Sentinel credentials.
-  # When it's set, the `externalRedis.password` parameter is ignored
+  # -- The name of an existing secret with Redis (must contain key `redis-password`. And should contain `redis-username` if username is not `default`) and Sentinel credentials.
+  # When it's set, the `externalRedis.username` and `externalRedis.password` parameters are ignored
   existingSecret: ""
   # -- External Redis Secret annotations
   secretAnnotations: {}
@@ -2112,6 +2147,9 @@ server:
 
   # -- Annotations to be added to server Deployment
   deploymentAnnotations: {}
+
+  # -- Labels for the server Deployment
+  deploymentLabels: {}
 
   # -- Annotations to be added to server pods
   podAnnotations: {}
@@ -2580,6 +2618,12 @@ server:
     # -- List of custom rules for the server's ClusterRole resource
     rules: []
 
+  # Default ArgoCD Server's network policy
+  networkPolicy:
+    # -- Default network policy rules used by ArgoCD Server
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
+
 ## Repo Server
 repoServer:
   # -- Repo server name
@@ -2761,6 +2805,9 @@ repoServer:
   # -- Annotations to be added to repo server Deployment
   deploymentAnnotations: {}
 
+  # -- Labels for the repo server Deployment
+  deploymentLabels: {}
+
   # -- Annotations to be added to repo server pods
   podAnnotations: {}
 
@@ -2891,6 +2938,8 @@ repoServer:
     port: 8081
     # -- Repo server service port name
     portName: tcp-repo-server
+    # -- Traffic distribution preference for the repo server service. If the field is not set, the implementation will apply its default routing strategy.
+    trafficDistribution: ""
 
   ## Repo server metrics service configuration
   metrics:
@@ -2973,6 +3022,12 @@ repoServer:
   #     - get
   #     - list
   #     - watch
+
+  # Default repo server's network policy
+  networkPolicy:
+    # -- Default network policy rules used by repo server
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
 
 ## ApplicationSet controller
 applicationSet:
@@ -3130,6 +3185,9 @@ applicationSet:
 
   # -- Annotations to be added to ApplicationSet controller Deployment
   deploymentAnnotations: {}
+
+  # -- Labels for the ApplicationSet controller Deployment
+  deploymentLabels: {}
 
   # -- Annotations for the ApplicationSet controller pods
   podAnnotations: {}
@@ -3343,6 +3401,13 @@ applicationSet:
       #     - argocd-applicationset.example.com
   # -- Enable ApplicationSet in any namespace feature
   allowAnyNamespace: false
+
+  # Default ApplicationSet controller's network policy
+  networkPolicy:
+    # -- Default network policy rules used by ApplicationSet controller
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
+
 ## Notifications controller
 notifications:
   # -- Enable notifications controller
@@ -3512,6 +3577,9 @@ notifications:
 
   # -- Annotations to be applied to the notifications controller Deployment
   deploymentAnnotations: {}
+
+  # -- Labels for the notifications controller Deployment
+  deploymentLabels: {}
 
   # -- Annotations to be applied to the notifications controller Pods
   podAnnotations: {}
@@ -3909,6 +3977,12 @@ notifications:
     # defaultTriggers: |
     #   - on-sync-status-unknown
 
+  # Default notifications controller's network policy
+  networkPolicy:
+    # -- Default network policy rules used by notifications controller
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false
+
 commitServer:
   # -- Enable commit server
   enabled: false
@@ -3977,6 +4051,10 @@ commitServer:
     annotations: {}
     # -- commit server service labels
     labels: {}
+    # -- commit server service port
+    port: 8086
+    # -- commit server service port name
+    portName: server
 
   # -- Automount API credentials for the Service Account into the pod.
   automountServiceAccountToken: false
@@ -3995,6 +4073,9 @@ commitServer:
 
   # -- Annotations to be added to commit server Deployment
   deploymentAnnotations: {}
+
+  # -- Labels for the commit server Deployment
+  deploymentLabels: {}
 
   # -- Annotations for the commit server pods
   podAnnotations: {}
@@ -4088,3 +4169,9 @@ commitServer:
   # -- Priority class for the commit server pods
   # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
+
+  # Default commit server's network policy
+  networkPolicy:
+    # -- Default network policy rules used by commit server
+    # @default -- `false` (defaults to global.networkPolicy.create)
+    create: false

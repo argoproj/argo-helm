@@ -11,6 +11,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.repoServer.deploymentLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.repoServer.deploymentStrategy) }}
   strategy:
@@ -295,6 +298,24 @@ spec:
             valueFrom:
               configMapKeyRef:
                 key: reposerver.git.request.timeout
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_REPO_SERVER_OCI_MANIFEST_MAX_EXTRACTED_SIZE
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.oci.manifest.max.extracted.size
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_REPO_SERVER_DISABLE_OCI_MANIFEST_MAX_EXTRACTED_SIZE
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.disable.oci.manifest.max.extracted.size
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_REPO_SERVER_OCI_LAYER_MEDIA_TYPES
+            valueFrom:
+              configMapKeyRef:
+                key: reposerver.oci.layer.media.types
                 name: argocd-cmd-params-cm
                 optional: true
           - name: ARGOCD_REVISION_CACHE_LOCK_TIMEOUT

@@ -187,6 +187,7 @@ Fields to note:
 | controller.metricsConfig.port | int | `9090` | Port is the port where metrics are emitted |
 | controller.metricsConfig.portName | string | `"metrics"` | Container metrics port name |
 | controller.metricsConfig.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping |
+| controller.metricsConfig.scheme | string | `"http"` | serviceMonitor scheme |
 | controller.metricsConfig.secure | bool | `false` | Flag that use a self-signed cert for TLS |
 | controller.metricsConfig.servicePort | int | `8080` | Service metrics port |
 | controller.metricsConfig.servicePortName | string | `"metrics"` | Service metrics port name |
@@ -226,12 +227,14 @@ Fields to note:
 | controller.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | controller.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | controller.serviceType | string | `"ClusterIP"` | Service type of the controller Service |
+| controller.synchronization | object | `{}` | enable Synchronization to use a database.  Postgres and MySQL (>= 5.7.8) are available. |
 | controller.telemetryConfig.enabled | bool | `false` | Enables prometheus telemetry server |
 | controller.telemetryConfig.ignoreErrors | bool | `false` | Flag that instructs prometheus to ignore metric emission errors. |
 | controller.telemetryConfig.interval | string | `"30s"` | Frequency at which prometheus scrapes telemetry data |
 | controller.telemetryConfig.metricsTTL | string | `""` | How often custom metrics are cleared from memory |
 | controller.telemetryConfig.path | string | `"/telemetry"` | telemetry path |
 | controller.telemetryConfig.port | int | `8081` | telemetry container port |
+| controller.telemetryConfig.scheme | string | `"http"` | telemetry serviceMonitor scheme to use |
 | controller.telemetryConfig.secure | bool | `false` | Flag that use a self-signed cert for TLS |
 | controller.telemetryConfig.servicePort | int | `8081` | telemetry service port |
 | controller.telemetryConfig.servicePortName | string | `"telemetry"` | telemetry service port name |

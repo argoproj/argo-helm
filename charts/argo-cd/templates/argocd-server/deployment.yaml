@@ -11,6 +11,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.server.deploymentLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.server.deploymentStrategy) }}
   strategy:
@@ -207,12 +210,6 @@ spec:
                 name: argocd-cmd-params-cm
                 key: server.oidc.cache.expiration
                 optional: true
-          - name: ARGOCD_SERVER_LOGIN_ATTEMPTS_EXPIRATION
-            valueFrom:
-              configMapKeyRef:
-                name: argocd-cmd-params-cm
-                key: server.login.attempts.expiration
-                optional: true
           - name: ARGOCD_SERVER_STATIC_ASSETS
             valueFrom:
               configMapKeyRef:
@@ -370,6 +367,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: applicationsetcontroller.enable.scm.providers
+                optional: true
+          - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_GITHUB_API_METRICS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: applicationsetcontroller.enable.github.api.metrics
                 optional: true
           - name: ARGOCD_HYDRATOR_ENABLED
             valueFrom:

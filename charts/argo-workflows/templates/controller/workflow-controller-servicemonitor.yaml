@@ -25,6 +25,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       honorLabels: {{ .Values.controller.metricsConfig.honorLabels }}
+      scheme: {{ .Values.controller.metricsConfig.scheme}}
   {{- end }}
   {{- if .Values.controller.telemetryConfig.enabled }}
     - port: telemetry
@@ -39,6 +40,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       honorLabels: {{ .Values.controller.metricsConfig.honorLabels }}
+      scheme: {{ .Values.controller.telemetryConfig.scheme }}
   {{- end }}
   {{- with .Values.controller.metricsConfig.targetLabels }}
   targetLabels:

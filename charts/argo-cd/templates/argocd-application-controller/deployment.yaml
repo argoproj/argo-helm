@@ -12,6 +12,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.controller.deploymentLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.controller.replicas }}
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit | default .Values.global.revisionHistoryLimit }}
@@ -181,6 +184,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: controller.self.heal.backoff.cap.seconds
                 optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_COOLDOWN_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.self.heal.backoff.cooldown.seconds
+                optional: true
           - name: ARGOCD_APPLICATION_CONTROLLER_SYNC_TIMEOUT
             valueFrom:
               configMapKeyRef:
@@ -332,6 +341,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: controller.cluster.cache.events.processing.interval
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_COMMIT_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: commit.server
                 optional: true
         {{- with .Values.controller.envFrom }}
         envFrom:

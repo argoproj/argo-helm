@@ -149,6 +149,8 @@ controller:
     servicePort: 8080
     # -- Service metrics port name
     servicePortName: metrics
+    # -- serviceMonitor scheme
+    scheme: http
     # -- Flag to enable headless service
     headlessService: false
     # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
@@ -163,6 +165,7 @@ controller:
     # -- ServiceMonitor will add labels from the service to the Prometheus metric
     ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
     targetLabels: []
+
   # -- the controller container's securityContext
   securityContext:
     readOnlyRootFilesystem: true
@@ -256,6 +259,8 @@ controller:
     servicePort: 8081
     # -- telemetry service port name
     servicePortName: telemetry
+    # -- telemetry serviceMonitor scheme to use
+    scheme: http
   serviceMonitor:
     # -- Enable a prometheus ServiceMonitor
     enabled: false
@@ -263,6 +268,7 @@ controller:
     additionalLabels: {}
     # -- Prometheus ServiceMonitor namespace
     namespace: "" # "monitoring"
+
   serviceAccount:
     # -- Create a service account for the controller
     create: true
@@ -430,6 +436,41 @@ controller:
   # -- The duration in seconds before the pods in the GC queue get deleted. A zero value indicates that the pods will be deleted immediately.
   # @default -- `5s` (Argo Workflows default)
   podGCDeleteDelayDuration: ""
+
+  # -- enable Synchronization to use a database.  Postgres and MySQL (>= 5.7.8) are available.
+  ## Ref: https://argo-workflows.readthedocs.io/en/latest/workflow-controller-configmap/#syncconfig
+  synchronization: {}
+  # controllerName: argo-workflows
+  # connectionPool:
+  #   maxIdleConns: 100
+  #   maxOpenConns: 0
+  # postgresql:
+  #   host: localhost
+  #   port: 5432
+  #   database: postgres
+  #   tableName: argo_workflows
+  #   # the database secrets must be in the same namespace of the controller
+  #   userNameSecret:
+  #     name: argo-postgres-config
+  #     key: username
+  #   passwordSecret:
+  #     name: argo-postgres-config
+  #     key: password
+  #   ssl: true
+  #   # sslMode must be one of: disable, require, verify-ca, verify-full
+  #   # you can find more information about those ssl options here: https://godoc.org/github.com/lib/pq
+  #   sslMode: require
+  # mysql:
+  #   host: localhost
+  #   port: 3306
+  #   database: argo
+  #   tableName: argo_workflows
+  #   userNameSecret:
+  #     name: argo-mysql-config
+  #     key: username
+  #   passwordSecret:
+  #     name: argo-mysql-config
+  #     key: password
 
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
@@ -863,7 +904,7 @@ artifactRepository:
     # keyFormat: "{{ \"{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}\" }}"
     # # serviceAccountKeySecret is a secret selector.
     # # It references the k8s secret named 'my-gcs-credentials'.
-    # # This secret is expected to have have the key 'serviceAccountKey',
+    # # This secret is expected to have the key 'serviceAccountKey',
     # # containing the base64 encoded credentials
     # # to the bucket.
     # #
@@ -880,7 +921,7 @@ artifactRepository:
     # blobNameFormat: path/in/container
     # # accountKeySecret is a secret selector.
     # # It references the k8s secret named 'my-azure-storage-credentials'.
-    # # This secret is expected to have have the key 'account-access-key',
+    # # This secret is expected to have the key 'account-access-key',
     # # containing the base64 encoded credentials to the storage account.
     # # If a managed identity has been assigned to the machines running the
     # # workflow (e.g., https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
@@ -936,7 +977,7 @@ artifactRepositoryRef: {}
   #        bucket: $mybucket
   #        # accessKeySecret and secretKeySecret are secret selectors.
   #        # It references the k8s secret named 'bucket-workflow-artifect-credentials'.
-  #        # This secret is expected to have have the keys 'accessKey'
+  #        # This secret is expected to have the keys 'accessKey'
   #        # and 'secretKey', containing the base64 encoded credentials
   #        # to the bucket.
   #        accessKeySecret:
