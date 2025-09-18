@@ -3,7 +3,7 @@ appVersion: v3.7.2
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.45.25
+version: 0.45.26
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -17,4 +17,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: Use the good value for the server service loadBalancerClass
+      description: Add workflowtasksets/status RBAC permission to fix controller unable to patch status error
