@@ -178,6 +178,12 @@ controller:
       relabelings: []
       # -- MetricRelabelConfigs to apply to samples before ingestion
       metricRelabelings: []
+      # -- TLS configuration for the ServiceMonitor. When set, scheme will be https
+      tlsConfig: {}
+        # caFile: /etc/istio-certs/root-cert.pem
+        # certFile: /etc/istio-certs/cert-chain.pem
+        # insecureSkipVerify: true
+        # keyFile: /etc/istio-certs/key.pem
 
   # -- Configure liveness [probe] for the controller
   # @default -- See [values.yaml]
