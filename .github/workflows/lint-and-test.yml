@@ -92,9 +92,7 @@ jobs:
       - name: Create an external redis for ArgoCD externalRedis feature
         if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
         run: |
-          kubectl create namespace redis
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm install redis bitnami/redis --wait --namespace redis --set auth.password=argocd --set architecture=standalone
+          kubectl apply -f ./.github/configs/external-redis.yaml
 
       - name: Run chart-testing (install)
         run: ct install --config ./.github/configs/ct-install.yaml
