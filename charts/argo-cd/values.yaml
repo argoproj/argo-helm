@@ -1140,6 +1140,14 @@ controller:
     # -- List of custom rules for the application controller's ClusterRole resource
     rules: []
 
+  ## Enable this and set the rules: to whatever custom rules you want for the Role resource.
+  ## Defaults to off
+  roleRules:
+    # -- Enable custom rules for the application controller's Role resource
+    enabled: false
+    # -- List of custom rules for the application controller's Role resource
+    rules: []
+
   # Default application controller's network policy
   networkPolicy:
     # -- Default network policy rules used by application controller
