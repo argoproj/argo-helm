@@ -6,8 +6,8 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 rules:
-{{- if .Values.controller.roleRules.enabled }}
-  {{- toYaml .Values.controller.roleRules.rules | nindent 2 }}
+{{- with .Values.controller.roleRules }}
+{{- toYaml . | nindent 0 }}
 {{- else }}
 - apiGroups:
   - ""
