@@ -37,7 +37,7 @@ spec:
   - name: {{ .Values.dashboard.service.portName }}
     protocol: TCP
     port: {{ .Values.dashboard.service.port }}
-    targetPort: {{ .Values.dashboard.service.targetPort }}
+    targetPort: dashboard
     {{- if and (eq .Values.dashboard.service.type "NodePort") .Values.dashboard.service.nodePort }}
     nodePort: {{ .Values.dashboard.service.nodePort }}
     {{- end }}
