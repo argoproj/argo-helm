@@ -12,12 +12,10 @@ spec:
   - ports:
     - port: webhook
   {{- end }}
-  {{- if .Values.applicationSet.metrics.enabled }}
   - from:
     - namespaceSelector: {}
     ports:
     - port: metrics
-  {{- end }}
   podSelector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 6 }}
