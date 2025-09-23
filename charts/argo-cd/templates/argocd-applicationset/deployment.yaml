@@ -238,6 +238,12 @@ spec:
                   key: applicationsetcontroller.requeue.after
                   name: argocd-cmd-params-cm
                   optional: true
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_MAX_RESOURCES_STATUS_COUNT
+              valueFrom:
+                configMapKeyRef:
+                  name: argocd-cmd-params-cm
+                  key: applicationsetcontroller.status.max.resources.count
+                  optional: true
           {{- with .Values.applicationSet.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
