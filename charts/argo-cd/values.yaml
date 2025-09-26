@@ -2793,6 +2793,16 @@ repoServer:
   # -- Init containers to add to the repo server pods
   initContainers: []
 
+  # -- Resource limits and requests for the copyutil initContainer
+  copyutil:
+    resources: {}
+    #  limits:
+    #    cpu: 100m
+    #    memory: 128Mi
+    #  requests:
+    #    cpu: 50m
+    #    memory: 64Mi
+
   # -- Additional volumeMounts to the repo server main container
   volumeMounts: []
 
@@ -2852,18 +2862,6 @@ repoServer:
   #  requests:
   #    cpu: 10m
   #    memory: 64Mi
-
-  # -- Init containers for the repo server pods
-  initContainers:
-    # -- Resource limits and requests for the copyutil initContainer
-    copyutil:
-      resources: {}
-      #  limits:
-      #    cpu: 100m
-      #    memory: 128Mi
-      #  requests:
-      #    cpu: 50m
-      #    memory: 64Mi
 
   # Repo server container ports
   containerPorts:
