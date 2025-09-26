@@ -2853,6 +2853,18 @@ repoServer:
   #    cpu: 10m
   #    memory: 64Mi
 
+  # -- Init containers for the repo server pods
+  initContainers:
+    # -- Resource limits and requests for the copyutil initContainer
+    copyutil:
+      resources: {}
+      #  limits:
+      #    cpu: 100m
+      #    memory: 128Mi
+      #  requests:
+      #    cpu: 50m
+      #    memory: 64Mi
+
   # Repo server container ports
   containerPorts:
     # -- Repo server container port

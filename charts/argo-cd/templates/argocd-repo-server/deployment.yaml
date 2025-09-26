@@ -412,7 +412,11 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
         name: copyutil
         resources:
+          {{- if .Values.repoServer.initContainers.copyutil.resources }}
+          {{- toYaml .Values.repoServer.initContainers.copyutil.resources | nindent 10 }}
+          {{- else }}
           {{- toYaml .Values.repoServer.resources | nindent 10 }}
+          {{- end }}
         {{- with .Values.repoServer.containerSecurityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
