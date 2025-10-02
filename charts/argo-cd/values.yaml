@@ -1140,6 +1140,11 @@ controller:
     # -- List of custom rules for the application controller's ClusterRole resource
     rules: []
 
+  ## Enable this and set the rules: to whatever custom rules you want for the Role resource.
+  ## Defaults to off
+  # -- List of custom rules for the application controller's Role resource
+  roleRules: []
+
   # Default application controller's network policy
   networkPolicy:
     # -- Default network policy rules used by application controller
@@ -2787,6 +2792,16 @@ repoServer:
 
   # -- Init containers to add to the repo server pods
   initContainers: []
+
+  copyutil:
+    # -- Resource limits and requests for the repo server copyutil initContainer
+    resources: {}
+    #  limits:
+    #    cpu: 100m
+    #    memory: 128Mi
+    #  requests:
+    #    cpu: 50m
+    #    memory: 64Mi
 
   # -- Additional volumeMounts to the repo server main container
   volumeMounts: []
