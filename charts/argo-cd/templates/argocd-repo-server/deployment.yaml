@@ -447,8 +447,29 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
+      {{- $existingVolumes := .Values.repoServer.existingVolumes }}
       {{- with .Values.repoServer.volumes }}
-        {{- toYaml . | nindent 6 }}
+        {{- $filteredVolumes := list }}
+        {{- range . }}
+          {{- $skip := false }}
+          {{- if and $existingVolumes.tmp (eq .name "tmp") }}
+            {{- $skip = true }}
+          {{- else if and $existingVolumes.helmWorkingDir (eq .name "helm-working-dir") }}
+            {{- $skip = true }}
+          {{- else if and $existingVolumes.plugins (eq .name "plugins") }}
+            {{- $skip = true }}
+          {{- else if and $existingVolumes.varFiles (eq .name "var-files") }}
+            {{- $skip = true }}
+          {{- else if and $existingVolumes.gpgKeyring (eq .name "gpg-keyring") }}
+            {{- $skip = true }}
+          {{- end }}
+          {{- if not $skip }}
+            {{- $filteredVolumes = append $filteredVolumes . }}
+          {{- end }}
+        {{- end }}
+        {{- if $filteredVolumes }}
+          {{- toYaml $filteredVolumes | nindent 6 }}
+        {{- end }}
       {{- end }}
       {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
       - name: helm-working-dir
