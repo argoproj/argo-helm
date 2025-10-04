@@ -1120,6 +1120,15 @@ NAME: my-release
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
 | server.hostNetwork | bool | `false` | Host Network for Server pods |
+| server.httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
+| server.httproute.enabled | bool | `false` | Enable HTTPRoute resource for Argo CD server (Gateway API) |
+| server.httproute.extraHosts | list | `[]` (See [values.yaml]) | The list of additional hostnames to be covered by HTTPRoute |
+| server.httproute.extraRules | list | `[]` (See [values.yaml]) | Additional HTTPRoute rules |
+| server.httproute.hostname | string | `""` (defaults to global.domain) | Argo CD server hostname |
+| server.httproute.labels | object | `{}` | Additional HTTPRoute labels |
+| server.httproute.parentRefs | list | `[]` (See [values.yaml]) | Gateway API parentRefs for the HTTPRoute |
+| server.httproute.path | string | `"/"` | The path to Argo CD server |
+| server.httproute.pathType | string | `"PathPrefix"` | HTTPRoute path type. One of `Exact`, `PathPrefix` or `RegularExpression` |
 | server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Argo CD server |
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
 | server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Argo CD server |
