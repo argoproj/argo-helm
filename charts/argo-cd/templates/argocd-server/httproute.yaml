@@ -1,0 +1,43 @@
+{{- if .Values.server.httproute.enabled -}}
+{{- $insecure := index .Values.configs.params "server.insecure" | toString -}}
+{{- $servicePort := eq $insecure "true" | ternary .Values.server.service.servicePortHttp .Values.server.service.servicePortHttps -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    {{- with .Values.server.httproute.labels }}
+      {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+  {{- with .Values.server.httproute.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ tpl (toString $value) $ | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  {{- with .Values.server.httproute.parentRefs }}
+  parentRefs:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+  {{- if or .Values.server.httproute.hostname .Values.global.domain }}
+  hostnames:
+    - {{ tpl (.Values.server.httproute.hostname) $ | default .Values.global.domain }}
+    {{- range .Values.server.httproute.extraHosts }}
+    - {{ tpl .name $ }}
+    {{- end }}
+  {{- end }}
+  rules:
+    - matches:
+        - path:
+            type: {{ .Values.server.httproute.pathType }}
+            value: {{ .Values.server.httproute.path }}
+      backendRefs:
+        - name: {{ include "argo-cd.server.fullname" . }}
+          port: {{ $servicePort }}
+    {{- with .Values.server.httproute.extraRules }}
+      {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+{{- end }}

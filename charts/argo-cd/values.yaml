@@ -2640,6 +2640,38 @@ server:
     # -- Termination policy of Openshift Route
     termination_policy: None
 
+  # Gateway API HTTPRoute configuration
+  httproute:
+    # -- Enable HTTPRoute resource for Argo CD server (Gateway API)
+    enabled: false
+    # -- Additional HTTPRoute labels
+    labels: {}
+    # -- Additional HTTPRoute annotations
+    annotations: {}
+    # -- Gateway API parentRefs for the HTTPRoute
+    ## Must reference an existing Gateway
+    # @default -- `[]` (See [values.yaml])
+    ## Note: Supports use of custom Helm templates
+    parentRefs: []
+      # - name: example-gateway
+      #   namespace: example-gateway-namespace
+      #   sectionName: https
+    # -- Argo CD server hostname
+    # @default -- `""` (defaults to global.domain)
+    hostname: ""
+    # -- The path to Argo CD server
+    path: /
+    # -- HTTPRoute path type. One of `Exact`, `PathPrefix` or `RegularExpression`
+    pathType: PathPrefix
+    # -- The list of additional hostnames to be covered by HTTPRoute
+    # @default -- `[]` (See [values.yaml])
+    extraHosts: []
+      # - name: argocd.example.com
+    # -- Additional HTTPRoute rules
+    # @default -- `[]` (See [values.yaml])
+    ## Note: Supports use of custom Helm templates
+    extraRules: []
+
   ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
   ## Defaults to off
   clusterRoleRules:
