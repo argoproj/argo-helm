@@ -67,7 +67,7 @@ applicationSet:
 ## Ingress configuration
 
 Please refer to the [Operator Manual](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingress-configurationh) for details as the samples
-below corespond to their respective sections.
+below correspond to their respective sections.
 
 ### SSL-Passthrough
 
@@ -172,7 +172,7 @@ Refer to the Operator Manual for [AWS Application Load Balancer mode](https://ar
 The provided example assumes you are using TLS off-loading via AWS ACM service.
 
 > **Note:**
-> Using `controller: aws` creates additional service for gRPC traffic and it's no longer need to use `ingressGrpc` configuration section.
+> Using `controller: aws` creates an additional service for gRPC traffic and it's no longer needed to use `ingressGrpc` configuration section.
 
 ```yaml
 global:
@@ -264,7 +264,7 @@ spec:
 
 ## Synchronizing Changes from Original Repository
 
-In the original [Argo CD repository](https://github.com/argoproj/argo-cd/) an [`manifests/install.yaml`](https://github.com/argoproj/argo-cd/blob/master/manifests/install.yaml) is generated using `kustomize`. It's the basis for the installation as [described in the docs](https://argo-cd.readthedocs.io/en/stable/getting_started/#1-install-argo-cd).
+In the original [Argo CD repository](https://github.com/argoproj/argo-cd/) a [`manifests/install.yaml`](https://github.com/argoproj/argo-cd/blob/master/manifests/install.yaml) is generated using `kustomize`. It's the basis for the installation as [described in the docs](https://argo-cd.readthedocs.io/en/stable/getting_started/#1-install-argo-cd).
 
 When installing Argo CD using this helm chart the user should have a similar experience and configuration rolled out. Hence, it makes sense to try to achieve a similar output of rendered `.yaml` resources when calling `helm template` using the default settings in `values.yaml`.
 

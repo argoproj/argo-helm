@@ -6,4 +6,4 @@ We adhere to the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/
 
 Be kind
 
-Your participation is at the discression of the maintainers of this project.
+Your participation is at the discretion of the maintainers of this project.
