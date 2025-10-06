@@ -1,5 +1,6 @@
 # argocd-image-updater
 
+
 A Helm chart for Argo CD Image Updater, a tool to automatically update the container images of Kubernetes workloads which are managed by Argo CD
 
 To regenerate this document, from the root of this chart directory run:
@@ -14,7 +15,7 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm install argocd-image-updater argo/argocd-image-updater
 ```
 
-You will also need to run through the [secret setup documentation] so Argo CD Image Updater can talk to the Argo CD API (until its automated in this chart).
+You will also need to run through the [secret setup documentation] so Argo CD Image Updater can talk to the Argo CD API (until it's automated in this chart).
 
 ## Prerequisites
 

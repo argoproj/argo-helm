@@ -66,7 +66,7 @@ applicationSet:
 ## Ingress configuration
 
 Please refer to the [Operator Manual](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingress-configurationh) for details as the samples
-below corespond to their respective sections.
+below correspond to their respective sections.
 
 ### SSL-Passthrough
 
@@ -476,7 +476,7 @@ This version adds `global.affinity` options that are used as a presets. Override
 ### 5.19.0
 
 This version consolidates config for custom repository TLS certificates and SSH known hosts. If you provided these values (`configs.knownHosts.*`, `configs.knownHostsAnnotations`, `configs.tlsCerts`, `configs.tlsCertsAnnotations`) please move them into new `configs.ssh` and `configs.tls` sections.
-You can also use new option `configs.ssh.extraHosts` to configure your SSH keys without maintaing / overwritting keys for public Git repositories.
+You can also use new option `configs.ssh.extraHosts` to configure your SSH keys without maintaining / overwriting keys for public Git repositories.
 
 ### 5.13.0
 
@@ -495,7 +495,7 @@ The change aligns chart with officially [supported versions](https://argo-cd.rea
 
 ### 5.7.0
 
-This version introcudes new `configs.cm` and `configs.rbac` sections that replaces `server.config` and `server.rbacConfig` respectively.
+This version introduces new `configs.cm` and `configs.rbac` sections that replace `server.config` and `server.rbacConfig` respectively.
 Please move your current configuration to the new place. The Argo CD RBAC config now also sets defaults in the `argocd-rbac-cm`.
 If you have manually created this ConfigMap please ensure templating is disabled so you will not lose your changes.
 
