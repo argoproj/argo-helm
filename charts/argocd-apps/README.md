@@ -1,5 +1,6 @@
 # argocd-apps
 
+
 A Helm chart for managing additional Argo CD Applications and Projects
 
 To regenerate this document, from the root of this chart directory run:

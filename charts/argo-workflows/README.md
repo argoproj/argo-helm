@@ -91,6 +91,7 @@ Please refer to [Argo Server Auth Mode] for more details.
 
 Argo Workflows server also supports SSO and you can enable it to configure `.Values.server.sso` and `.Values.server.authModes`. In order to manage access levels, you can optionally add RBAC to SSO. Please refer to [SSO RBAC] for more details.
 
+
 ## Values
 
 The `values.yaml` contains items used to tweak a deployment of this chart.
@@ -419,4 +420,4 @@ Fields to note:
 [values.yaml]: values.yaml
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-workflows?modal=changelog
 [SSO RBAC]: https://argo-workflows.readthedocs.io/en/stable/argo-server-sso/
-[Argo Server Auth Mode]: https://argo-workflows.readthedocs.io/en/stable/argo-server-auth-mode/
+[Argo Server Auth Mode]: https://argo-workflows.readthedocs.io/en/stable/argo-server-auth-mode/ 

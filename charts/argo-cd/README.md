@@ -4,6 +4,7 @@ A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kub
 
 Source code can be found here:
 
+
 * <https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd>
 * <https://github.com/argoproj/argo-cd>
 
@@ -67,7 +68,7 @@ applicationSet:
 ## Ingress configuration
 
 Please refer to the [Operator Manual](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingress-configurationh) for details as the samples
-below corespond to their respective sections.
+below correspond to their respective sections.
 
 ### SSL-Passthrough
 
@@ -232,7 +233,7 @@ server:
           port: 8080
       frontendConfig:
         redirectToHttps:
-          enabled: true 
+          enabled: true  
       managedCertificate:
         enabled: true
 ```
@@ -261,6 +262,7 @@ spec:
           secret:
             argocdServerAdminPassword: $2a$10$H1a30nMr9v2QE2nkyz0BoOD2J0I6FQFMtHS0csEg12RBWzfRuuoE6
 ```
+
 
 ## Synchronizing Changes from Original Repository
 
@@ -315,6 +317,7 @@ Please carefully read at least those resources:
 Chart versions from >= 7.7.2 and < 7.9.0 are using a Redis version which is no longer using an open source version of Redis.
 Thus we downgraded Redis to latest available 7.2 (from 7.4) to be in-line with upstream manifests and fully honor
 [CNCF Allowlist License Policy].
+
 
 **Users using redis-ha may encounter issues** which can be resolved by either deleting all redis-ha pods after the
 deployment/upgrade:
@@ -374,7 +377,7 @@ Upstream steps in the [FAQ] are not enough, since we chose a different approach.
 (We use a Kubernetes Job with [Chart Hooks] to create the auth secret `argocd-redis`.)
 
 Steps to rotate the secret when using the helm chart (bold step is additional to upstream):
-* Delete `argocd-redis` secret in the namespace where Argo CD is installed.
+* Delete `argocd-redis` secret in the namespace where Argo CD is installed. 
   ```bash
   kubectl delete secret argocd-redis -n <argocd namespace>
   ```
@@ -398,7 +401,7 @@ Steps to rotate the secret when using the helm chart (bold step is additional to
   ```
 
 ### 6.9.0
-ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9). 
+ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9).  
 
 ### 6.4.0
 
@@ -449,6 +452,7 @@ This version supports Kubernetes version `>=1.23.0-0`. The current supported ver
 
 Please see more information about EoL: [Amazon EKS EoL][EKS EoL].
 
+
 ### 5.31.0
 The manifests are now using [`tini` as entrypoint][tini], instead of `entrypoint.sh`. Until Argo CD v2.8, `entrypoint.sh` is retained for upgrade compatibility.
 This means that the deployment manifests have to be updated after upgrading to Argo CD v2.7, and before upgrading to Argo CD v2.8 later.
@@ -456,7 +460,7 @@ In case the manifests are updated before moving to Argo CD v2.8, the containers 
 
 ### 5.26.0
 
-This version adds support for Config Management Plugins using the sidecar model and configured in a ConfigMap named `argocd-cmp-cm`.
+This version adds support for Config Management Plugins using the sidecar model and configured in a ConfigMap named `argocd-cmp-cm`. 
 Users will need to migrate from the previous `argocd-cm` ConfigMap method to using the sidecar method before Argo CD v2.8. See the [Argo CD CMP migration guide](https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/#migrating-from-argocd-cm-plugins) for more specifics.
 
 To migrate your plugins, you can now set the `configs.cmp.create` to `true` and move your plugins from `configs.cm` to `configs.cmp.plugins`.
@@ -474,7 +478,7 @@ This version adds `global.affinity` options that are used as a presets. Override
 ### 5.19.0
 
 This version consolidates config for custom repository TLS certificates and SSH known hosts. If you provided these values (`configs.knownHosts.*`, `configs.knownHostsAnnotations`, `configs.tlsCerts`, `configs.tlsCertsAnnotations`) please move them into new `configs.ssh` and `configs.tls` sections.
-You can also use new option `configs.ssh.extraHosts` to configure your SSH keys without maintaing / overwritting keys for public Git repositories.
+You can also use new option `configs.ssh.extraHosts` to configure your SSH keys without maintaining / overwriting keys for public Git repositories.
 
 ### 5.13.0
 
@@ -493,7 +497,7 @@ The change aligns chart with officially [supported versions](https://argo-cd.rea
 
 ### 5.7.0
 
-This version introcudes new `configs.cm` and `configs.rbac` sections that replaces `server.config` and `server.rbacConfig` respectively.
+This version introduces new `configs.cm` and `configs.rbac` sections that replace `server.config` and `server.rbacConfig` respectively.
 Please move your current configuration to the new place. The Argo CD RBAC config now also sets defaults in the `argocd-rbac-cm`.
 If you have manually created this ConfigMap please ensure templating is disabled so you will not lose your changes.
 
@@ -673,6 +677,7 @@ kubeVersionOverride: "1.18.0"
 ```
 
 Then you should no longer encounter this issue.
+
 
 ### 3.0.0 and above
 
