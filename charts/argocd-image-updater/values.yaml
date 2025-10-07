@@ -328,16 +328,9 @@ service:
   # -- Service https port for NodePort service type (only if `service.type` is set to "NodePort")
   nodePortHttps: 30443
   # -- Service http port
-  servicePortHttp: 8080
-  # -- Service https port
-  servicePortHttps: 443
+  port: 8080
   # -- Service http port name, can be used to route traffic via istio
   servicePortHttpName: server-port
-  # -- Service https port name, can be used to route traffic via istio
-  servicePortHttpsName: https
-  # -- Service https port appProtocol
-  ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol
-  servicePortHttpsAppProtocol: ""
   # -- The class of the load balancer implementation
   loadBalancerClass: ""
   # -- LoadBalancer will get created with the IP specified in this field
@@ -358,7 +351,7 @@ service:
 # Ingress for the deployment
 ingress:
   # -- Enable an ingress resource for the deployment
-  enabled: false
+  enabled: true
   # -- Additional ingress labels
   labels: {}
   # -- Additional ingress annotations
@@ -369,8 +362,7 @@ ingress:
   # @default -- `""` (defaults to global.domain)
   hostname: ""
   # -- The path to deployment
-  path: /
-
+  path: /webhook
   # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
   pathType: Prefix
 

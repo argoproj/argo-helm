@@ -105,13 +105,13 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | imagePullSecrets | list | `[]` | ImagePullSecrets for the image updater deployment |
 | ingress.annotations | object | `{}` | Additional ingress annotations |
-| ingress.enabled | bool | `false` | Enable an ingress resource for the deployment |
+| ingress.enabled | bool | `true` | Enable an ingress resource for the deployment |
 | ingress.extraHosts | list | `[]` (See [values.yaml]) | The list of additional hostnames to be covered by ingress record |
 | ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | ingress.hostname | string | `""` (defaults to global.domain) | deployment hostname |
 | ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
 | ingress.labels | object | `{}` | Additional ingress labels |
-| ingress.path | string | `"/"` | The path to deployment |
+| ingress.path | string | `"/webhook"` | The path to deployment |
 | ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
 | ingress.tls | list | `[]` | Ingress TLS configuration |
 | initContainers | list | `[]` | Init containers to add to the image updater pod |
@@ -146,11 +146,8 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
 | service.nodePortHttp | int | `30080` | Service http port for NodePort service type (only if `service.type` is set to "NodePort") |
 | service.nodePortHttps | int | `30443` | Service https port for NodePort service type (only if `service.type` is set to "NodePort") |
-| service.servicePortHttp | int | `8080` | Service http port |
+| service.port | int | `8080` | Service http port |
 | service.servicePortHttpName | string | `"server-port"` | Service http port name, can be used to route traffic via istio |
-| service.servicePortHttps | int | `443` | Service https port |
-| service.servicePortHttpsAppProtocol | string | `""` | Service https port appProtocol |
-| service.servicePortHttpsName | string | `"https"` | Service https port name, can be used to route traffic via istio |
 | service.sessionAffinity | string | `"None"` | Used to maintain session affinity. Supports `ClientIP` and `None` |
 | service.type | string | `"ClusterIP"` | Service type |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |

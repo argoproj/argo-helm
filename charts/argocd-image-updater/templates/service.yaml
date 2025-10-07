@@ -39,20 +39,13 @@ spec:
   ports:
     - name: {{ .Values.service.servicePortHttpName }}
       protocol: TCP
-      port: {{ .Values.service.servicePortHttp }}
+      port: {{ .Values.service.port }}
       targetPort: {{ .Values.containerPort }}
-    {{- if eq .Values.service.type "NodePort" }}
+      {{- if eq .Values.service.type "NodePort" }}
       nodePort: {{ .Values.service.nodePortHttp }}
-    {{- end }}
-    - name: {{ .Values.service.servicePortHttpsName }}
-      protocol: TCP
-      port: {{ .Values.service.servicePortHttps }}
-      targetPort: {{ .Values.containerPort }}
+      {{- end }}
     {{- if eq .Values.service.type "NodePort" }}
       nodePort: {{ .Values.service.nodePortHttps }}
-    {{- end }}
-    {{- with .Values.service.servicePortHttpsAppProtocol }}
-      appProtocol: {{ . }}
     {{- end }}
   selector:
     {{- include "argocd-image-updater.selectorLabels" . | nindent 4 }}

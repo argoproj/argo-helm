@@ -25,20 +25,28 @@ spec:
     - host: {{ .Values.ingress.hostname }}
       http:
         paths:
-          - path: /webhook
-            pathType: Prefix
+          - path: {{ .Values.ingress.path }}
+            pathType: {{ .Values.ingress.pathType }}
             backend:
               service:
                 name: {{ $serviceName }}
                 port:
+                  {{- if kindIs "string" $servicePort }}
+                  name: {{ $servicePort }}
+                  {{- else }}
                   number: {{ $servicePort }}
+                  {{- end }}
           - path: /healthz
             pathType: Prefix
             backend:
               service:
                 name: {{ $serviceName }}
                 port:
+                  {{- if kindIs "string" $servicePort }}
+                  name: {{ $servicePort }}
+                  {{- else }}
                   number: {{ $servicePort }}
+                  {{- end }}
           {{- with .Values.ingress.extraPaths }}
             {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
@@ -52,7 +60,11 @@ spec:
               service:
                 name: {{ include "argocd-image-updater.fullname" $ }}
                 port:
-                  number: {{ $.Values.service.port }}
+                  {{- if kindIs "string" $servicePort }}
+                  name: {{ $servicePort }}
+                  {{- else }}
+                  number: {{ $servicePort }}
+                  {{- end }}
     {{- end }}
   {{- with .Values.ingress.tls }}
   tls:
