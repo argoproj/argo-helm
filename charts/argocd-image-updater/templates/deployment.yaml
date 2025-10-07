@@ -184,22 +184,22 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.containerPort }}
             {{ if .Values.metrics.enabled }}
             - name: metrics
-              containerPort: 8081
+              containerPort: {{ .Values.metrics.service.servicePort }}
               protocol: TCP
             {{- end }}
           readinessProbe:
             httpGet:
               path: /healthz
-              port: 8080
+              port: {{ .Values.containerPort }}
             initialDelaySeconds: 3
             periodSeconds: 30
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 8080
+              port: {{ .Values.containerPort }}
             initialDelaySeconds: 3
             periodSeconds: 30
           resources:
