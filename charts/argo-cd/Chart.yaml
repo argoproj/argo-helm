@@ -26,5 +26,7 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
+    - kind: fixed
+      description: Fix volume conflict in repo-server deployment when using existingVolumes
     - kind: changed
       description: Bump redis_exporter to v1.78.0
