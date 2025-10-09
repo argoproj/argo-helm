@@ -2640,6 +2640,106 @@ server:
     # -- Termination policy of Openshift Route
     termination_policy: None
 
+  # Gateway API HTTPRoute configuration
+  # NOTE: Gateway API support is in EXPERIMENTAL status
+  # Support depends on your Gateway controller implementation
+  # Some controllers may require additional configuration (e.g., BackendTLSPolicy for HTTPS backends)
+  # Refer to https://gateway-api.sigs.k8s.io/implementations/ for controller-specific details
+  httproute:
+    # -- Enable HTTPRoute resource for Argo CD server (Gateway API)
+    enabled: false
+    # -- Additional HTTPRoute labels
+    labels: {}
+    # -- Additional HTTPRoute annotations
+    annotations: {}
+    # -- Gateway API parentRefs for the HTTPRoute
+    ## Must reference an existing Gateway
+    # @default -- `[]` (See [values.yaml])
+    parentRefs: []
+      # - name: example-gateway
+      #   namespace: example-gateway-namespace
+      #   sectionName: https
+    # -- List of hostnames for the HTTPRoute
+    # @default -- `[]` (See [values.yaml])
+    hostnames: []
+      # - argocd.example.com
+    # -- HTTPRoute rules configuration
+    # @default -- `[]` (See [values.yaml])
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+        # filters: []
+        #   - type: RequestHeaderModifier
+        #     requestHeaderModifier:
+        #       add:
+        #         - name: X-Custom-Header
+        #           value: custom-value
+
+  # Gateway API GRPCRoute configuration
+  # NOTE: Gateway API support is in EXPERIMENTAL status
+  # Support depends on your Gateway controller implementation
+  # Refer to https://gateway-api.sigs.k8s.io/implementations/ for controller-specific details
+  grpcroute:
+    # -- Enable GRPCRoute resource for Argo CD server (Gateway API)
+    enabled: false
+    # -- Additional GRPCRoute labels
+    labels: {}
+    # -- Additional GRPCRoute annotations
+    annotations: {}
+    # -- Gateway API parentRefs for the GRPCRoute
+    ## Must reference an existing Gateway
+    # @default -- `[]` (See [values.yaml])
+    parentRefs: []
+      # - name: example-gateway
+      #   namespace: example-gateway-namespace
+      #   sectionName: grpc
+    # -- List of hostnames for the GRPCRoute
+    # @default -- `[]` (See [values.yaml])
+    hostnames: []
+      # - grpc.argocd.example.com
+    # -- GRPCRoute rules configuration
+    # @default -- `[]` (See [values.yaml])
+    rules:
+      - matches:
+          - method:
+              type: Exact
+        # filters: []
+        #   - type: RequestHeaderModifier
+        #     requestHeaderModifier:
+        #       add:
+        #         - name: X-Custom-Header
+        #           value: custom-value
+
+  # Gateway API BackendTLSPolicy configuration
+  # NOTE: BackendTLSPolicy is in EXPERIMENTAL status (v1alpha3)
+  # Required for HTTPS backends when using Gateway API
+  # Not all Gateway controllers support this resource (e.g., Cilium does not support it yet)
+  backendTLSPolicy:
+    # -- Enable BackendTLSPolicy resource for Argo CD server (Gateway API)
+    enabled: false
+    # -- Additional BackendTLSPolicy labels
+    labels: {}
+    # -- Additional BackendTLSPolicy annotations
+    annotations: {}
+    # -- Target references for the BackendTLSPolicy
+    # @default -- `[]` (See [values.yaml])
+    targetRefs: []
+      # - group: ""
+      #   kind: Service
+      #   name: argocd-server
+      #   sectionName: https
+    # -- TLS validation configuration
+    # @default -- `{}` (See [values.yaml])
+    validation: {}
+      # hostname: argocd-server.argocd.svc.cluster.local
+      # caCertificateRefs:
+      #   - name: example-ca-cert
+      #     group: ""
+      #     kind: ConfigMap
+      # wellKnownCACertificates: System
+
   ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
   ## Defaults to off
   clusterRoleRules:

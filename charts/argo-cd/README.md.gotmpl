@@ -236,6 +236,72 @@ server:
         enabled: true
 ```
 
+### Gateway API HTTPRoute
+
+The Gateway API provides a modern, extensible way to configure ingress traffic routing. This chart supports HTTPRoute resources as an alternative to traditional Ingress.
+
+> **Note:**
+> Gateway API support is **EXPERIMENTAL**. Support depends on your Gateway controller implementation. Some controllers may require additional configuration (e.g., BackendTLSPolicy for HTTPS backends). Refer to [Gateway API implementations](https://gateway-api.sigs.k8s.io/implementations/) for controller-specific details.
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: https
+```
+
+#### Gateway API with gRPC support
+
+For deployments requiring gRPC routing, use GRPCRoute alongside HTTPRoute:
+
+```yaml
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: https
+
+  grpcroute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: grpc
+```
+
+#### Gateway API with TLS backend
+
+For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy (experimental, v1alpha3):
+
+> **Warning:**
+> BackendTLSPolicy is in **EXPERIMENTAL** status. Not all Gateway controllers support this resource (e.g., Cilium does not yet support it).
+
+```yaml
+configs:
+  params:
+    server.insecure: false  # HTTPS backend
+
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+
+  backendTLSPolicy:
+    enabled: true
+    hostname: argocd-server.argocd.svc.cluster.local
+    wellKnownCACertificates: System
+```
+
 ## Setting the initial admin password via Argo CD Application CR
 
 > **Note:** When deploying the `argo-cd` chart via an Argo CD `Application` CR, define your bcrypt-hashed admin password under `helm.values`—not `helm.parameters`—because Argo CD performs variable substitution on `parameters`, which will mangle any `$…` in your hash.

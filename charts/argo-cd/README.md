@@ -237,6 +237,72 @@ server:
         enabled: true
 ```
 
+### Gateway API HTTPRoute
+
+The Gateway API provides a modern, extensible way to configure ingress traffic routing. This chart supports HTTPRoute resources as an alternative to traditional Ingress.
+
+> **Note:**
+> Gateway API support is **EXPERIMENTAL**. Support depends on your Gateway controller implementation. Some controllers may require additional configuration (e.g., BackendTLSPolicy for HTTPS backends). Refer to [Gateway API implementations](https://gateway-api.sigs.k8s.io/implementations/) for controller-specific details.
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: https
+```
+
+#### Gateway API with gRPC support
+
+For deployments requiring gRPC routing, use GRPCRoute alongside HTTPRoute:
+
+```yaml
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: https
+
+  grpcroute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: grpc
+```
+
+#### Gateway API with TLS backend
+
+For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy (experimental, v1alpha3):
+
+> **Warning:**
+> BackendTLSPolicy is in **EXPERIMENTAL** status. Not all Gateway controllers support this resource (e.g., Cilium does not yet support it).
+
+```yaml
+configs:
+  params:
+    server.insecure: false  # HTTPS backend
+
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+
+  backendTLSPolicy:
+    enabled: true
+    hostname: argocd-server.argocd.svc.cluster.local
+    wellKnownCACertificates: System
+```
+
 ## Setting the initial admin password via Argo CD Application CR
 
 > **Note:** When deploying the `argo-cd` chart via an Argo CD `Application` CR, define your bcrypt-hashed admin password under `helm.values`—not `helm.parameters`—because Argo CD performs variable substitution on `parameters`, which will mangle any `$…` in your hash.
@@ -1077,6 +1143,11 @@ NAME: my-release
 | server.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Argo CD server [HPA] |
 | server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the Argo CD server [HPA] |
 | server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo CD server [HPA] |
+| server.backendTLSPolicy.annotations | object | `{}` | Additional BackendTLSPolicy annotations |
+| server.backendTLSPolicy.enabled | bool | `false` | Enable BackendTLSPolicy resource for Argo CD server (Gateway API) |
+| server.backendTLSPolicy.labels | object | `{}` | Additional BackendTLSPolicy labels |
+| server.backendTLSPolicy.targetRefs | list | `[]` (See [values.yaml]) | Target references for the BackendTLSPolicy |
+| server.backendTLSPolicy.validation | object | `{}` (See [values.yaml]) | TLS validation configuration |
 | server.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
 | server.certificate.annotations | object | `{}` | Annotations to be applied to the Server Certificate |
 | server.certificate.domain | string | `""` (defaults to global.domain) | Certificate primary domain (commonName) |
@@ -1119,7 +1190,19 @@ NAME: my-release
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
+| server.grpcroute.annotations | object | `{}` | Additional GRPCRoute annotations |
+| server.grpcroute.enabled | bool | `false` | Enable GRPCRoute resource for Argo CD server (Gateway API) |
+| server.grpcroute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames for the GRPCRoute |
+| server.grpcroute.labels | object | `{}` | Additional GRPCRoute labels |
+| server.grpcroute.parentRefs | list | `[]` (See [values.yaml]) | Gateway API parentRefs for the GRPCRoute |
+| server.grpcroute.rules | list | `[]` (See [values.yaml]) | GRPCRoute rules configuration |
 | server.hostNetwork | bool | `false` | Host Network for Server pods |
+| server.httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
+| server.httproute.enabled | bool | `false` | Enable HTTPRoute resource for Argo CD server (Gateway API) |
+| server.httproute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames for the HTTPRoute |
+| server.httproute.labels | object | `{}` | Additional HTTPRoute labels |
+| server.httproute.parentRefs | list | `[]` (See [values.yaml]) | Gateway API parentRefs for the HTTPRoute |
+| server.httproute.rules | list | `[]` (See [values.yaml]) | HTTPRoute rules configuration |
 | server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Argo CD server |
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
 | server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Argo CD server |
