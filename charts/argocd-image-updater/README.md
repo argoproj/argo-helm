@@ -91,7 +91,10 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/). |
 | config.sshConfig.config | string | `""` | Argo CD Image Updater ssh client parameter configuration |
 | config.sshConfig.name | string | `"argocd-image-updater-ssh-config"` | Name of the sshConfig ConfigMap |
+| containerPort | int | `8080` | ContainerPort for the deployment |
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
+| dualStack.ipFamilies | list | `[]` | IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
+| dualStack.ipFamilyPolicy | string | `""` | IP family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry. |
 | extraEnv | list | `[]` | Extra environment variables for argocd-image-updater. |
 | extraEnvFrom | list | `[]` | Extra envFrom to pass to argocd-image-updater |
@@ -101,6 +104,16 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | image.repository | string | `"quay.io/argoprojlabs/argocd-image-updater"` | Default image repository |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | imagePullSecrets | list | `[]` | ImagePullSecrets for the image updater deployment |
+| ingress.annotations | object | `{}` | Additional ingress annotations |
+| ingress.enabled | bool | `true` | Enable an ingress resource for the deployment |
+| ingress.extraHosts | list | `[]` (See [values.yaml]) | The list of additional hostnames to be covered by ingress record |
+| ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
+| ingress.hostname | string | `""` (defaults to global.domain) | deployment hostname |
+| ingress.ingressClassName | string | `""` | Defines which ingress controller will implement the resource |
+| ingress.labels | object | `{}` | Additional ingress labels |
+| ingress.path | string | `"/webhook"` | The path to deployment |
+| ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
+| ingress.tls | list | `[]` | Ingress TLS configuration |
 | initContainers | list | `[]` | Init containers to add to the image updater pod |
 | metrics.enabled | bool | `false` | Deploy metrics service |
 | metrics.service.annotations | object | `{}` | Metrics service annotations |
@@ -124,6 +137,19 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | replicaCount | int | `1` | Replica count for the deployment. It is not advised to run more than one replica. |
 | resources | object | `{}` | Pod memory and cpu resource settings for the deployment |
 | securityContext | object | See [values.yaml] | Security context settings for the deployment |
+| service.annotations | object | `{}` | Service annotations |
+| service.externalIPs | list | `[]` | Service external IPs |
+| service.externalTrafficPolicy | string | `"Cluster"` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
+| service.labels | object | `{}` | Service labels |
+| service.loadBalancerClass | string | `""` | The class of the load balancer implementation |
+| service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
+| service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
+| service.nodePortHttp | int | `30080` | Service http port for NodePort service type (only if `service.type` is set to "NodePort") |
+| service.nodePortHttps | int | `30443` | Service https port for NodePort service type (only if `service.type` is set to "NodePort") |
+| service.port | int | `8080` | Service http port |
+| service.servicePortHttpName | string | `"server-port"` | Service http port name, can be used to route traffic via istio |
+| service.sessionAffinity | string | `"None"` | Used to maintain session affinity. Supports `ClientIP` and `None` |
+| service.type | string | `"ClusterIP"` | Service type |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.labels | object | `{}` | Labels to add to the service account |

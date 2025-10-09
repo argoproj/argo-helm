@@ -76,6 +76,12 @@ spec:
                 key: argocd.token
                 name: {{ .Values.config.argocd.tokenSecretName }}
                 optional: true
+          - name: IMAGE_UPDATER_INTERVAL
+            valueFrom:
+              configMapKeyRef:
+                key: interval
+                name: argocd-image-updater-config
+                optional: true
           - name: IMAGE_UPDATER_LOGLEVEL
             valueFrom:
               configMapKeyRef:
@@ -124,6 +130,48 @@ spec:
                 key: log.level
                 name: {{ .Values.config.name }}
                 optional: true
+          - name: ENABLE_WEBHOOK
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-image-updater-config
+                key: webhook.enable
+                optional: true
+          - name: WEBHOOK_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-image-updater-config
+                key: webhook.port
+                optional: true
+          - name: QUAY_WEBHOOK_SECRET
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-image-updater-secret
+                key: webhook.quay-secret
+                optional: true
+          - name: DOCKER_WEBHOOK_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: argocd-image-updater-secret
+                key: webhook.docker-secret
+                optional: true
+          - name: GHCR_WEBHOOK_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: argocd-image-updater-secret
+                key: webhook.ghcr-secret
+                optional: true
+          - name: HARBOR_WEBHOOK_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: argocd-image-updater-secret
+                key: webhook.harbor-secret
+                optional: true
+          - name: WEBHOOK_RATELIMIT_ALLOWED
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-image-updater-config
+                key: webhook.ratelimit-allowed
+                optional: true
           {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -136,22 +184,22 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.containerPort }}
             {{ if .Values.metrics.enabled }}
             - name: metrics
-              containerPort: 8081
+              containerPort: {{ .Values.metrics.service.servicePort }}
               protocol: TCP
             {{- end }}
           readinessProbe:
             httpGet:
               path: /healthz
-              port: 8080
+              port: {{ .Values.containerPort }}
             initialDelaySeconds: 3
             periodSeconds: 30
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 8080
+              port: {{ .Values.containerPort }}
             initialDelaySeconds: 3
             periodSeconds: 30
           resources:
