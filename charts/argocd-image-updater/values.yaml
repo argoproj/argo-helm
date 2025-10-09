@@ -311,3 +311,88 @@ metrics:
     namespace: ""
     # -- Prometheus ServiceMonitor labels
     additionalLabels: {}
+
+# -- ContainerPort for the deployment
+containerPort: 8080
+
+## Service configuration
+service:
+  # -- Service annotations
+  annotations: {}
+  # -- Service labels
+  labels: {}
+  # -- Service type
+  type: ClusterIP
+  # -- Service http port for NodePort service type (only if `service.type` is set to "NodePort")
+  nodePortHttp: 30080
+  # -- Service https port for NodePort service type (only if `service.type` is set to "NodePort")
+  nodePortHttps: 30443
+  # -- Service http port
+  port: 8080
+  # -- Service http port name, can be used to route traffic via istio
+  servicePortHttpName: server-port
+  # -- The class of the load balancer implementation
+  loadBalancerClass: ""
+  # -- LoadBalancer will get created with the IP specified in this field
+  loadBalancerIP: ""
+  # -- Source IP ranges to allow access to service from
+  ## EKS Ref: https://repost.aws/knowledge-center/eks-cidr-ip-address-loadbalancer
+  ## GKE Ref: https://cloud.google.com/kubernetes-engine/docs/concepts/network-overview#limit-connectivity-ext-lb
+  loadBalancerSourceRanges: []
+  # -- Service external IPs
+  externalIPs: []
+  # -- Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints
+  ## Ref: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+  externalTrafficPolicy: Cluster
+  # -- Used to maintain session affinity. Supports `ClientIP` and `None`
+  ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+  sessionAffinity: None
+
+# Ingress for the deployment
+ingress:
+  # -- Enable an ingress resource for the deployment
+  enabled: true
+  # -- Additional ingress labels
+  labels: {}
+  # -- Additional ingress annotations
+  annotations: {}
+  # -- Defines which ingress controller will implement the resource
+  ingressClassName: ""
+  # -- deployment hostname
+  # @default -- `""` (defaults to global.domain)
+  hostname: ""
+  # -- The path to deployment
+  path: /webhook
+  # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
+  pathType: Prefix
+
+  # -- The list of additional hostnames to be covered by ingress record
+  # @default -- `[]` (See [values.yaml])
+  extraHosts: []
+    # - name: argocd.example.com
+    #   path: /
+
+  # -- Additional ingress paths
+  # @default -- `[]` (See [values.yaml])
+  ## Note: Supports use of custom Helm templates
+  extraPaths: []
+    # - path: /*
+    #   pathType: Prefix
+    #   backend:
+    #     service:
+    #       name: ssl-redirect
+    #       port:
+    #         name: use-annotation
+
+  # -- Ingress TLS configuration
+  tls: []
+    # - secretName: argoworkflows-example-tls
+    #   hosts:
+    #     - argoworkflows.example.com
+
+# Configure dual-stack
+dualStack:
+  # -- IP family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services)
+  ipFamilyPolicy: ""
+  # -- IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6.
+  ipFamilies: []
