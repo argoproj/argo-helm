@@ -262,6 +262,7 @@ server:
           - argocd.example.com 
         # Certificate can be managed by Web Application Routing 
         secretName: argocd-tls
+```
 
 ### Gateway API HTTPRoute
 
