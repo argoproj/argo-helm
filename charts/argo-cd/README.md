@@ -259,7 +259,7 @@ server:
       # Optional: Add any AKS-specific annotations if needed 
     extraTls: 
       - hosts: 
-        - argocd.example.com 
+          - argocd.example.com 
         # Certificate can be managed by Web Application Routing 
         secretName: argocd-tls
 
