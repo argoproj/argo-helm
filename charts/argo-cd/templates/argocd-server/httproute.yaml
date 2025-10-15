@@ -36,7 +36,9 @@ spec:
       {{- toYaml . | nindent 8 }}
     {{- end }}
       backendRefs:
-        - name: {{ $fullName }}
+        - group: ''
+          kind: Service
+          name: {{ $fullName }}
           port: {{ $servicePort }}
           weight: 1
     {{- end }}
