@@ -91,6 +91,10 @@ global:
   # -- Add Prometheus scrape annotations to all metrics services. This can be used as an alternative to the ServiceMonitors.
   addPrometheusAnnotations: false
 
+  # -- Defining the ServiceMonitor API version, useful for Azure Managed Prometheus implementation.
+  ## Ref: https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-crd#create-a-pod-or-service-monitor
+  serviceMonitorApiVersion: monitoring.coreos.com/v1
+
   # -- Toggle and define pod-level security context.
   # @default -- `{}` (See [values.yaml])
   securityContext: {}
@@ -1069,6 +1073,9 @@ controller:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus
+      ## Ref: https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-crd#create-a-pod-or-service-monitor
+      apiVersion: ""
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
@@ -1178,6 +1185,9 @@ dex:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus
+      ## Ref: https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-crd#create-a-pod-or-service-monitor
+      apiVersion: ""
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
@@ -1753,6 +1763,9 @@ redis:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus
+      ## Ref: https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-crd#create-a-pod-or-service-monitor
+      apiVersion: ""
       # -- Interval at which metrics should be scraped
       interval: 30s
       # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
@@ -2410,6 +2423,9 @@ server:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus
+      ## Ref: https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-crd#create-a-pod-or-service-monitor
+      apiVersion: ""
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
@@ -3108,6 +3124,9 @@ repoServer:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus
+      ## Ref: https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-crd#create-a-pod-or-service-monitor
+      apiVersion: ""
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
@@ -3277,6 +3296,9 @@ applicationSet:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus
+      ## Ref: https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-crd#create-a-pod-or-service-monitor
+      apiVersion: ""
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
@@ -3694,6 +3716,9 @@ notifications:
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
       enabled: false
+      # -- Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus
+      ## Ref: https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-crd#create-a-pod-or-service-monitor
+      apiVersion: ""
       # -- Prometheus ServiceMonitor selector
       selector: {}
         # prometheus: kube-prometheus

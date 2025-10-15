@@ -873,6 +873,7 @@ NAME: my-release
 | global.revisionHistoryLimit | int | `3` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
 | global.runtimeClassName | string | `""` | Runtime class name for all components |
 | global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
+| global.serviceMonitorApiVersion | string | `"monitoring.coreos.com/v1"` | Defining the ServiceMonitor API version, useful for Azure Managed Prometheus implementation. |
 | global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
 | global.tolerations | list | `[]` | Default tolerations for all components |
 | global.topologySpreadConstraints | list | `[]` | Default [TopologySpreadConstraints] rules for all components |
@@ -1006,6 +1007,7 @@ NAME: my-release
 | controller.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | controller.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | controller.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
+| controller.metrics.serviceMonitor.apiVersion | string | `""` | Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus |
 | controller.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | controller.metrics.serviceMonitor.honorLabels | bool | `false` | When true, honorLabels preserves the metric’s labels when they collide with the target’s labels. |
 | controller.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
@@ -1110,6 +1112,7 @@ NAME: my-release
 | repoServer.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | repoServer.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | repoServer.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
+| repoServer.metrics.serviceMonitor.apiVersion | string | `""` | Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus |
 | repoServer.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | repoServer.metrics.serviceMonitor.honorLabels | bool | `false` | When true, honorLabels preserves the metric’s labels when they collide with the target’s labels. |
 | repoServer.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
@@ -1281,6 +1284,7 @@ NAME: my-release
 | server.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | server.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | server.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
+| server.metrics.serviceMonitor.apiVersion | string | `""` | Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus |
 | server.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | server.metrics.serviceMonitor.honorLabels | bool | `false` | When true, honorLabels preserves the metric’s labels when they collide with the target’s labels. |
 | server.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
@@ -1393,6 +1397,7 @@ NAME: my-release
 | dex.metrics.service.portName | string | `"http-metrics"` | Metrics service port name |
 | dex.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | dex.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
+| dex.metrics.serviceMonitor.apiVersion | string | `""` | Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus |
 | dex.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | dex.metrics.serviceMonitor.honorLabels | bool | `false` | When true, honorLabels preserves the metric’s labels when they collide with the target’s labels. |
 | dex.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
@@ -1498,6 +1503,7 @@ NAME: my-release
 | redis.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | redis.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | redis.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
+| redis.metrics.serviceMonitor.apiVersion | string | `""` | Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus |
 | redis.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | redis.metrics.serviceMonitor.honorLabels | bool | `false` | When true, honorLabels preserves the metric’s labels when they collide with the target’s labels. |
 | redis.metrics.serviceMonitor.interval | string | `"30s"` | Interval at which metrics should be scraped |
@@ -1696,6 +1702,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | applicationSet.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | applicationSet.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
+| applicationSet.metrics.serviceMonitor.apiVersion | string | `""` | Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus |
 | applicationSet.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | applicationSet.metrics.serviceMonitor.honorLabels | bool | `false` | When true, honorLabels preserves the metric’s labels when they collide with the target’s labels. |
 | applicationSet.metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
@@ -1784,6 +1791,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | notifications.metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | notifications.metrics.serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations |
+| notifications.metrics.serviceMonitor.apiVersion | string | `""` | Prometheus ServiceMonitor API version, useful when working with Azure Managed Prometheus |
 | notifications.metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | notifications.metrics.serviceMonitor.honorLabels | bool | `false` | When true, honorLabels preserves the metric’s labels when they collide with the target’s labels. |
 | notifications.metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
