@@ -28,6 +28,9 @@ spec:
         {{- end }}
       {{- end }}
     spec:
+      {{- with .Values.redisSecretInit.runtimeClassName | default .Values.global.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
       {{- with .Values.redisSecretInit.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
