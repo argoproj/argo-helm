@@ -1608,7 +1608,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | redisSecretInit.affinity | object | `{}` | Assign custom [affinity] rules to the Redis secret-init Job |
 | redisSecretInit.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
 | redisSecretInit.enabled | bool | `true` | Enable Redis secret initialization. If disabled, secret must be provisioned by alternative methods |
-| redisSecretInit.extraArgs | list | `[]` | Additional command line arguments to pass to the SecretInit Job |
+| redisSecretInit.extraArgs | list | `[]` | Additional command line arguments for the Redis secret-init Job |
 | redisSecretInit.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis secret-init Job |
 | redisSecretInit.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Redis secret-init Job |
 | redisSecretInit.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Redis secret-init Job |
