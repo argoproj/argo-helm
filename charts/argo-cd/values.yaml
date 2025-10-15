@@ -1916,6 +1916,10 @@ redisSecretInit:
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
 
+  # -- Runtime class name for the Redis secret-init Job
+  # @default -- `""` (defaults to global.runtimeClassName)
+  runtimeClassName: ""
+
   # -- Annotations to be added to the Redis secret-init Job
   jobAnnotations: {}
 

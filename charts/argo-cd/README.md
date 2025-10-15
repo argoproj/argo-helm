@@ -1619,6 +1619,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | redisSecretInit.podLabels | object | `{}` | Labels to be added to the Redis secret-init Job |
 | redisSecretInit.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for Redis secret-init Job |
 | redisSecretInit.resources | object | `{}` | Resource limits and requests for Redis secret-init Job |
+| redisSecretInit.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the Redis secret-init Job |
 | redisSecretInit.securityContext | object | `{}` | Redis secret-init Job pod-level security context |
 | redisSecretInit.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | redisSecretInit.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
