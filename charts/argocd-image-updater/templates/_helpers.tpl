@@ -25,7 +25,7 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
-Override .Release.Namespace 
+Override .Release.Namespace
 */}}
 {{- define "argocd-image-updater.namespace" -}}
 {{- default .Release.Namespace .Values.namespaceOverride }}
@@ -66,5 +66,17 @@ Create the name of the service account to use
 {{- default (include "argocd-image-updater.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Dual stack definition
+*/}}
+{{- define "argocd-image-updater.dualStack" -}}
+{{- with .Values.dualStack.ipFamilyPolicy }}
+ipFamilyPolicy: {{ . }}
+{{- end }}
+{{- with .Values.dualStack.ipFamilies }}
+ipFamilies: {{ toYaml . | nindent 4 }}
 {{- end }}
 {{- end }}

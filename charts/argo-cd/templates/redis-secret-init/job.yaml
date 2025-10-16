@@ -28,6 +28,9 @@ spec:
         {{- end }}
       {{- end }}
     spec:
+      {{- with .Values.redisSecretInit.runtimeClassName | default .Values.global.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
       {{- with .Values.redisSecretInit.imagePullSecrets | default .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -37,6 +40,9 @@ spec:
           - argocd
           - admin
           - redis-initial-password
+        {{- with .Values.redisSecretInit.extraArgs }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         image: {{ default .Values.global.image.repository .Values.redisSecretInit.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.redisSecretInit.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.redisSecretInit.image.imagePullPolicy }}
         name: secret-init
