@@ -415,68 +415,9 @@ configs:
     # -- Annotations to be added to the argocd-cmd-params-cm ConfigMap
     annotations: {}
 
-    ## Generic parameters
-    # -- Open-Telemetry collector address: (e.g. "otel-collector:4317")
-    otlp.address: ''
-
-    ## Controller Properties
-    # -- Number of application status processors
-    controller.status.processors: 20
-    # -- Number of application operation processors
-    controller.operation.processors: 10
-    # -- Specifies timeout between application self heal attempts
-    controller.self.heal.timeout.seconds: 5
-    # -- Repo server RPC call timeout seconds.
-    controller.repo.server.timeout.seconds: 60
-    # -- Specifies the timeout after which a sync would be terminated. 0 means no timeout
-    controller.sync.timeout.seconds: 0
-
-    ## Server properties
-    # -- Run server without TLS
-    ## NOTE: This value should be set when you generate params by other means as it changes ports used by ingress template.
-    server.insecure: false
-    # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
-    server.basehref: /
-    # -- Used if Argo CD is running behind reverse proxy under subpath different from /
-    server.rootpath: ''
-    # -- Directory path that contains additional static assets
-    server.staticassets: /shared/app
-    # -- Disable Argo CD RBAC for user authentication
-    server.disable.auth: false
-    # -- Enable GZIP compression
-    server.enable.gzip: true
-    # -- Enable proxy extension feature. (proxy extension is in Alpha phase)
-    server.enable.proxy.extension: false
-    # -- Enable the hydrator feature (hydrator is in Alpha phase)
-    hydrator.enabled: false
-    # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
-    server.x.frame.options: sameorigin
-
-    ## Repo-server properties
-    # -- Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit.
-    reposerver.parallelism.limit: 0
-
-    ## ApplicationSet Properties
-    # -- Modify how application is synced between the generator and the cluster. One of: `sync`, `create-only`, `create-update`, `create-delete`
-    applicationsetcontroller.policy: sync
-    # -- Enables use of the Progressive Syncs capability
-    applicationsetcontroller.enable.progressive.syncs: false
-    # -- A list of glob patterns specifying where to look for ApplicationSet resources. (e.g. `"argocd,argocd-appsets-*"`)
-    # @default -- `""` (default is only the ns where the controller is installed)
-    ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Appset-Any-Namespace/
-    applicationsetcontroller.namespaces: ""
-
-    # -- Enables [Applications in any namespace]
-    ## List of additional namespaces where applications may be created in and reconciled from.
-    ## The namespace where Argo CD is installed to will always be allowed.
-    ## Set comma-separated list. (e.g. app-team-one, app-team-two)
-    application.namespaces: ""
-
-    # -- JQ Path expression timeout
-    ## By default, the evaluation of a JQPathExpression is limited to one second.
-    ## If you encounter a "JQ patch execution timed out" error message due to a complex JQPathExpression
-    ## that requires more time to evaluate, you can extend the timeout period.
-    controller.ignore.normalizer.jq.timeout: "1s"
+    # You can customize parameters by adding parameters here.
+    # (e.g.)
+    # otlp.address: ''
 
   # Argo CD RBAC policy configuration
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
