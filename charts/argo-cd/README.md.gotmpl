@@ -396,6 +396,24 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 9.0.0
+We have removed all parameters under `.Values.configs.cm.params` in this release, with the exception of `create` and `annotations`.
+This is to ensure better alignment with the upstream project, as tracking changes to their default values within the Helm chart has become challenging.
+
+**Breaking change**
+
+Please be aware that the default value for `applicationsetcontroller.policy` has been updated to match the upstream default. The chart's default was previously `'sync'`, while the upstream default is `""` (an empty string).
+If you rely on the previous behavior, you will need to update your values.yaml.
+
+To restore the previous setting, you can override the argocd-cmd-params-cm ConfigMap as you could in older versions.
+
+```yaml
+configs:
+  cm:
+    params:
+      applicationsetcontroller.policy: 'sync'
+```
+
 ### 8.0.0
 
 In this release we upgrade the Helm chart to deploy the next major version of Argo CD (v3.0.0).
