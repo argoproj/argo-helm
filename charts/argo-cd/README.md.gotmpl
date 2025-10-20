@@ -397,7 +397,7 @@ For full list of changes please check ArtifactHub [changelog].
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
 ### 9.0.0
-We have removed all parameters under `.Values.configs.cm.params` in this release, with the exception of `create` and `annotations`.
+We have removed all parameters under `.Values.configs.params` in this release, with the exception of `create` and `annotations`.
 This is to ensure better alignment with the upstream project, as tracking changes to their default values within the Helm chart has become challenging.
 
 **Breaking change**
