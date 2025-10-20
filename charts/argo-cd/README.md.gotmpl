@@ -400,6 +400,8 @@ Highlighted versions provide information about additional steps that should be p
 We have removed all parameters under `.Values.configs.params` in this release, with the exception of `create` and `annotations`.
 This is to ensure better alignment with the upstream project, as tracking changes to their default values within the Helm chart has become challenging.
 
+**Though we removed the parameters from values.yaml in argo-helm, we keep providing the interface to override `.Values.configs.params` as the same way. **
+
 **Breaking change**
 
 Please be aware that the default value for `applicationsetcontroller.policy` has been updated to match the upstream default. The chart's default was previously `'sync'`, while the upstream default is `""` (an empty string).
