@@ -1,4 +1,4 @@
-{{- if and .Values.server.ingress.enabled (eq .Values.server.ingress.controller "gke") .Values.server.ingress.gke.managedCertificate.create }}
+{{- if and .Values.server.enabled .Values.server.ingress.enabled (eq .Values.server.ingress.controller "gke") .Values.server.ingress.gke.managedCertificate.create }}
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:

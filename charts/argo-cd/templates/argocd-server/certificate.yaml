@@ -1,4 +1,4 @@
-{{- if .Values.server.certificate.enabled -}}
+{{- if and .Values.server.enabled .Values.server.certificate.enabled -}}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -19,7 +19,7 @@ spec:
       {{- range $key, $value := . }}
       {{ $key }}: {{ $value | quote }}
       {{- end }}
-  {{- end }} 
+  {{- end }}
   secretName: argocd-server-tls
   commonName: {{ .Values.server.certificate.domain | default .Values.global.domain }}
   dnsNames:
