@@ -10,6 +10,7 @@ DEPRECATED option dex.logLevel - Use `configs.params."dexserver.log.level"`
 {{- if .Values.dex.logFormat }}
 DEPRECATED option dex.logFormat - Use `configs.params."dexserver.log.format"`
 {{- end }}
+{{- if .Values.server.enabled }}
 In order to access the server UI you have the following options:
 
 {{ $rootpath := default "" (index .Values "configs" "params" "server.rootpath") -}}
@@ -34,4 +35,5 @@ kubectl -n {{ include  "argo-cd.namespace" . }} get secret argocd-initial-admin-
 After reaching the UI the first time you can login using Dex or OIDC.
 {{ else -}}
 After reaching the UI the first time you cannot login with username and password since you've disabled it. You should enable admin back or configure Dex via `configs.cm.dex.config` or OIDC via `configs.cm.oidc.config`.
+{{ end -}}
 {{ end -}}
