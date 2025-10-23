@@ -105,7 +105,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion |
 | imagePullSecrets | list | `[]` | ImagePullSecrets for the image updater deployment |
 | ingress.annotations | object | `{}` | Additional ingress annotations |
-| ingress.enabled | bool | `true` | Enable an ingress resource for the deployment |
+| ingress.enabled | bool | `false` | Enable an ingress resource for the deployment |
 | ingress.extraHosts | list | `[]` (See [values.yaml]) | The list of additional hostnames to be covered by ingress record |
 | ingress.extraPaths | list | `[]` (See [values.yaml]) | Additional ingress paths |
 | ingress.hostname | string | `""` (defaults to global.domain) | deployment hostname |
