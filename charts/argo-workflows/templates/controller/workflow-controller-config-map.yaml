@@ -179,6 +179,12 @@ data:
       {{- with .Values.server.sso.filterGroupsRegex }}
       filterGroupsRegex: {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.server.sso.rootCA }}
+      rootCA: {{ toYaml . }}
+      {{- end }}
+      {{- with .Values.server.sso.rootCAFile }}
+      rootCAFile: {{ toYaml . }}
+      {{- end }}
     {{- end }}
     {{- with .Values.controller.synchronization }}
     synchronization: {{- toYaml . | nindent 6 }}
