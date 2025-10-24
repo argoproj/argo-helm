@@ -396,6 +396,25 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 9.0.0
+We have removed all parameters under `.Values.configs.params` in this release, with the exception of `create` and `annotations`.
+This is to ensure better alignment with the upstream project, as tracking changes to their default values within the Helm chart has become challenging.
+
+**Though we removed the parameters from values.yaml in argo-helm, we keep providing the interface to override `.Values.configs.params` as the same way. **
+
+**Breaking change**
+
+Please be aware that the default value for `applicationsetcontroller.policy` has been updated to match the upstream default. The chart's default was previously `'sync'`, while the upstream default is `""` (an empty string).
+If you rely on the previous behavior, you will need to update your values.yaml.
+
+To restore the previous setting, you can override the argocd-cmd-params-cm ConfigMap as you could in older versions.
+
+```yaml
+configs:
+  params:
+    applicationsetcontroller.policy: 'sync'
+```
+
 ### 8.0.0
 
 In this release we upgrade the Helm chart to deploy the next major version of Argo CD (v3.0.0).
@@ -908,27 +927,6 @@ NAME: my-release
 | configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
 | configs.gpg.annotations | object | `{}` | Annotations to be added to argocd-gpg-keys-cm configmap |
 | configs.gpg.keys | object | `{}` (See [values.yaml]) | [GnuPG] public keys to add to the keyring |
-| configs.params."application.namespaces" | string | `""` | Enables [Applications in any namespace] |
-| configs.params."applicationsetcontroller.enable.progressive.syncs" | bool | `false` | Enables use of the Progressive Syncs capability |
-| configs.params."applicationsetcontroller.namespaces" | string | `""` (default is only the ns where the controller is installed) | A list of glob patterns specifying where to look for ApplicationSet resources. (e.g. `"argocd,argocd-appsets-*"`) |
-| configs.params."applicationsetcontroller.policy" | string | `"sync"` | Modify how application is synced between the generator and the cluster. One of: `sync`, `create-only`, `create-update`, `create-delete` |
-| configs.params."controller.ignore.normalizer.jq.timeout" | string | `"1s"` | JQ Path expression timeout |
-| configs.params."controller.operation.processors" | int | `10` | Number of application operation processors |
-| configs.params."controller.repo.server.timeout.seconds" | int | `60` | Repo server RPC call timeout seconds. |
-| configs.params."controller.self.heal.timeout.seconds" | int | `5` | Specifies timeout between application self heal attempts |
-| configs.params."controller.status.processors" | int | `20` | Number of application status processors |
-| configs.params."controller.sync.timeout.seconds" | int | `0` | Specifies the timeout after which a sync would be terminated. 0 means no timeout |
-| configs.params."hydrator.enabled" | bool | `false` | Enable the hydrator feature (hydrator is in Alpha phase) |
-| configs.params."otlp.address" | string | `""` | Open-Telemetry collector address: (e.g. "otel-collector:4317") |
-| configs.params."reposerver.parallelism.limit" | int | `0` | Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit. |
-| configs.params."server.basehref" | string | `"/"` | Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from / |
-| configs.params."server.disable.auth" | bool | `false` | Disable Argo CD RBAC for user authentication |
-| configs.params."server.enable.gzip" | bool | `true` | Enable GZIP compression |
-| configs.params."server.enable.proxy.extension" | bool | `false` | Enable proxy extension feature. (proxy extension is in Alpha phase) |
-| configs.params."server.insecure" | bool | `false` | Run server without TLS |
-| configs.params."server.rootpath" | string | `""` | Used if Argo CD is running behind reverse proxy under subpath different from / |
-| configs.params."server.staticassets" | string | `"/shared/app"` | Directory path that contains additional static assets |
-| configs.params."server.x.frame.options" | string | `"sameorigin"` | Set X-Frame-Options header in HTTP responses to value. To disable, set to "". |
 | configs.params.annotations | object | `{}` | Annotations to be added to the argocd-cmd-params-cm ConfigMap |
 | configs.params.create | bool | `true` | Create the argocd-cmd-params-cm configmap If false, it is expected the configmap will be created by something else. |
 | configs.rbac."policy.csv" | string | `''` (See [values.yaml]) | File containing user-defined policies and role definitions. |
@@ -1462,7 +1460,7 @@ NAME: my-release
 | redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
 | redis.exporter.image.repository | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
-| redis.exporter.image.tag | string | `"v1.78.0"` | Tag to use for the redis-exporter |
+| redis.exporter.image.tag | string | `"v1.79.0"` | Tag to use for the redis-exporter |
 | redis.exporter.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis exporter |
 | redis.exporter.livenessProbe.failureThreshold | int | `5` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | redis.exporter.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |
