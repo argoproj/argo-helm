@@ -25,22 +25,22 @@ spec:
   hostnames:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  rules:
-    {{- if .Values.server.grpcroute.rules }} 
-      {{- range .Values.server.grpcroute.rules }}
-      {{- with .matches }}
-      - matches:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .filters }}
-        filters:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-        backendRefs:
-          - name: {{ $fullName }}
-            port: {{ $servicePort }}
-            weight: 1
-      {{- end }}
+  rules:  
+  {{- if .Values.server.grpcroute.rules }}  
+    {{- range .Values.server.grpcroute.rules }}  
+    - {{- with .matches }}  
+      matches:  
+        {{- toYaml . | nindent 8 }}  
+      {{- end }}  
+      {{- with .filters }}  
+      filters:  
+        {{- toYaml . | nindent 8 }}  
+      {{- end }}  
+      backendRefs:  
+        - name: {{ $fullName }}  
+          port: {{ $servicePort }}  
+          weight: 1  
+    {{- end }}  
   {{- else }}  
     - matches:  
         - method:  
@@ -50,4 +50,4 @@ spec:
         - name: {{ $fullName }}  
           port: {{ $servicePort }}  
           weight: 1  
-{{- end }}
+  {{- end }}
