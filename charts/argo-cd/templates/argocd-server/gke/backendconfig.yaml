@@ -1,5 +1,5 @@
 {{- if and .Values.server.ingress.enabled (eq .Values.server.ingress.controller "gke") .Values.server.ingress.gke.backendConfig }}
-apiVersion: cloud.google.com/v1
+apiVersion: {{ include "argo-cd.apiVersions.cloudgoogle" . }}
 kind: BackendConfig
 metadata:
   name: {{ include "argo-cd.server.fullname" . }}
