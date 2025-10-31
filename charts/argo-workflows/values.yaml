@@ -13,6 +13,9 @@ crds:
   install: true
   # -- Keep CRDs on chart uninstall
   keep: true
+  # -- Use full CRDs with complete OpenAPI schemas. When false, uses minified CRDs with x-kubernetes-preserve-unknown-fields.
+  # Note: Full CRDs are ~7.4MB and may require Server Side Apply (kubectl apply --server-side). See README for details.
+  full: false
   # -- Annotations to be added to all CRDs
   annotations: {}
 
