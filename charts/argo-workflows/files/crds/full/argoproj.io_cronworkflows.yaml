@@ -1,15 +1,8 @@
-{{- if and .Values.crds.install .Values.crds.full }}
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    {{- if .Values.crds.keep }}
-    "helm.sh/resource-policy": keep
-    {{- end }}
-    {{- with .Values.crds.annotations }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
-  name: cronworkflows.argoproj.io
+    helm.sh/resource-policy: keep
 spec:
   group: argoproj.io
   names:
@@ -24756,4 +24749,3 @@ spec:
         type: object
     served: true
     storage: true
-{{- end }}
