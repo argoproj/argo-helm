@@ -9,13 +9,25 @@ metadata:
     {{- include "argo-rollouts.labels" . | nindent 4 }}
 data:
   {{- with .Values.notifications.notifiers }}
-    {{- toYaml . | nindent 2 }}
+    {{- if eq .format "template" }}
+      {{- tpl (toYaml .) $ | nindent 2 }}
+    {{- else }}
+      {{- toYaml . | nindent 2 }}
+    {{- end }}
   {{- end }}
   {{- with .Values.notifications.templates }}
-    {{- toYaml . | nindent 2 }}
+    {{- if eq .format "template" }}
+      {{- tpl (toYaml .) $ | nindent 2 }}
+    {{- else }}
+      {{- toYaml . | nindent 2 }}
+    {{- end }}
   {{- end }}
   {{- with .Values.notifications.triggers }}
-    {{- toYaml . | nindent 2 }}
+    {{- if eq .format "template" }}
+      {{- tpl (toYaml .) $ | nindent 2 }}
+    {{- else }}
+      {{- toYaml . | nindent 2 }}
+    {{- end }}
   {{- end }}
   {{- with .Values.notifications.subscriptions }}
   subscriptions: |

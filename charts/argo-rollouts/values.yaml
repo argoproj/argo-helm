@@ -497,11 +497,15 @@ notifications:
 
   # -- Configures notification services
   notifiers: {}
+    # -- Whether to use Helm templating (tpl) in configmap (one of: `plain`, `template`)
+    # format: plain
     # service.slack: |
     #   token: $slack-token
 
   # -- Notification templates
   templates: {}
+    # -- Whether to use Helm templating (tpl) in configmap (one of: `plain`, `template`)
+    # format: plain
     # template.my-purple-template: |
     #   message: |
     #     Rollout {{.rollout.metadata.name}} has purple image
@@ -513,7 +517,10 @@ notifications:
     #           }]
 
   # -- The trigger defines the condition when the notification should be sent
+
   triggers: {}
+    # -- Whether to use Helm templating (tpl) in configmap (one of: `plain`, `template`)
+    # format: plain
     # trigger.on-purple: |
     #   - send: [my-purple-template]
     #     when: rollout.spec.template.spec.containers[0].image == 'argoproj/rollouts-demo:purple'
