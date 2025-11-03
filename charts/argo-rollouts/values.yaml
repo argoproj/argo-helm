@@ -260,6 +260,10 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+  # -- Specifies whether a service account token should be automatically mounted into pods
+  # Defaults to true when unspecified. Set to 'false' if you are using projected tokens.
+  automountServiceAccountToken:
+
 # -- Annotations to be added to all CRDs
 crdAnnotations: {}
 
