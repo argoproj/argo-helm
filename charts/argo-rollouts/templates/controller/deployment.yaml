@@ -45,9 +45,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "argo-rollouts.serviceAccountName" . }}
-      {{- if ne .Values.serviceAccount.automountServiceAccountToken nil }}
       automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
-      {{- end }}
       containers:
       - image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ default .Chart.AppVersion .Values.controller.image.tag }}"
         args:
