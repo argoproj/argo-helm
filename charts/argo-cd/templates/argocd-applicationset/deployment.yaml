@@ -298,6 +298,8 @@ spec:
               name: gpg-keyring
             - mountPath: /app/config/reposerver/tls
               name: argocd-repo-server-tls
+            - mountPath: /home/argocd/params
+              name: argocd-cmd-params-cm
             - mountPath: /tmp
               name: tmp
         {{- with .Values.applicationSet.extraContainers }}
@@ -368,6 +370,13 @@ spec:
                 path: tls.key
               - key: ca.crt
                 path: ca.crt
+        - name: argocd-cmd-params-cm
+          configMap:
+            optional: true
+            name: argocd-cmd-params-cm
+            items:
+              - key: applicationsetcontroller.profile.enabled
+                path: profiler.enabled
       {{- with .Values.applicationSet.dnsConfig }}
       dnsConfig:
         {{- toYaml . | nindent 8 }}
