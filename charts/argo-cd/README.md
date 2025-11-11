@@ -914,7 +914,6 @@ NAME: my-release
 | configs.cm."resource.customizations.ignoreResourceUpdates.autoscaling_HorizontalPodAutoscaler" | string | See [values.yaml] | Legacy annotations used on HPA autoscaling/v1 |
 | configs.cm."resource.customizations.ignoreResourceUpdates.discovery.k8s.io_EndpointSlice" | string | See [values.yaml] | Ignores update if EndpointSlice is not excluded globally |
 | configs.cm."resource.exclusions" | string | See [values.yaml] | Resource Exclusion/Inclusion |
-| configs.cm."server.rbac.log.enforce.enable" | bool | `false` | Enable logs RBAC enforcement |
 | configs.cm."statusbadge.enabled" | bool | `false` | Enable Status Badge |
 | configs.cm."timeout.hard.reconciliation" | string | `"0s"` | Timeout to refresh application data as well as target manifests cache |
 | configs.cm."timeout.reconciliation" | string | `"180s"` | Timeout to discover if a new manifests version got published to the repository |

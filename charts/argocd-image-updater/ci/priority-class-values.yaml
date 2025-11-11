@@ -1,5 +1,7 @@
-# Test with extraObjects enabled
-# Do not deploy the CRDs as they are already present from the previous test
-installCRDs: false
+# Test with PriorityClass set
+
+crds:
+  # Delete CRDs upon uninstall, otherwise they would conflict with other tests
+  keep: false
 
 priorityClassName: system-node-critical
