@@ -91,6 +91,61 @@ Please refer to [Argo Server Auth Mode] for more details.
 
 Argo Workflows server also supports SSO and you can enable it to configure `.Values.server.sso` and `.Values.server.authModes`. In order to manage access levels, you can optionally add RBAC to SSO. Please refer to [SSO RBAC] for more details.
 
+### Ingress Configuration
+
+Argo Workflows server can be exposed using Kubernetes Ingress or Gateway API HTTPRoute.
+
+#### Traditional Kubernetes Ingress
+
+See the `server.ingress` section in values.yaml for standard Ingress configuration.
+
+#### Gateway API HTTPRoute
+
+The Gateway API provides a modern, extensible way to configure ingress traffic routing. This chart supports HTTPRoute resources as an alternative to traditional Ingress.
+
+> **Note:**
+> Gateway API support is **EXPERIMENTAL**. Support depends on your Gateway controller implementation. Some controllers may require additional configuration (e.g., BackendTLSPolicy for HTTPS backends). Refer to [Gateway API implementations](https://gateway-api.sigs.k8s.io/implementations/) for controller-specific details.
+
+```yaml
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: https
+    hostnames:
+      - argoworkflows.example.com
+```
+
+##### Gateway API with TLS backend
+
+For HTTPS backends with Gateway API (when `server.secure: true`), you may need to configure BackendTLSPolicy (experimental, v1alpha3):
+
+> **Warning:**
+> BackendTLSPolicy is in **EXPERIMENTAL** status. Not all Gateway controllers support this resource (e.g., Cilium does not yet support it).
+
+```yaml
+server:
+  secure: true
+
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+
+  backendTLSPolicy:
+    enabled: true
+    targetRefs:
+      - group: ""
+        kind: Service
+        name: argo-workflows-server
+    validation:
+      hostname: argo-workflows-server.argo.svc.cluster.local
+      wellKnownCACertificates: System
+```
+
 
 ## Values
 

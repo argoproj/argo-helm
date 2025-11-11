@@ -91,6 +91,61 @@ Please refer to [Argo Server Auth Mode] for more details.
 
 Argo Workflows server also supports SSO and you can enable it to configure `.Values.server.sso` and `.Values.server.authModes`. In order to manage access levels, you can optionally add RBAC to SSO. Please refer to [SSO RBAC] for more details.
 
+### Ingress Configuration
+
+Argo Workflows server can be exposed using Kubernetes Ingress or Gateway API HTTPRoute.
+
+#### Traditional Kubernetes Ingress
+
+See the `server.ingress` section in values.yaml for standard Ingress configuration.
+
+#### Gateway API HTTPRoute
+
+The Gateway API provides a modern, extensible way to configure ingress traffic routing. This chart supports HTTPRoute resources as an alternative to traditional Ingress.
+
+> **Note:**
+> Gateway API support is **EXPERIMENTAL**. Support depends on your Gateway controller implementation. Some controllers may require additional configuration (e.g., BackendTLSPolicy for HTTPS backends). Refer to [Gateway API implementations](https://gateway-api.sigs.k8s.io/implementations/) for controller-specific details.
+
+```yaml
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: https
+    hostnames:
+      - argoworkflows.example.com
+```
+
+##### Gateway API with TLS backend
+
+For HTTPS backends with Gateway API (when `server.secure: true`), you may need to configure BackendTLSPolicy (experimental, v1alpha3):
+
+> **Warning:**
+> BackendTLSPolicy is in **EXPERIMENTAL** status. Not all Gateway controllers support this resource (e.g., Cilium does not yet support it).
+
+```yaml
+server:
+  secure: true
+
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+
+  backendTLSPolicy:
+    enabled: true
+    targetRefs:
+      - group: ""
+        kind: Service
+        name: argo-workflows-server
+    validation:
+      hostname: argo-workflows-server.argo.svc.cluster.local
+      wellKnownCACertificates: System
+```
+
 ## Values
 
 The `values.yaml` contains items used to tweak a deployment of this chart.
@@ -291,6 +346,11 @@ Fields to note:
 | server.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Argo Server [HPA] |
 | server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the Argo Server [HPA] |
 | server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo Server [HPA] |
+| server.backendTLSPolicy.annotations | object | `{}` | Additional BackendTLSPolicy annotations |
+| server.backendTLSPolicy.enabled | bool | `false` | Enable BackendTLSPolicy resource for Argo Workflows server (Gateway API) |
+| server.backendTLSPolicy.labels | object | `{}` | Additional BackendTLSPolicy labels |
+| server.backendTLSPolicy.targetRefs | list | `[]` (See [values.yaml]) | Target references for the BackendTLSPolicy |
+| server.backendTLSPolicy.validation | object | `{}` (See [values.yaml]) | TLS validation configuration |
 | server.baseHref | string | `"/"` | Value for base href in index.html. Used if the server is running behind reverse proxy under subpath different from /. |
 | server.clusterWorkflowTemplates.enableEditing | bool | `true` | Give the server permissions to edit ClusterWorkflowTemplates. |
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
@@ -301,6 +361,12 @@ Fields to note:
 | server.extraEnv | list | `[]` | Extra environment variables to provide to the argo-server container |
 | server.extraInitContainers | list | `[]` | Enables init containers to be added to the server deployment |
 | server.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
+| server.httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
+| server.httproute.enabled | bool | `false` | Enable HTTPRoute resource for Argo Workflows server (Gateway API) |
+| server.httproute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames for the HTTPRoute |
+| server.httproute.labels | object | `{}` | Additional HTTPRoute labels |
+| server.httproute.parentRefs | list | `[]` (See [values.yaml]) | Gateway API parentRefs for the HTTPRoute |
+| server.httproute.rules | list | `[]` (See [values.yaml]) | HTTPRoute rules configuration |
 | server.image.registry | string | `"quay.io"` | Registry to use for the server |
 | server.image.repository | string | `"argoproj/argocli"` | Repository to use for the server |
 | server.image.tag | string | `""` | Image tag for the Argo Workflows server. Defaults to `.Values.images.tag`. |
