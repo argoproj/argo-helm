@@ -3,7 +3,7 @@ kind: Role
 metadata:
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
-  name: argocd-image-updater-leader-election-role
+  name: {{ include "argocd-image-updater.fullname" . }}-leader-election-role
   namespace: {{ include "argocd-image-updater.namespace" . | quote }}
 rules:
 - apiGroups:
