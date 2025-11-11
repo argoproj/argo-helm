@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "argocd-image-updater.fullname" . }}
+  name: {{ include "argocd-image-updater.fullname" . }}-controller
   namespace: {{ include "argocd-image-updater.namespace" . | quote }}
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
