@@ -1,0 +1,546 @@
+{{- if .Values.crds.install }}
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.16.1
+    {{- if .Values.crds.keep }}
+    "helm.sh/resource-policy": keep
+    {{- end }}
+    {{- with .Values.crds.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.crds.additionalLabels }}
+  labels:
+    {{- toYaml . | nindent 4}}
+  {{- end }}
+  name: imageupdaters.argocd-image-updater.argoproj.io
+spec:
+  group: argocd-image-updater.argoproj.io
+  names:
+    kind: ImageUpdater
+    listKind: ImageUpdaterList
+    plural: imageupdaters
+    singular: imageupdater
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ImageUpdater is the Schema for the imageupdaters API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              ImageUpdaterSpec defines the desired state of ImageUpdater
+              It specifies which applications to target, default update strategies,
+              and a list of images to manage.
+            properties:
+              applicationRefs:
+                description: |-
+                  ApplicationRefs indicates the set of applications to be managed.
+                  ApplicationRefs is a list of rules to select Argo CD Applications within the `spec.namespace`.
+                  Each reference can also provide specific overrides for the global settings defined above.
+                items:
+                  description: ApplicationRef contains various criteria by which to
+                    include applications for managing by image updater
+                  properties:
+                    commonUpdateSettings:
+                      description: |-
+                        CommonUpdateSettings overrides the global CommonUpdateSettings for applications
+                        matched by this selector.
+                      properties:
+                        allowTags:
+                          description: |-
+                            AllowTags is a regex pattern for tags to allow.
+                            This acts as the default if not overridden.
+                          type: string
+                        forceUpdate:
+                          default: false
+                          description: |-
+                            ForceUpdate specifies whether updates should be forced.
+                            This acts as the default if not overridden.
+                          type: boolean
+                        ignoreTags:
+                          description: |-
+                            IgnoreTags is a list of glob-like patterns of tags to ignore.
+                            This acts as the default and can be overridden at more specific levels.
+                          items:
+                            type: string
+                          type: array
+                          x-kubernetes-list-type: atomic
+                        platforms:
+                          description: |-
+                            Platforms specifies a list of target platforms (e.g., "linux/amd64", "linux/arm64").
+                            If specified, the image updater will consider these platforms when checking for new versions or digests.
+                          items:
+                            type: string
+                          type: array
+                          x-kubernetes-list-type: atomic
+                        pullSecret:
+                          description: |-
+                            PullSecret is the pull secret to use for images.
+                            This acts as the default if not overridden.
+                          type: string
+                        updateStrategy:
+                          default: semver
+                          description: |-
+                            UpdateStrategy defines the update strategy to apply.
+                            Examples: "semver", "latest", "digest", "name".
+                            This acts as the default if not overridden at a more specific level.
+                          type: string
+                      type: object
+                    images:
+                      description: |-
+                        Images contains a list of configurations that how images should be updated.
+                        These rules apply to applications selected by namePattern in ApplicationRefs, and each
+                        image can override global/ApplicationRef settings.
+                      items:
+                        description: |-
+                          ImageConfig defines how a specific container image should be discovered, updated,
+                          and how those updates should be reflected in application manifests.
+                        properties:
+                          alias:
+                            description: |-
+                              Alias is a short, user-defined name for this image configuration.
+                              It MUST be unique within a single ApplicationRef's list of images.
+                              This field is mandatory.
+                            pattern: ^[a-zA-Z0-9][a-zA-Z0-9-._]*$
+                            type: string
+                          commonUpdateSettings:
+                            description: CommonUpdateSettings overrides the effective
+                              default CommonUpdateSettings for this specific image.
+                            properties:
+                              allowTags:
+                                description: |-
+                                  AllowTags is a regex pattern for tags to allow.
+                                  This acts as the default if not overridden.
+                                type: string
+                              forceUpdate:
+                                default: false
+                                description: |-
+                                  ForceUpdate specifies whether updates should be forced.
+                                  This acts as the default if not overridden.
+                                type: boolean
+                              ignoreTags:
+                                description: |-
+                                  IgnoreTags is a list of glob-like patterns of tags to ignore.
+                                  This acts as the default and can be overridden at more specific levels.
+                                items:
+                                  type: string
+                                type: array
+                                x-kubernetes-list-type: atomic
+                              platforms:
+                                description: |-
+                                  Platforms specifies a list of target platforms (e.g., "linux/amd64", "linux/arm64").
+                                  If specified, the image updater will consider these platforms when checking for new versions or digests.
+                                items:
+                                  type: string
+                                type: array
+                                x-kubernetes-list-type: atomic
+                              pullSecret:
+                                description: |-
+                                  PullSecret is the pull secret to use for images.
+                                  This acts as the default if not overridden.
+                                type: string
+                              updateStrategy:
+                                default: semver
+                                description: |-
+                                  UpdateStrategy defines the update strategy to apply.
+                                  Examples: "semver", "latest", "digest", "name".
+                                  This acts as the default if not overridden at a more specific level.
+                                type: string
+                            type: object
+                          imageName:
+                            description: |-
+                              ImageName is the full identifier of the image to be tracked,
+                              including the registry (if not Docker Hub), the image name, and an initial/current tag or version.
+                              This is the string used to query the container registry and also as a base for finding updates.
+                              Example: "docker.io/library/nginx:1.17.10", "quay.io/prometheus/node-exporter:v1.5.0".
+                              This field is mandatory.
+                            type: string
+                          manifestTargets:
+                            description: |-
+                              ManifestTarget defines how and where to update this image in Kubernetes manifests.
+                              Only one of Helm or Kustomize should be specified within this block.
+                              This whole block is optional if the image update isn't written to a manifest in a structured way.
+                            properties:
+                              helm:
+                                description: |-
+                                  Helm specifies update parameters if the target manifest is managed by Helm
+                                  and updates are to be made to Helm values files.
+                                properties:
+                                  name:
+                                    description: |-
+                                      Name is the dot-separated path to the Helm key for the image repository/name part.
+                                      Example: "image.repository", "frontend.deployment.image.name".
+                                      This field is required if the Helm target is used.
+                                    type: string
+                                  spec:
+                                    description: |-
+                                      Spec is an optional dot-separated path to a Helm key where the full image string
+                                      (e.g., "image/name:1.0") should be written.
+                                      Use this if your Helm chart expects the entire image reference in a single field,
+                                      rather than separate name/tag fields. If this is set, other Helm parameter-related
+                                      options will be ignored.
+                                    type: string
+                                  tag:
+                                    description: |-
+                                      Tag is the dot-separated path to the Helm key for the image tag part.
+                                      Example: "image.tag", "frontend.deployment.image.version".
+                                      This field is required if the Helm target is used.
+                                    type: string
+                                required:
+                                - name
+                                - tag
+                                type: object
+                              kustomize:
+                                description: |-
+                                  Kustomize specifies update parameters if the target manifest is managed by Kustomize
+                                  and updates involve changing image tags in Kustomize configurations.
+                                properties:
+                                  name:
+                                    description: |-
+                                      Name is the image name (which can include the registry and an initial tag)
+                                      as it appears in the `images` list of a kustomization.yaml file that needs to be updated.
+                                      The updater will typically change the tag or add a digest to this entry.
+                                      Example: "docker.io/library/nginx".
+                                      This field is required if the Kustomize target is used.
+                                    type: string
+                                required:
+                                - name
+                                type: object
+                            type: object
+                            x-kubernetes-validations:
+                            - message: Exactly one of helm or kustomize must be specified
+                                within manifestTargets if the block is present.
+                              rule: 'has(self.helm) ? !has(self.kustomize) : has(self.kustomize)'
+                        required:
+                        - alias
+                        - imageName
+                        type: object
+                      minItems: 1
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - alias
+                      x-kubernetes-list-type: map
+                    labelSelectors:
+                      description: LabelSelectors indicates the label selectors to
+                        apply for application selection
+                      properties:
+                        matchExpressions:
+                          description: matchExpressions is a list of label selector
+                            requirements. The requirements are ANDed.
+                          items:
+                            description: |-
+                              A label selector requirement is a selector that contains values, a key, and an operator that
+                              relates the key and values.
+                            properties:
+                              key:
+                                description: key is the label key that the selector
+                                  applies to.
+                                type: string
+                              operator:
+                                description: |-
+                                  operator represents a key's relationship to a set of values.
+                                  Valid operators are In, NotIn, Exists and DoesNotExist.
+                                type: string
+                              values:
+                                description: |-
+                                  values is an array of string values. If the operator is In or NotIn,
+                                  the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                  the values array must be empty. This array is replaced during a strategic
+                                  merge patch.
+                                items:
+                                  type: string
+                                type: array
+                                x-kubernetes-list-type: atomic
+                            required:
+                            - key
+                            - operator
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: atomic
+                        matchLabels:
+                          additionalProperties:
+                            type: string
+                          description: |-
+                            matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                            map is equivalent to an element of matchExpressions, whose key field is "key", the
+                            operator is "In", and the values array contains only "value". The requirements are ANDed.
+                          type: object
+                      type: object
+                      x-kubernetes-map-type: atomic
+                    namePattern:
+                      description: NamePattern indicates the glob pattern for application
+                        name
+                      type: string
+                    writeBackConfig:
+                      description: |-
+                        WriteBackConfig overrides the global WriteBackConfig settings for applications
+                        matched by this selector.
+                      properties:
+                        gitConfig:
+                          description: |-
+                            GitConfig provides Git configuration settings if the write-back method involves Git.
+                            This can only be used when method is "git" or starts with "git:".
+                          properties:
+                            branch:
+                              description: |-
+                                Branch to commit updates to.
+                                Required if write-back method is Git and this is not specified at the spec level.
+                              type: string
+                            repository:
+                              description: |-
+                                Repository URL to commit changes to.
+                                If not specified here or at the spec level, the controller MUST infer it from the
+                                Argo CD Application's `spec.source.repoURL`. This field allows overriding that.
+                              type: string
+                            writeBackTarget:
+                              description: |-
+                                WriteBackTarget defines the path and type of file to update in the Git repository.
+                                Examples: "helmvalues:./helm/values.yaml", "kustomization:./kustomize/overlays/production".
+                                For ApplicationSet usage, `{{ quote "{{ .app.path.path }}" }}` should be resolved by ApplicationSet
+                                before this CR is generated, resulting in a concrete path here.
+                                Required if write-back method is Git and this is not specified at the spec level.
+                              type: string
+                          type: object
+                        method:
+                          default: argocd
+                          description: |-
+                            Method defines the method for writing back updated image versions.
+                            This acts as the default if not overridden. If not specified, defaults to "argocd".
+                          pattern: ^(argocd|git|git:[a-zA-Z0-9][a-zA-Z0-9-._/:]*)$
+                          type: string
+                      required:
+                      - method
+                      type: object
+                  required:
+                  - images
+                  - namePattern
+                  type: object
+                minItems: 1
+                type: array
+                x-kubernetes-list-map-keys:
+                - namePattern
+                x-kubernetes-list-type: map
+              commonUpdateSettings:
+                description: |-
+                  CommonUpdateSettings provides global default settings for update strategies,
+                  tag filtering, pull secrets, etc., for all applications matched by this CR.
+                  These can be overridden at the ApplicationRef or ImageConfig level.
+                properties:
+                  allowTags:
+                    description: |-
+                      AllowTags is a regex pattern for tags to allow.
+                      This acts as the default if not overridden.
+                    type: string
+                  forceUpdate:
+                    default: false
+                    description: |-
+                      ForceUpdate specifies whether updates should be forced.
+                      This acts as the default if not overridden.
+                    type: boolean
+                  ignoreTags:
+                    description: |-
+                      IgnoreTags is a list of glob-like patterns of tags to ignore.
+                      This acts as the default and can be overridden at more specific levels.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: atomic
+                  platforms:
+                    description: |-
+                      Platforms specifies a list of target platforms (e.g., "linux/amd64", "linux/arm64").
+                      If specified, the image updater will consider these platforms when checking for new versions or digests.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: atomic
+                  pullSecret:
+                    description: |-
+                      PullSecret is the pull secret to use for images.
+                      This acts as the default if not overridden.
+                    type: string
+                  updateStrategy:
+                    default: semver
+                    description: |-
+                      UpdateStrategy defines the update strategy to apply.
+                      Examples: "semver", "latest", "digest", "name".
+                      This acts as the default if not overridden at a more specific level.
+                    type: string
+                type: object
+              namespace:
+                description: |-
+                  Namespace indicates the target namespace of the applications.
+                  This is the namespace where the controller will look for Argo CD Applications
+                  matching the criteria in ApplicationRefs.
+                type: string
+              writeBackConfig:
+                description: |-
+                  WriteBackConfig provides global default settings for how and where to write back image updates.
+                  This can be overridden at the ApplicationRef level.
+                properties:
+                  gitConfig:
+                    description: |-
+                      GitConfig provides Git configuration settings if the write-back method involves Git.
+                      This can only be used when method is "git" or starts with "git:".
+                    properties:
+                      branch:
+                        description: |-
+                          Branch to commit updates to.
+                          Required if write-back method is Git and this is not specified at the spec level.
+                        type: string
+                      repository:
+                        description: |-
+                          Repository URL to commit changes to.
+                          If not specified here or at the spec level, the controller MUST infer it from the
+                          Argo CD Application's `spec.source.repoURL`. This field allows overriding that.
+                        type: string
+                      writeBackTarget:
+                        description: |-
+                          WriteBackTarget defines the path and type of file to update in the Git repository.
+                          Examples: "helmvalues:./helm/values.yaml", "kustomization:./kustomize/overlays/production".
+                          For ApplicationSet usage, `{{ quote "{{ .app.path.path }}" }}` should be resolved by ApplicationSet
+                          before this CR is generated, resulting in a concrete path here.
+                          Required if write-back method is Git and this is not specified at the spec level.
+                        type: string
+                    type: object
+                  method:
+                    default: argocd
+                    description: |-
+                      Method defines the method for writing back updated image versions.
+                      This acts as the default if not overridden. If not specified, defaults to "argocd".
+                    pattern: ^(argocd|git|git:[a-zA-Z0-9][a-zA-Z0-9-._/:]*)$
+                    type: string
+                required:
+                - method
+                type: object
+            required:
+            - applicationRefs
+            - namespace
+            type: object
+          status:
+            description: ImageUpdaterStatus defines the observed state of ImageUpdater
+            properties:
+              conditions:
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              imageStatus:
+                description: ImageStatus indicates the detailed status for the list
+                  of managed images
+                items:
+                  description: ImageStatus contains information for an image:version
+                    and its update status in hosting applications
+                  properties:
+                    applications:
+                      description: Applications contains a list of applications and
+                        when the image was last updated therein
+                      items:
+                        description: ImageApplicationLastUpdated contains information
+                          for an application and when the image was last updated therein
+                        properties:
+                          appName:
+                            description: AppName indicates and namespace and the application
+                              name
+                            type: string
+                          lastUpdatedAt:
+                            description: LastUpdatedAt indicates when the image in
+                              this application was last updated
+                            format: date-time
+                            type: string
+                        required:
+                        - appName
+                        type: object
+                      type: array
+                    name:
+                      description: Name indicates the image name
+                      type: string
+                    version:
+                      description: Version indicates the image version
+                      type: string
+                  required:
+                  - name
+                  - version
+                  type: object
+                type: array
+              reconciledAt:
+                description: LastUpdatedAt indicates when the image updater last ran
+                format: date-time
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+{{- end }}

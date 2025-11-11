@@ -41,7 +41,7 @@ spec:
     - name: {{ .Values.service.servicePortHttpName }}
       protocol: TCP
       port: {{ .Values.service.port }}
-      targetPort: {{ .Values.containerPort }}
+      targetPort: webhook
       {{- if eq .Values.service.type "NodePort" }}
       nodePort: {{ .Values.service.nodePortHttp }}
       {{- end }}
