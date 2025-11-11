@@ -12,6 +12,6 @@ data:
     registries:
       {{- toYaml . | nindent 6 }}
   {{- end }}
-  {{- with (omit .Values.config "name" "registries" "sshConfig") }}
-    {{- toYaml . | nindent 2 }}
+  {{- range $key, $value := (omit .Values.config "name" "registries" "sshConfig") }}
+  {{ $key }}: {{ $value | quote }}
   {{- end }}
