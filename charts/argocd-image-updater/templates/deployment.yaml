@@ -37,7 +37,7 @@ spec:
           command:
             - /manager
           args:
-            - --metrics-bind-address=:{{ .Values.metrics.service.servicePort }}
+            - --metrics-bind-address=:{{ .Values.containerPorts.metrics }}
             - run
             {{- with .Values.extraArgs }}
               {{- toYaml . | nindent 12 }}
