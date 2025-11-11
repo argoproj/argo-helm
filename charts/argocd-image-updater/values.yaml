@@ -1,3 +1,14 @@
+## Custom resource configuration
+crds:
+  # -- Install and upgrade CRDs
+  install: true
+  # -- Keep CRDs on chart uninstall
+  keep: true
+  # -- Annotations to be added to all CRDs
+  annotations: {}
+  # -- Additional labels to be added to all CRDs
+  additionalLabels: {}
+
 # -- Replica count for the deployment. It is not advised to run more than one replica.
 replicaCount: 1
 image:
@@ -252,8 +263,9 @@ podLabels: {}
   # azure.workload.identity/use: "true"
 
 # -- Pod security context settings for the deployment
-podSecurityContext: {}
-  # fsGroup: 2000
+# @default -- See [values.yaml]
+podSecurityContext:
+  runAsNonRoot: true
 
 # -- Security context settings for the deployment
 # @default -- See [values.yaml]
@@ -293,7 +305,7 @@ metrics:
     # -- Metrics service labels
     labels: {}
     # -- Metrics service port
-    servicePort: 8081
+    servicePort: 8443
   serviceMonitor:
     # -- Enable a prometheus ServiceMonitor
     enabled: false
@@ -312,8 +324,13 @@ metrics:
     # -- Prometheus ServiceMonitor labels
     additionalLabels: {}
 
-# -- ContainerPort for the deployment
-containerPort: 8080
+containerPorts:
+  # -- Port for the webhook events
+  webhook: 8082
+  # -- Port for the probe endpoint
+  health: 8081
+  # -- Port for the metrics
+  metrics: 8443
 
 ## Service configuration
 service:

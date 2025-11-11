@@ -68,14 +68,41 @@ rules:
     verbs:
       - create
   - apiGroups:
+      - argocd-image-updater.argoproj.io
+    resources:
+      - imageupdaters
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - argocd-image-updater.argoproj.io
+    resources:
+      - imageupdaters/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - argocd-image-updater.argoproj.io
+    resources:
+      - imageupdaters/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
       - argoproj.io
     resources:
       - applications
     verbs:
       - get
       - list
-      - update
       - patch
+      - update
+      - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

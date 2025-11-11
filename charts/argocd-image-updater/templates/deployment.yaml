@@ -33,49 +33,16 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "argocd-image-updater.fullname" . }}-controller
+          command:
+            - /manager
           args:
+            - --metrics-bind-address=:{{ .Values.metrics.service.servicePort }}
             - run
             {{- with .Values.extraArgs }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
           env:
-          - name: APPLICATIONS_API
-            valueFrom:
-              configMapKeyRef:
-                key: applications_api
-                name: {{ .Values.config.name }}
-                optional: true
-          - name: ARGOCD_GRPC_WEB
-            valueFrom:
-              configMapKeyRef:
-                key: argocd.grpc_web
-                name: {{ .Values.config.name }}
-                optional: true
-          - name: ARGOCD_SERVER
-            valueFrom:
-              configMapKeyRef:
-                key: argocd.server_addr
-                name: {{ .Values.config.name }}
-                optional: true
-          - name: ARGOCD_INSECURE
-            valueFrom:
-              configMapKeyRef:
-                key: argocd.insecure
-                name: {{ .Values.config.name }}
-                optional: true
-          - name: ARGOCD_PLAINTEXT
-            valueFrom:
-              configMapKeyRef:
-                key: argocd.plaintext
-                name: {{ .Values.config.name }}
-                optional: true
-          - name: ARGOCD_TOKEN
-            valueFrom:
-              secretKeyRef:
-                key: argocd.token
-                name: {{ .Values.config.argocd.tokenSecretName }}
-                optional: true
           - name: IMAGE_UPDATER_INTERVAL
             valueFrom:
               configMapKeyRef:
@@ -87,6 +54,24 @@ spec:
               configMapKeyRef:
                 key: log.level
                 name: {{ .Values.config.name }}
+                optional: true
+          - name: IMAGE_UPDATER_LOGFORMAT
+            valueFrom:
+              configMapKeyRef:
+                key: log.format
+                name: {{ .Values.config.name }}
+                optional: true
+          - name: MAX_CONCURRENT_APPS
+            valueFrom:
+              configMapKeyRef:
+                key: max_concurrent_apps
+                name: {{ .Values.config.name }}
+                optional: true
+          - name: MAX_CONCURRENT_RECONCILES
+            valueFrom:
+              configMapKeyRef:
+                key: max_concurrent_reconciles
+                name: a{{ .Values.config.name }}
                 optional: true
           - name: GIT_COMMIT_USER
             valueFrom:
@@ -124,12 +109,6 @@ spec:
                 key: kube.events
                 name: {{ .Values.config.name }}
                 optional: true
-          - name: ARGOCD_LOGLEVEL
-            valueFrom:
-              configMapKeyRef:
-                key: log.level
-                name: {{ .Values.config.name }}
-                optional: true
           - name: ENABLE_WEBHOOK
             valueFrom:
               configMapKeyRef:
@@ -144,7 +123,7 @@ spec:
                 optional: true
           - name: QUAY_WEBHOOK_SECRET
             valueFrom:
-              configMapKeyRef:
+              secretKeyRef:
                 name: argocd-image-updater-secret
                 key: webhook.quay-secret
                 optional: true
@@ -184,22 +163,27 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.containerPort }}
-            {{ if .Values.metrics.enabled }}
+            - name: health
+              containerPort: {{ .Values.containerPorts.health }}
+              protocol: TCP
+            - name: webhook
+              containerPort: {{ .Values.containerPorts.webhook }}
+              protocol: TCP
+            {{- if .Values.metrics.enabled }}
             - name: metrics
-              containerPort: {{ .Values.metrics.service.servicePort }}
+              containerPort: {{ .Values.containerPorts.metrics }}
               protocol: TCP
             {{- end }}
           readinessProbe:
             httpGet:
-              path: /healthz
-              port: {{ .Values.containerPort }}
-            initialDelaySeconds: 3
-            periodSeconds: 30
+              path: /readyz
+              port: {{ .Values.containerPorts.health }}
+            initialDelaySeconds: 15
+            periodSeconds: 20
           livenessProbe:
             httpGet:
               path: /healthz
-              port: {{ .Values.containerPort }}
+              port: {{ .Values.containerPorts.health }}
             initialDelaySeconds: 3
             periodSeconds: 30
           resources:
@@ -224,6 +208,7 @@ spec:
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 10}}
           {{- end }}
+      terminationGracePeriodSeconds: 10
       volumes:
       - configMap:
           items:

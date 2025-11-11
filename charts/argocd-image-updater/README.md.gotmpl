@@ -11,7 +11,7 @@ docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:late
 
 ```console
 helm repo add argo https://argoproj.github.io/argo-helm
-helm install argocd-image-updater argo/argocd-image-updater
+helm install argocd-image-updater argo/argocd-image-updater --namespace argocd-image-updater-system
 ```
 
 You will also need to run through the [secret setup documentation] so Argo CD Image Updater can talk to the Argo CD API (until its automated in this chart).

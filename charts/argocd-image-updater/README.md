@@ -11,7 +11,7 @@ docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:late
 
 ```console
 helm repo add argo https://argoproj.github.io/argo-helm
-helm install argocd-image-updater argo/argocd-image-updater
+helm install argocd-image-updater argo/argocd-image-updater --namespace argocd-image-updater-system
 ```
 
 You will also need to run through the [secret setup documentation] so Argo CD Image Updater can talk to the Argo CD API (until its automated in this chart).
@@ -91,7 +91,13 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/). |
 | config.sshConfig.config | string | `""` | Argo CD Image Updater ssh client parameter configuration |
 | config.sshConfig.name | string | `"argocd-image-updater-ssh-config"` | Name of the sshConfig ConfigMap |
-| containerPort | int | `8080` | ContainerPort for the deployment |
+| containerPorts.health | int | `8081` | Port for the probe endpoint |
+| containerPorts.metrics | int | `8443` | Port for the metrics |
+| containerPorts.webhook | int | `8082` | Port for the webhook events |
+| crds.additionalLabels | object | `{}` | Additional labels to be added to all CRDs |
+| crds.annotations | object | `{}` | Annotations to be added to all CRDs |
+| crds.install | bool | `true` | Install and upgrade CRDs |
+| crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
 | dualStack.ipFamilies | list | `[]` | IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
 | dualStack.ipFamilyPolicy | string | `""` | IP family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
@@ -118,7 +124,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | metrics.enabled | bool | `false` | Deploy metrics service |
 | metrics.service.annotations | object | `{}` | Metrics service annotations |
 | metrics.service.labels | object | `{}` | Metrics service labels |
-| metrics.service.servicePort | int | `8081` | Metrics service port |
+| metrics.service.servicePort | int | `8443` | Metrics service port |
 | metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
@@ -131,7 +137,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | nodeSelector | object | `{}` | Kubernetes nodeSelector settings for the deployment |
 | podAnnotations | object | `{}` | Pod Annotations for the deployment |
 | podLabels | object | `{}` | Pod Labels for the deployment |
-| podSecurityContext | object | `{}` | Pod security context settings for the deployment |
+| podSecurityContext | object | See [values.yaml] | Pod security context settings for the deployment |
 | priorityClassName | string | `""` | Priority class for the deployment |
 | rbac.enabled | bool | `true` | Enable RBAC creation |
 | replicaCount | int | `1` | Replica count for the deployment. It is not advised to run more than one replica. |
