@@ -7,42 +7,11 @@ metadata:
   name: {{ .Values.config.name }}
   namespace: {{ include "argocd-image-updater.namespace" . | quote }}
 data:
-  {{- with .Values.config.applicationsAPIKind }}
-  applications_api: {{ . | quote }}
-  {{- if eq . "argocd" }}
-  argocd.grpc_web: {{ $.Values.config.argocd.grpcWeb | quote }}
-  {{- with $.Values.config.argocd.serverAddress }}
-  argocd.server_addr: {{ . | quote }}
-  {{- end }}
-  argocd.insecure: {{ $.Values.config.argocd.insecure | quote }}
-  argocd.plaintext: {{ $.Values.config.argocd.plaintext | quote }}
-  {{- end -}}
-  {{- end }}
-  {{- with .Values.config.logLevel }}
-  log.level: {{ . | quote }}
-  {{- end }}
-  {{- with .Values.config.gitCommitUser }}
-  git.user: {{ . | quote }}
-  {{- end }}
-  {{- with .Values.config.gitCommitMail }}
-  git.email: {{ . | quote }}
-  {{- end }}
-  {{- with .Values.config.gitCommitTemplate }}
-  git.commit-message-template: |
-    {{- nindent 4 . }}
-  {{- end }}
-  {{- with .Values.config.gitCommitSigningKey }}
-  git.commit-signing-key: {{ . | quote }}
-  {{- end }}
-  {{- with .Values.config.gitCommitSignOff }}
-  git.commit-sign-off: {{ . | quote }}
-  {{- end }}
-  {{- with .Values.config.gitCommitSigningMethod }}
-  git.commit-signing-method: {{ . | quote }}
-  {{- end }}
-  kube.events: {{ .Values.config.disableKubeEvents | quote }}
   {{- with .Values.config.registries }}
   registries.conf: |
     registries:
       {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with (omit .Values.config "name" "registries" "sshConfig") }}
+    {{- toYaml . | nindent 2 }}
   {{- end }}

@@ -131,48 +131,30 @@ volumes: []
 config:
   # -- Name of the ConfigMap
   name: argocd-image-updater-config
-  # -- API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`)
-  applicationsAPIKind: ""
-
-  # Described in detail here https://argocd-image-updater.readthedocs.io/en/stable/install/reference/#flags
-  # Note: this is only relevant if config.applicationsAPIKind == 'argocd'
-  argocd:
-    # -- Use the gRPC-web protocol to connect to the Argo CD API
-    grpcWeb: true
-    # -- Connect to the Argo CD API server at server address
-    serverAddress: ""
-    # -- If specified, the certificate of the Argo CD API server is not verified.
-    insecure: false
-    # -- If specified, use an unencrypted HTTP connection to the Argo CD API instead of TLS.
-    plaintext: false
-    # -- If specified, the secret with Argo CD API key will be created.
-    token: ""
-    # -- Name of the Secret containing the token
-    tokenSecretName: "argocd-image-updater-secret"
 
   # -- Disable kubernetes events
-  disableKubeEvents: false
+  kube.events: false
 
   # -- Username to use for Git commits
-  gitCommitUser: ""
+  git.user: ""
 
   # -- E-Mail address to use for Git commits
-  gitCommitMail: ""
+  git.email: ""
 
   # -- Changing the Git commit message
-  gitCommitTemplate: ""
+  git.commit-message-template: ""
 
   # -- Path to public SSH key mounted in container, or GPG key ID used to sign commits
-  gitCommitSigningKey: ""
+  git.commit-signing-key: ""
 
   # -- Enables sign off on commits
-  gitCommitSignOff: false
+  git.commit-sign-off: false
 
   # -- Method used to sign Git commits. `openpgp` or `ssh`
-  gitCommitSigningMethod: ""
+  git.commit-signing-method: ""
 
   # -- Argo CD Image Update log level
-  logLevel: "info"
+  log.level: "info"
 
   # -- Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/).
   registries: []

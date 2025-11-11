@@ -59,21 +59,14 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts` |
 | authScripts.name | string | `"argocd-image-updater-authscripts"` | Name of the authentication scripts ConfigMap |
 | authScripts.scripts | object | `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents. |
-| config.applicationsAPIKind | string | `""` | API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`) |
-| config.argocd.grpcWeb | bool | `true` | Use the gRPC-web protocol to connect to the Argo CD API |
-| config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
-| config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the Argo CD API instead of TLS. |
-| config.argocd.serverAddress | string | `""` | Connect to the Argo CD API server at server address |
-| config.argocd.token | string | `""` | If specified, the secret with Argo CD API key will be created. |
-| config.argocd.tokenSecretName | string | `"argocd-image-updater-secret"` | Name of the Secret containing the token |
-| config.disableKubeEvents | bool | `false` | Disable kubernetes events |
-| config.gitCommitMail | string | `""` | E-Mail address to use for Git commits |
-| config.gitCommitSignOff | bool | `false` | Enables sign off on commits |
-| config.gitCommitSigningKey | string | `""` | Path to public SSH key mounted in container, or GPG key ID used to sign commits |
-| config.gitCommitSigningMethod | string | `""` | Method used to sign Git commits. `openpgp` or `ssh` |
-| config.gitCommitTemplate | string | `""` | Changing the Git commit message |
-| config.gitCommitUser | string | `""` | Username to use for Git commits |
-| config.logLevel | string | `"info"` | Argo CD Image Update log level |
+| config."git.commit-message-template" | string | `""` | Changing the Git commit message |
+| config."git.commit-sign-off" | bool | `false` | Enables sign off on commits |
+| config."git.commit-signing-key" | string | `""` | Path to public SSH key mounted in container, or GPG key ID used to sign commits |
+| config."git.commit-signing-method" | string | `""` | Method used to sign Git commits. `openpgp` or `ssh` |
+| config."git.email" | string | `""` | E-Mail address to use for Git commits |
+| config."git.user" | string | `""` | Username to use for Git commits |
+| config."kube.events" | bool | `false` | Disable kubernetes events |
+| config."log.level" | string | `"info"` | Argo CD Image Update log level |
 | config.name | string | `"argocd-image-updater-config"` | Name of the ConfigMap |
 | config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/). |
 | config.sshConfig.config | string | `""` | Argo CD Image Updater ssh client parameter configuration |
