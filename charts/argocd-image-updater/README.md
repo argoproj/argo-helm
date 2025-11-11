@@ -10,45 +10,32 @@ docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:late
 ## Installation
 
 ```console
-helm repo add argo https://argoproj.github.io/argo-helm
-helm install argocd-image-updater argo/argocd-image-updater
+helm install oci://ghcr.io/argoproj/argo-helm/argocd-image-updater --namespace argocd-image-updater-system
 ```
 
-You will also need to run through the [secret setup documentation] so Argo CD Image Updater can talk to the Argo CD API (until its automated in this chart).
+If you still use the classic approach of installing Helm charts (non-OCI), you can do so by adding the Argo Helm repository and installing the chart with the following commands:
+
+```console
+helm repo add argo https://argoproj.github.io/argo-helm
+helm install argocd-image-updater argo/argocd-image-updater --namespace argocd-image-updater-system
+```
+
+The Argo CD Image Updater controller **must** be run in the same Kubernetes cluster where your Argo CD `Application` resources are managed. The current controller architecture (v1.0+) does not support connecting to a remote Kubernetes cluster to manage applications.
 
 ## Prerequisites
 
 * Helm v3.0.0+
 
-## Configuration options
+## Changelog
 
-In order for your deployment of Argo CD Image Updater to be successful, you will need to make sure you set the correct configuration options described in detail on the [argocd-image-updater flags page].
+For full list of changes please check ArtifactHub [changelog].
 
-All of the `argocd-` prefixed flags, which tell `argocd-image-updater` how your Argo CD instance is setup, are set in the `config.argocd` values block. For instance:
+Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
-```yaml
-config:
-  argocd:
-    grpcWeb: false
-    serverAddress: "http://argocd.argo"
-    insecure: true
-    plaintext: true
-```
+### 1.0.0
 
-Any additional arguments mentioned on the [argocd-image-updater flags page] can be configured using the `extraArgs` value, like so.
-
-### Argo CD API key
-
-If you are unable to install Argo CD Image Updater into the same Kubernetes cluster you might configure it to use API of your Argo CD installation.
-Please also read [Configuration of Container Registries].
-
-```yaml
-config:
-  argocd:
-    token: <your_secret_here>
-```
-
-If you specify a token value the secret will be created.
+This chart release includes the upstream breaking changes introduced in Argo CD Image Updater 1.0.0.
+Please read the migration docs carefully: https://argocd-image-updater.readthedocs.io/en/stable/configuration/migration/
 
 ### Registries
 
@@ -72,26 +59,25 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts` |
 | authScripts.name | string | `"argocd-image-updater-authscripts"` | Name of the authentication scripts ConfigMap |
 | authScripts.scripts | object | `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents. |
-| config.applicationsAPIKind | string | `""` | API kind that is used to manage Argo CD applications (`kubernetes` or `argocd`) |
-| config.argocd.grpcWeb | bool | `true` | Use the gRPC-web protocol to connect to the Argo CD API |
-| config.argocd.insecure | bool | `false` | If specified, the certificate of the Argo CD API server is not verified. |
-| config.argocd.plaintext | bool | `false` | If specified, use an unencrypted HTTP connection to the Argo CD API instead of TLS. |
-| config.argocd.serverAddress | string | `""` | Connect to the Argo CD API server at server address |
-| config.argocd.token | string | `""` | If specified, the secret with Argo CD API key will be created. |
-| config.argocd.tokenSecretName | string | `"argocd-image-updater-secret"` | Name of the Secret containing the token |
-| config.disableKubeEvents | bool | `false` | Disable kubernetes events |
-| config.gitCommitMail | string | `""` | E-Mail address to use for Git commits |
-| config.gitCommitSignOff | bool | `false` | Enables sign off on commits |
-| config.gitCommitSigningKey | string | `""` | Path to public SSH key mounted in container, or GPG key ID used to sign commits |
-| config.gitCommitSigningMethod | string | `""` | Method used to sign Git commits. `openpgp` or `ssh` |
-| config.gitCommitTemplate | string | `""` | Changing the Git commit message |
-| config.gitCommitUser | string | `""` | Username to use for Git commits |
-| config.logLevel | string | `"info"` | Argo CD Image Update log level |
+| config."git.commit-message-template" | string | `""` | Changing the Git commit message |
+| config."git.commit-sign-off" | bool | `false` | Enables sign off on commits |
+| config."git.commit-signing-key" | string | `""` | Path to public SSH key mounted in container, or GPG key ID used to sign commits |
+| config."git.commit-signing-method" | string | `""` | Method used to sign Git commits. `openpgp` or `ssh` |
+| config."git.email" | string | `""` | E-Mail address to use for Git commits |
+| config."git.user" | string | `""` | Username to use for Git commits |
+| config."kube.events" | bool | `false` | Disable kubernetes events |
+| config."log.level" | string | `"info"` | Argo CD Image Update log level |
 | config.name | string | `"argocd-image-updater-config"` | Name of the ConfigMap |
 | config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/). |
 | config.sshConfig.config | string | `""` | Argo CD Image Updater ssh client parameter configuration |
 | config.sshConfig.name | string | `"argocd-image-updater-ssh-config"` | Name of the sshConfig ConfigMap |
-| containerPort | int | `8080` | ContainerPort for the deployment |
+| containerPorts.health | int | `8081` | Port for the probe endpoint |
+| containerPorts.metrics | int | `8443` | Port for the metrics |
+| containerPorts.webhook | int | `8082` | Port for the webhook events |
+| crds.additionalLabels | object | `{}` | Additional labels to be added to all CRDs |
+| crds.annotations | object | `{}` | Annotations to be added to all CRDs |
+| crds.install | bool | `true` | Install and upgrade CRDs |
+| crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
 | dualStack.ipFamilies | list | `[]` | IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
 | dualStack.ipFamilyPolicy | string | `""` | IP family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
@@ -118,7 +104,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | metrics.enabled | bool | `false` | Deploy metrics service |
 | metrics.service.annotations | object | `{}` | Metrics service annotations |
 | metrics.service.labels | object | `{}` | Metrics service labels |
-| metrics.service.servicePort | int | `8081` | Metrics service port |
+| metrics.service.servicePort | int | `8443` | Metrics service port |
 | metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
 | metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
@@ -131,7 +117,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | nodeSelector | object | `{}` | Kubernetes nodeSelector settings for the deployment |
 | podAnnotations | object | `{}` | Pod Annotations for the deployment |
 | podLabels | object | `{}` | Pod Labels for the deployment |
-| podSecurityContext | object | `{}` | Pod security context settings for the deployment |
+| podSecurityContext | object | See [values.yaml] | Pod security context settings for the deployment |
 | priorityClassName | string | `""` | Priority class for the deployment |
 | rbac.enabled | bool | `true` | Enable RBAC creation |
 | replicaCount | int | `1` | Replica count for the deployment. It is not advised to run more than one replica. |
@@ -162,9 +148,5 @@ The `config.registries` value can be used exactly as it looks in the documentati
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/helm-docs)
 
-[MetricRelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
-[RelabelConfigs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
-[secret setup documentation]: https://argocd-image-updater.readthedocs.io/en/stable/install/installation/#method-2-connect-using-argo-cd-api-server
-[argocd-image-updater flags page]: https://argocd-image-updater.readthedocs.io/en/stable/install/reference/#flags
 [Configuration of Container Registries]: https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/
 [Support ECR authentication]: https://github.com/argoproj-labs/argocd-image-updater/issues/112
