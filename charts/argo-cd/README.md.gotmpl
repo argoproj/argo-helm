@@ -396,6 +396,13 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 9.1.0
+This chart contains a breaking change (if using `redis-ha`), which was introduced by the dependency `redis-ha` (as seen [here](https://github.com/DandyDeveloper/charts/blob/a03b6a6f4d72b6606ce9a218c7d0026350b48ad0/charts/redis-ha/README.md#4341---upgrade-may-complain-about-selector-label-changes-being-immutable)). The upgrade will complain about selector label changes being immutable, which requires a replacement of the `argocd-redis-ha-haproxy` deployment. To overcome this, you will need to delete (orphaning children) this deployment, updated ArgoCD to disable server-side diffing, then allow the new deployment of `argocd-redis-ha-haproxy` to rollout with the updated label selectors.
+
+> Note: If server-side diffing is enabled, you will need to revert this to use client-side diffing, otherwise ArgoCD will be in an Unknown status. More information [here](https://github.com/argoproj/argo-cd/issues/25184). If you happened to upgrade this helm chart before configuring client-side diffing, you will need to delete (orphaning children) the `argocd-redis-ha-haproxy` deployment; once the newest deployment has rolled out, its suggested to cleanup the orphaned ReplicaSets
+
+This issue was reported [here](https://github.com/argoproj/argo-helm/issues/3571)
+
 ### 9.0.0
 We have removed all parameters under `.Values.configs.params` in this release, with the exception of `create` and `annotations`.
 This is to ensure better alignment with the upstream project, as tracking changes to their default values within the Helm chart has become challenging.
