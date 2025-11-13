@@ -2472,6 +2472,9 @@ server:
       ## Instance mode needs type NodePort, IP mode needs type ClusterIP
       ## Ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/how-it-works/#ingress-traffic
       serviceType: NodePort
+      # -- Annotations for the AWS ALB gRPC service
+      ## Allows adding custom annotations to the gRPC service for integrations like DataDog, Prometheus, etc.
+      serviceAnnotations: {}
 
     # Google specific options for Google Application Load Balancer
     # Applies only when `server.ingress.controller` is set to `gke`

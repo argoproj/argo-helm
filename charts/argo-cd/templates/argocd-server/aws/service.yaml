@@ -4,8 +4,13 @@ kind: Service
 metadata:
   annotations:
     alb.ingress.kubernetes.io/backend-protocol-version: {{ .Values.server.ingress.aws.backendProtocolVersion }}
+    {{- with .Values.server.ingress.aws.serviceAnnotations }}  
+    {{- range $key, $value := . }}  
+    {{ $key }}: {{ $value | quote }}  
+    {{- end }}  
+    {{- end }}
   labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" (print .Values.server.name "-gprc") "name" (print .Values.server.name "-grpc")) | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" . "component" (print .Values.server.name "-grpc") "name" (print .Values.server.name "-grpc")) | nindent 4 }}
   name: {{ template "argo-cd.server.fullname" . }}-grpc
   namespace: {{ include  "argo-cd.namespace" . }}
 spec:
