@@ -2642,13 +2642,10 @@ server:
     # -- List of hostnames for the GRPCRoute
     # @default -- `[]` (See [values.yaml])
     hostnames: []
-      # - grpc.argocd.example.com
+    # - grpc.argocd.example.com
     # -- GRPCRoute rules configuration
     # @default -- `[]` (See [values.yaml])
-    rules:
-      - matches:
-          - method:
-              type: Exact
+    rules: []
         # filters: []
         #   - type: RequestHeaderModifier
         #     requestHeaderModifier:
