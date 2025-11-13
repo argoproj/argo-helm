@@ -42,7 +42,7 @@ spec:
           weight: 1  
     {{- end }}  
   {{- else }}  
-    -  backendRefs:  
+    - backendRefs:  
         - name: {{ $fullName }}  
           port: {{ $servicePort }}  
           weight: 1  
