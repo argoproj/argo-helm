@@ -1,7 +1,9 @@
 {{- if .Values.server.httproute.enabled -}}
 {{- $fullName := include "argo-cd.server.fullname" . -}}
 {{- $insecure := index .Values.configs.params "server.insecure" | toString -}}
-{{- $servicePort := eq $insecure "true" | ternary .Values.server.service.servicePortHttp .Values.server.service.servicePortHttps -}}
+{{- $servicePortHttp := .Values.server.service.servicePortHttp -}}
+{{- $servicePortHttps := .Values.server.service.servicePortHttps -}}
+{{- $servicePortHttp2 := .Values.server.service.servicePortHttp2 -}}
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -26,20 +28,24 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   rules:
-    {{- range .Values.server.httproute.rules }}
-    {{- with .matches }}
-    - matches:
-      {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .filters }}
-      filters:
-      {{- toYaml . | nindent 8 }}
-    {{- end }}
-      backendRefs:
+    {{- range $servicePort := eq $insecure "true" | ternary (list $servicePortHttp $servicePortHttp2) (list $servicePortHttps) -}}
+    {{- range $.Values.server.httproute.rules | default (list dict) }}
+    - backendRefs:
         - group: ''
           kind: Service
           name: {{ $fullName }}
           port: {{ $servicePort }}
           weight: 1
+    {{- with .matches | default (eq $servicePort $servicePortHttp2 | ternary (list dict) list) }}
+      matches:
+      {{- range . }}
+        - {{ eq $servicePort $servicePortHttp2 | ternary (set (deepCopy .) "headers" (prepend (index . "headers" | default list) (dict "name" "Content-Type" "value" "application/grpc"))) . | toYaml | indent 10 | trim }}
+      {{- end }}
+    {{- end }}
+    {{- with .filters }}
+      filters:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- end }}
     {{- end }}
 {{- end }}

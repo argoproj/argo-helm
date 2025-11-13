@@ -1328,8 +1328,12 @@ NAME: my-release
 | server.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | server.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
 | server.service.nodePortHttp | int | `30080` | Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort") |
+| server.service.nodePortHttp2 | int | `38008` | Server service http2 port for NodePort service type (only if `server.service.type` is set to "NodePort") |
 | server.service.nodePortHttps | int | `30443` | Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort") |
 | server.service.servicePortHttp | int | `80` | Server service http port |
+| server.service.servicePortHttp2 | int | `8008` | Server service http2 port |
+| server.service.servicePortHttp2AppProtocol | string | `"kubernetes.io/h2c"` | Server service http2 port appProtocol |
+| server.service.servicePortHttp2Name | string | `"http2"` | Server service http2 port name, can be used to route traffic via istio |
 | server.service.servicePortHttpName | string | `"http"` | Server service http port name, can be used to route traffic via istio |
 | server.service.servicePortHttps | int | `443` | Server service https port |
 | server.service.servicePortHttpsAppProtocol | string | `""` | Server service https port appProtocol |
