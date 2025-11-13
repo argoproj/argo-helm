@@ -42,11 +42,7 @@ spec:
           weight: 1  
     {{- end }}  
   {{- else }}  
-    - matches:  
-        - method:  
-            type: Exact  
-            service: ""  
-      backendRefs:  
+    -  backendRefs:  
         - name: {{ $fullName }}  
           port: {{ $servicePort }}  
           weight: 1  
