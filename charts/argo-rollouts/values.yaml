@@ -251,6 +251,9 @@ controller:
     # - name: "argoproj-labs/sample-nginx" # name of the plugin, it must match the name required by the plugin so it can find it's configuration
     #   location: "file://./my-custom-plugin" # supports http(s):// urls and file://
 
+  # -- Automount API credentials for the Service Account into the pod.
+  automountServiceAccountToken: true
+
 serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
@@ -259,6 +262,9 @@ serviceAccount:
   # -- The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
+
+  # -- Automount API credentials for the Service Account
+  automountServiceAccountToken: true
 
 # -- Annotations to be added to all CRDs
 crdAnnotations: {}
