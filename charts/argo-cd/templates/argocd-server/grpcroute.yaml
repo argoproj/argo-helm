@@ -26,18 +26,18 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   rules:
-    {{- range .Values.server.grpcroute.rules }}
-    {{- with .matches }}
-    - matches:
-      {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .filters }}
-      filters:
-      {{- toYaml . | nindent 8 }}
-    {{- end }}
-      backendRefs:
+  {{- range .Values.server.grpcroute.rules }}
+    - backendRefs:
         - name: {{ $fullName }}
           port: {{ $servicePort }}
           weight: 1
+    {{- with .filters }}
+      filters:
+        {{- toYaml . | nindent 8 }}
     {{- end }}
+    {{- with .matches }}
+      matches:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+  {{- end }}
 {{- end }}
