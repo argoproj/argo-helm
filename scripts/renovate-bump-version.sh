@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 while getopts c:d:v: opt; do
   case ${opt} in
     c) chart=${OPTARG} ;;
