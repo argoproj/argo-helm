@@ -8,6 +8,11 @@
 
 set -euo pipefail
 
+if ! command -v jq &> /dev/null; then
+    echo "Error: jq is required but not installed"
+    exit 1
+fi
+
 VERSION="${1:-}"
 
 if [[ -z "$VERSION" ]]; then
@@ -27,17 +32,13 @@ CRD_DIR="$REPO_ROOT/charts/argo-workflows/files/crds"
 
 UPSTREAM_BASE_URL="https://raw.githubusercontent.com/argoproj/argo-workflows/${VERSION}/manifests/base/crds"
 
-# List of CRD files to download
-CRD_FILES=(
-    "argoproj.io_clusterworkflowtemplates.yaml"
-    "argoproj.io_cronworkflows.yaml"
-    "argoproj.io_workflowartifactgctasks.yaml"
-    "argoproj.io_workfloweventbindings.yaml"
-    "argoproj.io_workflows.yaml"
-    "argoproj.io_workflowtaskresults.yaml"
-    "argoproj.io_workflowtasksets.yaml"
-    "argoproj.io_workflowtemplates.yaml"
-)
+# Function to get CRD file list from GitHub API
+get_crd_files() {
+    local type="$1"
+    local api_url="https://api.github.com/repos/argoproj/argo-workflows/contents/manifests/base/crds/${type}?ref=${VERSION}"
+
+    curl -sSfL "$api_url" | jq -r '.[] | select(.name | test("^argoproj\\.io_.*\\.yaml$")) | .name'
+}
 
 # Function to process a CRD file:
 # - Remove the "auto-generated" comment line
@@ -85,20 +86,32 @@ download_crds() {
 
     mkdir -p "$dest_dir"
 
-    for crd_file in "${CRD_FILES[@]}"; do
+    # Clean existing CRD files before downloading in case upstream have deleted a CRD
+    rm -f "$dest_dir"/*.yaml
+
+    # Get file list dynamically from GitHub API
+    local crd_files
+    crd_files=$(get_crd_files "$type")
+
+    if [[ -z "$crd_files" ]]; then
+        echo "  Error: Failed to fetch CRD file list for $type"
+        return 1
+    fi
+
+    while IFS= read -r crd_file; do
         local url="$UPSTREAM_BASE_URL/$type/$crd_file"
         local dest="$dest_dir/$crd_file"
 
         echo "  Downloading $crd_file..."
         if ! curl -sSfL "$url" -o "$dest"; then
-            echo "    Warning: Failed to download $crd_file (may not exist for $type)"
+            echo "    Warning: Failed to download $crd_file"
             rm -f "$dest"
             continue
         fi
 
         process_crd "$dest"
         echo "    Downloaded and processed $crd_file"
-    done
+    done <<< "$crd_files"
 }
 
 echo "Updating Argo Workflows CRDs to $VERSION"
