@@ -124,6 +124,7 @@ annotations:
 Minimally:
 
 ```shell
+kubectl create ns argo
 helm install charts/argo-workflows -n argo
 argo version
 ```
