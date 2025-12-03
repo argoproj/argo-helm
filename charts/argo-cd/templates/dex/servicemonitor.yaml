@@ -1,5 +1,6 @@
-{{- if and (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") .Values.dex.enabled .Values.dex.metrics.enabled .Values.dex.metrics.serviceMonitor.enabled }}
-apiVersion: monitoring.coreos.com/v1
+{{- $apiVersion := include "argo-cd.apiVersions.monitoring" . }}
+{{- if and (.Capabilities.APIVersions.Has $apiVersion) .Values.dex.enabled .Values.dex.metrics.enabled .Values.dex.metrics.serviceMonitor.enabled }}
+apiVersion: {{ $apiVersion }}
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-cd.dex.fullname" . }}
