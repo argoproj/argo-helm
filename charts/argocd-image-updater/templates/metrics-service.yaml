@@ -17,7 +17,7 @@ metadata:
   namespace: {{ include "argocd-image-updater.namespace" . | quote }}
 spec:
   ports:
-    - name: https
+    - name: metrics
       protocol: TCP
       port: {{ .Values.metrics.service.servicePort }}
       targetPort: metrics
