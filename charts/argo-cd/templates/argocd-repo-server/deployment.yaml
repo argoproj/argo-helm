@@ -417,7 +417,7 @@ spec:
       initContainers:
       - command:
         - /bin/cp
-        - -n
+        - --update=none
         - /usr/local/bin/argocd
         - /var/run/argocd/argocd-cmp-server
         image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}
