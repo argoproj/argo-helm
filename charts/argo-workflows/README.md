@@ -407,6 +407,7 @@ Fields to note:
 | server.serviceNodePort | string | `nil` | Service node port |
 | server.servicePort | int | `2746` | Service port for server |
 | server.servicePortName | string | `""` | Service port name |
+| server.serviceTargetPort | int | `2746` | Service target port for server |
 | server.serviceType | string | `"ClusterIP"` | Service type for server pods |
 | server.sso.clientId.key | string | `"client-id"` | Key of secret to retrieve the app OIDC client ID |
 | server.sso.clientId.name | string | `"argo-server-sso"` | Name of secret to retrieve the app OIDC client ID |
