@@ -162,7 +162,7 @@ spec:
               mountPath: /app/config/tls
             - name: argocd-repo-server-tls
               mountPath: /app/config/reposerver/tls
-            {{- with .Values.notifications.extraVolumeMounts }}
+            {{- with (concat .Values.global.extraVolumeMounts .Values.notifications.extraVolumeMounts) }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
         {{- with .Values.notifications.extraContainers }}
@@ -196,7 +196,7 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-        {{- with .Values.notifications.extraVolumes }}
+        {{- with (concat .Values.global.extraVolumes .Values.notifications.extraVolumes) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - name: tls-certs
