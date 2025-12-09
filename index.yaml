@@ -32183,6 +32183,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Bump argo-workflows to v3.7.6
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.7.6
+    created: "2025-12-09T15:08:53.920132069Z"
+    description: A Helm chart for Argo Workflows
+    digest: 3312f958a4b7cbeb9d51fbd1da94b8d9cf2c8d878dd62d024a870b30506201e1
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-0.46.2/argo-workflows-0.46.2.tgz
+    version: 0.46.2
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Add server.serviceTargetPort parameter to allow custom target ports for TLS sidecars
       artifacthub.io/signKey: |
@@ -40382,4 +40406,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2025-12-08T22:14:47.208474034Z"
+generated: "2025-12-09T15:08:53.922815515Z"
