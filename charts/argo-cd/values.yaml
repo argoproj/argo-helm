@@ -2588,6 +2588,7 @@ server:
     termination_policy: None
 
   # Gateway API HTTPRoute configuration
+  # NOTE: Gateway API support is in EXPERIMENTAL status
   # Support depends on your Gateway controller implementation
   # Some controllers may require additional configuration (e.g., BackendTLSPolicy for HTTPS backends)
   # Refer to https://gateway-api.sigs.k8s.io/implementations/ for controller-specific details
@@ -2624,6 +2625,7 @@ server:
         #           value: custom-value
 
   # Gateway API GRPCRoute configuration
+  # NOTE: Gateway API support is in EXPERIMENTAL status
   # Support depends on your Gateway controller implementation
   # Refer to https://gateway-api.sigs.k8s.io/implementations/ for controller-specific details
   grpcroute:
@@ -2658,6 +2660,7 @@ server:
         #           value: custom-value
 
   # Gateway API BackendTLSPolicy configuration
+  # NOTE: Gateway API support is in EXPERIMENTAL status
   # Required for HTTPS backends when using Gateway API
   # Not all Gateway controllers support this resource (e.g., Cilium does not support it yet)
   backendTLSPolicy:
