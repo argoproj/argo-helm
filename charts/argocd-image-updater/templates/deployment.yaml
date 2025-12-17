@@ -43,6 +43,12 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           env:
+          - name: ARGOCD_NAMESPACE
+            valueFrom:
+              configMapKeyRef:
+                key: argocd.namespace
+                name: {{ .Values.config.name }}
+                optional: true
           - name: IMAGE_UPDATER_INTERVAL
             valueFrom:
               configMapKeyRef:
