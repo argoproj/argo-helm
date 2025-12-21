@@ -2695,6 +2695,11 @@ server:
     # -- List of custom rules for the server's ClusterRole resource
     rules: []
 
+  ## Server RBAC configuration
+  rbac:
+    # -- Restrict server permissions to minimal set (removes delete/patch on wildcard resources)
+    minimal: false
+
   # Default ArgoCD Server's network policy
   networkPolicy:
     # -- Default network policy rules used by ArgoCD Server

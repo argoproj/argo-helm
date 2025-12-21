@@ -8,7 +8,71 @@ metadata:
 rules:
   {{- if .Values.server.clusterRoleRules.enabled }}
     {{- toYaml .Values.server.clusterRoleRules.rules | nindent 2 }}
+  {{- else if .Values.server.rbac.minimal }}
+  # Minimal permissions for read-only access
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - get     # supports viewing live object manifest in UI
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - list    # supports listing events in UI
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+    verbs:
+      - get     # supports viewing pod logs from UI
+  {{- if eq (toString (index .Values.configs.cm "exec.enabled")) "true" }}
+  - apiGroups:
+      - ""
+    resources:
+      - pods/exec
+    verbs:
+      - create
+  {{- end }}
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - applications
+      - applicationsets
+    verbs:
+      - get
+      - list
+      - watch
+  {{- if (index .Values.configs.params "application.namespaces") }}
+  - apiGroups:
+      - "argoproj.io"
+    resources:
+      - "applications"
+    verbs:
+      - get
+      - list
+      - watch
+  {{- end }}
+  - apiGroups:
+      - batch
+    resources:
+      {{/* supports viewing jobs from UI */}}
+      - jobs
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - workflows
+    verbs:
+      - get
+      - list
   {{- else }}
+  # Default permissions
   - apiGroups:
       - '*'
     resources:

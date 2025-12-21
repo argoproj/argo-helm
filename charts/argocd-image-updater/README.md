@@ -1,5 +1,6 @@
 # argocd-image-updater
 
+
 A Helm chart for Argo CD Image Updater, a tool to automatically update the container images of Kubernetes workloads which are managed by Argo CD
 
 To regenerate this document, from the root of this chart directory run:

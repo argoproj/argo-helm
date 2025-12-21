@@ -4,6 +4,7 @@ A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kub
 
 Source code can be found here:
 
+
 * <https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd>
 * <https://github.com/argoproj/argo-cd>
 
@@ -232,35 +233,35 @@ server:
           port: 8080
       frontendConfig:
         redirectToHttps:
-          enabled: true 
+          enabled: true  
       managedCertificate:
         enabled: true
 ```
 
 ### AKS Application Routing (generic)
 
-AKS Web Application Routing uses the standard Kubernetes Ingress specification, so the `generic` controller type is sufficient. 
-webapprouting provides a managed ingress controller based on nginx. 
+AKS Web Application Routing uses the standard Kubernetes Ingress specification, so the `generic` controller type is sufficient.  
+webapprouting provides a managed ingress controller based on nginx.  
 
-```yaml 
-global: 
-  domain: argocd.example.com 
- 
-configs: 
-  params: 
-    server.insecure: true 
- 
-server: 
-  ingress: 
-    enabled: true 
-    controller: generic 
-    ingressClassName: webapprouting.kubernetes.azure.com 
-    annotations: 
-      # Optional: Add any AKS-specific annotations if needed 
-    extraTls: 
-      - hosts: 
-          - argocd.example.com 
-        # Certificate can be managed by Web Application Routing 
+```yaml  
+global:  
+  domain: argocd.example.com  
+  
+configs:  
+  params:  
+    server.insecure: true  
+  
+server:  
+  ingress:  
+    enabled: true  
+    controller: generic  
+    ingressClassName: webapprouting.kubernetes.azure.com  
+    annotations:  
+      # Optional: Add any AKS-specific annotations if needed  
+    extraTls:  
+      - hosts:  
+          - argocd.example.com  
+        # Certificate can be managed by Web Application Routing  
         secretName: argocd-tls
 ```
 
@@ -355,6 +356,7 @@ spec:
             argocdServerAdminPassword: $2a$10$H1a30nMr9v2QE2nkyz0BoOD2J0I6FQFMtHS0csEg12RBWzfRuuoE6
 ```
 
+
 ## Synchronizing Changes from Original Repository
 
 In the original [Argo CD repository](https://github.com/argoproj/argo-cd/) an [`manifests/install.yaml`](https://github.com/argoproj/argo-cd/blob/master/manifests/install.yaml) is generated using `kustomize`. It's the basis for the installation as [described in the docs](https://argo-cd.readthedocs.io/en/stable/getting_started/#1-install-argo-cd).
@@ -435,6 +437,7 @@ Chart versions from >= 7.7.2 and < 7.9.0 are using a Redis version which is no l
 Thus we downgraded Redis to latest available 7.2 (from 7.4) to be in-line with upstream manifests and fully honor
 [CNCF Allowlist License Policy].
 
+
 **Users using redis-ha may encounter issues** which can be resolved by either deleting all redis-ha pods after the
 deployment/upgrade:
 
@@ -493,7 +496,7 @@ Upstream steps in the [FAQ] are not enough, since we chose a different approach.
 (We use a Kubernetes Job with [Chart Hooks] to create the auth secret `argocd-redis`.)
 
 Steps to rotate the secret when using the helm chart (bold step is additional to upstream):
-* Delete `argocd-redis` secret in the namespace where Argo CD is installed.
+* Delete `argocd-redis` secret in the namespace where Argo CD is installed. 
   ```bash
   kubectl delete secret argocd-redis -n <argocd namespace>
   ```
@@ -517,7 +520,7 @@ Steps to rotate the secret when using the helm chart (bold step is additional to
   ```
 
 ### 6.9.0
-ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9). 
+ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9).  
 
 ### 6.4.0
 
@@ -568,6 +571,7 @@ This version supports Kubernetes version `>=1.23.0-0`. The current supported ver
 
 Please see more information about EoL: [Amazon EKS EoL][EKS EoL].
 
+
 ### 5.31.0
 The manifests are now using [`tini` as entrypoint][tini], instead of `entrypoint.sh`. Until Argo CD v2.8, `entrypoint.sh` is retained for upgrade compatibility.
 This means that the deployment manifests have to be updated after upgrading to Argo CD v2.7, and before upgrading to Argo CD v2.8 later.
@@ -575,7 +579,7 @@ In case the manifests are updated before moving to Argo CD v2.8, the containers 
 
 ### 5.26.0
 
-This version adds support for Config Management Plugins using the sidecar model and configured in a ConfigMap named `argocd-cmp-cm`.
+This version adds support for Config Management Plugins using the sidecar model and configured in a ConfigMap named `argocd-cmp-cm`. 
 Users will need to migrate from the previous `argocd-cm` ConfigMap method to using the sidecar method before Argo CD v2.8. See the [Argo CD CMP migration guide](https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/#migrating-from-argocd-cm-plugins) for more specifics.
 
 To migrate your plugins, you can now set the `configs.cmp.create` to `true` and move your plugins from `configs.cm` to `configs.cmp.plugins`.
@@ -792,6 +796,7 @@ kubeVersionOverride: "1.18.0"
 ```
 
 Then you should no longer encounter this issue.
+
 
 ### 3.0.0 and above
 
@@ -1307,6 +1312,7 @@ NAME: my-release
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
 | server.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the Argo CD server pods |
+| server.rbac.minimal | bool | `false` | Restrict server permissions to minimal set (removes delete/patch on wildcard resources) |
 | server.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | server.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
