@@ -1217,7 +1217,7 @@ NAME: my-release
 | server.extensions.extensionList | list | `[]` (See [values.yaml]) | Extensions for Argo CD |
 | server.extensions.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for extensions |
 | server.extensions.image.repository | string | `"quay.io/argoprojlabs/argocd-extension-installer"` | Repository to use for extension installer image |
-| server.extensions.image.tag | string | `"v0.0.8"` | Tag to use for extension installer image |
+| server.extensions.image.tag | string | `"v0.0.9"` | Tag to use for extension installer image |
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
