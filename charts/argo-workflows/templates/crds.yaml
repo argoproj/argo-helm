@@ -1,0 +1,9 @@
+{{- if .Values.crds.install }}
+{{- $pattern := ternary "files/crds/full/*.yaml" "files/crds/minimal/*.yaml" .Values.crds.full }}
+{{- range $path, $_ :=  .Files.Glob  $pattern }}
+{{- if or (contains "clusterworkflowtemplates" $path | not) $.Values.server.clusterWorkflowTemplates.enabled $.Values.controller.clusterWorkflowTemplates.enabled }}
+---
+{{ include "argo-workflows.insertResourcePolicyAnnotation" (dict "input" ($.Files.Get $path) "value" $.Values.crds.keep) }}
+{{- end }}
+{{- end }}
+{{- end }}
