@@ -59,7 +59,6 @@ metadata:
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
   name: {{ include "argocd-image-updater.fullname" . }}
-  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
 rules:
   - apiGroups:
     - ""
@@ -110,7 +109,6 @@ metadata:
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
   name: {{ include "argocd-image-updater.fullname" . }}
-  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
