@@ -159,7 +159,7 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
-        {{- with .Values.dex.volumeMounts }}
+        {{- with (concat .Values.global.extraVolumeMounts .Values.dex.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - name: static-files
@@ -243,7 +243,7 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-      {{- with .Values.dex.volumes }}
+      {{- with (concat .Values.global.extraVolumes .Values.dex.volumes) }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
       {{- with .Values.dex.dnsConfig }}

@@ -162,6 +162,23 @@ global:
   # -- Environment variables to pass to all deployed Deployments
   env: []
 
+  # -- Extra volumes to add to all deployed Deployments and StatefulSets
+  extraVolumes: []
+  # Example of adding a custom CA bundle from a ConfigMap:
+  # - name: my-root-ca
+  #   configMap:
+  #     name: my-trustbundle
+  #     items:
+  #       - key: bundle.pem
+  #         path: ca-certificates.crt
+
+
+  # -- Extra volume mounts to add to all deployed Deployments and StatefulSets
+  extraVolumeMounts: []
+  # Example of adding a custom CA bundle mount:
+  # - name: my-root-ca
+  #   mountPath: /etc/ssl/certs
+
   # -- Annotations for the all deployed Certificates
   certificateAnnotations: {}
 
