@@ -41,14 +41,14 @@ spec:
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttp }}
     targetPort: {{ .Values.server.containerPorts.server }}
-    {{- if eq .Values.server.service.type "NodePort" }}
+    {{- if and (eq .Values.server.service.type "NodePort") .Values.server.service.nodePortHttp }}
     nodePort: {{ .Values.server.service.nodePortHttp }}
     {{- end }}
   - name: {{ .Values.server.service.servicePortHttpsName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttps }}
     targetPort: {{ .Values.server.containerPorts.server }}
-    {{- if eq .Values.server.service.type "NodePort" }}
+    {{- if and (eq .Values.server.service.type "NodePort") .Values.server.service.nodePortHttps }}
     nodePort: {{ .Values.server.service.nodePortHttps }}
     {{- end }}
     {{- with .Values.server.service.servicePortHttpsAppProtocol }}
