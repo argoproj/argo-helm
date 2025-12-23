@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 while getopts c:d:v: opt; do
   case ${opt} in
     c) chart=${OPTARG} ;;
@@ -39,3 +39,8 @@ sed -i -e '/^  artifacthub.io\/changes: |/,$ d' "${chart_yaml_path}"
   echo "      description: Bump ${dependency_name} to ${dependency_version}"
 } >> "${chart_yaml_path}"
 cat "${chart_yaml_path}"
+
+# If the dependency is argo-workflows, also update CRDs
+if [[ "$dependency_name" == "argo-workflows" ]]; then
+  "$(dirname "$0")/update-argo-workflows-crds.sh" "$dependency_version"
+fi

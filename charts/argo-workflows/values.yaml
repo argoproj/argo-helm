@@ -13,6 +13,9 @@ crds:
   install: true
   # -- Keep CRDs on chart uninstall
   keep: true
+  # -- Use full CRDs with complete OpenAPI schemas. When false, uses minified CRDs with x-kubernetes-preserve-unknown-fields.
+  # Note: Full CRDs are ~7.4MB and may require Server Side Apply (kubectl apply --server-side). See README for details.
+  full: false
   # -- Annotations to be added to all CRDs
   annotations: {}
 
@@ -545,6 +548,8 @@ server:
   serviceType: ClusterIP
   # -- Service port for server
   servicePort: 2746
+  # -- Service target port for server
+  serviceTargetPort: 2746
   # -- Service node port
   serviceNodePort: # 32746
   # -- Service port name
@@ -790,7 +795,7 @@ server:
         #           value: custom-value
 
   # Gateway API BackendTLSPolicy configuration
-  # NOTE: BackendTLSPolicy is in EXPERIMENTAL status (v1alpha3)
+  # NOTE: BackendTLSPolicy support is in EXPERIMENTAL status
   # Required for HTTPS backends when using Gateway API
   # Not all Gateway controllers support this resource (e.g., Cilium does not support it yet)
   backendTLSPolicy:

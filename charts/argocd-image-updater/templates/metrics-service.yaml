@@ -23,4 +23,24 @@ spec:
       targetPort: metrics
   selector:
     {{- include "argocd-image-updater.selectorLabels" . | nindent 4 }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: argocd-image-updater-controller
+    control-plane: argocd-image-updater-controller
+  name: {{ include "argocd-image-updater.fullname" . }}-allow-metrics
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
+spec:
+  ingress:
+  - ports:
+    - port: metrics
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      {{- include "argocd-image-updater.selectorLabels" . | nindent 6 }}
+  policyTypes:
+  - Ingress
 {{- end }}

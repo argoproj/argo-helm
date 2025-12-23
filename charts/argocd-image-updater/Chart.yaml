@@ -2,8 +2,8 @@ apiVersion: v2
 name: argocd-image-updater
 description: A Helm chart for Argo CD Image Updater, a tool to automatically update the container images of Kubernetes workloads which are managed by Argo CD
 type: application
-version: 0.14.0
-appVersion: v0.17.0
+version: 1.0.4
+appVersion: v1.0.2
 home: https://github.com/argoproj-labs/argocd-image-updater
 icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
 keywords:
@@ -19,4 +19,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: Change default value of `.Values.ingress.enabled` to `false`
+      description: fix ServiceMonitor target discovery
