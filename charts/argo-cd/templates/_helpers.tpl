@@ -319,3 +319,21 @@ key: auth
 optional: true
     {{- end -}}
 {{- end -}}
+
+{{/*
+Return the target Kubernetes version
+*/}}
+{{- define "argo-cd.kubeVersion" -}}
+  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
+{{- end -}}
+
+{{/*
+Return the appropriate apiVersion for monitoring CRDs
+*/}}
+{{- define "argo-cd.apiVersions.monitoring" -}}
+{{- if .Values.apiVersionOverrides.monitoring -}}
+{{- print .Values.apiVersionOverrides.monitoring -}}
+{{- else -}}
+{{- print "monitoring.coreos.com/v1" -}}
+{{- end -}}
+{{- end -}}
