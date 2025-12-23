@@ -1,4 +1,4 @@
-{{- if and .Values.server.ingress.enabled (eq .Values.server.ingress.controller "gke") .Values.server.ingress.gke.backendConfig }}
+{{- if and .Values.server.enabled .Values.server.ingress.enabled (eq .Values.server.ingress.controller "gke") .Values.server.ingress.gke.backendConfig }}
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
