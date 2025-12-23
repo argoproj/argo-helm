@@ -222,6 +222,7 @@ spec:
                 name: argocd-cmd-params-cm
                 key: controller.app.state.cache.expiration
                 optional: true
+          {{- if or .Values.redis.enabled .Values.externalRedis.host }}
           - name: REDIS_SERVER
             valueFrom:
               configMapKeyRef:
@@ -260,6 +261,7 @@ spec:
                 name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
                 key: redis-sentinel-password
                 optional: true
+          {{- end }}
           - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
             valueFrom:
               configMapKeyRef:
