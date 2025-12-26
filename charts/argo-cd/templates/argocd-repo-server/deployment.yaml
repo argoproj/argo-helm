@@ -383,6 +383,7 @@ spec:
         - name: metrics
           containerPort: {{ .Values.repoServer.containerPorts.metrics }}
           protocol: TCP
+        {{- if .Values.repoServer.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /healthz?full=true
@@ -392,6 +393,8 @@ spec:
           timeoutSeconds: {{ .Values.repoServer.livenessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.repoServer.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.repoServer.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
             path: /healthz
@@ -401,6 +404,7 @@ spec:
           timeoutSeconds: {{ .Values.repoServer.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.repoServer.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.readinessProbe.failureThreshold }}
+        {{- end }}
         resources:
           {{- toYaml .Values.repoServer.resources | nindent 10 }}
         {{- with .Values.repoServer.containerSecurityContext }}
