@@ -421,6 +421,7 @@ spec:
         - name: metrics
           containerPort: {{ .Values.server.containerPorts.metrics }}
           protocol: TCP
+        {{- if .Values.server.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /healthz?full=true
@@ -430,6 +431,8 @@ spec:
           timeoutSeconds: {{ .Values.server.livenessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.server.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.server.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.server.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
             path: /healthz
@@ -439,6 +442,7 @@ spec:
           timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.server.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
+        {{- end }}
         resources:
           {{- toYaml .Values.server.resources | nindent 10 }}
         {{- with .Values.server.containerSecurityContext }}
