@@ -25,6 +25,10 @@ spec:
   {{- if hasKey $appSetData "goTemplate" }}
   goTemplate: {{ $appSetData.goTemplate }}
   {{- end }}
+  {{- with $appSetData.goTemplateOptions }}
+  goTemplateOptions:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with $appSetData.generators }}
   generators:
     {{- toYaml . | nindent 4 }}
