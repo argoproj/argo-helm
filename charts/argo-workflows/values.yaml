@@ -475,6 +475,14 @@ controller:
   #     name: argo-mysql-config
   #     key: password
 
+  failedPodRestart:
+    # -- Enable to restart of pods that fail before entering Running state.
+    ## This is useful for recovering from transient infrastructure issues like node eviction due to DiskPressure or MemoryPressure without requiring a retryStrategy on every template.
+    ## ref: https://argo-workflows.readthedocs.io/en/latest/pod-restarts/
+    enabled: false
+    # -- Maximum number of automatic restarts per node before giving up.
+    maxRestarts: 3
+
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
   # -- imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`.
