@@ -218,6 +218,8 @@ Fields to note:
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
 | controller.extraEnv | list | `[]` | Extra environment variables to provide to the controller container |
 | controller.extraInitContainers | list | `[]` | Enables init containers to be added to the controller deployment |
+| controller.failedPodRestart.enabled | bool | `false` | Enable to restart of pods that fail before entering Running state. |
+| controller.failedPodRestart.maxRestarts | int | `3` | Maximum number of automatic restarts per node before giving up. |
 | controller.image.registry | string | `"quay.io"` | Registry to use for the controller |
 | controller.image.repository | string | `"argoproj/workflow-controller"` | Registry to use for the controller |
 | controller.image.tag | string | `""` | Image tag for the workflow controller. Defaults to `.Values.images.tag`. |

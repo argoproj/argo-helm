@@ -214,4 +214,7 @@ data:
     {{- with .Values.controller.podGCDeleteDelayDuration }}
     podGCDeleteDelayDuration: {{ . }}
     {{- end }}
+    {{- with .Values.controller.failedPodRestart }}
+    failedPodRestart: {{- toYaml . | nindent 6 }}
+    {{- end }}
 {{- end }}
