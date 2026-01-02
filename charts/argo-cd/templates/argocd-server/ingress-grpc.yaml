@@ -1,4 +1,4 @@
-{{- if .Values.server.ingressGrpc.enabled -}}
+{{- if and .Values.server.enabled .Values.server.ingressGrpc.enabled -}}
 {{- $hostname := printf "grpc.%s" (.Values.server.ingress.hostname | default .Values.global.domain) -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress

@@ -64,6 +64,17 @@ applicationSet:
   replicas: 2
 ```
 
+## Core mode
+
+You can deploy [Argo-CD core](https://argo-cd.readthedocs.io/en/stable/operator-manual/core/) with this chart by disabling the server and dex components:
+
+```yaml
+server:
+    enabled: false
+dex:
+    enabled: false
+```
+
 ## Ingress configuration
 
 Please refer to the [Operator Manual](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingress-configurationh) for details as the samples
@@ -232,7 +243,7 @@ server:
           port: 8080
       frontendConfig:
         redirectToHttps:
-          enabled: true 
+          enabled: true
       managedCertificate:
         enabled: true
 ```
@@ -517,7 +528,7 @@ Steps to rotate the secret when using the helm chart (bold step is additional to
   ```
 
 ### 6.9.0
-ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9). 
+ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9).
 
 ### 6.4.0
 
@@ -1212,6 +1223,7 @@ NAME: my-release
 | server.dnsConfig | object | `{}` | [DNS configuration] |
 | server.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Server pods |
 | server.emptyDir.sizeLimit | string | `""` (defaults not set if not specified i.e. no size limit) | EmptyDir size limit for the Argo CD server |
+| server.enabled | bool | `true` | Enable server |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
 | server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
 | server.extensions.containerSecurityContext | object | See [values.yaml] | Server UI extensions container-level security context |
