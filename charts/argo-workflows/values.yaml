@@ -168,6 +168,9 @@ controller:
     # -- ServiceMonitor will add labels from the service to the Prometheus metric
     ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
     targetLabels: []
+    # -- Manipulate the metrics created by the workflow controller
+    ## Ref: https://argo-workflows.readthedocs.io/en/latest/metrics/#modifiers
+    modifiers: {}
 
   # -- the controller container's securityContext
   securityContext:
