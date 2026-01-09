@@ -1,4 +1,7 @@
 {{- range $extensionName, $extensionData:= .Values.extensions }}
+{{- if not $extensionData }}
+{{- continue }}
+{{- end }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ArgoCDExtension
