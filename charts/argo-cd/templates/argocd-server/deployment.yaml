@@ -393,7 +393,7 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
-        {{- with .Values.server.volumeMounts }}
+        {{- with (concat .Values.global.extraVolumeMounts .Values.server.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - mountPath: /app/config/ssh
@@ -508,7 +508,7 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-      {{- with .Values.server.volumes }}
+      {{- with (concat .Values.global.extraVolumes .Values.server.volumes) }}
         {{- toYaml . | nindent 6}}
       {{- end }}
       {{- if .Values.server.extensions.enabled }}
