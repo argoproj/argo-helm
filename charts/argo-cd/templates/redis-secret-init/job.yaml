@@ -1,4 +1,4 @@
-{{- if and .Values.redisSecretInit.enabled (not .Values.externalRedis.host) }}
+{{- if and .Values.redisSecretInit.enabled (or .Values.redis.enabled (index .Values "redis-ha" "enabled")) (not .Values.externalRedis.host) }}
 apiVersion: batch/v1
 kind: Job
 metadata:

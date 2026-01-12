@@ -232,7 +232,9 @@ NOTE: Configuration keys must be stored as dict because YAML treats dot as separ
 {{- $presets := dict -}}
 {{- $_ := set $presets "repo.server" (printf "%s:%s" (include "argo-cd.repoServer.fullname" .) (.Values.repoServer.service.port | toString)) -}}
 {{- $_ := set $presets "server.repo.server.strict.tls" (.Values.repoServer.certificateSecret.enabled | toString ) -}}
+{{- if or .Values.redis.enabled .Values.externalRedis.host -}}
 {{- $_ := set $presets "redis.server" (include "argo-cd.redis.server" .) -}}
+{{- end -}}
 {{- $_ := set $presets "applicationsetcontroller.enable.leader.election" (gt ((.Values.applicationSet.replicas | default .Values.applicationSet.replicaCount) | int64) 1) -}}
 {{- if .Values.dex.enabled -}}
 {{- $_ := set $presets "server.dex.server" (include "argo-cd.dex.server" .) -}}
@@ -318,4 +320,22 @@ name: "argocd-redis"
 key: auth
 optional: true
     {{- end -}}
+{{- end -}}
+
+{{/*
+Return the target Kubernetes version
+*/}}
+{{- define "argo-cd.kubeVersion" -}}
+  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride }}
+{{- end -}}
+
+{{/*
+Return the appropriate apiVersion for monitoring CRDs
+*/}}
+{{- define "argo-cd.apiVersions.monitoring" -}}
+{{- if .Values.apiVersionOverrides.monitoring -}}
+{{- print .Values.apiVersionOverrides.monitoring -}}
+{{- else -}}
+{{- print "monitoring.coreos.com/v1" -}}
+{{- end -}}
 {{- end -}}

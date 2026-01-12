@@ -166,6 +166,7 @@ spec:
                 name: argocd-cmd-params-cm
                 key: reposerver.repo.cache.expiration
                 optional: true
+          {{- if or .Values.redis.enabled .Values.externalRedis.host }}
           - name: REDIS_SERVER
             valueFrom:
               configMapKeyRef:
@@ -204,6 +205,7 @@ spec:
                 name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
                 key: redis-sentinel-password
                 optional: true
+          {{- end }}
           - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
             valueFrom:
               configMapKeyRef:
@@ -383,6 +385,7 @@ spec:
         - name: metrics
           containerPort: {{ .Values.repoServer.containerPorts.metrics }}
           protocol: TCP
+        {{- if .Values.repoServer.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /healthz?full=true
@@ -392,6 +395,8 @@ spec:
           timeoutSeconds: {{ .Values.repoServer.livenessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.repoServer.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.repoServer.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
             path: /healthz
@@ -401,6 +406,7 @@ spec:
           timeoutSeconds: {{ .Values.repoServer.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.repoServer.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.readinessProbe.failureThreshold }}
+        {{- end }}
         resources:
           {{- toYaml .Values.repoServer.resources | nindent 10 }}
         {{- with .Values.repoServer.containerSecurityContext }}
