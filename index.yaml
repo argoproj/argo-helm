@@ -38332,6 +38332,31 @@ entries:
   argocd-apps:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Allow nullified top level items. E.g. allows the removal of a default Application in a specific environment by setting it to null.
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    created: "2026-01-12T12:04:07.194156072Z"
+    description: A Helm chart for managing additional Argo CD Applications and Projects
+    digest: 69cd6e158da9f6584928954a38708d67a177985cd2dda04da9e90c2677d73adb
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-apps
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-apps-2.0.4/argocd-apps-2.0.4.tgz
+    version: 2.0.4
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: support goTemplateOptions for ApplicationSet
       artifacthub.io/signKey: |
@@ -40840,4 +40865,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-01-09T10:34:44.185066737Z"
+generated: "2026-01-12T12:04:07.196812575Z"
