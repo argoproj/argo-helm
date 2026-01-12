@@ -285,7 +285,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
-            {{- with .Values.applicationSet.extraVolumeMounts }}
+            {{- with (concat .Values.global.extraVolumeMounts .Values.applicationSet.extraVolumeMounts) }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
             - mountPath: /app/config/ssh
@@ -333,7 +333,7 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-        {{- with .Values.applicationSet.extraVolumes }}
+        {{- with (concat .Values.global.extraVolumes .Values.applicationSet.extraVolumes) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - name: ssh-known-hosts
