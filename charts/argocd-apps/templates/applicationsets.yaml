@@ -1,4 +1,7 @@
 {{- range $appSetName, $appSetData:= .Values.applicationsets }}
+{{- if not $appSetData }}
+{{- continue }}
+{{- end }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
