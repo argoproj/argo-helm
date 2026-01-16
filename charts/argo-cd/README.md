@@ -1675,6 +1675,12 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the ApplicationSet controller |
 | applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
+| applicationSet.httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
+| applicationSet.httproute.enabled | bool | `false` | Enable HTTPRoute resource for Argo CD Applicationset Webhook (Gateway API) |
+| applicationSet.httproute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames for the HTTPRoute |
+| applicationSet.httproute.labels | object | `{}` | Additional HTTPRoute labels |
+| applicationSet.httproute.parentRefs | list | `[]` (See [values.yaml]) | Gateway API parentRefs for the HTTPRoute |
+| applicationSet.httproute.rules | list | `[]` (See [values.yaml]) | HTTPRoute rules configuration |
 | applicationSet.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the ApplicationSet controller |
 | applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the ApplicationSet controller |
 | applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the ApplicationSet controller |
