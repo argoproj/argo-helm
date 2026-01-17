@@ -1,0 +1,43 @@
+{{- if .Values.applicationSet.httproute.enabled -}}
+{{- $fullName := include "argo-cd.applicationSet.fullname" . -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "argo-cd.applicationSet.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
+    {{- with .Values.applicationSet.httproute.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.applicationSet.httproute.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs:
+    {{- with .Values.applicationSet.httproute.parentRefs }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.applicationSet.httproute.hostnames }}
+  hostnames:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+    {{- range .Values.applicationSet.httproute.rules }}
+    {{- with .matches }}
+    - matches:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .filters }}
+      filters:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+      backendRefs:
+        - group: ''
+          kind: Service
+          name: {{ include "argo-cd.applicationSet.fullname" . }}
+          port: {{ .Values.applicationSet.service.port }}
+          weight: 1
+    {{- end }}
+{{- end }}
