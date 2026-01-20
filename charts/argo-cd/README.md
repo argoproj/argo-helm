@@ -232,35 +232,35 @@ server:
           port: 8080
       frontendConfig:
         redirectToHttps:
-          enabled: true  
+          enabled: true 
       managedCertificate:
         enabled: true
 ```
 
 ### AKS Application Routing (generic)
 
-AKS Web Application Routing uses the standard Kubernetes Ingress specification, so the `generic` controller type is sufficient.  
-webapprouting provides a managed ingress controller based on nginx.  
+AKS Web Application Routing uses the standard Kubernetes Ingress specification, so the `generic` controller type is sufficient. 
+webapprouting provides a managed ingress controller based on nginx. 
 
-```yaml  
-global:  
-  domain: argocd.example.com  
-  
-configs:  
-  params:  
-    server.insecure: true  
-  
-server:  
-  ingress:  
-    enabled: true  
-    controller: generic  
-    ingressClassName: webapprouting.kubernetes.azure.com  
-    annotations:  
-      # Optional: Add any AKS-specific annotations if needed  
-    extraTls:  
-      - hosts:  
-          - argocd.example.com  
-        # Certificate can be managed by Web Application Routing  
+```yaml 
+global: 
+  domain: argocd.example.com 
+ 
+configs: 
+  params: 
+    server.insecure: true 
+ 
+server: 
+  ingress: 
+    enabled: true 
+    controller: generic 
+    ingressClassName: webapprouting.kubernetes.azure.com 
+    annotations: 
+      # Optional: Add any AKS-specific annotations if needed 
+    extraTls: 
+      - hosts: 
+          - argocd.example.com 
+        # Certificate can be managed by Web Application Routing 
         secretName: argocd-tls
 ```
 
@@ -363,7 +363,7 @@ When installing Argo CD using this helm chart the user should have a similar exp
 
 To update the templates and default settings in `values.yaml` it may come in handy to look up the diff of the `manifests/install.yaml` between two versions accordingly. This can either be done directly via github and look for `manifests/install.yaml`:
 
-<https://github.com/argoproj/argo-cd/compare/v1.8.7...v2.0.0#files_bucket>
+https://github.com/argoproj/argo-cd/compare/v1.8.7...v2.0.0#files_bucket
 
 Or you clone the repository and do a local `git-diff`:
 
@@ -397,7 +397,6 @@ For full list of changes please check ArtifactHub [changelog].
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
 ### 9.1.0
-
 This chart contains a breaking change (if using `redis-ha`), which was introduced by the dependency `redis-ha` (as seen [here](https://github.com/DandyDeveloper/charts/blob/a03b6a6f4d72b6606ce9a218c7d0026350b48ad0/charts/redis-ha/README.md#4341---upgrade-may-complain-about-selector-label-changes-being-immutable)). The upgrade will complain about selector label changes being immutable, which requires a replacement of the `argocd-redis-ha-haproxy` deployment. To overcome this, you will need to delete (orphaning children) this deployment, updated ArgoCD to disable server-side diffing, then allow the new deployment of `argocd-redis-ha-haproxy` to rollout with the updated label selectors.
 
 > Note: If server-side diffing is enabled, you will need to revert this to use client-side diffing, otherwise ArgoCD will be in an Unknown status. More information [here](https://github.com/argoproj/argo-cd/issues/25184). If you happened to upgrade this helm chart before configuring client-side diffing, you will need to delete (orphaning children) the `argocd-redis-ha-haproxy` deployment; once the newest deployment has rolled out, its suggested to cleanup the orphaned ReplicaSets
@@ -405,11 +404,10 @@ This chart contains a breaking change (if using `redis-ha`), which was introduce
 This issue was reported [here](https://github.com/argoproj/argo-helm/issues/3571)
 
 ### 9.0.0
-
 We have removed all parameters under `.Values.configs.params` in this release, with the exception of `create` and `annotations`.
 This is to ensure better alignment with the upstream project, as tracking changes to their default values within the Helm chart has become challenging.
 
-**Though we removed the parameters from values.yaml in argo-helm, we keep providing the interface to override `.Values.configs.params` as the same way.**
+**Though we removed the parameters from values.yaml in argo-helm, we keep providing the interface to override `.Values.configs.params` as the same way. **
 
 **Breaking change**
 
@@ -428,8 +426,8 @@ configs:
 
 In this release we upgrade the Helm chart to deploy the next major version of Argo CD (v3.0.0).
 Please carefully read at least those resources:
-* [v2.14 to 3.0 upgrade instructions]
-* [Argo CD v3.0 Release Blog Post]
+- [v2.14 to 3.0 upgrade instructions]
+- [Argo CD v3.0 Release Blog Post]
 
 ### 7.9.0
 
@@ -445,23 +443,17 @@ kubectl delete pods -l app=redis-ha
 ```
 
 Or alternatively by temporary switching to a single redis installation, then back to HA.
-
 1. Evaluate current chart version in use
-
    ```bash
    $ helm ls
-   NAME   NAMESPACE REVISION UPDATED                               STATUS   CHART          APP VERSION
-   argocd argocd    3        2025-04-29 00:07:43.099922 +0200 CEST deployed argo-cd-7.8.28 v2.14.11
+   NAME  	NAMESPACE	REVISION	UPDATED                              	STATUS  	CHART         	APP VERSION
+   argocd	argocd   	3       	2025-04-29 00:07:43.099922 +0200 CEST	deployed	argo-cd-7.8.28	v2.14.11
    ```
-
 2. Switch to single redis
-
    ```bash
    helm upgrade argocd argo/argo-cd --version <your current chart version> --reuse-values --set redis-ha.enabled=false
    ```
-
 3. Upgrade to chart version 7.9 or newer and re-enable redis HA again
-
    ```bash
    helm upgrade argocd argo/argo-cd --version 7.9.0 --reuse-values --set redis-ha.enabled=true
    ```
@@ -501,42 +493,31 @@ Upstream steps in the [FAQ] are not enough, since we chose a different approach.
 (We use a Kubernetes Job with [Chart Hooks] to create the auth secret `argocd-redis`.)
 
 Steps to rotate the secret when using the helm chart (bold step is additional to upstream):
-
 * Delete `argocd-redis` secret in the namespace where Argo CD is installed.
-
   ```bash
   kubectl delete secret argocd-redis -n <argocd namespace>
   ```
-
 * **Perform a helm upgrade**
-
   ```bash
   helm upgrade argocd argo/argo-cd --reuse-values --wait
   ```
-
 * If you are running Redis in HA mode, restart Redis in HA.
-
   ```bash
   kubectl rollout restart deployment argocd-redis-ha-haproxy
   kubectl rollout restart statefulset argocd-redis-ha-server
   ```
-
 * If you are running Redis in non-HA mode, restart Redis.
-
   ```bash
   kubectl rollout restart deployment argocd-redis
   ```
-
 * Restart other components.
-
   ```bash
   kubectl rollout restart deployment argocd-server argocd-repo-server
   kubectl rollout restart statefulset argocd-application-controller
   ```
 
 ### 6.9.0
-
-ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9).  
+ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9). 
 
 ### 6.4.0
 
@@ -588,7 +569,6 @@ This version supports Kubernetes version `>=1.23.0-0`. The current supported ver
 Please see more information about EoL: [Amazon EKS EoL][EKS EoL].
 
 ### 5.31.0
-
 The manifests are now using [`tini` as entrypoint][tini], instead of `entrypoint.sh`. Until Argo CD v2.8, `entrypoint.sh` is retained for upgrade compatibility.
 This means that the deployment manifests have to be updated after upgrading to Argo CD v2.7, and before upgrading to Argo CD v2.8 later.
 In case the manifests are updated before moving to Argo CD v2.8, the containers will not be able to start.
@@ -667,9 +647,9 @@ done
 
 This version **removes support for**:
 
-* deprecated repository credentials (parameter `configs.repositoryCredentials`)
-* option to run application controller as a Deployment
-* the parameters `server.additionalApplications` and `server.additionalProjects`
+- deprecated repository credentials (parameter `configs.repositoryCredentials`)
+- option to run application controller as a Deployment
+- the parameters `server.additionalApplications` and `server.additionalProjects`
 
 Please carefully read the following section if you are using these parameters!
 
@@ -731,9 +711,9 @@ for project in "guestbook"; do
 done
 ```
 
-1. Upgrade argo-cd Helm chart to v5.0.0
+2. Upgrade argo-cd Helm chart to v5.0.0
 
-2. Remove keep [helm.sh/resource-policy annotation](https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource)
+3. Remove keep [helm.sh/resource-policy annotation](https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource)
 
 ```bash
 # delete annotations from Applications
@@ -747,7 +727,7 @@ for project in "guestbook"; do
 done
 ```
 
-1. Adopt existing resources to [argocd-apps](../argocd-apps)
+4. Adopt existing resources to [argocd-apps](../argocd-apps)
 
 ### 4.9.0
 
@@ -847,10 +827,10 @@ server:
 
 ## Prerequisites
 
-* Kubernetes: `>=1.25.0-0`
-  * We align with [Amazon EKS calendar][EKS EoL] because there are many AWS users and it's a conservative approach.
-  * Please check [Support Matrix of Argo CD][Kubernetes Compatibility Matrix] for official info.
-* Helm v3.0.0+
+- Kubernetes: `>=1.25.0-0`
+  - We align with [Amazon EKS calendar][EKS EoL] because there are many AWS users and it's a conservative approach.
+  - Please check [Support Matrix of Argo CD][Kubernetes Compatibility Matrix] for official info.
+- Helm v3.0.0+
 
 ## Installing the Chart
 
@@ -1004,13 +984,13 @@ NAME: my-release
 | controller.deploymentLabels | object | `{}` | Labels for the application controller Deployment |
 | controller.dnsConfig | object | `{}` | [DNS configuration] |
 | controller.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for application controller pods |
-| controller.dynamicClusterDistribution | bool | `false` | Enable dynamic cluster distribution (alpha) Ref: <https://argo-cd.readthedocs.io/en/stable/operator-manual/dynamic-cluster-distribution> |
+| controller.dynamicClusterDistribution | bool | `false` | Enable dynamic cluster distribution (alpha) Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/dynamic-cluster-distribution |
 | controller.emptyDir.sizeLimit | string | `""` (defaults not set if not specified i.e. no size limit) | EmptyDir size limit for application controller |
 | controller.env | list | `[]` | Environment variables to pass to application controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to application controller |
 | controller.extraContainers | list | `[]` | Additional containers to be added to the application controller pod |
-| controller.heartbeatTime | int | `10` | Application controller heartbeat time Ref: <https://argo-cd.readthedocs.io/en/stable/operator-manual/dynamic-cluster-distribution/#working-of-dynamic-distribution> |
+| controller.heartbeatTime | int | `10` | Application controller heartbeat time Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/dynamic-cluster-distribution/#working-of-dynamic-distribution |
 | controller.hostNetwork | bool | `false` | Host Network for application controller pods |
 | controller.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application controller |
 | controller.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the application controller |
@@ -1091,7 +1071,7 @@ NAME: my-release
 | repoServer.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. |
 | repoServer.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the repo server |
 | repoServer.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the repo server [HPA] |
-| repoServer.autoscaling.metrics | list | `[]` | Configures custom HPA metrics for the Argo CD repo server Ref: <https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/> |
+| repoServer.autoscaling.metrics | list | `[]` | Configures custom HPA metrics for the Argo CD repo server Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ |
 | repoServer.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the repo server [HPA] |
 | repoServer.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the repo server [HPA] |
 | repoServer.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the repo server [HPA] |
@@ -1197,7 +1177,7 @@ NAME: my-release
 | server.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. |
 | server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Argo CD server |
 | server.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the Argo CD server [HPA] |
-| server.autoscaling.metrics | list | `[]` | Configures custom HPA metrics for the Argo CD server Ref: <https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/> |
+| server.autoscaling.metrics | list | `[]` | Configures custom HPA metrics for the Argo CD server Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ |
 | server.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Argo CD server [HPA] |
 | server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the Argo CD server [HPA] |
 | server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo CD server [HPA] |
@@ -1576,7 +1556,7 @@ NAME: my-release
 
 ### Option 2 - Redis HA
 
-This option uses the following third-party chart to bootstrap a clustered Redis: <https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha>.
+This option uses the following third-party chart to bootstrap a clustered Redis: https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha.
 For all available configuration options, please read upstream README and/or chart source.
 The main options are listed here:
 
@@ -1930,12 +1910,14 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 
 [Argo CD RBAC policy]: https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/
 [affinity]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+[BackendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-configuration#backendconfigspec_v1beta1_cloudgooglecom
 [CSS styles]: https://argo-cd.readthedocs.io/en/stable/operator-manual/custom-styles/
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-cd?modal=changelog
 [Chart Hooks]: https://helm.sh/docs/topics/charts_hooks/
 [DNS configuration]: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 [external cluster credentials]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
 [FAQ]: https://argo-cd.readthedocs.io/en/stable/faq/
+[FrontendConfigSpec]: https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-configuration#configuring_ingress_features_through_frontendconfig_parameters
 [declarative setup]: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup
 [gRPC-ingress]: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
 [GnuPG]: https://argo-cd.readthedocs.io/en/stable/user-guide/gpg-verification/
@@ -1952,6 +1934,7 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [tini]: https://github.com/argoproj/argo-cd/pull/12707
 [EKS EoL]: https://endoflife.date/amazon-eks
 [Kubernetes Compatibility Matrix]: https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/#supported-versions
+[Applications in any namespace]: https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/#applications-in-any-namespace
 [Argo CD Extensions]: https://github.com/argoproj-labs/argocd-extensions?tab=readme-ov-file#deprecation-notice
 [Argo CD Extension Installer]: https://github.com/argoproj-labs/argocd-extension-installer
 [Argo CD Manifest Hydrator]: https://argo-cd.readthedocs.io/en/stable/proposals/manifest-hydrator/
