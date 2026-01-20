@@ -851,8 +851,9 @@ NAME: my-release
 |-----|------|---------|-------------|
 | apiVersionOverrides | object | `{}` |  |
 | azure.workloadIdentity.clientId | string | `nil` | Client Id of the workload identity to be used to pull artifacts |
-| azure.workloadIdentity.enable | bool | `false` | Enable\Disable Azure workload identity |
+| azure.workloadIdentity.enabled | bool | `false` | Enable\Disable Azure workload identity |
 | azure.workloadIdentity.entraSSOClientId | string | `nil` | Client Id of the workload identity to be used to Entra SSO, can be same as clientId |
+| azure.workloadIdentity.tenantId | string | `nil` | Tenant Id of the workload identity. |
 | crds.additionalLabels | object | `{}` | Additional labels to be added to all CRDs |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |

@@ -4290,7 +4290,13 @@ commitServer:
 
 azure:
   workloadIdentity:
-    enable: false
+    # -- Enable\Disable Azure workload identity
+    # @default -- `false`
+    enabled: false
+    # -- Client Id of the workload identity to be used to pull artifacts
     clientId:
+    # --  Client Id of the workload identity to be used to Entra SSO, can be same as clientId
     entraSSOClientId:
+    # --  Tenant Id of the workload identity.
+    tenantId :
 

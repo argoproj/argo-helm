@@ -43,7 +43,7 @@ spec:
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.server.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- if .Values.azure.workloadIdentity.enable }}
+        {{- if .Values.azure.workloadIdentity.enabled }}
         azure.workload.identity/use: "true"
         {{- end }}
     spec:
