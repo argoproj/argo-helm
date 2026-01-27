@@ -237,6 +237,9 @@ configs:
     #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
     #   clientID: aaaabbbbccccddddeee
     #   clientSecret: $oidc.azuread.clientSecret
+    #   # Optional: set to true to use Azure Workload Identity instead of clientSecret
+    #   azure:
+    #     useWorkloadIdentity: false
 
     # Some OIDC providers require a separate clientID for different callback URLs.
     # For example, if configuring Argo CD with self-hosted Dex, you will need a separate client ID
