@@ -40,10 +40,6 @@ rules:
   - get
   - watch
   - list
-  {{- if .Values.controller.rbac.writeConfigMaps }}
-  - create
-  - update
-  {{- end}}
 - apiGroups:
   - ""
   resources:
@@ -169,6 +165,15 @@ rules:
   - update
   - patch
   - delete
+{{- if .Values.controller.rbac.writeConfigMaps }}
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - update
+{{- end}}
 {{- if .Values.controller.rbac.accessAllSecrets }}
 - apiGroups:
   - ""
