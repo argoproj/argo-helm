@@ -10,18 +10,20 @@ If you want your deployment of this helm chart to most closely match the [argo C
 
 #### Full vs Minified CRDs
 
-By default, this chart installs the **minified CRDs** (which use `x-kubernetes-preserve-unknown-fields` to accept any fields).
-These are smaller in size but provide almost no validation.
-This is the default in upstream manifests.
+This chart supports two CRD variants:
 
-If you prefer to use the **full CRDs** with complete OpenAPI schemas (recommended for better validation and type safety), you can set:
+- **Full CRDs** (default): Include complete OpenAPI schemas for better validation and type safety. These are approximately 7.4MB total.
+- **Minified CRDs**: Use `x-kubernetes-preserve-unknown-fields` to accept any fields. Smaller but provide almost no validation.
+
+As of Argo Workflows version 4, full CRDs are the default as they are upstream.
+To use minified CRDs instead:
 
 ```bash
---set crds.full=true
+--set crds.full=false
 ```
 
-**Important:** Full CRDs are approximately 7.4MB total and will most likely need to be applied using Server Side Apply to avoid hitting size limits.
-When installing manually with kubectl, use:
+**Important:** Due to their size, full CRDs require Server Side Apply.
+When installing manually with kubectl:
 
 ```bash
 kubectl apply --server-side --force-conflicts -k "https://github.com/argoproj/argo-workflows/manifests/base/crds/full?ref=v<argoVersion>"
@@ -225,7 +227,7 @@ Fields to note:
 | apiVersionOverrides.monitoring | string | `""` | String to override apiVersion of monitoring CRDs (ServiceMonitor) rendered by this helm chart |
 | commonLabels | object | `{}` | Labels to set on all resources |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
-| crds.full | bool | `false` | Use full CRDs with complete OpenAPI schemas. When false, uses minified CRDs with x-kubernetes-preserve-unknown-fields. Note: Full CRDs are ~7.4MB and may require Server Side Apply (kubectl apply --server-side). See README for details. |
+| crds.full | bool | `true` | Use full CRDs with complete OpenAPI schemas. When false, uses minified CRDs with x-kubernetes-preserve-unknown-fields. Note: Full CRDs are ~7.4MB and may require Server Side Apply (kubectl apply --server-side). See README for details. |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `true` | Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs. |
