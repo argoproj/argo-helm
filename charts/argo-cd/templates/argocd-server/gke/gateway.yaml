@@ -1,0 +1,80 @@
+{{- if and .Values.server.gateway.enabled (eq .Values.server.gateway.controller "gke") }}
+{{- $servicePort := eq $insecure "true" | ternary .Values.server.service.servicePortHttp .Values.server.service.servicePortHttps -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    {{- with .Values.server.gateway.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- range $key, $value := .Values.server.gateway.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  {{- with .Values.server.gateway.gatewayClassName }}
+  gatewayClassName: {{ . }}
+  {{- end }}
+  listeners:
+  {{- if .Values.server.gateway.http }}
+  - name: http
+    protocol: HTTP
+    port: {{ .Values.server.gateway.http.port | default "80" }}
+  {{- end }}
+  {{- if .Values.server.gateway.https }}
+    protocol: HTTPS
+    port: {{ .Values.server.gateway.https.port | default "443" }}
+    tls:
+      mode: {{ .Values.server.gateway.https.mode | default "Terminate" }}
+      options:
+        {{- range $key, $value := .Values.server.gateway.https.options }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+  {{- end }}
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    {{- with .Values.server.gateway.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  parentRefs:
+  - name: {{ include "argo-cd.server.fullname" $ }}
+  hostnames:
+  - {{ include "argo-cd.server.fullname" $ }}
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: {{ .Values.server.gateway.path | default "/" }}
+    backendRefs:
+    - name: {{ include "argo-cd.server.fullname" . }}
+      kind: Service
+      port: {{ $servicePort }}
+
+{{- if .Values.server.gateway.gcpglobalpolicy }}
+---
+apiVersion: networking.gke.io/v1
+kind: GCPGatewayPolicy
+metadata:
+  name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+spec:
+  default:
+    allowGlobalAccess: true
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: {{ include "argo-cd.server.fullname" . }}
+
+{{- end }}
+
+{{- end }}
