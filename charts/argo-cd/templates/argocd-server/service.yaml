@@ -44,6 +44,9 @@ spec:
     {{- if and (eq .Values.server.service.type "NodePort") .Values.server.service.nodePortHttp }}
     nodePort: {{ .Values.server.service.nodePortHttp }}
     {{- end }}
+    {{- with .Values.server.service.servicePortHttpAppProtocol }}
+    appProtocol: {{ . }}
+    {{- end }}
   - name: {{ .Values.server.service.servicePortHttpsName }}
     protocol: TCP
     port: {{ .Values.server.service.servicePortHttps }}

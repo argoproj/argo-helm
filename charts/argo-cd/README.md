@@ -1336,6 +1336,7 @@ NAME: my-release
 | server.service.nodePortHttp | int | `30080` | Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort") |
 | server.service.nodePortHttps | int | `30443` | Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort") |
 | server.service.servicePortHttp | int | `80` | Server service http port |
+| server.service.servicePortHttpAppProtocol | string | `""` | Server service http port appProtocol |
 | server.service.servicePortHttpName | string | `"http"` | Server service http port name, can be used to route traffic via istio |
 | server.service.servicePortHttps | int | `443` | Server service https port |
 | server.service.servicePortHttpsAppProtocol | string | `""` | Server service https port appProtocol |

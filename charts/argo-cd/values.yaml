@@ -2331,6 +2331,9 @@ server:
     servicePortHttpName: http
     # -- Server service https port name, can be used to route traffic via istio
     servicePortHttpsName: https
+    # -- Server service http port appProtocol
+    ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol
+    servicePortHttpAppProtocol: ""
     # -- Server service https port appProtocol
     ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol
     servicePortHttpsAppProtocol: ""
