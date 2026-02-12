@@ -216,12 +216,14 @@ authScripts:
     #   #!/bin/sh
     #   echo "auth script 2 here"
     # azure-workload-identity.sh: |
-    #   #!/bin:sh
-    #   # Example script for Azure Workload Identity.
-    #   # This script would typically use environment variables set by the workload identity
-    #   # to acquire an Azure AD token and authenticate with Azure Container Registry (ACR).
-    #   # It should output the Docker username and password on stdout, e.g., '00000000-0000-0000-0000-000000000000:<token>'
-
+    # Example script for Azure Workload Identity.
+    # #!/bin:sh
+    # set -eo pipefail
+    # AAD_ACCESS_TOKEN=$(cat $AZURE_FEDERATED_TOKEN_FILE)
+    # ACCESS_TOKEN=$(wget --output-document - --header "Content-Type: application/x-www-form-urlencoded" --post-data="grant_type=client_credentials&client_id=${AZURE_CLIENT_ID}&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&scope=https://management.azure.com/.default&client_assertion=${AAD_ACCESS_TOKEN}" https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/token | python3 -c "import sys, json; print(json.load(sys.stdin)['access_token'])")
+    # ACR_REFRESH_TOKEN=$(wget --quiet --header="Content-Type: application/x-www-form-urlencoded" --post-data="grant_type=access_token&service=${ACR_NAME}&access_token=${ACCESS_TOKEN}" --output-document - "https://${ACR_NAME}/oauth2/exchange" | python3 -c "import sys, json; print(json.load(sys.stdin)['refresh_token'])")
+    # echo "00000000-0000-0000-0000-000000000000:$ACR_REFRESH_TOKEN"
+    
 serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
