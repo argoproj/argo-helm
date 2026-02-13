@@ -209,18 +209,13 @@ authScripts:
   ## Authentication scripts can be used for various cloud providers like ECR or Azure Workload Identity.
   ## For Azure Workload Identity, you can place your authentication script here to handle token acquisition.
   scripts: {}
-    # auth1.sh: |
-    #   #!/bin/sh
-    #   echo "auth script 1 here"
-    # auth2.sh: |
-    #   #!/bin/sh
-    #   echo "auth script 2 here"
     # azure-workload-identity.sh: |
-    #   #!/bin:sh
-    #   # Example script for Azure Workload Identity.
-    #   # This script would typically use environment variables set by the workload identity
-    #   # to acquire an Azure AD token and authenticate with Azure Container Registry (ACR).
-    #   # It should output the Docker username and password on stdout, e.g., '00000000-0000-0000-0000-000000000000:<token>'
+    # Example Script for Azure Workload Identity:
+    #  #!/bin:sh
+    # TOKEN=$(cat $AZURE_FEDERATED_TOKEN_FILE)
+    # ACCESS_TOKEN=$(curl -s -X POST "https://login.microsoftonline.com/$AZURE_TENANT_ID/oauth2/v2.0/token" -d "grant_type=client_credentials&client_id=$AZURE_CLIENT_ID&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=$TOKEN&scope=https://management.azure.com/.default" | jq -r '.access_token')
+    # REFRESH_TOKEN=$(curl -s "https://${ACR_NAME}.azurecr.io/oauth2/exchange" -d "grant_type=access_token&service=${ACR_NAME}.azurecr.io&access_token=$ACCESS_TOKEN" | jq -r '.refresh_token')
+    # echo "00000000-0000-0000-0000-000000000000:$REFRESH_TOKEN"
 
 serviceAccount:
   # -- Specifies whether a service account should be created
