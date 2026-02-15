@@ -39456,6 +39456,33 @@ entries:
   argocd-image-updater:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Fix shebang line in azure-workload-identity example
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.1.0
+    created: "2026-02-15T17:26:35.517630889Z"
+    description: A Helm chart for Argo CD Image Updater, a tool to automatically update
+      the container images of Kubernetes workloads which are managed by Argo CD
+    digest: e847d12332917ec79859d59373bec9a8160ae3fe7dfd07d0be2a8469d116a7d1
+    home: https://github.com/argoproj-labs/argocd-image-updater
+    icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-image-updater
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-image-updater-1.1.1/argocd-image-updater-1.1.1.tgz
+    version: 1.1.1
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Bump argocd-image-updater to v1.1.0
       artifacthub.io/signKey: |
@@ -41453,4 +41480,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-02-14T11:43:19.566328623Z"
+generated: "2026-02-15T17:26:35.51946344Z"
