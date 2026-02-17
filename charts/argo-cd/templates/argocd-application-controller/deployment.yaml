@@ -228,10 +228,7 @@ spec:
                 optional: true
           - name: REDIS_SERVER
             valueFrom:
-              configMapKeyRef:
-                name: argocd-cmd-params-cm
-                key: redis.server
-                optional: true
+              {{- include "argo-cd.redisServerEnvRef" . | nindent 14 }}
           - name: REDIS_COMPRESSION
             valueFrom:
               configMapKeyRef:
