@@ -65,6 +65,7 @@ spec:
                       description: |-
                         CommonUpdateSettings overrides the global CommonUpdateSettings for applications
                         matched by this selector.
+                        This field is ignored when UseAnnotations is true.
                       properties:
                         allowTags:
                           description: |-
@@ -111,6 +112,7 @@ spec:
                         Images contains a list of configurations that how images should be updated.
                         These rules apply to applications selected by namePattern in ApplicationRefs, and each
                         image can override global/ApplicationRef settings.
+                        This field is ignored when UseAnnotations is true.
                       items:
                         description: |-
                           ImageConfig defines how a specific container image should be discovered, updated,
@@ -190,25 +192,23 @@ spec:
                                     description: |-
                                       Name is the dot-separated path to the Helm key for the image repository/name part.
                                       Example: "image.repository", "frontend.deployment.image.name".
-                                      This field is required if the Helm target is used.
+                                      If neither spec nor name/tag are set, defaults to "image.name".
+                                      If spec is set, this field is ignored.
                                     type: string
                                   spec:
                                     description: |-
-                                      Spec is an optional dot-separated path to a Helm key where the full image string
+                                      Spec is the dot-separated path to a Helm key where the full image string
                                       (e.g., "image/name:1.0") should be written.
                                       Use this if your Helm chart expects the entire image reference in a single field,
-                                      rather than separate name/tag fields. If this is set, other Helm parameter-related
-                                      options will be ignored.
+                                      rather than separate name/tag fields. If this is set, name and tag will be ignored.
                                     type: string
                                   tag:
                                     description: |-
                                       Tag is the dot-separated path to the Helm key for the image tag part.
                                       Example: "image.tag", "frontend.deployment.image.version".
-                                      This field is required if the Helm target is used.
+                                      If neither spec nor name/tag are set, defaults to "image.tag".
+                                      If spec is set, this field is ignored.
                                     type: string
-                                required:
-                                - name
-                                - tag
                                 type: object
                               kustomize:
                                 description: |-
@@ -235,7 +235,6 @@ spec:
                         - alias
                         - imageName
                         type: object
-                      minItems: 1
                       type: array
                       x-kubernetes-list-map-keys:
                       - alias
@@ -291,10 +290,21 @@ spec:
                       description: NamePattern indicates the glob pattern for application
                         name
                       type: string
+                    useAnnotations:
+                      default: false
+                      description: |-
+                        UseAnnotations When true, read image configuration from Application's
+                        argocd-image-updater.argoproj.io/* annotations instead of
+                        requiring explicit Images[] configuration in this CR.
+                        When this field is set to true, only namePattern and labelSelectors are used for
+                        application selection. All other fields (CommonUpdateSettings, WriteBackConfig, Images)
+                        are ignored.
+                      type: boolean
                     writeBackConfig:
                       description: |-
                         WriteBackConfig overrides the global WriteBackConfig settings for applications
                         matched by this selector.
+                        This field is ignored when UseAnnotations is true.
                       properties:
                         gitConfig:
                           description: |-
@@ -332,9 +342,13 @@ spec:
                       - method
                       type: object
                   required:
-                  - images
                   - namePattern
                   type: object
+                  x-kubernetes-validations:
+                  - message: Either useAnnotations must be true, or images must be
+                      provided with at least one item
+                    rule: '!(has(self.useAnnotations) && self.useAnnotations == true)
+                      ? (has(self.images) && size(self.images) > 0) : true'
                 minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:

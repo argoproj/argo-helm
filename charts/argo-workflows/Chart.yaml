@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v3.7.9
+appVersion: v3.7.10
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 0.47.3
+version: 0.47.4
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -16,5 +16,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Remove create/update permissions for namespaces added by "controller.rbac.writeConfigmaps"
+    - kind: changed
+      description: Bump argo-workflows to v3.7.10
