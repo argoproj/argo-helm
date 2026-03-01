@@ -64,14 +64,40 @@ Create redis name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Return Redis server endpoint
+Return Redis server endpoint (empty when endpoint is read from existingSecret via existingSecretServerKey)
 */}}
 {{- define "argo-cd.redis.server" -}}
 {{- $redisHa := (index .Values "redis-ha") -}}
 {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
     {{- printf "%s:%s" (include "argo-cd.redis.fullname" .)  (toString .Values.redis.servicePort) }}
+{{- else if and .Values.externalRedis.existingSecret .Values.externalRedis.existingSecretServerKey }}
+    {{- /* Endpoint from secret; do not output here */ -}}
 {{- else if and .Values.externalRedis.host .Values.externalRedis.port }}
     {{- printf "%s:%s" .Values.externalRedis.host (toString .Values.externalRedis.port) }}
+{{- end }}
+{{- end -}}
+
+{{/*
+True when external Redis is in use (host set or endpoint from existingSecret)
+*/}}
+{{- define "argo-cd.externalRedis.inUse" -}}
+{{- or .Values.externalRedis.host (and .Values.externalRedis.existingSecret .Values.externalRedis.existingSecretServerKey) -}}
+{{- end -}}
+
+{{/*
+valueFrom block for REDIS_SERVER env: secretKeyRef when endpoint comes from existingSecret, else configMapKeyRef
+*/}}
+{{- define "argo-cd.redisServerEnvRef" -}}
+{{- if and .Values.externalRedis.existingSecret .Values.externalRedis.existingSecretServerKey }}
+secretKeyRef:
+  name: {{ .Values.externalRedis.existingSecret }}
+  key: {{ .Values.externalRedis.existingSecretServerKey }}
+  optional: false
+{{- else }}
+configMapKeyRef:
+  name: argocd-cmd-params-cm
+  key: redis.server
+  optional: true
 {{- end }}
 {{- end -}}
 

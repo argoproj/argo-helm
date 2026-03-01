@@ -1603,6 +1603,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | externalRedis.existingSecret | string | `""` | The name of an existing secret with Redis (must contain key `redis-password`. And should contain `redis-username` if username is not `default`) and Sentinel credentials. When it's set, the `externalRedis.username` and `externalRedis.password` parameters are ignored |
+| externalRedis.existingSecretServerKey | string | `""` | When set, the Redis server endpoint (host:port) is read from the existing secret under this key (e.g. `redis-server`). When it's set, `externalRedis.host` and `externalRedis.port` are ignored for the endpoint. The secret value must be in "host:port" format. |
 | externalRedis.host | string | `""` | External Redis server host |
 | externalRedis.password | string | `""` | External Redis password |
 | externalRedis.port | int | `6379` | External Redis server port |
