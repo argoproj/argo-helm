@@ -76,6 +76,9 @@ global:
   # -- Annotations for the all deployed Statefulsets
   statefulsetAnnotations: {}
 
+  # -- Labels for the all deployed Statefulsets
+  statefulsetLabels: {}
+
   # -- Annotations for the all deployed Deployments
   deploymentAnnotations: {}
 
@@ -898,6 +901,9 @@ controller:
 
   # -- Annotations for the application controller StatefulSet
   statefulsetAnnotations: {}
+
+  # -- Labels for the application controller StatefulSet
+  statefulsetLabels: {}
 
   # -- Annotations for the application controller Deployment
   deploymentAnnotations: {}
@@ -2650,6 +2656,9 @@ server:
         #       add:
         #         - name: X-Custom-Header
         #           value: custom-value
+        # timeouts:
+        #   request: 10s
+        #   backendRequest: 2s
 
   # Gateway API GRPCRoute configuration
   # NOTE: Gateway API support is in EXPERIMENTAL status
