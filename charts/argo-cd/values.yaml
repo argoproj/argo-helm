@@ -1188,7 +1188,7 @@ dex:
     # -- Dex image repository
     repository: ghcr.io/dexidp/dex
     # -- Dex image tag
-    tag: v2.44.0
+    tag: v2.45.1
     # -- Dex imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1307,6 +1307,7 @@ dex:
   # @default -- See [values.yaml]
   containerSecurityContext:
     runAsNonRoot: true
+    runAsUser: 1001
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
     seccompProfile:
