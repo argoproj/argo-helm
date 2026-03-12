@@ -37,22 +37,7 @@ You can customize the kubectl image, image pull secrets, and CRD source URL via 
 
 #### Using Argo CD
 
-Argo CD supports Server Side Apply natively. When deploying this chart via Argo CD, you can either rely on the hook Job or use Argo CD's built-in SSA:
-
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: argo-workflows
-spec:
-  syncPolicy:
-    syncOptions:
-    - ServerSideApply=true
-  source:
-    chart: argo-workflows
-    repoURL: https://argoproj.github.io/argo-helm
-    targetRevision: 0.xx.xx
-```
+Argo CD supports Helm hooks natively by converting them to Argo CD PreSync hooks. The CRD install hook Job will run automatically during Argo CD sync — no special configuration is required.
 
 #### Installing CRDs Outside the Chart
 
