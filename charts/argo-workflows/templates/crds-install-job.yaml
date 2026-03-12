@@ -1,5 +1,5 @@
 {{- if and .Values.crds.install .Values.crds.full }}
-{{- $crdInstallName := printf "%s-crd-install" (include "argo-workflows.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- $crdInstallName := printf "%s-crd-install" (include "argo-workflows.fullname" . | trunc 51 | trimSuffix "-") }}
 ---
 apiVersion: v1
 kind: ServiceAccount
