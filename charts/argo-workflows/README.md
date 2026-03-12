@@ -12,34 +12,32 @@ If you want your deployment of this helm chart to most closely match the [argo C
 
 This chart supports two CRD variants:
 
-- **Full CRDs** (default): Include complete OpenAPI schemas for better validation and type safety. These are approximately 7.4MB total.
+- **Full CRDs** (default): Include complete OpenAPI schemas for better validation and type safety. These are approximately 11MB total uncompressed.
 - **Minified CRDs**: Use `x-kubernetes-preserve-unknown-fields` to accept any fields. Smaller but provide almost no validation.
 
-As of Argo Workflows version 4, full CRDs are the default as they are upstream.
+As of Argo Workflows version 4, full CRDs are the default, matching upstream.
+
 To use minified CRDs instead:
 
 ```bash
---set crds.full=false
+helm install my-release argo/argo-workflows --set crds.full=false
 ```
 
-**Important:** Due to their size, full CRDs require Server Side Apply.
-When installing manually with kubectl:
+#### How the full CRDs are installed
 
-```bash
-kubectl apply --server-side --force-conflicts -k "https://github.com/argoproj/argo-workflows/manifests/base/crds/full?ref=v<argoVersion>"
-```
+Full CRDs are too large to include directly in Helm templates (they would exceed the Kubernetes Secret size limit that Helm uses to store releases). Instead, this chart uses a **pre-install/pre-upgrade hook Job** that downloads and applies CRDs from this chart's GitHub release tag using `kubectl apply --server-side --force-conflicts`.
 
-Note: Helm 3 does not natively support Server Side Apply.
-If you encounter issues installing full CRDs via Helm (such as "Too long" errors), you have two options:
+This means `helm install` works out of the box with full CRDs — no manual steps required. The hook Job requires:
 
-**Option 1: Manual kubectl apply**
+- A `kubectl` image (defaults to `registry.k8s.io/kubectl`)
+- ClusterRole permissions to create/update CRDs (created automatically as hook resources)
+- Network access to `raw.githubusercontent.com` from the cluster (to download the CRD manifests)
 
-1. Apply the CRDs manually using kubectl with `--server-side` as shown above
-2. Install the chart with `--set crds.install=false` to skip CRD installation
+You can customize the kubectl image, image pull secrets, and CRD source URL via `crds.upgradeJob` values (see values table below).
 
-**Option 2: Use ArgoCD with Server Side Apply**
+#### Using Argo CD
 
-ArgoCD supports Server Side Apply for Helm charts. To enable it, set the sync option in your Application manifest:
+Argo CD supports Server Side Apply natively. When deploying this chart via Argo CD, you can either rely on the hook Job or use Argo CD's built-in SSA:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -54,10 +52,6 @@ spec:
     chart: argo-workflows
     repoURL: https://argoproj.github.io/argo-helm
     targetRevision: 0.xx.xx
-    helm:
-      values: |
-        crds:
-          full: true
 ```
 
 #### Installing CRDs Outside the Chart
@@ -66,14 +60,14 @@ Some users would prefer to install the CRDs _outside_ of the chart. You can disa
 
 Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations). Starting with 3.4.0 (chart version 0.19.0), the CRDs have been moved to `<chart>/templates` to address this design decision.
 
-If you are using Argo Workflows chart version prior to 3.4.0 (chart version 0.19.0) or have elected to manage the Argo Workflows CRDs outside of the chart, please use `kubectl` to upgrade CRDs manually from [files/crds/full](files/crds/full/) or [files/crds/minimal](files/crds/minimal/) folders, or via the manifests from the upstream project repo:
+If you are managing CRDs outside the chart, apply them manually:
 
 ```bash
 # For full CRDs (requires Server Side Apply due to size)
 kubectl apply --server-side --force-conflicts -k "https://github.com/argoproj/argo-workflows/manifests/base/crds/full?ref=<appVersion>"
 
-# Eg. version v3.7.3
-kubectl apply --server-side --force-conflicts -k "https://github.com/argoproj/argo-workflows/manifests/base/crds/full?ref=v3.7.3"
+# Eg. version v4.0.2
+kubectl apply --server-side --force-conflicts -k "https://github.com/argoproj/argo-workflows/manifests/base/crds/full?ref=v4.0.2"
 
 # For minified CRDs (standard apply works fine)
 kubectl apply -k "https://github.com/argoproj/argo-workflows/manifests/base/crds/minimal?ref=<appVersion>"
@@ -226,10 +220,20 @@ Fields to note:
 | apiVersionOverrides.cloudgoogle | string | `""` | String to override apiVersion of GKE resources rendered by this helm chart |
 | apiVersionOverrides.monitoring | string | `""` | String to override apiVersion of monitoring CRDs (ServiceMonitor) rendered by this helm chart |
 | commonLabels | object | `{}` | Labels to set on all resources |
-| crds.annotations | object | `{}` | Annotations to be added to all CRDs |
-| crds.full | bool | `true` | Use full CRDs with complete OpenAPI schemas. When false, uses minified CRDs with x-kubernetes-preserve-unknown-fields. Note: Full CRDs are ~7.4MB and may require Server Side Apply (kubectl apply --server-side). See README for details. |
+| crds.annotations | object | `{}` | Annotations to be added to all CRDs (only applies when crds.full=false) |
+| crds.full | bool | `true` | Use full CRDs with complete OpenAPI schemas. When false, uses minified CRDs with x-kubernetes-preserve-unknown-fields. Full CRDs are very large and are installed via a pre-install/pre-upgrade hook Job that uses server-side apply. |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
+| crds.upgradeJob | object | `{"crdBaseURL":"","hostPath":"","image":{"repository":"registry.k8s.io/kubectl","tag":"v1.32.0"},"imagePullSecrets":[],"nodeSelector":{},"resources":{},"tolerations":[]}` | Configuration for the CRD install Job (only used when crds.full=true) |
+| crds.upgradeJob.crdBaseURL | string | `""` | Override base URL to download full CRD YAML files from. Defaults to this chart's release tag on GitHub. Ignored if hostPath is set. |
+| crds.upgradeJob.hostPath | string | `""` | Host path to mount CRD files from (for local/CI testing). When set, CRDs are applied from this path instead of downloading. |
+| crds.upgradeJob.image | object | `{"repository":"registry.k8s.io/kubectl","tag":"v1.32.0"}` | Image for the kubectl container that applies CRDs |
+| crds.upgradeJob.image.repository | string | `"registry.k8s.io/kubectl"` | Repository for the kubectl image |
+| crds.upgradeJob.image.tag | string | `"v1.32.0"` | Tag for the kubectl image |
+| crds.upgradeJob.imagePullSecrets | list | `[]` | Image pull secrets for the CRD install Job |
+| crds.upgradeJob.nodeSelector | object | `{}` | Node selector for the CRD install Job |
+| crds.upgradeJob.resources | object | `{}` | Resources for the CRD install Job containers |
+| crds.upgradeJob.tolerations | list | `[]` | Tolerations for the CRD install Job |
 | createAggregateRoles | bool | `true` | Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs. |
 | emissary.images | list | `[]` | The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used. |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |

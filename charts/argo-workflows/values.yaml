@@ -14,10 +14,30 @@ crds:
   # -- Keep CRDs on chart uninstall
   keep: true
   # -- Use full CRDs with complete OpenAPI schemas. When false, uses minified CRDs with x-kubernetes-preserve-unknown-fields.
-  # Note: Full CRDs are ~7.4MB and may require Server Side Apply (kubectl apply --server-side). See README for details.
+  # Full CRDs are very large and are installed via a pre-install/pre-upgrade hook Job that uses server-side apply.
   full: true
-  # -- Annotations to be added to all CRDs
+  # -- Annotations to be added to all CRDs (only applies when crds.full=false)
   annotations: {}
+  # -- Configuration for the CRD install Job (only used when crds.full=true)
+  upgradeJob:
+    # -- Image for the kubectl container that applies CRDs
+    image:
+      # -- Repository for the kubectl image
+      repository: registry.k8s.io/kubectl
+      # -- Tag for the kubectl image
+      tag: v1.32.0
+    # -- Override base URL to download full CRD YAML files from. Defaults to this chart's release tag on GitHub. Ignored if hostPath is set.
+    crdBaseURL: ""
+    # -- Host path to mount CRD files from (for local/CI testing). When set, CRDs are applied from this path instead of downloading.
+    hostPath: ""
+    # -- Resources for the CRD install Job containers
+    resources: {}
+    # -- Node selector for the CRD install Job
+    nodeSelector: {}
+    # -- Tolerations for the CRD install Job
+    tolerations: []
+    # -- Image pull secrets for the CRD install Job
+    imagePullSecrets: []
 
 # -- Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs.
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
