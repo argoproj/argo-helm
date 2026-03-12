@@ -1,9 +1,10 @@
 {{- if and .Values.crds.install .Values.crds.full }}
+{{- $crdInstallName := printf "%s-crd-install" (include "argo-workflows.fullname" .) | trunc 63 | trimSuffix "-" }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ include "argo-workflows.fullname" . }}-crd-install
+  name: {{ $crdInstallName }}
   namespace: {{ include "argo-workflows.namespace" . }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 4 }}
@@ -15,7 +16,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "argo-workflows.fullname" . }}-crd-install
+  name: {{ $crdInstallName }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 4 }}
   annotations:
@@ -30,7 +31,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "argo-workflows.fullname" . }}-crd-install
+  name: {{ $crdInstallName }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 4 }}
   annotations:
@@ -39,17 +40,17 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 subjects:
   - kind: ServiceAccount
-    name: {{ include "argo-workflows.fullname" . }}-crd-install
+    name: {{ $crdInstallName }}
     namespace: {{ include "argo-workflows.namespace" . }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "argo-workflows.fullname" . }}-crd-install
+  name: {{ $crdInstallName }}
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "argo-workflows.fullname" . }}-crd-install
+  name: {{ $crdInstallName }}
   namespace: {{ include "argo-workflows.namespace" . }}
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 4 }}
@@ -63,7 +64,7 @@ spec:
       labels:
         {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "argo-workflows.fullname" . }}-crd-install
+      serviceAccountName: {{ $crdInstallName }}
       {{- with .Values.crds.upgradeJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
