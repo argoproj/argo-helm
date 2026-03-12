@@ -98,6 +98,14 @@ jobs:
         run: |
           kubectl apply -f ./.github/configs/external-redis.yaml
 
+      - name: Copy full CRDs to kind nodes for argo-workflows testing
+        id: argo-wf-crds
+        if: contains(steps.list-changed.outputs.changed_charts, 'argo-workflows')
+        run: |
+          for node in $(kind get nodes --name chart-testing); do
+            docker cp charts/argo-workflows/files/crds/full/. "$node":/crds/
+          done
+
       - name: Run chart-testing (install)
-        run: ct install --config ./.github/configs/ct-install.yaml
+        run: ct install --config ./.github/configs/ct-install.yaml ${{ steps.argo-wf-crds.outcome == 'success' && '--helm-extra-set-args "--set crds.upgradeJob.hostPath=/crds"' || '' }}
         if: steps.list-changed.outputs.changed == 'true'
