@@ -902,6 +902,7 @@ NAME: my-release
 | global.runtimeClassName | string | `""` | Runtime class name for all components |
 | global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
 | global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
+| global.statefulsetLabels | object | `{}` | Labels for the all deployed Statefulsets |
 | global.tolerations | list | `[]` | Default tolerations for all components |
 | global.topologySpreadConstraints | list | `[]` | Default [TopologySpreadConstraints] rules for all components |
 
@@ -925,7 +926,8 @@ NAME: my-release
 | configs.cm."resource.exclusions" | string | See [values.yaml] | Resource Exclusion/Inclusion |
 | configs.cm."statusbadge.enabled" | bool | `false` | Enable Status Badge |
 | configs.cm."timeout.hard.reconciliation" | string | `"0s"` | Timeout to refresh application data as well as target manifests cache |
-| configs.cm."timeout.reconciliation" | string | `"180s"` | Timeout to discover if a new manifests version got published to the repository |
+| configs.cm."timeout.reconciliation" | string | `"120s"` | Timeout to discover if a new manifests version got published to the repository |
+| configs.cm."timeout.reconciliation.jitter" | string | `"60s"` | Maximum jitter added to the reconciliation timeout to spread out refreshes and reduce repo-server load |
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
 | configs.cm.create | bool | `true` | Create the argocd-cm configmap for [declarative setup] |
 | configs.cmp.annotations | object | `{}` | Annotations to be added to argocd-cmp-cm configmap |
@@ -1048,6 +1050,7 @@ NAME: my-release
 | controller.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | controller.serviceAccount.name | string | `"argocd-application-controller"` | Service account name |
 | controller.statefulsetAnnotations | object | `{}` | Annotations for the application controller StatefulSet |
+| controller.statefulsetLabels | object | `{}` | Labels for the application controller StatefulSet |
 | controller.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | controller.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the application controller |
@@ -1382,7 +1385,7 @@ NAME: my-release
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
-| dex.image.tag | string | `"v2.44.0"` | Dex image tag |
+| dex.image.tag | string | `"v2.45.1"` | Dex image tag |
 | dex.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
@@ -1473,7 +1476,7 @@ NAME: my-release
 | redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
 | redis.exporter.image.repository | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
-| redis.exporter.image.tag | string | `"v1.81.0"` | Tag to use for the redis-exporter |
+| redis.exporter.image.tag | string | `"v1.82.0"` | Tag to use for the redis-exporter |
 | redis.exporter.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis exporter |
 | redis.exporter.livenessProbe.failureThreshold | int | `5` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | redis.exporter.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |
