@@ -116,6 +116,15 @@
       }
     },
     {
+      "matchPackageNames": ["registry.k8s.io/kubectl"],
+      "commitMessagePrefix": "chore(argo-workflows):",
+      "postUpgradeTasks": {
+        "commands": [
+          "./scripts/helm-docs.sh"
+        ]
+      }
+    },
+    {
       "matchPackagePatterns": ["redis-ha"],
       "enabled": false
     },

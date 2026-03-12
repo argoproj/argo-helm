@@ -224,12 +224,12 @@ Fields to note:
 | crds.full | bool | `true` | Use full CRDs with complete OpenAPI schemas. When false, uses minified CRDs with x-kubernetes-preserve-unknown-fields. Full CRDs are very large and are installed via a pre-install/pre-upgrade hook Job that uses server-side apply. |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
-| crds.upgradeJob | object | `{"crdBaseURL":"","hostPath":"","image":{"repository":"registry.k8s.io/kubectl","tag":"v1.32.0"},"imagePullSecrets":[],"nodeSelector":{},"resources":{},"tolerations":[]}` | Configuration for the CRD install Job (only used when crds.full=true) |
+| crds.upgradeJob | object | `{"crdBaseURL":"","hostPath":"","image":{"repository":"registry.k8s.io/kubectl","tag":"v1.35.2"},"imagePullSecrets":[],"nodeSelector":{},"resources":{},"tolerations":[]}` | Configuration for the CRD install Job (only used when crds.full=true) |
 | crds.upgradeJob.crdBaseURL | string | `""` | Override base URL to download full CRD YAML files from. Defaults to this chart's release tag on GitHub. Ignored if hostPath is set. |
 | crds.upgradeJob.hostPath | string | `""` | Host path to mount CRD files from (for local/CI testing). When set, CRDs are applied from this path instead of downloading. |
-| crds.upgradeJob.image | object | `{"repository":"registry.k8s.io/kubectl","tag":"v1.32.0"}` | Image for the kubectl container that applies CRDs |
+| crds.upgradeJob.image | object | `{"repository":"registry.k8s.io/kubectl","tag":"v1.35.2"}` | Image for the kubectl container that applies CRDs |
 | crds.upgradeJob.image.repository | string | `"registry.k8s.io/kubectl"` | Repository for the kubectl image |
-| crds.upgradeJob.image.tag | string | `"v1.32.0"` | Tag for the kubectl image |
+| crds.upgradeJob.image.tag | string | `"v1.35.2"` | Tag for the kubectl image |
 | crds.upgradeJob.imagePullSecrets | list | `[]` | Image pull secrets for the CRD install Job |
 | crds.upgradeJob.nodeSelector | object | `{}` | Node selector for the CRD install Job |
 | crds.upgradeJob.resources | object | `{}` | Resources for the CRD install Job containers |
