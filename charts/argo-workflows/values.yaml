@@ -38,6 +38,14 @@ crds:
     tolerations: []
     # -- Image pull secrets for the CRD install Job
     imagePullSecrets: []
+    # -- Extra environment variables to provide to the CRD install Job container
+    extraEnv: []
+    # - name: HTTP_PROXY
+    #   value: "http://proxy.example.com:8080"
+    # - name: HTTPS_PROXY
+    #   value: "http://proxy.example.com:8080"
+    # - name: NO_PROXY
+    #   value: "localhost,127.0.0.1,10.96.0.0/12,192.168.0.0/16"
 
 # -- Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs.
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles

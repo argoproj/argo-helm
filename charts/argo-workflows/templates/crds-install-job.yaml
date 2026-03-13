@@ -85,6 +85,10 @@ spec:
       containers:
         - name: apply
           image: "{{ .Values.crds.upgradeJob.image.repository }}:{{ .Values.crds.upgradeJob.image.tag }}"
+          env:
+          {{- with .Values.crds.upgradeJob.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- if .Values.crds.upgradeJob.hostPath }}
           volumeMounts:
             - name: crds
