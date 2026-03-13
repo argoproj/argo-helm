@@ -33183,6 +33183,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Add extraEnv to CRD install Job for proxy configuration
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v4.0.2
+    created: "2026-03-13T06:42:26.011413781Z"
+    description: A Helm chart for Argo Workflows
+    digest: 81f27ac36c9550a3458147ce0e03c32027fe618af5b5c7efbc73343d7fe447f3
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-1.0.2/argo-workflows-1.0.2.tgz
+    version: 1.0.2
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Truncate full CRD install job name to 63 chars
       artifacthub.io/signKey: |
@@ -41885,4 +41909,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-03-13T01:48:40.341127837Z"
+generated: "2026-03-13T06:42:26.013248225Z"
