@@ -34,8 +34,6 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ include "argocd-image-updater.fullname" . }}-controller
-          command:
-            - /manager
           args:
             - --metrics-bind-address=:{{ .Values.containerPorts.metrics }}
             - run
