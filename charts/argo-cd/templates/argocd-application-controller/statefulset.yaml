@@ -12,6 +12,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.statefulsetLabels) .Values.controller.statefulsetLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.controller.replicas }}
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit | default .Values.global.revisionHistoryLimit }}
@@ -144,6 +147,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: controller.log.level
                 optional: true
+          - name: ARGOCD_LOG_FORMAT_TIMESTAMP
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: log.format.timestamp
+                optional: true
           - name: ARGOCD_APPLICATION_CONTROLLER_METRICS_CACHE_EXPIRATION
             valueFrom:
               configMapKeyRef:
@@ -155,6 +164,42 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: controller.self.heal.timeout.seconds
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_TIMEOUT_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.self.heal.backoff.timeout.seconds
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_FACTOR
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.self.heal.backoff.factor
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_CAP_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.self.heal.backoff.cap.seconds
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_COOLDOWN_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.self.heal.backoff.cooldown.seconds
+                optional: true
+          - name: ARGOCD_SYNC_WAVE_DELAY
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.sync.wave.delay.seconds
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_SYNC_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.sync.timeout.seconds
                 optional: true
           - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_PLAINTEXT
             valueFrom:
@@ -201,19 +246,11 @@ spec:
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
-                key: redis-username
-                optional: true
+                {{- include "argo-cd.redisUsernameSecretRef" . | nindent 16 }}
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
-                {{- if .Values.externalRedis.host }}
-                key: redis-password
-                optional: true
-                {{- else }}
-                key: auth
-                {{- end }}
+                {{- include "argo-cd.redisPasswordSecretRef" . | nindent 16 }}
           - name: REDIS_SENTINEL_USERNAME
             valueFrom:
               secretKeyRef:
@@ -249,6 +286,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: otlp.headers
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_OTLP_ATTRS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.attrs
                 optional: true
           - name: ARGOCD_APPLICATION_NAMESPACES
             valueFrom:
@@ -292,6 +335,32 @@ spec:
                 name: argocd-cmd-params-cm
                 key: controller.ignore.normalizer.jq.timeout
                 optional: true
+          - name: ARGOCD_HYDRATOR_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: hydrator.enabled
+                optional: true
+          - name: ARGOCD_CLUSTER_CACHE_BATCH_EVENTS_PROCESSING
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.cluster.cache.batch.events.processing
+                optional: true
+          - name: ARGOCD_CLUSTER_CACHE_EVENTS_PROCESSING_INTERVAL
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.cluster.cache.events.processing.interval
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_COMMIT_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: commit.server
+                optional: true
+          - name: KUBECACHEDIR
+            value: /tmp/kubecache
         {{- with .Values.controller.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
@@ -317,13 +386,17 @@ spec:
         {{- end }}
         workingDir: /home/argocd
         volumeMounts:
-        {{- with .Values.controller.volumeMounts }}
+        {{- with (concat .Values.global.extraVolumeMounts .Values.controller.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - mountPath: /app/config/controller/tls
           name: argocd-repo-server-tls
         - mountPath: /home/argocd
           name: argocd-home
+        - name: argocd-cmd-params-cm
+          mountPath: /home/argocd/params
+        - name: argocd-application-controller-tmp
+          mountPath: /tmp
       {{- with .Values.controller.extraContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
@@ -355,10 +428,17 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-      {{- with .Values.controller.volumes }}
+      {{- with (concat .Values.global.extraVolumes .Values.controller.volumes) }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
       - name: argocd-home
+        {{- if .Values.controller.emptyDir.sizeLimit }}
+        emptyDir:
+          sizeLimit: {{ .Values.controller.emptyDir.sizeLimit }}
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
+      - name: argocd-application-controller-tmp
         {{- if .Values.controller.emptyDir.sizeLimit }}
         emptyDir:
           sizeLimit: {{ .Values.controller.emptyDir.sizeLimit }}
@@ -376,6 +456,13 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
+      - name: argocd-cmd-params-cm
+        configMap:
+          optional: true
+          name: argocd-cmd-params-cm
+          items:
+          - key: controller.profile.enabled
+            path: profiler.enabled
       {{- if .Values.controller.hostNetwork }}
       hostNetwork: {{ .Values.controller.hostNetwork }}
       {{- end }}

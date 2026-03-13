@@ -1,5 +1,6 @@
-{{- if and (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") .Values.notifications.enabled .Values.notifications.metrics.enabled .Values.notifications.metrics.serviceMonitor.enabled }}
-apiVersion: monitoring.coreos.com/v1
+{{- $apiVersion := include "argo-cd.apiVersions.monitoring" . }}
+{{- if and (.Capabilities.APIVersions.Has $apiVersion) .Values.notifications.enabled .Values.notifications.metrics.enabled .Values.notifications.metrics.serviceMonitor.enabled }}
+apiVersion: {{ $apiVersion }}
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-cd.notifications.fullname" . }}
@@ -41,6 +42,7 @@ spec:
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      honorLabels: {{ .Values.notifications.metrics.serviceMonitor.honorLabels }}
   namespaceSelector:
     matchNames:
       - {{ include "argo-cd.namespace" . }}

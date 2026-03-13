@@ -11,6 +11,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.server.deploymentLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.server.deploymentStrategy) }}
   strategy:
@@ -207,12 +210,6 @@ spec:
                 name: argocd-cmd-params-cm
                 key: server.oidc.cache.expiration
                 optional: true
-          - name: ARGOCD_SERVER_LOGIN_ATTEMPTS_EXPIRATION
-            valueFrom:
-              configMapKeyRef:
-                name: argocd-cmd-params-cm
-                key: server.login.attempts.expiration
-                optional: true
           - name: ARGOCD_SERVER_STATIC_ASSETS
             valueFrom:
               configMapKeyRef:
@@ -246,19 +243,11 @@ spec:
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
-                key: redis-username
-                optional: true
+                {{- include "argo-cd.redisUsernameSecretRef" . | nindent 16 }}
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
-                {{- if .Values.externalRedis.host }}
-                key: redis-password
-                optional: true
-                {{- else }}
-                key: auth
-                {{- end }}
+                {{- include "argo-cd.redisPasswordSecretRef" . | nindent 16 }}
           - name: REDIS_SENTINEL_USERNAME
             valueFrom:
               secretKeyRef:
@@ -313,6 +302,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: otlp.headers
                 optional: true
+          - name: ARGOCD_SERVER_OTLP_ATTRS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.attrs
+                optional: true
           - name: ARGOCD_APPLICATION_NAMESPACES
             valueFrom:
               configMapKeyRef:
@@ -343,12 +338,60 @@ spec:
                 name: argocd-cmd-params-cm
                 key: server.api.content.types
                 optional: true
+          - name: ARGOCD_SERVER_WEBHOOK_PARALLELISM_LIMIT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.webhook.parallelism.limit
+                optional: true
+          - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_NEW_GIT_FILE_GLOBBING
+            valueFrom:
+              configMapKeyRef:
+                key: applicationsetcontroller.enable.new.git.file.globbing
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_APPLICATIONSET_CONTROLLER_SCM_ROOT_CA_PATH
+            valueFrom:
+              configMapKeyRef:
+                key: applicationsetcontroller.scm.root.ca.path
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_APPLICATIONSET_CONTROLLER_ALLOWED_SCM_PROVIDERS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: applicationsetcontroller.allowed.scm.providers
+                optional: true
+          - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_SCM_PROVIDERS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: applicationsetcontroller.enable.scm.providers
+                optional: true
+          - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_GITHUB_API_METRICS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: applicationsetcontroller.enable.github.api.metrics
+                optional: true
+          - name: ARGOCD_HYDRATOR_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: hydrator.enabled
+                optional: true
+          - name: ARGOCD_SYNC_WITH_REPLACE_ALLOWED
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.sync.replace.allowed
+                optional: true
         {{- with .Values.server.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
-        {{- with .Values.server.volumeMounts }}
+        {{- with (concat .Values.global.extraVolumeMounts .Values.server.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - mountPath: /app/config/ssh
@@ -365,6 +408,8 @@ spec:
           name: styles
         - mountPath: /tmp
           name: tmp
+        - name: argocd-cmd-params-cm
+          mountPath: /home/argocd/params
         {{- if .Values.server.extensions.enabled }}
         - mountPath: /tmp/extensions
           name: extensions
@@ -376,6 +421,7 @@ spec:
         - name: metrics
           containerPort: {{ .Values.server.containerPorts.metrics }}
           protocol: TCP
+        {{- if .Values.server.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /healthz?full=true
@@ -385,6 +431,8 @@ spec:
           timeoutSeconds: {{ .Values.server.livenessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.server.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.server.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.server.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
             path: /healthz
@@ -394,6 +442,7 @@ spec:
           timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.server.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
+        {{- end }}
         resources:
           {{- toYaml .Values.server.resources | nindent 10 }}
         {{- with .Values.server.containerSecurityContext }}
@@ -457,7 +506,7 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-      {{- with .Values.server.volumes }}
+      {{- with (concat .Values.global.extraVolumes .Values.server.volumes) }}
         {{- toYaml . | nindent 6}}
       {{- end }}
       {{- if .Values.server.extensions.enabled }}
@@ -513,6 +562,13 @@ spec:
             path: tls.crt
           - key: ca.crt
             path: ca.crt
+      - name: argocd-cmd-params-cm
+        configMap:
+          optional: true
+          name: argocd-cmd-params-cm
+          items:
+          - key: server.profile.enabled
+            path: profiler.enabled
       {{- if .Values.server.hostNetwork }}
       hostNetwork: {{ .Values.server.hostNetwork }}
       {{- end }}

@@ -1,0 +1,53 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "argocd-image-updater.fullname" . }}
+  namespace: {{ include  "argocd-image-updater.namespace" . }}
+  labels:
+    {{- include "argocd-image-updater.labels" . | nindent 4 }}
+    {{- with .Values.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  {{- include "argocd-image-updater.dualStack" . | indent 2 }}
+  {{- with .Values.service.externalIPs }}
+  externalIPs: {{ . }}
+  {{- end }}
+  {{- if or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  {{- end }}
+  {{- if eq .Values.service.type "LoadBalancer" }}
+  {{- with .Values.service.loadBalancerClass }}
+  loadBalancerClass: {{ . }}
+  {{- end }}
+  {{- with .Values.service.loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
+  sessionAffinity: {{ .Values.service.sessionAffinity }}
+  ports:
+    - name: {{ .Values.service.servicePortHttpName }}
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: webhook
+      {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.nodePortHttp }}
+      {{- end }}
+    {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.nodePortHttps }}
+    {{- end }}
+  selector:
+    {{- include "argocd-image-updater.selectorLabels" . | nindent 4 }}
+{{- end }}

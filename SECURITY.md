@@ -6,7 +6,7 @@ Each helm chart currently supports the designated application version in the Cha
 
 * [Security Policy for Argo Workflows](https://github.com/argoproj/argo-workflows/blob/master/SECURITY.md)
 * [Security Policy for Argo Events](https://github.com/argoproj/argo-events/blob/master/SECURITY.md)
-* [Security Policy for Argo Rollouts](https://github.com/argoproj/argo-rollouts/blob/master/docs/security.md)
+* [Security Policy for Argo Rollouts](https://github.com/argoproj/argo-rollouts/blob/master/docs/security/security.md)
 * [Security Policy for Argo CD](https://github.com/argoproj/argo-cd/blob/master/SECURITY.md)
 * [Security Policy for Argo CD Image Updater](https://github.com/argoproj-labs/argocd-image-updater/blob/master/SECURITY.md)
 

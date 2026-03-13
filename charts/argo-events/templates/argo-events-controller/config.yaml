@@ -32,6 +32,8 @@ data:
           maxBytes: {{ .Values.configs.jetstream.streamConfig.maxBytes }}
           replicas: {{ .Values.configs.jetstream.streamConfig.replicas }}
           duplicates: {{ .Values.configs.jetstream.streamConfig.duplicates }}
+          retention: {{ .Values.configs.jetstream.streamConfig.retention }}
+          discard: {{ .Values.configs.jetstream.streamConfig.discard }}
         versions:
         {{- range .Values.configs.jetstream.versions }}
         - version: {{ .version }}

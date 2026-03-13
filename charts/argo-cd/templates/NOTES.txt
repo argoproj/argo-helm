@@ -1,9 +1,24 @@
+{{- if .Values.notifications.logLevel }}
+DEPRECATED option notifications.logLevel - Use `configs.params."notificationscontroller.log.level"`
+{{- end }}
+{{- if .Values.notifications.logFormat }}
+DEPRECATED option notifications.logFormat - Use `configs.params."notificationscontroller.log.format"`
+{{- end }}
+{{- if .Values.dex.logLevel }}
+DEPRECATED option dex.logLevel - Use `configs.params."dexserver.log.level"`
+{{- end }}
+{{- if .Values.dex.logFormat }}
+DEPRECATED option dex.logFormat - Use `configs.params."dexserver.log.format"`
+{{- end }}
 In order to access the server UI you have the following options:
 
+{{ $rootpath := default "" (index .Values "configs" "params" "server.rootpath") -}}
 1. kubectl port-forward service/{{ include "argo-cd.fullname" . }}-server -n {{ include  "argo-cd.namespace" . }} 8080:443
-
+{{ if $rootpath }}
+    and then open the browser on http://localhost:8080/{{ $rootpath }} and accept the certificate
+{{ else }}
     and then open the browser on http://localhost:8080 and accept the certificate
-
+{{ end }}
 2. enable ingress in the values file `server.ingress.enabled` and either
       - Add the annotation for ssl passthrough: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
       - Set the `configs.params."server.insecure"` in the values file and terminate SSL at your ingress: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-multiple-ingress-objects-and-hosts

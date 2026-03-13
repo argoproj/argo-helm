@@ -1,0 +1,21 @@
+# Configuration file for MegaLinter
+# Run megalinter locally with: `docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:rw -v $(pwd):/tmp/lint:rw oxsecurity/megalinter:v8`
+ENABLE:
+  - DOCKERFILE
+  - PYTHON
+
+DISABLE_LINTERS:
+  - PYTHON_FLAKE8
+  - PYTHON_PYRIGHT
+  - PYTHON_RUFF
+  - PYTHON_BANDIT
+
+CLEAR_REPORT_FOLDER: true
+PYTHON_PYLINT_PRE_COMMANDS:
+  - command: pip install -r /tmp/lint/requirements.txt
+    venv: pylint
+REPORT_OUTPUT_FOLDER: none
+
+
+# You might want to enable this locally to fix some stuff without guessing what you need to change. Check before committing to git.
+#APPLY_FIXES: all

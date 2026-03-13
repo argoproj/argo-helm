@@ -1,4 +1,4 @@
-{{- if .Values.server.GKEbackendConfig.enabled }}
+{{- if and .Values.server.enabled .Values.server.GKEbackendConfig.enabled }}
 apiVersion: {{ include "argo-workflows.apiVersions.cloudgoogle" . }}
 kind: BackendConfig
 metadata:

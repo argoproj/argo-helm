@@ -1,4 +1,4 @@
-{{- if and .Values.global.networkPolicy.create (or .Values.applicationSet.metrics.enabled .Values.applicationSet.ingress.enabled) }}
+{{- if and (or .Values.applicationSet.networkPolicy.create .Values.global.networkPolicy.create) (or .Values.applicationSet.metrics.enabled .Values.applicationSet.ingress.enabled) }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -12,12 +12,10 @@ spec:
   - ports:
     - port: webhook
   {{- end }}
-  {{- if .Values.applicationSet.metrics.enabled }}
   - from:
     - namespaceSelector: {}
     ports:
     - port: metrics
-  {{- end }}
   podSelector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 6 }}

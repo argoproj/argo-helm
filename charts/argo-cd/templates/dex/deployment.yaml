@@ -12,6 +12,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.dex.deploymentLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.dex.deploymentStrategy) }}
   strategy:
@@ -72,8 +75,12 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.image.imagePullPolicy }}
         command:
         - /shared/argocd-dex
-        - --logformat={{ default .Values.global.logging.format .Values.dex.logFormat }}
-        - --loglevel={{ default .Values.global.logging.level .Values.dex.logLevel }}
+        {{- with .Values.dex.logLevel }}
+        - --loglevel={{ . }}
+        {{- end }}
+        {{- with .Values.dex.logFormat }}
+        - --logformat={{ . }}
+        {{- end }}
         args:
         - rundex
         {{- with .Values.dex.extraArgs }}
@@ -83,6 +90,24 @@ spec:
           {{- with (concat .Values.global.env .Values.dex.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+          - name: ARGOCD_DEX_SERVER_LOGFORMAT
+            valueFrom:
+              configMapKeyRef:
+                key: dexserver.log.format
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_DEX_SERVER_LOGLEVEL
+            valueFrom:
+              configMapKeyRef:
+                key: dexserver.log.level
+                name: argocd-cmd-params-cm
+                optional: true
+          - name: ARGOCD_LOG_FORMAT_TIMESTAMP
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: log.format.timestamp
+                optional: true
           - name: ARGOCD_DEX_SERVER_DISABLE_TLS
             valueFrom:
               configMapKeyRef:
@@ -134,7 +159,7 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
-        {{- with .Values.dex.volumeMounts }}
+        {{- with (concat .Values.global.extraVolumeMounts .Values.dex.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - name: static-files
@@ -218,7 +243,7 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-      {{- with .Values.dex.volumes }}
+      {{- with (concat .Values.global.extraVolumes .Values.dex.volumes) }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
       {{- with .Values.dex.dnsConfig }}

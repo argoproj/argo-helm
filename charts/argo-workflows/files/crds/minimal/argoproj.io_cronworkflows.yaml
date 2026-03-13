@@ -1,15 +1,9 @@
-{{- if .Values.crds.install }}
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: cronworkflows.argoproj.io
   annotations:
-    {{- if .Values.crds.keep }}
-    "helm.sh/resource-policy": keep
-    {{- end }}
-    {{- with .Values.crds.annotations }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
+    helm.sh/resource-policy: keep
 spec:
   group: argoproj.io
   names:
@@ -25,10 +19,22 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
+        description: CronWorkflow is the definition of a scheduled workflow resource
         properties:
           apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -46,4 +52,3 @@ spec:
         type: object
     served: true
     storage: true
-{{- end }}

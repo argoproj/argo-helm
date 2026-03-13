@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 {{- if .Values.singleNamespace }}
 kind: RoleBinding
-{{ else }}
+{{- else }}
 kind: ClusterRoleBinding
 {{- end }}
 metadata:
@@ -16,7 +16,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   {{- if .Values.singleNamespace }}
   kind: Role
-  {{ else }}
+  {{- else }}
   kind: ClusterRole
   {{- end }}
   name: {{ template "argo-workflows.server.fullname" . }}

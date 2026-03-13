@@ -1,5 +1,6 @@
-{{- if and (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") .Values.controller.metrics.enabled .Values.controller.metrics.serviceMonitor.enabled }}
-apiVersion: monitoring.coreos.com/v1
+{{- $apiVersion := include "argo-cd.apiVersions.monitoring" . }}
+{{- if and (.Capabilities.APIVersions.Has $apiVersion) .Values.controller.metrics.enabled .Values.controller.metrics.serviceMonitor.enabled }}
+apiVersion: {{ $apiVersion }}
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-cd.controller.fullname" . }}
@@ -34,6 +35,7 @@ spec:
       metricRelabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      honorLabels: {{ .Values.controller.metrics.serviceMonitor.honorLabels }}
       {{- with .Values.controller.metrics.serviceMonitor.scheme }}
       scheme: {{ . }}
       {{- end }}

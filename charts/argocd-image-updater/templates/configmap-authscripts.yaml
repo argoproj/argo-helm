@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
-  name: argocd-image-updater-authscripts
+  name: {{ .Values.authScripts.name }}
   namespace: {{ include "argocd-image-updater.namespace" . | quote }}
 data:
   {{- toYaml .Values.authScripts.scripts | nindent 2}}

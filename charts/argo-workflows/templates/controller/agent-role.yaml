@@ -1,0 +1,29 @@
+{{- if .Values.workflow.rbac.agentPermissions -}}
+  {{- range $namespace := or .Values.singleNamespace false | ternary (list "") (append .Values.controller.workflowNamespaces (coalesce .Values.workflow.namespace (include "argo-workflows.namespace" .)) | uniq)  }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ template "argo-workflows.fullname" $ }}-workflow-agent
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" $ "component" $.Values.controller.name "name" $.Values.controller.name) | nindent 4 }}
+    {{- with $namespace }}
+  namespace: {{ . }}
+    {{- end }}
+rules:
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - workflowtasksets
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - workflowtasksets/status
+    verbs:
+      - patch
+  {{- end }}
+
+{{- end }}

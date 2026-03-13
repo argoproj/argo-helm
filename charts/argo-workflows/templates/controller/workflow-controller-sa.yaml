@@ -9,7 +9,7 @@ metadata:
   {{- with .Values.controller.serviceAccount.labels  }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{ with .Values.controller.serviceAccount.annotations }}
+  {{- with .Values.controller.serviceAccount.annotations }}
   annotations:
     {{- toYaml .| nindent 4 }}
   {{- end }}

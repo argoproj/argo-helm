@@ -35,14 +35,11 @@ rules:
   - ""
   resources:
   - configmaps
+  - namespaces
   verbs:
   - get
   - watch
   - list
-  {{- if .Values.controller.rbac.writeConfigMaps }}
-  - create
-  - update
-  {{- end}}
 - apiGroups:
   - ""
   resources:
@@ -60,6 +57,7 @@ rules:
   - workflows/finalizers
   - workflowtasksets
   - workflowtasksets/finalizers
+  - workflowtasksets/status
   - workflowartifactgctasks
   verbs:
   - get
@@ -167,6 +165,25 @@ rules:
   - update
   - patch
   - delete
+{{- if .Values.controller.rbac.writeConfigMaps }}
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - update
+{{- end}}
+{{- if .Values.controller.rbac.accessAllSecrets }}
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+{{- else }}
 - apiGroups:
   - ""
   resources:
@@ -174,7 +191,7 @@ rules:
   verbs:
   - get
   resourceNames:
-  {{/* for HTTP templates */}}
+  {{- /* for HTTP templates */}}
   - argo-workflows-agent-ca-certificates
 {{- with .Values.controller.rbac.secretWhitelist }}
 - apiGroups:
@@ -187,15 +204,6 @@ rules:
   - watch
   resourceNames: {{- toYaml . | nindent 4 }}
 {{- end }}
-{{- if and (not .Values.controller.rbac.secretWhitelist) (.Values.controller.rbac.accessAllSecrets) }}
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - list
-  - watch
 {{- end }}
 
 {{- if and .Values.controller.clusterWorkflowTemplates.enabled (not .Values.singleNamespace) }}
