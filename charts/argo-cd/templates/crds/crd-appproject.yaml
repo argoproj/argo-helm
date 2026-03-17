@@ -3,6 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     {{- if .Values.crds.keep }}
     "helm.sh/resource-policy": keep
     {{- end }}
@@ -384,4 +385,3 @@ spec:
     served: true
     storage: true
 {{- end }}
-
