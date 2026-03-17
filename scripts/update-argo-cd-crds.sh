@@ -48,7 +48,7 @@ to_local_filename() {
 
 # Process a downloaded CRD into a Helm template:
 # - Wrap in {{- if .Values.crds.install }} conditional
-# - Add argocd.argoproj.io/sync-options and helm.sh/resource-policy annotations
+# - Add helm.sh/resource-policy annotation and custom annotation support
 # - Add Helm template directives for custom annotations and labels
 process_crd() {
     local src_file="$1"
@@ -67,7 +67,6 @@ HEADER
             state = "meta"
             print "metadata:"
             print "  annotations:"
-            print "    argocd.argoproj.io/sync-options: ServerSideApply=true"
             print "    {{- if .Values.crds.keep }}"
             print "    \"helm.sh/resource-policy\": keep"
             print "    {{- end }}"
