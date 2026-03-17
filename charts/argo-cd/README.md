@@ -377,7 +377,7 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ### Custom resource definitions
 
-The chart enables server-side apply for CustomResourceDefinitions by default using the `crds.annotations.argocd.argoproj.io/sync-options` annotation. This default avoids client-side apply size limits that can affect large CRDs (for example, ApplicationSet CRDs) and follows the upstream upgrade guidance: https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/3.2-3.3/#applicationset-crd-exceeds-the-size-limit-for-client-side-apply.
+The chart enables server-side apply for CustomResourceDefinitions when using Argo CD to install Argo CD using the `crds.annotations.argocd.argoproj.io/sync-options` annotation. This default avoids client-side apply size limits that can affect large CRDs (for example, ApplicationSet CRDs) and follows the upstream upgrade guidance: https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/3.2-3.3/#applicationset-crd-exceeds-the-size-limit-for-client-side-apply. If you install the CRDs manually using kubectl make sure to enable server-side apply.
 
 Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
 
