@@ -851,7 +851,7 @@ NAME: my-release
 |-----|------|---------|-------------|
 | apiVersionOverrides | object | `{}` |  |
 | crds.additionalLabels | object | `{}` | Additional labels to be added to all CRDs |
-| crds.annotations | object | `{}` | Annotations to be added to all CRDs |
+| crds.annotations | object | `{"argocd.argoproj.io/sync-options":"ServerSideApply=true"}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `false` | Create aggregated roles that extend existing cluster roles to interact with argo-cd resources |
