@@ -1588,6 +1588,41 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Omit runAsUser for dex when deployed on OpenShift
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.3.4
+    created: "2026-03-18T14:44:13.948266907Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.34.11
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 8275b4d4a669f64d3026fa00e9a0c47fabf891b5e980a59e786baa182c68dfec
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-9.4.14/argo-cd-9.4.14.tgz
+    version: 9.4.14
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Rename crd-project.yaml to crd-appproject.yaml to match upstream. Contents not changed.
       artifacthub.io/signKey: |
@@ -42065,4 +42100,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-03-18T11:33:53.508630014Z"
+generated: "2026-03-18T14:44:13.950683224Z"
