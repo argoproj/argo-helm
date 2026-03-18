@@ -38,6 +38,10 @@ spec:
   - ports:
     - port: metrics
       protocol: TCP
+    {{- if .Values.ingress.enabled }}
+    - port: webhook
+      protocol: TCP
+    {{- end }}
   podSelector:
     matchLabels:
       {{- include "argocd-image-updater.selectorLabels" . | nindent 6 }}

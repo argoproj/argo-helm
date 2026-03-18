@@ -34,7 +34,8 @@ crds:
   # -- Keep CRDs on chart uninstall
   keep: true
   # -- Annotations to be added to all CRDs
-  annotations: {}
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
   # -- Additional labels to be added to all CRDs
   additionalLabels: {}
 
@@ -75,6 +76,9 @@ global:
 
   # -- Annotations for the all deployed Statefulsets
   statefulsetAnnotations: {}
+
+  # -- Labels for the all deployed Statefulsets
+  statefulsetLabels: {}
 
   # -- Annotations for the all deployed Deployments
   deploymentAnnotations: {}
@@ -162,6 +166,23 @@ global:
   # -- Environment variables to pass to all deployed Deployments
   env: []
 
+  # -- Extra volumes to add to all deployed Deployments and StatefulSets
+  extraVolumes: []
+  # Example of adding a custom CA bundle from a ConfigMap:
+  # - name: my-root-ca
+  #   configMap:
+  #     name: my-trustbundle
+  #     items:
+  #       - key: bundle.pem
+  #         path: ca-certificates.crt
+
+
+  # -- Extra volume mounts to add to all deployed Deployments and StatefulSets
+  extraVolumeMounts: []
+  # Example of adding a custom CA bundle mount:
+  # - name: my-root-ca
+  #   mountPath: /etc/ssl/certs
+
   # -- Annotations for the all deployed Certificates
   certificateAnnotations: {}
 
@@ -192,7 +213,10 @@ configs:
     admin.enabled: true
 
     # -- Timeout to discover if a new manifests version got published to the repository
-    timeout.reconciliation: 180s
+    timeout.reconciliation: 120s
+
+    # -- Maximum jitter added to the reconciliation timeout to spread out refreshes and reduce repo-server load
+    timeout.reconciliation.jitter: 60s
 
     # -- Timeout to refresh application data as well as target manifests cache
     timeout.hard.reconciliation: 0s
@@ -220,6 +244,9 @@ configs:
     #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
     #   clientID: aaaabbbbccccddddeee
     #   clientSecret: $oidc.azuread.clientSecret
+    #   # Optional: set to true to use Azure Workload Identity instead of clientSecret
+    #   azure:
+    #     useWorkloadIdentity: false
 
     # Some OIDC providers require a separate clientID for different callback URLs.
     # For example, if configuring Argo CD with self-hosted Dex, you will need a separate client ID
@@ -876,6 +903,9 @@ controller:
   # -- Annotations for the application controller StatefulSet
   statefulsetAnnotations: {}
 
+  # -- Labels for the application controller StatefulSet
+  statefulsetLabels: {}
+
   # -- Annotations for the application controller Deployment
   deploymentAnnotations: {}
 
@@ -1159,7 +1189,7 @@ dex:
     # -- Dex image repository
     repository: ghcr.io/dexidp/dex
     # -- Dex image tag
-    tag: v2.44.0
+    tag: v2.45.1
     # -- Dex imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1278,6 +1308,7 @@ dex:
   # @default -- See [values.yaml]
   containerSecurityContext:
     runAsNonRoot: true
+    runAsUser: 1001
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
     seccompProfile:
@@ -1433,8 +1464,8 @@ redis:
     # -- Redis repository
     repository: ecr-public.aws.com/docker/library/redis
     # -- Redis tag
-    ## Do not upgrade to >= 7.4.0, otherwise you are no longer using an open source version of Redis
-    tag: 8.2.2-alpine
+    ## Do not use 7.4.0 <= v < 8.0.0, otherwise you are no longer using an open source version of Redis
+    tag: 8.2.3-alpine
     # -- Redis image pull policy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1450,7 +1481,7 @@ redis:
       # -- Repository to use for the redis-exporter
       repository: ghcr.io/oliver006/redis_exporter
       # -- Tag to use for the redis-exporter
-      tag: v1.80.1
+      tag: v1.82.0
       # -- Image pull policy for the redis-exporter
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
@@ -1730,7 +1761,7 @@ redis-ha:
     repository: ecr-public.aws.com/docker/library/redis
     # -- Redis tag
     ## Do not upgrade to >= 7.4.0, otherwise you are no longer using an open source version of Redis
-    tag: 8.2.2-alpine
+    tag: 8.2.3-alpine
   ## Prometheus redis-exporter sidecar
   exporter:
     # -- Enable Prometheus redis-exporter sidecar
@@ -2627,6 +2658,9 @@ server:
         #       add:
         #         - name: X-Custom-Header
         #           value: custom-value
+        # timeouts:
+        #   request: 10s
+        #   backendRequest: 2s
 
   # Gateway API GRPCRoute configuration
   # NOTE: Gateway API support is in EXPERIMENTAL status

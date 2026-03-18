@@ -355,8 +355,8 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
-        {{- if .Values.repoServer.volumeMounts }}
-          {{- toYaml .Values.repoServer.volumeMounts | nindent 8 }}
+        {{- with (concat .Values.global.extraVolumeMounts .Values.repoServer.volumeMounts) }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
@@ -420,10 +420,10 @@ spec:
       {{- end }}
       initContainers:
       - command:
-        - /bin/cp
-        - --update=none
-        - /usr/local/bin/argocd
-        - /var/run/argocd/argocd-cmp-server
+        - sh
+        - '-c'
+        args:
+        - /bin/cp --update=none /usr/local/bin/argocd /var/run/argocd/argocd && /bin/ln -sf /var/run/argocd/argocd /var/run/argocd/argocd-cmp-server
         image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
         name: copyutil
@@ -463,7 +463,7 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-      {{- with .Values.repoServer.volumes }}
+      {{- with (concat .Values.global.extraVolumes .Values.repoServer.volumes) }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
       {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}

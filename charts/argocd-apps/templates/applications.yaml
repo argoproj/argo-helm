@@ -1,4 +1,7 @@
 {{- range $appName, $appData:= .Values.applications }}
+{{- if not $appData }}
+{{- continue }}
+{{- end }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application

@@ -44,3 +44,8 @@ cat "${chart_yaml_path}"
 if [[ "$dependency_name" == "argo-workflows" ]]; then
   "$(dirname "$0")/update-argo-workflows-crds.sh" "$dependency_version"
 fi
+
+# If the dependency is argocd-image-updater, also update CRDs
+if [[ "$dependency_name" == "argocd-image-updater" ]]; then
+  "$(dirname "$0")/update-argocd-image-updater-crds.sh" "$dependency_version"
+fi

@@ -12,6 +12,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.statefulsetLabels) .Values.controller.statefulsetLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.controller.replicas }}
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit | default .Values.global.revisionHistoryLimit }}
@@ -383,7 +386,7 @@ spec:
         {{- end }}
         workingDir: /home/argocd
         volumeMounts:
-        {{- with .Values.controller.volumeMounts }}
+        {{- with (concat .Values.global.extraVolumeMounts .Values.controller.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - mountPath: /app/config/controller/tls
@@ -425,7 +428,7 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-      {{- with .Values.controller.volumes }}
+      {{- with (concat .Values.global.extraVolumes .Values.controller.volumes) }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
       - name: argocd-home

@@ -14,10 +14,38 @@ crds:
   # -- Keep CRDs on chart uninstall
   keep: true
   # -- Use full CRDs with complete OpenAPI schemas. When false, uses minified CRDs with x-kubernetes-preserve-unknown-fields.
-  # Note: Full CRDs are ~7.4MB and may require Server Side Apply (kubectl apply --server-side). See README for details.
-  full: false
-  # -- Annotations to be added to all CRDs
+  # Full CRDs are very large and are installed via a pre-install/pre-upgrade hook Job that uses server-side apply.
+  full: true
+  # -- Annotations to be added to all CRDs (only applies when crds.full=false)
   annotations: {}
+  # -- Configuration for the CRD install Job (only used when crds.full=true)
+  upgradeJob:
+    # -- Image for the kubectl container that applies CRDs
+    image:
+      # -- Repository for the kubectl image
+      repository: registry.k8s.io/kubectl
+      # -- Tag for the kubectl image
+      tag: v1.35.2
+    # -- Override base URL to download full CRD YAML files from. Defaults to this chart's release tag on GitHub. Ignored if hostPath is set.
+    crdBaseURL: ""
+    # -- Host path to mount CRD files from (for local/CI testing). When set, CRDs are applied from this path instead of downloading.
+    hostPath: ""
+    # -- Resources for the CRD install Job containers
+    resources: {}
+    # -- Node selector for the CRD install Job
+    nodeSelector: {}
+    # -- Tolerations for the CRD install Job
+    tolerations: []
+    # -- Image pull secrets for the CRD install Job
+    imagePullSecrets: []
+    # -- Extra environment variables to provide to the CRD install Job container
+    extraEnv: []
+    # - name: HTTP_PROXY
+    #   value: "http://proxy.example.com:8080"
+    # - name: HTTPS_PROXY
+    #   value: "http://proxy.example.com:8080"
+    # - name: NO_PROXY
+    #   value: "localhost,127.0.0.1,10.96.0.0/12,192.168.0.0/16"
 
 # -- Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs.
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -168,6 +196,9 @@ controller:
     # -- ServiceMonitor will add labels from the service to the Prometheus metric
     ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
     targetLabels: []
+    # -- Manipulate the metrics created by the workflow controller
+    ## Ref: https://argo-workflows.readthedocs.io/en/latest/metrics/#modifiers
+    modifiers: {}
 
   # -- the controller container's securityContext
   securityContext:
@@ -764,6 +795,71 @@ server:
   #   redirectToHttps:
   #     enabled: true
   #     responseCodeName: RESPONSE_CODE
+
+  # Gateway API HTTPRoute configuration
+  # NOTE: Gateway API support is in EXPERIMENTAL status
+  # Support depends on your Gateway controller implementation
+  # Some controllers may require additional configuration (e.g., BackendTLSPolicy for HTTPS backends)
+  # Refer to https://gateway-api.sigs.k8s.io/implementations/ for controller-specific details
+  httproute:
+    # -- Enable HTTPRoute resource for Argo Workflows server (Gateway API)
+    enabled: false
+    # -- Additional HTTPRoute labels
+    labels: {}
+    # -- Additional HTTPRoute annotations
+    annotations: {}
+    # -- Gateway API parentRefs for the HTTPRoute
+    ## Must reference an existing Gateway
+    # @default -- `[]` (See [values.yaml])
+    parentRefs: []
+      # - name: example-gateway
+      #   namespace: example-gateway-namespace
+      #   sectionName: https
+    # -- List of hostnames for the HTTPRoute
+    # @default -- `[]` (See [values.yaml])
+    hostnames: []
+      # - argoworkflows.example.com
+    # -- HTTPRoute rules configuration
+    # @default -- `[]` (See [values.yaml])
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+        # filters: []
+        #   - type: RequestHeaderModifier
+        #     requestHeaderModifier:
+        #       add:
+        #         - name: X-Custom-Header
+        #           value: custom-value
+
+  # Gateway API BackendTLSPolicy configuration
+  # NOTE: BackendTLSPolicy support is in EXPERIMENTAL status
+  # Required for HTTPS backends when using Gateway API
+  # Not all Gateway controllers support this resource (e.g., Cilium does not support it yet)
+  backendTLSPolicy:
+    # -- Enable BackendTLSPolicy resource for Argo Workflows server (Gateway API)
+    enabled: false
+    # -- Additional BackendTLSPolicy labels
+    labels: {}
+    # -- Additional BackendTLSPolicy annotations
+    annotations: {}
+    # -- Target references for the BackendTLSPolicy
+    # @default -- `[]` (See [values.yaml])
+    targetRefs: []
+      # - group: ""
+      #   kind: Service
+      #   name: argo-workflows-server
+      #   sectionName: https
+    # -- TLS validation configuration
+    # @default -- `{}` (See [values.yaml])
+    validation: {}
+      # hostname: argo-workflows-server.argo.svc.cluster.local
+      # caCertificateRefs:
+      #   - name: example-ca-cert
+      #     group: ""
+      #     kind: ConfigMap
+      # wellKnownCACertificates: System
 
   clusterWorkflowTemplates:
     # -- Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates.
