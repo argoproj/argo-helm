@@ -48,6 +48,9 @@ fi
 # If the dependency is argo-events, also update CRDs
 if [[ "$dependency_name" == "argo-events" ]]; then
   "$(dirname "$0")/update-argo-events-crds.sh" "$dependency_version"
+# If the dependency is argo-cd, also update CRDs
+if [[ "$dependency_name" == "argo-cd" ]]; then
+  "$(dirname "$0")/update-argo-cd-crds.sh" "$dependency_version"
 fi
 
 # If the dependency is argocd-image-updater, also update CRDs
