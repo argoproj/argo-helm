@@ -45,9 +45,14 @@ if [[ "$dependency_name" == "argo-workflows" ]]; then
   "$(dirname "$0")/update-argo-workflows-crds.sh" "$dependency_version"
 fi
 
+# If the dependency is argo-events, also update CRDs
+if [[ "$dependency_name" == "argo-events" ]]; then
+  "$(dirname "$0")/update-argo-events-crds.sh" "$dependency_version"
+
 # If the dependency is argo-rollouts, also update CRDs
 if [[ "$dependency_name" == "argo-rollouts" ]]; then
   "$(dirname "$0")/update-argo-rollouts-crds.sh" "$dependency_version"
+
 # If the dependency is argo-cd, also update CRDs
 if [[ "$dependency_name" == "argo-cd" ]]; then
   "$(dirname "$0")/update-argo-cd-crds.sh" "$dependency_version"
