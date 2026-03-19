@@ -10,7 +10,7 @@ metadata:
       {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- with .Values.controller.vpa.annotations }}
-  annnotaions:
+  annotations:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
@@ -23,7 +23,7 @@ spec:
     {{- end }}
     name: {{ template "argo-cd.controller.fullname" . }}
   updatePolicy:
-    updateMode: {{ .Values.controller.vpa.updateMode }}
+    updateMode: {{ .Values.controller.vpa.updateMode | quote }}
   resourcePolicy:
     containerPolicies:
     - containerName: {{ .Values.controller.name }}
