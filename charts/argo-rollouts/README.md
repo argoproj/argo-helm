@@ -90,6 +90,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.containerPorts.healthz | int | `8080` | Healthz container port |
 | controller.containerPorts.metrics | int | `8090` | Metrics container port |
 | controller.createClusterRole | bool | `true` | flag to enable creation of cluster controller role (requires cluster RBAC) |
+| controller.createConfigmap | bool | `true` | Whether to create the argo-rollouts-config ConfigMap. Set to false when running multiple controller instances in the same namespace (e.g. with different --instance-id values) to avoid Helm ownership conflicts; each secondary instance will read the ConfigMap created by the primary release. |
 | controller.deploymentAnnotations | object | `{}` | Annotations to be added to the controller deployment |
 | controller.deploymentLabels | object | `{}` | Labels to be added to the controller deployment |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-controller.  A list of flags. |

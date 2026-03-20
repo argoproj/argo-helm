@@ -251,6 +251,12 @@ controller:
     # - name: "argoproj-labs/sample-nginx" # name of the plugin, it must match the name required by the plugin so it can find it's configuration
     #   location: "file://./my-custom-plugin" # supports http(s):// urls and file://
 
+  # -- Whether to create the argo-rollouts-config ConfigMap. Set to false when running multiple
+  # controller instances in the same namespace (e.g. with different --instance-id values) to
+  # avoid Helm ownership conflicts; each secondary instance will read the ConfigMap created by
+  # the primary release.
+  createConfigmap: true
+
 serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
