@@ -36,11 +36,11 @@ namespaceOverride: ""
 ## If you want to use this, please set `.Values.rbac.enabled` true as well.
 createClusterRoles: true
 
-# -- Serve metrics endpoint securely via HTTPS (default `true`). Set to `false` to use HTTP
-metricsSecure: true
+# -- (bool) Serve metrics endpoint securely via HTTPS. Upstream default is `true`. Only applies to the new `run` command (controller-runtime based). Leave unset to omit the flag entirely.
+metricsSecure:
 
-# -- Enable HTTP/2 for the metrics and webhook servers
-enableHTTP2: false
+# -- (bool) Enable HTTP/2 for the metrics and webhook servers. Upstream default is `false`. Only applies to the new `run` command (controller-runtime based). Leave unset to omit the flag entirely.
+enableHTTP2:
 
 # -- Extra arguments for argocd-image-updater not defined in `config.argocd`.
 # If a flag contains both key and value, they need to be split to a new entry.

@@ -112,7 +112,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
 | dualStack.ipFamilies | list | `[]` | IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
 | dualStack.ipFamilyPolicy | string | `""` | IP family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
-| enableHTTP2 | bool | `false` | Enable HTTP/2 for the metrics and webhook servers |
+| enableHTTP2 | bool | `nil` | Enable HTTP/2 for the metrics and webhook servers. Upstream default is `false`. Only applies to the new `run` command (controller-runtime based). Leave unset to omit the flag entirely. |
 | extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry. |
 | extraEnv | list | `[]` | Extra environment variables for argocd-image-updater. |
 | extraEnvFrom | list | `[]` | Extra envFrom to pass to argocd-image-updater |
@@ -144,7 +144,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
 | metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
-| metricsSecure | bool | `true` | Serve metrics endpoint securely via HTTPS (default `true`). Set to `false` to use HTTP |
+| metricsSecure | bool | `nil` | Serve metrics endpoint securely via HTTPS. Upstream default is `true`. Only applies to the new `run` command (controller-runtime based). Leave unset to omit the flag entirely. |
 | nameOverride | string | `""` | Global name (argocd-image-updater.name in _helpers.tpl) override |
 | namespaceOverride | string | `""` | Global namespace (argocd-image-updater.namespace in _helpers.tpl) override |
 | nodeSelector | object | `{}` | Kubernetes nodeSelector settings for the deployment |
