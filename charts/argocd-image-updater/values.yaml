@@ -36,6 +36,12 @@ namespaceOverride: ""
 ## If you want to use this, please set `.Values.rbac.enabled` true as well.
 createClusterRoles: true
 
+# -- Serve metrics endpoint securely via HTTPS (default `true`). Set to `false` to use HTTP
+metricsSecure: true
+
+# -- Enable HTTP/2 for the metrics and webhook servers
+enableHTTP2: false
+
 # -- Extra arguments for argocd-image-updater not defined in `config.argocd`.
 # If a flag contains both key and value, they need to be split to a new entry.
 extraArgs: []
@@ -153,8 +159,33 @@ config:
   # -- Method used to sign Git commits. `openpgp` or `ssh`
   git.commit-signing-method: ""
 
+  # -- Argo CD Image Updater log format (`text` or `json`)
+  log.format: ""
+
   # -- Argo CD Image Update log level
   log.level: "info"
+
+  # -- Interval for how often to check for updates (e.g. `2m`, `5m`)
+  interval: ""
+
+  # -- Maximum number of ArgoCD applications that can be updated concurrently
+  max_concurrent_apps: ""
+
+  # -- Maximum number of concurrent Reconciles which can be run
+  max_concurrent_reconciles: ""
+
+  # -- Namespace where ArgoCD runs in (defaults to the controller namespace)
+  argocd.namespace: ""
+
+  # -- Enable webhook server for receiving registry events
+  webhook.enable: ""
+
+  # -- Port to listen on for webhook events
+  webhook.port: ""
+
+  # -- The number of allowed requests per hour for webhook rate limiting (0 disables)
+  webhook.ratelimit-allowed: ""
+
 
   # -- Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/).
   registries: []
