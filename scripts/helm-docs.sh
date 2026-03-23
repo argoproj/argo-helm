@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ## Reference: https://github.com/norwoodj/helm-docs
 set -eux
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"

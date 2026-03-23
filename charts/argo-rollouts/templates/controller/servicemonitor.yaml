@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "argo-rollouts.fullname" . }}
-  namespace: {{ default .Release.Namespace .Values.controller.metrics.serviceMonitor.namespace | quote }}
+  namespace: {{ default (include "argo-rollouts.namespace" .) .Values.controller.metrics.serviceMonitor.namespace | quote }}
   labels:
     app.kubernetes.io/component: {{ .Values.controller.component }}
     {{- include "argo-rollouts.labels" . | nindent 4 }}
@@ -17,6 +17,11 @@ metadata:
 spec:
   endpoints:
   - port: {{ .Values.controller.metrics.service.portName }}
+    {{- with .Values.controller.metrics.serviceMonitor.tlsConfig }}
+    scheme: https
+    tlsConfig:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- with .Values.controller.metrics.serviceMonitor.relabelings }}
     relabelings:
       {{- toYaml . | nindent 6 }}

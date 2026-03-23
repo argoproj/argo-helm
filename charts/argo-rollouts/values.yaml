@@ -15,6 +15,10 @@ nameOverride:
 # -- String to fully override "argo-rollouts.fullname" template
 fullnameOverride:
 
+# -- Override the namespace
+# @default -- `.Release.Namespace`
+namespaceOverride: ""
+
 ## Override APIVersions
 ## If you want to template helm charts but cannot access k8s API server
 ## you can set api versions here
@@ -45,6 +49,18 @@ global:
   deploymentLabels: {}
   # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
   revisionHistoryLimit: 10
+  # -- Specifies the deployment DNS configuration for controller and dashboard.
+  dnsConfig: {}
+  # nameservers:
+  #   - 1.2.3.4
+  # searches:
+  #   - ns1.svc.cluster-domain.example
+  #   - my.dns.search.suffix
+  # options:
+  #   - name: ndots
+  #     value: "1"
+  #   - name: attempts
+  #     value: "3"
 
 controller:
   # -- Value of label `app.kubernetes.io/component`
@@ -162,6 +178,12 @@ controller:
       relabelings: []
       # -- MetricRelabelConfigs to apply to samples before ingestion
       metricRelabelings: []
+      # -- TLS configuration for the ServiceMonitor. When set, scheme will be https
+      tlsConfig: {}
+        # caFile: /etc/istio-certs/root-cert.pem
+        # certFile: /etc/istio-certs/cert-chain.pem
+        # insecureSkipVerify: true
+        # keyFile: /etc/istio-certs/key.pem
 
   # -- Configure liveness [probe] for the controller
   # @default -- See [values.yaml]
@@ -228,6 +250,12 @@ controller:
   trafficRouterPlugins: []
     # - name: "argoproj-labs/sample-nginx" # name of the plugin, it must match the name required by the plugin so it can find it's configuration
     #   location: "file://./my-custom-plugin" # supports http(s):// urls and file://
+
+  # -- Whether to create the argo-rollouts-config ConfigMap. Set to false when running multiple
+  # controller instances in the same namespace (e.g. with different --instance-id values) to
+  # avoid Helm ownership conflicts; each secondary instance will read the ConfigMap created by
+  # the primary release.
+  createConfigmap: true
 
 serviceAccount:
   # -- Specifies whether a service account should be created

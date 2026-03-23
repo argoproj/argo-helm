@@ -12,6 +12,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.dex.name "name" .Values.dex.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.dex.deploymentLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.dex.deploymentStrategy) }}
   strategy:
@@ -99,6 +102,12 @@ spec:
                 key: dexserver.log.level
                 name: argocd-cmd-params-cm
                 optional: true
+          - name: ARGOCD_LOG_FORMAT_TIMESTAMP
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: log.format.timestamp
+                optional: true
           - name: ARGOCD_DEX_SERVER_DISABLE_TLS
             valueFrom:
               configMapKeyRef:
@@ -147,10 +156,14 @@ spec:
           {{- toYaml .Values.dex.resources | nindent 10 }}
         {{- with .Values.dex.containerSecurityContext }}
         securityContext:
-          {{- toYaml . | nindent 10 }}
+          {{- if $.Values.openshift.enabled }}
+            {{- omit . "runAsUser" | toYaml | nindent 10 }}
+          {{- else }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
         {{- end }}
         volumeMounts:
-        {{- with .Values.dex.volumeMounts }}
+        {{- with (concat .Values.global.extraVolumeMounts .Values.dex.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - name: static-files
@@ -180,7 +193,11 @@ spec:
           {{- toYaml (default .Values.dex.resources .Values.dex.initImage.resources) | nindent 10 }}
         {{- with .Values.dex.containerSecurityContext }}
         securityContext:
-          {{- toYaml . | nindent 10 }}
+          {{- if $.Values.openshift.enabled }}
+            {{- omit . "runAsUser" | toYaml | nindent 10 }}
+          {{- else }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
         {{- end }}
       {{- with .Values.dex.initContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
@@ -234,7 +251,7 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-      {{- with .Values.dex.volumes }}
+      {{- with (concat .Values.global.extraVolumes .Values.dex.volumes) }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
       {{- with .Values.dex.dnsConfig }}

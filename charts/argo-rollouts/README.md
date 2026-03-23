@@ -51,12 +51,14 @@ For full list of changes please check ArtifactHub [changelog].
 | fullnameOverride | string | `nil` | String to fully override "argo-rollouts.fullname" template |
 | global.deploymentAnnotations | object | `{}` | Annotations for all deployed Deployments |
 | global.deploymentLabels | object | `{}` | Labels for all deployed Deployments |
+| global.dnsConfig | object | `{}` | Specifies the deployment DNS configuration for controller and dashboard. |
 | global.revisionHistoryLimit | int | `10` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
 | imagePullSecrets | list | `[]` | Secrets with credentials to pull images from a private registry. Registry secret names as an array. |
 | installCRDs | bool | `true` | Install and upgrade CRDs |
 | keepCRDs | bool | `true` | Keep CRD's on helm uninstall |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `nil` | String to partially override "argo-rollouts.fullname" template |
+| namespaceOverride | string | `.Release.Namespace` | Override the namespace |
 | notifications.configmap.create | bool | `true` | Whether to create notifications configmap |
 | notifications.notifiers | object | `{}` | Configures notification services |
 | notifications.secret.annotations | object | `{}` | Annotations to be added to the notifications secret |
@@ -88,6 +90,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.containerPorts.healthz | int | `8080` | Healthz container port |
 | controller.containerPorts.metrics | int | `8090` | Metrics container port |
 | controller.createClusterRole | bool | `true` | flag to enable creation of cluster controller role (requires cluster RBAC) |
+| controller.createConfigmap | bool | `true` | Whether to create the argo-rollouts-config ConfigMap. Set to false when running multiple controller instances in the same namespace (e.g. with different --instance-id values) to avoid Helm ownership conflicts; each secondary instance will read the ConfigMap created by the primary release. |
 | controller.deploymentAnnotations | object | `{}` | Annotations to be added to the controller deployment |
 | controller.deploymentLabels | object | `{}` | Labels to be added to the controller deployment |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-controller.  A list of flags. |
@@ -114,6 +117,7 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.metrics.serviceMonitor.metricRelabelings | list | `[]` | MetricRelabelConfigs to apply to samples before ingestion |
 | controller.metrics.serviceMonitor.namespace | string | `""` | Namespace to be used for the ServiceMonitor |
 | controller.metrics.serviceMonitor.relabelings | list | `[]` | RelabelConfigs to apply to samples before scraping |
+| controller.metrics.serviceMonitor.tlsConfig | object | `{}` | TLS configuration for the ServiceMonitor. When set, scheme will be https |
 | controller.nodeSelector | object | `{}` | [Node selector] |
 | controller.pdb.annotations | object | `{}` | Annotations to be added to controller [Pod Disruption Budget] |
 | controller.pdb.enabled | bool | `false` | Deploy a [Pod Disruption Budget] for the controller |

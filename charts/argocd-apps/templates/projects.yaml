@@ -1,4 +1,7 @@
 {{- range $projectName, $projectData := .Values.projects }}
+{{- if not $projectData }}
+{{- continue }}
+{{- end }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject

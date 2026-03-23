@@ -236,6 +236,124 @@ server:
         enabled: true
 ```
 
+### AKS Application Routing (generic)
+
+AKS Web Application Routing uses the standard Kubernetes Ingress specification, so the `generic` controller type is sufficient.  
+webapprouting provides a managed ingress controller based on nginx.  
+
+```yaml  
+global:  
+  domain: argocd.example.com  
+  
+configs:  
+  params:  
+    server.insecure: true  
+  
+server:  
+  ingress:  
+    enabled: true  
+    controller: generic  
+    ingressClassName: webapprouting.kubernetes.azure.com  
+    annotations:  
+      # Optional: Add any AKS-specific annotations if needed  
+    extraTls:  
+      - hosts:  
+          - argocd.example.com  
+        # Certificate can be managed by Web Application Routing  
+        secretName: argocd-tls
+```
+
+### Gateway API HTTPRoute
+
+The Gateway API provides a modern, extensible way to configure ingress traffic routing. This chart supports HTTPRoute resources as an alternative to traditional Ingress.
+
+> **Note:**
+> Gateway API support is **EXPERIMENTAL**. Support depends on your Gateway controller implementation. Some controllers may require additional configuration (e.g., BackendTLSPolicy for HTTPS backends). Refer to [Gateway API implementations](https://gateway-api.sigs.k8s.io/implementations/) for controller-specific details.
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: https
+```
+
+#### Gateway API with gRPC support
+
+For deployments requiring gRPC routing, use GRPCRoute alongside HTTPRoute:
+
+```yaml
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: https
+
+  grpcroute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: grpc
+```
+
+#### Gateway API with TLS backend
+
+For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy (experimental, v1alpha3):
+
+> **Warning:**
+> BackendTLSPolicy is in **EXPERIMENTAL** status. Not all Gateway controllers support this resource (e.g., Cilium does not yet support it).
+
+```yaml
+configs:
+  params:
+    server.insecure: false  # HTTPS backend
+
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+
+  backendTLSPolicy:
+    enabled: true
+    hostname: argocd-server.argocd.svc.cluster.local
+    wellKnownCACertificates: System
+```
+
+## Setting the initial admin password via Argo CD Application CR
+
+> **Note:** When deploying the `argo-cd` chart via an Argo CD `Application` CR, define your bcrypt-hashed admin password under `helm.values`—not `helm.parameters`—because Argo CD performs variable substitution on `parameters`, which will mangle any `$…` in your hash.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-testing
+spec:
+  destination:
+    namespace: testing
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: argo-cd
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 3.21.0
+    helm:
+      values: |
+        configs:
+          secret:
+            argocdServerAdminPassword: $2a$10$H1a30nMr9v2QE2nkyz0BoOD2J0I6FQFMtHS0csEg12RBWzfRuuoE6
+```
+
 
 ## Synchronizing Changes from Original Repository
 
@@ -259,6 +377,8 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ### Custom resource definitions
 
+The chart enables server-side apply for CustomResourceDefinitions when using Argo CD to install Argo CD using the `crds.annotations.argocd.argoproj.io/sync-options` annotation. This default avoids client-side apply size limits that can affect large CRDs (for example, ApplicationSet CRDs) and follows the upstream upgrade guidance: https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/3.2-3.3/#applicationset-crd-exceeds-the-size-limit-for-client-side-apply. If you install the CRDs manually using kubectl make sure to enable server-side apply.
+
 Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
 
 Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations). Starting with 5.2.0, the CRDs have been moved to `<chart>/templates` to address this design decision.
@@ -277,6 +397,69 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
+
+### 9.1.0
+This chart contains a breaking change (if using `redis-ha`), which was introduced by the dependency `redis-ha` (as seen [here](https://github.com/DandyDeveloper/charts/blob/a03b6a6f4d72b6606ce9a218c7d0026350b48ad0/charts/redis-ha/README.md#4341---upgrade-may-complain-about-selector-label-changes-being-immutable)). The upgrade will complain about selector label changes being immutable, which requires a replacement of the `argocd-redis-ha-haproxy` deployment. To overcome this, you will need to delete (orphaning children) this deployment, updated ArgoCD to disable server-side diffing, then allow the new deployment of `argocd-redis-ha-haproxy` to rollout with the updated label selectors.
+
+> Note: If server-side diffing is enabled, you will need to revert this to use client-side diffing, otherwise ArgoCD will be in an Unknown status. More information [here](https://github.com/argoproj/argo-cd/issues/25184). If you happened to upgrade this helm chart before configuring client-side diffing, you will need to delete (orphaning children) the `argocd-redis-ha-haproxy` deployment; once the newest deployment has rolled out, its suggested to cleanup the orphaned ReplicaSets
+
+This issue was reported [here](https://github.com/argoproj/argo-helm/issues/3571)
+
+### 9.0.0
+We have removed all parameters under `.Values.configs.params` in this release, with the exception of `create` and `annotations`.
+This is to ensure better alignment with the upstream project, as tracking changes to their default values within the Helm chart has become challenging.
+
+**Though we removed the parameters from values.yaml in argo-helm, we keep providing the interface to override `.Values.configs.params` as the same way. **
+
+**Breaking change**
+
+Please be aware that the default value for `applicationsetcontroller.policy` has been updated to match the upstream default. The chart's default was previously `'sync'`, while the upstream default is `""` (an empty string).
+If you rely on the previous behavior, you will need to update your values.yaml.
+
+To restore the previous setting, you can override the argocd-cmd-params-cm ConfigMap as you could in older versions.
+
+```yaml
+configs:
+  params:
+    applicationsetcontroller.policy: 'sync'
+```
+
+### 8.0.0
+
+In this release we upgrade the Helm chart to deploy the next major version of Argo CD (v3.0.0).
+Please carefully read at least those resources:
+- [v2.14 to 3.0 upgrade instructions]
+- [Argo CD v3.0 Release Blog Post]
+
+### 7.9.0
+
+Chart versions from >= 7.7.2 and < 7.9.0 are using a Redis version which is no longer using an open source version of Redis.
+Thus we downgraded Redis to latest available 7.2 (from 7.4) to be in-line with upstream manifests and fully honor
+[CNCF Allowlist License Policy].
+
+
+**Users using redis-ha may encounter issues** which can be resolved by either deleting all redis-ha pods after the
+deployment/upgrade:
+
+```bash
+kubectl delete pods -l app=redis-ha
+```
+
+Or alternatively by temporary switching to a single redis installation, then back to HA.
+1. Evaluate current chart version in use
+   ```bash
+   $ helm ls
+   NAME  	NAMESPACE	REVISION	UPDATED                              	STATUS  	CHART         	APP VERSION
+   argocd	argocd   	3       	2025-04-29 00:07:43.099922 +0200 CEST	deployed	argo-cd-7.8.28	v2.14.11
+   ```
+2. Switch to single redis
+   ```bash
+   helm upgrade argocd argo/argo-cd --version <your current chart version> --reuse-values --set redis-ha.enabled=false
+   ```
+3. Upgrade to chart version 7.9 or newer and re-enable redis HA again
+   ```bash
+   helm upgrade argocd argo/argo-cd --version 7.9.0 --reuse-values --set redis-ha.enabled=true
+   ```
 
 ### 7.0.0
 
@@ -679,7 +862,8 @@ NAME: my-release
 
 ## Global Configs
 
-NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm ConfigMap.
+> **Note:**
+> Any values you put under `.Values.configs.cm` are passed to argocd-cm ConfigMap, and under `.Values.configs.params` are passed to argocd-params-cm ConfigMap.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -863,3 +1047,6 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [Argo CD Extension Installer]: https://github.com/argoproj-labs/argocd-extension-installer
 [Argo CD Manifest Hydrator]: https://argo-cd.readthedocs.io/en/stable/proposals/manifest-hydrator/
 [Manifest Hydrator]: https://github.com/argoproj/argo-cd/blob/master/docs/proposals/manifest-hydrator.md
+[CNCF Allowlist License Policy]: https://github.com/cncf/foundation/blob/main/allowed-third-party-license-policy.md#cncf-allowlist-license-policy
+[v2.14 to 3.0 upgrade instructions]: https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/2.14-3.0/
+[Argo CD v3.0 Release Blog Post]: https://blog.argoproj.io/argo-cd-v3-0-release-candidate-a0b933f4e58f

@@ -1,0 +1,55 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    {{- include "argocd-image-updater.labels" . | nindent 4 }}
+  name: {{ include "argocd-image-updater.fullname" . }}-leader-election-role
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    {{- include "argocd-image-updater.labels" . | nindent 4 }}
+  name: {{ include "argocd-image-updater.fullname" . }}-leader-election-rolebinding
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "argocd-image-updater.fullname" . }}-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: {{ include "argocd-image-updater.serviceAccountName" . }}
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}

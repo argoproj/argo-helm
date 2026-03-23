@@ -1,0 +1,102 @@
+header:
+  schema-version: 2.2.0
+  last-updated: "2026-02-14"
+  last-reviewed: "2026-02-14"
+  url: https://github.com/argoproj/argo-helm
+
+project:
+  name: Argo Helm
+  homepage: https://argoproj.github.io/argo-helm
+  administrators:
+    - name: Marco Maurer
+      social: https://github.com/mkilchhofer
+      primary: true
+    - name: Jason Meridth
+      social: https://github.com/jmeridth
+      primary: false
+    - name: Aikawa
+      social: https://github.com/yu-cruco
+      primary: false
+    - name: Tim Collins
+      social: https://github.com/tico24
+      primary: false
+  repositories:
+    - name: argo-helm
+      url: https://github.com/argoproj/argo-helm
+      comment: |
+        Argo Helm is the repository for Argo project Helm charts.
+  documentation:
+    code-of-conduct: https://github.com/cncf/foundation/blob/master/code-of-conduct.md
+  vulnerability-reporting:
+    reports-accepted: true
+    bug-bounty-available: false
+    contact:
+      name: Argo Helm Security
+      email: cncf-argo-maintainers@lists.cncf.io
+      primary: true
+    policy: https://github.com/argoproj/argo-helm/blob/main/SECURITY.md
+    comment: |
+      Our preferred contact method related to vulnerabilities is the Security tab on GitHub.
+      Click the button "Report a vulnerability" to open the advisory form.
+      Please refer to the security policy for reporting information prior to using the email contact.
+
+repository:
+  status: active
+  url: https://github.com/argoproj/argo-helm
+  accepts-change-request: true
+  accepts-automated-change-request: true
+  bug-fixes-only: false
+  core-team:
+    - name: Marco Maurer
+      social: https://github.com/mkilchhofer
+      primary: true
+    - name: Jason Meridth
+      social: https://github.com/jmeridth
+      primary: false
+    - name: Aikawa
+      social: https://github.com/yu-cruco
+      primary: false
+    - name: Tim Collins
+      social: https://github.com/tico24
+      primary: false
+  license:
+    url: https://github.com/argoproj/argo-helm/blob/main/LICENSE
+    expression: Apache-2.0
+  security:
+    assessments:
+      self:
+        comment: |
+          Self assessment has not yet been completed.
+    tools:
+      - name: Dependabot
+        type: SCA
+        rulesets:
+          - built-in
+        integration:
+          adhoc: false
+          ci: true
+          release: false
+        results: {}
+        comment: |
+          Dependabot is used for automated dependency updates.
+      - name: Renovate
+        type: SCA
+        rulesets:
+          - built-in
+        integration:
+          adhoc: false
+          ci: true
+          release: false
+        results: {}
+        comment: |
+          Renovate is used for automated dependency updates.
+  documentation:
+    contributing-guide: https://github.com/argoproj/argo-helm/blob/main/CONTRIBUTING.md
+    dependency-management-policy: https://github.com/argoproj/argo-helm/blob/master/CONTRIBUTING.md#new-application-versions
+  release:
+    automated-pipeline: true
+    distribution-points:
+      - uri: https://argoproj.github.io/argo-helm
+        comment: Argo Helm Chart Repository
+      - uri: https://artifacthub.io/packages/search?org=argoproj&repo=argo
+        comment: Artifact Hub

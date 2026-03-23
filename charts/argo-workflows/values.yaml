@@ -13,8 +13,39 @@ crds:
   install: true
   # -- Keep CRDs on chart uninstall
   keep: true
-  # -- Annotations to be added to all CRDs
+  # -- Use full CRDs with complete OpenAPI schemas. When false, uses minified CRDs with x-kubernetes-preserve-unknown-fields.
+  # Full CRDs are very large and are installed via a pre-install/pre-upgrade hook Job that uses server-side apply.
+  full: true
+  # -- Annotations to be added to all CRDs (only applies when crds.full=false)
   annotations: {}
+  # -- Configuration for the CRD install Job (only used when crds.full=true)
+  upgradeJob:
+    # -- Image for the kubectl container that applies CRDs
+    image:
+      # -- Repository for the kubectl image
+      repository: registry.k8s.io/kubectl
+      # -- Tag for the kubectl image
+      tag: v1.35.3
+    # -- Override base URL to download full CRD YAML files from. Defaults to this chart's release tag on GitHub. Ignored if hostPath is set.
+    crdBaseURL: ""
+    # -- Host path to mount CRD files from (for local/CI testing). When set, CRDs are applied from this path instead of downloading.
+    hostPath: ""
+    # -- Resources for the CRD install Job containers
+    resources: {}
+    # -- Node selector for the CRD install Job
+    nodeSelector: {}
+    # -- Tolerations for the CRD install Job
+    tolerations: []
+    # -- Image pull secrets for the CRD install Job
+    imagePullSecrets: []
+    # -- Extra environment variables to provide to the CRD install Job container
+    extraEnv: []
+    # - name: HTTP_PROXY
+    #   value: "http://proxy.example.com:8080"
+    # - name: HTTPS_PROXY
+    #   value: "http://proxy.example.com:8080"
+    # - name: NO_PROXY
+    #   value: "localhost,127.0.0.1,10.96.0.0/12,192.168.0.0/16"
 
 # -- Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs.
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -151,6 +182,8 @@ controller:
     servicePort: 8080
     # -- Service metrics port name
     servicePortName: metrics
+    # -- serviceMonitor scheme
+    scheme: http
     # -- Flag to enable headless service
     headlessService: false
     # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
@@ -165,6 +198,10 @@ controller:
     # -- ServiceMonitor will add labels from the service to the Prometheus metric
     ## Ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
     targetLabels: []
+    # -- Manipulate the metrics created by the workflow controller
+    ## Ref: https://argo-workflows.readthedocs.io/en/latest/metrics/#modifiers
+    modifiers: {}
+
   # -- the controller container's securityContext
   securityContext:
     readOnlyRootFilesystem: true
@@ -258,6 +295,8 @@ controller:
     servicePort: 8081
     # -- telemetry service port name
     servicePortName: telemetry
+    # -- telemetry serviceMonitor scheme to use
+    scheme: http
   serviceMonitor:
     # -- Enable a prometheus ServiceMonitor
     enabled: false
@@ -265,6 +304,7 @@ controller:
     additionalLabels: {}
     # -- Prometheus ServiceMonitor namespace
     namespace: "" # "monitoring"
+
   serviceAccount:
     # -- Create a service account for the controller
     create: true
@@ -433,6 +473,49 @@ controller:
   # @default -- `5s` (Argo Workflows default)
   podGCDeleteDelayDuration: ""
 
+  # -- enable Synchronization to use a database.  Postgres and MySQL (>= 5.7.8) are available.
+  ## Ref: https://argo-workflows.readthedocs.io/en/latest/workflow-controller-configmap/#syncconfig
+  synchronization: {}
+  # controllerName: argo-workflows
+  # connectionPool:
+  #   maxIdleConns: 100
+  #   maxOpenConns: 0
+  # postgresql:
+  #   host: localhost
+  #   port: 5432
+  #   database: postgres
+  #   tableName: argo_workflows
+  #   # the database secrets must be in the same namespace of the controller
+  #   userNameSecret:
+  #     name: argo-postgres-config
+  #     key: username
+  #   passwordSecret:
+  #     name: argo-postgres-config
+  #     key: password
+  #   ssl: true
+  #   # sslMode must be one of: disable, require, verify-ca, verify-full
+  #   # you can find more information about those ssl options here: https://godoc.org/github.com/lib/pq
+  #   sslMode: require
+  # mysql:
+  #   host: localhost
+  #   port: 3306
+  #   database: argo
+  #   tableName: argo_workflows
+  #   userNameSecret:
+  #     name: argo-mysql-config
+  #     key: username
+  #   passwordSecret:
+  #     name: argo-mysql-config
+  #     key: password
+
+  failedPodRestart:
+    # -- Enable to restart of pods that fail before entering Running state.
+    ## This is useful for recovering from transient infrastructure issues like node eviction due to DiskPressure or MemoryPressure without requiring a retryStrategy on every template.
+    ## ref: https://argo-workflows.readthedocs.io/en/latest/pod-restarts/
+    enabled: false
+    # -- Maximum number of automatic restarts per node before giving up.
+    maxRestarts: 3
+
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
   # -- imagePullPolicy to apply to Workflow main container. Defaults to `.Values.images.pullPolicy`.
@@ -506,6 +589,8 @@ server:
   serviceType: ClusterIP
   # -- Service port for server
   servicePort: 2746
+  # -- Service target port for server
+  serviceTargetPort: 2746
   # -- Service node port
   serviceNodePort: # 32746
   # -- Service port name
@@ -713,6 +798,71 @@ server:
   #     enabled: true
   #     responseCodeName: RESPONSE_CODE
 
+  # Gateway API HTTPRoute configuration
+  # NOTE: Gateway API support is in EXPERIMENTAL status
+  # Support depends on your Gateway controller implementation
+  # Some controllers may require additional configuration (e.g., BackendTLSPolicy for HTTPS backends)
+  # Refer to https://gateway-api.sigs.k8s.io/implementations/ for controller-specific details
+  httproute:
+    # -- Enable HTTPRoute resource for Argo Workflows server (Gateway API)
+    enabled: false
+    # -- Additional HTTPRoute labels
+    labels: {}
+    # -- Additional HTTPRoute annotations
+    annotations: {}
+    # -- Gateway API parentRefs for the HTTPRoute
+    ## Must reference an existing Gateway
+    # @default -- `[]` (See [values.yaml])
+    parentRefs: []
+      # - name: example-gateway
+      #   namespace: example-gateway-namespace
+      #   sectionName: https
+    # -- List of hostnames for the HTTPRoute
+    # @default -- `[]` (See [values.yaml])
+    hostnames: []
+      # - argoworkflows.example.com
+    # -- HTTPRoute rules configuration
+    # @default -- `[]` (See [values.yaml])
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+        # filters: []
+        #   - type: RequestHeaderModifier
+        #     requestHeaderModifier:
+        #       add:
+        #         - name: X-Custom-Header
+        #           value: custom-value
+
+  # Gateway API BackendTLSPolicy configuration
+  # NOTE: BackendTLSPolicy support is in EXPERIMENTAL status
+  # Required for HTTPS backends when using Gateway API
+  # Not all Gateway controllers support this resource (e.g., Cilium does not support it yet)
+  backendTLSPolicy:
+    # -- Enable BackendTLSPolicy resource for Argo Workflows server (Gateway API)
+    enabled: false
+    # -- Additional BackendTLSPolicy labels
+    labels: {}
+    # -- Additional BackendTLSPolicy annotations
+    annotations: {}
+    # -- Target references for the BackendTLSPolicy
+    # @default -- `[]` (See [values.yaml])
+    targetRefs: []
+      # - group: ""
+      #   kind: Service
+      #   name: argo-workflows-server
+      #   sectionName: https
+    # -- TLS validation configuration
+    # @default -- `{}` (See [values.yaml])
+    validation: {}
+      # hostname: argo-workflows-server.argo.svc.cluster.local
+      # caCertificateRefs:
+      #   - name: example-ca-cert
+      #     group: ""
+      #     kind: ConfigMap
+      # wellKnownCACertificates: System
+
   clusterWorkflowTemplates:
     # -- Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates.
     enabled: true
@@ -865,7 +1015,7 @@ artifactRepository:
     # keyFormat: "{{ \"{{workflow.namespace}}/{{workflow.name}}/{{pod.name}}\" }}"
     # # serviceAccountKeySecret is a secret selector.
     # # It references the k8s secret named 'my-gcs-credentials'.
-    # # This secret is expected to have have the key 'serviceAccountKey',
+    # # This secret is expected to have the key 'serviceAccountKey',
     # # containing the base64 encoded credentials
     # # to the bucket.
     # #
@@ -882,7 +1032,7 @@ artifactRepository:
     # blobNameFormat: path/in/container
     # # accountKeySecret is a secret selector.
     # # It references the k8s secret named 'my-azure-storage-credentials'.
-    # # This secret is expected to have have the key 'account-access-key',
+    # # This secret is expected to have the key 'account-access-key',
     # # containing the base64 encoded credentials to the storage account.
     # # If a managed identity has been assigned to the machines running the
     # # workflow (e.g., https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
@@ -938,7 +1088,7 @@ artifactRepositoryRef: {}
   #        bucket: $mybucket
   #        # accessKeySecret and secretKeySecret are secret selectors.
   #        # It references the k8s secret named 'bucket-workflow-artifect-credentials'.
-  #        # This secret is expected to have have the keys 'accessKey'
+  #        # This secret is expected to have the keys 'accessKey'
   #        # and 'secretKey', containing the base64 encoded credentials
   #        # to the bucket.
   #        accessKeySecret:

@@ -1,4 +1,4 @@
-{{- if and .Values.commitServer.enabled .Values.global.networkPolicy.create }}
+{{- if and .Values.commitServer.enabled (or .Values.commitServer.networkPolicy.create .Values.global.networkPolicy.create)}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

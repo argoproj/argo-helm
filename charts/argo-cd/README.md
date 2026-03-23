@@ -237,6 +237,124 @@ server:
         enabled: true
 ```
 
+### AKS Application Routing (generic)
+
+AKS Web Application Routing uses the standard Kubernetes Ingress specification, so the `generic` controller type is sufficient. 
+webapprouting provides a managed ingress controller based on nginx. 
+
+```yaml 
+global: 
+  domain: argocd.example.com 
+ 
+configs: 
+  params: 
+    server.insecure: true 
+ 
+server: 
+  ingress: 
+    enabled: true 
+    controller: generic 
+    ingressClassName: webapprouting.kubernetes.azure.com 
+    annotations: 
+      # Optional: Add any AKS-specific annotations if needed 
+    extraTls: 
+      - hosts: 
+          - argocd.example.com 
+        # Certificate can be managed by Web Application Routing 
+        secretName: argocd-tls
+```
+
+### Gateway API HTTPRoute
+
+The Gateway API provides a modern, extensible way to configure ingress traffic routing. This chart supports HTTPRoute resources as an alternative to traditional Ingress.
+
+> **Note:**
+> Gateway API support is **EXPERIMENTAL**. Support depends on your Gateway controller implementation. Some controllers may require additional configuration (e.g., BackendTLSPolicy for HTTPS backends). Refer to [Gateway API implementations](https://gateway-api.sigs.k8s.io/implementations/) for controller-specific details.
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: https
+```
+
+#### Gateway API with gRPC support
+
+For deployments requiring gRPC routing, use GRPCRoute alongside HTTPRoute:
+
+```yaml
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: https
+
+  grpcroute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: grpc
+```
+
+#### Gateway API with TLS backend
+
+For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy (experimental, v1alpha3):
+
+> **Warning:**
+> BackendTLSPolicy is in **EXPERIMENTAL** status. Not all Gateway controllers support this resource (e.g., Cilium does not yet support it).
+
+```yaml
+configs:
+  params:
+    server.insecure: false  # HTTPS backend
+
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+
+  backendTLSPolicy:
+    enabled: true
+    hostname: argocd-server.argocd.svc.cluster.local
+    wellKnownCACertificates: System
+```
+
+## Setting the initial admin password via Argo CD Application CR
+
+> **Note:** When deploying the `argo-cd` chart via an Argo CD `Application` CR, define your bcrypt-hashed admin password under `helm.values`—not `helm.parameters`—because Argo CD performs variable substitution on `parameters`, which will mangle any `$…` in your hash.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-testing
+spec:
+  destination:
+    namespace: testing
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: argo-cd
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 3.21.0
+    helm:
+      values: |
+        configs:
+          secret:
+            argocdServerAdminPassword: $2a$10$H1a30nMr9v2QE2nkyz0BoOD2J0I6FQFMtHS0csEg12RBWzfRuuoE6
+```
+
 ## Synchronizing Changes from Original Repository
 
 In the original [Argo CD repository](https://github.com/argoproj/argo-cd/) an [`manifests/install.yaml`](https://github.com/argoproj/argo-cd/blob/master/manifests/install.yaml) is generated using `kustomize`. It's the basis for the installation as [described in the docs](https://argo-cd.readthedocs.io/en/stable/getting_started/#1-install-argo-cd).
@@ -259,6 +377,8 @@ Changes in the `CustomResourceDefinition` resources shall be fixed easily by cop
 
 ### Custom resource definitions
 
+The chart enables server-side apply for CustomResourceDefinitions when using Argo CD to install Argo CD using the `crds.annotations.argocd.argoproj.io/sync-options` annotation. This default avoids client-side apply size limits that can affect large CRDs (for example, ApplicationSet CRDs) and follows the upstream upgrade guidance: https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/3.2-3.3/#applicationset-crd-exceeds-the-size-limit-for-client-side-apply. If you install the CRDs manually using kubectl make sure to enable server-side apply.
+
 Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart by using `--set crds.install=false` when installing the chart.
 
 Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations). Starting with 5.2.0, the CRDs have been moved to `<chart>/templates` to address this design decision.
@@ -277,6 +397,68 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
+
+### 9.1.0
+This chart contains a breaking change (if using `redis-ha`), which was introduced by the dependency `redis-ha` (as seen [here](https://github.com/DandyDeveloper/charts/blob/a03b6a6f4d72b6606ce9a218c7d0026350b48ad0/charts/redis-ha/README.md#4341---upgrade-may-complain-about-selector-label-changes-being-immutable)). The upgrade will complain about selector label changes being immutable, which requires a replacement of the `argocd-redis-ha-haproxy` deployment. To overcome this, you will need to delete (orphaning children) this deployment, updated ArgoCD to disable server-side diffing, then allow the new deployment of `argocd-redis-ha-haproxy` to rollout with the updated label selectors.
+
+> Note: If server-side diffing is enabled, you will need to revert this to use client-side diffing, otherwise ArgoCD will be in an Unknown status. More information [here](https://github.com/argoproj/argo-cd/issues/25184). If you happened to upgrade this helm chart before configuring client-side diffing, you will need to delete (orphaning children) the `argocd-redis-ha-haproxy` deployment; once the newest deployment has rolled out, its suggested to cleanup the orphaned ReplicaSets
+
+This issue was reported [here](https://github.com/argoproj/argo-helm/issues/3571)
+
+### 9.0.0
+We have removed all parameters under `.Values.configs.params` in this release, with the exception of `create` and `annotations`.
+This is to ensure better alignment with the upstream project, as tracking changes to their default values within the Helm chart has become challenging.
+
+**Though we removed the parameters from values.yaml in argo-helm, we keep providing the interface to override `.Values.configs.params` as the same way. **
+
+**Breaking change**
+
+Please be aware that the default value for `applicationsetcontroller.policy` has been updated to match the upstream default. The chart's default was previously `'sync'`, while the upstream default is `""` (an empty string).
+If you rely on the previous behavior, you will need to update your values.yaml.
+
+To restore the previous setting, you can override the argocd-cmd-params-cm ConfigMap as you could in older versions.
+
+```yaml
+configs:
+  params:
+    applicationsetcontroller.policy: 'sync'
+```
+
+### 8.0.0
+
+In this release we upgrade the Helm chart to deploy the next major version of Argo CD (v3.0.0).
+Please carefully read at least those resources:
+- [v2.14 to 3.0 upgrade instructions]
+- [Argo CD v3.0 Release Blog Post]
+
+### 7.9.0
+
+Chart versions from >= 7.7.2 and < 7.9.0 are using a Redis version which is no longer using an open source version of Redis.
+Thus we downgraded Redis to latest available 7.2 (from 7.4) to be in-line with upstream manifests and fully honor
+[CNCF Allowlist License Policy].
+
+**Users using redis-ha may encounter issues** which can be resolved by either deleting all redis-ha pods after the
+deployment/upgrade:
+
+```bash
+kubectl delete pods -l app=redis-ha
+```
+
+Or alternatively by temporary switching to a single redis installation, then back to HA.
+1. Evaluate current chart version in use
+   ```bash
+   $ helm ls
+   NAME  	NAMESPACE	REVISION	UPDATED                              	STATUS  	CHART         	APP VERSION
+   argocd	argocd   	3       	2025-04-29 00:07:43.099922 +0200 CEST	deployed	argo-cd-7.8.28	v2.14.11
+   ```
+2. Switch to single redis
+   ```bash
+   helm upgrade argocd argo/argo-cd --version <your current chart version> --reuse-values --set redis-ha.enabled=false
+   ```
+3. Upgrade to chart version 7.9 or newer and re-enable redis HA again
+   ```bash
+   helm upgrade argocd argo/argo-cd --version 7.9.0 --reuse-values --set redis-ha.enabled=true
+   ```
 
 ### 7.0.0
 
@@ -670,8 +852,8 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | apiVersionOverrides | object | `{}` |  |
-| crds.additionalLabels | object | `{}` | Addtional labels to be added to all CRDs |
-| crds.annotations | object | `{}` | Annotations to be added to all CRDs |
+| crds.additionalLabels | object | `{}` | Additional labels to be added to all CRDs |
+| crds.annotations | object | `{"argocd.argoproj.io/sync-options":"ServerSideApply=true"}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `false` | Create aggregated roles that extend existing cluster roles to interact with argo-cd resources |
@@ -685,7 +867,8 @@ NAME: my-release
 
 ## Global Configs
 
-NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm ConfigMap.
+> **Note:**
+> Any values you put under `.Values.configs.cm` are passed to argocd-cm ConfigMap, and under `.Values.configs.params` are passed to argocd-params-cm ConfigMap.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -696,11 +879,14 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | global.affinity.podAntiAffinity | string | `"soft"` | Default pod anti-affinity rules. Either: `none`, `soft` or `hard` |
 | global.certificateAnnotations | object | `{}` | Annotations for the all deployed Certificates |
 | global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
+| global.deploymentLabels | object | `{}` | Labels for the all deployed Deployments |
 | global.deploymentStrategy | object | `{}` | Deployment strategy for the all deployed Deployments |
 | global.domain | string | `"argocd.example.com"` | Default domain used by all components |
 | global.dualStack.ipFamilies | list | `[]` | IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
 | global.dualStack.ipFamilyPolicy | string | `""` | IP family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
 | global.env | list | `[]` | Environment variables to pass to all deployed Deployments |
+| global.extraVolumeMounts | list | `[]` | Extra volume mounts to add to all deployed Deployments and StatefulSets |
+| global.extraVolumes | list | `[]` | Extra volumes to add to all deployed Deployments and StatefulSets |
 | global.hostAliases | list | `[]` | Mapping between IP and hostnames that will be injected as entries in the pod's hosts files |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all Argo CD deployments |
 | global.image.repository | string | `"quay.io/argoproj/argocd"` | If defined, a repository applied to all Argo CD deployments |
@@ -718,6 +904,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | global.runtimeClassName | string | `""` | Runtime class name for all components |
 | global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
 | global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
+| global.statefulsetLabels | object | `{}` | Labels for the all deployed Statefulsets |
 | global.tolerations | list | `[]` | Default tolerations for all components |
 | global.topologySpreadConstraints | list | `[]` | Default [TopologySpreadConstraints] rules for all components |
 
@@ -730,10 +917,19 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` | The name of tracking label used by Argo CD for resource pruning |
 | configs.cm."application.sync.impersonation.enabled" | bool | `false` | Enable control of the service account used for the sync operation (alpha) |
 | configs.cm."exec.enabled" | bool | `false` | Enable exec feature in Argo UI |
-| configs.cm."server.rbac.log.enforce.enable" | bool | `false` | Enable logs RBAC enforcement |
+| configs.cm."resource.customizations.ignoreResourceUpdates.ConfigMap" | string | See [values.yaml] | Ignore the cluster-autoscaler status |
+| configs.cm."resource.customizations.ignoreResourceUpdates.Endpoints" | string | See [values.yaml] | Ignores update if Endpoints is not excluded globally |
+| configs.cm."resource.customizations.ignoreResourceUpdates.all" | string | See [values.yaml] | Ignoring status for all resources. An update will still be sent if the status update causes the health to change. |
+| configs.cm."resource.customizations.ignoreResourceUpdates.apps_ReplicaSet" | string | See [values.yaml] | Ignore the common scaling annotations |
+| configs.cm."resource.customizations.ignoreResourceUpdates.argoproj.io_Application" | string | See [values.yaml] | Some Application fields are generated and not related to the application updates itself |
+| configs.cm."resource.customizations.ignoreResourceUpdates.argoproj.io_Rollout" | string | See [values.yaml] | Ignore Argo Rollouts generated fields |
+| configs.cm."resource.customizations.ignoreResourceUpdates.autoscaling_HorizontalPodAutoscaler" | string | See [values.yaml] | Legacy annotations used on HPA autoscaling/v1 |
+| configs.cm."resource.customizations.ignoreResourceUpdates.discovery.k8s.io_EndpointSlice" | string | See [values.yaml] | Ignores update if EndpointSlice is not excluded globally |
+| configs.cm."resource.exclusions" | string | See [values.yaml] | Resource Exclusion/Inclusion |
 | configs.cm."statusbadge.enabled" | bool | `false` | Enable Status Badge |
 | configs.cm."timeout.hard.reconciliation" | string | `"0s"` | Timeout to refresh application data as well as target manifests cache |
-| configs.cm."timeout.reconciliation" | string | `"180s"` | Timeout to discover if a new manifests version got published to the repository |
+| configs.cm."timeout.reconciliation" | string | `"120s"` | Timeout to discover if a new manifests version got published to the repository |
+| configs.cm."timeout.reconciliation.jitter" | string | `"60s"` | Maximum jitter added to the reconciliation timeout to spread out refreshes and reduce repo-server load |
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
 | configs.cm.create | bool | `true` | Create the argocd-cm configmap for [declarative setup] |
 | configs.cmp.annotations | object | `{}` | Annotations to be added to argocd-cmp-cm configmap |
@@ -743,26 +939,6 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | configs.credentialTemplatesAnnotations | object | `{}` | Annotations to be added to `configs.credentialTemplates` Secret |
 | configs.gpg.annotations | object | `{}` | Annotations to be added to argocd-gpg-keys-cm configmap |
 | configs.gpg.keys | object | `{}` (See [values.yaml]) | [GnuPG] public keys to add to the keyring |
-| configs.params."application.namespaces" | string | `""` | Enables [Applications in any namespace] |
-| configs.params."applicationsetcontroller.enable.progressive.syncs" | bool | `false` | Enables use of the Progressive Syncs capability |
-| configs.params."applicationsetcontroller.namespaces" | string | `""` (default is only the ns where the controller is installed) | A list of glob patterns specifying where to look for ApplicationSet resources. (e.g. `"argocd,argocd-appsets-*"`) |
-| configs.params."applicationsetcontroller.policy" | string | `"sync"` | Modify how application is synced between the generator and the cluster. One of: `sync`, `create-only`, `create-update`, `create-delete` |
-| configs.params."controller.ignore.normalizer.jq.timeout" | string | `"1s"` | JQ Path expression timeout |
-| configs.params."controller.operation.processors" | int | `10` | Number of application operation processors |
-| configs.params."controller.repo.server.timeout.seconds" | int | `60` | Repo server RPC call timeout seconds. |
-| configs.params."controller.self.heal.timeout.seconds" | int | `5` | Specifies timeout between application self heal attempts |
-| configs.params."controller.status.processors" | int | `20` | Number of application status processors |
-| configs.params."controller.sync.timeout.seconds" | int | `0` | Specifies the timeout after which a sync would be terminated. 0 means no timeout |
-| configs.params."otlp.address" | string | `""` | Open-Telemetry collector address: (e.g. "otel-collector:4317") |
-| configs.params."reposerver.parallelism.limit" | int | `0` | Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit. |
-| configs.params."server.basehref" | string | `"/"` | Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from / |
-| configs.params."server.disable.auth" | bool | `false` | Disable Argo CD RBAC for user authentication |
-| configs.params."server.enable.gzip" | bool | `true` | Enable GZIP compression |
-| configs.params."server.enable.proxy.extension" | bool | `false` | Enable proxy extension feature. (proxy extension is in Alpha phase) |
-| configs.params."server.insecure" | bool | `false` | Run server without TLS |
-| configs.params."server.rootpath" | string | `""` | Used if Argo CD is running behind reverse proxy under subpath different from / |
-| configs.params."server.staticassets" | string | `"/shared/app"` | Directory path that contains additional static assets |
-| configs.params."server.x.frame.options" | string | `"sameorigin"` | Set X-Frame-Options header in HTTP responses to value. To disable, set to "". |
 | configs.params.annotations | object | `{}` | Annotations to be added to the argocd-cmd-params-cm ConfigMap |
 | configs.params.create | bool | `true` | Create the argocd-cmd-params-cm configmap If false, it is expected the configmap will be created by something else. |
 | configs.rbac."policy.csv" | string | `''` (See [values.yaml]) | File containing user-defined policies and role definitions. |
@@ -806,6 +982,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | controller.containerPorts.metrics | int | `8082` | Metrics container port |
 | controller.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
 | controller.deploymentAnnotations | object | `{}` | Annotations for the application controller Deployment |
+| controller.deploymentLabels | object | `{}` | Labels for the application controller Deployment |
 | controller.dnsConfig | object | `{}` | [DNS configuration] |
 | controller.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for application controller pods |
 | controller.dynamicClusterDistribution | bool | `false` | Enable dynamic cluster distribution (alpha) Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/dynamic-cluster-distribution |
@@ -849,6 +1026,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | controller.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | controller.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | controller.name | string | `"application-controller"` | Application controller name string |
+| controller.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by application controller |
 | controller.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | controller.pdb.annotations | object | `{}` | Annotations to be added to application controller pdb |
 | controller.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the application controller |
@@ -866,6 +1044,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | controller.replicas | int | `1` | The number of application controller pods to run. Additional replicas will cause sharding of managed clusters across number of replicas. |
 | controller.resources | object | `{}` | Resource limits and requests for the application controller pods |
 | controller.revisionHistoryLimit | int | `5` | Maximum number of controller revisions that will be maintained in StatefulSet history |
+| controller.roleRules | list | `[]` | List of custom rules for the application controller's Role resource |
 | controller.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the application controller |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
@@ -873,11 +1052,17 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | controller.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | controller.serviceAccount.name | string | `"argocd-application-controller"` | Service account name |
 | controller.statefulsetAnnotations | object | `{}` | Annotations for the application controller StatefulSet |
+| controller.statefulsetLabels | object | `{}` | Labels for the application controller StatefulSet |
 | controller.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | controller.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | controller.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | controller.volumeMounts | list | `[]` | Additional volumeMounts to the application controller main container |
 | controller.volumes | list | `[]` | Additional volumes to the application controller pod |
+| controller.vpa.annotations | object | `{}` | Annotations to be added to application controller vpa |
+| controller.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for application controller container |
+| controller.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the application controller |
+| controller.vpa.labels | object | `{}` | Labels to be added to application controller vpa |
+| controller.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Argo Repo Server
 
@@ -903,7 +1088,9 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | repoServer.containerPorts.metrics | int | `8084` | Metrics container port |
 | repoServer.containerPorts.server | int | `8081` | Repo server container port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
+| repoServer.copyutil.resources | object | `{}` | Resource limits and requests for the repo server copyutil initContainer |
 | repoServer.deploymentAnnotations | object | `{}` | Annotations to be added to repo server Deployment |
+| repoServer.deploymentLabels | object | `{}` | Labels for the repo server Deployment |
 | repoServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the repo server Deployment |
 | repoServer.dnsConfig | object | `{}` | [DNS configuration] |
 | repoServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Repo server pods |
@@ -920,6 +1107,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | repoServer.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | repoServer.initContainers | list | `[]` | Init containers to add to the repo server pods |
 | repoServer.lifecycle | object | `{}` | Specify postStart and preStop lifecycle hooks for your argo-repo-server container |
+| repoServer.livenessProbe.enabled | bool | `true` | Enable Kubernetes liveness probe for Repo Server |
 | repoServer.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | repoServer.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | repoServer.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -945,6 +1133,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | repoServer.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | repoServer.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | repoServer.name | string | `"repo-server"` | Repo server name |
+| repoServer.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by repo server |
 | repoServer.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | repoServer.pdb.annotations | object | `{}` | Annotations to be added to repo server pdb |
 | repoServer.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the repo server |
@@ -955,6 +1144,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | repoServer.podLabels | object | `{}` | Labels to be added to repo server pods |
 | repoServer.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the repo server pods |
 | repoServer.rbac | list | `[]` | Repo server rbac rules |
+| repoServer.readinessProbe.enabled | bool | `true` | Enable Kubernetes readiness probe for Repo Server |
 | repoServer.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | repoServer.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | repoServer.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -967,6 +1157,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | repoServer.service.labels | object | `{}` | Repo server service labels |
 | repoServer.service.port | int | `8081` | Repo server service port |
 | repoServer.service.portName | string | `"tcp-repo-server"` | Repo server service port name |
+| repoServer.service.trafficDistribution | string | `""` | Traffic distribution preference for the repo server service. If the field is not set, the implementation will apply its default routing strategy. |
 | repoServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | repoServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | repoServer.serviceAccount.create | bool | `true` | Create repo server service account |
@@ -992,6 +1183,11 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | server.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Argo CD server [HPA] |
 | server.autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage for the Argo CD server [HPA] |
 | server.autoscaling.targetMemoryUtilizationPercentage | int | `50` | Average memory utilization percentage for the Argo CD server [HPA] |
+| server.backendTLSPolicy.annotations | object | `{}` | Additional BackendTLSPolicy annotations |
+| server.backendTLSPolicy.enabled | bool | `false` | Enable BackendTLSPolicy resource for Argo CD server (Gateway API) |
+| server.backendTLSPolicy.labels | object | `{}` | Additional BackendTLSPolicy labels |
+| server.backendTLSPolicy.targetRefs | list | `[]` (See [values.yaml]) | Target references for the BackendTLSPolicy |
+| server.backendTLSPolicy.validation | object | `{}` (See [values.yaml]) | TLS validation configuration |
 | server.certificate.additionalHosts | list | `[]` | Certificate Subject Alternate Names (SANs) |
 | server.certificate.annotations | object | `{}` | Annotations to be applied to the Server Certificate |
 | server.certificate.domain | string | `""` (defaults to global.domain) | Certificate primary domain (commonName) |
@@ -1018,6 +1214,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | server.containerPorts.server | int | `8080` | Server container port |
 | server.containerSecurityContext | object | See [values.yaml] | Server container-level security context |
 | server.deploymentAnnotations | object | `{}` | Annotations to be added to server Deployment |
+| server.deploymentLabels | object | `{}` | Labels for the server Deployment |
 | server.deploymentStrategy | object | `{}` | Deployment strategy to be added to the server Deployment |
 | server.dnsConfig | object | `{}` | [DNS configuration] |
 | server.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Server pods |
@@ -1029,17 +1226,30 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | server.extensions.extensionList | list | `[]` (See [values.yaml]) | Extensions for Argo CD |
 | server.extensions.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for extensions |
 | server.extensions.image.repository | string | `"quay.io/argoprojlabs/argocd-extension-installer"` | Repository to use for extension installer image |
-| server.extensions.image.tag | string | `"v0.0.8"` | Tag to use for extension installer image |
+| server.extensions.image.tag | string | `"v0.0.9"` | Tag to use for extension installer image |
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
+| server.grpcroute.annotations | object | `{}` | Additional GRPCRoute annotations |
+| server.grpcroute.enabled | bool | `false` | Enable GRPCRoute resource for Argo CD server (Gateway API) |
+| server.grpcroute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames for the GRPCRoute |
+| server.grpcroute.labels | object | `{}` | Additional GRPCRoute labels |
+| server.grpcroute.parentRefs | list | `[]` (See [values.yaml]) | Gateway API parentRefs for the GRPCRoute |
+| server.grpcroute.rules | list | `[]` (See [values.yaml]) | GRPCRoute rules configuration |
 | server.hostNetwork | bool | `false` | Host Network for Server pods |
+| server.httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
+| server.httproute.enabled | bool | `false` | Enable HTTPRoute resource for Argo CD server (Gateway API) |
+| server.httproute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames for the HTTPRoute |
+| server.httproute.labels | object | `{}` | Additional HTTPRoute labels |
+| server.httproute.parentRefs | list | `[]` (See [values.yaml]) | Gateway API parentRefs for the HTTPRoute |
+| server.httproute.rules | list | `[]` (See [values.yaml]) | HTTPRoute rules configuration |
 | server.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Argo CD server |
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
 | server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Argo CD server |
 | server.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.aws.backendProtocolVersion | string | `"GRPC"` | Backend protocol version for the AWS ALB gRPC service |
+| server.ingress.aws.serviceAnnotations | object | `{}` | Annotations for the AWS ALB gRPC service |
 | server.ingress.aws.serviceType | string | `"NodePort"` | Service type for the AWS ALB gRPC service |
 | server.ingress.controller | string | `"generic"` | Specific implementation for ingress controller. One of `generic`, `aws` or `gke` |
 | server.ingress.enabled | bool | `false` | Enable an ingress resource for the Argo CD server |
@@ -1071,6 +1281,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | server.ingressGrpc.tls | bool | `false` | Enable TLS configuration for the hostname defined at `server.ingressGrpc.hostname` |
 | server.initContainers | list | `[]` | Init containers to add to the server pod |
 | server.lifecycle | object | `{}` | Specify postStart and preStop lifecycle hooks for your argo-cd-server container |
+| server.livenessProbe.enabled | bool | `true` | Enable Kubernetes liveness probe for default backend |
 | server.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | server.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -1096,6 +1307,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | server.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | server.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | server.name | string | `"server"` | Argo CD server name |
+| server.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by ArgoCD Server |
 | server.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | server.pdb.annotations | object | `{}` | Annotations to be added to Argo CD server pdb |
 | server.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Argo CD server |
@@ -1105,6 +1317,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
 | server.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the Argo CD server pods |
+| server.readinessProbe.enabled | bool | `true` | Enable Kubernetes readiness probe for default backend |
 | server.readinessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | server.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
@@ -1162,6 +1375,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | dex.containerPorts.metrics | int | `5558` | Metrics container port |
 | dex.containerSecurityContext | object | See [values.yaml] | Dex container-level security context |
 | dex.deploymentAnnotations | object | `{}` | Annotations to be added to the Dex server Deployment |
+| dex.deploymentLabels | object | `{}` | Labels for the Dex server Deployment |
 | dex.deploymentStrategy | object | `{}` | Deployment strategy to be added to the Dex server Deployment |
 | dex.dnsConfig | object | `{}` | [DNS configuration] |
 | dex.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Dex server pods |
@@ -1173,7 +1387,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
-| dex.image.tag | string | `"v2.42.0"` | Dex image tag |
+| dex.image.tag | string | `"v2.45.1"` | Dex image tag |
 | dex.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
@@ -1205,6 +1419,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | dex.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | dex.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | dex.name | string | `"dex-server"` | Dex name |
+| dex.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by Dex server |
 | dex.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | dex.pdb.annotations | object | `{}` | Annotations to be added to Dex server pdb |
 | dex.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Dex server |
@@ -1252,6 +1467,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | redis.containerPorts.redis | int | `6379` | Redis container port |
 | redis.containerSecurityContext | object | See [values.yaml] | Redis container-level security context |
 | redis.deploymentAnnotations | object | `{}` | Annotations to be added to the Redis server Deployment |
+| redis.deploymentLabels | object | `{}` | Labels for the Redis server Deployment |
 | redis.dnsConfig | object | `{}` | [DNS configuration] |
 | redis.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Redis server pods |
 | redis.enabled | bool | `true` | Enable redis |
@@ -1262,7 +1478,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
 | redis.exporter.image.repository | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
-| redis.exporter.image.tag | string | `"v1.69.0"` | Tag to use for the redis-exporter |
+| redis.exporter.image.tag | string | `"v1.82.0"` | Tag to use for the redis-exporter |
 | redis.exporter.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis exporter |
 | redis.exporter.livenessProbe.failureThreshold | int | `5` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | redis.exporter.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |
@@ -1279,8 +1495,8 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Redis image pull policy |
-| redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
-| redis.image.tag | string | `"7.4.2-alpine"` | Redis tag |
+| redis.image.repository | string | `"ecr-public.aws.com/docker/library/redis"` | Redis repository |
+| redis.image.tag | string | `"8.2.3-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis server |
@@ -1308,6 +1524,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | redis.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | redis.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | redis.name | string | `"redis"` | Redis name |
+| redis.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by redis |
 | redis.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | redis.pdb.annotations | object | `{}` | Annotations to be added to Redis pdb |
 | redis.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Redis |
@@ -1355,18 +1572,19 @@ The main options are listed here:
 | redis-ha.existingSecret | string | `"argocd-redis"` | Existing Secret to use for redis-ha authentication. By default the redis-secret-init Job is generating this Secret. |
 | redis-ha.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
 | redis-ha.exporter.image | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
-| redis-ha.exporter.tag | string | `"v1.69.0"` | Tag to use for the redis-exporter |
+| redis-ha.exporter.tag | string | `"v1.75.0"` | Tag to use for the redis-exporter |
 | redis-ha.haproxy.additionalAffinities | object | `{}` | Additional affinities to add to the haproxy pods. |
 | redis-ha.haproxy.affinity | string | `""` | Assign custom [affinity] rules to the haproxy pods. |
 | redis-ha.haproxy.containerSecurityContext | object | See [values.yaml] | HAProxy container-level security context |
 | redis-ha.haproxy.enabled | bool | `true` | Enabled HAProxy LoadBalancing/Proxy |
 | redis-ha.haproxy.hardAntiAffinity | bool | `true` | Whether the haproxy pods should be forced to run on separate nodes. |
+| redis-ha.haproxy.image.repository | string | `"ecr-public.aws.com/docker/library/haproxy"` | HAProxy Image Repository |
 | redis-ha.haproxy.labels | object | `{"app.kubernetes.io/name":"argocd-redis-ha-haproxy"}` | Custom labels for the haproxy pod. This is relevant for Argo CD CLI. |
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
 | redis-ha.haproxy.tolerations | list | `[]` | [Tolerations] for use with node taints for haproxy pods. |
 | redis-ha.hardAntiAffinity | bool | `true` | Whether the Redis server pods should be forced to run on separate nodes. |
-| redis-ha.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
-| redis-ha.image.tag | string | `"7.4.2-alpine"` | Redis tag |
+| redis-ha.image.repository | string | `"ecr-public.aws.com/docker/library/redis"` | Redis repository |
+| redis-ha.image.tag | string | `"8.2.3-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistence on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
@@ -1389,7 +1607,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| externalRedis.existingSecret | string | `""` | The name of an existing secret with Redis (must contain key `redis-password`) and Sentinel credentials. When it's set, the `externalRedis.password` parameter is ignored |
+| externalRedis.existingSecret | string | `""` | The name of an existing secret with Redis (must contain key `redis-password`. And should contain `redis-username` if username is not `default`) and Sentinel credentials. When it's set, the `externalRedis.username` and `externalRedis.password` parameters are ignored |
 | externalRedis.host | string | `""` | External Redis server host |
 | externalRedis.password | string | `""` | External Redis password |
 | externalRedis.port | int | `6379` | External Redis server port |
@@ -1406,6 +1624,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | redisSecretInit.affinity | object | `{}` | Assign custom [affinity] rules to the Redis secret-init Job |
 | redisSecretInit.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
 | redisSecretInit.enabled | bool | `true` | Enable Redis secret initialization. If disabled, secret must be provisioned by alternative methods |
+| redisSecretInit.extraArgs | list | `[]` | Additional command line arguments for the Redis secret-init Job |
 | redisSecretInit.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis secret-init Job |
 | redisSecretInit.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Redis secret-init Job |
 | redisSecretInit.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Redis secret-init Job |
@@ -1417,6 +1636,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | redisSecretInit.podLabels | object | `{}` | Labels to be added to the Redis secret-init Job |
 | redisSecretInit.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for Redis secret-init Job |
 | redisSecretInit.resources | object | `{}` | Resource limits and requests for Redis secret-init Job |
+| redisSecretInit.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the Redis secret-init Job |
 | redisSecretInit.securityContext | object | `{}` | Redis secret-init Job pod-level security context |
 | redisSecretInit.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | redisSecretInit.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
@@ -1449,6 +1669,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.containerPorts.webhook | int | `7000` | Webhook container port |
 | applicationSet.containerSecurityContext | object | See [values.yaml] | ApplicationSet controller container-level security context |
 | applicationSet.deploymentAnnotations | object | `{}` | Annotations to be added to ApplicationSet controller Deployment |
+| applicationSet.deploymentLabels | object | `{}` | Labels for the ApplicationSet controller Deployment |
 | applicationSet.deploymentStrategy | object | `{}` | Deployment strategy to be added to the ApplicationSet controller Deployment |
 | applicationSet.dnsConfig | object | `{}` | [DNS configuration] |
 | applicationSet.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for ApplicationSet controller pods |
@@ -1502,6 +1723,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | applicationSet.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | applicationSet.name | string | `"applicationset-controller"` | ApplicationSet controller name string |
+| applicationSet.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by ApplicationSet controller |
 | applicationSet.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | applicationSet.pdb.annotations | object | `{}` | Annotations to be added to ApplicationSet controller pdb |
 | applicationSet.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the ApplicationSet controller |
@@ -1547,6 +1769,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.containerSecurityContext | object | See [values.yaml] | Notification controller container-level security Context |
 | notifications.context | object | `{}` | Define user-defined context |
 | notifications.deploymentAnnotations | object | `{}` | Annotations to be applied to the notifications controller Deployment |
+| notifications.deploymentLabels | object | `{}` | Labels for the notifications controller Deployment |
 | notifications.deploymentStrategy | object | `{"type":"Recreate"}` | Deployment strategy to be added to the notifications controller Deployment |
 | notifications.dnsConfig | object | `{}` | [DNS configuration] |
 | notifications.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for notifications controller Pods |
@@ -1585,6 +1808,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
 | notifications.metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | notifications.name | string | `"notifications-controller"` | Notifications controller name string |
+| notifications.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by notifications controller |
 | notifications.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | notifications.notifiers | object | See [values.yaml] | Configures notification services such as slack, email or custom webhook |
 | notifications.pdb.annotations | object | `{}` | Annotations to be added to notifications controller pdb |
@@ -1632,6 +1856,7 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account into the pod. |
 | commitServer.containerSecurityContext | object | See [values.yaml] | commit server container-level security context |
 | commitServer.deploymentAnnotations | object | `{}` | Annotations to be added to commit server Deployment |
+| commitServer.deploymentLabels | object | `{}` | Labels for the commit server Deployment |
 | commitServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the commit server Deployment |
 | commitServer.dnsConfig | object | `{}` | [DNS configuration] |
 | commitServer.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for commit server pods |
@@ -1657,6 +1882,7 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.metrics.service.servicePort | int | `8087` | Metrics service port |
 | commitServer.metrics.service.type | string | `"ClusterIP"` | Metrics service type |
 | commitServer.name | string | `"commit-server"` | Commit server name |
+| commitServer.networkPolicy.create | bool | `false` (defaults to global.networkPolicy.create) | Default network policy rules used by commit server |
 | commitServer.nodeSelector | object | `{}` (defaults to global.nodeSelector) | [Node selector] |
 | commitServer.podAnnotations | object | `{}` | Annotations for the commit server pods |
 | commitServer.podLabels | object | `{}` | Labels for the commit server pods |
@@ -1670,6 +1896,8 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the commit server |
 | commitServer.service.annotations | object | `{}` | commit server service annotations |
 | commitServer.service.labels | object | `{}` | commit server service labels |
+| commitServer.service.port | int | `8086` | commit server service port |
+| commitServer.service.portName | string | `"server"` | commit server service port name |
 | commitServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | commitServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | commitServer.serviceAccount.create | bool | `true` | Create commit server service account |
@@ -1713,3 +1941,6 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [Argo CD Extension Installer]: https://github.com/argoproj-labs/argocd-extension-installer
 [Argo CD Manifest Hydrator]: https://argo-cd.readthedocs.io/en/stable/proposals/manifest-hydrator/
 [Manifest Hydrator]: https://github.com/argoproj/argo-cd/blob/master/docs/proposals/manifest-hydrator.md
+[CNCF Allowlist License Policy]: https://github.com/cncf/foundation/blob/main/allowed-third-party-license-policy.md#cncf-allowlist-license-policy
+[v2.14 to 3.0 upgrade instructions]: https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/2.14-3.0/
+[Argo CD v3.0 Release Blog Post]: https://blog.argoproj.io/argo-cd-v3-0-release-candidate-a0b933f4e58f

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 while getopts c:d:v: opt; do
   case ${opt} in
     c) chart=${OPTARG} ;;
@@ -39,3 +39,9 @@ sed -i -e '/^  artifacthub.io\/changes: |/,$ d' "${chart_yaml_path}"
   echo "      description: Bump ${dependency_name} to ${dependency_version}"
 } >> "${chart_yaml_path}"
 cat "${chart_yaml_path}"
+
+# Update CRDs if a matching script exists
+crd_script="$(dirname "$0")/update-${dependency_name}-crds.sh"
+if [[ -x "$crd_script" ]]; then
+  "$crd_script" "$dependency_version"
+fi

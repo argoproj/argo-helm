@@ -1,6 +1,7 @@
 {{- $redisHa := (index .Values "redis-ha") -}}
-{{- if and (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") .Values.redis.enabled (not $redisHa.enabled) .Values.redis.metrics.enabled .Values.redis.metrics.serviceMonitor.enabled -}}
-apiVersion: monitoring.coreos.com/v1
+{{- $apiVersion := include "argo-cd.apiVersions.monitoring" . }}
+{{- if and (.Capabilities.APIVersions.Has $apiVersion) .Values.redis.enabled (not $redisHa.enabled) .Values.redis.metrics.enabled .Values.redis.metrics.serviceMonitor.enabled -}}
+apiVersion: {{ $apiVersion }}
 kind: ServiceMonitor
 metadata:
   name: {{ template "argo-cd.redis.fullname" . }}

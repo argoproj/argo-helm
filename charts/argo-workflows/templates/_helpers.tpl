@@ -209,3 +209,10 @@ Allows overriding it for multi-namespace deployments in combined charts.
 {{- define "argo-workflows.namespace" -}}
 {{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
 {{- end }}
+
+{{/*
+Insert helm/resource-policy annotations into the workflows CRDs
+*/}}
+{{- define "argo-workflows.insertResourcePolicyAnnotation" -}}
+{{- regexReplaceAllLiteral "\n  annotations:\n    helm.sh/resource-policy: keep\n" .input (ternary "\n  annotations:\n    helm.sh/resource-policy: keep\n" "\n  annotations: {}\n" .value) -}}
+{{- end -}}

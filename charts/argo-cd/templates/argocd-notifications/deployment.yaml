@@ -12,6 +12,9 @@ metadata:
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.notifications.name "name" .Values.notifications.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.notifications.deploymentLabels) }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: 1
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
@@ -24,8 +27,9 @@ spec:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.notifications.name) | nindent 6 }}
   template:
     metadata:
-      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.notifications.podAnnotations) }}
       annotations:
+        checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.notifications.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
@@ -94,6 +98,12 @@ spec:
                   key: notificationscontroller.log.format
                   name: argocd-cmd-params-cm
                   optional: true
+            - name: ARGOCD_LOG_FORMAT_TIMESTAMP
+              valueFrom:
+                configMapKeyRef:
+                  name: argocd-cmd-params-cm
+                  key: log.format.timestamp
+                  optional: true
             - name: ARGOCD_APPLICATION_NAMESPACES
               valueFrom:
                 configMapKeyRef:
@@ -152,7 +162,7 @@ spec:
               mountPath: /app/config/tls
             - name: argocd-repo-server-tls
               mountPath: /app/config/reposerver/tls
-            {{- with .Values.notifications.extraVolumeMounts }}
+            {{- with (concat .Values.global.extraVolumeMounts .Values.notifications.extraVolumeMounts) }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
         {{- with .Values.notifications.extraContainers }}
@@ -186,7 +196,7 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-        {{- with .Values.notifications.extraVolumes }}
+        {{- with (concat .Values.global.extraVolumes .Values.notifications.extraVolumes) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - name: tls-certs
