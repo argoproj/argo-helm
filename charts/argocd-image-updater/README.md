@@ -82,6 +82,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts` |
 | authScripts.name | string | `"argocd-image-updater-authscripts"` | Name of the authentication scripts ConfigMap |
 | authScripts.scripts | object | `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents. |
+| config."argocd.namespace" | string | `""` | Namespace where ArgoCD runs in (defaults to the controller namespace) |
 | config."git.commit-message-template" | string | `""` | Changing the Git commit message |
 | config."git.commit-sign-off" | bool | `false` | Enables sign off on commits |
 | config."git.commit-signing-key" | string | `""` | Path to public SSH key mounted in container, or GPG key ID used to sign commits |
@@ -89,7 +90,14 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config."git.email" | string | `""` | E-Mail address to use for Git commits |
 | config."git.user" | string | `""` | Username to use for Git commits |
 | config."kube.events" | bool | `false` | Disable kubernetes events |
+| config."log.format" | string | `""` | Argo CD Image Updater log format (`text` or `json`) |
 | config."log.level" | string | `"info"` | Argo CD Image Update log level |
+| config."webhook.enable" | string | `""` | Enable webhook server for receiving registry events |
+| config."webhook.port" | string | `""` | Port to listen on for webhook events |
+| config."webhook.ratelimit-allowed" | string | `""` | The number of allowed requests per hour for webhook rate limiting (0 disables) |
+| config.interval | string | `""` | Interval for how often to check for updates (e.g. `2m`, `5m`) |
+| config.max_concurrent_apps | string | `""` | Maximum number of ArgoCD applications that can be updated concurrently |
+| config.max_concurrent_reconciles | string | `""` | Maximum number of concurrent Reconciles which can be run |
 | config.name | string | `"argocd-image-updater-config"` | Name of the ConfigMap |
 | config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/). |
 | config.sshConfig.config | string | `""` | Argo CD Image Updater ssh client parameter configuration |
@@ -104,6 +112,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
 | dualStack.ipFamilies | list | `[]` | IP families that should be supported and the order in which they should be applied to ClusterIP as well. Can be IPv4 and/or IPv6. |
 | dualStack.ipFamilyPolicy | string | `""` | IP family policy to configure dual-stack see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services) |
+| enableHTTP2 | bool | `nil` | Enable HTTP/2 for the metrics and webhook servers. Upstream default is `false`. Only applies to the new `run` command (controller-runtime based). Leave unset to omit the flag entirely. |
 | extraArgs | list | `[]` | Extra arguments for argocd-image-updater not defined in `config.argocd`. If a flag contains both key and value, they need to be split to a new entry. |
 | extraEnv | list | `[]` | Extra environment variables for argocd-image-updater. |
 | extraEnvFrom | list | `[]` | Extra envFrom to pass to argocd-image-updater |
@@ -135,6 +144,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
 | metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
+| metricsSecure | bool | `nil` | Serve metrics endpoint securely via HTTPS. Upstream default is `true`. Only applies to the new `run` command (controller-runtime based). Leave unset to omit the flag entirely. |
 | nameOverride | string | `""` | Global name (argocd-image-updater.name in _helpers.tpl) override |
 | namespaceOverride | string | `""` | Global namespace (argocd-image-updater.namespace in _helpers.tpl) override |
 | nodeSelector | object | `{}` | Kubernetes nodeSelector settings for the deployment |
