@@ -40208,6 +40208,33 @@ entries:
   argocd-image-updater:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Add service.enabled value to allow Service creation independently of ingress.enabled
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.1.1
+    created: "2026-03-25T06:42:02.683420734Z"
+    description: A Helm chart for Argo CD Image Updater, a tool to automatically update
+      the container images of Kubernetes workloads which are managed by Argo CD
+    digest: 43636c51fdd6aca8d7564787c79356fde4d853bd07c2e7f4056591a3ace52e79
+    home: https://github.com/argoproj-labs/argocd-image-updater
+    icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-image-updater
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-image-updater-1.1.4/argocd-image-updater-1.1.4.tgz
+    version: 1.1.4
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Remove command override in deployment to allow Dockerfile ENTRYPOINT with tini init process to prevent zombie processes
       artifacthub.io/signKey: |
@@ -42286,4 +42313,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-03-24T08:29:15.13648609Z"
+generated: "2026-03-25T06:42:02.685275148Z"
