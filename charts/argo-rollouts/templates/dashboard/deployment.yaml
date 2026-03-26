@@ -52,6 +52,9 @@ spec:
         - dashboard
         - "--loglevel={{ .Values.dashboard.logging.level }}"
         - "--kloglevel={{ .Values.dashboard.logging.kloglevel }}"
+        {{- with .Values.dashboard.rootPath }}
+        - "--root-path={{ . }}"
+        {{- end }}
         {{- with .Values.dashboard.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
