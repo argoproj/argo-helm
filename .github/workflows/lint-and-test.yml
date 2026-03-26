@@ -9,7 +9,7 @@ jobs:
   linter-artifacthub:
     runs-on: ubuntu-latest
     container:
-      image: ecr-public.aws.com/artifacthub/ah:v1.14.0
+      image: ecr-public.aws.com/artifacthub/ah:v1.14.0@sha256:3773afcdeb5662c31576f1a9a0ee10bced7af2e80842ca06a186a50497e149a5
       options: --user 1001
     steps:
       - name: Harden the runner (Audit all outbound calls)
