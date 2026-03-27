@@ -31,7 +31,7 @@ spec:
       annotations:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
         {{- if .Values.repoServer.certificateSecret.enabled }}
-        checksum/repo-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argocd-repo-server-tls-secret.yaml") . | sha256sum }}
+        checksum/repo-server-tls: {{ include (print $.Template.BasePath "/argocd-configs/argo-cd-repo-server-tls-secret.yaml") . | sha256sum }}
         {{- end }}
         {{- if .Values.configs.cm.create }}
         checksum/cm: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cm.yaml") . | sha256sum }}
@@ -78,7 +78,7 @@ spec:
         image: {{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.repoServer.image.imagePullPolicy }}
         args:
-        - /usr/local/bin/argocd-repo-server
+        - /usr/local/bin/argo-cd-repo-server
         - --port={{ .Values.repoServer.containerPorts.server }}
         - --metrics-port={{ .Values.repoServer.containerPorts.metrics }}
         {{- with .Values.repoServer.extraArgs }}
@@ -367,7 +367,7 @@ spec:
         - mountPath: /app/config/gpg/keys
           name: gpg-keyring
         - mountPath: /app/config/reposerver/tls
-          name: argocd-repo-server-tls
+          name: argo-cd-repo-server-tls
         {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
         - mountPath: /helm-working-dir
           name: helm-working-dir
@@ -532,9 +532,9 @@ spec:
         emptyDir: {}
           {{- end }}
         {{- end }}
-      - name: argocd-repo-server-tls
+      - name: argo-cd-repo-server-tls
         secret:
-          secretName: argocd-repo-server-tls
+          secretName: argo-cd-repo-server-tls
           optional: true
           items:
           - key: tls.crt

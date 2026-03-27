@@ -62,7 +62,7 @@ spec:
     {{- if .Values.server.ingress.tls }}
     - hosts:
       - {{ .Values.server.ingress.hostname | default .Values.global.domain }}
-      secretName: argocd-server-tls
+      secretName: argo-cd-server-tls
     {{- end }}
     {{- with .Values.server.ingress.extraTls }}
       {{- toYaml . | nindent 4 }}

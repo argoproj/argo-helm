@@ -383,7 +383,7 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - mountPath: /app/config/controller/tls
-          name: argocd-repo-server-tls
+          name: argo-cd-repo-server-tls
         - mountPath: /home/argocd
           name: argocd-home
         - name: argocd-cmd-params-cm
@@ -430,9 +430,9 @@ spec:
         emptyDir: {}
         {{- end }}
 
-      - name: argocd-repo-server-tls
+      - name: argo-cd-repo-server-tls
         secret:
-          secretName: argocd-repo-server-tls
+          secretName: argo-cd-repo-server-tls
           optional: true
           items:
           - key: tls.crt

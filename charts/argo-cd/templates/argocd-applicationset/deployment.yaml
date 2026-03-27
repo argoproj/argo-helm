@@ -297,7 +297,7 @@ spec:
             - mountPath: /app/config/gpg/keys
               name: gpg-keyring
             - mountPath: /app/config/reposerver/tls
-              name: argocd-repo-server-tls
+              name: argo-cd-repo-server-tls
             - mountPath: /home/argocd/params
               name: argocd-cmd-params-cm
             - mountPath: /tmp
@@ -359,9 +359,9 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-        - name: argocd-repo-server-tls
+        - name: argo-cd-repo-server-tls
           secret:
-            secretName: argocd-repo-server-tls
+            secretName: argo-cd-repo-server-tls
             optional: true
             items:
               - key: tls.crt

@@ -52,7 +52,7 @@ Common labels
 helm.sh/chart: {{ include "argo-cd.chart" .context }}
 {{ include "argo-cd.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
 app.kubernetes.io/managed-by: {{ .context.Release.Service }}
-app.kubernetes.io/part-of: argocd
+app.kubernetes.io/part-of: argo-cd
 app.kubernetes.io/version: {{ include "argo-cd.versionLabelValue" .context }}
 {{- with .context.Values.global.additionalLabels }}
 {{ toYaml . }}
