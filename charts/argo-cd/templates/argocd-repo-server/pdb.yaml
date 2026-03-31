@@ -1,4 +1,4 @@
-{{- if .Values.repoServer.pdb.enabled }}
+{{- if and .Values.repoServer.pdb.enabled .Values.repoServer.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:

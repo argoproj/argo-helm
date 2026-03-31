@@ -1,4 +1,4 @@
-{{- if .Values.applicationSet.certificate.enabled -}}
+{{- if and .Values.applicationSet.certificate.enabled .Values.applicationSet.enabled -}}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:

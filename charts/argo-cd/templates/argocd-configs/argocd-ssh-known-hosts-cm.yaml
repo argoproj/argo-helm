@@ -1,4 +1,4 @@
-{{- if .Values.configs.ssh.create }}
+{{- if and .Values.configs.ssh.create (or .Values.server.enabled .Values.applicationSet.enabled  .Values.commitServer.enabled .Values.repoServer.enabled) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

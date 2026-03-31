@@ -1,3 +1,4 @@
+{{- if .Values.controller.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -60,5 +61,6 @@ rules:
   - watch
   - create
   - update
+{{- end }}
 {{- end }}
 {{- end }}

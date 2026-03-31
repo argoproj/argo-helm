@@ -1,4 +1,4 @@
-{{- if and .Values.createClusterRoles .Values.repoServer.clusterRoleRules.enabled }}
+{{- if and .Values.createClusterRoles .Values.repoServer.clusterRoleRules.enabled .Values.repoServer.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:

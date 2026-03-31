@@ -1,4 +1,4 @@
-{{- if .Values.controller.dynamicClusterDistribution }}
+{{- if and .Values.controller.dynamicClusterDistribution .Values.controller.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

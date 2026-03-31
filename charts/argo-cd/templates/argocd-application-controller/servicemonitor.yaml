@@ -1,5 +1,5 @@
 {{- $apiVersion := include "argo-cd.apiVersions.monitoring" . }}
-{{- if and (.Capabilities.APIVersions.Has $apiVersion) .Values.controller.metrics.enabled .Values.controller.metrics.serviceMonitor.enabled }}
+{{- if and (.Capabilities.APIVersions.Has $apiVersion) .Values.controller.metrics.enabled .Values.controller.metrics.serviceMonitor.enabled .Values.controller.enabled }}
 apiVersion: {{ $apiVersion }}
 kind: ServiceMonitor
 metadata:

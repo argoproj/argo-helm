@@ -1,4 +1,4 @@
-{{- if .Values.server.route.enabled -}}
+{{- if and .Values.server.route.enabled .Values.server.enabled -}}
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:

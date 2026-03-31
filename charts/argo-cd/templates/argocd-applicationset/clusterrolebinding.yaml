@@ -1,4 +1,4 @@
-{{- if .Values.applicationSet.allowAnyNamespace }}
+{{- if and .Values.applicationSet.allowAnyNamespace .Values.applicationSet.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:

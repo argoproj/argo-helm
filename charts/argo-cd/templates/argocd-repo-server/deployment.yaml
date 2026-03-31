@@ -1,3 +1,4 @@
+{{- if .Values.repoServer.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -551,3 +552,4 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       dnsPolicy: {{ .Values.repoServer.dnsPolicy }}
+{{- end }}

@@ -1,4 +1,4 @@
-{{- if .Values.server.httproute.enabled -}}
+{{- if and .Values.server.httproute.enabled .Values.server.enabled -}}
 {{- $fullName := include "argo-cd.server.fullname" . -}}
 {{- $insecure := index .Values.configs.params "server.insecure" | toString -}}
 {{- $servicePort := eq $insecure "true" | ternary .Values.server.service.servicePortHttp .Values.server.service.servicePortHttps -}}

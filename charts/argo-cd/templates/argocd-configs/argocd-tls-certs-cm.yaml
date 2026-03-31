@@ -1,4 +1,4 @@
-{{- if .Values.configs.tls.create }}
+{{- if and .Values.configs.tls.create (or .Values.server.enabled .Values.notifications.enabled .Values.applicationSet.enabled .Values.commitServer.enabled .Values.repoServer.enabled) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
