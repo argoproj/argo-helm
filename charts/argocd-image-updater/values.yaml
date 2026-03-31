@@ -316,6 +316,8 @@ containerPorts:
 
 ## Service configuration
 service:
+  # -- Enable a Service for the webhook endpoint. A Service is created when this is set to true or when `ingress.enabled` is true
+  enabled: false
   # -- Service annotations
   annotations: {}
   # -- Service labels

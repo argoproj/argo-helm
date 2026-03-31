@@ -59,6 +59,21 @@ spec:
         {{- if gt (int .Values.controller.replicas) 1 }}
         - --leader-elect
         {{- end }}
+        {{- if .Values.controller.awsVerifyTargetGroup }}
+        - --aws-verify-target-group
+        {{- end }}
+        {{- with .Values.controller.awsTargetGroupBindingAPIVersion }}
+        - "--aws-target-group-binding-api-version={{ . }}"
+        {{- end }}
+        {{- with .Values.controller.albTagKeyResourceID }}
+        - "--alb-tag-key-resource-id={{ . }}"
+        {{- end }}
+        {{- if .Values.controller.selfServiceNotification }}
+        - --self-service-notification-enabled
+        {{- end }}
+        {{- with .Values.controller.pprofAddress }}
+        - "--enable-pprof-address={{ . }}"
+        {{- end }}
         {{- with .Values.controller.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

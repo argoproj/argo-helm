@@ -147,6 +147,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | resources | object | `{}` | Pod memory and cpu resource settings for the deployment |
 | securityContext | object | See [values.yaml] | Security context settings for the deployment |
 | service.annotations | object | `{}` | Service annotations |
+| service.enabled | bool | `false` | Enable a Service for the webhook endpoint. A Service is created when this is set to true or when `ingress.enabled` is true |
 | service.externalIPs | list | `[]` | Service external IPs |
 | service.externalTrafficPolicy | string | `"Cluster"` | Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints |
 | service.labels | object | `{}` | Service labels |

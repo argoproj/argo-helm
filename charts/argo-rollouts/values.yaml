@@ -113,6 +113,19 @@ controller:
     # -- Image pull policy
     pullPolicy: IfNotPresent
 
+  # -- Enable AWS target group verification before progressing through steps (requires AWS privileges)
+  awsVerifyTargetGroup: false
+  # -- Set the AWS TargetGroupBinding apiVersion (e.g. `elbv2.k8s.aws/v1beta1` for standard EKS, `eks.amazonaws.com/v1` for EKS Auto Mode)
+  awsTargetGroupBindingAPIVersion: ""
+  # -- Set the ALB tag key for resource ID (e.g. `ingress.k8s.aws/resource` for standard EKS, `ingress.eks.amazonaws.com` for EKS Auto Mode)
+  albTagKeyResourceID: ""
+
+  # -- Enable self-service notification support, allowing the controller to pull notification config from the rollout's namespace
+  selfServiceNotification: false
+
+  # -- Enable pprof profiling on the controller by specifying a listen address (e.g. `:6060` or `localhost:6060`)
+  pprofAddress: ""
+
   # -- Additional command line arguments to pass to rollouts-controller.  A list of flags.
   extraArgs: []
 
@@ -251,6 +264,12 @@ controller:
     # - name: "argoproj-labs/sample-nginx" # name of the plugin, it must match the name required by the plugin so it can find it's configuration
     #   location: "file://./my-custom-plugin" # supports http(s):// urls and file://
 
+  # -- Whether to create the argo-rollouts-config ConfigMap. Set to false when running multiple
+  # controller instances in the same namespace (e.g. with different --instance-id values) to
+  # avoid Helm ownership conflicts; each secondary instance will read the ConfigMap created by
+  # the primary release.
+  createConfigmap: true
+
 serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
@@ -370,6 +389,8 @@ dashboard:
     tag: ""
     # -- Image pull policy
     pullPolicy: IfNotPresent
+  # -- Set the root path of the dashboard (e.g. `/rollouts`). Useful when running behind a reverse proxy with a path prefix.
+  rootPath: ""
   # -- Additional command line arguments to pass to rollouts-dashboard. A list of flags.
   extraArgs: []
   # -- Additional environment variables for rollouts-dashboard. A list of name/value maps.

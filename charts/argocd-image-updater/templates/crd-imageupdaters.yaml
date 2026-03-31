@@ -55,7 +55,7 @@ spec:
               applicationRefs:
                 description: |-
                   ApplicationRefs indicates the set of applications to be managed.
-                  ApplicationRefs is a list of rules to select Argo CD Applications within the `spec.namespace`.
+                  ApplicationRefs is a list of rules to select Argo CD Applications within the ImageUpdater CR's namespace.
                   Each reference can also provide specific overrides for the global settings defined above.
                 items:
                   description: ApplicationRef contains various criteria by which to
@@ -403,8 +403,10 @@ spec:
               namespace:
                 description: |-
                   Namespace indicates the target namespace of the applications.
-                  This is the namespace where the controller will look for Argo CD Applications
-                  matching the criteria in ApplicationRefs.
+
+                  Deprecated: This field is deprecated and will be removed in a future release.
+                  The controller now uses the ImageUpdater CR's namespace (metadata.namespace)
+                  to determine which namespace to search for applications. This field is ignored.
                 type: string
               writeBackConfig:
                 description: |-
@@ -448,7 +450,6 @@ spec:
                 type: object
             required:
             - applicationRefs
-            - namespace
             type: object
           status:
             description: ImageUpdaterStatus defines the observed state of ImageUpdater

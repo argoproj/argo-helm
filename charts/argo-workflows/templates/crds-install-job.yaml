@@ -1,0 +1,126 @@
+{{- if and .Values.crds.install .Values.crds.full }}
+{{- $crdInstallName := printf "%s-crd-install" (include "argo-workflows.fullname" . | trunc 51 | trimSuffix "-") }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $crdInstallName }}
+  namespace: {{ include "argo-workflows.namespace" . }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ $crdInstallName }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+rules:
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["create", "get", "list", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ $crdInstallName }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+subjects:
+  - kind: ServiceAccount
+    name: {{ $crdInstallName }}
+    namespace: {{ include "argo-workflows.namespace" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ $crdInstallName }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $crdInstallName }}
+  namespace: {{ include "argo-workflows.namespace" . }}
+  labels:
+    {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 8 }}
+    spec:
+      serviceAccountName: {{ $crdInstallName }}
+      {{- with .Values.crds.upgradeJob.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.crds.upgradeJob.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.crds.upgradeJob.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.crds.upgradeJob.hostPath }}
+      volumes:
+        - name: crds
+          hostPath:
+            path: {{ .Values.crds.upgradeJob.hostPath }}
+      {{- end }}
+      containers:
+        - name: apply
+          image: "{{ .Values.crds.upgradeJob.image.repository }}:{{ .Values.crds.upgradeJob.image.tag }}"
+          env:
+          {{- with .Values.crds.upgradeJob.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.crds.upgradeJob.hostPath }}
+          volumeMounts:
+            - name: crds
+              mountPath: /crds
+              readOnly: true
+          command:
+            - kubectl
+            - apply
+            - --server-side
+            - --force-conflicts
+            - -f
+            - /crds/
+          {{- else }}
+          {{- $baseURL := .Values.crds.upgradeJob.crdBaseURL | default (printf "https://raw.githubusercontent.com/argoproj/argo-helm/argo-workflows-%s/charts/argo-workflows/files/crds/full" .Chart.Version) }}
+          command:
+            - kubectl
+            - apply
+            - --server-side
+            - --force-conflicts
+            # We use the name of the files bundled in the Helm chart to determine
+            # the names of the full CRDs to install. It's either this or hard
+            # code the names, and this would burn us in the future.
+            {{- range $path, $_ := .Files.Glob "files/crds/minimal/*.yaml" }}
+            - -f
+            - "{{ $baseURL }}/{{ base $path }}"
+            {{- end }}
+          {{- end }}
+          {{- with .Values.crds.upgradeJob.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      restartPolicy: Never
+  backoffLimit: 3
+{{- end }}

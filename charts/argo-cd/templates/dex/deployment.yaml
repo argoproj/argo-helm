@@ -156,7 +156,11 @@ spec:
           {{- toYaml .Values.dex.resources | nindent 10 }}
         {{- with .Values.dex.containerSecurityContext }}
         securityContext:
-          {{- toYaml . | nindent 10 }}
+          {{- if $.Values.openshift.enabled }}
+            {{- omit . "runAsUser" | toYaml | nindent 10 }}
+          {{- else }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
         {{- end }}
         volumeMounts:
         {{- with (concat .Values.global.extraVolumeMounts .Values.dex.volumeMounts) }}
@@ -189,7 +193,11 @@ spec:
           {{- toYaml (default .Values.dex.resources .Values.dex.initImage.resources) | nindent 10 }}
         {{- with .Values.dex.containerSecurityContext }}
         securityContext:
-          {{- toYaml . | nindent 10 }}
+          {{- if $.Values.openshift.enabled }}
+            {{- omit . "runAsUser" | toYaml | nindent 10 }}
+          {{- else }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
         {{- end }}
       {{- with .Values.dex.initContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}

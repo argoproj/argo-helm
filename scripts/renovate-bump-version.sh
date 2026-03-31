@@ -40,7 +40,8 @@ sed -i -e '/^  artifacthub.io\/changes: |/,$ d' "${chart_yaml_path}"
 } >> "${chart_yaml_path}"
 cat "${chart_yaml_path}"
 
-# If the dependency is argo-workflows, also update CRDs
-if [[ "$dependency_name" == "argo-workflows" ]]; then
-  "$(dirname "$0")/update-argo-workflows-crds.sh" "$dependency_version"
+# Update CRDs if a matching script exists
+crd_script="$(dirname "$0")/update-${dependency_name}-crds.sh"
+if [[ -x "$crd_script" ]]; then
+  "$crd_script" "$dependency_version"
 fi

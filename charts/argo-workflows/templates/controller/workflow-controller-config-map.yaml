@@ -90,7 +90,7 @@ data:
         {{- end }}
         {{- end }}
         bucket: {{ tpl (.Values.artifactRepository.s3.bucket | default "") . }}
-        endpoint: {{ tpl (.Values.artifactRepository.s3.endpoint | default "") . }}
+        endpoint: {{ tpl (.Values.artifactRepository.s3.endpoint | default "s3.amazonaws.com") . }}
         insecure: {{ .Values.artifactRepository.s3.insecure }}
         {{- if .Values.artifactRepository.s3.caSecret }}
         caSecret:
@@ -217,5 +217,8 @@ data:
     {{- end }}
     {{- with .Values.controller.podGCDeleteDelayDuration }}
     podGCDeleteDelayDuration: {{ . }}
+    {{- end }}
+    {{- with .Values.controller.failedPodRestart }}
+    failedPodRestart: {{- toYaml . | nindent 6 }}
     {{- end }}
 {{- end }}

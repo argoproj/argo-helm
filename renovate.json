@@ -11,6 +11,7 @@
   "labels": ["renovate"],
   "includePaths": [
     "**/charts/argo-workflows/Chart.yaml",
+    "**/charts/argo-workflows/values.yaml",
     "**/charts/argo-cd/Chart.yaml",
     "**/charts/argo-cd/values.yaml",
     "**/charts/argo-events/Chart.yaml",
@@ -107,6 +108,16 @@
       "allowedVersions": "< 7.4",
       "description": ["With version 7.4, Redis is moving away from the BSD 3-Clause License"],
       "commitMessagePrefix": "chore({{parentDir}}):",
+      "postUpgradeTasks": {
+        "commands": [
+          "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}}",
+          "./scripts/helm-docs.sh"
+        ]
+      }
+    },
+    {
+      "matchPackageNames": ["registry.k8s.io/kubectl"],
+      "commitMessagePrefix": "chore(argo-workflows):",
       "postUpgradeTasks": {
         "commands": [
           "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}}",
