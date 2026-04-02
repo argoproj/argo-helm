@@ -103,6 +103,12 @@ jobs:
           ## Metrics API not available in kind cluster
           rm charts/argo-cd/ci/ha-autoscaling-values.yaml
 
+      - name: Skip VPA tests of ArgoCD
+        if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
+        run: |
+          ## VPA CRDs not available in kind cluster
+          rm charts/argo-cd/ci/vpa-values.yaml
+
       - name: Create an external redis for ArgoCD externalRedis feature
         if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
         run: |
