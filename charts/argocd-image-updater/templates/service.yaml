@@ -45,9 +45,6 @@ spec:
       {{- if eq .Values.service.type "NodePort" }}
       nodePort: {{ .Values.service.nodePortHttp }}
       {{- end }}
-    {{- if eq .Values.service.type "NodePort" }}
-      nodePort: {{ .Values.service.nodePortHttps }}
-    {{- end }}
   selector:
     {{- include "argocd-image-updater.selectorLabels" . | nindent 4 }}
 {{- end }}
