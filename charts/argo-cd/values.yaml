@@ -327,8 +327,7 @@ configs:
         - '.metadata.annotations."notified.notifications.argoproj.io"'
     # -- Legacy annotations used on HPA autoscaling/v1
     # @default -- See [values.yaml]
-    resource.customizations.ignoreResourceUpdates.autoscaling_HorizontalPodAutoscaler:
-      |
+    resource.customizations.ignoreResourceUpdates.autoscaling_HorizontalPodAutoscaler: |
       jqPathExpressions:
         - '.metadata.annotations."autoscaling.alpha.kubernetes.io/behavior"'
         - '.metadata.annotations."autoscaling.alpha.kubernetes.io/conditions"'
@@ -351,8 +350,7 @@ configs:
         - '.metadata.annotations."rollout.argoproj.io/desired-replicas"'
     # -- Ignores update if EndpointSlice is not excluded globally
     # @default -- See [values.yaml]
-    resource.customizations.ignoreResourceUpdates.discovery.k8s.io_EndpointSlice:
-      |
+    resource.customizations.ignoreResourceUpdates.discovery.k8s.io_EndpointSlice: |
       jsonPointers:
         - /metadata
         - /endpoints
@@ -3050,8 +3048,7 @@ repoServer:
     metrics: 8084
 
   # -- Host Network for Repo server pods
-  hostNetwork:
-    false
+  hostNetwork: false
 
     # -- [DNS configuration]
   dnsConfig: {}
