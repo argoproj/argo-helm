@@ -33603,6 +33603,33 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Fix missing service account secrets
+          links:
+            - name: GitHub Issue
+              url: https://github.com/argoproj/argo-helm/issues/3236
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v4.0.4
+    created: "2026-04-14T05:22:29.489822882Z"
+    description: A Helm chart for Argo Workflows
+    digest: 1a987eb04e89f2821f40ad30f9ce88722c323a5b2196a7fa4f0272d83aa81ad3
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-1.0.8/argo-workflows-1.0.8.tgz
+    version: 1.0.8
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Bump argo-workflows to v4.0.4
       artifacthub.io/signKey: |
@@ -42530,4 +42557,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-04-08T22:09:29.739644739Z"
+generated: "2026-04-14T05:22:29.491631373Z"
