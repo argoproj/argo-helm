@@ -3,7 +3,7 @@ appVersion: v4.0.4
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 1.0.9
+version: 1.0.10
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -16,8 +16,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: added
-      description: Add timeouts support to server HTTPRoute
-      links:
-        - name: GitHub Issue
-          url: https://github.com/argoproj/argo-helm/issues/3832
+    - kind: changed
+      description: Bump kubectl to v1.35.4
