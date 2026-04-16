@@ -2971,6 +2971,9 @@ repoServer:
   initContainers: []
 
   copyutil:
+    # -- Extra arguments for the cp command in the repo server copyutil initContainer
+    # @default -- `"--update=none"`
+    extraArgs: "--update=none"
     # -- Resource limits and requests for the repo server copyutil initContainer
     resources: {}
     #  limits:
