@@ -88,7 +88,7 @@ spec:
         {{- end }}
         env:
           {{- with (concat .Values.global.env .Values.dex.env) }}
-            {{- toYaml . | nindent 10 }}
+            {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
           - name: ARGOCD_DEX_SERVER_LOGFORMAT
             valueFrom:
