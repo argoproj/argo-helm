@@ -121,3 +121,6 @@ releases:
     values:
       - my-argocd-values.yaml
 ```
+
+
+<!-- Fix #3844 -->
