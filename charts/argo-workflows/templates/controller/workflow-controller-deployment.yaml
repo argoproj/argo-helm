@@ -13,6 +13,10 @@ metadata:
 spec:
   replicas: {{ .Values.controller.replicas }}
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
+  {{- if eq (int .Values.controller.replicas) 1 }}
+  strategy:
+    type: Recreate
+  {{- end }}
   selector:
     matchLabels:
       {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
