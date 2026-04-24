@@ -1,0 +1,12 @@
+# Test Gateway API TLSRoute for Argo CD server
+crds:
+  keep: false
+server:
+  tlsroute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: example-gateway-namespace
+        sectionName: tls-passthrough
+    hostnames:
+      - argocd.example.com
