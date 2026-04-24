@@ -1,0 +1,37 @@
+name: Default PR to Draft
+
+on:
+  pull_request_target:
+    types: [opened]
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
+
+jobs:
+  default-to-draft:
+    name: Convert PR to draft and add label
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # Convert PR to draft and add "Mark Ready When Ready" label
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - name: Convert to draft
+        if: github.event.pull_request.draft == false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr ready --undo ${{ github.event.pull_request.number }} --repo ${{ github.repository }}
+
+      - name: Add Mark Ready When Ready label
+        if: "!contains(github.event.pull_request.labels.*.name, 'Mark Ready When Ready')"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr edit ${{ github.event.pull_request.number }} --add-label "Mark Ready When Ready" --repo ${{ github.repository }}

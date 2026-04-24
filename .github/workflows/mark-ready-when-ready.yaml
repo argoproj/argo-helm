@@ -1,0 +1,34 @@
+name: Mark PR Ready When Ready
+
+on:
+  pull_request_target:
+    types: [opened, edited, labeled, unlabeled, synchronize]
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
+
+jobs:
+  mark-ready:
+    name: Mark as ready after successful checks
+    runs-on: ubuntu-latest
+    permissions:
+      checks: read        # Read CI check results to determine if PR is ready
+      contents: write     # Required by kenyonj/mark-ready-when-ready action
+      pull-requests: write # Mark the draft PR as ready for review
+      statuses: read      # Read commit statuses to determine if PR is ready
+    if: |
+      contains(github.event.pull_request.labels.*.name, 'Mark Ready When Ready') &&
+      github.event.pull_request.draft == true
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - name: Mark ready when ready
+        uses: kenyonj/mark-ready-when-ready@0ef6176fc2ddef5bab6cb4ab9517a37f0c153ba4 # v1.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
