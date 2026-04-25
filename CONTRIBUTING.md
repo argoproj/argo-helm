@@ -7,8 +7,7 @@ Argo Helm is a collection of **community maintained** charts. Therefore we rely 
 All submissions, including submissions by project members, require review. We use GitHub pull requests for this purpose. Consult [GitHub Help](https://help.github.com/articles/about-pull-requests/) for more information on using pull requests. See the above stated requirements for PR on this project.
 
 > **Note**
-> Please create a separate Pull Request for each chart.
-> e.g: If your changes involve both argo-cd and argo-rollouts, please submit one PR for argo-cd and another separate.
+> Please start your pull request in draft mode and add the `Mark Ready When Ready` label to your PR. This will transition your PR automatically to ready when all of the checks have passed. This allows you to iterate on your PR if failures occur without notifying maintainers to review it until it is ready. Thank you for your understanding and cooperation.
 
 ### Pull Request Title Linting
 
