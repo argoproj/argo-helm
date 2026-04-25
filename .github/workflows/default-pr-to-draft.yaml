@@ -2,18 +2,19 @@ name: Default PR to Draft
 
 on:
   pull_request_target:
-    types: [opened]
+    types: [opened, reopened]
 
 permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
+  cancel-in-progress: true
 
 jobs:
   default-to-draft:
     name: Convert PR to draft and add label
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]' && github.actor != 'renovate[bot]'
     permissions:
       pull-requests: write # Convert PR to draft and add "Mark Ready When Ready" label
     steps:
