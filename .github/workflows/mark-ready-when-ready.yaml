@@ -8,7 +8,7 @@ permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
+  cancel-in-progress: true
 
 jobs:
   mark-ready:
@@ -20,6 +20,8 @@ jobs:
       pull-requests: write # Mark the draft PR as ready for review
       statuses: read      # Read commit statuses to determine if PR is ready
     if: |
+      github.actor != 'dependabot[bot]' &&
+      github.actor != 'renovate[bot]' &&
       contains(github.event.pull_request.labels.*.name, 'Mark Ready When Ready') &&
       github.event.pull_request.draft == true
     steps:
