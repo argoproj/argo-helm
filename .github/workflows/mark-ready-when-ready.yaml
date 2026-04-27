@@ -21,7 +21,7 @@ jobs:
       statuses: read      # Read commit statuses to determine if PR is ready
     if: |
       github.actor != 'dependabot[bot]' &&
-      github.actor != 'renovate[bot]' &&
+      github.actor != 'argoproj-renovate[bot]' &&
       contains(github.event.pull_request.labels.*.name, 'Mark Ready When Ready') &&
       github.event.pull_request.draft == true
     steps:

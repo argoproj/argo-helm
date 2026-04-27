@@ -14,7 +14,7 @@ jobs:
   default-to-draft:
     name: Convert PR to draft and add label
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]' && github.actor != 'renovate[bot]'
+    if: github.actor != 'dependabot[bot]' && github.actor != 'argoproj-renovate[bot]'
     permissions:
       pull-requests: write # Convert PR to draft and add "Mark Ready When Ready" label
     steps:
