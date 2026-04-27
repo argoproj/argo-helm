@@ -3,7 +3,7 @@ appVersion: v3.3.8
 kubeVersion: ">=1.25.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 9.5.4
+version: 9.5.5
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -28,3 +28,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: Set argo-cd parent repo as first source in Chart.yaml, so renovate can pull changelogs from parent repo.
+    - kind: changed
+      description: Make PrometheusRule API version field overridable like it is in ServiceMonitor objects.
