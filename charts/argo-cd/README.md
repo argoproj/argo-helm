@@ -232,35 +232,35 @@ server:
           port: 8080
       frontendConfig:
         redirectToHttps:
-          enabled: true 
+          enabled: true
       managedCertificate:
         enabled: true
 ```
 
 ### AKS Application Routing (generic)
 
-AKS Web Application Routing uses the standard Kubernetes Ingress specification, so the `generic` controller type is sufficient. 
-webapprouting provides a managed ingress controller based on nginx. 
+AKS Web Application Routing uses the standard Kubernetes Ingress specification, so the `generic` controller type is sufficient.
+webapprouting provides a managed ingress controller based on nginx.
 
-```yaml 
-global: 
-  domain: argocd.example.com 
- 
-configs: 
-  params: 
-    server.insecure: true 
- 
-server: 
-  ingress: 
-    enabled: true 
-    controller: generic 
-    ingressClassName: webapprouting.kubernetes.azure.com 
-    annotations: 
-      # Optional: Add any AKS-specific annotations if needed 
-    extraTls: 
-      - hosts: 
-          - argocd.example.com 
-        # Certificate can be managed by Web Application Routing 
+```yaml
+global:
+  domain: argocd.example.com
+
+configs:
+  params:
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
+    controller: generic
+    ingressClassName: webapprouting.kubernetes.azure.com
+    annotations:
+      # Optional: Add any AKS-specific annotations if needed
+    extraTls:
+      - hosts:
+          - argocd.example.com
+        # Certificate can be managed by Web Application Routing
         secretName: argocd-tls
 ```
 
@@ -519,7 +519,7 @@ Steps to rotate the secret when using the helm chart (bold step is additional to
   ```
 
 ### 6.9.0
-ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9). 
+ApplicationSet controller is always created to follow [upstream's manifest](https://github.com/argoproj/argo-cd/blob/v2.11.0/manifests/core-install/kustomization.yaml#L9).
 
 ### 6.4.0
 
@@ -856,7 +856,7 @@ NAME: my-release
 | crds.annotations | object | `{"argocd.argoproj.io/sync-options":"ServerSideApply=true"}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
-| createAggregateRoles | bool | `false` | Create aggregated roles that extend existing cluster roles to interact with argo-cd resources # Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles |
+| createAggregateRoles | bool | `false` | Create aggregated roles that extend existing cluster roles to interact with argo-cd resources |
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. # Used when you manage applications in the same cluster where Argo CD runs |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy # Note: Supports use of custom Helm templates |
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
