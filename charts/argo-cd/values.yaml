@@ -2736,6 +2736,7 @@ server:
       enabled: false
       # -- ALB target group configuration
       # Refer to https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/guide/gateway/targetgroupconfig/ for details
+      # @default -- `{}` (See [values.yaml])
       targetGroupConfiguration:
         # -- Additional HTTPRoute labels
         labels: {}
@@ -2743,6 +2744,7 @@ server:
         annotations: {}
         # -- Route configuration
         # -- Refer to https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/guide/gateway/targetgroupconfig/#route-matching-logic
+        # @default -- `[]` (See [values.yaml])
         routeConfigurations:
           - routeIdentifier:
               kind: HTTPRoute

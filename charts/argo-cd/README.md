@@ -1246,10 +1246,10 @@ NAME: my-release
 | server.httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
 | server.httproute.aws.enabled | bool | `false` | Enable AWS Application Load Balancer options for the HTTPRoute |
 | server.httproute.aws.rules | list | `[]` (See [values.yaml]) | HTTPRoute rules configuration |
-| server.httproute.aws.targetGroupConfiguration | object | `{"annotations":{},"labels":{},"routeConfigurations":[{"routeIdentifier":{"kind":"HTTPRoute","name":"{{ template \"argo-cd.server.fullname\" . }}-grpc","namespace":"{{ .Release.Namespace }}"},"targetGroupProps":{"protocolVersion":"GRPC"}},{"routeIdentifier":{"kind":"HTTPRoute"},"targetGroupProps":{"protocolVersion":"HTTP1"}},{"routeIdentifier":{"kind":"GRPCRoute"},"targetGroupProps":{"protocolVersion":"GRPC"}}]}` | ALB target group configuration Refer to https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/guide/gateway/targetgroupconfig/ for details |
+| server.httproute.aws.targetGroupConfiguration | object | `{}` (See [values.yaml]) | ALB target group configuration Refer to https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/guide/gateway/targetgroupconfig/ for details |
 | server.httproute.aws.targetGroupConfiguration.annotations | object | `{}` | Additional HTTPRoute annotations |
 | server.httproute.aws.targetGroupConfiguration.labels | object | `{}` | Additional HTTPRoute labels |
-| server.httproute.aws.targetGroupConfiguration.routeConfigurations | list | `[{"routeIdentifier":{"kind":"HTTPRoute","name":"{{ template \"argo-cd.server.fullname\" . }}-grpc","namespace":"{{ .Release.Namespace }}"},"targetGroupProps":{"protocolVersion":"GRPC"}},{"routeIdentifier":{"kind":"HTTPRoute"},"targetGroupProps":{"protocolVersion":"HTTP1"}},{"routeIdentifier":{"kind":"GRPCRoute"},"targetGroupProps":{"protocolVersion":"GRPC"}}]` | Refer to https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/guide/gateway/targetgroupconfig/#route-matching-logic |
+| server.httproute.aws.targetGroupConfiguration.routeConfigurations | list | `[]` (See [values.yaml]) | Refer to https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/guide/gateway/targetgroupconfig/#route-matching-logic |
 | server.httproute.enabled | bool | `false` | Enable HTTPRoute resource for Argo CD server (Gateway API) |
 | server.httproute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames for the HTTPRoute |
 | server.httproute.labels | object | `{}` | Additional HTTPRoute labels |
