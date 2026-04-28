@@ -1,0 +1,28 @@
+{{- if and .Values.server.httproute.enabled .Values.server.httproute.aws.enabled }}
+{{- $fullName := include "argo-cd.server.fullname" . -}}
+{{- $insecure := index .Values.configs.params "server.insecure" | toString -}}
+{{- $servicePort := eq $insecure "true" | ternary .Values.server.service.servicePortHttp .Values.server.service.servicePortHttps -}}
+apiVersion: gateway.k8s.aws/v1beta1
+kind: TargetGroupConfiguration
+metadata:
+  name: {{ $fullName }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    {{- with .Values.server.httproute.aws.targetGroupConfiguration.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.server.httproute.aws.targetGroupConfiguration.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  targetReferences:
+    - group: ''
+      kind: Service
+      name: {{ $fullName }}
+  {{- with .Values.server.httproute.aws.targetGroupConfiguration.routeConfigurations }}
+  routeConfigurations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+{{- end -}}

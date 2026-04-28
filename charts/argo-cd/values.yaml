@@ -2730,6 +2730,56 @@ server:
         #   request: 10s
         #   backendRequest: 2s
 
+    # AWS specific options for Application Load Balancer with Gateway API
+    aws:
+      # -- Enable AWS Application Load Balancer options for the HTTPRoute
+      enabled: false
+      # -- ALB target group configuration
+      # Refer to https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/guide/gateway/targetgroupconfig/ for details
+      targetGroupConfiguration:
+        # -- Additional HTTPRoute labels
+        labels: {}
+        # -- Additional HTTPRoute annotations
+        annotations: {}
+        # -- Route configuration
+        # -- Refer to https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/guide/gateway/targetgroupconfig/#route-matching-logic
+        routeConfigurations:
+          - routeIdentifier:
+              kind: HTTPRoute
+              name: |-
+                {{ template "argo-cd.server.fullname" . }}-grpc
+              namespace: "{{ .Release.Namespace }}"
+            targetGroupProps:
+              protocolVersion: GRPC
+          - routeIdentifier:
+              kind: HTTPRoute
+            targetGroupProps:
+              protocolVersion: HTTP1
+          - routeIdentifier:
+              kind: GRPCRoute
+            targetGroupProps:
+              protocolVersion: GRPC
+      # -- HTTPRoute rules configuration
+      # @default -- `[]` (See [values.yaml])
+      rules:
+        - matches:
+            - headers:
+                - name: Content-Type
+                  type: RegularExpression
+                  value: ^application/grpc.*
+              path:
+                type: PathPrefix
+                value: /
+          # filters: []
+          #   - type: RequestHeaderModifier
+          #     requestHeaderModifier:
+          #       add:
+          #         - name: X-Custom-Header
+          #           value: custom-value
+          # timeouts:
+          #   request: 10s
+          #   backendRequest: 2s
+
   # Gateway API GRPCRoute configuration
   # NOTE: Gateway API support is in EXPERIMENTAL status
   # Support depends on your Gateway controller implementation
