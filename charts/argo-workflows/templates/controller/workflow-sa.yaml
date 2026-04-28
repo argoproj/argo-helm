@@ -21,5 +21,20 @@ metadata:
 imagePullSecrets:
     {{- toYaml . | nindent 2 }}
   {{- end }}
+  {{- if $.Values.workflow.serviceAccount.createSecret }}
+secrets:
+  - name: {{ $.Values.workflow.serviceAccount.name }}.service-account-token
+---
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  name: {{ $.Values.workflow.serviceAccount.name }}.service-account-token
+    {{- with $namespace }}
+  namespace: {{ . }}
+    {{- end }}
+  annotations:
+    kubernetes.io/service-account.name: "{{ $.Values.workflow.serviceAccount.name }}"
+  {{- end }}
   {{- end }}
 {{- end }}

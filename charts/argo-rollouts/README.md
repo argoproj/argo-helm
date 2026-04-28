@@ -86,6 +86,9 @@ For full list of changes please check ArtifactHub [changelog].
 |-----|------|---------|-------------|
 | containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Security Context to set on container level |
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
+| controller.albTagKeyResourceID | string | `""` | Set the ALB tag key for resource ID (e.g. `ingress.k8s.aws/resource` for standard EKS, `ingress.eks.amazonaws.com` for EKS Auto Mode) |
+| controller.awsTargetGroupBindingAPIVersion | string | `""` | Set the AWS TargetGroupBinding apiVersion (e.g. `elbv2.k8s.aws/v1beta1` for standard EKS, `eks.amazonaws.com/v1` for EKS Auto Mode) |
+| controller.awsVerifyTargetGroup | bool | `false` | Enable AWS target group verification before progressing through steps (requires AWS privileges) |
 | controller.component | string | `"rollouts-controller"` | Value of label `app.kubernetes.io/component` |
 | controller.containerPorts.healthz | int | `8080` | Healthz container port |
 | controller.containerPorts.metrics | int | `8090` | Metrics container port |
@@ -126,10 +129,12 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.pdb.minAvailable | string | `nil` | Minimum number / percentage of pods that should remain scheduled |
 | controller.podAnnotations | object | `{}` | Annotations to be added to application controller pods |
 | controller.podLabels | object | `{}` | Labels to be added to the application controller pods |
+| controller.pprofAddress | string | `""` | Enable pprof profiling on the controller by specifying a listen address (e.g. `:6060` or `localhost:6060`) |
 | controller.priorityClassName | string | `""` | [priorityClassName] for the controller |
 | controller.readinessProbe | object | See [values.yaml] | Configure readiness [probe] for the controller |
 | controller.replicas | int | `2` | The number of controller pods to run |
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
+| controller.selfServiceNotification | bool | `false` | Enable self-service notification support, allowing the controller to pull notification config from the rollout's namespace |
 | controller.stepPlugins | list | `[]` | Configures 3rd party stepPlugins for controller |
 | controller.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | controller.tolerations | list | `[]` | [Tolerations] for use with node taints |
@@ -186,6 +191,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.readonly | bool | `false` | Set cluster role to readonly |
 | dashboard.replicas | int | `1` | The number of dashboard pods to run |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
+| dashboard.rootPath | string | `""` | Set the root path of the dashboard (e.g. `/rollouts`). Useful when running behind a reverse proxy with a path prefix. |
 | dashboard.service.annotations | object | `{}` | Service annotations |
 | dashboard.service.externalIPs | list | `[]` | Dashboard service external IPs |
 | dashboard.service.labels | object | `{}` | Service labels |

@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: v4.0.3
+appVersion: v4.0.5
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 1.0.6
+version: 1.0.13
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -16,5 +16,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Default S3 artifact repository endpoint to s3.amazonaws.com when not set
+    - kind: changed
+      description: Use Recreate deployment strategy when controller replicas is 1 to prevent two controllers running during rollout

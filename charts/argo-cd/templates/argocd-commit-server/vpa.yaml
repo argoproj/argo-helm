@@ -1,0 +1,29 @@
+{{- if and (.Values.commitServer.vpa) (.Values.commitServer.vpa.enabled) }}
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ include "argo-cd.commitServer.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+  labels:
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.commitServer.name "name" .Values.commitServer.name) | nindent 4 }}
+    {{- with .Values.commitServer.vpa.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.commitServer.vpa.annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: {{ template "argo-cd.commitServer.fullname" . }}
+  updatePolicy:
+    updateMode: {{ .Values.commitServer.vpa.updateMode | quote }}
+  resourcePolicy:
+    containerPolicies:
+    - containerName: {{ .Values.commitServer.name }}
+    {{ with .Values.commitServer.vpa.containerPolicy }}
+    {{- toYaml . | nindent 6 }}
+    {{- end }}
+{{- end }}
