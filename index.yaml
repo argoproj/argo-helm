@@ -1588,6 +1588,41 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Support empty matches in GRPCRoute and HTTPRoute rules.
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.3.8
+    created: "2026-04-29T07:32:23.155177931Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.34.11
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 8cf1ca6197c948729b9a8beff5a17eae2bd4f0505f6c78452c50062687e08b6d
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-cd
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-9.5.8/argo-cd-9.5.8.tgz
+    version: 9.5.8
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Make PrometheusRule API version field overridable like it is in ServiceMonitor objects.
       artifacthub.io/signKey: |
@@ -42925,4 +42960,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-04-28T21:19:06.710152423Z"
+generated: "2026-04-29T07:32:23.157571058Z"
