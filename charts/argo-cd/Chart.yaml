@@ -1,14 +1,14 @@
 apiVersion: v2
-appVersion: v3.3.6
+appVersion: v3.3.8
 kubeVersion: ">=1.25.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 9.4.18
+version: 9.5.10
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
-  - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
   - https://github.com/argoproj/argo-cd
+  - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
 keywords:
   - argoproj
   - argocd
@@ -28,5 +28,3 @@ annotations:
   artifacthub.io/changes: |
     - kind: added
       description: Add additional annotations support for redis-secret-init Role and RoleBinding
-    - kind: changed
-      description: Bump argo-cd to v3.3.6

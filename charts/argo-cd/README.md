@@ -4,8 +4,8 @@ A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kub
 
 Source code can be found here:
 
-* <https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd>
 * <https://github.com/argoproj/argo-cd>
+* <https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd>
 
 This is a **community maintained** chart. This chart installs [argo-cd](https://argo-cd.readthedocs.io/en/stable/), a declarative, GitOps continuous delivery tool for Kubernetes.
 
@@ -1088,6 +1088,7 @@ NAME: my-release
 | repoServer.containerPorts.metrics | int | `8084` | Metrics container port |
 | repoServer.containerPorts.server | int | `8081` | Repo server container port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
+| repoServer.copyutil.extraArgs | string | `"--update=none"` | Extra arguments for the cp command in the repo server copyutil initContainer |
 | repoServer.copyutil.resources | object | `{}` | Resource limits and requests for the repo server copyutil initContainer |
 | repoServer.deploymentAnnotations | object | `{}` | Annotations to be added to repo server Deployment |
 | repoServer.deploymentLabels | object | `{}` | Labels for the repo server Deployment |
@@ -1169,6 +1170,11 @@ NAME: my-release
 | repoServer.useEphemeralHelmWorkingDir | bool | `true` | Toggle the usage of a ephemeral Helm working directory |
 | repoServer.volumeMounts | list | `[]` | Additional volumeMounts to the repo server main container |
 | repoServer.volumes | list | `[]` | Additional volumes to the repo server pod |
+| repoServer.vpa.annotations | object | `{}` | Annotations to be added to repo server vpa |
+| repoServer.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for repo server container |
+| repoServer.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the repo server |
+| repoServer.vpa.labels | object | `{}` | Labels to be added to repo server vpa |
+| repoServer.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Argo Server
 
@@ -1226,7 +1232,7 @@ NAME: my-release
 | server.extensions.extensionList | list | `[]` (See [values.yaml]) | Extensions for Argo CD |
 | server.extensions.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for extensions |
 | server.extensions.image.repository | string | `"quay.io/argoprojlabs/argocd-extension-installer"` | Repository to use for extension installer image |
-| server.extensions.image.tag | string | `"v0.0.9"` | Tag to use for extension installer image |
+| server.extensions.image.tag | string | `"v1.0.0"` | Tag to use for extension installer image |
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
@@ -1357,6 +1363,11 @@ NAME: my-release
 | server.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the Argo CD server |
 | server.volumeMounts | list | `[]` | Additional volumeMounts to the server main container |
 | server.volumes | list | `[]` | Additional volumes to the server pod |
+| server.vpa.annotations | object | `{}` | Annotations to be added to Argo CD server vpa |
+| server.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for Argo CD server container |
+| server.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Argo CD server |
+| server.vpa.labels | object | `{}` | Labels to be added to Argo CD server vpa |
+| server.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Dex
 
@@ -1454,6 +1465,11 @@ NAME: my-release
 | dex.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to dex |
 | dex.volumeMounts | list | `[]` | Additional volumeMounts to the dex main container |
 | dex.volumes | list | `[]` | Additional volumes to the dex pod |
+| dex.vpa.annotations | object | `{}` | Annotations to be added to Dex server vpa |
+| dex.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for Dex server container |
+| dex.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Dex server |
+| dex.vpa.labels | object | `{}` | Labels to be added to Dex server vpa |
+| dex.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Redis
 
@@ -1555,6 +1571,11 @@ NAME: my-release
 | redis.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to redis |
 | redis.volumeMounts | list | `[]` | Additional volumeMounts to the redis container |
 | redis.volumes | list | `[]` | Additional volumes to the redis pod |
+| redis.vpa.annotations | object | `{}` | Annotations to be added to Redis vpa |
+| redis.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for Redis container |
+| redis.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Redis |
+| redis.vpa.labels | object | `{}` | Labels to be added to Redis vpa |
+| redis.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ### Option 2 - Redis HA
 
@@ -1680,6 +1701,12 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the ApplicationSet controller |
 | applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
+| applicationSet.httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
+| applicationSet.httproute.enabled | bool | `false` | Enable HTTPRoute resource for Argo CD Applicationset Webhook (Gateway API) |
+| applicationSet.httproute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames for the HTTPRoute |
+| applicationSet.httproute.labels | object | `{}` | Additional HTTPRoute labels |
+| applicationSet.httproute.parentRefs | list | `[]` (See [values.yaml]) | Gateway API parentRefs for the HTTPRoute |
+| applicationSet.httproute.rules | list | `[]` (See [values.yaml]) | HTTPRoute rules configuration |
 | applicationSet.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the ApplicationSet controller |
 | applicationSet.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the ApplicationSet controller |
 | applicationSet.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the ApplicationSet controller |
@@ -1755,6 +1782,11 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | applicationSet.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | applicationSet.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the ApplicationSet controller |
+| applicationSet.vpa.annotations | object | `{}` | Annotations to be added to ApplicationSet controller vpa |
+| applicationSet.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for ApplicationSet controller container |
+| applicationSet.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the ApplicationSet controller |
+| applicationSet.vpa.labels | object | `{}` | Labels to be added to ApplicationSet controller vpa |
+| applicationSet.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Notifications
 
@@ -1843,6 +1875,11 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | notifications.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the application controller |
 | notifications.triggers | object | `{}` | The trigger defines the condition when the notification should be sent |
+| notifications.vpa.annotations | object | `{}` | Annotations to be added to notifications controller vpa |
+| notifications.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for notifications controller container |
+| notifications.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the notifications controller |
+| notifications.vpa.labels | object | `{}` | Labels to be added to notifications controller vpa |
+| notifications.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Commit server (Manifest Hydrator)
 
@@ -1906,6 +1943,11 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | commitServer.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | commitServer.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the commit server |
+| commitServer.vpa.annotations | object | `{}` | Annotations to be added to commit server vpa |
+| commitServer.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for commit server container |
+| commitServer.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the commit server |
+| commitServer.vpa.labels | object | `{}` | Labels to be added to commit server vpa |
+| commitServer.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/helm-docs)
