@@ -37,7 +37,7 @@ spec:
         - group: ''
           kind: Service
           name: {{ $fullName }}
-          port: {{ .Values.applicationSet.service.port }}
+          port: {{ $.Values.applicationSet.service.port }}
           weight: 1
     {{- end }}
 {{- end }}
