@@ -86,7 +86,7 @@ spec:
         {{- end }}
         env:
           {{- with (concat .Values.global.env .Values.repoServer.env) }}
-            {{- toYaml . | nindent 10 }}
+            {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
           {{- if .Values.openshift.enabled }}
           - name: USER_NAME
