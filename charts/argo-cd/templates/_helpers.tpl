@@ -291,7 +291,7 @@ optional: {{ if .Values.externalRedis.username }}false{{ else }}true{{ end }}
     {{- else -}}
 name: "argocd-redis"
 key: redis-username
-optional: true
+optional: {{ .Values.configRefOptionality.redisUsernameSecret }}
     {{- end -}}
 {{- end -}}
 
@@ -316,7 +316,7 @@ optional: false # Secret is not optional in this case !
     {{- /* All other use cases (e.g. disabled pre-install Job) */ -}}
 name: "argocd-redis"
 key: auth
-optional: true
+optional: {{ .Values.configRefOptionality.redisPasswordSecret }}
     {{- end -}}
 {{- end -}}
 

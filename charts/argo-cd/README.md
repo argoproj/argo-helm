@@ -852,6 +852,9 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | apiVersionOverrides | object | `{}` |  |
+| configRefOptionality | object | `{"redisPasswordSecret":true,"redisUsernameSecret":true}` | Resources that reference other resources, e.g. env-vars injection from ConfigMaps or Secrets can be optional or required |
+| configRefOptionality.redisPasswordSecret | bool | `true` | Secret ref in argo-cd.redisPasswordSecretRef |
+| configRefOptionality.redisUsernameSecret | bool | `true` | Secret ref in argo-cd.redisUsernameSecretRef |
 | crds.additionalLabels | object | `{}` | Additional labels to be added to all CRDs |
 | crds.annotations | object | `{"argocd.argoproj.io/sync-options":"ServerSideApply=true"}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |

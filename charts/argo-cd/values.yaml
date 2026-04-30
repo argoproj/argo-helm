@@ -4511,3 +4511,10 @@ commitServer:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+
+# -- Resources that reference other resources, e.g. env-vars injection from ConfigMaps or Secrets can be optional or required
+configRefOptionality:
+  # -- Secret ref in argo-cd.redisUsernameSecretRef
+  redisUsernameSecret: true
+  # -- Secret ref in argo-cd.redisPasswordSecretRef
+  redisPasswordSecret: true
