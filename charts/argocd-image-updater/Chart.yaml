@@ -19,4 +19,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: added
-      description: Add first-class values for missing config keys (log.format, interval, concurrency), webhook support (enable, port, rate-limit, ACR/CloudEvents secrets), controller flags (metricsSecure, enableHTTP2), and health-probe-bind-address wiring
+      description: Wire ALIYUN_ACR_WEBHOOK_SECRET and CLOUDEVENTS_WEBHOOK_SECRET env vars, add metricsSecure and enableHTTP2 controller flags, and bind --health-probe-bind-address to containerPorts.health

@@ -82,7 +82,6 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts` |
 | authScripts.name | string | `"argocd-image-updater-authscripts"` | Name of the authentication scripts ConfigMap |
 | authScripts.scripts | object | `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents. |
-| config."argocd.namespace" | string | `""` | Namespace where ArgoCD runs in (defaults to the controller namespace) |
 | config."git.commit-message-template" | string | `""` | Changing the Git commit message |
 | config."git.commit-sign-off" | bool | `false` | Enables sign off on commits |
 | config."git.commit-signing-key" | string | `""` | Path to public SSH key mounted in container, or GPG key ID used to sign commits |
@@ -90,14 +89,7 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | config."git.email" | string | `""` | E-Mail address to use for Git commits |
 | config."git.user" | string | `""` | Username to use for Git commits |
 | config."kube.events" | bool | `false` | Disable kubernetes events |
-| config."log.format" | string | `""` | Argo CD Image Updater log format (`text` or `json`) |
 | config."log.level" | string | `"info"` | Argo CD Image Update log level |
-| config."webhook.enable" | string | `""` | Enable webhook server for receiving registry events |
-| config."webhook.port" | string | `""` | Port to listen on for webhook events |
-| config."webhook.ratelimit-allowed" | string | `""` | The number of allowed requests per hour for webhook rate limiting (0 disables) |
-| config.interval | string | `""` | Interval for how often to check for updates (e.g. `2m`, `5m`) |
-| config.max_concurrent_apps | string | `""` | Maximum number of ArgoCD applications that can be updated concurrently |
-| config.max_concurrent_reconciles | string | `""` | Maximum number of concurrent Reconciles which can be run |
 | config.name | string | `"argocd-image-updater-config"` | Name of the ConfigMap |
 | config.registries | list | `[]` | Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/). |
 | config.sshConfig.config | string | `""` | Argo CD Image Updater ssh client parameter configuration |
