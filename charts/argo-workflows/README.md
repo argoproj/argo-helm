@@ -262,6 +262,7 @@ Fields to note:
 | controller.configMap.name | string | `""` | ConfigMap name |
 | controller.cronWorkflowWorkers | string | `nil` | Number of cron workflow workers Only valid for 3.5+ |
 | controller.deploymentAnnotations | object | `{}` | deploymentAnnotations is an optional map of annotations to be applied to the controller Deployment |
+| controller.deploymentStrategy | object | `{}` | Deployment strategy for the workflow-controller. When set, it takes precedence over the chart's default of `type: Recreate` for `replicas: 1`, allowing operators with `replicas: 2+` to opt into a zero-downtime rolling strategy (e.g. `maxUnavailable: 0, maxSurge: 1`). |
 | controller.extraArgs | list | `[]` | Extra arguments to be added to the controller |
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
 | controller.extraEnv | list | `[]` | Extra environment variables to provide to the controller container |
@@ -408,6 +409,7 @@ Fields to note:
 | server.clusterWorkflowTemplates.enableEditing | bool | `true` | Give the server permissions to edit ClusterWorkflowTemplates. |
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
 | server.deploymentAnnotations | object | `{}` | optional map of annotations to be applied to the ui Deployment |
+| server.deploymentStrategy | object | `{}` | Deployment strategy for the argo server. When unset, Kubernetes uses the default RollingUpdate (25%/25%); set this to opt into zero-downtime rolls (e.g. `maxUnavailable: 0, maxSurge: 1`) when running 2+ replicas. |
 | server.enabled | bool | `true` | Deploy the Argo Server |
 | server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary. |
 | server.extraContainers | list | `[]` | Extra containers to be added to the server deployment |

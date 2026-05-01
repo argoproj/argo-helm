@@ -16,6 +16,10 @@ spec:
   replicas: {{ .Values.server.replicas }}
   {{- end }}
   revisionHistoryLimit: {{ .Values.server.revisionHistoryLimit }}
+  {{- with .Values.server.deploymentStrategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "argo-workflows.selectorLabels" (dict "context" . "name" .Values.server.name) | nindent 6 }}

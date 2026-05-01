@@ -13,7 +13,10 @@ metadata:
 spec:
   replicas: {{ .Values.controller.replicas }}
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
-  {{- if eq (int .Values.controller.replicas) 1 }}
+  {{- if .Values.controller.deploymentStrategy }}
+  strategy:
+    {{- toYaml .Values.controller.deploymentStrategy | nindent 4 }}
+  {{- else if eq (int .Values.controller.replicas) 1 }}
   strategy:
     type: Recreate
   {{- end }}

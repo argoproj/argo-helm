@@ -387,6 +387,16 @@ controller:
   # -- The number of revisions to keep.
   revisionHistoryLimit: 10
 
+  # -- Deployment strategy for the workflow-controller. When set, it takes
+  # precedence over the chart's default of `type: Recreate` for `replicas: 1`,
+  # allowing operators with `replicas: 2+` to opt into a zero-downtime rolling
+  # strategy (e.g. `maxUnavailable: 0, maxSurge: 1`).
+  deploymentStrategy: {}
+    # type: RollingUpdate
+    # rollingUpdate:
+    #   maxUnavailable: 0
+    #   maxSurge: 1
+
   pdb:
     # -- Configure [Pod Disruption Budget] for the controller pods
     enabled: false
@@ -628,6 +638,16 @@ server:
   replicas: 1
   # -- The number of revisions to keep.
   revisionHistoryLimit: 10
+
+  # -- Deployment strategy for the argo server. When unset, Kubernetes uses
+  # the default RollingUpdate (25%/25%); set this to opt into zero-downtime
+  # rolls (e.g. `maxUnavailable: 0, maxSurge: 1`) when running 2+ replicas.
+  deploymentStrategy: {}
+    # type: RollingUpdate
+    # rollingUpdate:
+    #   maxUnavailable: 0
+    #   maxSurge: 1
+
   ## Argo Server Horizontal Pod Autoscaler
   autoscaling:
     # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Argo Server
