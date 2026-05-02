@@ -769,6 +769,7 @@ controller:
   replicas: 1
 
   # -- Enable dynamic cluster distribution (alpha)
+  # Enabling this grants the application controller RBAC access to the argocd-app-controller-shard-cm ConfigMap.
   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/dynamic-cluster-distribution
   ## This is done using a deployment instead of a statefulSet
   ## When replicas are added or removed, the sharding algorithm is re-run to ensure that the
