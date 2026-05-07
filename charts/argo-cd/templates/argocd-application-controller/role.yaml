@@ -47,7 +47,7 @@ rules:
   - get
   - list
   - watch
-{{- if and (not .Values.createClusterRoles) .Values.controller.dynamicClusterDistribution }}
+{{- if .Values.controller.dynamicClusterDistribution }}
 - apiGroups:
   - ""
   resources:

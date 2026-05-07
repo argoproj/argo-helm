@@ -26,5 +26,7 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
+    - kind: fixed
+      description: Fix RBAC condition for argocd-app-controller-shard-cm when controller.dynamicClusterDistribution is enabled
     - kind: changed
       description: Bump argo-cd to v3.4.1
