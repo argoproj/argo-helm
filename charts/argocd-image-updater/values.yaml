@@ -301,6 +301,16 @@ metrics:
     selector: {}
       # promtheus: kube-prometheus
 
+    # -- Prometheus ServiceMonitor scheme
+    scheme: ""
+    # -- Prometheus ServiceMonitor tlsConfig
+    tlsConfig: {}
+    # -- Prometheus ServiceMonitor authorization
+    authorization: {}
+      # type: Bearer
+      # credentials:
+      #   name: argocd-image-updater-metrics-token
+      #   key: token
     # -- Prometheus ServiceMonitor namespace
     namespace: ""
     # -- Prometheus ServiceMonitor labels
