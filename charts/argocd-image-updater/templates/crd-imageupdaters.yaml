@@ -358,7 +358,7 @@ spec:
                               description: |-
                                 WriteBackTarget defines the path and type of file to update in the Git repository.
                                 Examples: "helmvalues:./helm/values.yaml", "kustomization:./kustomize/overlays/production".
-                                For ApplicationSet usage, `{{ .app.path.path }}` should be resolved by ApplicationSet
+                                For ApplicationSet usage, `{{`{{ .app.path.path }}`}}` should be resolved by ApplicationSet
                                 before this CR is generated, resulting in a concrete path here.
                                 Required if write-back method is Git and this is not specified at the spec level.
                               type: string
@@ -476,7 +476,7 @@ spec:
                         description: |-
                           WriteBackTarget defines the path and type of file to update in the Git repository.
                           Examples: "helmvalues:./helm/values.yaml", "kustomization:./kustomize/overlays/production".
-                          For ApplicationSet usage, `{{ .app.path.path }}` should be resolved by ApplicationSet
+                          For ApplicationSet usage, `{{`{{ .app.path.path }}`}}` should be resolved by ApplicationSet
                           before this CR is generated, resulting in a concrete path here.
                           Required if write-back method is Git and this is not specified at the spec level.
                         type: string
