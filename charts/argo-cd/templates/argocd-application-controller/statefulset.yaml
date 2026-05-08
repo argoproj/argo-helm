@@ -81,7 +81,7 @@ spec:
         name: {{ .Values.controller.name }}
         env:
           {{- with (concat .Values.global.env .Values.controller.env) }}
-            {{- toYaml . | nindent 10 }}
+            {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
           - name: ARGOCD_CONTROLLER_REPLICAS
             value: {{ .Values.controller.replicas | quote }}
