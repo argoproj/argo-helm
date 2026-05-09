@@ -34,12 +34,33 @@ crds:
     resources: {}
     # -- Node selector for the CRD install Job
     nodeSelector: {}
+    # -- Pod security context for the CRD install Job pod
+    podSecurityContext:
+      runAsNonRoot: true
+      fsGroup: 65532
+      runAsUser: 65532
+      runAsGroup: 65532
+      fsGroupChangePolicy: "OnRootMismatch"
+      seccompProfile:
+        type: RuntimeDefault
     # -- Tolerations for the CRD install Job
     tolerations: []
     # -- Image pull secrets for the CRD install Job
     imagePullSecrets: []
     # -- Extra environment variables to provide to the CRD install Job container
     extraEnv: []
+    # -- Security context for the CRD install Job container
+    securityContext:
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      runAsUser: 65532
+      runAsGroup: 65532
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+          - ALL
     # - name: HTTP_PROXY
     #   value: "http://proxy.example.com:8080"
     # - name: HTTPS_PROXY
