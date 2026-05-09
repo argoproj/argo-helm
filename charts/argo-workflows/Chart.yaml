@@ -3,7 +3,7 @@ appVersion: v4.0.5
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 1.0.14
+version: 1.0.15
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -17,4 +17,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: Bump kubectl to v1.36.1
+      description: Allow configuring the container and pod-level securityContext for the crd upgrade job
