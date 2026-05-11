@@ -72,7 +72,7 @@ spec:
         {{- end }}
         env:
           {{- with (concat .Values.global.env .Values.commitServer.extraEnv) }}
-            {{- toYaml . | nindent 10 }}
+            {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
           - name: ARGOCD_COMMIT_SERVER_LISTEN_ADDRESS
             valueFrom:

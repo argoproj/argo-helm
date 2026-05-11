@@ -84,7 +84,7 @@ spec:
             {{- end }}
           env:
             {{- with (concat .Values.global.env .Values.notifications.extraEnv) }}
-              {{- toYaml . | nindent 12 }}
+              {{- tpl (toYaml .) $ | nindent 12 }}
             {{- end }}
             - name: ARGOCD_NOTIFICATIONS_CONTROLLER_LOGLEVEL
               valueFrom:
