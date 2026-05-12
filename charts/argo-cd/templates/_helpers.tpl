@@ -1,11 +1,32 @@
 {{/* vim: set filetype=mustache: */}}
 {{/*
+Create a component fullname while preserving the component suffix.
+*/}}
+{{- define "argo-cd.component.fullname" -}}
+{{- $ctx := .context -}}
+{{- $name := .name -}}
+{{- $suffix := .suffix | default "" -}}
+{{- $maxLen := .maxLen | default 63 | int -}}
+{{- $componentName := $name -}}
+{{- if $suffix -}}
+{{- $componentName = printf "%s-%s" $name $suffix -}}
+{{- end -}}
+{{- /* Reserve space for hyphen + componentName */ -}}
+{{- $baseMaxLen := sub $maxLen (add (len $componentName) 1) | int -}}
+{{- if lt $baseMaxLen 1 -}}
+{{- fail (printf "cannot build fullname for component %q: maxLen %d leaves no room for base name" $componentName $maxLen) -}}
+{{- end -}}
+{{- $base := include "argo-cd.fullname" $ctx | trunc $baseMaxLen | trimSuffix "-" -}}
+{{- printf "%s-%s" $base $componentName | trunc $maxLen | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create controller name and version as used by the chart label.
 Truncated at 52 chars because StatefulSet label 'controller-revision-hash' is limited
 to 63 chars and it includes 10 chars of hash and a separating '-'.
 */}}
 {{- define "argo-cd.controller.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.controller.name | trunc 52 | trimSuffix "-" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.controller.name "maxLen" 52) -}}
 {{- end -}}
 
 {{/*
@@ -23,7 +44,7 @@ Create the name of the controller service account to use
 Create dex name and version as used by the chart label.
 */}}
 {{- define "argo-cd.dex.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.dex.name | trunc 63 | trimSuffix "-" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.dex.name) -}}
 {{- end -}}
 
 {{/*
@@ -59,7 +80,7 @@ Create redis name and version as used by the chart label.
         {{- printf "%s-haproxy" (include "redis-ha.fullname" $redisHaContext) | trunc 63 | trimSuffix "-" -}}
     {{- end -}}
 {{- else -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.redis.name | trunc 63 | trimSuffix "-" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.redis.name) -}}
 {{- end -}}
 {{- end -}}
 
@@ -91,7 +112,7 @@ Create the name of the redis service account to use
 Create Redis secret-init name
 */}}
 {{- define "argo-cd.redisSecretInit.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.redisSecretInit.name | trunc 63 | trimSuffix "-" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.redisSecretInit.name) -}}
 {{- end -}}
 
 {{/*
@@ -109,7 +130,7 @@ Create the name of the Redis secret-init service account to use
 Create argocd server name and version as used by the chart label.
 */}}
 {{- define "argo-cd.server.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.server.name | trunc 63 | trimSuffix "-" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.server.name) -}}
 {{- end -}}
 
 {{/*
@@ -127,7 +148,7 @@ Create the name of the Argo CD server service account to use
 Create argocd repo-server name and version as used by the chart label.
 */}}
 {{- define "argo-cd.repoServer.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.repoServer.name | trunc 63 | trimSuffix "-" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.repoServer.name) -}}
 {{- end -}}
 
 {{/*
@@ -145,7 +166,7 @@ Create the name of the repo-server service account to use
 Create argocd application set name and version as used by the chart label.
 */}}
 {{- define "argo-cd.applicationSet.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.applicationSet.name | trunc 63 | trimSuffix "-" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.applicationSet.name) -}}
 {{- end -}}
 
 {{/*
@@ -163,7 +184,7 @@ Create the name of the application set service account to use
 Create argocd notifications name and version as used by the chart label.
 */}}
 {{- define "argo-cd.notifications.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.notifications.name | trunc 63 | trimSuffix "-" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.notifications.name) -}}
 {{- end -}}
 
 {{/*
@@ -181,7 +202,7 @@ Create the name of the notifications service account to use
 Create argocd commit-server name and version as used by the chart label.
 */}}
 {{- define "argo-cd.commitServer.fullname" -}}
-{{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.commitServer.name | trunc 63 | trimSuffix "-" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.commitServer.name) -}}
 {{- end -}}
 
 {{/*
@@ -336,4 +357,75 @@ Return the appropriate apiVersion for monitoring CRDs
 {{- else -}}
 {{- print "monitoring.coreos.com/v1" -}}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Create controller metrics service name.
+*/}}
+{{- define "argo-cd.controller.metrics.fullname" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.controller.name "suffix" "metrics") -}}
+{{- end -}}
+
+{{/*
+Create redis metrics service name.
+*/}}
+{{- define "argo-cd.redis.metrics.fullname" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.redis.name "suffix" "metrics") -}}
+{{- end -}}
+
+{{/*
+Create server metrics service name.
+*/}}
+{{- define "argo-cd.server.metrics.fullname" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.server.name "suffix" "metrics") -}}
+{{- end -}}
+
+{{/*
+Create repo-server metrics service name.
+*/}}
+{{- define "argo-cd.repoServer.metrics.fullname" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.repoServer.name "suffix" "metrics") -}}
+{{- end -}}
+
+{{/*
+Create applicationset metrics service name.
+*/}}
+{{- define "argo-cd.applicationSet.metrics.fullname" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.applicationSet.name "suffix" "metrics") -}}
+{{- end -}}
+
+{{/*
+Create notifications metrics service name.
+*/}}
+{{- define "argo-cd.notifications.metrics.fullname" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.notifications.name "suffix" "metrics") -}}
+{{- end -}}
+
+{{/*
+Create commit-server metrics service name.
+*/}}
+{{- define "argo-cd.commitServer.metrics.fullname" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.commitServer.name "suffix" "metrics") -}}
+{{- end -}}
+
+{{/*
+Create redis health configmap name.
+*/}}
+{{- define "argo-cd.redis.healthConfigMap.fullname" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.redis.name "suffix" "health-configmap") -}}
+{{- end -}}
+
+{{/*
+Create server grpc service/ingress name.
+*/}}
+{{- define "argo-cd.server.grpc.fullname" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.server.name "suffix" "grpc") -}}
+{{- end -}}
+
+
+{{/*
+Create aws server grpc service/ingress name.
+*/}}
+{{- define "argo-cd.server.aws.grpc.fullname" -}}
+{{- include "argo-cd.component.fullname" (dict "context" . "name" .Values.server.name "suffix" "grpc" "maxLen" 52) -}}
 {{- end -}}

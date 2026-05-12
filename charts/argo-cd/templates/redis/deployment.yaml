@@ -210,7 +210,7 @@ spec:
       volumes:
         - name: health
           configMap:
-            name: {{ include "argo-cd.redis.fullname" . }}-health-configmap
+            name: {{ include "argo-cd.redis.healthConfigMap.fullname" . }}
             defaultMode: 493
       {{- with .Values.redis.volumes }}
         {{- toYaml . | nindent 8}}

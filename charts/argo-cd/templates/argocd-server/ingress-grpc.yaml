@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "argo-cd.server.fullname" . }}-grpc
+  name: {{ include "argo-cd.server.grpc.fullname" . }}
   namespace: {{ include  "argo-cd.namespace" . }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
