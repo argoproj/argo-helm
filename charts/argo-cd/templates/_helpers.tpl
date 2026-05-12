@@ -218,6 +218,9 @@ Merge Argo Configuration with Preset Configuration
 {{- $preset := include "argo-cd.config.cm.presets" . | fromYaml | default dict -}}
 {{- range $key, $value := mergeOverwrite $preset $config }}
 {{- $fmted := $value | toString }}
+{{- if eq $key "url" }}
+{{- $fmted = tpl $fmted $ }}
+{{- end }}
 {{- if not (eq $fmted "") }}
 {{ $key }}: {{ $fmted | toYaml }}
 {{- end }}
