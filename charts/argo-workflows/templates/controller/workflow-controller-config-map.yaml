@@ -118,17 +118,17 @@ data:
       {{- toYaml .Values.customArtifactRepository | nindent 6 }}
       {{- end }}
     {{- end }}
-    {{- if .Values.controller.metricsConfig.enabled }}
+    {{- with .Values.controller.metricsConfig }}
     metricsConfig:
-      enabled: {{ .Values.controller.metricsConfig.enabled }}
-      path: {{ .Values.controller.metricsConfig.path }}
-      port: {{ .Values.controller.metricsConfig.port }}
-      {{- if .Values.controller.metricsConfig.metricsTTL }}
-      metricsTTL: {{ .Values.controller.metricsConfig.metricsTTL }}
+      enabled: {{ .enabled }}
+      path: {{ .path }}
+      port: {{ .port }}
+      {{- if .metricsTTL }}
+      metricsTTL: {{ .metricsTTL }}
       {{- end }}
-      ignoreErrors: {{ .Values.controller.metricsConfig.ignoreErrors }}
-      secure: {{ .Values.controller.metricsConfig.secure }}
-      {{- with .Values.controller.metricsConfig.modifiers }}
+      ignoreErrors: {{ .ignoreErrors }}
+      secure: {{ .secure }}
+      {{- with .modifiers }}
       modifiers:
         {{- toYaml . | nindent 8 }} 
       {{- end }}  
