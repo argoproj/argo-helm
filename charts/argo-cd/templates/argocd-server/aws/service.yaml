@@ -11,7 +11,7 @@ metadata:
     {{- end }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" (print .Values.server.name "-grpc") "name" (print .Values.server.name "-grpc")) | nindent 4 }}
-  name: {{ template "argo-cd.server.fullname" . }}-grpc
+  name: {{ include "argo-cd.server.aws.grpc.fullname" . }}
   namespace: {{ include  "argo-cd.namespace" . }}
 spec:
   {{- include "argo-cd.dualStack" . | indent 2 }}

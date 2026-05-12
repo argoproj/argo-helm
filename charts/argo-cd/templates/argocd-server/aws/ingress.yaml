@@ -12,7 +12,7 @@ metadata:
       {{- toYaml . | nindent 4 }}
     {{- end }}
   annotations:
-    alb.ingress.kubernetes.io/conditions.{{ include "argo-cd.server.fullname" . }}-grpc: |
+    alb.ingress.kubernetes.io/conditions.{{ include "argo-cd.server.aws.grpc.fullname" . }}: |
       [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "Content-Type", "values":["application/grpc"]}}]
     {{- range $key, $value := .Values.server.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
@@ -32,7 +32,7 @@ spec:
             pathType: {{ $.Values.server.ingressGrpc.pathType }}
             backend:
               service:
-                name: {{ include "argo-cd.server.fullname" $ }}-grpc
+                name: {{ include "argo-cd.server.aws.grpc.fullname" $ }}
                 port:
                   number: {{ $servicePort }}
           - path: {{ .Values.server.ingress.path }}
