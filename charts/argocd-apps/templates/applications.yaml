@@ -51,8 +51,8 @@ spec:
   info:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with $appData.sourceHydrator }}  
-  sourceHydrator:  
-    {{- toYaml . | nindent 4 }}  
+  {{- with $appData.sourceHydrator }}
+  sourceHydrator:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
