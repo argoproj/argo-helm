@@ -34094,6 +34094,30 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Bump kubectl to v1.36.1
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v4.0.5
+    created: "2026-05-13T11:52:02.10055972Z"
+    description: A Helm chart for Argo Workflows
+    digest: 552fd9548aa107cd495a5e1277c4995b0389591ce945537a356863bfc791c339
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-1.0.14/argo-workflows-1.0.14.tgz
+    version: 1.0.14
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Use Recreate deployment strategy when controller replicas is 1 to prevent two controllers running during rollout
       artifacthub.io/signKey: |
         fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
@@ -43170,4 +43194,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-05-13T02:43:40.77279807Z"
+generated: "2026-05-13T11:52:02.102993836Z"
