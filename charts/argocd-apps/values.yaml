@@ -41,14 +41,14 @@ applications: {}
 #    info:
 #    - name: url
 #      value: https://argoproj.github.io/
-# ArgoCD Manifest Hydrator (requires hydrator.enabled=true in argocd-cmd-params-cm)  
-#    sourceHydrator:  
-#      drySource:  
-#        repoURL: https://github.com/argoproj/argocd-example-apps.git  
-#        path: helm-guestbook  
-#        targetRevision: HEAD  
-#      syncSource:  
-#        targetBranch: environments/prod  
+# ArgoCD Manifest Hydrator (requires hydrator.enabled=true in argocd-cmd-params-cm)
+#    sourceHydrator:
+#      drySource:
+#        repoURL: https://github.com/argoproj/argocd-example-apps.git
+#        path: helm-guestbook
+#        targetRevision: HEAD
+#      syncSource:
+#        targetBranch: environments/prod
 #        path: helm-guestbook-hydrated
 
 # -- Deploy Argo CD Projects within this helm release
