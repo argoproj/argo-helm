@@ -4,12 +4,12 @@ on:
   schedule:
     - cron: "30 1 * * *"
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   stale:
     permissions:
+      contents: read # for actions/stale to read issues and PRs
       issues: write # for actions/stale to close stale issues
       pull-requests: write # for actions/stale to close stale PRs
     runs-on: ubuntu-latest
