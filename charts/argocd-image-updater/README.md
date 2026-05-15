@@ -129,12 +129,15 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | metrics.service.labels | object | `{}` | Metrics service labels |
 | metrics.service.servicePort | int | `8443` | Metrics service port |
 | metrics.serviceMonitor.additionalLabels | object | `{}` | Prometheus ServiceMonitor labels |
+| metrics.serviceMonitor.authorization | object | `{}` | Prometheus ServiceMonitor authorization |
 | metrics.serviceMonitor.enabled | bool | `false` | Enable a prometheus ServiceMonitor |
 | metrics.serviceMonitor.interval | string | `"30s"` | Prometheus ServiceMonitor interval |
 | metrics.serviceMonitor.metricRelabelings | list | `[]` | Prometheus [MetricRelabelConfigs] to apply to samples before ingestion |
 | metrics.serviceMonitor.namespace | string | `""` | Prometheus ServiceMonitor namespace |
 | metrics.serviceMonitor.relabelings | list | `[]` | Prometheus [RelabelConfigs] to apply to samples before scraping |
+| metrics.serviceMonitor.scheme | string | `""` | Prometheus ServiceMonitor scheme |
 | metrics.serviceMonitor.selector | object | `{}` | Prometheus ServiceMonitor selector |
+| metrics.serviceMonitor.tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig |
 | nameOverride | string | `""` | Global name (argocd-image-updater.name in _helpers.tpl) override |
 | namespaceOverride | string | `""` | Global namespace (argocd-image-updater.namespace in _helpers.tpl) override |
 | nodeSelector | object | `{}` | Kubernetes nodeSelector settings for the deployment |
