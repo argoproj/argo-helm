@@ -47,6 +47,12 @@ spec:
                 key: argocd.namespace
                 name: {{ .Values.config.name }}
                 optional: true
+          - name: IMAGE_UPDATER_WATCH_NAMESPACES
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Values.config.name }}
+                key: watch.namespaces
+                optional: true
           - name: IMAGE_UPDATER_INTERVAL
             valueFrom:
               configMapKeyRef:
@@ -149,11 +155,41 @@ spec:
                 name: argocd-image-updater-secret
                 key: webhook.harbor-secret
                 optional: true
+          - name: ALIYUN_ACR_WEBHOOK_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: argocd-image-updater-secret
+                key: webhook.aliyun-acr-secret
+                optional: true
           - name: WEBHOOK_RATELIMIT_ALLOWED
             valueFrom:
               configMapKeyRef:
                 name: {{ .Values.config.name }}
                 key: webhook.ratelimit-allowed
+                optional: true
+          - name: DISABLE_TLS
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Values.config.name }}
+                key: disable-tls
+                optional: true
+          - name: TLS_MIN_VERSION
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Values.config.name }}
+                key: tls.min-version
+                optional: true
+          - name: TLS_MAX_VERSION
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Values.config.name }}
+                key: tls.max-version
+                optional: true
+          - name: TLS_CIPHERS
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Values.config.name }}
+                key: tls.ciphers
                 optional: true
           {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 10 }}
@@ -205,6 +241,9 @@ spec:
             mountPath: /app/ssh-keys/id_rsa
             readOnly: true
             subPath: sshPrivateKey
+          - name: argocd-image-updater-tls
+            mountPath: /app/config/tls
+            readOnly: true
           {{- if .Values.authScripts.enabled }}
           - mountPath: /scripts
             name: authscripts
@@ -241,6 +280,15 @@ spec:
         secret:
           secretName: ssh-git-creds
           optional: true
+      - name: argocd-image-updater-tls
+        secret:
+          secretName: argocd-image-updater-tls
+          optional: true
+          items:
+            - key: tls.crt
+              path: tls.crt
+            - key: tls.key
+              path: tls.key
       - emptyDir: {}
         name: tmp
       {{- with .Values.volumes }}
