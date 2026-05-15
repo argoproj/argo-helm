@@ -40472,6 +40472,31 @@ entries:
   argocd-apps:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Add sourceHydrator field support to Application and ApplicationSet templates
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    created: "2026-05-15T15:23:20.208694538Z"
+    description: A Helm chart for managing additional Argo CD Applications and Projects
+    digest: 037b6cb7ad1460302cfc85b9a9dd98d087a2ae7af056081fd065f26377ee60b9
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-apps
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-apps-2.0.5/argocd-apps-2.0.5.tgz
+    version: 2.0.5
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Allow nullified top level items. E.g. allows the removal of a default Application in a specific environment by setting it to null.
       artifacthub.io/signKey: |
@@ -43194,4 +43219,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-05-13T11:52:02.102993836Z"
+generated: "2026-05-15T15:23:20.212153816Z"
