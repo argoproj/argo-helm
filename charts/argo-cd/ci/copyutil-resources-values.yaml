@@ -1,0 +1,38 @@
+# Smoke-test that user overrides on the copyutil resources block render through.
+# The chart sets a default memory limit of 256Mi on dex.initImage.resources and
+# repoServer.copyutil.resources; this file exercises explicit overrides on both
+# so chart-testing renders the override path on every PR. Note that chart-testing
+# only renders + installs — it does not assert on rendered values, so this file
+# catches a template that fails to render with overrides, not a refactor that
+# silently drops them.
+
+# crds.keep: false so chart-testing can iterate multiple values files in the
+# same kind cluster without the CRDs from a previous install blocking the next.
+crds:
+  keep: false
+
+dex:
+  enabled: true
+  initImage:
+    resources:
+      limits:
+        cpu: 100m
+        memory: 384Mi
+      requests:
+        cpu: 10m
+        memory: 192Mi
+
+repoServer:
+  copyutil:
+    # Both copyutil paths read extraArgs from values now. The dex side renders
+    # in exec form (each whitespace-separated token becomes an argv element);
+    # the repo-server side renders inside `sh -c` because of the `&&` chain
+    # with `ln -sf`, so the value is shell-interpreted on that side.
+    extraArgs: "--force --verbose"
+    resources:
+      limits:
+        cpu: 100m
+        memory: 384Mi
+      requests:
+        cpu: 10m
+        memory: 192Mi

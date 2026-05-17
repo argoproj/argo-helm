@@ -1,0 +1,136 @@
+suite: copyutil init container rendering
+
+tests:
+  - it: dex copyutil command uses cp -f in exec form (no shell)
+    template: templates/dex/deployment.yaml
+    set:
+      dex.enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].command
+          value:
+            - /bin/cp
+            - "-f"
+            - /usr/local/bin/argocd
+            - /shared/argocd-dex
+      - isNull:
+          path: spec.template.spec.initContainers[0].args
+
+  - it: dex copyutil is not vulnerable to shell injection via extraArgs
+    template: templates/dex/deployment.yaml
+    set:
+      dex.enabled: true
+      dex.initImage.extraArgs: "foo; rm -rf /"
+    asserts:
+      ## Each whitespace-separated token becomes its own argv element, so a
+      ## metacharacter like ';' is delivered as a literal cp argument (cp
+      ## rejects it with "unrecognized option") rather than being parsed by
+      ## a shell. The kubelet never invokes a shell for this command.
+      - equal:
+          path: spec.template.spec.initContainers[0].command
+          value:
+            - /bin/cp
+            - "foo;"
+            - "rm"
+            - "-rf"
+            - "/"
+            - /usr/local/bin/argocd
+            - /shared/argocd-dex
+
+  - it: dex copyutil resources default matches documented shape
+    template: templates/dex/deployment.yaml
+    set:
+      dex.enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].resources
+          value:
+            limits:
+              memory: 256Mi
+            requests:
+              memory: 256Mi
+
+  - it: dex copyutil respects user override on extraArgs
+    template: templates/dex/deployment.yaml
+    set:
+      dex.enabled: true
+      dex.initImage.extraArgs: "--update=none"
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].command
+          value:
+            - /bin/cp
+            - "--update=none"
+            - /usr/local/bin/argocd
+            - /shared/argocd-dex
+
+  - it: dex copyutil with empty extraArgs renders bare cp
+    template: templates/dex/deployment.yaml
+    set:
+      dex.enabled: true
+      dex.initImage.extraArgs: ""
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].command
+          value:
+            - /bin/cp
+            - /usr/local/bin/argocd
+            - /shared/argocd-dex
+
+  - it: dex copyutil resources fall back to dex.resources when set to null
+    template: templates/dex/deployment.yaml
+    set:
+      dex.enabled: true
+      dex.initImage.resources: null
+      dex.resources:
+        limits:
+          memory: 999Mi
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].resources
+          value:
+            limits:
+              memory: 999Mi
+
+  - it: repo-server copyutil args use cp -f, not --update=none
+    template: templates/argocd-repo-server/deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].args
+          value:
+            - /bin/cp -f /usr/local/bin/argocd /var/run/argocd/argocd && /bin/ln -sf /var/run/argocd/argocd /var/run/argocd/argocd-cmp-server
+
+  - it: repo-server copyutil resources default matches documented shape
+    template: templates/argocd-repo-server/deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].resources
+          value:
+            limits:
+              memory: 256Mi
+            requests:
+              memory: 256Mi
+
+  - it: repo-server copyutil respects user override on extraArgs
+    template: templates/argocd-repo-server/deployment.yaml
+    set:
+      repoServer.copyutil.extraArgs: "--update=none"
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].args
+          value:
+            - /bin/cp --update=none /usr/local/bin/argocd /var/run/argocd/argocd && /bin/ln -sf /var/run/argocd/argocd /var/run/argocd/argocd-cmp-server
+
+  - it: repo-server copyutil resources fall back to repoServer.resources when set to null
+    template: templates/argocd-repo-server/deployment.yaml
+    set:
+      repoServer.copyutil.resources: null
+      repoServer.resources:
+        limits:
+          memory: 999Mi
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].resources
+          value:
+            limits:
+              memory: 999Mi

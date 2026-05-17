@@ -1229,15 +1229,28 @@ dex:
     # -- Argo CD init image imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
+    # -- Extra arguments for the cp command in the dex copyutil initContainer
+    ## Short flag -f is used instead of --force so the chart remains
+    ## compatible with images that ship BusyBox cp (e.g. alpine-based custom
+    ## images), which does not accept GNU long flags.
+    extraArgs: "-f"
     # -- Argo CD init image resources
-    # @default -- `{}` (defaults to dex.resources)
-    resources: {}
-    #  requests:
-    #    cpu: 5m
-    #    memory: 96Mi
-    #  limits:
-    #    cpu: 10m
-    #    memory: 144Mi
+    # @default -- `{"limits":{"memory":"256Mi"},"requests":{"memory":"256Mi"}}`
+    ## NOTE: copyutil copies the full argocd binary (~220Mi) into a shared
+    ## volume. The kernel charges the page cache for the copy to the
+    ## cgroup; clean cache is normally reclaimable, but tight limits
+    ## combined with concurrent allocations can cross memory.max before
+    ## reclaim catches up and trigger an OOMKill mid-copy. The default
+    ## of 256Mi reduces (but does not eliminate) that risk; extraArgs
+    ## defaults to -f so any partial binary left by an OOMKill is
+    ## overwritten on retry rather than silently kept. requests.memory
+    ## equals limits.memory so the scheduler reserves the headroom on
+    ## the node rather than letting the init run as Burstable.
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 256Mi
 
   # -- Environment variables to pass to the Dex server
   env: []
@@ -2972,16 +2985,32 @@ repoServer:
 
   copyutil:
     # -- Extra arguments for the cp command in the repo server copyutil initContainer
-    # @default -- `"--update=none"`
-    extraArgs: "--update=none"
+    ## The previous default was --update=none (equivalent to cp -n), which
+    ## silently SKIPS the copy when the destination already exists. If a
+    ## prior init attempt was killed mid-copy and left a partial argocd
+    ## binary on the shared volume, the next attempt would exit 0 without
+    ## rewriting it and the main container would then load the truncated
+    ## binary. Default cp already overwrites; -f additionally removes and
+    ## retries when the destination is not writable (e.g. mode 0400 from a
+    ## prior copy). Short flag form is used so the chart remains compatible
+    ## with images shipping BusyBox cp.
+    extraArgs: "-f"
     # -- Resource limits and requests for the repo server copyutil initContainer
-    resources: {}
-    #  limits:
-    #    cpu: 100m
-    #    memory: 128Mi
-    #  requests:
-    #    cpu: 50m
-    #    memory: 64Mi
+    # @default -- `{"limits":{"memory":"256Mi"},"requests":{"memory":"256Mi"}}`
+    ## NOTE: copyutil copies the full argocd binary (~220Mi) into a shared
+    ## volume. The kernel charges the page cache for the copy to the cgroup;
+    ## clean cache is normally reclaimable, but tight limits combined with
+    ## concurrent allocations can cross memory.max before reclaim catches up
+    ## and trigger an OOMKill mid-copy. The default of 256Mi reduces (but
+    ## does not eliminate) that risk; -f in extraArgs ensures any partial
+    ## binary left by an OOMKill is overwritten on retry. requests.memory
+    ## equals limits.memory so the scheduler reserves the headroom on the
+    ## node rather than letting the init run as Burstable.
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 256Mi
 
   # -- Additional volumeMounts to the repo server main container
   volumeMounts: []

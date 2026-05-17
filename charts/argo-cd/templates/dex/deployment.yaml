@@ -181,7 +181,11 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.initImage.imagePullPolicy }}
         command:
         - /bin/cp
-        - -n
+        {{- range (splitList " " .Values.dex.initImage.extraArgs) }}
+          {{- if . }}
+        - {{ . | quote }}
+          {{- end }}
+        {{- end }}
         - /usr/local/bin/argocd
         - /shared/argocd-dex
         volumeMounts:
