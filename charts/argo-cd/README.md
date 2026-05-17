@@ -398,6 +398,22 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 9.6.0
+
+This release changes the defaults for the dex and repo-server `copyutil` init containers to avoid a failure mode where the ~220 MiB argocd binary gets truncated on the shared volume after an OOMKill, leaving the main container to crash-loop against the partial binary. Three behavior changes are worth knowing about on upgrade:
+
+1. `repoServer.copyutil.resources` now defaults to `{limits: {memory: 256Mi}}` (was `{}`), and `dex.initImage.resources` now defaults to the same. Previously both keys defaulted to empty and the templates fell back to `repoServer.resources` / `dex.resources` via Helm's `default` helper, so the init container inherited the parent component's resources block. The init container now has its own resource defaults regardless of the parent. If you relied on the inheritance to give `copyutil` a larger limit, set `repoServer.copyutil.resources` (or `dex.initImage.resources`) explicitly. Setting it to `null` opts back into the inheritance path.
+
+2. `repoServer.copyutil.extraArgs` now defaults to `"-f"` (was `"--update=none"`). On retry after a partial copy, `cp -f` removes the destination if it exists and is not writable, then rewrites it, instead of silently skipping it. If you rely on the previous skip-if-exists semantics (e.g. a custom `initContainer` that pre-populates the shared volume), set `repoServer.copyutil.extraArgs: "--update=none"` to restore the old behavior. Users who already override `repoServer.copyutil.extraArgs` will not pick up the new default automatically. The short flag form (`-f`) is used so the chart remains compatible with BusyBox-based custom images.
+
+3. The dex copyutil init container now has a matching `dex.initImage.extraArgs` knob (defaulting to `"-f"`), mirroring the repo-server side. Previously the cp flag was hardcoded in the template with no override. The dex copyutil runs in exec form (no shell wrapper) — the value is split on whitespace and each token becomes a separate `argv` element, so shell metacharacters in `dex.initImage.extraArgs` are passed to `cp` as literal arguments (and rejected by `cp`) rather than interpreted by a shell. Setting `dex.initImage.extraArgs: ""` renders bare `cp` (which still overwrites by default).
+
+The repo-server copyutil still runs under `sh -c` because the init container chains `cp ... && ln -sf ...` for the `argocd-cmp-server` symlink. `repoServer.copyutil.extraArgs` is therefore shell-interpreted on that side (this matches the pre-9.6.0 behavior — only the default value changed). Treat `repoServer.copyutil.extraArgs` as you would any other shell-rendered value: avoid metacharacters unless you know what you are putting there.
+
+Both copyutil resources blocks set `requests.memory` equal to `limits.memory` so the scheduler reserves the headroom on the node rather than letting the init container run as Burstable with aggressive reclaim under pressure.
+
+If you still see the copyutil init container OOMKill at the new 256Mi default — for example on a node that runs many copyutil instances concurrently under memory pressure, or after a future argocd binary growth crosses the headroom — raise `repoServer.copyutil.resources.limits.memory` (or `dex.initImage.resources.limits.memory`) further. 256Mi is sized to comfortably hold the ~220 MiB binary plus copy buffers in the common case, not to guarantee no OOMKill under adversarial memory pressure.
+
 ### 9.1.0
 This chart contains a breaking change (if using `redis-ha`), which was introduced by the dependency `redis-ha` (as seen [here](https://github.com/DandyDeveloper/charts/blob/a03b6a6f4d72b6606ce9a218c7d0026350b48ad0/charts/redis-ha/README.md#4341---upgrade-may-complain-about-selector-label-changes-being-immutable)). The upgrade will complain about selector label changes being immutable, which requires a replacement of the `argocd-redis-ha-haproxy` deployment. To overcome this, you will need to delete (orphaning children) this deployment, updated ArgoCD to disable server-side diffing, then allow the new deployment of `argocd-redis-ha-haproxy` to rollout with the updated label selectors.
 
@@ -1088,8 +1104,8 @@ NAME: my-release
 | repoServer.containerPorts.metrics | int | `8084` | Metrics container port |
 | repoServer.containerPorts.server | int | `8081` | Repo server container port |
 | repoServer.containerSecurityContext | object | See [values.yaml] | Repo server container-level security context |
-| repoServer.copyutil.extraArgs | string | `"--update=none"` | Extra arguments for the cp command in the repo server copyutil initContainer |
-| repoServer.copyutil.resources | object | `{}` | Resource limits and requests for the repo server copyutil initContainer |
+| repoServer.copyutil.extraArgs | string | `"-f"` | Extra arguments for the cp command in the repo server copyutil initContainer |
+| repoServer.copyutil.resources | object | `{"limits":{"memory":"256Mi"},"requests":{"memory":"256Mi"}}` | Resource limits and requests for the repo server copyutil initContainer |
 | repoServer.deploymentAnnotations | object | `{}` | Annotations to be added to repo server Deployment |
 | repoServer.deploymentLabels | object | `{}` | Labels for the repo server Deployment |
 | repoServer.deploymentStrategy | object | `{}` | Deployment strategy to be added to the repo server Deployment |
@@ -1401,9 +1417,10 @@ NAME: my-release
 | dex.image.tag | string | `"v2.45.1"` | Dex image tag |
 | dex.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
+| dex.initImage.extraArgs | string | `"-f"` | Extra arguments for the cp command in the dex copyutil initContainer |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
 | dex.initImage.repository | string | `""` (defaults to global.image.repository) | Argo CD init image repository |
-| dex.initImage.resources | object | `{}` (defaults to dex.resources) | Argo CD init image resources |
+| dex.initImage.resources | object | `{"limits":{"memory":"256Mi"},"requests":{"memory":"256Mi"}}` | Argo CD init image resources |
 | dex.initImage.tag | string | `""` (defaults to global.image.tag) | Argo CD init image tag |
 | dex.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Dex >= 2.28.0 |
 | dex.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
