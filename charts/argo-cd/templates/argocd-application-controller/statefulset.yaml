@@ -84,7 +84,9 @@ spec:
             {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
           - name: ARGOCD_CONTROLLER_REPLICAS
-            value: {{ .Values.controller.replicas | quote }}
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.replicas
           - name: ARGOCD_APPLICATION_CONTROLLER_NAME
             value: {{ template "argo-cd.controller.fullname" . }}
           - name: ARGOCD_RECONCILIATION_TIMEOUT
