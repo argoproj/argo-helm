@@ -304,6 +304,26 @@ server:
         sectionName: grpc
 ```
 
+#### Gateway API with TLS passthrough
+
+For end-to-end TLS where the Argo CD server keeps handling TLS, use TLSRoute to route traffic based on SNI:
+
+```yaml
+configs:
+  params:
+    server.insecure: false  # HTTPS backend
+
+server:
+  tlsroute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: tls-passthrough
+    hostnames:
+      - argocd.example.com
+```
+
 #### Gateway API with TLS backend
 
 For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy (experimental, v1alpha3):
