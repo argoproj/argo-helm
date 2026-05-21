@@ -48,6 +48,18 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 1.2.0 (app version 1.2.0)
+
+Starting with this release, the webhook server runs with **TLS enabled by default**. If you previously relied on plain HTTP, you must explicitly opt out by setting the `--disable-tls` flag or the `DISABLE_TLS` environment variable like below.
+
+```yaml
+extraEnv:
+  - name: DISABLE_TLS
+    value: "false"
+```
+
+For details, see [TLS Configuration](https://argocd-image-updater.readthedocs.io/en/stable/configuration/webhook/#tls-configuration).
+
 ### 1.0.3 (app version 1.0.2)
 
 The upstream project changed the recommended installation namespace from `argocd-image-updater-system` to the same
