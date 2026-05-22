@@ -51,8 +51,11 @@ echo "  Generating Helm template..."
 {{- if .Values.crds.install }}
 HEADER
 
-    # Remove leading "---" if present, then process the YAML
-    sed '/^---$/d' "$TMP_FILE" | awk '
+    # Remove leading "---" if present, then process the YAML.
+    # Also escape any literal `{{ ... }}` example strings from upstream descriptions
+    # (e.g. `{{ .app.path.path }}`) so Helm renders them verbatim instead of
+    # evaluating them as template actions and erroring with "nil pointer evaluating ...".
+    sed -e '/^---$/d' -e 's/{{[^{}]*}}/{{`&`}}/g' "$TMP_FILE" | awk '
     BEGIN { in_metadata = 0; printed_metadata = 0 }
     /^apiVersion:/ { print; next }
     /^kind:/ { print; next }
