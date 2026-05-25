@@ -305,6 +305,26 @@ server:
         sectionName: grpc
 ```
 
+#### Gateway API with TLS passthrough
+
+For end-to-end TLS where the Argo CD server keeps handling TLS, use TLSRoute to route traffic based on SNI:
+
+```yaml
+configs:
+  params:
+    server.insecure: false  # HTTPS backend
+
+server:
+  tlsroute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: tls-passthrough
+    hostnames:
+      - argocd.example.com
+```
+
 #### Gateway API with TLS backend
 
 For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy (experimental, v1alpha3):
@@ -1359,6 +1379,12 @@ NAME: my-release
 | server.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | server.serviceAccount.name | string | `"argocd-server"` | Server service account name |
 | server.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
+| server.tlsroute.annotations | object | `{}` | Additional TLSRoute annotations |
+| server.tlsroute.enabled | bool | `false` | Enable TLSRoute resource for Argo CD server (Gateway API) |
+| server.tlsroute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames to match against SNI |
+| server.tlsroute.labels | object | `{}` | Additional TLSRoute labels |
+| server.tlsroute.parentRefs | list | `[]` (See [values.yaml]) | Gateway API parentRefs for the TLSRoute |
+| server.tlsroute.rules | list | `[]` (See [values.yaml]) | TLSRoute rules configuration If not specified, a default rule routing to the server service is created |
 | server.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | server.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to the Argo CD server |
 | server.volumeMounts | list | `[]` | Additional volumeMounts to the server main container |
