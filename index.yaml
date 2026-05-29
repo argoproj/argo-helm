@@ -31228,6 +31228,32 @@ entries:
   argo-rollouts:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Replace deprecated --metricsport flag with --metricsPort in controller deployment
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.9.0
+    created: "2026-05-29T00:42:54.138166079Z"
+    description: A Helm chart for Argo Rollouts
+    digest: 8c1ccb000b59796cef39b3386ae5face4bfd9208483cf105508649313a1ddce1
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-rollouts
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-rollouts
+    sources:
+    - https://github.com/argoproj/argo-rollouts
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-rollouts-2.40.10/argo-rollouts-2.40.10.tgz
+    version: 2.40.10
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Add first-class values for AWS EKS Auto Mode (awsVerifyTargetGroup, awsTargetGroupBindingAPIVersion, albTagKeyResourceID), self-service notifications, pprof profiling address, and dashboard rootPath
       artifacthub.io/signKey: |
@@ -43370,4 +43396,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-05-28T15:45:38.876614987Z"
+generated: "2026-05-29T00:42:54.141314562Z"
