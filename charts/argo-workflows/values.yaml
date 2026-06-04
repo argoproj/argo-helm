@@ -35,14 +35,7 @@ crds:
     # -- Node selector for the CRD install Job
     nodeSelector: {}
     # -- Pod security context for the CRD install Job pod
-    podSecurityContext:
-      runAsNonRoot: true
-      fsGroup: 65532
-      runAsUser: 65532
-      runAsGroup: 65532
-      fsGroupChangePolicy: "OnRootMismatch"
-      seccompProfile:
-        type: RuntimeDefault
+    podSecurityContext: {}
     # -- Tolerations for the CRD install Job
     tolerations: []
     # -- Image pull secrets for the CRD install Job
