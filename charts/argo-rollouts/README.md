@@ -163,6 +163,12 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.enabled | bool | `false` | Deploy dashboard server |
 | dashboard.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-dashboard. A list of flags. |
 | dashboard.extraEnv | list | `[]` | Additional environment variables for rollouts-dashboard. A list of name/value maps. |
+| dashboard.httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
+| dashboard.httproute.enabled | bool | `false` | Enable HTTPRoute resource for the dashboard (Gateway API) |
+| dashboard.httproute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames for the HTTPRoute |
+| dashboard.httproute.labels | object | `{}` | Additional HTTPRoute labels |
+| dashboard.httproute.parentRefs | list | `[]` (See [values.yaml]) | Gateway API parentRefs for the HTTPRoute |
+| dashboard.httproute.rules | list | `[]` (See [values.yaml]) | HTTPRoute rules configuration |
 | dashboard.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | dashboard.image.registry | string | `"quay.io"` | Registry to use |
 | dashboard.image.repository | string | `"argoproj/kubectl-argo-rollouts"` | Repository to use |
