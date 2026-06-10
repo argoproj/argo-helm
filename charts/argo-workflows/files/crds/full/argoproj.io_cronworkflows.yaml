@@ -58,7 +58,7 @@ spec:
                 description: 'v3.6 and after: Schedules is a list of schedules to
                   run the Workflow in Cron format'
                 items:
-                  pattern: ^(@(yearly|annually|monthly|weekly|daily|midnight|hourly)|@every\s+([0-9]+(ns|us|µs|ms|s|m|h))+|([0-9*,/?-]+\s+){4}[0-9*,/?-]+)$
+                  pattern: ^(@(yearly|annually|monthly|weekly|daily|midnight|hourly)|@every\s+([0-9]+(ns|us|µs|ms|s|m|h))+|([A-Za-z0-9*,/?-]+\s+){4}[A-Za-z0-9*,/?-]+)$
                   type: string
                 minItems: 1
                 type: array
@@ -1061,7 +1061,7 @@ spec:
                     description: |-
                       Arguments contain the parameters and artifacts sent to the workflow entrypoint
                       Parameters are referencable globally using the 'workflow' variable prefix.
-                      e.g. {{workflow.parameters.myparam}}
+                      e.g. workflow.parameters.myparam
                     properties:
                       artifacts:
                         description: Artifacts is the list of artifacts to pass to
@@ -1415,7 +1415,7 @@ spec:
                             globalName:
                               description: |-
                                 GlobalName exports an output artifact to the global scope, making it available as
-                                '{{workflow.outputs.artifacts.XXXX}} and in workflow.status.outputs.artifacts
+                                workflow.outputs.artifacts.XXXX and in workflow.status.outputs.artifacts
                               type: string
                             hdfs:
                               description: HDFS contains HDFS artifact location details
@@ -2183,7 +2183,7 @@ spec:
                             globalName:
                               description: |-
                                 GlobalName exports an output parameter to the global scope, making it available as
-                                '{{workflow.outputs.parameters.XXXX}} and in workflow.status.outputs.parameters
+                                workflow.outputs.parameters.XXXX and in workflow.status.outputs.parameters
                               type: string
                             name:
                               description: Name is the parameter name
@@ -2247,7 +2247,7 @@ spec:
                                 parameter:
                                   description: |-
                                     Parameter reference to a step or dag task in which to retrieve an output parameter value from
-                                    (e.g. '{{steps.mystep.outputs.myparam}}')
+                                    (e.g. steps.mystep.outputs.myparam)
                                   type: string
                                 path:
                                   description: Path in the container to retrieve an
@@ -2763,7 +2763,7 @@ spec:
                                   globalName:
                                     description: |-
                                       GlobalName exports an output artifact to the global scope, making it available as
-                                      '{{workflow.outputs.artifacts.XXXX}} and in workflow.status.outputs.artifacts
+                                      workflow.outputs.artifacts.XXXX and in workflow.status.outputs.artifacts
                                     type: string
                                   hdfs:
                                     description: HDFS contains HDFS artifact location
@@ -3560,7 +3560,7 @@ spec:
                                   globalName:
                                     description: |-
                                       GlobalName exports an output parameter to the global scope, making it available as
-                                      '{{workflow.outputs.parameters.XXXX}} and in workflow.status.outputs.parameters
+                                      workflow.outputs.parameters.XXXX and in workflow.status.outputs.parameters
                                     type: string
                                   name:
                                     description: Name is the parameter name
@@ -3625,7 +3625,7 @@ spec:
                                       parameter:
                                         description: |-
                                           Parameter reference to a step or dag task in which to retrieve an output parameter value from
-                                          (e.g. '{{steps.mystep.outputs.myparam}}')
+                                          (e.g. steps.mystep.outputs.myparam)
                                         type: string
                                       path:
                                         description: Path in the container to retrieve
@@ -20759,7 +20759,7 @@ spec:
                                             globalName:
                                               description: |-
                                                 GlobalName exports an output artifact to the global scope, making it available as
-                                                '{{workflow.outputs.artifacts.XXXX}} and in workflow.status.outputs.artifacts
+                                                workflow.outputs.artifacts.XXXX and in workflow.status.outputs.artifacts
                                               type: string
                                             hdfs:
                                               description: HDFS contains HDFS artifact
@@ -21625,7 +21625,7 @@ spec:
                                             globalName:
                                               description: |-
                                                 GlobalName exports an output parameter to the global scope, making it available as
-                                                '{{workflow.outputs.parameters.XXXX}} and in workflow.status.outputs.parameters
+                                                workflow.outputs.parameters.XXXX and in workflow.status.outputs.parameters
                                               type: string
                                             name:
                                               description: Name is the parameter name
@@ -21696,7 +21696,7 @@ spec:
                                                 parameter:
                                                   description: |-
                                                     Parameter reference to a step or dag task in which to retrieve an output parameter value from
-                                                    (e.g. '{{steps.mystep.outputs.myparam}}')
+                                                    (e.g. steps.mystep.outputs.myparam)
                                                   type: string
                                                 path:
                                                   description: Path in the container
@@ -22159,7 +22159,7 @@ spec:
                                                   globalName:
                                                     description: |-
                                                       GlobalName exports an output artifact to the global scope, making it available as
-                                                      '{{workflow.outputs.artifacts.XXXX}} and in workflow.status.outputs.artifacts
+                                                      workflow.outputs.artifacts.XXXX and in workflow.status.outputs.artifacts
                                                     type: string
                                                   hdfs:
                                                     description: HDFS contains HDFS
@@ -23087,7 +23087,7 @@ spec:
                                                   globalName:
                                                     description: |-
                                                       GlobalName exports an output parameter to the global scope, making it available as
-                                                      '{{workflow.outputs.parameters.XXXX}} and in workflow.status.outputs.parameters
+                                                      workflow.outputs.parameters.XXXX and in workflow.status.outputs.parameters
                                                     type: string
                                                   name:
                                                     description: Name is the parameter
@@ -23163,7 +23163,7 @@ spec:
                                                       parameter:
                                                         description: |-
                                                           Parameter reference to a step or dag task in which to retrieve an output parameter value from
-                                                          (e.g. '{{steps.mystep.outputs.myparam}}')
+                                                          (e.g. steps.mystep.outputs.myparam)
                                                         type: string
                                                       path:
                                                         description: Path in the container
@@ -23697,7 +23697,7 @@ spec:
                                     globalName:
                                       description: |-
                                         GlobalName exports an output artifact to the global scope, making it available as
-                                        '{{workflow.outputs.artifacts.XXXX}} and in workflow.status.outputs.artifacts
+                                        workflow.outputs.artifacts.XXXX and in workflow.status.outputs.artifacts
                                       type: string
                                     hdfs:
                                       description: HDFS contains HDFS artifact location
@@ -26435,7 +26435,7 @@ spec:
                                   globalName:
                                     description: |-
                                       GlobalName exports an output artifact to the global scope, making it available as
-                                      '{{workflow.outputs.artifacts.XXXX}} and in workflow.status.outputs.artifacts
+                                      workflow.outputs.artifacts.XXXX and in workflow.status.outputs.artifacts
                                     type: string
                                   hdfs:
                                     description: HDFS contains HDFS artifact location
@@ -27233,7 +27233,7 @@ spec:
                                   globalName:
                                     description: |-
                                       GlobalName exports an output parameter to the global scope, making it available as
-                                      '{{workflow.outputs.parameters.XXXX}} and in workflow.status.outputs.parameters
+                                      workflow.outputs.parameters.XXXX and in workflow.status.outputs.parameters
                                     type: string
                                   name:
                                     description: Name is the parameter name
@@ -27298,7 +27298,7 @@ spec:
                                       parameter:
                                         description: |-
                                           Parameter reference to a step or dag task in which to retrieve an output parameter value from
-                                          (e.g. '{{steps.mystep.outputs.myparam}}')
+                                          (e.g. steps.mystep.outputs.myparam)
                                         type: string
                                       path:
                                         description: Path in the container to retrieve
@@ -27860,7 +27860,7 @@ spec:
                                   globalName:
                                     description: |-
                                       GlobalName exports an output artifact to the global scope, making it available as
-                                      '{{workflow.outputs.artifacts.XXXX}} and in workflow.status.outputs.artifacts
+                                      workflow.outputs.artifacts.XXXX and in workflow.status.outputs.artifacts
                                     type: string
                                   hdfs:
                                     description: HDFS contains HDFS artifact location
@@ -28661,7 +28661,7 @@ spec:
                                   globalName:
                                     description: |-
                                       GlobalName exports an output parameter to the global scope, making it available as
-                                      '{{workflow.outputs.parameters.XXXX}} and in workflow.status.outputs.parameters
+                                      workflow.outputs.parameters.XXXX and in workflow.status.outputs.parameters
                                     type: string
                                   name:
                                     description: Name is the parameter name
@@ -28726,7 +28726,7 @@ spec:
                                       parameter:
                                         description: |-
                                           Parameter reference to a step or dag task in which to retrieve an output parameter value from
-                                          (e.g. '{{steps.mystep.outputs.myparam}}')
+                                          (e.g. steps.mystep.outputs.myparam)
                                         type: string
                                       path:
                                         description: Path in the container to retrieve
@@ -29175,7 +29175,7 @@ spec:
                                     globalName:
                                       description: |-
                                         GlobalName exports an output artifact to the global scope, making it available as
-                                        '{{workflow.outputs.artifacts.XXXX}} and in workflow.status.outputs.artifacts
+                                        workflow.outputs.artifacts.XXXX and in workflow.status.outputs.artifacts
                                       type: string
                                     hdfs:
                                       description: HDFS contains HDFS artifact location
@@ -33594,7 +33594,7 @@ spec:
                                           globalName:
                                             description: |-
                                               GlobalName exports an output artifact to the global scope, making it available as
-                                              '{{workflow.outputs.artifacts.XXXX}} and in workflow.status.outputs.artifacts
+                                              workflow.outputs.artifacts.XXXX and in workflow.status.outputs.artifacts
                                             type: string
                                           hdfs:
                                             description: HDFS contains HDFS artifact
@@ -34436,7 +34436,7 @@ spec:
                                           globalName:
                                             description: |-
                                               GlobalName exports an output parameter to the global scope, making it available as
-                                              '{{workflow.outputs.parameters.XXXX}} and in workflow.status.outputs.parameters
+                                              workflow.outputs.parameters.XXXX and in workflow.status.outputs.parameters
                                             type: string
                                           name:
                                             description: Name is the parameter name
@@ -34505,7 +34505,7 @@ spec:
                                               parameter:
                                                 description: |-
                                                   Parameter reference to a step or dag task in which to retrieve an output parameter value from
-                                                  (e.g. '{{steps.mystep.outputs.myparam}}')
+                                                  (e.g. steps.mystep.outputs.myparam)
                                                 type: string
                                               path:
                                                 description: Path in the container
@@ -34947,7 +34947,7 @@ spec:
                                                 globalName:
                                                   description: |-
                                                     GlobalName exports an output artifact to the global scope, making it available as
-                                                    '{{workflow.outputs.artifacts.XXXX}} and in workflow.status.outputs.artifacts
+                                                    workflow.outputs.artifacts.XXXX and in workflow.status.outputs.artifacts
                                                   type: string
                                                 hdfs:
                                                   description: HDFS contains HDFS
@@ -35844,7 +35844,7 @@ spec:
                                                 globalName:
                                                   description: |-
                                                     GlobalName exports an output parameter to the global scope, making it available as
-                                                    '{{workflow.outputs.parameters.XXXX}} and in workflow.status.outputs.parameters
+                                                    workflow.outputs.parameters.XXXX and in workflow.status.outputs.parameters
                                                   type: string
                                                 name:
                                                   description: Name is the parameter
@@ -35917,7 +35917,7 @@ spec:
                                                     parameter:
                                                       description: |-
                                                         Parameter reference to a step or dag task in which to retrieve an output parameter value from
-                                                        (e.g. '{{steps.mystep.outputs.myparam}}')
+                                                        (e.g. steps.mystep.outputs.myparam)
                                                       type: string
                                                     path:
                                                       description: Path in the container
