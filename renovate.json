@@ -94,6 +94,7 @@
       "postUpgradeTasks": {
         "commands": [
           "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}}",
+          "./scripts/update-argocd-dashboards.sh {{newVersion}}",
           "./scripts/helm-docs.sh"
         ]
       }
