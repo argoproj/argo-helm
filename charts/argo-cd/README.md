@@ -858,6 +858,10 @@ NAME: my-release
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `false` | Create aggregated roles that extend existing cluster roles to interact with argo-cd resources |
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
+| dashboards.annotations | object | `{}` | Annotations to be added to all dashboard ConfigMaps |
+| dashboards.enabled | bool | `false` | Enable Grafana dashboard support |
+| dashboards.extraLabels | object | `{"grafana_dashboard":"1"}` | Extra labels to be added to all dashboard ConfigMaps |
+| dashboards.namespace | string | `.Release.Namespace` | Namespace for dashboard ConfigMaps |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |

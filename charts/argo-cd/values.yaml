@@ -757,6 +757,23 @@ extraObjects: []
   #       labels:
   #         app.kubernetes.io/part-of: argocd
 
+## Grafana Dashboard Configuration
+dashboards:
+  # -- Enable Grafana dashboard support
+  enabled: false
+
+  # -- Namespace for dashboard ConfigMaps
+  # @default -- `.Release.Namespace`
+  namespace: ""
+
+  # -- Annotations to be added to all dashboard ConfigMaps
+  annotations: {}
+
+  # -- Extra labels to be added to all dashboard ConfigMaps
+  extraLabels:
+    grafana_dashboard: "1"
+    # grafana_folder: ArgoCD
+
 ## Application controller
 controller:
   # -- Application controller name string

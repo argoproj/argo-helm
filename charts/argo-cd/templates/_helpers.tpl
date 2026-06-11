@@ -211,6 +211,13 @@ Argo Configuration Preset Values (Influenced by Values configuration)
 {{- end -}}
 
 {{/*
+Return the appropriate namespace for dashboards
+*/}}
+{{- define "argo-cd.dashboards.namespace" -}}
+  {{- default .Release.Namespace .Values.dashboards.namespace | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Merge Argo Configuration with Preset Configuration
 */}}
 {{- define "argo-cd.config.cm" -}}
