@@ -47,4 +47,8 @@ spec:
   usages:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- if hasKey .Values.server.certificate "subject" }}
+  subject:
+    {{- toYaml .Values.server.certificate.subject | nindent 4 }}
+  {{- end }}
 {{- end }}
