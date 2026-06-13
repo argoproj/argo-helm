@@ -65,6 +65,10 @@ spec:
         {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 8 }}
     spec:
       serviceAccountName: {{ $crdInstallName }}
+      {{- with .Values.crds.upgradeJob.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.crds.upgradeJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -86,6 +90,10 @@ spec:
       containers:
         - name: apply
           image: "{{ .Values.crds.upgradeJob.image.repository }}:{{ .Values.crds.upgradeJob.image.tag }}"
+          {{- with .Values.crds.upgradeJob.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
           {{- with .Values.crds.upgradeJob.extraEnv }}
             {{- toYaml . | nindent 12 }}

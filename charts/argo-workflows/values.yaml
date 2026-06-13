@@ -18,7 +18,7 @@ crds:
   full: true
   # -- Annotations to be added to all CRDs (only applies when crds.full=false)
   annotations: {}
-  # -- Configuration for the CRD install Job (only used when crds.full=true)
+  # Configuration for the CRD install Job (only used when crds.full=true)
   upgradeJob:
     # -- Image for the kubectl container that applies CRDs
     image:
@@ -34,10 +34,24 @@ crds:
     resources: {}
     # -- Node selector for the CRD install Job
     nodeSelector: {}
+    # -- Pod security context for the CRD install Job pod
+    podSecurityContext: {}
     # -- Tolerations for the CRD install Job
     tolerations: []
     # -- Image pull secrets for the CRD install Job
     imagePullSecrets: []
+    # -- Security context for the CRD install Job container
+    securityContext:
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      runAsUser: 65532
+      runAsGroup: 65532
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+          - ALL
     # -- Extra environment variables to provide to the CRD install Job container
     extraEnv: []
     # - name: HTTP_PROXY
