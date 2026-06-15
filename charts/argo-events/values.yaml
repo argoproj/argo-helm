@@ -204,7 +204,7 @@ controller:
   # -- The number of replicasets history to keep
   revisionHistoryLimit: 5
 
-  # -- The number of events controller pods to run.
+  # -- The number of events controller pods to run. Leader election is disabled when set to `1`.
   replicas: 1
 
   # Pod disruption budget
