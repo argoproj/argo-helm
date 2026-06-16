@@ -12,6 +12,10 @@ spec:
       {{- include "argo-events.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
   replicas: {{ .Values.controller.replicas }}
+  {{- if eq (int .Values.controller.replicas) 1 }}
+  strategy:
+    type: Recreate
+  {{- end }}
   template:
     metadata:
       annotations:
@@ -45,6 +49,9 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
         args:
         - controller
+        {{- if eq (int .Values.controller.replicas) 1 }}
+        - --leader-election=false
+        {{- end }}
         {{- if .Values.controller.rbac.namespaced }}
         - --namespaced
         {{- end }}

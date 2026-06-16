@@ -212,9 +212,9 @@ Fields to note:
 | crds.upgradeJob.crdBaseURL | string | `""` | Override base URL to download full CRD YAML files from. Defaults to this chart's release tag on GitHub. Ignored if hostPath is set. |
 | crds.upgradeJob.extraEnv | list | `[]` | Extra environment variables to provide to the CRD install Job container |
 | crds.upgradeJob.hostPath | string | `""` | Host path to mount CRD files from (for local/CI testing). When set, CRDs are applied from this path instead of downloading. |
-| crds.upgradeJob.image | object | `{"repository":"registry.k8s.io/kubectl","tag":"v1.36.1"}` | Image for the kubectl container that applies CRDs |
+| crds.upgradeJob.image | object | `{"repository":"registry.k8s.io/kubectl","tag":"v1.36.2"}` | Image for the kubectl container that applies CRDs |
 | crds.upgradeJob.image.repository | string | `"registry.k8s.io/kubectl"` | Repository for the kubectl image |
-| crds.upgradeJob.image.tag | string | `"v1.36.1"` | Tag for the kubectl image |
+| crds.upgradeJob.image.tag | string | `"v1.36.2"` | Tag for the kubectl image |
 | crds.upgradeJob.imagePullSecrets | list | `[]` | Image pull secrets for the CRD install Job |
 | crds.upgradeJob.nodeSelector | object | `{}` | Node selector for the CRD install Job |
 | crds.upgradeJob.podSecurityContext | object | `{}` | Pod security context for the CRD install Job pod |
