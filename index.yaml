@@ -29367,6 +29367,33 @@ entries:
   argo-events:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Disable controller leader election and use the Recreate deployment strategy when replicas is set to 1.
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.9.10
+    created: "2026-06-16T04:46:40.726594152Z"
+    description: A Helm chart for Argo Events, the event-driven workflow automation
+      framework
+    digest: b53de9151b3a7b361b9a7140827cb1d6ea8f340f5280a8a6ed56cdb2c5f335eb
+    home: https://github.com/argoproj/argo-helm
+    icon: https://avatars.githubusercontent.com/u/30269780?s=200&v=4
+    keywords:
+    - argoproj
+    - argo-events
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-events
+    sources:
+    - https://github.com/argoproj/argo-events
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-events-2.4.22/argo-events-2.4.22.tgz
+    version: 2.4.22
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Rename CRD files to match upstream. The contents are unchanged.
       artifacthub.io/signKey: |
@@ -34388,6 +34415,30 @@ entries:
     - argo-rollouts-0.1.0.tgz
     version: 0.1.0
   argo-workflows:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Bump kubectl to v1.36.2
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v4.0.6
+    created: "2026-06-16T04:46:40.962522682Z"
+    description: A Helm chart for Argo Workflows
+    digest: 472623ccf6870e7f2fa9bfa7b4f2246569d8f6f139dd21edcc17926223d6b61d
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-1.0.16/argo-workflows-1.0.16.tgz
+    version: 1.0.16
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
@@ -43621,4 +43672,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-06-11T22:52:58.711881571Z"
+generated: "2026-06-16T04:46:40.964483381Z"
