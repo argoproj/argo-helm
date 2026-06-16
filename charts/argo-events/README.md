@@ -178,7 +178,7 @@ done
 | controller.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | controller.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | controller.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| controller.replicas | int | `1` | The number of events controller pods to run. |
+| controller.replicas | int | `1` | The number of events controller pods to run. Leader election is disabled when set to `1`. |
 | controller.resources | object | `{}` | Resource limits and requests for the events controller pods |
 | controller.revisionHistoryLimit | int | `5` | The number of replicasets history to keep |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
