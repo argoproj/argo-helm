@@ -1,0 +1,22 @@
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      group: gateway.networking.k8s.io
+      kind: Gateway
+      name: example-gateway
+      namespace: example-gateway-namespace
+    listeners:
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: argocd.example.com
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - group: ""
+              kind: Secret
+              name: argocd-server-tls
+        allowedRoutes:
+          namespaces:
+            from: Same

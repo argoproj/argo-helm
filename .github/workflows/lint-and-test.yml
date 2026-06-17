@@ -117,6 +117,11 @@ jobs:
         run: |
           kubectl apply -f ./.github/configs/external-redis.yaml
 
+      - name: Install Gateway API CRDs for ListenerSet testing
+        if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
+        run: |
+          kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.0/experimental-install.yaml
+
       - name: Copy full CRDs to kind nodes for argo-workflows testing
         id: argo-wf-crds
         if: contains(steps.list-changed.outputs.changed_charts, 'argo-workflows')
