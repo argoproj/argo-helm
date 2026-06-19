@@ -57,6 +57,11 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if hasKey .Values.repoServer "hostUsers" }}
+      hostUsers: {{ .Values.repoServer.hostUsers }}
+      {{- else if hasKey .Values.global "hostUsers" }}
+      hostUsers: {{ .Values.global.hostUsers }}
+      {{- end }}
       {{- with .Values.global.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}
