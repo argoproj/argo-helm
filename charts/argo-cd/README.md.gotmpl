@@ -306,7 +306,7 @@ server:
 
 #### Gateway API with TLS backend
 
-For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy (experimental, v1alpha3):
+For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy:
 
 > **Warning:**
 > BackendTLSPolicy is in **EXPERIMENTAL** status. Not all Gateway controllers support this resource (e.g., Cilium does not yet support it).
@@ -327,6 +327,67 @@ server:
     enabled: true
     hostname: argocd-server.argocd.svc.cluster.local
     wellKnownCACertificates: System
+```
+
+#### Gateway API ListenerSet
+
+Use ListenerSet to attach listeners to an existing shared Gateway. This is useful when you want to contribute listeners to a Gateway managed by another team or namespace.
+
+> **Note:**
+> ListenerSet support is **EXPERIMENTAL**. Requires Gateway API v1.5+ and a controller that supports ListenerSet. Refer to [Gateway API implementations](https://gateway-api.sigs.k8s.io/implementations/) for controller-specific details.
+
+```yaml
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      group: gateway.networking.k8s.io
+      kind: Gateway
+      name: example-gateway
+      namespace: gateway-system
+    listeners:
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: argocd.example.com
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - group: ""
+              kind: Secret
+              name: argocd-server-tls
+        allowedRoutes:
+          namespaces:
+            from: Same
+```
+
+Combined with an HTTPRoute to route traffic from the listener to the Argo CD server:
+
+```yaml
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: gateway-system
+    listeners:
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: argocd.example.com
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - group: ""
+              kind: Secret
+              name: argocd-server-tls
+
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: https
 ```
 
 ## Setting the initial admin password via Argo CD Application CR
