@@ -3,7 +3,7 @@ appVersion: v3.4.4
 kubeVersion: ">=1.25.0-0"
 description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery tool for Kubernetes.
 name: argo-cd
-version: 10.0.0
+version: 10.0.1
 home: https://github.com/argoproj/argo-helm
 icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
 sources:
@@ -27,4 +27,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: Enable network policies for all components by default
+      description: Render a valid redis secret name for Redis sentinel env vars when redis-ha is enabled with haproxy disabled
