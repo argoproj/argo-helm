@@ -337,13 +337,59 @@ Use ListenerSet to attach listeners to an existing shared Gateway. This is usefu
 > **Note:**
 > ListenerSet support is **EXPERIMENTAL**. Requires Gateway API v1.5+ and a controller that supports ListenerSet. Refer to [Gateway API implementations](https://gateway-api.sigs.k8s.io/implementations/) for controller-specific details.
 
+Only `parentRef` (pointing to the parent Gateway) is required. A default HTTPS listener is synthesized automatically using `global.domain` as the hostname:
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: gateway-system
+```
+
+Combined with an HTTPRoute to route traffic through the listener to the Argo CD server. The HTTPRoute automatically targets the ListenerSet and inherits the hostname from `global.domain` — no extra configuration needed:
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: gateway-system
+
+  httproute:
+    enabled: true
+```
+
+To customise the synthesized listener (e.g. change the port, protocol, or TLS secret), override the individual fields:
+
 ```yaml
 server:
   listenerset:
     enabled: true
     parentRef:
-      group: gateway.networking.k8s.io
-      kind: Gateway
+      name: example-gateway
+      namespace: gateway-system
+    hostname: custom.example.com   # overrides global.domain
+    port: 8443
+    tls:
+      secretName: my-tls-secret
+```
+
+For full control, provide a `listeners` array directly. When non-empty it is used verbatim and all synthesized listener fields are ignored:
+
+```yaml
+server:
+  listenerset:
+    enabled: true
+    parentRef:
       name: example-gateway
       namespace: gateway-system
     listeners:
@@ -360,35 +406,6 @@ server:
         allowedRoutes:
           namespaces:
             from: Same
-```
-
-Combined with an HTTPRoute to route traffic from the listener to the Argo CD server:
-
-```yaml
-server:
-  listenerset:
-    enabled: true
-    parentRef:
-      name: example-gateway
-      namespace: gateway-system
-    listeners:
-      - name: https
-        port: 443
-        protocol: HTTPS
-        hostname: argocd.example.com
-        tls:
-          mode: Terminate
-          certificateRefs:
-            - group: ""
-              kind: Secret
-              name: argocd-server-tls
-
-  httproute:
-    enabled: true
-    parentRefs:
-      - name: example-gateway
-        namespace: gateway-system
-        sectionName: https
 ```
 
 ## Setting the initial admin password via Argo CD Application CR
@@ -1348,11 +1365,20 @@ NAME: my-release
 | server.ingressGrpc.tls | bool | `false` | Enable TLS configuration for the hostname defined at `server.ingressGrpc.hostname` |
 | server.initContainers | list | `[]` | Init containers to add to the server pod |
 | server.lifecycle | object | `{}` | Specify postStart and preStop lifecycle hooks for your argo-cd-server container |
+| server.listenerset.allowedRoutes | object | `{"namespaces":{"from":"Same"}}` | allowedRoutes for the synthesized listener |
 | server.listenerset.annotations | object | `{}` | Additional ListenerSet annotations |
 | server.listenerset.enabled | bool | `false` | Enable ListenerSet resource for Argo CD server (Gateway API) |
+| server.listenerset.hostname | string | `""` | Hostname for the synthesized listener. Defaults to global.domain when empty. |
 | server.listenerset.labels | object | `{}` | Additional ListenerSet labels |
-| server.listenerset.listeners | list | `[]` (See [values.yaml]) | Listeners to attach to the parent Gateway |
+| server.listenerset.listenerName | string | `"https"` | Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs. |
+| server.listenerset.listeners | list | `[]` (See [values.yaml]) | Listeners to attach to the parent Gateway. When non-empty, used verbatim and all synthesized listener fields above are ignored. |
 | server.listenerset.parentRef | object | `{}` (See [values.yaml]) | Gateway API parentRef for the ListenerSet |
+| server.listenerset.port | int | `443` | Port for the synthesized listener |
+| server.listenerset.protocol | string | `"HTTPS"` | Protocol for the synthesized listener |
+| server.listenerset.tls | object | `{"enabled":true,"mode":"Terminate","secretName":""}` | TLS configuration for the synthesized listener |
+| server.listenerset.tls.enabled | bool | `true` | Enable TLS on the synthesized listener |
+| server.listenerset.tls.mode | string | `"Terminate"` | TLS termination mode |
+| server.listenerset.tls.secretName | string | `""` | Secret name for TLS certificate. Defaults to `argocd-server-tls` when empty. |
 | server.livenessProbe.enabled | bool | `true` | Enable Kubernetes liveness probe for default backend |
 | server.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
@@ -1790,11 +1816,20 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
 | applicationSet.ingress.tls | bool | `false` | Enable TLS configuration for the hostname defined at `applicationSet.webhook.ingress.hostname` |
 | applicationSet.initContainers | list | `[]` | Init containers to add to the ApplicationSet controller pod |
+| applicationSet.listenerset.allowedRoutes | object | `{"namespaces":{"from":"Same"}}` | allowedRoutes for the synthesized listener |
 | applicationSet.listenerset.annotations | object | `{}` | Additional ListenerSet annotations |
 | applicationSet.listenerset.enabled | bool | `false` | Enable ListenerSet resource for Argo CD ApplicationSet webhook (Gateway API) |
+| applicationSet.listenerset.hostname | string | `""` | Hostname for the synthesized listener. Defaults to global.domain when empty. |
 | applicationSet.listenerset.labels | object | `{}` | Additional ListenerSet labels |
-| applicationSet.listenerset.listeners | list | `[]` (See [values.yaml]) | Listeners to attach to the parent Gateway |
+| applicationSet.listenerset.listenerName | string | `"https"` | Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs. |
+| applicationSet.listenerset.listeners | list | `[]` (See [values.yaml]) | Listeners to attach to the parent Gateway. When non-empty, used verbatim and all synthesized listener fields above are ignored. |
 | applicationSet.listenerset.parentRef | object | `{}` (See [values.yaml]) | Gateway API parentRef for the ListenerSet |
+| applicationSet.listenerset.port | int | `443` | Port for the synthesized listener |
+| applicationSet.listenerset.protocol | string | `"HTTPS"` | Protocol for the synthesized listener |
+| applicationSet.listenerset.tls | object | `{"enabled":true,"mode":"Terminate","secretName":""}` | TLS configuration for the synthesized listener |
+| applicationSet.listenerset.tls.enabled | bool | `true` | Enable TLS on the synthesized listener |
+| applicationSet.listenerset.tls.mode | string | `"Terminate"` | TLS termination mode |
+| applicationSet.listenerset.tls.secretName | string | `""` | Secret name for TLS certificate. Defaults to `argocd-applicationset-controller-tls` when empty. |
 | applicationSet.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for ApplicationSet controller |
 | applicationSet.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | applicationSet.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |

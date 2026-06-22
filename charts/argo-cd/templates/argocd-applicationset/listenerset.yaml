@@ -17,8 +17,23 @@ metadata:
 spec:
   parentRef:
     {{- toYaml .Values.applicationSet.listenerset.parentRef | nindent 4 }}
-  {{- with .Values.applicationSet.listenerset.listeners }}
   listeners:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- if .Values.applicationSet.listenerset.listeners }}
+    {{- toYaml .Values.applicationSet.listenerset.listeners | nindent 4 }}
+    {{- else }}
+    - name: {{ .Values.applicationSet.listenerset.listenerName }}
+      port: {{ .Values.applicationSet.listenerset.port }}
+      protocol: {{ .Values.applicationSet.listenerset.protocol }}
+      hostname: {{ tpl (.Values.applicationSet.listenerset.hostname | default .Values.global.domain) $ }}
+      {{- if .Values.applicationSet.listenerset.tls.enabled }}
+      tls:
+        mode: {{ .Values.applicationSet.listenerset.tls.mode }}
+        certificateRefs:
+          - group: ""
+            kind: Secret
+            name: {{ .Values.applicationSet.listenerset.tls.secretName | default "argocd-applicationset-controller-tls" }}
+      {{- end }}
+      allowedRoutes:
+        {{- toYaml .Values.applicationSet.listenerset.allowedRoutes | nindent 8 }}
+    {{- end }}
 {{- end }}
