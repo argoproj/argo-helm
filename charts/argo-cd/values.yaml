@@ -2809,11 +2809,29 @@ server:
     ## Must reference an existing Gateway. Unlike HTTPRoute, ListenerSet accepts exactly one parentRef.
     # @default -- `{}` (See [values.yaml])
     parentRef: {}
-      # group: gateway.networking.k8s.io
-      # kind: Gateway
       # name: example-gateway
       # namespace: example-gateway-namespace
-    # -- Listeners to attach to the parent Gateway
+    # -- Hostname for the synthesized listener. Defaults to global.domain when empty.
+    hostname: ""
+    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs.
+    listenerName: https
+    # -- Port for the synthesized listener
+    port: 443
+    # -- Protocol for the synthesized listener
+    protocol: HTTPS
+    # -- TLS configuration for the synthesized listener
+    tls:
+      # -- Enable TLS on the synthesized listener
+      enabled: true
+      # -- TLS termination mode
+      mode: Terminate
+      # -- Secret name for TLS certificate. Defaults to `argocd-server-tls` when empty.
+      secretName: ""
+    # -- allowedRoutes for the synthesized listener
+    allowedRoutes:
+      namespaces:
+        from: Same
+    # -- Listeners to attach to the parent Gateway. When non-empty, used verbatim and all synthesized listener fields above are ignored.
     # @default -- `[]` (See [values.yaml])
     listeners: []
       # - name: https
@@ -3740,11 +3758,29 @@ applicationSet:
     ## Must reference an existing Gateway. Unlike HTTPRoute, ListenerSet accepts exactly one parentRef.
     # @default -- `{}` (See [values.yaml])
     parentRef: {}
-      # group: gateway.networking.k8s.io
-      # kind: Gateway
       # name: example-gateway
       # namespace: example-gateway-namespace
-    # -- Listeners to attach to the parent Gateway
+    # -- Hostname for the synthesized listener. Defaults to global.domain when empty.
+    hostname: ""
+    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs.
+    listenerName: https
+    # -- Port for the synthesized listener
+    port: 443
+    # -- Protocol for the synthesized listener
+    protocol: HTTPS
+    # -- TLS configuration for the synthesized listener
+    tls:
+      # -- Enable TLS on the synthesized listener
+      enabled: true
+      # -- TLS termination mode
+      mode: Terminate
+      # -- Secret name for TLS certificate. Defaults to `argocd-applicationset-controller-tls` when empty.
+      secretName: ""
+    # -- allowedRoutes for the synthesized listener
+    allowedRoutes:
+      namespaces:
+        from: Same
+    # -- Listeners to attach to the parent Gateway. When non-empty, used verbatim and all synthesized listener fields above are ignored.
     # @default -- `[]` (See [values.yaml])
     listeners: []
       # - name: https

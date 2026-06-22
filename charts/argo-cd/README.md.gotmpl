@@ -336,13 +336,59 @@ Use ListenerSet to attach listeners to an existing shared Gateway. This is usefu
 > **Note:**
 > ListenerSet support is **EXPERIMENTAL**. Requires Gateway API v1.5+ and a controller that supports ListenerSet. Refer to [Gateway API implementations](https://gateway-api.sigs.k8s.io/implementations/) for controller-specific details.
 
+Only `parentRef` (pointing to the parent Gateway) is required. A default HTTPS listener is synthesized automatically using `global.domain` as the hostname:
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: gateway-system
+```
+
+Combined with an HTTPRoute to route traffic through the listener to the Argo CD server. The HTTPRoute automatically targets the ListenerSet and inherits the hostname from `global.domain` — no extra configuration needed:
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: gateway-system
+
+  httproute:
+    enabled: true
+```
+
+To customise the synthesized listener (e.g. change the port, protocol, or TLS secret), override the individual fields:
+
 ```yaml
 server:
   listenerset:
     enabled: true
     parentRef:
-      group: gateway.networking.k8s.io
-      kind: Gateway
+      name: example-gateway
+      namespace: gateway-system
+    hostname: custom.example.com   # overrides global.domain
+    port: 8443
+    tls:
+      secretName: my-tls-secret
+```
+
+For full control, provide a `listeners` array directly. When non-empty it is used verbatim and all synthesized listener fields are ignored:
+
+```yaml
+server:
+  listenerset:
+    enabled: true
+    parentRef:
       name: example-gateway
       namespace: gateway-system
     listeners:
@@ -359,35 +405,6 @@ server:
         allowedRoutes:
           namespaces:
             from: Same
-```
-
-Combined with an HTTPRoute to route traffic from the listener to the Argo CD server:
-
-```yaml
-server:
-  listenerset:
-    enabled: true
-    parentRef:
-      name: example-gateway
-      namespace: gateway-system
-    listeners:
-      - name: https
-        port: 443
-        protocol: HTTPS
-        hostname: argocd.example.com
-        tls:
-          mode: Terminate
-          certificateRefs:
-            - group: ""
-              kind: Secret
-              name: argocd-server-tls
-
-  httproute:
-    enabled: true
-    parentRefs:
-      - name: example-gateway
-        namespace: gateway-system
-        sectionName: https
 ```
 
 ## Setting the initial admin password via Argo CD Application CR

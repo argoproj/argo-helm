@@ -1,0 +1,14 @@
+crds:
+  keep: false
+
+global:
+  domain: argocd.example.com
+
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: example-gateway-namespace
+  httproute:
+    enabled: true
