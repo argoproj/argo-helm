@@ -424,7 +424,7 @@ spec:
         {{- if .Values.server.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: /healthz?full=true
+            path: {{ .Values.server.livenessProbe.httpPath }}
             port: server
           initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
@@ -435,13 +435,24 @@ spec:
         {{- if .Values.server.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: /healthz
+            path: {{ .Values.server.readinessProbe.httpPath }}
             port: server
           initialDelaySeconds: {{ .Values.server.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.server.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.server.startupProbe.enabled }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.server.startupProbe.httpPath }}
+            port: server
+          initialDelaySeconds: {{ .Values.server.startupProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.server.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.server.startupProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.server.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.server.startupProbe.failureThreshold }}
         {{- end }}
         resources:
           {{- toYaml .Values.server.resources | nindent 10 }}

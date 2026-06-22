@@ -371,13 +371,24 @@ spec:
           protocol: TCP
         readinessProbe:
           httpGet:
-            path: /healthz
+            path: {{ .Values.controller.readinessProbe.httpPath }}
             port: metrics
           initialDelaySeconds: {{ .Values.controller.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.controller.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.controller.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.controller.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
+        {{- if .Values.controller.startupProbe.enabled }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.controller.startupProbe.httpPath }}
+            port: metrics
+          initialDelaySeconds: {{ .Values.controller.startupProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.controller.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.controller.startupProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.controller.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.controller.startupProbe.failureThreshold }}
+        {{- end }}
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
         {{- with .Values.controller.containerSecurityContext }}

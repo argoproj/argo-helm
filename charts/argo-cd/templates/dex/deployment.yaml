@@ -152,6 +152,18 @@ spec:
           successThreshold: {{ .Values.dex.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.dex.readinessProbe.failureThreshold }}
         {{- end }}
+        {{- if .Values.dex.startupProbe.enabled }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.dex.startupProbe.httpPath }}
+            port: {{ .Values.dex.startupProbe.httpPort }}
+            scheme: {{ .Values.dex.startupProbe.httpScheme }}
+          initialDelaySeconds: {{ .Values.dex.startupProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.dex.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.dex.startupProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.dex.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.dex.startupProbe.failureThreshold }}
+        {{- end }}
         resources:
           {{- toYaml .Values.dex.resources | nindent 10 }}
         {{- with .Values.dex.containerSecurityContext }}
