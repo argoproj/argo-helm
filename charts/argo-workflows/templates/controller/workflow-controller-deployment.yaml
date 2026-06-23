@@ -100,6 +100,10 @@ spec:
           {{- with .Values.controller.extraEnv }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- with .Values.controller.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.controller.resources | nindent 12 }}
           {{- with .Values.controller.volumeMounts }}
