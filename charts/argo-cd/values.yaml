@@ -951,8 +951,28 @@ controller:
   # Readiness probe for application controller
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   readinessProbe:
+    # -- Http path to use for the readiness probe
+    httpPath: /healthz
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  ## Startup probe for application controller (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for application controller
+    enabled: false
+    # -- Http path to use for the startup probe
+    httpPath: /healthz
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 10
     # -- How often (in seconds) to perform the [probe]
@@ -1370,6 +1390,28 @@ dex:
     httpScheme: HTTP
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  ## Startup probe for Dex server (optional)
+  ## Supported from Dex >= 2.28.0
+  startupProbe:
+    # -- Enable Kubernetes startup probe for Dex >= 2.28.0
+    enabled: false
+    # -- Http path to use for the startup probe
+    httpPath: /healthz/ready
+    # -- Http port to use for the startup probe
+    httpPort: metrics
+    # -- Scheme to use for the startup probe (can be HTTP or HTTPS)
+    httpScheme: HTTP
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 10
     # -- How often (in seconds) to perform the [probe]
@@ -2271,6 +2313,8 @@ server:
   readinessProbe:
     # -- Enable Kubernetes readiness probe for default backend
     enabled: true
+    # -- Http path to use for the readiness probe
+    httpPath: /healthz
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -2285,8 +2329,28 @@ server:
   livenessProbe:
     # -- Enable Kubernetes liveness probe for default backend
     enabled: true
+    # -- Http path to use for the liveness probe
+    httpPath: /healthz?full=true
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  ## Startup probe for Argo CD server (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for Argo CD server
+    enabled: false
+    # -- Http path to use for the startup probe
+    httpPath: /healthz
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 10
     # -- How often (in seconds) to perform the [probe]
@@ -2793,6 +2857,43 @@ server:
       #     kind: ConfigMap
       # wellKnownCACertificates: System
 
+  # Gateway API ListenerSet configuration
+  # NOTE: Gateway API support is in EXPERIMENTAL status
+  # ListenerSet allows attaching additional listeners to an existing Gateway
+  # Requires Gateway API v1alpha2 and a controller that supports ListenerSet
+  # Refer to https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1alpha2.ListenerSet
+  listenerset:
+    # -- Enable ListenerSet resource for Argo CD server (Gateway API)
+    enabled: false
+    # -- Additional ListenerSet labels
+    labels: {}
+    # -- Additional ListenerSet annotations
+    annotations: {}
+    # -- Gateway API parentRef for the ListenerSet
+    ## Must reference an existing Gateway. Unlike HTTPRoute, ListenerSet accepts exactly one parentRef.
+    # @default -- `{}` (See [values.yaml])
+    parentRef: {}
+      # group: gateway.networking.k8s.io
+      # kind: Gateway
+      # name: example-gateway
+      # namespace: example-gateway-namespace
+    # -- Listeners to attach to the parent Gateway
+    # @default -- `[]` (See [values.yaml])
+    listeners: []
+      # - name: https
+      #   port: 443
+      #   protocol: HTTPS
+      #   hostname: argocd.example.com
+      #   tls:
+      #     mode: Terminate
+      #     certificateRefs:
+      #       - group: ""
+      #         kind: Secret
+      #         name: argocd-server-tls
+      #   allowedRoutes:
+      #     namespaces:
+      #       from: Same
+
   ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
   ## Defaults to off
   clusterRoleRules:
@@ -3075,6 +3176,8 @@ repoServer:
   readinessProbe:
     # -- Enable Kubernetes readiness probe for Repo Server
     enabled: true
+    # -- Http path to use for the readiness probe
+    httpPath: /healthz
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -3089,8 +3192,28 @@ repoServer:
   livenessProbe:
     # -- Enable Kubernetes liveness probe for Repo Server
     enabled: true
+    # -- Http path to use for the liveness probe
+    httpPath: /healthz?full=true
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  ## Startup probe for Repo Server (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for Repo Server
+    enabled: false
+    # -- Http path to use for the startup probe
+    httpPath: /healthz
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 10
     # -- How often (in seconds) to perform the [probe]
@@ -3508,6 +3631,22 @@ applicationSet:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
 
+  ## Startup probe for ApplicationSet controller (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for ApplicationSet controller
+    enabled: false
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
+
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
 
@@ -3686,6 +3825,43 @@ applicationSet:
         #         - name: X-Custom-Header
         #           value: custom-value
 
+  # Gateway API ListenerSet configuration for the Git Generator webhook
+  ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration
+  # NOTE: Gateway API support is in EXPERIMENTAL status
+  # ListenerSet allows attaching additional listeners to an existing Gateway
+  # Requires Gateway API v1alpha2 and a controller that supports ListenerSet
+  # Refer to https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1alpha2.ListenerSet
+  listenerset:
+    # -- Enable ListenerSet resource for Argo CD ApplicationSet webhook (Gateway API)
+    enabled: false
+    # -- Additional ListenerSet labels
+    labels: {}
+    # -- Additional ListenerSet annotations
+    annotations: {}
+    # -- Gateway API parentRef for the ListenerSet
+    ## Must reference an existing Gateway. Unlike HTTPRoute, ListenerSet accepts exactly one parentRef.
+    # @default -- `{}` (See [values.yaml])
+    parentRef: {}
+      # group: gateway.networking.k8s.io
+      # kind: Gateway
+      # name: example-gateway
+      # namespace: example-gateway-namespace
+    # -- Listeners to attach to the parent Gateway
+    # @default -- `[]` (See [values.yaml])
+    listeners: []
+      # - name: https
+      #   port: 443
+      #   protocol: HTTPS
+      #   hostname: argocd.example.com
+      #   tls:
+      #     mode: Terminate
+      #     certificateRefs:
+      #       - group: ""
+      #         kind: Secret
+      #         name: argocd-applicationset-controller-tls
+      #   allowedRoutes:
+      #     namespaces:
+      #       from: Same
 
   # -- Enable ApplicationSet in any namespace feature
   allowAnyNamespace: false
@@ -3959,6 +4135,22 @@ notifications:
     successThreshold: 1
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+
+  ## Startup probe for notifications controller Pods (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for notifications controller Pods
+    enabled: false
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
 
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
@@ -4426,6 +4618,8 @@ commitServer:
   readinessProbe:
     # -- Enable Kubernetes liveness probe for commit server
     enabled: true
+    # -- Http path to use for the readiness probe
+    httpPath: /healthz
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 5
     # -- How often (in seconds) to perform the [probe]
@@ -4438,6 +4632,8 @@ commitServer:
   livenessProbe:
     # -- Enable Kubernetes liveness probe for commit server
     enabled: true
+    # -- Http path to use for the liveness probe
+    httpPath: /healthz?full=true
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 30
     # -- How often (in seconds) to perform the [probe]
@@ -4446,6 +4642,22 @@ commitServer:
     timeoutSeconds: 5
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+
+  ## Startup probe for commit server (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for commit server
+    enabled: false
+    # -- Http path to use for the startup probe
+    httpPath: /healthz
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
 
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30

@@ -118,7 +118,7 @@ spec:
         {{- if .Values.commitServer.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: /healthz?full=true
+            path: {{ .Values.commitServer.livenessProbe.httpPath }}
             port: 8087
           initialDelaySeconds: {{ .Values.commitServer.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.commitServer.livenessProbe.periodSeconds }}
@@ -128,12 +128,22 @@ spec:
         {{- if .Values.commitServer.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: /healthz
+            path: {{ .Values.commitServer.readinessProbe.httpPath }}
             port: 8087
           initialDelaySeconds: {{ .Values.commitServer.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.commitServer.readinessProbe.periodSeconds }}
           failureThreshold: {{ .Values.commitServer.readinessProbe.failureThreshold }}
           timeoutSeconds: {{ .Values.commitServer.readinessProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.commitServer.startupProbe.enabled }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.commitServer.startupProbe.httpPath }}
+            port: 8087
+          initialDelaySeconds: {{ .Values.commitServer.startupProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.commitServer.startupProbe.periodSeconds }}
+          failureThreshold: {{ .Values.commitServer.startupProbe.failureThreshold }}
+          timeoutSeconds: {{ .Values.commitServer.startupProbe.timeoutSeconds }}
         {{- end }}
         resources:
           {{- toYaml .Values.commitServer.resources | nindent 10 }}

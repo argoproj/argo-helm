@@ -278,6 +278,16 @@ spec:
             successThreshold: {{ .Values.applicationSet.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.applicationSet.readinessProbe.failureThreshold }}
           {{- end }}
+          {{- if .Values.applicationSet.startupProbe.enabled }}
+          startupProbe:
+            tcpSocket:
+              port: probe
+            initialDelaySeconds: {{ .Values.applicationSet.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.applicationSet.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.applicationSet.startupProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.applicationSet.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.applicationSet.startupProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.applicationSet.resources | nindent 12 }}
           {{- with .Values.applicationSet.containerSecurityContext }}
