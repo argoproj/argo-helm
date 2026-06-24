@@ -390,6 +390,9 @@ controller:
     # - name: FOO
     #   value: "bar"
 
+  # -- envFrom to pass to the controller container
+  envFrom: []
+
   # -- Extra arguments to be added to the controller
   extraArgs: []
   # -- Additional volume mounts to the controller main container
@@ -705,6 +708,9 @@ server:
   extraEnv: []
     # - name: FOO
     #   value: "bar"
+
+  # -- envFrom to pass to the argo-server container
+  envFrom: []
 
   # -- Deprecated; use server.authModes instead.
   authMode: ""
