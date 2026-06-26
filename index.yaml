@@ -1588,6 +1588,41 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Only render the Redis metrics NetworkPolicy ingress rule when redis.exporter.enabled is true
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.4.4
+    created: "2026-06-26T07:50:55.388108197Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.34.11
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 185e9de6c8c7a74c260ae16df088d740b3c6ea7608f47bbef25e1a9aec2bf8c6
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-cd
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-9.7.1/argo-cd-9.7.1.tgz
+    version: 9.7.1
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Add optional startup probes and allow overriding httpGet path for health checks
       artifacthub.io/signKey: |
@@ -43825,4 +43860,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-06-26T03:22:11.641301407Z"
+generated: "2026-06-26T07:50:55.391607967Z"
