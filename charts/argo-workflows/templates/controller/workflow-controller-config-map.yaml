@@ -76,7 +76,7 @@ data:
       {{- end }}
       {{- if .Values.artifactRepository.s3 }}
       s3:
-        {{- if .Values.useStaticCredentials }}
+        {{- if and .Values.useStaticCredentials (not .Values.artifactRepository.s3.useSDKCreds) }}
         accessKeySecret:
           key: {{ tpl .Values.artifactRepository.s3.accessKeySecret.key . }}
           name: {{ tpl .Values.artifactRepository.s3.accessKeySecret.name . }}
