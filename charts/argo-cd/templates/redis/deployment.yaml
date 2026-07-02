@@ -76,7 +76,11 @@ spec:
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
+              {{- if and .Values.redis.existingSecret (not .Values.redisSecretInit.enabled) }}
+              name: {{ .Values.redis.existingSecret }}
+              {{- else }}
               name: argocd-redis
+              {{- end }}
               key: auth
         {{- with (concat .Values.global.env .Values.redis.env) }}
           {{- tpl (toYaml .) $ | nindent 8 }}
@@ -139,7 +143,11 @@ spec:
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
+              {{- if and .Values.redis.existingSecret (not .Values.redisSecretInit.enabled) }}
+              name: {{ .Values.redis.existingSecret }}
+              {{- else }}
               name: argocd-redis
+              {{- end }}
               key: auth
         {{- with (concat .Values.global.env .Values.redis.exporter.env) }}
           {{- tpl (toYaml .) $ | nindent 8 }}
