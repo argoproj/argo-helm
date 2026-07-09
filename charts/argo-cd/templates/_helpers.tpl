@@ -216,9 +216,15 @@ Argo Configuration Preset Values (Influenced by Values configuration)
 Merge Argo Configuration with Preset Configuration
 */}}
 {{- define "argo-cd.config.cm" -}}
-{{- $config := omit .Values.configs.cm "create" "annotations" -}}
+{{- $config := omit .Values.configs.cm "create" "annotations" "resourceExclusionsAdditional" -}}
 {{- $preset := include "argo-cd.config.cm.presets" . | fromYaml | default dict -}}
-{{- range $key, $value := mergeOverwrite $preset $config }}
+{{- $merged := mergeOverwrite $preset $config -}}
+{{- if .Values.configs.cm.resourceExclusionsAdditional }}
+{{- $existing := get $merged "resource.exclusions" | default "" | trimSuffix "\n" }}
+{{- $additional := .Values.configs.cm.resourceExclusionsAdditional | toYaml }}
+{{- $_ := set $merged "resource.exclusions" (list $existing $additional | compact | join "\n") -}}
+{{- end }}
+{{- range $key, $value := $merged }}
 {{- $fmted := $value | toString }}
 {{- if not (eq $fmted "") }}
 {{ $key }}: {{ $fmted | toYaml }}
