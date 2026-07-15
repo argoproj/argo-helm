@@ -29717,6 +29717,33 @@ entries:
   argo-events:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Bump argo-events to v1.9.11
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.9.11
+    created: "2026-07-15T05:34:09.968760519Z"
+    description: A Helm chart for Argo Events, the event-driven workflow automation
+      framework
+    digest: b2179e5ca31473dc7d8906cb42d33a20c932ea7935efb90e508f4a261adecb1b
+    home: https://github.com/argoproj/argo-helm
+    icon: https://avatars.githubusercontent.com/u/30269780?s=200&v=4
+    keywords:
+    - argoproj
+    - argo-events
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-events
+    sources:
+    - https://github.com/argoproj/argo-events
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-events-2.4.23/argo-events-2.4.23.tgz
+    version: 2.4.23
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Disable controller leader election and use the Recreate deployment strategy when replicas is set to 1.
       artifacthub.io/signKey: |
@@ -44148,4 +44175,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-07-09T17:49:36.098660818Z"
+generated: "2026-07-15T05:34:09.972252043Z"
