@@ -217,6 +217,7 @@ Fields to note:
 | crds.upgradeJob.image.tag | string | `"v1.36.2"` | Tag for the kubectl image |
 | crds.upgradeJob.imagePullSecrets | list | `[]` | Image pull secrets for the CRD install Job |
 | crds.upgradeJob.nodeSelector | object | `{}` | Node selector for the CRD install Job |
+| crds.upgradeJob.podLabels | object | `{}` | Optional labels to add to the CRD install Job pod |
 | crds.upgradeJob.podSecurityContext | object | `{}` | Pod security context for the CRD install Job pod |
 | crds.upgradeJob.resources | object | `{}` | Resources for the CRD install Job containers |
 | crds.upgradeJob.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":65532,"runAsNonRoot":true,"runAsUser":65532,"seccompProfile":{"type":"RuntimeDefault"}}` | Security context for the CRD install Job container |

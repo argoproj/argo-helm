@@ -63,6 +63,9 @@ spec:
     metadata:
       labels:
         {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 8 }}
+        {{- with.Values.crds.upgradeJob.podLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ $crdInstallName }}
       {{- with .Values.crds.upgradeJob.podSecurityContext }}
