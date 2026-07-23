@@ -91,7 +91,9 @@ rules:
   resourceNames:
   {{- with .Values.controller.persistence.postgresql }}
   - {{ .userNameSecret.name }}
-  - {{ .passwordSecret.name }}
+  {{- with .passwordSecret }}
+  - {{ .name }}
+  {{- end}}
   {{- end}}
   {{- with .Values.controller.persistence.mysql }}
   - {{ .userNameSecret.name }}

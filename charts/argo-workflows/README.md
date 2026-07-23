@@ -121,6 +121,48 @@ Please see the upstream [Operator Manual's High Availability page](https://argo-
 
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster. If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of its configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.
 
+### Init-less pod layout (beta)
+
+Argo Workflows v4.1+ supports an opt-in [init-less pod layout], where the executor is provided to workflow pods through an [image volume] instead of an init container copying the binary. Enable it with `controller.initlessPod.enabled: true`.
+
+Requirements and caveats:
+
+- Requires the `ImageVolume` feature gate to be enabled on the kube-apiserver and all kubelets running workflow pods. Image volumes are beta in Kubernetes v1.33-1.35 and enabled by default from v1.36. If the cluster does not support them, workflow pod creation will fail.
+- A custom `executor.image` must provide a manifest list covering every node architecture in the cluster.
+- Workflows whose `main` container sets `securityContext.readOnlyRootFilesystem: true` may fail to load input artifacts placed on the read-only root filesystem in this mode.
+
+### OpenTelemetry tracing (beta)
+
+Argo Workflows v4.1+ can emit [OpenTelemetry traces] from the workflow controller and the executor. Tracing is configured entirely through standard `OTEL_*` environment variables and is enabled by setting an OTLP endpoint; the chart already provides the necessary hooks:
+
+```yaml
+controller:
+  # Traces from the workflow controller
+  extraEnv:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://otel-collector:4318
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: http/protobuf
+
+# Traces from the executor in workflow pods
+executor:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://otel-collector:4318
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: http/protobuf
+
+# Optional: expose the OTEL configuration to your own code in main containers
+mainContainer:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://otel-collector:4318
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: http/protobuf
+```
+
+The Argo Server is not instrumented for tracing.
+
 ### Argo Workflows server authentication
 
 Argo Workflows server provides some choices for authentication mechanism and you can configure `.Values.server.authModes`. By default, authentication mode is `[server]`, for local development purposes or cases where your gateway authentication is covered by some other means.
@@ -264,6 +306,7 @@ Fields to note:
 | controller.configMap.name | string | `""` | ConfigMap name |
 | controller.cronWorkflowWorkers | string | `nil` | Number of cron workflow workers Only valid for 3.5+ |
 | controller.deploymentAnnotations | object | `{}` | deploymentAnnotations is an optional map of annotations to be applied to the controller Deployment |
+| controller.disableAgentPodCreation | bool | `false` | Disable the creation of agent pods, which are used for HTTP and Plugin templates. When enabled, HTTP and Plugin templates will not be processed by this controller. Only valid for 4.1+ |
 | controller.envFrom | list | `[]` | envFrom to pass to the controller container |
 | controller.extraArgs | list | `[]` | Extra arguments to be added to the controller |
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
@@ -275,6 +318,7 @@ Fields to note:
 | controller.image.repository | string | `"argoproj/workflow-controller"` | Registry to use for the controller |
 | controller.image.tag | string | `""` | Image tag for the workflow controller. Defaults to `.Values.images.tag`. |
 | controller.initialDelay | string | `nil` | Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224 |
+| controller.initlessPod.enabled | bool | `false` | Enable the init-less pod layout (beta), which provides the executor to workflow pods through an image volume instead of an init container. Only valid for 4.1+. Requires the `ImageVolume` feature gate on the kube-apiserver and all kubelets (beta in Kubernetes v1.33-1.35, enabled by default from v1.36). |
 | controller.instanceID.enabled | bool | `false` | Configures the controller to filter workflow submissions to only those which have a matching instanceID attribute. |
 | controller.instanceID.explicitID | string | `""` | Use a custom instanceID |
 | controller.instanceID.useReleaseName | bool | `false` | Use ReleaseName as instanceID |
@@ -310,7 +354,7 @@ Fields to note:
 | controller.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
 | controller.parallelism | string | `nil` | parallelism dictates how many workflows can be running at the same time |
 | controller.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the controller pods |
-| controller.persistence | object | `{}` | enable Workflow Archive to store the status of workflows. Postgres and MySQL (>= 5.7.8) are available. |
+| controller.persistence | object | `{}` | enable Workflow Archive to store the status of workflows. Postgres, MySQL (>= 5.7.8) and MariaDB (>= 10.2.7, requires Argo Workflows v4.1+) are available. |
 | controller.podAnnotations | object | `{}` | podAnnotations is an optional map of annotations to be applied to the controller Pods |
 | controller.podCleanupWorkers | string | `nil` | Number of pod cleanup workers |
 | controller.podGCDeleteDelayDuration | string | `5s` (Argo Workflows default) | The duration in seconds before the pods in the GC queue get deleted. A zero value indicates that the pods will be deleted immediately. |
@@ -545,3 +589,6 @@ Fields to note:
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-workflows?modal=changelog
 [SSO RBAC]: https://argo-workflows.readthedocs.io/en/stable/argo-server-sso/
 [Argo Server Auth Mode]: https://argo-workflows.readthedocs.io/en/stable/argo-server-auth-mode/
+[init-less pod layout]: https://argo-workflows.readthedocs.io/en/latest/initless-pod/
+[image volume]: https://kubernetes.io/docs/tasks/configure-pod-container/image-volumes/
+[OpenTelemetry traces]: https://argo-workflows.readthedocs.io/en/latest/telemetry-configuration/
