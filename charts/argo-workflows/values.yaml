@@ -937,6 +937,8 @@ server:
     userInfoPath: ""
     # -- Skip TLS verification for the HTTP client
     insecureSkipVerify: false
+    # -- Custom PEM encoded CA certificate file contents used to validate the OIDC provider's certificate
+    rootCA: ""
     # -- Filter the groups returned by the OIDC provider
     ## A logical "OR" is used between each regex in the list
     filterGroupsRegex: []
