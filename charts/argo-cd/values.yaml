@@ -826,6 +826,10 @@ controller:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Application controller image
   image:
@@ -1223,6 +1227,10 @@ dex:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Dex image
   image:
@@ -1544,6 +1552,10 @@ redis:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Redis image
   image:
@@ -2116,6 +2128,10 @@ server:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Argo CD server image
   image:
@@ -3007,6 +3023,10 @@ repoServer:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Repo server image
   image:
@@ -3445,6 +3465,10 @@ applicationSet:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## ApplicationSet controller image
   image:
@@ -3963,6 +3987,10 @@ notifications:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Notifications controller image
   image:
@@ -4759,3 +4787,7 @@ commitServer:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
