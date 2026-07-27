@@ -418,6 +418,7 @@ Fields to note:
 |-----|------|---------|-------------|
 | executor.args | list | `[]` | Passes arguments to the executor processes |
 | executor.env | list | `[]` | Adds environment variables for the executor. |
+| executor.image.nonroot | bool | `false` | Use the `-nonroot` executor image variant. When enabled, the `-nonroot` suffix is appended to the resolved image tag. |
 | executor.image.pullPolicy | string | `""` | Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`. |
 | executor.image.registry | string | `"quay.io"` | Registry to use for the Workflow Executors |
 | executor.image.repository | string | `"argoproj/argoexec"` | Repository to use for the Workflow Executors |
