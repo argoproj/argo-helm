@@ -84,11 +84,16 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.crds.upgradeJob.hostPath }}
+      {{- if or .Values.crds.upgradeJob.hostPath .Values.crds.upgradeJob.volumes }}
       volumes:
+        {{- if .Values.crds.upgradeJob.hostPath }}
         - name: crds
           hostPath:
             path: {{ .Values.crds.upgradeJob.hostPath }}
+        {{- end }}
+        {{- with .Values.crds.upgradeJob.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- end }}
       containers:
         - name: apply
@@ -101,11 +106,18 @@ spec:
           {{- with .Values.crds.upgradeJob.extraEnv }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if .Values.crds.upgradeJob.hostPath }}
+          {{- if or .Values.crds.upgradeJob.hostPath .Values.crds.upgradeJob.volumeMounts }}
           volumeMounts:
+            {{- if .Values.crds.upgradeJob.hostPath }}
             - name: crds
               mountPath: /crds
               readOnly: true
+            {{- end }}
+            {{- with .Values.crds.upgradeJob.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.crds.upgradeJob.hostPath }}
           command:
             - kubectl
             - apply

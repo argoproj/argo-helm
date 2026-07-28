@@ -222,6 +222,8 @@ Fields to note:
 | crds.upgradeJob.resources | object | `{}` | Resources for the CRD install Job containers |
 | crds.upgradeJob.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":65532,"runAsNonRoot":true,"runAsUser":65532,"seccompProfile":{"type":"RuntimeDefault"}}` | Security context for the CRD install Job container |
 | crds.upgradeJob.tolerations | list | `[]` | Tolerations for the CRD install Job |
+| crds.upgradeJob.volumeMounts | list | `[]` | Additional volume mounts on the CRD install Job container |
+| crds.upgradeJob.volumes | list | `[]` | Additional volumes on the CRD install Job pod |
 | createAggregateRoles | bool | `true` | Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs. |
 | emissary.images | list | `[]` | The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used. |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy |

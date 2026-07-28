@@ -62,6 +62,17 @@ crds:
     #   value: "http://proxy.example.com:8080"
     # - name: NO_PROXY
     #   value: "localhost,127.0.0.1,10.96.0.0/12,192.168.0.0/16"
+    # -- Additional volumes on the CRD install Job pod
+    volumes: []
+    # - name: ca-bundle
+    #   configMap:
+    #     name: ca-bundle
+    # -- Additional volume mounts on the CRD install Job container
+    volumeMounts: []
+    # - name: ca-bundle
+    #   mountPath: /etc/ssl/certs/ca-bundle.crt
+    #   subPath: ca-bundle.crt
+    #   readOnly: true
 
 # -- Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs.
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
