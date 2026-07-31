@@ -2464,16 +2464,33 @@ server:
     type: ClusterIP
     # -- Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort")
     nodePortHttp: 30080
+    # -- (int) Server service http2 port for NodePort service type (only if `server.service.servicePortHttp2` is set and `server.service.type` is set to "NodePort")
+    # @default -- `nil` (a random node port is assigned)
+    nodePortHttp2:
     # -- Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort")
     nodePortHttps: 30443
     # -- Server service http port
     servicePortHttp: 80
+    # -- (int) Server service cleartext http2 (h2c) port, targeting the same container port as `servicePortHttp`
+    # @default -- `nil` (disabled)
+    ## The Argo CD server serves the web UI (HTTP/1.1) and gRPC (HTTP/2) on a single container port, and
+    ## `appProtocol` is single-valued per service port. Set this to expose a second port advertising the
+    ## h2c backend protocol, for Gateway API implementations that do not infer it from the route type.
+    ## Leave empty to disable. Only rendered when `configs.params."server.insecure"` is `true`, since
+    ## h2c is not applicable to a TLS backend.
+    servicePortHttp2:
     # -- Server service https port
     servicePortHttps: 443
     # -- Server service http port name, can be used to route traffic via istio
     servicePortHttpName: http
+    # -- Server service http2 port name, can be used to route traffic via istio
+    servicePortHttp2Name: http2
     # -- Server service https port name, can be used to route traffic via istio
     servicePortHttpsName: https
+    # -- Server service http2 port appProtocol, e.g. `kubernetes.io/h2c`. Implementations that select the
+    # protocol from the port name instead do not need it
+    ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol
+    servicePortHttp2AppProtocol: ""
     # -- Server service https port appProtocol
     ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol
     servicePortHttpsAppProtocol: ""
