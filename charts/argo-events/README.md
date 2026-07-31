@@ -138,6 +138,7 @@ done
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | controller.containerSecurityContext | object | `{}` | Events controller container-level security context |
+| controller.deploymentAnnotations | object | `{}` | Annotations to be added to events controller Deployment |
 | controller.env | list | `[]` | Environment variables to pass to events controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to events controller |
 | controller.extraContainers | list | `[]` | Additional containers to be added to the events controller pods |
@@ -196,6 +197,7 @@ done
 |-----|------|---------|-------------|
 | webhook.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | webhook.containerSecurityContext | object | `{}` | Event controller container-level security context |
+| webhook.deploymentAnnotations | object | `{}` | Annotations to be added to admission webhook Deployment |
 | webhook.enabled | bool | `false` | Enable admission webhook. Applies only for cluster-wide installation |
 | webhook.env | list | `[]` (See [values.yaml]) | Environment variables to pass to event controller |
 | webhook.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to event controller |

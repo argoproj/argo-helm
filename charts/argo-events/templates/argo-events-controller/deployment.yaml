@@ -3,6 +3,10 @@ kind: Deployment
 metadata:
   name: {{ include "argo-events.controller.fullname" . }}
   namespace: {{ include "argo-events.namespace" . | quote }}
+  {{- with .Values.controller.deploymentAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     app.kubernetes.io/version: {{ include "argo-events.controller_chart_version_label" . }}
