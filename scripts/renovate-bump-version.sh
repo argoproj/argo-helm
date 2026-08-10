@@ -25,7 +25,9 @@ chart_yaml_path="charts/${chart}/Chart.yaml"
 # This way we can drop prefixes like "argoproj/..." , "argoproj-labs/..." , "quay.io/foo/..."
 dependency_name="${dependency_name##*/}"
 
-# Mirror the upstream update type for the main application of each chart.
+# Map the upstream update type for the main application of each chart:
+# upstream major/minor -> chart minor, upstream patch -> chart patch (per CONTRIBUTING.md).
+# Chart major bumps stay manual since they require an Upgrading section in the README.
 # Auxiliary images (dex, redis, kubectl, ...) always bump the chart patch version.
 main_apps='argo-cd argo-workflows argo-events argo-rollouts argocd-image-updater'
 if [[ " ${main_apps} " != *" ${dependency_name} "* ]]; then
@@ -38,8 +40,7 @@ major=$(echo "${version}" | cut -d. -f1)
 minor=$(echo "${version}" | cut -d. -f2)
 patch=$(echo "${version}" | cut -d. -f3)
 case "${update_type}" in
-  major) major=$((major + 1)); minor=0; patch=0 ;;
-  minor) minor=$((minor + 1)); patch=0 ;;
+  major|minor) minor=$((minor + 1)); patch=0 ;;
   *) patch=$((patch + 1)) ;;
 esac
 sed -i "s/^version:.*/version: ${major}.${minor}.${patch}/g" "${chart_yaml_path}"
