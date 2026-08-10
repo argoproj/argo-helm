@@ -67,9 +67,9 @@ done
 | configs.jetstream.streamConfig.maxMsgs | int | `1000000` | Maximum number of messages before expiring oldest message |
 | configs.jetstream.streamConfig.replicas | int | `3` | Number of replicas, defaults to 3 and requires minimal 3 |
 | configs.jetstream.streamConfig.retention | int | `0` | 0: Limits, 1: Interest, 2: WorkQueue |
-| configs.jetstream.versions[0].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.14.0"` |  |
-| configs.jetstream.versions[0].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.14.0"` |  |
-| configs.jetstream.versions[0].natsImage | string | `"nats:2.10.10"` |  |
+| configs.jetstream.versions[0].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.23.0"` |  |
+| configs.jetstream.versions[0].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.20.1"` |  |
+| configs.jetstream.versions[0].natsImage | string | `"nats:2.14.4"` |  |
 | configs.jetstream.versions[0].startCommand | string | `"/nats-server"` |  |
 | configs.jetstream.versions[0].version | string | `"latest"` |  |
 | configs.jetstream.versions[1].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
@@ -112,6 +112,11 @@ done
 | configs.jetstream.versions[8].natsImage | string | `"nats:2.10.10"` |  |
 | configs.jetstream.versions[8].startCommand | string | `"/nats-server"` |  |
 | configs.jetstream.versions[8].version | string | `"2.10.10"` |  |
+| configs.jetstream.versions[9].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.23.0"` |  |
+| configs.jetstream.versions[9].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.20.1"` |  |
+| configs.jetstream.versions[9].natsImage | string | `"nats:2.14.4"` |  |
+| configs.jetstream.versions[9].startCommand | string | `"/nats-server"` |  |
+| configs.jetstream.versions[9].version | string | `"2.14.4"` |  |
 | configs.nats.versions | list | See [values.yaml] | Supported versions of NATS event bus |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
