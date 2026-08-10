@@ -15,6 +15,7 @@
     "**/charts/argo-cd/Chart.yaml",
     "**/charts/argo-cd/values.yaml",
     "**/charts/argo-events/Chart.yaml",
+    "**/charts/argo-events/values.yaml",
     "**/charts/argo-rollouts/Chart.yaml",
     "**/charts/argocd-image-updater/Chart.yaml",
     "**/.github/workflows/renovate.yaml"
@@ -72,6 +73,33 @@
     },
     {
       "customType": "regex",
+      "fileMatch": ["charts/argo-events/values.yaml$"],
+      "matchStrings": [
+        "natsImage: (?<depName>nats):(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["charts/argo-events/values.yaml$"],
+      "matchStrings": [
+        "metricsExporterImage: (?<depName>natsio/prometheus-nats-exporter):(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["charts/argo-events/values.yaml$"],
+      "matchStrings": [
+        "configReloaderImage: (?<depName>natsio/nats-server-config-reloader):(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
       "fileMatch": ["^\\.github/workflows/[^/]+\\.ya?ml$"],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s+.+version: (?<currentValue>.*)"
@@ -88,7 +116,10 @@
         "argoproj-labs/argocd-image-updater",
         "argoprojlabs/argocd-extension-installer",
         "ghcr.io/dexidp/dex",
-        "ghcr.io/oliver006/redis_exporter"
+        "ghcr.io/oliver006/redis_exporter",
+        "^nats$",
+        "natsio/prometheus-nats-exporter",
+        "natsio/nats-server-config-reloader"
       ],
       "commitMessagePrefix": "chore({{parentDir}}):",
       "postUpgradeTasks": {
