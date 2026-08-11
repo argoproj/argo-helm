@@ -109,6 +109,9 @@ data:
         {{- if .Values.artifactRepository.s3.useSDKCreds }}
         useSDKCreds: {{ .Values.artifactRepository.s3.useSDKCreds }}
         {{- end }}
+        {{- with .Values.artifactRepository.s3.addressingStyle }}
+        addressingStyle: {{ . }}
+        {{- end }}
         {{- with .Values.artifactRepository.s3.encryptionOptions }}
         encryptionOptions:
           {{- toYaml . | nindent 10 }}
@@ -224,5 +227,12 @@ data:
     {{- end }}
     {{- with .Values.controller.failedPodRestart }}
     failedPodRestart: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- if .Values.controller.disableAgentPodCreation }}
+    disableAgentPodCreation: {{ .Values.controller.disableAgentPodCreation }}
+    {{- end }}
+    {{- if .Values.controller.initlessPod.enabled }}
+    initlessPod:
+      enabled: {{ .Values.controller.initlessPod.enabled }}
     {{- end }}
 {{- end }}

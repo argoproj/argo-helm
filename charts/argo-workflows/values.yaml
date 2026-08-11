@@ -226,7 +226,7 @@ controller:
     capabilities:
       drop:
         - ALL
-  # -- enable Workflow Archive to store the status of workflows. Postgres and MySQL (>= 5.7.8) are available.
+  # -- enable Workflow Archive to store the status of workflows. Postgres, MySQL (>= 5.7.8) and MariaDB (>= 10.2.7, requires Argo Workflows v4.1+) are available.
   ## Ref: https://argo-workflows.readthedocs.io/en/stable/workflow-archive/
   persistence: {}
   # connectionPool:
@@ -248,6 +248,16 @@ controller:
   #   passwordSecret:
   #     name: argo-postgres-config
   #     key: password
+  #   # Instead of passwordSecret, Postgres can authenticate with a token.
+  #   # Requires Argo Workflows v4.1+; userNameSecret is still required.
+  #   # Microsoft Entra ID (needs Azure Workload Identity on the controller's service account):
+  #   azureToken:
+  #     enabled: true
+  #     scope: https://ossrdbms-aad.database.windows.net/.default
+  #   # AWS RDS IAM authentication (needs IRSA or EKS Pod Identity on the controller's service account):
+  #   awsRDSToken:
+  #     enabled: true
+  #     region: us-east-1
   #   ssl: true
   #   # sslMode must be one of: disable, require, verify-ca, verify-full
   #   # you can find more information about those ssl options here: https://godoc.org/github.com/lib/pq
@@ -534,6 +544,16 @@ controller:
     enabled: false
     # -- Maximum number of automatic restarts per node before giving up.
     maxRestarts: 3
+
+  # -- Disable the creation of agent pods, which are used for HTTP and Plugin templates. When enabled, HTTP and Plugin templates will not be processed by this controller.
+  # Only valid for 4.1+
+  disableAgentPodCreation: false
+
+  initlessPod:
+    # -- Enable the init-less pod layout (beta), which provides the executor to workflow pods through an image volume instead of an init container.
+    # Only valid for 4.1+. Requires the `ImageVolume` feature gate on the kube-apiserver and all kubelets (beta in Kubernetes v1.33-1.35, enabled by default from v1.36).
+    ## Ref: https://argo-workflows.readthedocs.io/en/latest/initless-pod/
+    enabled: false
 
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
@@ -1033,6 +1053,9 @@ artifactRepository:
     # region:
     # roleARN:
     # useSDKCreds: true
+    # # addressingStyle must be one of: "" (auto-detect), path, virtual-hosted
+    # # Only valid for 4.1+
+    # addressingStyle: ""
     # encryptionOptions:
     #   enableEncryption: true
   # -- Store artifact in a GCS object store
