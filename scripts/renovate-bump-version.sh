@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
-while getopts c:d:v: opt; do
+while getopts c:d:v:t: opt; do
   case ${opt} in
     c) chart=${OPTARG} ;;
     d) dependency_name=${OPTARG} ;;
     v) dependency_version=${OPTARG} ;;
+    t) update_type=${OPTARG} ;;
     *)
       echo 'Usage:' >&2
       echo '-c: chart       Related Helm chart name' >&2
       echo '-d  dependency  Name of the updated dependency' >&2
       echo '-v  version     New version of the updated dependency' >&2
+      echo '-t  type        Renovate update type (major, minor, patch)' >&2
       exit 1
   esac
 done
@@ -23,12 +25,24 @@ chart_yaml_path="charts/${chart}/Chart.yaml"
 # This way we can drop prefixes like "argoproj/..." , "argoproj-labs/..." , "quay.io/foo/..."
 dependency_name="${dependency_name##*/}"
 
-# Bump the chart version by one patch version
+# Map the upstream update type for the main application of each chart:
+# upstream major/minor -> chart minor, upstream patch -> chart patch (per CONTRIBUTING.md).
+# Chart major bumps stay manual since they require an Upgrading section in the README.
+# Auxiliary images (dex, redis, kubectl, ...) always bump the chart patch version.
+main_apps='argo-cd argo-workflows argo-events argo-rollouts argocd-image-updater'
+if [[ " ${main_apps} " != *" ${dependency_name} "* ]]; then
+  update_type='patch'
+fi
+
+# Bump the chart version according to the update type
 version=$(grep '^version:' "${chart_yaml_path}" | awk '{print $2}')
 major=$(echo "${version}" | cut -d. -f1)
 minor=$(echo "${version}" | cut -d. -f2)
 patch=$(echo "${version}" | cut -d. -f3)
-patch=$((patch + 1))
+case "${update_type}" in
+  major|minor) minor=$((minor + 1)); patch=0 ;;
+  *) patch=$((patch + 1)) ;;
+esac
 sed -i "s/^version:.*/version: ${major}.${minor}.${patch}/g" "${chart_yaml_path}"
 
 # Add a changelog entry
