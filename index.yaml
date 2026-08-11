@@ -35127,6 +35127,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Support Argo Workflows v4.1 features (initlessPod, disableAgentPodCreation, S3 addressingStyle, database token authentication)
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v4.1.0
+    created: "2026-08-11T15:34:22.500341071Z"
+    description: A Helm chart for Argo Workflows
+    digest: 4143d106956b47652bf5015763823d403f876c4f0dcda5d22e85fecd445c4537
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-1.1.1/argo-workflows-1.1.1.tgz
+    version: 1.1.1
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Bump argo-workflows to v4.1.0
       artifacthub.io/signKey: |
@@ -44652,4 +44676,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-08-11T13:53:30.835894859Z"
+generated: "2026-08-11T15:34:22.503122937Z"
