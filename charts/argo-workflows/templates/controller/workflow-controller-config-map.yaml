@@ -180,6 +180,10 @@ data:
       {{- with .Values.server.sso.insecureSkipVerify }}
       insecureSkipVerify: {{ toYaml . }}
       {{- end }}
+      {{- with .Values.server.sso.rootCA }}
+      rootCA: |-
+        {{- . | nindent 8 }}
+      {{- end }}
       {{- with .Values.server.sso.filterGroupsRegex }}
       filterGroupsRegex: {{- toYaml . | nindent 8 }}
       {{- end }}

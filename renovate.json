@@ -93,7 +93,7 @@
       "commitMessagePrefix": "chore({{parentDir}}):",
       "postUpgradeTasks": {
         "commands": [
-          "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}}",
+          "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}} -t {{updateType}}",
           "./scripts/helm-docs.sh"
         ]
       }
@@ -110,7 +110,7 @@
       "commitMessagePrefix": "chore({{parentDir}}):",
       "postUpgradeTasks": {
         "commands": [
-          "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}}",
+          "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}} -t {{updateType}}",
           "./scripts/helm-docs.sh"
         ]
       }
@@ -120,7 +120,7 @@
       "commitMessagePrefix": "chore(argo-workflows):",
       "postUpgradeTasks": {
         "commands": [
-          "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}}",
+          "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}} -t {{updateType}}",
           "./scripts/helm-docs.sh"
         ]
       }
