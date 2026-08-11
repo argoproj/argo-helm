@@ -122,14 +122,6 @@ jobs:
         run: |
           kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.0/experimental-install.yaml
 
-      - name: Copy full CRDs to kind nodes for argo-workflows testing
-        id: argo-wf-crds
-        if: contains(steps.list-changed.outputs.changed_charts, 'argo-workflows')
-        run: |
-          for node in $(kind get nodes --name chart-testing); do
-            docker cp charts/argo-workflows/files/crds/full/. "$node":/crds/
-          done
-
       - name: Run chart-testing (install)
-        run: ct install --config ./.github/configs/ct-install.yaml ${{ steps.argo-wf-crds.outcome == 'success' && '--helm-extra-set-args "--set crds.upgradeJob.hostPath=/crds"' || '' }}
+        run: ct install --config ./.github/configs/ct-install.yaml
         if: steps.list-changed.outputs.changed == 'true'

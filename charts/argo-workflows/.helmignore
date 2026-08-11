@@ -23,5 +23,5 @@ ci/
 *.gotmpl
 # Raw full CRDs are excluded from the chart package to keep the release Secret
 # under the 1MB Kubernetes Secret size limit. Full CRDs are applied at install
-# time by the CRD install hook Job, which downloads them from GitHub.
+# time by the CRD install hook Job, which carries them inside its image.
 files/crds/full/*.yaml
