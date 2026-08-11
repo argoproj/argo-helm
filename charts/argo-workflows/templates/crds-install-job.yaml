@@ -63,7 +63,7 @@ spec:
     metadata:
       labels:
         {{- include "argo-workflows.labels" (dict "context" . "component" "crds" "name" "crd-install") | nindent 8 }}
-        {{- with.Values.crds.upgradeJob.podLabels }}
+        {{- with .Values.crds.upgradeJob.podLabels }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -80,54 +80,33 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.crds.upgradeJob.imagePullSecrets }}
+      {{- with (default .Values.images.pullSecrets .Values.crds.upgradeJob.imagePullSecrets) }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.crds.upgradeJob.hostPath }}
       volumes:
-        - name: crds
-          hostPath:
-            path: {{ .Values.crds.upgradeJob.hostPath }}
-      {{- end }}
+        - name: tmp
+          emptyDir: {}
       containers:
         - name: apply
-          image: "{{ .Values.crds.upgradeJob.image.repository }}:{{ .Values.crds.upgradeJob.image.tag }}"
+          # The image bundles the full CRDs for its own version and applies them
+          # with server-side apply by default, so it needs no command or network
+          # access to GitHub.
+          image: "{{- include "argo-workflows.image" (dict "context" . "image" .Values.crds.upgradeJob.image) }}:{{ default (include "argo-workflows.defaultTag" .) .Values.crds.upgradeJob.image.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
           {{- with .Values.crds.upgradeJob.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          env:
           {{- with .Values.crds.upgradeJob.extraEnv }}
+          env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if .Values.crds.upgradeJob.hostPath }}
           volumeMounts:
-            - name: crds
-              mountPath: /crds
-              readOnly: true
-          command:
-            - kubectl
-            - apply
-            - --server-side
-            - --force-conflicts
-            - -f
-            - /crds/
-          {{- else }}
-          {{- $baseURL := .Values.crds.upgradeJob.crdBaseURL | default (printf "https://raw.githubusercontent.com/argoproj/argo-helm/argo-workflows-%s/charts/argo-workflows/files/crds/full" .Chart.Version) }}
-          command:
-            - kubectl
-            - apply
-            - --server-side
-            - --force-conflicts
-            # We use the name of the files bundled in the Helm chart to determine
-            # the names of the full CRDs to install. It's either this or hard
-            # code the names, and this would burn us in the future.
-            {{- range $path, $_ := .Files.Glob "files/crds/minimal/*.yaml" }}
-            - -f
-            - "{{ $baseURL }}/{{ base $path }}"
-            {{- end }}
-          {{- end }}
+            # The image sets HOME=/tmp so that kubectl can write its discovery
+            # cache, which needs somewhere writable under readOnlyRootFilesystem.
+            - name: tmp
+              mountPath: /tmp
           {{- with .Values.crds.upgradeJob.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
