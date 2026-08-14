@@ -131,7 +131,6 @@ For full list of changes please check ArtifactHub [changelog].
 | controller.podLabels | object | `{}` | Labels to be added to the application controller pods |
 | controller.pprofAddress | string | `""` | Enable pprof profiling on the controller by specifying a listen address (e.g. `:6060` or `localhost:6060`) |
 | controller.priorityClassName | string | `""` | [priorityClassName] for the controller |
-| controller.readinessProbe | object | See [values.yaml] | Configure readiness [probe] for the controller |
 | controller.replicas | int | `2` | The number of controller pods to run |
 | controller.resources | object | `{}` | Resource limits and requests for the controller pods. |
 | controller.selfServiceNotification | bool | `false` | Enable self-service notification support, allowing the controller to pull notification config from the rollout's namespace |

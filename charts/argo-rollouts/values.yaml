@@ -210,18 +210,6 @@ controller:
     successThreshold: 1
     timeoutSeconds: 10
 
-  # -- Configure readiness [probe] for the controller
-  # @default -- See [values.yaml]
-  readinessProbe:
-    httpGet:
-      path: /metrics
-      port: metrics
-    initialDelaySeconds: 15
-    periodSeconds: 5
-    failureThreshold: 3
-    successThreshold: 1
-    timeoutSeconds: 4
-
   ## Configure Pod Disruption Budget for the controller
   pdb:
     # -- Labels to be added to controller [Pod Disruption Budget]
