@@ -1,7 +1,7 @@
 {{- if .Values.server.grpcroute.enabled -}}
 {{- $fullName := include "argo-cd.server.fullname" . -}}
 {{- $insecure := index .Values.configs.params "server.insecure" | toString -}}
-{{- $servicePort := eq $insecure "true" | ternary .Values.server.service.servicePortHttp .Values.server.service.servicePortHttps -}}
+{{- $servicePort := eq $insecure "true" | ternary (.Values.server.service.servicePortHttp2 | default .Values.server.service.servicePortHttp) .Values.server.service.servicePortHttps -}}
 apiVersion: gateway.networking.k8s.io/v1
 kind: GRPCRoute
 metadata:

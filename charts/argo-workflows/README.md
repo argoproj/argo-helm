@@ -25,15 +25,14 @@ helm install my-release argo/argo-workflows --set crds.full=false
 
 #### How the full CRDs are installed
 
-Full CRDs are too large to include directly in Helm templates (they would exceed the Kubernetes Secret size limit that Helm uses to store releases). Instead, this chart uses a **pre-install/pre-upgrade hook Job** that downloads and applies CRDs from this chart's GitHub release tag using `kubectl apply --server-side --force-conflicts`.
+Full CRDs are too large to include directly in Helm templates (they would exceed the Kubernetes Secret size limit that Helm uses to store releases). Instead, this chart uses a **pre-install/pre-upgrade hook Job** that runs the upstream [CRD installer image](https://argo-workflows.readthedocs.io/en/latest/crd-installer/), `quay.io/argoproj/argo-workflows-crdinstaller`. That image bundles `kubectl` together with the full CRDs for its own version and applies them with `kubectl apply --server-side --force-conflicts`.
 
 This means `helm install` works out of the box with full CRDs — no manual steps required. The hook Job requires:
 
-- A `kubectl` image (defaults to `registry.k8s.io/kubectl`)
+- Access to the CRD installer image, tagged with the chart's app version (overridable via `crds.upgradeJob.image`)
 - ClusterRole permissions to create/update CRDs (created automatically as hook resources)
-- Network access to `raw.githubusercontent.com` from the cluster (to download the CRD manifests)
 
-You can customize the kubectl image, image pull secrets, and CRD source URL via `crds.upgradeJob` values (see values table below).
+Because the CRDs travel inside the image, the Job needs no network access beyond your registry, so it works in air-gapped clusters. You can customize the image, image pull secrets, and the rest of the pod spec via `crds.upgradeJob` values (see values table below).
 
 #### Using Argo CD
 
@@ -120,6 +119,48 @@ Please see the upstream [Operator Manual's High Availability page](https://argo-
 ### Workflow controller
 
 This chart defaults to setting the `controller.instanceID.enabled` to `false` now, which means the deployed controller will act upon any workflow deployed to the cluster. If you would like to limit the behavior and deploy multiple workflow controllers, please use the `controller.instanceID.enabled` attribute along with one of its configuration options to set the `instanceID` of the workflow controller to be properly scoped for your needs.
+
+### Init-less pod layout (beta)
+
+Argo Workflows v4.1+ supports an opt-in [init-less pod layout], where the executor is provided to workflow pods through an [image volume] instead of an init container copying the binary. Enable it with `controller.initlessPod.enabled: true`.
+
+Requirements and caveats:
+
+- Requires the `ImageVolume` feature gate to be enabled on the kube-apiserver and all kubelets running workflow pods. Image volumes are beta in Kubernetes v1.33-1.35 and enabled by default from v1.36. If the cluster does not support them, workflow pod creation will fail.
+- A custom `executor.image` must provide a manifest list covering every node architecture in the cluster.
+- Workflows whose `main` container sets `securityContext.readOnlyRootFilesystem: true` may fail to load input artifacts placed on the read-only root filesystem in this mode.
+
+### OpenTelemetry tracing (beta)
+
+Argo Workflows v4.1+ can emit [OpenTelemetry traces] from the workflow controller and the executor. Tracing is configured entirely through standard `OTEL_*` environment variables and is enabled by setting an OTLP endpoint; the chart already provides the necessary hooks:
+
+```yaml
+controller:
+  # Traces from the workflow controller
+  extraEnv:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://otel-collector:4318
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: http/protobuf
+
+# Traces from the executor in workflow pods
+executor:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://otel-collector:4318
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: http/protobuf
+
+# Optional: expose the OTEL configuration to your own code in main containers
+mainContainer:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://otel-collector:4318
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: http/protobuf
+```
+
+The Argo Server is not instrumented for tracing.
 
 ### Argo Workflows server authentication
 
@@ -209,18 +250,17 @@ Fields to note:
 | crds.full | bool | `true` | Use full CRDs with complete OpenAPI schemas. When false, uses minified CRDs with x-kubernetes-preserve-unknown-fields. Full CRDs are very large and are installed via a pre-install/pre-upgrade hook Job that uses server-side apply. |
 | crds.install | bool | `true` | Install and upgrade CRDs |
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
-| crds.upgradeJob.crdBaseURL | string | `""` | Override base URL to download full CRD YAML files from. Defaults to this chart's release tag on GitHub. Ignored if hostPath is set. |
 | crds.upgradeJob.extraEnv | list | `[]` | Extra environment variables to provide to the CRD install Job container |
-| crds.upgradeJob.hostPath | string | `""` | Host path to mount CRD files from (for local/CI testing). When set, CRDs are applied from this path instead of downloading. |
-| crds.upgradeJob.image | object | `{"repository":"registry.k8s.io/kubectl","tag":"v1.36.3"}` | Image for the kubectl container that applies CRDs |
-| crds.upgradeJob.image.repository | string | `"registry.k8s.io/kubectl"` | Repository for the kubectl image |
-| crds.upgradeJob.image.tag | string | `"v1.36.3"` | Tag for the kubectl image |
-| crds.upgradeJob.imagePullSecrets | list | `[]` | Image pull secrets for the CRD install Job |
+| crds.upgradeJob.image | object | `{"registry":"quay.io","repository":"argoproj/argo-workflows-crdinstaller","tag":""}` | Image for the container that applies the full CRDs. It bundles the CRDs for its own tag, so keep it in step with the app version. |
+| crds.upgradeJob.image.registry | string | `"quay.io"` | Registry to use for the CRD installer |
+| crds.upgradeJob.image.repository | string | `"argoproj/argo-workflows-crdinstaller"` | Repository to use for the CRD installer |
+| crds.upgradeJob.image.tag | string | `""` | Image tag for the CRD installer. Defaults to `.Values.images.tag`. |
+| crds.upgradeJob.imagePullSecrets | list | `.Values.images.pullSecrets` | Image pull secrets for the CRD install Job |
 | crds.upgradeJob.nodeSelector | object | `{}` | Node selector for the CRD install Job |
 | crds.upgradeJob.podLabels | object | `{}` | Optional labels to add to the CRD install Job pod |
 | crds.upgradeJob.podSecurityContext | object | `{}` | Pod security context for the CRD install Job pod |
 | crds.upgradeJob.resources | object | `{}` | Resources for the CRD install Job containers |
-| crds.upgradeJob.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":65532,"runAsNonRoot":true,"runAsUser":65532,"seccompProfile":{"type":"RuntimeDefault"}}` | Security context for the CRD install Job container |
+| crds.upgradeJob.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":8737,"runAsNonRoot":true,"runAsUser":8737,"seccompProfile":{"type":"RuntimeDefault"}}` | Security context for the CRD install Job container |
 | crds.upgradeJob.tolerations | list | `[]` | Tolerations for the CRD install Job |
 | createAggregateRoles | bool | `true` | Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs. |
 | emissary.images | list | `[]` | The command/args for each image on workflow, needed when the command is not specified and the emissary executor is used. |
@@ -264,6 +304,7 @@ Fields to note:
 | controller.configMap.name | string | `""` | ConfigMap name |
 | controller.cronWorkflowWorkers | string | `nil` | Number of cron workflow workers Only valid for 3.5+ |
 | controller.deploymentAnnotations | object | `{}` | deploymentAnnotations is an optional map of annotations to be applied to the controller Deployment |
+| controller.disableAgentPodCreation | bool | `false` | Disable the creation of agent pods, which are used for HTTP and Plugin templates. When enabled, HTTP and Plugin templates will not be processed by this controller. Only valid for 4.1+ |
 | controller.envFrom | list | `[]` | envFrom to pass to the controller container |
 | controller.extraArgs | list | `[]` | Extra arguments to be added to the controller |
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
@@ -275,6 +316,7 @@ Fields to note:
 | controller.image.repository | string | `"argoproj/workflow-controller"` | Registry to use for the controller |
 | controller.image.tag | string | `""` | Image tag for the workflow controller. Defaults to `.Values.images.tag`. |
 | controller.initialDelay | string | `nil` | Resolves ongoing, uncommon AWS EKS bug: https://github.com/argoproj/argo-workflows/pull/4224 |
+| controller.initlessPod.enabled | bool | `false` | Enable the init-less pod layout (beta), which provides the executor to workflow pods through an image volume instead of an init container. Only valid for 4.1+. Requires the `ImageVolume` feature gate on the kube-apiserver and all kubelets (beta in Kubernetes v1.33-1.35, enabled by default from v1.36). |
 | controller.instanceID.enabled | bool | `false` | Configures the controller to filter workflow submissions to only those which have a matching instanceID attribute. |
 | controller.instanceID.explicitID | string | `""` | Use a custom instanceID |
 | controller.instanceID.useReleaseName | bool | `false` | Use ReleaseName as instanceID |
@@ -310,7 +352,7 @@ Fields to note:
 | controller.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
 | controller.parallelism | string | `nil` | parallelism dictates how many workflows can be running at the same time |
 | controller.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the controller pods |
-| controller.persistence | object | `{}` | enable Workflow Archive to store the status of workflows. Postgres and MySQL (>= 5.7.8) are available. |
+| controller.persistence | object | `{}` | enable Workflow Archive to store the status of workflows. Postgres, MySQL (>= 5.7.8) and MariaDB (>= 10.2.7, requires Argo Workflows v4.1+) are available. |
 | controller.podAnnotations | object | `{}` | podAnnotations is an optional map of annotations to be applied to the controller Pods |
 | controller.podCleanupWorkers | string | `nil` | Number of pod cleanup workers |
 | controller.podGCDeleteDelayDuration | string | `5s` (Argo Workflows default) | The duration in seconds before the pods in the GC queue get deleted. A zero value indicates that the pods will be deleted immediately. |
@@ -511,6 +553,19 @@ Fields to note:
 | customArtifactRepository | object | `{}` | The section of custom artifact repository. Utilize a custom artifact repository that is not one of the current base ones (s3, gcs, azure) |
 | useStaticCredentials | bool | `true` | Use static credentials for S3 (eg. when not using AWS IRSA) |
 
+## Upgrading
+
+### To 2.0.0
+
+The full CRDs are now installed by the upstream [CRD installer image], `quay.io/argoproj/argo-workflows-crdinstaller`, instead of a stock `kubectl` image that downloaded the CRD YAML from GitHub. This removes the GitHub egress requirement, but the `crds.upgradeJob` values changed shape:
+
+* `crds.upgradeJob.image.repository` and `crds.upgradeJob.image.tag` now refer to the CRD installer image, and `crds.upgradeJob.image.registry` was added. The tag defaults to the chart's app version. If you overrode these to pin a `kubectl` image, drop the override.
+* `crds.upgradeJob.crdBaseURL` was removed. The CRDs are bundled in the image, so there is nothing to download.
+* `crds.upgradeJob.hostPath` was removed. It only existed to feed the Job from local files in CI, which the image makes unnecessary.
+* `crds.upgradeJob.securityContext.runAsUser` and `runAsGroup` default to `8737` to match the image.
+
+This requires app version v4.1.0 or later, the first release to publish the CRD installer image. Set `crds.full=false` to use the minified CRDs, which are unaffected.
+
 ## Breaking changes from the deprecated `argo` chart
 
 1. the `installCRD` value has been removed. CRDs are now only installed from the conventional crds/ directory
@@ -545,3 +600,7 @@ Fields to note:
 [changelog]: https://artifacthub.io/packages/helm/argo/argo-workflows?modal=changelog
 [SSO RBAC]: https://argo-workflows.readthedocs.io/en/stable/argo-server-sso/
 [Argo Server Auth Mode]: https://argo-workflows.readthedocs.io/en/stable/argo-server-auth-mode/
+[init-less pod layout]: https://argo-workflows.readthedocs.io/en/latest/initless-pod/
+[image volume]: https://kubernetes.io/docs/tasks/configure-pod-container/image-volumes/
+[OpenTelemetry traces]: https://argo-workflows.readthedocs.io/en/latest/telemetry-configuration/
+[CRD installer image]: https://argo-workflows.readthedocs.io/en/latest/crd-installer/

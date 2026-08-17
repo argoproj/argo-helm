@@ -305,6 +305,35 @@ server:
         sectionName: grpc
 ```
 
+When the Argo CD server runs in insecure mode (`server.insecure: true`), it serves the web UI (HTTP/1.1 only) and gRPC (HTTP/2 only) on the same container port. `appProtocol` is single-valued per Service port, so the `http` port cannot describe both protocols. Per [GEP-1911](https://gateway-api.sigs.k8s.io/geps/gep-1911/) implementations only *may* infer the backend protocol from the route type, so gRPC works on some Gateway controllers and not others. Set `server.service.servicePortHttp2` to expose an additional Service port, and `server.service.servicePortHttp2AppProtocol` to declare its protocol explicitly. The GRPCRoute then targets that port, while the HTTPRoute keeps using the `http` port:
+
+```yaml
+configs:
+  params:
+    server.insecure: true
+
+server:
+  service:
+    servicePortHttp2: 8080
+    servicePortHttp2AppProtocol: kubernetes.io/h2c
+
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+
+  grpcroute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: grpc
+```
+
+> **Note:**
+> The `kubernetes.io/h2c` application protocol is defined by [KEP-3726](https://github.com/kubernetes/enhancements/tree/master/keps/sig-network/3726-standard-application-protocols), and not every implementation uses it — Istio, for example, expects `http2` or `grpc`, and can also select the protocol from `servicePortHttp2Name` alone. Set `servicePortHttp2AppProtocol` to whatever your controller understands. The port is only rendered in insecure mode, since h2c does not apply to a TLS backend.
+
 #### Gateway API with TLS backend
 
 For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy:
@@ -1463,8 +1492,12 @@ NAME: my-release
 | server.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | server.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
 | server.service.nodePortHttp | int | `30080` | Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort") |
+| server.service.nodePortHttp2 | int | `nil` (a random node port is assigned) | Server service http2 port for NodePort service type (only if `server.service.servicePortHttp2` is set and `server.service.type` is set to "NodePort") |
 | server.service.nodePortHttps | int | `30443` | Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort") |
 | server.service.servicePortHttp | int | `80` | Server service http port |
+| server.service.servicePortHttp2 | int | `nil` (disabled) | Server service cleartext http2 (h2c) port, targeting the same container port as `servicePortHttp` |
+| server.service.servicePortHttp2AppProtocol | string | `""` | Server service http2 port appProtocol, e.g. `kubernetes.io/h2c`. Implementations that select the protocol from the port name instead do not need it |
+| server.service.servicePortHttp2Name | string | `"http2"` | Server service http2 port name, can be used to route traffic via istio |
 | server.service.servicePortHttpName | string | `"http"` | Server service http port name, can be used to route traffic via istio |
 | server.service.servicePortHttps | int | `443` | Server service https port |
 | server.service.servicePortHttpsAppProtocol | string | `""` | Server service https port appProtocol |
