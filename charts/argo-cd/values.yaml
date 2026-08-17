@@ -2439,6 +2439,9 @@ server:
     usages: []
     # -- Annotations that allow the certificate to be composed from data residing in existing Kubernetes Resources
     secretTemplateAnnotations: {}
+    # ReferenceGrant for Gateway API
+    referencegrant:
+      enabled: false
 
   # TLS certificate configuration via Secret
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server

@@ -47,4 +47,19 @@ spec:
   usages:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+---
+{{- if and .Values.server.certificate.referencegrant.enabled (and .Values.server.httproute.enabled .Values.server.httproute.parentRefs) -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: ReferenceGrant
+metadata:
+  name: {{ include "argo-cd.server.fullname" . }}
+  namespace: {{ include  "argo-cd.namespace" . }}
+spec:
+  from:
+  {{- toYaml .Values.server.httproute.parentRefs | nindent 4 }}
+  to:
+  - group: ""
+    kind: Secret
+    name: argocd-server-tls
+{{- end }}
 {{- end }}
