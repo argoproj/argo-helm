@@ -1182,6 +1182,7 @@ NAME: my-release
 | controller.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for application controller container |
 | controller.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the application controller |
 | controller.vpa.labels | object | `{}` | Labels to be added to application controller vpa |
+| controller.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | controller.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Argo Repo Server
@@ -1303,6 +1304,7 @@ NAME: my-release
 | repoServer.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for repo server container |
 | repoServer.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the repo server |
 | repoServer.vpa.labels | object | `{}` | Labels to be added to repo server vpa |
+| repoServer.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | repoServer.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Argo Server
@@ -1523,6 +1525,7 @@ NAME: my-release
 | server.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for Argo CD server container |
 | server.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Argo CD server |
 | server.vpa.labels | object | `{}` | Labels to be added to Argo CD server vpa |
+| server.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | server.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Dex
@@ -1634,6 +1637,7 @@ NAME: my-release
 | dex.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for Dex server container |
 | dex.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Dex server |
 | dex.vpa.labels | object | `{}` | Labels to be added to Dex server vpa |
+| dex.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | dex.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Redis
@@ -1740,6 +1744,7 @@ NAME: my-release
 | redis.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for Redis container |
 | redis.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Redis |
 | redis.vpa.labels | object | `{}` | Labels to be added to Redis vpa |
+| redis.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | redis.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ### Option 2 - Redis HA
@@ -1971,6 +1976,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for ApplicationSet controller container |
 | applicationSet.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the ApplicationSet controller |
 | applicationSet.vpa.labels | object | `{}` | Labels to be added to ApplicationSet controller vpa |
+| applicationSet.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | applicationSet.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Notifications
@@ -2070,6 +2076,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for notifications controller container |
 | notifications.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the notifications controller |
 | notifications.vpa.labels | object | `{}` | Labels to be added to notifications controller vpa |
+| notifications.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | notifications.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Commit server (Manifest Hydrator)
@@ -2146,6 +2153,7 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for commit server container |
 | commitServer.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the commit server |
 | commitServer.vpa.labels | object | `{}` | Labels to be added to commit server vpa |
+| commitServer.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | commitServer.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ----------------------------------------------
