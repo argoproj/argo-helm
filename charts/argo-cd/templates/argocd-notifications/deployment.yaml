@@ -212,6 +212,7 @@ spec:
         - name: tls-certs
           configMap:
             name: argocd-tls-certs-cm
+            optional: true
         - name: argocd-repo-server-tls
           secret:
             secretName: argocd-repo-server-tls
