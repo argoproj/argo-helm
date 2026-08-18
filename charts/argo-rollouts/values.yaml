@@ -210,6 +210,9 @@ controller:
     successThreshold: 1
     timeoutSeconds: 10
 
+  # -- Configure readiness [probe] for the controller
+  readinessProbe: {}
+
   ## Configure Pod Disruption Budget for the controller
   pdb:
     # -- Labels to be added to controller [Pod Disruption Budget]
