@@ -17,6 +17,9 @@ spec:
   {{- with .Values.notifications.vpa.recommenders }}
   recommenders: {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .Values.notifications.vpa.startupBoost }}
+  startupBoost: {{- toYaml . | nindent 4 }}
+  {{- end }}
   targetRef:
     apiVersion: "apps/v1"
     kind: Deployment

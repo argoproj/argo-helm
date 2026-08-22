@@ -17,6 +17,9 @@ spec:
   {{- with .Values.commitServer.vpa.recommenders }}
   recommenders: {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .Values.commitServer.vpa.startupBoost }}
+  startupBoost: {{- toYaml . | nindent 4 }}
+  {{- end }}
   targetRef:
     apiVersion: "apps/v1"
     kind: Deployment
