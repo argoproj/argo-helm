@@ -18,12 +18,21 @@ metadata:
   {{- end }}
 spec:
   parentRefs:
-    {{- with .Values.server.httproute.parentRefs }}
-      {{- toYaml . | nindent 4 }}
+    {{- if .Values.server.httproute.parentRefs }}
+    {{- toYaml .Values.server.httproute.parentRefs | nindent 4 }}
+    {{- else if .Values.server.listenerset.enabled }}
+    - group: gateway.networking.k8s.io
+      kind: ListenerSet
+      name: {{ $fullName }}
+      namespace: {{ include "argo-cd.namespace" . }}
+      sectionName: {{ .Values.server.listenerset.listenerName }}
     {{- end }}
-  {{- with .Values.server.httproute.hostnames }}
+  {{- if .Values.server.httproute.hostnames }}
   hostnames:
-    {{- toYaml . | nindent 4 }}
+    {{- toYaml .Values.server.httproute.hostnames | nindent 4 }}
+  {{- else if .Values.server.listenerset.enabled }}
+  hostnames:
+    - {{ tpl (.Values.server.listenerset.hostname | default .Values.global.domain) $ | quote }}
   {{- end }}
   rules:
   {{- range .Values.server.httproute.rules }}

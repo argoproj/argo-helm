@@ -1,0 +1,25 @@
+crds:
+  keep: false
+
+configs:
+  params:
+    server.insecure: true
+server:
+  service:
+    servicePortHttp2: 8080
+    servicePortHttp2AppProtocol: kubernetes.io/h2c
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: example-gateway-namespace
+  grpcroute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: example-gateway-namespace
+    rules:
+      - matches:
+          - method:
+              type: Exact
+              service: argocd.ApplicationService

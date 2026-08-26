@@ -305,6 +305,35 @@ server:
         sectionName: grpc
 ```
 
+When the Argo CD server runs in insecure mode (`server.insecure: true`), it serves the web UI (HTTP/1.1 only) and gRPC (HTTP/2 only) on the same container port. `appProtocol` is single-valued per Service port, so the `http` port cannot describe both protocols. Per [GEP-1911](https://gateway-api.sigs.k8s.io/geps/gep-1911/) implementations only *may* infer the backend protocol from the route type, so gRPC works on some Gateway controllers and not others. Set `server.service.servicePortHttp2` to expose an additional Service port, and `server.service.servicePortHttp2AppProtocol` to declare its protocol explicitly. The GRPCRoute then targets that port, while the HTTPRoute keeps using the `http` port:
+
+```yaml
+configs:
+  params:
+    server.insecure: true
+
+server:
+  service:
+    servicePortHttp2: 8080
+    servicePortHttp2AppProtocol: kubernetes.io/h2c
+
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+
+  grpcroute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: grpc
+```
+
+> **Note:**
+> The `kubernetes.io/h2c` application protocol is defined by [KEP-3726](https://github.com/kubernetes/enhancements/tree/master/keps/sig-network/3726-standard-application-protocols), and not every implementation uses it — Istio, for example, expects `http2` or `grpc`, and can also select the protocol from `servicePortHttp2Name` alone. Set `servicePortHttp2AppProtocol` to whatever your controller understands. The port is only rendered in insecure mode, since h2c does not apply to a TLS backend.
+
 #### Gateway API with TLS backend
 
 For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy:
@@ -337,13 +366,59 @@ Use ListenerSet to attach listeners to an existing shared Gateway. This is usefu
 > **Note:**
 > ListenerSet support is **EXPERIMENTAL**. Requires Gateway API v1.5+ and a controller that supports ListenerSet. Refer to [Gateway API implementations](https://gateway-api.sigs.k8s.io/implementations/) for controller-specific details.
 
+Only `parentRef` (pointing to the parent Gateway) is required. A default HTTPS listener is synthesized automatically using `global.domain` as the hostname:
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: gateway-system
+```
+
+Combined with an HTTPRoute to route traffic through the listener to the Argo CD server. The HTTPRoute automatically targets the ListenerSet and inherits the hostname from `global.domain` — no extra configuration needed:
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: gateway-system
+
+  httproute:
+    enabled: true
+```
+
+To customise the synthesized listener (e.g. change the port, protocol, or TLS secret), override the individual fields:
+
 ```yaml
 server:
   listenerset:
     enabled: true
     parentRef:
-      group: gateway.networking.k8s.io
-      kind: Gateway
+      name: example-gateway
+      namespace: gateway-system
+    hostname: custom.example.com   # overrides global.domain
+    port: 8443
+    tls:
+      secretName: my-tls-secret
+```
+
+For full control, provide a `listeners` array directly. When non-empty it is used verbatim and all synthesized listener fields are ignored:
+
+```yaml
+server:
+  listenerset:
+    enabled: true
+    parentRef:
       name: example-gateway
       namespace: gateway-system
     listeners:
@@ -360,35 +435,6 @@ server:
         allowedRoutes:
           namespaces:
             from: Same
-```
-
-Combined with an HTTPRoute to route traffic from the listener to the Argo CD server:
-
-```yaml
-server:
-  listenerset:
-    enabled: true
-    parentRef:
-      name: example-gateway
-      namespace: gateway-system
-    listeners:
-      - name: https
-        port: 443
-        protocol: HTTPS
-        hostname: argocd.example.com
-        tls:
-          mode: Terminate
-          certificateRefs:
-            - group: ""
-              kind: Secret
-              name: argocd-server-tls
-
-  httproute:
-    enabled: true
-    parentRefs:
-      - name: example-gateway
-        namespace: gateway-system
-        sectionName: https
 ```
 
 ## Setting the initial admin password via Argo CD Application CR
@@ -1136,6 +1182,7 @@ NAME: my-release
 | controller.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for application controller container |
 | controller.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the application controller |
 | controller.vpa.labels | object | `{}` | Labels to be added to application controller vpa |
+| controller.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | controller.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Argo Repo Server
@@ -1257,6 +1304,7 @@ NAME: my-release
 | repoServer.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for repo server container |
 | repoServer.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the repo server |
 | repoServer.vpa.labels | object | `{}` | Labels to be added to repo server vpa |
+| repoServer.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | repoServer.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Argo Server
@@ -1370,11 +1418,20 @@ NAME: my-release
 | server.ingressGrpc.tls | bool | `false` | Enable TLS configuration for the hostname defined at `server.ingressGrpc.hostname` |
 | server.initContainers | list | `[]` | Init containers to add to the server pod |
 | server.lifecycle | object | `{}` | Specify postStart and preStop lifecycle hooks for your argo-cd-server container |
+| server.listenerset.allowedRoutes | object | `{"namespaces":{"from":"Same"}}` | allowedRoutes for the synthesized listener |
 | server.listenerset.annotations | object | `{}` | Additional ListenerSet annotations |
 | server.listenerset.enabled | bool | `false` | Enable ListenerSet resource for Argo CD server (Gateway API) |
+| server.listenerset.hostname | string | `""` | Hostname for the synthesized listener. Defaults to global.domain when empty. |
 | server.listenerset.labels | object | `{}` | Additional ListenerSet labels |
-| server.listenerset.listeners | list | `[]` (See [values.yaml]) | Listeners to attach to the parent Gateway |
+| server.listenerset.listenerName | string | `"https"` | Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs. |
+| server.listenerset.listeners | list | `[]` (See [values.yaml]) | Listeners to attach to the parent Gateway. When non-empty, used verbatim and all synthesized listener fields above are ignored. |
 | server.listenerset.parentRef | object | `{}` (See [values.yaml]) | Gateway API parentRef for the ListenerSet |
+| server.listenerset.port | int | `443` | Port for the synthesized listener |
+| server.listenerset.protocol | string | `"HTTPS"` | Protocol for the synthesized listener |
+| server.listenerset.tls | object | `{"enabled":true,"mode":"Terminate","secretName":""}` | TLS configuration for the synthesized listener |
+| server.listenerset.tls.enabled | bool | `true` | Enable TLS on the synthesized listener |
+| server.listenerset.tls.mode | string | `"Terminate"` | TLS termination mode |
+| server.listenerset.tls.secretName | string | `""` | Secret name for TLS certificate. Defaults to `argocd-server-tls` when empty. |
 | server.livenessProbe.enabled | bool | `true` | Enable Kubernetes liveness probe for default backend |
 | server.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | server.livenessProbe.httpPath | string | `"/healthz?full=true"` | Http path to use for the liveness probe |
@@ -1435,8 +1492,12 @@ NAME: my-release
 | server.service.loadBalancerIP | string | `""` | LoadBalancer will get created with the IP specified in this field |
 | server.service.loadBalancerSourceRanges | list | `[]` | Source IP ranges to allow access to service from |
 | server.service.nodePortHttp | int | `30080` | Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort") |
+| server.service.nodePortHttp2 | int | `nil` (a random node port is assigned) | Server service http2 port for NodePort service type (only if `server.service.servicePortHttp2` is set and `server.service.type` is set to "NodePort") |
 | server.service.nodePortHttps | int | `30443` | Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort") |
 | server.service.servicePortHttp | int | `80` | Server service http port |
+| server.service.servicePortHttp2 | int | `nil` (disabled) | Server service cleartext http2 (h2c) port, targeting the same container port as `servicePortHttp` |
+| server.service.servicePortHttp2AppProtocol | string | `""` | Server service http2 port appProtocol, e.g. `kubernetes.io/h2c`. Implementations that select the protocol from the port name instead do not need it |
+| server.service.servicePortHttp2Name | string | `"http2"` | Server service http2 port name, can be used to route traffic via istio |
 | server.service.servicePortHttpName | string | `"http"` | Server service http port name, can be used to route traffic via istio |
 | server.service.servicePortHttps | int | `443` | Server service https port |
 | server.service.servicePortHttpsAppProtocol | string | `""` | Server service https port appProtocol |
@@ -1464,6 +1525,7 @@ NAME: my-release
 | server.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for Argo CD server container |
 | server.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Argo CD server |
 | server.vpa.labels | object | `{}` | Labels to be added to Argo CD server vpa |
+| server.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | server.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Dex
@@ -1575,6 +1637,7 @@ NAME: my-release
 | dex.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for Dex server container |
 | dex.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Dex server |
 | dex.vpa.labels | object | `{}` | Labels to be added to Dex server vpa |
+| dex.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | dex.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Redis
@@ -1601,7 +1664,7 @@ NAME: my-release
 | redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
 | redis.exporter.image.repository | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
-| redis.exporter.image.tag | string | `"v1.86.0"` | Tag to use for the redis-exporter |
+| redis.exporter.image.tag | string | `"v1.89.0"` | Tag to use for the redis-exporter |
 | redis.exporter.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis exporter |
 | redis.exporter.livenessProbe.failureThreshold | int | `5` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | redis.exporter.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |
@@ -1619,7 +1682,7 @@ NAME: my-release
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Redis image pull policy |
 | redis.image.repository | string | `"ecr-public.aws.com/docker/library/redis"` | Redis repository |
-| redis.image.tag | string | `"8.2.3-alpine"` | Redis tag |
+| redis.image.tag | string | `"8.6.4-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
 | redis.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis server |
@@ -1682,6 +1745,7 @@ NAME: my-release
 | redis.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for Redis container |
 | redis.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Redis |
 | redis.vpa.labels | object | `{}` | Labels to be added to Redis vpa |
+| redis.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | redis.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ### Option 2 - Redis HA
@@ -1831,11 +1895,20 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.ingress.pathType | string | `"Prefix"` | Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific` |
 | applicationSet.ingress.tls | bool | `false` | Enable TLS configuration for the hostname defined at `applicationSet.webhook.ingress.hostname` |
 | applicationSet.initContainers | list | `[]` | Init containers to add to the ApplicationSet controller pod |
+| applicationSet.listenerset.allowedRoutes | object | `{"namespaces":{"from":"Same"}}` | allowedRoutes for the synthesized listener |
 | applicationSet.listenerset.annotations | object | `{}` | Additional ListenerSet annotations |
 | applicationSet.listenerset.enabled | bool | `false` | Enable ListenerSet resource for Argo CD ApplicationSet webhook (Gateway API) |
+| applicationSet.listenerset.hostname | string | `""` | Hostname for the synthesized listener. Defaults to global.domain when empty. |
 | applicationSet.listenerset.labels | object | `{}` | Additional ListenerSet labels |
-| applicationSet.listenerset.listeners | list | `[]` (See [values.yaml]) | Listeners to attach to the parent Gateway |
+| applicationSet.listenerset.listenerName | string | `"https"` | Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs. |
+| applicationSet.listenerset.listeners | list | `[]` (See [values.yaml]) | Listeners to attach to the parent Gateway. When non-empty, used verbatim and all synthesized listener fields above are ignored. |
 | applicationSet.listenerset.parentRef | object | `{}` (See [values.yaml]) | Gateway API parentRef for the ListenerSet |
+| applicationSet.listenerset.port | int | `443` | Port for the synthesized listener |
+| applicationSet.listenerset.protocol | string | `"HTTPS"` | Protocol for the synthesized listener |
+| applicationSet.listenerset.tls | object | `{"enabled":true,"mode":"Terminate","secretName":""}` | TLS configuration for the synthesized listener |
+| applicationSet.listenerset.tls.enabled | bool | `true` | Enable TLS on the synthesized listener |
+| applicationSet.listenerset.tls.mode | string | `"Terminate"` | TLS termination mode |
+| applicationSet.listenerset.tls.secretName | string | `""` | Secret name for TLS certificate. Defaults to `argocd-applicationset-controller-tls` when empty. |
 | applicationSet.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for ApplicationSet controller |
 | applicationSet.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | applicationSet.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
@@ -1904,6 +1977,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for ApplicationSet controller container |
 | applicationSet.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the ApplicationSet controller |
 | applicationSet.vpa.labels | object | `{}` | Labels to be added to ApplicationSet controller vpa |
+| applicationSet.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | applicationSet.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Notifications
@@ -2003,6 +2077,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for notifications controller container |
 | notifications.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the notifications controller |
 | notifications.vpa.labels | object | `{}` | Labels to be added to notifications controller vpa |
+| notifications.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | notifications.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Commit server (Manifest Hydrator)
@@ -2079,6 +2154,7 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.vpa.containerPolicy | object | `{}` | Controls how VPA computes the recommended resources for commit server container |
 | commitServer.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the commit server |
 | commitServer.vpa.labels | object | `{}` | Labels to be added to commit server vpa |
+| commitServer.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
 | commitServer.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ----------------------------------------------
