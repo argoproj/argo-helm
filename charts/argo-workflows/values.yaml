@@ -926,6 +926,8 @@ server:
       key: client-secret
     # -- The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
     redirectUrl: ""
+    # -- The OIDC logout redirect URL. Should be an absolute HTTP(S) URL.
+    logoutRedirectUrl: ""
     rbac:
       # -- Adds ServiceAccount Policy to server (Cluster)Role.
       enabled: true

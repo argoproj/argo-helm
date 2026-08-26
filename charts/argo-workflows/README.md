@@ -527,6 +527,7 @@ Fields to note:
 | server.sso.insecureSkipVerify | bool | `false` | Skip TLS verification for the HTTP client |
 | server.sso.issuer | string | `"https://accounts.google.com"` | The root URL of the OIDC identity provider |
 | server.sso.issuerAlias | string | `""` | Alternate root URLs that can be included for some OIDC providers |
+| server.sso.logoutRedirectUrl | string | `""` | The OIDC logout redirect URL. Should be an absolute HTTP(S) URL. |
 | server.sso.rbac.enabled | bool | `true` | Adds ServiceAccount Policy to server (Cluster)Role. |
 | server.sso.rbac.secretWhitelist | list | `[]` | Whitelist to allow server to fetch Secrets |
 | server.sso.redirectUrl | string | `""` | The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback. |
