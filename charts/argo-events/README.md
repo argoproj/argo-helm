@@ -138,6 +138,7 @@ done
 |-----|------|---------|-------------|
 | controller.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | controller.containerSecurityContext | object | `{}` | Events controller container-level security context |
+| controller.deploymentAnnotations | object | `{}` | Annotations to be added to events controller Deployment |
 | controller.env | list | `[]` | Environment variables to pass to events controller |
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to events controller |
 | controller.extraContainers | list | `[]` | Additional containers to be added to the events controller pods |
@@ -178,7 +179,7 @@ done
 | controller.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | controller.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | controller.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
-| controller.replicas | int | `1` | The number of events controller pods to run. |
+| controller.replicas | int | `1` | The number of events controller pods to run. Leader election is disabled when set to `1`. |
 | controller.resources | object | `{}` | Resource limits and requests for the events controller pods |
 | controller.revisionHistoryLimit | int | `5` | The number of replicasets history to keep |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
@@ -196,6 +197,7 @@ done
 |-----|------|---------|-------------|
 | webhook.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | webhook.containerSecurityContext | object | `{}` | Event controller container-level security context |
+| webhook.deploymentAnnotations | object | `{}` | Annotations to be added to admission webhook Deployment |
 | webhook.enabled | bool | `false` | Enable admission webhook. Applies only for cluster-wide installation |
 | webhook.env | list | `[]` (See [values.yaml]) | Environment variables to pass to event controller |
 | webhook.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to event controller |

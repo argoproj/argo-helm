@@ -18,34 +18,44 @@ crds:
   full: true
   # -- Annotations to be added to all CRDs (only applies when crds.full=false)
   annotations: {}
-  # -- Configuration for the CRD install Job (only used when crds.full=true)
+  # Configuration for the CRD install Job (only used when crds.full=true)
   upgradeJob:
-    # -- Image for the kubectl container that applies CRDs
+    # -- Image for the container that applies the full CRDs. It bundles the CRDs for its own tag, so keep it in step with the app version.
+    ## Ref: https://argo-workflows.readthedocs.io/en/latest/crd-installer/
     image:
-      # -- Repository for the kubectl image
-      repository: registry.k8s.io/kubectl
-      # -- Tag for the kubectl image
-      tag: v1.36.1
-    # -- Override base URL to download full CRD YAML files from. Defaults to this chart's release tag on GitHub. Ignored if hostPath is set.
-    crdBaseURL: ""
-    # -- Host path to mount CRD files from (for local/CI testing). When set, CRDs are applied from this path instead of downloading.
-    hostPath: ""
+      # -- Registry to use for the CRD installer
+      registry: quay.io
+      # -- Repository to use for the CRD installer
+      repository: argoproj/argo-workflows-crdinstaller
+      # -- Image tag for the CRD installer. Defaults to `.Values.images.tag`.
+      tag: ""
     # -- Resources for the CRD install Job containers
     resources: {}
     # -- Node selector for the CRD install Job
     nodeSelector: {}
+    # -- Pod security context for the CRD install Job pod
+    podSecurityContext: {}
+    # -- Optional labels to add to the CRD install Job pod
+    podLabels: {}
     # -- Tolerations for the CRD install Job
     tolerations: []
     # -- Image pull secrets for the CRD install Job
+    # @default -- `.Values.images.pullSecrets`
     imagePullSecrets: []
+    # -- Security context for the CRD install Job container
+    securityContext:
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      runAsUser: 8737
+      runAsGroup: 8737
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+          - ALL
     # -- Extra environment variables to provide to the CRD install Job container
     extraEnv: []
-    # - name: HTTP_PROXY
-    #   value: "http://proxy.example.com:8080"
-    # - name: HTTPS_PROXY
-    #   value: "http://proxy.example.com:8080"
-    # - name: NO_PROXY
-    #   value: "localhost,127.0.0.1,10.96.0.0/12,192.168.0.0/16"
 
 # -- Create ClusterRoles that extend existing ClusterRoles to interact with Argo Workflows CRDs.
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -210,7 +220,7 @@ controller:
     capabilities:
       drop:
         - ALL
-  # -- enable Workflow Archive to store the status of workflows. Postgres and MySQL (>= 5.7.8) are available.
+  # -- enable Workflow Archive to store the status of workflows. Postgres, MySQL (>= 5.7.8) and MariaDB (>= 10.2.7, requires Argo Workflows v4.1+) are available.
   ## Ref: https://argo-workflows.readthedocs.io/en/stable/workflow-archive/
   persistence: {}
   # connectionPool:
@@ -232,6 +242,16 @@ controller:
   #   passwordSecret:
   #     name: argo-postgres-config
   #     key: password
+  #   # Instead of passwordSecret, Postgres can authenticate with a token.
+  #   # Requires Argo Workflows v4.1+; userNameSecret is still required.
+  #   # Microsoft Entra ID (needs Azure Workload Identity on the controller's service account):
+  #   azureToken:
+  #     enabled: true
+  #     scope: https://ossrdbms-aad.database.windows.net/.default
+  #   # AWS RDS IAM authentication (needs IRSA or EKS Pod Identity on the controller's service account):
+  #   awsRDSToken:
+  #     enabled: true
+  #     region: us-east-1
   #   ssl: true
   #   # sslMode must be one of: disable, require, verify-ca, verify-full
   #   # you can find more information about those ssl options here: https://godoc.org/github.com/lib/pq
@@ -376,6 +396,9 @@ controller:
     # - name: FOO
     #   value: "bar"
 
+  # -- envFrom to pass to the controller container
+  envFrom: []
+
   # -- Extra arguments to be added to the controller
   extraArgs: []
   # -- Additional volume mounts to the controller main container
@@ -515,6 +538,16 @@ controller:
     enabled: false
     # -- Maximum number of automatic restarts per node before giving up.
     maxRestarts: 3
+
+  # -- Disable the creation of agent pods, which are used for HTTP and Plugin templates. When enabled, HTTP and Plugin templates will not be processed by this controller.
+  # Only valid for 4.1+
+  disableAgentPodCreation: false
+
+  initlessPod:
+    # -- Enable the init-less pod layout (beta), which provides the executor to workflow pods through an image volume instead of an init container.
+    # Only valid for 4.1+. Requires the `ImageVolume` feature gate on the kube-apiserver and all kubelets (beta in Kubernetes v1.33-1.35, enabled by default from v1.36).
+    ## Ref: https://argo-workflows.readthedocs.io/en/latest/initless-pod/
+    enabled: false
 
 # mainContainer adds default config for main container that could be overriden in workflows template
 mainContainer:
@@ -691,6 +724,9 @@ server:
   extraEnv: []
     # - name: FOO
     #   value: "bar"
+
+  # -- envFrom to pass to the argo-server container
+  envFrom: []
 
   # -- Deprecated; use server.authModes instead.
   authMode: ""
@@ -915,6 +951,8 @@ server:
     userInfoPath: ""
     # -- Skip TLS verification for the HTTP client
     insecureSkipVerify: false
+    # -- Custom PEM encoded CA certificate file contents used to validate the OIDC provider's certificate
+    rootCA: ""
     # -- Filter the groups returned by the OIDC provider
     ## A logical "OR" is used between each regex in the list
     filterGroupsRegex: []
@@ -1009,6 +1047,9 @@ artifactRepository:
     # region:
     # roleARN:
     # useSDKCreds: true
+    # # addressingStyle must be one of: "" (auto-detect), path, virtual-hosted
+    # # Only valid for 4.1+
+    # addressingStyle: ""
     # encryptionOptions:
     #   enableEncryption: true
   # -- Store artifact in a GCS object store

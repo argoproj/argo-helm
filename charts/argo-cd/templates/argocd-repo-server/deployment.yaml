@@ -386,7 +386,7 @@ spec:
         {{- if .Values.repoServer.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: /healthz?full=true
+            path: {{ .Values.repoServer.livenessProbe.httpPath }}
             port: metrics
           initialDelaySeconds: {{ .Values.repoServer.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.repoServer.livenessProbe.periodSeconds }}
@@ -397,13 +397,24 @@ spec:
         {{- if .Values.repoServer.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: /healthz
+            path: {{ .Values.repoServer.readinessProbe.httpPath }}
             port: metrics
           initialDelaySeconds: {{ .Values.repoServer.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.repoServer.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.repoServer.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.repoServer.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.repoServer.readinessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.repoServer.startupProbe.enabled }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.repoServer.startupProbe.httpPath }}
+            port: metrics
+          initialDelaySeconds: {{ .Values.repoServer.startupProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.repoServer.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.repoServer.startupProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.repoServer.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.repoServer.startupProbe.failureThreshold }}
         {{- end }}
         resources:
           {{- toYaml .Values.repoServer.resources | nindent 10 }}

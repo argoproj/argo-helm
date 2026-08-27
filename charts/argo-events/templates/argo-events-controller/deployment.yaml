@@ -3,6 +3,10 @@ kind: Deployment
 metadata:
   name: {{ include "argo-events.controller.fullname" . }}
   namespace: {{ include "argo-events.namespace" . | quote }}
+  {{- with .Values.controller.deploymentAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
     app.kubernetes.io/version: {{ include "argo-events.controller_chart_version_label" . }}
@@ -12,6 +16,10 @@ spec:
       {{- include "argo-events.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 6 }}
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
   replicas: {{ .Values.controller.replicas }}
+  {{- if eq (int .Values.controller.replicas) 1 }}
+  strategy:
+    type: Recreate
+  {{- end }}
   template:
     metadata:
       annotations:
@@ -45,6 +53,9 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
         args:
         - controller
+        {{- if eq (int .Values.controller.replicas) 1 }}
+        - --leader-election=false
+        {{- end }}
         {{- if .Values.controller.rbac.namespaced }}
         - --namespaced
         {{- end }}

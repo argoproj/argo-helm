@@ -150,6 +150,16 @@ spec:
             successThreshold: {{ .Values.notifications.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.notifications.readinessProbe.failureThreshold }}
           {{- end }}
+          {{- if .Values.notifications.startupProbe.enabled }}
+          startupProbe:
+            tcpSocket:
+              port: metrics
+            initialDelaySeconds: {{ .Values.notifications.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.notifications.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.notifications.startupProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.notifications.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.notifications.startupProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.notifications.resources | nindent 12 }}
           {{- with .Values.notifications.containerSecurityContext }}

@@ -34,8 +34,7 @@ UPSTREAM_BASE_URL="https://raw.githubusercontent.com/argoproj/argo-workflows/${V
 
 # Function to get CRD file list from GitHub API
 get_crd_files() {
-    local type="$1"
-    local api_url="https://api.github.com/repos/argoproj/argo-workflows/contents/manifests/base/crds/${type}?ref=${VERSION}"
+    local api_url="https://api.github.com/repos/argoproj/argo-workflows/contents/manifests/base/crds/minimal?ref=${VERSION}"
 
     curl -sSfL "$api_url" | jq -r '.[] | select(.name | test("^argoproj\\.io_.*\\.yaml$")) | .name'
 }
@@ -77,12 +76,11 @@ process_crd() {
     ' "$file" > "$tmp_file" && mv "$tmp_file" "$file"
 }
 
-# Function to download and process CRDs for a specific type (full or minimal)
+# Function to download and process the minimal CRDs
 download_crds() {
-    local type="$1"
-    local dest_dir="$CRD_DIR/$type"
+    local dest_dir="$CRD_DIR/minimal"
 
-    echo "Downloading $type CRDs for Argo Workflows $VERSION..."
+    echo "Downloading minimal CRDs for Argo Workflows $VERSION..."
 
     mkdir -p "$dest_dir"
 
@@ -91,15 +89,15 @@ download_crds() {
 
     # Get file list dynamically from GitHub API
     local crd_files
-    crd_files=$(get_crd_files "$type")
+    crd_files=$(get_crd_files)
 
     if [[ -z "$crd_files" ]]; then
-        echo "  Error: Failed to fetch CRD file list for $type"
+        echo "  Error: Failed to fetch CRD file list"
         return 1
     fi
 
     while IFS= read -r crd_file; do
-        local url="$UPSTREAM_BASE_URL/$type/$crd_file"
+        local url="$UPSTREAM_BASE_URL/minimal/$crd_file"
         local dest="$dest_dir/$crd_file"
 
         echo "  Downloading $crd_file..."
@@ -117,13 +115,12 @@ download_crds() {
 echo "Updating Argo Workflows CRDs to $VERSION"
 echo "========================================="
 
-# Download both full and minimal CRDs
-download_crds "full"
-download_crds "minimal"
+# Only the minimal CRDs are kept in this repo. The full CRDs are installed from
+# the upstream argo-workflows-crdinstaller image, which carries its own copy.
+download_crds
 
 echo ""
 echo "Done! CRDs updated to $VERSION"
 echo ""
 echo "Files updated in:"
-echo "  - $CRD_DIR/full/"
 echo "  - $CRD_DIR/minimal/"

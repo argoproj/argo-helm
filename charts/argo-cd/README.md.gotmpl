@@ -304,9 +304,38 @@ server:
         sectionName: grpc
 ```
 
+When the Argo CD server runs in insecure mode (`server.insecure: true`), it serves the web UI (HTTP/1.1 only) and gRPC (HTTP/2 only) on the same container port. `appProtocol` is single-valued per Service port, so the `http` port cannot describe both protocols. Per [GEP-1911](https://gateway-api.sigs.k8s.io/geps/gep-1911/) implementations only *may* infer the backend protocol from the route type, so gRPC works on some Gateway controllers and not others. Set `server.service.servicePortHttp2` to expose an additional Service port, and `server.service.servicePortHttp2AppProtocol` to declare its protocol explicitly. The GRPCRoute then targets that port, while the HTTPRoute keeps using the `http` port:
+
+```yaml
+configs:
+  params:
+    server.insecure: true
+
+server:
+  service:
+    servicePortHttp2: 8080
+    servicePortHttp2AppProtocol: kubernetes.io/h2c
+
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+
+  grpcroute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+        namespace: gateway-system
+        sectionName: grpc
+```
+
+> **Note:**
+> The `kubernetes.io/h2c` application protocol is defined by [KEP-3726](https://github.com/kubernetes/enhancements/tree/master/keps/sig-network/3726-standard-application-protocols), and not every implementation uses it — Istio, for example, expects `http2` or `grpc`, and can also select the protocol from `servicePortHttp2Name` alone. Set `servicePortHttp2AppProtocol` to whatever your controller understands. The port is only rendered in insecure mode, since h2c does not apply to a TLS backend.
+
 #### Gateway API with TLS backend
 
-For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy (experimental, v1alpha3):
+For HTTPS backends with Gateway API, you may need to configure BackendTLSPolicy:
 
 > **Warning:**
 > BackendTLSPolicy is in **EXPERIMENTAL** status. Not all Gateway controllers support this resource (e.g., Cilium does not yet support it).
@@ -327,6 +356,84 @@ server:
     enabled: true
     hostname: argocd-server.argocd.svc.cluster.local
     wellKnownCACertificates: System
+```
+
+#### Gateway API ListenerSet
+
+Use ListenerSet to attach listeners to an existing shared Gateway. This is useful when you want to contribute listeners to a Gateway managed by another team or namespace.
+
+> **Note:**
+> ListenerSet support is **EXPERIMENTAL**. Requires Gateway API v1.5+ and a controller that supports ListenerSet. Refer to [Gateway API implementations](https://gateway-api.sigs.k8s.io/implementations/) for controller-specific details.
+
+Only `parentRef` (pointing to the parent Gateway) is required. A default HTTPS listener is synthesized automatically using `global.domain` as the hostname:
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: gateway-system
+```
+
+Combined with an HTTPRoute to route traffic through the listener to the Argo CD server. The HTTPRoute automatically targets the ListenerSet and inherits the hostname from `global.domain` — no extra configuration needed:
+
+```yaml
+global:
+  domain: argocd.example.com
+
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: gateway-system
+
+  httproute:
+    enabled: true
+```
+
+To customise the synthesized listener (e.g. change the port, protocol, or TLS secret), override the individual fields:
+
+```yaml
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: gateway-system
+    hostname: custom.example.com   # overrides global.domain
+    port: 8443
+    tls:
+      secretName: my-tls-secret
+```
+
+For full control, provide a `listeners` array directly. When non-empty it is used verbatim and all synthesized listener fields are ignored:
+
+```yaml
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: gateway-system
+    listeners:
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: argocd.example.com
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - group: ""
+              kind: Secret
+              name: argocd-server-tls
+        allowedRoutes:
+          namespaces:
+            from: Same
 ```
 
 ## Setting the initial admin password via Argo CD Application CR
@@ -397,6 +504,11 @@ kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=v2.4.9"
 For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
+
+### 10.0.0
+
+In this chart version we changed the parameter `global.networkPolicy.create` from `false` to `true` to align with the upstream manifests and apply
+security best practices. There might be use cases where users want to disable the network policies, for example when using a service mesh or when you want to use a more specific network policy type like CiliumNetworkPolicy. In this case, please set `global.networkPolicy.create` to `false` in your values.yaml and manage the network policies yourself.
 
 ### 9.1.0
 This chart contains a breaking change (if using `redis-ha`), which was introduced by the dependency `redis-ha` (as seen [here](https://github.com/DandyDeveloper/charts/blob/a03b6a6f4d72b6606ce9a218c7d0026350b48ad0/charts/redis-ha/README.md#4341---upgrade-may-complain-about-selector-label-changes-being-immutable)). The upgrade will complain about selector label changes being immutable, which requires a replacement of the `argocd-redis-ha-haproxy` deployment. To overcome this, you will need to delete (orphaning children) this deployment, updated ArgoCD to disable server-side diffing, then allow the new deployment of `argocd-redis-ha-haproxy` to rollout with the updated label selectors.

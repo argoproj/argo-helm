@@ -127,7 +127,9 @@ rules:
   resourceNames:
   {{- if .Values.controller.persistence.postgresql }}
   - {{ .Values.controller.persistence.postgresql.userNameSecret.name }}
-  - {{ .Values.controller.persistence.postgresql.passwordSecret.name }}
+  {{- with .Values.controller.persistence.postgresql.passwordSecret }}
+  - {{ .name }}
+  {{- end}}
   {{- end}}
   {{- if .Values.controller.persistence.mysql }}
   - {{ .Values.controller.persistence.mysql.userNameSecret.name }}

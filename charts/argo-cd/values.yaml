@@ -118,7 +118,7 @@ global:
   # Default network policy rules used by all components
   networkPolicy:
     # -- Create NetworkPolicy objects for all components
-    create: false
+    create: true
     # -- Default deny all ingress traffic
     defaultDenyIngress: false
 
@@ -826,6 +826,10 @@ controller:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Application controller image
   image:
@@ -951,8 +955,28 @@ controller:
   # Readiness probe for application controller
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   readinessProbe:
+    # -- Http path to use for the readiness probe
+    httpPath: /healthz
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  ## Startup probe for application controller (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for application controller
+    enabled: false
+    # -- Http path to use for the startup probe
+    httpPath: /healthz
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 10
     # -- How often (in seconds) to perform the [probe]
@@ -1009,8 +1033,6 @@ controller:
   metrics:
     # -- Deploy metrics service
     enabled: false
-    # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
-    scrapeTimeout: ""
     applicationLabels:
       # -- Enables additional labels in argocd_app_labels metric
       enabled: false
@@ -1034,6 +1056,8 @@ controller:
       enabled: false
       # -- Prometheus ServiceMonitor interval
       interval: 30s
+      # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+      scrapeTimeout: ""
       # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
       honorLabels: false
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
@@ -1203,6 +1227,10 @@ dex:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Dex image
   image:
@@ -1379,6 +1407,28 @@ dex:
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
 
+  ## Startup probe for Dex server (optional)
+  ## Supported from Dex >= 2.28.0
+  startupProbe:
+    # -- Enable Kubernetes startup probe for Dex >= 2.28.0
+    enabled: false
+    # -- Http path to use for the startup probe
+    httpPath: /healthz/ready
+    # -- Http port to use for the startup probe
+    httpPort: metrics
+    # -- Scheme to use for the startup probe (can be HTTP or HTTPS)
+    httpScheme: HTTP
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
 
@@ -1502,6 +1552,10 @@ redis:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Redis image
   image:
@@ -1509,7 +1563,7 @@ redis:
     repository: ecr-public.aws.com/docker/library/redis
     # -- Redis tag
     ## Do not use 7.4.0 <= v < 8.0.0, otherwise you are no longer using an open source version of Redis
-    tag: 8.2.3-alpine
+    tag: 8.6.4-alpine
     # -- Redis image pull policy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1525,7 +1579,7 @@ redis:
       # -- Repository to use for the redis-exporter
       repository: ghcr.io/oliver006/redis_exporter
       # -- Tag to use for the redis-exporter
-      tag: v1.86.0
+      tag: v1.89.0
       # -- Image pull policy for the redis-exporter
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
@@ -2074,6 +2128,10 @@ server:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Argo CD server image
   image:
@@ -2271,6 +2329,8 @@ server:
   readinessProbe:
     # -- Enable Kubernetes readiness probe for default backend
     enabled: true
+    # -- Http path to use for the readiness probe
+    httpPath: /healthz
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -2285,8 +2345,28 @@ server:
   livenessProbe:
     # -- Enable Kubernetes liveness probe for default backend
     enabled: true
+    # -- Http path to use for the liveness probe
+    httpPath: /healthz?full=true
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  ## Startup probe for Argo CD server (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for Argo CD server
+    enabled: false
+    # -- Http path to use for the startup probe
+    httpPath: /healthz
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 10
     # -- How often (in seconds) to perform the [probe]
@@ -2400,16 +2480,33 @@ server:
     type: ClusterIP
     # -- Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort")
     nodePortHttp: 30080
+    # -- (int) Server service http2 port for NodePort service type (only if `server.service.servicePortHttp2` is set and `server.service.type` is set to "NodePort")
+    # @default -- `nil` (a random node port is assigned)
+    nodePortHttp2:
     # -- Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort")
     nodePortHttps: 30443
     # -- Server service http port
     servicePortHttp: 80
+    # -- (int) Server service cleartext http2 (h2c) port, targeting the same container port as `servicePortHttp`
+    # @default -- `nil` (disabled)
+    ## The Argo CD server serves the web UI (HTTP/1.1) and gRPC (HTTP/2) on a single container port, and
+    ## `appProtocol` is single-valued per service port. Set this to expose a second port advertising the
+    ## h2c backend protocol, for Gateway API implementations that do not infer it from the route type.
+    ## Leave empty to disable. Only rendered when `configs.params."server.insecure"` is `true`, since
+    ## h2c is not applicable to a TLS backend.
+    servicePortHttp2:
     # -- Server service https port
     servicePortHttps: 443
     # -- Server service http port name, can be used to route traffic via istio
     servicePortHttpName: http
+    # -- Server service http2 port name, can be used to route traffic via istio
+    servicePortHttp2Name: http2
     # -- Server service https port name, can be used to route traffic via istio
     servicePortHttpsName: https
+    # -- Server service http2 port appProtocol, e.g. `kubernetes.io/h2c`. Implementations that select the
+    # protocol from the port name instead do not need it
+    ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol
+    servicePortHttp2AppProtocol: ""
     # -- Server service https port appProtocol
     ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol
     servicePortHttpsAppProtocol: ""
@@ -2793,6 +2890,61 @@ server:
       #     kind: ConfigMap
       # wellKnownCACertificates: System
 
+  # Gateway API ListenerSet configuration
+  # NOTE: Gateway API support is in EXPERIMENTAL status
+  # ListenerSet allows attaching additional listeners to an existing Gateway
+  # Requires Gateway API v1alpha2 and a controller that supports ListenerSet
+  # Refer to https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1alpha2.ListenerSet
+  listenerset:
+    # -- Enable ListenerSet resource for Argo CD server (Gateway API)
+    enabled: false
+    # -- Additional ListenerSet labels
+    labels: {}
+    # -- Additional ListenerSet annotations
+    annotations: {}
+    # -- Gateway API parentRef for the ListenerSet
+    ## Must reference an existing Gateway. Unlike HTTPRoute, ListenerSet accepts exactly one parentRef.
+    # @default -- `{}` (See [values.yaml])
+    parentRef: {}
+      # name: example-gateway
+      # namespace: example-gateway-namespace
+    # -- Hostname for the synthesized listener. Defaults to global.domain when empty.
+    hostname: ""
+    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs.
+    listenerName: https
+    # -- Port for the synthesized listener
+    port: 443
+    # -- Protocol for the synthesized listener
+    protocol: HTTPS
+    # -- TLS configuration for the synthesized listener
+    tls:
+      # -- Enable TLS on the synthesized listener
+      enabled: true
+      # -- TLS termination mode
+      mode: Terminate
+      # -- Secret name for TLS certificate. Defaults to `argocd-server-tls` when empty.
+      secretName: ""
+    # -- allowedRoutes for the synthesized listener
+    allowedRoutes:
+      namespaces:
+        from: Same
+    # -- Listeners to attach to the parent Gateway. When non-empty, used verbatim and all synthesized listener fields above are ignored.
+    # @default -- `[]` (See [values.yaml])
+    listeners: []
+      # - name: https
+      #   port: 443
+      #   protocol: HTTPS
+      #   hostname: argocd.example.com
+      #   tls:
+      #     mode: Terminate
+      #     certificateRefs:
+      #       - group: ""
+      #         kind: Secret
+      #         name: argocd-server-tls
+      #   allowedRoutes:
+      #     namespaces:
+      #       from: Same
+
   ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
   ## Defaults to off
   clusterRoleRules:
@@ -2888,6 +3040,10 @@ repoServer:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Repo server image
   image:
@@ -3075,6 +3231,8 @@ repoServer:
   readinessProbe:
     # -- Enable Kubernetes readiness probe for Repo Server
     enabled: true
+    # -- Http path to use for the readiness probe
+    httpPath: /healthz
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -3089,8 +3247,28 @@ repoServer:
   livenessProbe:
     # -- Enable Kubernetes liveness probe for Repo Server
     enabled: true
+    # -- Http path to use for the liveness probe
+    httpPath: /healthz?full=true
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  ## Startup probe for Repo Server (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for Repo Server
+    enabled: false
+    # -- Http path to use for the startup probe
+    httpPath: /healthz
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 10
     # -- How often (in seconds) to perform the [probe]
@@ -3304,6 +3482,10 @@ applicationSet:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## ApplicationSet controller image
   image:
@@ -3508,6 +3690,22 @@ applicationSet:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
 
+  ## Startup probe for ApplicationSet controller (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for ApplicationSet controller
+    enabled: false
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
+
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
 
@@ -3686,6 +3884,61 @@ applicationSet:
         #         - name: X-Custom-Header
         #           value: custom-value
 
+  # Gateway API ListenerSet configuration for the Git Generator webhook
+  ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration
+  # NOTE: Gateway API support is in EXPERIMENTAL status
+  # ListenerSet allows attaching additional listeners to an existing Gateway
+  # Requires Gateway API v1alpha2 and a controller that supports ListenerSet
+  # Refer to https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1alpha2.ListenerSet
+  listenerset:
+    # -- Enable ListenerSet resource for Argo CD ApplicationSet webhook (Gateway API)
+    enabled: false
+    # -- Additional ListenerSet labels
+    labels: {}
+    # -- Additional ListenerSet annotations
+    annotations: {}
+    # -- Gateway API parentRef for the ListenerSet
+    ## Must reference an existing Gateway. Unlike HTTPRoute, ListenerSet accepts exactly one parentRef.
+    # @default -- `{}` (See [values.yaml])
+    parentRef: {}
+      # name: example-gateway
+      # namespace: example-gateway-namespace
+    # -- Hostname for the synthesized listener. Defaults to global.domain when empty.
+    hostname: ""
+    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs.
+    listenerName: https
+    # -- Port for the synthesized listener
+    port: 443
+    # -- Protocol for the synthesized listener
+    protocol: HTTPS
+    # -- TLS configuration for the synthesized listener
+    tls:
+      # -- Enable TLS on the synthesized listener
+      enabled: true
+      # -- TLS termination mode
+      mode: Terminate
+      # -- Secret name for TLS certificate. Defaults to `argocd-applicationset-controller-tls` when empty.
+      secretName: ""
+    # -- allowedRoutes for the synthesized listener
+    allowedRoutes:
+      namespaces:
+        from: Same
+    # -- Listeners to attach to the parent Gateway. When non-empty, used verbatim and all synthesized listener fields above are ignored.
+    # @default -- `[]` (See [values.yaml])
+    listeners: []
+      # - name: https
+      #   port: 443
+      #   protocol: HTTPS
+      #   hostname: argocd.example.com
+      #   tls:
+      #     mode: Terminate
+      #     certificateRefs:
+      #       - group: ""
+      #         kind: Secret
+      #         name: argocd-applicationset-controller-tls
+      #   allowedRoutes:
+      #     namespaces:
+      #       from: Same
 
   # -- Enable ApplicationSet in any namespace feature
   allowAnyNamespace: false
@@ -3751,6 +4004,10 @@ notifications:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
 
   ## Notifications controller image
   image:
@@ -3959,6 +4216,22 @@ notifications:
     successThreshold: 1
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+
+  ## Startup probe for notifications controller Pods (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for notifications controller Pods
+    enabled: false
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
 
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
@@ -4426,6 +4699,8 @@ commitServer:
   readinessProbe:
     # -- Enable Kubernetes liveness probe for commit server
     enabled: true
+    # -- Http path to use for the readiness probe
+    httpPath: /healthz
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 5
     # -- How often (in seconds) to perform the [probe]
@@ -4438,6 +4713,8 @@ commitServer:
   livenessProbe:
     # -- Enable Kubernetes liveness probe for commit server
     enabled: true
+    # -- Http path to use for the liveness probe
+    httpPath: /healthz?full=true
     # -- Number of seconds after the container has started before [probe] is initiated
     initialDelaySeconds: 30
     # -- How often (in seconds) to perform the [probe]
@@ -4446,6 +4723,22 @@ commitServer:
     timeoutSeconds: 5
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
+
+  ## Startup probe for commit server (optional)
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  startupProbe:
+    # -- Enable Kubernetes startup probe for commit server
+    enabled: false
+    # -- Http path to use for the startup probe
+    httpPath: /healthz
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 20
 
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
@@ -4511,3 +4804,7 @@ commitServer:
       # maxAllowed:
       #   cpu: 1
       #   memory: 1Gi
+    # -- The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender
+    ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
+    ## NOTE: specify only zero or one recommender as of VPA 1.7.1
+    recommenders: []
