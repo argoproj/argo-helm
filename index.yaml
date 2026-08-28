@@ -1588,6 +1588,41 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Bump argo-cd to v3.5.2
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.5.2
+    created: "2026-08-28T08:04:05.029166946Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.38.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 6ccb3ee39efdf1c3bbc1e69b1a5ffdf172e52fac6873d3c2a0bb8dad40ba5af0
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-cd
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-10.4.1/argo-cd-10.4.1.tgz
+    version: 10.4.1
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Support specifying a VPA recommender via <component>.vpa.recommenders for all components
       artifacthub.io/signKey: |
@@ -44842,4 +44877,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-08-28T01:09:29.913408234Z"
+generated: "2026-08-28T08:04:05.033141912Z"
