@@ -1589,6 +1589,41 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: added
+          description: Add configs.cm.resourceExclusionsAdditional to append custom resource.exclusions entries without overriding the chart defaults
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.5.2
+    created: "2026-08-31T20:35:07.535619831Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.38.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 6b2589198fda6e52f2064f3a1b4e0089f21da18f5dffb05bea96244c5e96e605
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-cd
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-10.5.0/argo-cd-10.5.0.tgz
+    version: 10.5.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
           description: Added dnsPolicy/dnsConfig support for the secret initialization of Redis. Added hostNetwork support for Redis and the Redis secret initialization.
       artifacthub.io/signKey: |
         fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
@@ -44973,4 +45008,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-08-31T14:22:31.508046503Z"
+generated: "2026-08-31T20:35:07.538047877Z"
