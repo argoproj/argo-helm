@@ -7710,11 +7710,11 @@ spec:
                               properties:
                                 end:
                                   description: The end time to query in expr format
-                                    e.g. now(), now() - duration("1h"), now() - duration("{{args.lookback_duration}}")
+                                    e.g. now(), now() - duration("1h"), now() - duration("{{ "{{" }}args.lookback_duration}}")
                                   type: string
                                 start:
                                   description: The start time to query in expr format
-                                    e.g. now(), now() - duration("1h"), now() - duration("{{args.lookback_duration}}")
+                                    e.g. now(), now() - duration("1h"), now() - duration("{{ "{{" }}args.lookback_duration}}")
                                   type: string
                                 step:
                                   description: The maximum time between two slices
