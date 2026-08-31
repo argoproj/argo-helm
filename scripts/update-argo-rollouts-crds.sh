@@ -13,6 +13,11 @@ if ! command -v jq &> /dev/null; then
     exit 1
 fi
 
+if ! command -v yq &> /dev/null; then
+    echo "Error: yq is required but not installed"
+    exit 1
+fi
+
 VERSION="${1:-}"
 
 if [[ -z "$VERSION" ]]; then
@@ -40,6 +45,11 @@ get_crd_files() {
 }
 
 # Process a downloaded CRD into a Helm template:
+# - Strip schema descriptions to keep the Helm release Secret under the 1MiB
+#   Kubernetes limit (upstream restored full descriptions in v1.10.0 via
+#   argo-rollouts#4687, tripling CRD size; the chart shipped description-less
+#   CRDs through v1.9.1). The string-type guard preserves any schema *field*
+#   named "description" (a map), deleting only description doc strings.
 # - Wrap in {{- if .Values.installCRDs }} conditional
 # - Preserve upstream annotations (e.g. controller-gen.kubebuilder.io/version)
 # - Add helm.sh/resource-policy and custom annotation support
@@ -55,10 +65,11 @@ process_crd() {
 {{- if .Values.installCRDs }}
 HEADER
 
-        # Remove leading "---" if present, escape Go template syntax that may
-        # appear in upstream CRD descriptions (e.g. "{{args.foo}}" examples,
-        # which Helm would otherwise try to parse), then process the YAML
-        sed '/^---$/d' "$src_file" | sed 's/{{/{{ "{{" }}/g' | awk -v crd_name="$crd_name" '
+        # Strip description doc strings, remove leading "---" if present,
+        # escape Go template syntax that may appear in upstream CRD content
+        # (e.g. "{{args.foo}}" examples, which Helm would otherwise try to
+        # parse), then process the YAML
+        yq 'del(.. | .description? | select(tag == "!!str"))' "$src_file" | sed '/^---$/d' | sed 's/{{/{{ "{{" }}/g' | awk -v crd_name="$crd_name" '
         BEGIN { state = "init" }
 
         state == "init" && /^metadata:$/ {
