@@ -1044,6 +1044,7 @@ NAME: my-release
 | configs.cm."timeout.reconciliation.jitter" | string | `"60s"` | Maximum jitter added to the reconciliation timeout to spread out refreshes and reduce repo-server load |
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
 | configs.cm.create | bool | `true` | Create the argocd-cm configmap for [declarative setup] |
+| configs.cm.resourceExclusionsAdditional | list | `[]` | Additional resource exclusions to append to the default `resource.exclusions` list above, so that the defaults can be kept up to date without needing to duplicate/override them. These entries are always appended, never substituted: if you also set `resource.exclusions` yourself, they are appended to your value rather than to the chart defaults. |
 | configs.cmp.annotations | object | `{}` | Annotations to be added to argocd-cmp-cm configmap |
 | configs.cmp.create | bool | `false` | Create the argocd-cmp-cm configmap |
 | configs.cmp.plugins | object | `{}` | Plugin yaml files to be added to argocd-cmp-cm |

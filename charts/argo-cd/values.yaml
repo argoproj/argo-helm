@@ -426,6 +426,13 @@ configs:
         - ClusterBackgroundScanReport
         - UpdateRequest
 
+    # -- Additional resource exclusions to append to the default `resource.exclusions` list above,
+    # so that the defaults can be kept up to date without needing to duplicate/override them.
+    # These entries are always appended, never substituted: if you also set `resource.exclusions`
+    # yourself, they are appended to your value rather than to the chart defaults.
+    # @default -- `[]`
+    resourceExclusionsAdditional: []
+
   # Argo CD configuration parameters
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml
   params:
