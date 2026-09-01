@@ -32324,6 +32324,32 @@ entries:
   argo-rollouts:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Bump argo-rollouts to v1.10.0
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.10.0
+    created: "2026-09-01T07:27:20.015862167Z"
+    description: A Helm chart for Argo Rollouts
+    digest: 864c39ff9023dc2cc1d6424b128fa366e9a2d649698d822db0bc4c4facd7941d
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-rollouts
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-rollouts
+    sources:
+    - https://github.com/argoproj/argo-rollouts
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-rollouts-2.43.0/argo-rollouts-2.43.0.tgz
+    version: 2.43.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: removed
           description: Remove default readinessProbe from the controller to align with upstream manifests (argo-rollouts#4704)
       artifacthub.io/signKey: |
@@ -45008,4 +45034,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-08-31T20:35:07.538047877Z"
+generated: "2026-09-01T07:27:20.018814304Z"
