@@ -1891,6 +1891,18 @@ redis-ha:
       # -- Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled
       # @default -- `'""'`
       save: '""'
+  ## Redis sentinel specific configuration options
+  sentinel:
+    # -- Sentinel container lifecycle hooks. The default `postStart` hook resets the sentinel state after a rolling update to prevent high CPU usage
+    # @default -- See [values.yaml]
+    lifecycle:
+      postStart:
+        exec:
+          ## Note: the reset command hardcodes the master group name `argocd`. If you override `redis-ha.redis.masterGroupName`, you must override this hook to match.
+          command:
+            - '/bin/sh'
+            - '-c'
+            - 'sleep 30; redis-cli -p 26379 sentinel reset argocd'
   ## Enables a HA Proxy for better LoadBalancing / Sentinel Master support. Automatically proxies to Redis master.
   haproxy:
     # -- Enabled HAProxy LoadBalancing/Proxy

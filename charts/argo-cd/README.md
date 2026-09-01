@@ -1782,6 +1782,7 @@ The main options are listed here:
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
 | redis-ha.redis.masterGroupName | string | `"argocd"` | Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated |
+| redis-ha.sentinel.lifecycle | object | See [values.yaml] | Sentinel container lifecycle hooks. The default `postStart` hook resets the sentinel state after a rolling update to prevent high CPU usage |
 | redis-ha.tolerations | list | `[]` | [Tolerations] for use with node taints for Redis pods. |
 | redis-ha.topologySpreadConstraints | object | `{"enabled":false,"maxSkew":"","topologyKey":"","whenUnsatisfiable":""}` | Assign custom [TopologySpreadConstraints] rules to the Redis pods. |
 | redis-ha.topologySpreadConstraints.enabled | bool | `false` | Enable Redis HA topology spread constraints |
