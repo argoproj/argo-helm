@@ -1589,6 +1589,41 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: added
+          description: Prevent high Redis' sentinel CPU usage after rolling update
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.5.2
+    created: "2026-09-01T08:06:05.360841391Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.38.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 5cf2184bcccd3ae5bd1e3abf35342553fdba5c4ff8bee1aefdd6e76ee7b00e4d
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-cd
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-10.6.0/argo-cd-10.6.0.tgz
+    version: 10.6.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
           description: Add configs.cm.resourceExclusionsAdditional to append custom resource.exclusions entries without overriding the chart defaults
       artifacthub.io/signKey: |
         fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
@@ -45034,4 +45069,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-09-01T07:27:20.018814304Z"
+generated: "2026-09-01T08:06:05.363395473Z"
