@@ -30,6 +30,38 @@ NAME: my-release
 ...
 ```
 
+## EventBus
+
+This chart does **not** create an [EventBus](https://argoproj.github.io/argo-events/eventbus/eventbus/), matching the upstream argo-events install manifests. Event sources and sensors will not connect until an EventBus exists in the namespace. The bus type (native NATS, JetStream, or Kafka) is an environment decision, so the chart leaves it to you.
+
+You can create one from the same values file using `extraObjects`:
+
+```yaml
+extraObjects:
+  - apiVersion: argoproj.io/v1alpha1
+    kind: EventBus
+    metadata:
+      name: default
+    spec:
+      jetstream:
+        version: 2.10.29
+```
+
+or, for the native NATS bus:
+
+```yaml
+extraObjects:
+  - apiVersion: argoproj.io/v1alpha1
+    kind: EventBus
+    metadata:
+      name: default
+    spec:
+      nats:
+        native: {}
+```
+
+See the [EventBus documentation](https://argoproj.github.io/argo-events/eventbus/eventbus/) for the full spec and the supported JetStream versions in this chart's `values.yaml` (`configs.jetstream.versions`).
+
 ## Upgrading
 
 ### Custom resource definitions
