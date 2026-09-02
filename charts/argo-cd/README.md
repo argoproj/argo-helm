@@ -1385,6 +1385,8 @@ NAME: my-release
 | server.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Argo CD server |
 | server.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Argo CD server |
 | server.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
+| server.impersonation.enabled | bool | `false` | Grant argocd-server the `impersonate` verb on serviceaccounts for the app-sync impersonation feature (Argo CD v3.5+). Only enable if you use application sync impersonation; leaving it off keeps the default RBAC unchanged. |
+| server.impersonation.serviceAccounts | list | `[]` | ServiceAccount names argocd-server may impersonate. Rendered as `resourceNames` to scope the grant; leaving it empty allows impersonating any ServiceAccount (NOT recommended). |
 | server.ingress.annotations | object | `{}` | Additional ingress annotations |
 | server.ingress.aws.backendProtocolVersion | string | `"GRPC"` | Backend protocol version for the AWS ALB gRPC service |
 | server.ingress.aws.serviceAnnotations | object | `{}` | Annotations for the AWS ALB gRPC service |
