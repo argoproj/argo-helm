@@ -426,6 +426,13 @@ configs:
         - ClusterBackgroundScanReport
         - UpdateRequest
 
+    # -- Additional resource exclusions to append to the default `resource.exclusions` list above,
+    # so that the defaults can be kept up to date without needing to duplicate/override them.
+    # These entries are always appended, never substituted: if you also set `resource.exclusions`
+    # yourself, they are appended to your value rather than to the chart defaults.
+    # @default -- `[]`
+    resourceExclusionsAdditional: []
+
   # Argo CD configuration parameters
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml
   params:
@@ -1733,6 +1740,9 @@ redis:
     # -- Metrics container port
     metrics: 9121
 
+  # -- Host Network for redis pods
+  hostNetwork: false
+
   # -- [DNS configuration]
   dnsConfig: {}
   # -- Alternative DNS policy for Redis server pods
@@ -1881,6 +1891,18 @@ redis-ha:
       # -- Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled
       # @default -- `'""'`
       save: '""'
+  ## Redis sentinel specific configuration options
+  sentinel:
+    # -- Sentinel container lifecycle hooks. The default `postStart` hook resets the sentinel state after a rolling update to prevent high CPU usage
+    # @default -- See [values.yaml]
+    lifecycle:
+      postStart:
+        exec:
+          ## Note: the reset command hardcodes the master group name `argocd`. If you override `redis-ha.redis.masterGroupName`, you must override this hook to match.
+          command:
+            - '/bin/sh'
+            - '-c'
+            - 'sleep 30; redis-cli -p 26379 sentinel reset argocd'
   ## Enables a HA Proxy for better LoadBalancing / Sentinel Master support. Automatically proxies to Redis master.
   haproxy:
     # -- Enabled HAProxy LoadBalancing/Proxy
@@ -2035,6 +2057,14 @@ redisSecretInit:
   # -- Priority class for Redis secret-init Job
   # @default -- `""` (defaults to global.priorityClassName)
   priorityClassName: ""
+
+  # -- Host Network for redis-secret-init pods
+  hostNetwork: false
+
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- Alternative DNS policy for Redis secret-init Job
+  dnsPolicy: "ClusterFirst"
 
   # -- Assign custom [affinity] rules to the Redis secret-init Job
   affinity: {}
