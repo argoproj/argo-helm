@@ -61,8 +61,10 @@ process_crd() {
 {{- if .Values.crds.install }}
 HEADER
 
-        # Remove leading "---" if present, then process the YAML
-        sed '/^---$/d' "$src_file" | awk '
+        # Remove leading "---" if present, escape Go template syntax that may
+        # appear in upstream CRD descriptions (e.g. "{{args.foo}}" examples,
+        # which Helm would otherwise try to parse), then process the YAML
+        sed '/^---$/d' "$src_file" | sed 's/{{/{{ "{{" }}/g' | awk '
         BEGIN { state = "init"; name_line = "" }
 
         # Skip auto-generated comment
