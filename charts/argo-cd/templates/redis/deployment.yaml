@@ -215,6 +215,9 @@ spec:
       {{- with .Values.redis.volumes }}
         {{- toYaml . | nindent 8}}
       {{- end }}
+      {{- if .Values.redis.hostNetwork }}
+      hostNetwork: {{ .Values.redis.hostNetwork }}
+      {{- end }}
       {{- with .Values.redis.dnsConfig }}
       dnsConfig:
         {{- toYaml . | nindent 8 }}
