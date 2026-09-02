@@ -33,6 +33,9 @@ spec:
   {{- else if .Values.server.listenerset.enabled }}
   hostnames:
     - {{ tpl (.Values.server.listenerset.hostname | default .Values.global.domain) $ | quote }}
+  {{- else if .Values.global.domain }}
+  hostnames:
+    - {{ tpl .Values.global.domain $ | quote }}
   {{- end }}
   rules:
   {{- range .Values.server.httproute.rules }}
