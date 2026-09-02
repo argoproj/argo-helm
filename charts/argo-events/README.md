@@ -44,8 +44,10 @@ extraObjects:
       name: default
     spec:
       jetstream:
-        version: 2.10.29
+        version: latest
 ```
+
+`latest` resolves to the newest JetStream version this chart supports. To pin a specific version instead, use one of the entries listed under `configs.jetstream.versions` in `values.yaml`; the controller matches the version string exactly, so values outside that list will prevent the bus from starting.
 
 or, for the native NATS bus:
 
@@ -60,7 +62,7 @@ extraObjects:
         native: {}
 ```
 
-See the [EventBus documentation](https://argoproj.github.io/argo-events/eventbus/eventbus/) for the full spec and the supported JetStream versions in this chart's `values.yaml` (`configs.jetstream.versions`).
+See the [EventBus documentation](https://argoproj.github.io/argo-events/eventbus/eventbus/) for the full spec.
 
 ## Upgrading
 
