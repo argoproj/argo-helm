@@ -226,6 +226,9 @@ Merge Argo Configuration with Preset Configuration
 {{- end }}
 {{- range $key, $value := $merged }}
 {{- $fmted := $value | toString }}
+{{- if or (eq $key "url") (eq $key "statusbadge.url") }}
+{{- $fmted = tpl $fmted $ }}
+{{- end }}
 {{- if not (eq $fmted "") }}
 {{ $key }}: {{ $fmted | toYaml }}
 {{- end }}
