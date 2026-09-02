@@ -837,6 +837,13 @@ controller:
     ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
     ## NOTE: specify only zero or one recommender as of VPA 1.7.1
     recommenders: []
+    # -- Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set
+    ## Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/boost-application-startup
+    startupBoost: {}
+      # cpu:
+      #   type: Factor
+      #   factor: 2
+      #   durationSeconds: 10
 
   ## Application controller image
   image:
@@ -1238,6 +1245,13 @@ dex:
     ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
     ## NOTE: specify only zero or one recommender as of VPA 1.7.1
     recommenders: []
+    # -- Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set
+    ## Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/boost-application-startup
+    startupBoost: {}
+      # cpu:
+      #   type: Factor
+      #   factor: 2
+      #   durationSeconds: 10
 
   ## Dex image
   image:
@@ -1563,6 +1577,13 @@ redis:
     ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
     ## NOTE: specify only zero or one recommender as of VPA 1.7.1
     recommenders: []
+    # -- Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set
+    ## Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/boost-application-startup
+    startupBoost: {}
+      # cpu:
+      #   type: Factor
+      #   factor: 2
+      #   durationSeconds: 10
 
   ## Redis image
   image:
@@ -2162,6 +2183,13 @@ server:
     ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
     ## NOTE: specify only zero or one recommender as of VPA 1.7.1
     recommenders: []
+    # -- Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set
+    ## Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/boost-application-startup
+    startupBoost: {}
+      # cpu:
+      #   type: Factor
+      #   factor: 2
+      #   durationSeconds: 10
 
   ## Argo CD server image
   image:
@@ -3074,6 +3102,13 @@ repoServer:
     ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
     ## NOTE: specify only zero or one recommender as of VPA 1.7.1
     recommenders: []
+    # -- Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set
+    ## Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/boost-application-startup
+    startupBoost: {}
+      # cpu:
+      #   type: Factor
+      #   factor: 2
+      #   durationSeconds: 10
 
   ## Repo server image
   image:
@@ -3516,6 +3551,13 @@ applicationSet:
     ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
     ## NOTE: specify only zero or one recommender as of VPA 1.7.1
     recommenders: []
+    # -- Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set
+    ## Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/boost-application-startup
+    startupBoost: {}
+      # cpu:
+      #   type: Factor
+      #   factor: 2
+      #   durationSeconds: 10
 
   ## ApplicationSet controller image
   image:
@@ -4038,6 +4080,13 @@ notifications:
     ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
     ## NOTE: specify only zero or one recommender as of VPA 1.7.1
     recommenders: []
+    # -- Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set
+    ## Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/boost-application-startup
+    startupBoost: {}
+      # cpu:
+      #   type: Factor
+      #   factor: 2
+      #   durationSeconds: 10
 
   ## Notifications controller image
   image:
@@ -4838,3 +4887,10 @@ commitServer:
     ## Ref: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/api.md#verticalpodautoscalerspec
     ## NOTE: specify only zero or one recommender as of VPA 1.7.1
     recommenders: []
+    # -- Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set
+    ## Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/boost-application-startup
+    startupBoost: {}
+      # cpu:
+      #   type: Factor
+      #   factor: 2
+      #   durationSeconds: 10

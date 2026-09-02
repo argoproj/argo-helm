@@ -17,6 +17,9 @@ spec:
   {{- with .Values.controller.vpa.recommenders }}
   recommenders: {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .Values.controller.vpa.startupBoost }}
+  startupBoost: {{- toYaml . | nindent 4 }}
+  {{- end }}
   targetRef:
     apiVersion: "apps/v1"
     {{- if .Values.controller.dynamicClusterDistribution }}
