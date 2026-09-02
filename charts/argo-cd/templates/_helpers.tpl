@@ -271,6 +271,26 @@ Merge Argo Params Configuration with Preset Configuration
 {{- end -}}
 
 {{/*
+Return a sha256sum of only the `data` and `stringData` sections of a rendered
+ConfigMap/Secret template, for use in `checksum/*` pod annotations.
+
+Only the config payload is hashed - not the full manifest. The manifest's
+`metadata.labels` includes `helm.sh/chart`, which changes on every chart
+version bump, so hashing the whole manifest would roll all pods on every
+release even when the configuration is unchanged. Hashing only the data keeps
+a pure version bump a no-op for the pods, while any real config change still
+rolls them. Ref: https://github.com/argoproj/argo-helm/issues/3958
+
+Usage:
+  checksum/cm: {{ include "argo-cd.config.checksum" (dict "context" $ "path" "/argocd-configs/argocd-cm.yaml") }}
+*/}}
+{{- define "argo-cd.config.checksum" -}}
+{{- $rendered := include (print .context.Template.BasePath .path) .context | fromYaml -}}
+{{- $data := merge (dict) (dig "data" dict $rendered) (dig "stringData" dict $rendered) -}}
+{{- $data | toYaml | sha256sum -}}
+{{- end -}}
+
+{{/*
 Expand the namespace of the release.
 Allows overriding it for multi-namespace deployments in combined charts.
 */}}
