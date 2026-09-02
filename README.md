@@ -24,7 +24,7 @@ wget https://argoproj.github.io/argo-helm/pgp_keys.asc
 cat pgp_keys.asc | gpg --dearmor > pubring.asc
 
 # Pull the chart and verify it against our public key
-helm pull --verify oci://ghcr.io/argoproj/argo-helm/argo-cd --version 10.6.3 --keyring pubring.asc
+helm pull --verify oci://ghcr.io/argoproj/argo-helm/argo-cd --keyring pubring.asc
 ```
 
 A successful verification prints the chart digest and `Signed by: Argo Helm maintainers`. The same `--verify --keyring pubring.asc` flags work with `helm install` and `helm upgrade`.
