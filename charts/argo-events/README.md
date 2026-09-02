@@ -69,7 +69,7 @@ done
 | configs.jetstream.streamConfig.retention | int | `0` | 0: Limits, 1: Interest, 2: WorkQueue |
 | configs.jetstream.versions[0].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.14.0"` |  |
 | configs.jetstream.versions[0].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.14.0"` |  |
-| configs.jetstream.versions[0].natsImage | string | `"nats:2.10.10"` |  |
+| configs.jetstream.versions[0].natsImage | string | `"nats:2.10.29"` |  |
 | configs.jetstream.versions[0].startCommand | string | `"/nats-server"` |  |
 | configs.jetstream.versions[0].version | string | `"latest"` |  |
 | configs.jetstream.versions[1].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.7.0"` |  |
@@ -109,9 +109,9 @@ done
 | configs.jetstream.versions[7].version | string | `"2.9.16"` |  |
 | configs.jetstream.versions[8].configReloaderImage | string | `"natsio/nats-server-config-reloader:0.14.0"` |  |
 | configs.jetstream.versions[8].metricsExporterImage | string | `"natsio/prometheus-nats-exporter:0.14.0"` |  |
-| configs.jetstream.versions[8].natsImage | string | `"nats:2.10.10"` |  |
+| configs.jetstream.versions[8].natsImage | string | `"nats:2.10.29"` |  |
 | configs.jetstream.versions[8].startCommand | string | `"/nats-server"` |  |
-| configs.jetstream.versions[8].version | string | `"2.10.10"` |  |
+| configs.jetstream.versions[8].version | string | `"2.10.29"` |  |
 | configs.nats.versions | list | See [values.yaml] | Supported versions of NATS event bus |
 | crds.annotations | object | `{}` | Annotations to be added to all CRDs |
 | crds.install | bool | `true` | Install and upgrade CRDs |
