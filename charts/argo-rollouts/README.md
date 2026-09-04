@@ -156,7 +156,7 @@ For full list of changes please check ArtifactHub [changelog].
 |-----|------|---------|-------------|
 | dashboard.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | dashboard.component | string | `"rollouts-dashboard"` | Value of label `app.kubernetes.io/component` |
-| dashboard.containerSecurityContext | object | `{}` | Security Context to set on container level |
+| dashboard.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Security Context to set on container level |
 | dashboard.createClusterRole | bool | `true` | flag to enable creation of dashbord cluster role (requires cluster RBAC) |
 | dashboard.deploymentAnnotations | object | `{}` | Annotations to be added to the dashboard deployment |
 | dashboard.deploymentLabels | object | `{}` | Labels to be added to the dashboard deployment |
