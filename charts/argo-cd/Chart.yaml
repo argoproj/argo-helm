@@ -28,5 +28,3 @@ annotations:
   artifacthub.io/changes: |
     - kind: fixed
       description: Allow redis-secret-init Job ttlSecondsAfterFinished to be configured while preserving the default 60s value for compatibility with older Argo CD hook-completion behavior; increase it if you are experiencing the race described in argo-helm#2887.
-    - kind: security
-      description: Bump the redis-ha Redis image to 8.6.4-alpine so it no longer ships an OpenSSL version affected by the RSASVE uninitialized-memory issue (reported by m98anu)
