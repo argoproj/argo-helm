@@ -1845,6 +1845,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | redisSecretInit.serviceAccount.create | bool | `true` | Create a service account for the redis pod |
 | redisSecretInit.serviceAccount.name | string | `""` | Service account name for redis pod |
 | redisSecretInit.tolerations | list | `[]` (defaults to global.tolerations) | Tolerations to be added to the Redis secret-init Job |
+| redisSecretInit.ttlSecondsAfterFinished | int | `60` | Seconds after which the completed Redis secret-init Job is automatically deleted. Increase this value if you are experiencing the hook-completion race described in https://github.com/argoproj/argo-helm/issues/2887 and the Argo CD issue linked there. |
 
 ## ApplicationSet
 

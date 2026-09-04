@@ -2026,6 +2026,11 @@ redisSecretInit:
   # -- Additional command line arguments for the Redis secret-init Job
   extraArgs: []
 
+  # -- Seconds after which the completed Redis secret-init Job is automatically deleted.
+  # Increase this value if you are experiencing the hook-completion race described in
+  # https://github.com/argoproj/argo-helm/issues/2887 and the Argo CD issue linked there.
+  ttlSecondsAfterFinished: 60
+
   # -- Secrets with credentials to pull images from a private registry
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
