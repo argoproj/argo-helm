@@ -30,6 +30,8 @@ Every change to a chart needs all of the following, including a change that only
 
 Run `helm template` on the chart before and after your change and read the diff. If it shows anything you did not intend, fix that before opening the pull request.
 
+Run `./scripts/lint.sh` before you open the pull request. It takes no arguments and runs chart-testing in Docker over the charts you changed, the same lint CI runs, so it is what catches a missing version bump. Run `./scripts/lint-changelog.sh` too. That one needs only bash and checks that `artifacthub.io/changes` holds exactly one entry. Both are quicker than waiting for CI to fail.
+
 The full rules are in [CONTRIBUTING.md](CONTRIBUTING.md). Read it before your first change here.
 
 ## Comments and reviews
