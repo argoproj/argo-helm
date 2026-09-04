@@ -105,8 +105,8 @@
       "matchDatasources": [
         "docker"
       ],
-      "allowedVersions": "< 7.4",
-      "description": ["With version 7.4, Redis is moving away from the BSD 3-Clause License"],
+      "allowedVersions": "<7.4.0 || >=8.0.0",
+      "description": ["Redis 7.4.x is not open source (RSAL/SSPL); Redis 8.0+ restored an OSI-approved option (AGPLv3), so only the 7.4-7.x line is excluded"],
       "commitMessagePrefix": "chore({{parentDir}}):",
       "postUpgradeTasks": {
         "commands": [
