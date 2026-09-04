@@ -35697,6 +35697,30 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: fixed
+          description: Install notes no longer instruct submitting workflows without executor RBAC; they now explain the workflow ServiceAccount requirement and the values that create it
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v4.1.2
+    created: "2026-09-04T22:22:55.29931529Z"
+    description: A Helm chart for Argo Workflows
+    digest: eb4193d21134380d6ab5d289a34c8198cf7a17a8ba7ee26ea5548fb610b06178
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-2.0.4/argo-workflows-2.0.4.tgz
+    version: 2.0.4
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: fixed
           description: Honor crds.annotations when rendering minified CRDs
       artifacthub.io/signKey: |
         fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
@@ -45395,4 +45419,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-09-04T21:37:57.943813818Z"
+generated: "2026-09-04T22:22:55.301305038Z"
