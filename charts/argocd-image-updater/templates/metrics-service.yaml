@@ -16,6 +16,7 @@ metadata:
   name: {{ include "argocd-image-updater.fullname" . }}-metrics
   namespace: {{ include "argocd-image-updater.namespace" . | quote }}
 spec:
+  {{- include "argocd-image-updater.dualStack" . | indent 2 }}
   ports:
     - name: metrics
       protocol: TCP
