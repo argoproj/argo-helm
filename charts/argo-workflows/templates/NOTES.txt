@@ -6,6 +6,30 @@ DEPRECATED option server.authMode - Use server.authModes
 
 kubectl --namespace {{ .Release.Namespace }} get services -o wide | grep {{ template "argo-workflows.server.fullname" . }}
 
+{{- if .Values.workflow.serviceAccount.create }}
+
 2. Submit the hello-world workflow by running:
 
-argo submit https://raw.githubusercontent.com/argoproj/argo-workflows/master/examples/hello-world.yaml --watch
+argo submit https://raw.githubusercontent.com/argoproj/argo-workflows/main/examples/hello-world.yaml --serviceaccount {{ .Values.workflow.serviceAccount.name }} --watch
+
+Note: submit in a namespace the workflow controller manages ({{ if .Values.controller.workflowNamespaces }}{{ join ", " .Values.controller.workflowNamespaces }}{{ else }}{{ .Release.Namespace }}{{ end }}), where the {{ .Values.workflow.serviceAccount.name }} ServiceAccount and its executor RBAC were created.
+{{- else }}
+
+2. Before submitting workflows, set up executor RBAC. The workflow executor
+   needs permission to create workflowtaskresults, and the default
+   ServiceAccount does not have it, so submitting without this setup fails
+   with 'workflowtaskresults.argoproj.io is forbidden'.
+
+   Either let this chart create a workflow ServiceAccount with the required
+   RBAC by upgrading with:
+
+     --set workflow.serviceAccount.create=true
+
+   and then submit with:
+
+     argo submit https://raw.githubusercontent.com/argoproj/argo-workflows/main/examples/hello-world.yaml --serviceaccount {{ .Values.workflow.serviceAccount.name }} --watch
+
+   or create a ServiceAccount with equivalent RBAC yourself in each namespace
+   where workflows run. See the "ServiceAccount for Workflow Spec" section of
+   the chart README for details.
+{{- end }}
