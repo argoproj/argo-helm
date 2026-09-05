@@ -28,13 +28,13 @@ spec:
         {{- with.Values.controller.podLabels }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- if or .Values.controller.podAnnotations .Values.controller.configMap.create }}
+      {{- if or .Values.controller.podAnnotations (and .Values.controller.configMap.create .Values.controller.configMap.restartOnChange) }}
       annotations:
         {{- with .Values.controller.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- if .Values.controller.configMap.create }}
-        checksum/config: {{ include (print $.Template.BasePath "/controller/workflow-controller-config-map.yaml") . | sha256sum }}
+        {{- if and .Values.controller.configMap.create .Values.controller.configMap.restartOnChange }}
+        checksum/config: {{ include "argo-workflows.controller.config.checksum" (dict "context" $ "path" "/controller/workflow-controller-config-map.yaml") }}
         {{- end }}
       {{- end }}
     spec:
