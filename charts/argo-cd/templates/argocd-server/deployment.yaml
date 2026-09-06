@@ -489,7 +489,15 @@ spec:
           - name: tmp
             mountPath: /tmp
         env:
-          {{- toYaml .env | nindent 10 }}
+          {{- /* The shared extensions volume is mounted at /tmp/extensions and argocd-server
+          discovers extensions directly under it, while the installer image's built-in default
+          target is /tmp/extensions/resources. Entries in .env render after this and take
+          precedence if an extension sets its own EXTENSIONS_DIR. */}}
+          - name: EXTENSIONS_DIR
+            value: /tmp/extensions
+          {{- with .env }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
       {{- end }}
       {{- end }}
       {{- end }}
