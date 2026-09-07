@@ -192,8 +192,8 @@ controller:
     servicePort: 8080
     # -- Service metrics port name
     servicePortName: metrics
-    # -- serviceMonitor scheme
-    scheme: http
+    # -- ServiceMonitor scheme. Leave empty to derive from `secure` flag.
+    scheme: ""
     # -- Flag to enable headless service
     headlessService: false
     # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
@@ -315,8 +315,8 @@ controller:
     servicePort: 8081
     # -- telemetry service port name
     servicePortName: telemetry
-    # -- telemetry serviceMonitor scheme to use
-    scheme: http
+    # -- telemetry serviceMonitor scheme to use. Leave empty to derive from `secure` flag.
+    scheme: ""
   serviceMonitor:
     # -- Enable a prometheus ServiceMonitor
     enabled: false

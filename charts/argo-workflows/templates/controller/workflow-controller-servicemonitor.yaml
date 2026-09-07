@@ -1,4 +1,5 @@
 {{- $apiVersion := include "argo-workflows.apiVersions.monitoring" . }}
+{{- $metricsScheme := .Values.controller.metricsConfig.scheme | default (ternary "https" "http" .Values.controller.metricsConfig.secure) }}
 {{- if and (.Capabilities.APIVersions.Has $apiVersion) (or .Values.controller.metricsConfig.enabled .Values.controller.telemetryConfig.enabled) .Values.controller.serviceMonitor.enabled }}
 apiVersion: {{ $apiVersion }}
 kind: ServiceMonitor
@@ -25,7 +26,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       honorLabels: {{ .Values.controller.metricsConfig.honorLabels }}
-      scheme: {{ .Values.controller.metricsConfig.scheme}}
+      scheme: {{ $metricsScheme }}
+      {{- if and (eq $metricsScheme "https") (not .Values.controller.metricsConfig.tlsConfig) }}
+      tlsConfig:
+        insecureSkipVerify: true
+      {{- end }}
   {{- end }}
   {{- if .Values.controller.telemetryConfig.enabled }}
     - port: telemetry
@@ -40,7 +45,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       honorLabels: {{ .Values.controller.metricsConfig.honorLabels }}
-      scheme: {{ .Values.controller.telemetryConfig.scheme }}
+      scheme: {{ .Values.controller.telemetryConfig.scheme | default (ternary "https" "http" .Values.controller.telemetryConfig.secure) }}
   {{- end }}
   {{- with .Values.controller.metricsConfig.targetLabels }}
   targetLabels:
