@@ -33,6 +33,18 @@ rules:
   - update
   - delete
   - patch
+{{- if .Values.server.impersonation.enabled }}
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  {{- with .Values.server.impersonation.serviceAccounts }}
+  resourceNames:
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  verbs:
+  - impersonate  # opt-in: app-sync impersonation feature (Argo CD v3.5+); scoped to server.impersonation.serviceAccounts
+{{- end }}
 - apiGroups:
   - ""
   resources:

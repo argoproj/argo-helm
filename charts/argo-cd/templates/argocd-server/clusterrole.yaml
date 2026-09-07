@@ -17,6 +17,18 @@ rules:
       - delete  # supports deletion a live object in UI
       - get     # supports viewing live object manifest in UI
       - patch   # supports `argocd app patch`
+  {{- if .Values.server.impersonation.enabled }}
+  - apiGroups:
+      - ""
+    resources:
+      - serviceaccounts
+    {{- with .Values.server.impersonation.serviceAccounts }}
+    resourceNames:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    verbs:
+      - impersonate  # opt-in: app-sync impersonation feature (Argo CD v3.5+); scoped to server.impersonation.serviceAccounts
+  {{- end }}
   - apiGroups:
       - ""
     resources:
