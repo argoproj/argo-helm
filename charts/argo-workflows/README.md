@@ -309,6 +309,7 @@ Fields to note:
 | controller.configMap.annotations | object | `{}` | ConfigMap annotations |
 | controller.configMap.create | bool | `true` | Create a ConfigMap for the controller |
 | controller.configMap.name | string | `""` | ConfigMap name |
+| controller.configMap.restartOnChange | bool | `false` | Add checksum/config pod annotation to restart the controller when the ConfigMap changes. Alternative to the built-in config watcher; does not cover semaphore ConfigMaps. |
 | controller.cronWorkflowWorkers | string | `nil` | Number of cron workflow workers Only valid for 3.5+ |
 | controller.deploymentAnnotations | object | `{}` | deploymentAnnotations is an optional map of annotations to be applied to the controller Deployment |
 | controller.disableAgentPodCreation | bool | `false` | Disable the creation of agent pods, which are used for HTTP and Plugin templates. When enabled, HTTP and Plugin templates will not be processed by this controller. Only valid for 4.1+ |

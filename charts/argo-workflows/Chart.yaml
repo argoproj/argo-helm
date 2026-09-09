@@ -3,7 +3,7 @@ appVersion: v4.1.2
 name: argo-workflows
 description: A Helm chart for Argo Workflows
 type: application
-version: 2.0.4
+version: 2.0.6
 icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
 home: https://github.com/argoproj/argo-helm
 sources:
@@ -16,5 +16,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Install notes no longer instruct submitting workflows without executor RBAC; they now explain the workflow ServiceAccount requirement and the values that create it
+    - kind: added
+      description: Add opt-in controller.configMap.restartOnChange to restart the workflow controller on ConfigMap changes via checksum annotation
