@@ -70,6 +70,57 @@ jobs:
             echo "changed_charts=$charts" >> $GITHUB_OUTPUT
           fi
 
+      - name: Set up Python for IaC-Guard-V
+        if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+
+      - name: Install IaC-Guard-V
+        if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
+        run: python -m pip install --disable-pip-version-check --no-compile iac-guard-v==0.1.0b1
+
+      - name: Verify Argo CD metrics relationships
+        if: contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
+        run: |
+          helm dependency build charts/argo-cd
+
+          render_root=$(mktemp -d)
+          render_first="$render_root/first"
+          render_second="$render_root/second"
+
+          helm template argorel charts/argo-cd \
+            --namespace argocd \
+            --api-versions monitoring.coreos.com/v1 \
+            --values charts/argo-cd/ci/metrics-relationships-values.yaml \
+            --output-dir "$render_first"
+          helm template argorel charts/argo-cd \
+            --namespace argocd \
+            --api-versions monitoring.coreos.com/v1 \
+            --values charts/argo-cd/ci/metrics-relationships-values.yaml \
+            --output-dir "$render_second"
+
+          diff -qr "$render_first" "$render_second"
+          iac-guard contract lint \
+            --contract .github/iac-guard-v/argo-cd-metrics-relationships.yaml \
+            --format console
+          iac-guard contract plan \
+            --contract .github/iac-guard-v/argo-cd-metrics-relationships.yaml \
+            --project-root . \
+            --contract-root "$render_first/argo-cd/templates" \
+            --contract-provenance RESEARCH_HYPOTHESIS \
+            --source-commit "$GITHUB_SHA" \
+            --default-namespace argocd \
+            --format console
+          iac-guard verify \
+            --contract .github/iac-guard-v/argo-cd-metrics-relationships.yaml \
+            --project-root . \
+            --contract-root "$render_first/argo-cd/templates" \
+            --contract-provenance RESEARCH_HYPOTHESIS \
+            --source-commit "$GITHUB_SHA" \
+            --default-namespace argocd \
+            --format console
+
       - name: Run chart-testing (lint)
         run: ct lint --debug --config ./.github/configs/ct-lint.yaml --lint-conf ./.github/configs/lintconf.yaml
 
