@@ -13,8 +13,8 @@ metadata:
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.redisSecretInit.name "name" .Values.redisSecretInit.name) | nindent 4 }}
 spec:
-  {{- with .Values.redisSecretInit.ttlSecondsAfterFinished }}
-  ttlSecondsAfterFinished: {{ . }}
+  {{- if ne .Values.redisSecretInit.ttlSecondsAfterFinished nil }}
+  ttlSecondsAfterFinished: {{ .Values.redisSecretInit.ttlSecondsAfterFinished }}
   {{- end }}
   template:
     metadata:
