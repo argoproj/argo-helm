@@ -86,6 +86,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: commitserver.metrics.listen.address
                 optional: true
+          - name: GRPC_ENABLE_TXT_SERVICE_CONFIG
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: commitserver.grpc.enable.txt.service.config
+                optional: true
           - name: ARGOCD_COMMIT_SERVER_LOGFORMAT
             valueFrom:
               configMapKeyRef:

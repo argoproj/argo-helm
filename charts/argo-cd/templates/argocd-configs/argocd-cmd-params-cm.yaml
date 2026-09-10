@@ -14,4 +14,8 @@ metadata:
   {{- end }}
 data:
   {{- include "argo-cd.config.params" . | trim | nindent 2 }}
+  reposerver.grpc.enable.txt.service.config: {{ .Values.repoServer.grpc.enableTxtServiceConfig | quote }}
+  controller.grpc.enable.txt.service.config: {{ .Values.controller.grpc.enableTxtServiceConfig | quote }}
+  commitserver.grpc.enable.txt.service.config: {{ .Values.commitServer.grpc.enableTxtServiceConfig | quote }}
+  applicationsetcontroller.grpc.enable.txt.service.config: {{ .Values.applicationSet.grpc.enableTxtServiceConfig | quote }}
 {{- end }}

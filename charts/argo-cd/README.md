@@ -1104,6 +1104,7 @@ NAME: my-release
 | controller.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to application controller |
 | controller.extraArgs | list | `[]` | Additional command line arguments to pass to application controller |
 | controller.extraContainers | list | `[]` | Additional containers to be added to the application controller pod |
+| controller.grpc | object | `false` | GRPC service config DNS TXT lookups, set to false to disable DNS SRV/TXT lookups for localhost and IP literals (Argo CD issue #24991) |
 | controller.heartbeatTime | int | `10` | Application controller heartbeat time Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/dynamic-cluster-distribution/#working-of-dynamic-distribution |
 | controller.hostNetwork | bool | `false` | Host Network for application controller pods |
 | controller.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the application controller |
@@ -1231,6 +1232,7 @@ NAME: my-release
 | repoServer.existingVolumes | object | `{}` | Volumes to be used in replacement of emptydir on default volumes |
 | repoServer.extraArgs | list | `[]` | Additional command line arguments to pass to repo server |
 | repoServer.extraContainers | list | `[]` | Additional containers to be added to the repo server pod |
+| repoServer.grpc | object | `false` | GRPC service config DNS TXT lookups, set to false to disable DNS SRV/TXT lookups for localhost and IP literals (Argo CD issue #24991) |
 | repoServer.hostNetwork | bool | `false` | Host Network for Repo server pods |
 | repoServer.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the repo server |
 | repoServer.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the repo server |
@@ -1889,6 +1891,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the ApplicationSet controller |
 | applicationSet.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | applicationSet.extraVolumes | list | `[]` | List of extra volumes to add |
+| applicationSet.grpc | object | `false` | GRPC service config DNS TXT lookups, set to false to disable DNS SRV/TXT lookups for localhost and IP literals (Argo CD issue #24991) |
 | applicationSet.httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
 | applicationSet.httproute.enabled | bool | `false` | Enable HTTPRoute resource for Argo CD Applicationset Webhook (Gateway API) |
 | applicationSet.httproute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames for the HTTPRoute |
@@ -2121,6 +2124,7 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.extraEnvFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the commit server |
 | commitServer.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | commitServer.extraVolumes | list | `[]` | List of extra volumes to add |
+| commitServer.grpc | object | `false` | GRPC service config DNS TXT lookups, set to false to disable DNS SRV/TXT lookups for localhost and IP literals (Argo CD issue #24991) |
 | commitServer.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the commit server |
 | commitServer.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the commit server |
 | commitServer.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the commit server |

@@ -867,6 +867,11 @@ controller:
   # -- Environment variables to pass to application controller
   env: []
 
+  # -- GRPC service config DNS TXT lookups, set to false to disable DNS SRV/TXT lookups for localhost and IP literals (Argo CD issue #24991)
+  # @default -- `false`
+  grpc:
+    enableTxtServiceConfig: false
+
   # -- envFrom to pass to application controller
   # @default -- `[]` (See [values.yaml])
   envFrom: []
@@ -3156,6 +3161,11 @@ repoServer:
   # -- Environment variables to pass to repo server
   env: []
 
+  # -- GRPC service config DNS TXT lookups, set to false to disable DNS SRV/TXT lookups for localhost and IP literals (Argo CD issue #24991)
+  # @default -- `false`
+  grpc:
+    enableTxtServiceConfig: false
+
   # -- envFrom to pass to repo server
   # @default -- `[]` (See [values.yaml])
   envFrom: []
@@ -3606,6 +3616,11 @@ applicationSet:
   extraEnv: []
     # - name: "MY_VAR"
     #   value: "value"
+
+  # -- GRPC service config DNS TXT lookups, set to false to disable DNS SRV/TXT lookups for localhost and IP literals (Argo CD issue #24991)
+  # @default -- `false`
+  grpc:
+    enableTxtServiceConfig: false
 
   # -- envFrom to pass to the ApplicationSet controller
   # @default -- `[]` (See [values.yaml])
@@ -4701,6 +4716,11 @@ commitServer:
   extraEnv: []
     # - name: "MY_VAR"
     #   value: "value"
+
+  # -- GRPC service config DNS TXT lookups, set to false to disable DNS SRV/TXT lookups for localhost and IP literals (Argo CD issue #24991)
+  # @default -- `false`
+  grpc:
+    enableTxtServiceConfig: false
 
   # -- envFrom to pass to the commit server
   # @default -- `[]` (See [values.yaml])

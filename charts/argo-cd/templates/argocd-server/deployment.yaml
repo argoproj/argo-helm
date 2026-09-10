@@ -491,6 +491,8 @@ spec:
         env:
           - name: EXTENSIONS_DIR
             value: /tmp/extensions
+          - name: GRPC_ENABLE_TXT_SERVICE_CONFIG
+            value: "false"
           {{- with .env }}
           {{- toYaml . | nindent 10 }}
           {{- end }}

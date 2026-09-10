@@ -106,6 +106,12 @@ spec:
                 key: timeout.reconciliation.jitter
                 name: argocd-cm
                 optional: true
+          - name: GRPC_ENABLE_TXT_SERVICE_CONFIG
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.grpc.enable.txt.service.config
+                optional: true
           - name: ARGOCD_REPO_ERROR_GRACE_PERIOD_SECONDS
             valueFrom:
               configMapKeyRef:
