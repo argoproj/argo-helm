@@ -1111,6 +1111,13 @@ NAME: my-release
 | controller.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application controller |
 | controller.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | controller.initContainers | list | `[]` | Init containers to add to the application controller pod |
+| controller.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Application controller |
+| controller.livenessProbe.failureThreshold | int | `5` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| controller.livenessProbe.httpPath | string | `"/healthz"` | Http path to use for the liveness probe |
+| controller.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| controller.livenessProbe.periodSeconds | int | `30` | How often (in seconds) to perform the [probe] |
+| controller.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| controller.livenessProbe.timeoutSeconds | int | `5` | Number of seconds after which the [probe] times out |
 | controller.metrics.applicationLabels.enabled | bool | `false` | Enables additional labels in argocd_app_labels metric |
 | controller.metrics.applicationLabels.labels | list | `[]` | Additional labels |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
@@ -1366,7 +1373,7 @@ NAME: my-release
 | server.extensions.extensionList | list | `[]` (See [values.yaml]) | Extensions for Argo CD |
 | server.extensions.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for extensions |
 | server.extensions.image.repository | string | `"quay.io/argoprojlabs/argocd-extension-installer"` | Repository to use for extension installer image |
-| server.extensions.image.tag | string | `"v1.0.1"` | Tag to use for extension installer image |
+| server.extensions.image.tag | string | `"v1.1.0"` | Tag to use for extension installer image |
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
@@ -1668,7 +1675,7 @@ NAME: my-release
 | redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
 | redis.exporter.image.repository | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
-| redis.exporter.image.tag | string | `"v1.90.0"` | Tag to use for the redis-exporter |
+| redis.exporter.image.tag | string | `"v1.91.1"` | Tag to use for the redis-exporter |
 | redis.exporter.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis exporter |
 | redis.exporter.livenessProbe.failureThreshold | int | `5` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | redis.exporter.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |

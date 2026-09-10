@@ -30,6 +30,40 @@ NAME: my-release
 ...
 ```
 
+## EventBus
+
+This chart does **not** create an [EventBus](https://argoproj.github.io/argo-events/eventbus/eventbus/), matching the upstream argo-events install manifests. Event sources and sensors will not connect until an EventBus exists in the namespace. The bus type (native NATS, JetStream, or Kafka) is an environment decision, so the chart leaves it to you.
+
+You can create one from the same values file using `extraObjects`:
+
+```yaml
+extraObjects:
+  - apiVersion: argoproj.io/v1alpha1
+    kind: EventBus
+    metadata:
+      name: default
+    spec:
+      jetstream:
+        version: latest
+```
+
+`latest` resolves to the newest JetStream version this chart supports. To pin a specific version instead, use one of the entries listed under `configs.jetstream.versions` in `values.yaml`; the controller matches the version string exactly, so values outside that list will prevent the bus from starting.
+
+or, for the native NATS bus:
+
+```yaml
+extraObjects:
+  - apiVersion: argoproj.io/v1alpha1
+    kind: EventBus
+    metadata:
+      name: default
+    spec:
+      nats:
+        native: {}
+```
+
+See the [EventBus documentation](https://argoproj.github.io/argo-events/eventbus/eventbus/) for the full spec.
+
 ## Upgrading
 
 ### Custom resource definitions
@@ -206,9 +240,11 @@ done
 | webhook.enabled | bool | `false` | Enable admission webhook. Applies only for cluster-wide installation |
 | webhook.env | list | `[]` (See [values.yaml]) | Environment variables to pass to event controller |
 | webhook.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to event controller |
+| webhook.extraContainers | list | `[]` | Additional containers to be added to the admission webhook pods |
 | webhook.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the event controller |
 | webhook.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the event controller |
 | webhook.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the event controller |
+| webhook.initContainers | list | `[]` | Init containers to add to the admission webhook pods |
 | webhook.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | webhook.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
 | webhook.livenessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |

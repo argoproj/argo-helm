@@ -378,6 +378,17 @@ spec:
           timeoutSeconds: {{ .Values.controller.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.controller.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.controller.readinessProbe.failureThreshold }}
+        {{- if .Values.controller.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.controller.livenessProbe.httpPath }}
+            port: metrics
+          initialDelaySeconds: {{ .Values.controller.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.controller.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.controller.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.controller.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.controller.livenessProbe.failureThreshold }}
+        {{- end }}
         {{- if .Values.controller.startupProbe.enabled }}
         startupProbe:
           httpGet:

@@ -483,6 +483,12 @@ webhook:
   #    cpu: 250m
   #    memory: 256Mi
 
+  # -- Additional containers to be added to the admission webhook pods
+  extraContainers: []
+
+  # -- Init containers to add to the admission webhook pods
+  initContainers: []
+
   serviceAccount:
     # -- Create a service account for the admission webhook
     create: true
