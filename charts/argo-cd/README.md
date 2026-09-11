@@ -1153,6 +1153,7 @@ NAME: my-release
 | controller.pdb.labels | object | `{}` | Labels to be added to application controller pdb |
 | controller.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | controller.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| controller.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | controller.podAnnotations | object | `{}` | Annotations to be added to application controller pods |
 | controller.podLabels | object | `{}` | Labels to be added to application controller pods |
 | controller.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the application controller pods |
@@ -1272,6 +1273,7 @@ NAME: my-release
 | repoServer.pdb.labels | object | `{}` | Labels to be added to repo server pdb |
 | repoServer.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | repoServer.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| repoServer.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | repoServer.podAnnotations | object | `{}` | Annotations to be added to repo server pods |
 | repoServer.podLabels | object | `{}` | Labels to be added to repo server pods |
 | repoServer.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the repo server pods |
@@ -1476,6 +1478,7 @@ NAME: my-release
 | server.pdb.labels | object | `{}` | Labels to be added to Argo CD server pdb |
 | server.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | server.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| server.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
 | server.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the Argo CD server pods |
@@ -1607,6 +1610,7 @@ NAME: my-release
 | dex.pdb.labels | object | `{}` | Labels to be added to Dex server pdb |
 | dex.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
 | dex.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| dex.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | dex.podAnnotations | object | `{}` | Annotations to be added to the Dex server pods |
 | dex.podLabels | object | `{}` | Labels to be added to the Dex server pods |
 | dex.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the dex pods |
@@ -1729,6 +1733,7 @@ NAME: my-release
 | redis.pdb.labels | object | `{}` | Labels to be added to Redis pdb |
 | redis.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
 | redis.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| redis.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | redis.podAnnotations | object | `{}` | Annotations to be added to the Redis server pods |
 | redis.podLabels | object | `{}` | Labels to be added to the Redis server pods |
 | redis.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for redis pods |
@@ -1959,6 +1964,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.pdb.labels | object | `{}` | Labels to be added to ApplicationSet controller pdb |
 | applicationSet.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | applicationSet.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| applicationSet.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | applicationSet.podAnnotations | object | `{}` | Annotations for the ApplicationSet controller pods |
 | applicationSet.podLabels | object | `{}` | Labels for the ApplicationSet controller pods |
 | applicationSet.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the ApplicationSet controller pods |
@@ -2058,6 +2064,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.pdb.labels | object | `{}` | Labels to be added to notifications controller pdb |
 | notifications.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | notifications.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| notifications.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the notifications controller Pods |
 | notifications.podLabels | object | `{}` | Labels to be applied to the notifications controller Pods |
 | notifications.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the notifications controller pods |

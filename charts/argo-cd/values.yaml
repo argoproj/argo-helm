@@ -809,6 +809,9 @@ controller:
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `controller.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Application controller Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -1239,6 +1242,9 @@ dex:
     # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `dex.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Dex Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -1571,6 +1577,9 @@ redis:
     # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `redis.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Redis Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -2179,6 +2188,9 @@ server:
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `server.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Argo CD server Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -3098,6 +3110,9 @@ repoServer:
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `repoServer.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Repo server Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -3547,6 +3562,9 @@ applicationSet:
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `applicationSet.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## ApplicationSet controller Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -4076,6 +4094,9 @@ notifications:
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `notifications.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Notifications controller Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
