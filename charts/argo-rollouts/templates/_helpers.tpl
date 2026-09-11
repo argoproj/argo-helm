@@ -67,6 +67,24 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Return a sha256sum of only the `data` and `stringData` sections of a rendered
+ConfigMap/Secret template, for use in `checksum/*` pod annotations.
+
+Only the config payload is hashed - not the full manifest. The manifest's
+`metadata.labels` includes `helm.sh/chart`, which changes on every chart
+version bump, so hashing the whole manifest would roll the pods on every
+release even when the configuration is unchanged.
+
+Usage:
+  checksum/cm: {{ include "argo-rollouts.config.checksum" (dict "context" $ "path" "/controller/configmap.yaml") }}
+*/}}
+{{- define "argo-rollouts.config.checksum" -}}
+{{- $rendered := include (print .context.Template.BasePath .path) .context | fromYaml -}}
+{{- $data := merge (dict) (dig "data" dict $rendered) (dig "stringData" dict $rendered) -}}
+{{- $data | toYaml | sha256sum -}}
+{{- end -}}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "argo-rollouts.serviceAccountName" -}}
