@@ -489,7 +489,11 @@ spec:
           - name: tmp
             mountPath: /tmp
         env:
-          {{- toYaml .env | nindent 10 }}
+          - name: EXTENSIONS_DIR
+            value: /tmp/extensions
+          {{- with .env }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
       {{- end }}
       {{- end }}
       {{- end }}

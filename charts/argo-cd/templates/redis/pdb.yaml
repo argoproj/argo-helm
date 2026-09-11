@@ -22,6 +22,9 @@ spec:
   {{- else }}
   minAvailable: {{ .Values.redis.pdb.minAvailable | default 0 }}
   {{- end }}
+  {{- with .Values.redis.pdb.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+  {{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.redis.name }}

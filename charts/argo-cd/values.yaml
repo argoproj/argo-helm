@@ -809,6 +809,9 @@ controller:
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `controller.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Application controller Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -981,6 +984,28 @@ controller:
     successThreshold: 1
     # -- Number of seconds after which the [probe] times out
     timeoutSeconds: 1
+
+  ## Liveness probe for the application controller.
+  ## Disabled by default, matching upstream: Argo CD removed this probe deliberately
+  ## (argoproj/argo-cd#9557) because restarting an overloaded controller usually makes
+  ## things worse. Enable only if you have a known failure mode (e.g. deadlock) where
+  ## a restart is the correct remediation, and size the thresholds generously.
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  livenessProbe:
+    # -- Enable Kubernetes liveness probe for Application controller
+    enabled: false
+    # -- Http path to use for the liveness probe
+    httpPath: /healthz
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 5
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 30
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 5
 
   ## Startup probe for application controller (optional)
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
@@ -1217,6 +1242,9 @@ dex:
     # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `dex.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Dex Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -1549,6 +1577,9 @@ redis:
     # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `redis.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Redis Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -1607,7 +1638,7 @@ redis:
       # -- Repository to use for the redis-exporter
       repository: ghcr.io/oliver006/redis_exporter
       # -- Tag to use for the redis-exporter
-      tag: v1.90.0
+      tag: v1.91.1
       # -- Image pull policy for the redis-exporter
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
@@ -2157,6 +2188,9 @@ server:
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `server.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Argo CD server Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -2240,7 +2274,7 @@ server:
       # -- Repository to use for extension installer image
       repository: "quay.io/argoprojlabs/argocd-extension-installer"
       # -- Tag to use for extension installer image
-      tag: "v1.0.1"
+      tag: "v1.1.0"
       # -- Image pull policy for extensions
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
@@ -3076,6 +3110,9 @@ repoServer:
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `repoServer.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Repo server Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -3525,6 +3562,9 @@ applicationSet:
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `applicationSet.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## ApplicationSet controller Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/
@@ -4054,6 +4094,9 @@ notifications:
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `notifications.pdb.minAvailable`
     maxUnavailable: ""
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`
+    ## Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   ## Notifications controller Vertical Pod Autoscaler
   ## Ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/

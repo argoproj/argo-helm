@@ -394,7 +394,14 @@ dashboard:
   podSecurityContext:
     runAsNonRoot: true
   # -- Security Context to set on container level
-  containerSecurityContext: {}
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    seccompProfile:
+      type: RuntimeDefault
   service:
     # -- Sets the type of the Service
     type: ClusterIP

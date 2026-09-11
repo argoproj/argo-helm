@@ -58,7 +58,14 @@ kubectl apply -k "https://github.com/argoproj/argo-workflows/manifests/base/crds
 ```
 
 ### ServiceAccount for Workflow Spec
-In order for each Workflow run, you create ServiceAccount via `values.yaml` like below.
+
+The workflow executor needs RBAC to report status back to the controller (creating and patching `workflowtaskresults.argoproj.io`). The default ServiceAccount in a namespace does not have this permission, so submitting a workflow without any setup fails with:
+
+```
+workflowtaskresults.argoproj.io is forbidden: User "system:serviceaccount:<namespace>:default" cannot create resource "workflowtaskresults"
+```
+
+To have the chart create a workflow ServiceAccount with the required RBAC in the release namespace (and any `controller.workflowNamespaces`), configure `values.yaml` like below, and submit workflows with that ServiceAccount (`argo submit --serviceaccount argo-workflow ...` or `spec.serviceAccountName`).
 
 ```yaml
 workflow:
@@ -419,6 +426,7 @@ Fields to note:
 |-----|------|---------|-------------|
 | executor.args | list | `[]` | Passes arguments to the executor processes |
 | executor.env | list | `[]` | Adds environment variables for the executor. |
+| executor.image.nonroot | bool | `false` | Use the `-nonroot` executor image variant. When enabled, the `-nonroot` suffix is appended to the resolved image tag. |
 | executor.image.pullPolicy | string | `""` | Image PullPolicy to use for the Workflow Executors. Defaults to `.Values.images.pullPolicy`. |
 | executor.image.registry | string | `"quay.io"` | Registry to use for the Workflow Executors |
 | executor.image.repository | string | `"argoproj/argoexec"` | Repository to use for the Workflow Executors |
