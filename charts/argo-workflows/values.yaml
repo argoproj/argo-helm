@@ -211,6 +211,9 @@ controller:
     # -- Manipulate the metrics created by the workflow controller
     ## Ref: https://argo-workflows.readthedocs.io/en/latest/metrics/#modifiers
     modifiers: {}
+    # -- Temporality of the metrics, e.g. "Delta" or "Cumulative". Only used for OTLP push-based metrics.
+    ## Ref: https://argo-workflows.readthedocs.io/en/latest/metrics/
+    temporality: ""
 
   # -- the controller container's securityContext
   securityContext:
