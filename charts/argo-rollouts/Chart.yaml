@@ -18,5 +18,5 @@ annotations:
     fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Hash only the ConfigMap data in the checksum/cm annotation so a chart version bump does not restart the controller
+    - kind: changed
+      description: Hash only the ConfigMap data in the checksum/cm annotation so a chart version bump no longer restarts the controller. Adopting this release recomputes the annotation once, so the controller rolls a single time on this specific upgrade.
