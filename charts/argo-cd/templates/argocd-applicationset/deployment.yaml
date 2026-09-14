@@ -82,6 +82,12 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: GRPC_ENABLE_TXT_SERVICE_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  key: applicationsetcontroller.grpc.enable.txt.service.config
+                  name: argocd-cmd-params-cm
+                  optional: true
             - name: ARGOCD_APPLICATIONSET_CONTROLLER_GLOBAL_PRESERVED_ANNOTATIONS
               valueFrom:
                 configMapKeyRef:
