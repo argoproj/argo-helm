@@ -359,6 +359,7 @@ Fields to note:
 | controller.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
 | controller.parallelism | string | `nil` | parallelism dictates how many workflows can be running at the same time |
 | controller.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the controller pods |
+| controller.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`. Defaults to `IfHealthyBudget` if not set |
 | controller.persistence | object | `{}` | enable Workflow Archive to store the status of workflows. Postgres, MySQL (>= 5.7.8) and MariaDB (>= 10.2.7, requires Argo Workflows v4.1+) are available. |
 | controller.podAnnotations | object | `{}` | podAnnotations is an optional map of annotations to be applied to the controller Pods |
 | controller.podCleanupWorkers | string | `nil` | Number of pod cleanup workers |
@@ -504,6 +505,7 @@ Fields to note:
 | server.name | string | `"server"` | Server name string |
 | server.nodeSelector | object | `{"kubernetes.io/os":"linux"}` | [Node selector] |
 | server.pdb.enabled | bool | `false` | Configure [Pod Disruption Budget] for the server pods |
+| server.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`. Defaults to `IfHealthyBudget` if not set |
 | server.podAnnotations | object | `{}` | optional map of annotations to be applied to the ui Pods |
 | server.podLabels | object | `{}` | Optional labels to add to the UI pods |
 | server.podSecurityContext | object | `{}` | SecurityContext to set on the server pods |
