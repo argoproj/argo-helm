@@ -696,7 +696,8 @@ server:
     enabled: false
     # minAvailable: 1
     # maxUnavailable: 1
-    # unhealthyPodEvictionPolicy: AlwaysAllow
+    # -- Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow`. Defaults to `IfHealthyBudget` if not set
+    unhealthyPodEvictionPolicy: ""
 
   # -- [Node selector]
   nodeSelector:
