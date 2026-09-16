@@ -1,0 +1,17 @@
+# zizmor configuration: acknowledged findings with justification.
+# Everything not listed here fails CI. Ref: https://docs.zizmor.sh/configuration/
+rules:
+  dangerous-triggers:
+    ignore:
+      # Reads the PR title only; no fork code is checked out.
+      - pr-title.yml
+      # Applies size labels from diff stats; no fork code is checked out.
+      - pr-sizing.yml
+      # Metadata-only draft lifecycle; makes API calls with a scoped octo-sts
+      # token and never checks out fork code (see #4083 / #4084).
+      - pr-lifecycle.yml
+  github-app:
+    ignore:
+      # Renovate needs broad installation permissions to operate; scoping the
+      # token via permission-* inputs is tracked as a follow-up.
+      - renovate.yaml
