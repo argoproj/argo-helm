@@ -42,10 +42,13 @@ jobs:
           MARKER_LABEL: auto-drafted-ci-failed
         run: |
           set -euo pipefail
-          # workflow_run payloads omit PR refs for fork PRs; resolve by head SHA.
-          pr_json=$(gh api "repos/argoproj/argo-helm/commits/${HEAD_SHA}/pulls" --jq '[.[] | select(.state == "open")] | first')
+          # workflow_run payloads omit PR refs for fork PRs, and the
+          # commits/{sha}/pulls endpoint returns an empty list for fork PRs
+          # under the app token (observed live in run 35081347892), so match
+          # the head SHA against the open PR list instead.
+          pr_json=$(gh api "repos/argoproj/argo-helm/pulls?state=open&per_page=100" --paginate             --jq '[.[] | select(.head.sha == env.HEAD_SHA)] | first')
           if [ -z "${pr_json}" ] || [ "${pr_json}" = "null" ]; then
-            echo "No open PR for ${HEAD_SHA}; nothing to do."; exit 0
+            echo "No open PR with current head ${HEAD_SHA}; stale run or PR closed. Nothing to do."; exit 0
           fi
           pr=$(echo "${pr_json}" | jq -r .number)
           author=$(echo "${pr_json}" | jq -r .user.login)
@@ -66,7 +69,8 @@ jobs:
                  --jq '.[].body' | grep -q "pr-lifecycle:drafted:${HEAD_SHA}"; then
               echo "Already drafted once for ${HEAD_SHA}; respecting the author's ready state."; exit 0
             fi
-            gh api graphql -f query='mutation($id: ID!) { convertPullRequestToDraft(input: {pullRequestId: $id}) { pullRequest { isDraft } } }' -f id="${node_id}"
+            # shellcheck disable=SC2016 # $id is a GraphQL variable substituted server-side by gh, not a shell expansion
+          gh api graphql -f query='mutation($id: ID!) { convertPullRequestToDraft(input: {pullRequestId: $id}) { pullRequest { isDraft } } }' -f id="${node_id}"
             gh api "repos/argoproj/argo-helm/issues/${pr}/labels" -f "labels[]=${MARKER_LABEL}"
             gh api "repos/argoproj/argo-helm/issues/${pr}/comments" -f body="$(printf '<!-- pr-lifecycle:drafted:%s -->\nRequired checks failed, so this PR was converted to a draft to keep the review queue green. Push a fix (the PR returns to ready automatically when checks pass) or mark it ready yourself to discuss as is. Details: the failing run is linked in the checks tab.' "${HEAD_SHA}")"
             echo "Drafted PR #${pr}."
@@ -74,7 +78,8 @@ jobs:
             if [ "${has_label}" != "true" ]; then
               echo "PR #${pr} was not auto-drafted; leaving state alone."; exit 0
             fi
-            gh api graphql -f query='mutation($id: ID!) { markPullRequestReadyForReview(input: {pullRequestId: $id}) { pullRequest { isDraft } } }' -f id="${node_id}"
+            # shellcheck disable=SC2016 # $id is a GraphQL variable substituted server-side by gh, not a shell expansion
+          gh api graphql -f query='mutation($id: ID!) { markPullRequestReadyForReview(input: {pullRequestId: $id}) { pullRequest { isDraft } } }' -f id="${node_id}"
             gh api -X DELETE "repos/argoproj/argo-helm/issues/${pr}/labels/${MARKER_LABEL}"
             echo "PR #${pr} back to ready."
           else
