@@ -42,10 +42,13 @@ jobs:
           MARKER_LABEL: auto-drafted-ci-failed
         run: |
           set -euo pipefail
-          # workflow_run payloads omit PR refs for fork PRs; resolve by head SHA.
-          pr_json=$(gh api "repos/argoproj/argo-helm/commits/${HEAD_SHA}/pulls" --jq '[.[] | select(.state == "open")] | first')
+          # workflow_run payloads omit PR refs for fork PRs, and the
+          # commits/{sha}/pulls endpoint returns an empty list for fork PRs
+          # under the app token (observed live in run 35081347892), so match
+          # the head SHA against the open PR list instead.
+          pr_json=$(gh api "repos/argoproj/argo-helm/pulls?state=open&per_page=100" --paginate             --jq '[.[] | select(.head.sha == env.HEAD_SHA)] | first')
           if [ -z "${pr_json}" ] || [ "${pr_json}" = "null" ]; then
-            echo "No open PR for ${HEAD_SHA}; nothing to do."; exit 0
+            echo "No open PR with current head ${HEAD_SHA}; stale run or PR closed. Nothing to do."; exit 0
           fi
           pr=$(echo "${pr_json}" | jq -r .number)
           author=$(echo "${pr_json}" | jq -r .user.login)
