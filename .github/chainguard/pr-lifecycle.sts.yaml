@@ -1,0 +1,10 @@
+# octo-sts trust policy for the draft-PR lifecycle workflow.
+# Exchanges the workflow's OIDC identity for a short-lived GitHub App token.
+# Ref: https://github.com/octo-sts/app and argoproj/argo-helm#4083
+issuer: https://token.actions.githubusercontent.com
+subject_pattern: repo:argoproj/argo-helm:ref:refs/heads/main
+claim_pattern:
+  job_workflow_ref: argoproj/argo-helm/\.github/workflows/pr-lifecycle\.yml@refs/heads/main
+permissions:
+  pull_requests: write
+  issues: write

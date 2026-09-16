@@ -1,0 +1,82 @@
+## Draft-PR lifecycle: convert PRs to draft when required checks fail and
+## back to ready when they pass, using a short-lived octo-sts token because
+## the default GITHUB_TOKEN cannot mutate fork PRs (see #3879 / #4083).
+## The workflow only calls the API on PR metadata; fork code is never
+## checked out, so pull_request_target-style injection does not apply.
+name: PR Lifecycle
+on:
+  workflow_run:
+    workflows: ["Linting and Testing"]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  lifecycle:
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # octo-sts OIDC exchange
+      contents: read
+    concurrency:
+      group: pr-lifecycle-${{ github.event.workflow_run.head_sha }}
+      cancel-in-progress: false
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        with:
+          egress-policy: audit
+
+      - name: Get octo-sts token
+        id: sts
+        uses: octo-sts/action@6177b4481c00308b3839969c3eca88c96a91775f # v1.0.0
+        with:
+          scope: argoproj/argo-helm
+          identity: pr-lifecycle
+
+      - name: Reconcile PR draft state with check outcome
+        env:
+          GH_TOKEN: ${{ steps.sts.outputs.token }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          MARKER_LABEL: auto-drafted-ci-failed
+        run: |
+          set -euo pipefail
+          # workflow_run payloads omit PR refs for fork PRs; resolve by head SHA.
+          pr_json=$(gh api "repos/argoproj/argo-helm/commits/${HEAD_SHA}/pulls" --jq '[.[] | select(.state == "open")] | first')
+          if [ -z "${pr_json}" ] || [ "${pr_json}" = "null" ]; then
+            echo "No open PR for ${HEAD_SHA}; nothing to do."; exit 0
+          fi
+          pr=$(echo "${pr_json}" | jq -r .number)
+          author=$(echo "${pr_json}" | jq -r .user.login)
+          is_draft=$(echo "${pr_json}" | jq -r .draft)
+          node_id=$(echo "${pr_json}" | jq -r .node_id)
+          has_label=$(echo "${pr_json}" | jq -r --arg l "${MARKER_LABEL}" '[.labels[].name] | contains([$l])')
+
+          case "${author}" in
+            *"[bot]") echo "Bot-authored PR #${pr}; skipping."; exit 0 ;;
+          esac
+
+          if [ "${CONCLUSION}" = "failure" ]; then
+            if [ "${is_draft}" = "true" ]; then
+              echo "PR #${pr} already draft; nothing to do."; exit 0
+            fi
+            # Draft at most once per head SHA: a hidden marker comment records it.
+            if gh api "repos/argoproj/argo-helm/issues/${pr}/comments" --paginate \
+                 --jq '.[].body' | grep -q "pr-lifecycle:drafted:${HEAD_SHA}"; then
+              echo "Already drafted once for ${HEAD_SHA}; respecting the author's ready state."; exit 0
+            fi
+            gh api graphql -f query='mutation($id: ID!) { convertPullRequestToDraft(input: {pullRequestId: $id}) { pullRequest { isDraft } } }' -f id="${node_id}"
+            gh api "repos/argoproj/argo-helm/issues/${pr}/labels" -f "labels[]=${MARKER_LABEL}"
+            gh api "repos/argoproj/argo-helm/issues/${pr}/comments" -f body="$(printf '<!-- pr-lifecycle:drafted:%s -->\nRequired checks failed, so this PR was converted to a draft to keep the review queue green. Push a fix (the PR returns to ready automatically when checks pass) or mark it ready yourself to discuss as is. Details: the failing run is linked in the checks tab.' "${HEAD_SHA}")"
+            echo "Drafted PR #${pr}."
+          elif [ "${CONCLUSION}" = "success" ]; then
+            if [ "${has_label}" != "true" ]; then
+              echo "PR #${pr} was not auto-drafted; leaving state alone."; exit 0
+            fi
+            gh api graphql -f query='mutation($id: ID!) { markPullRequestReadyForReview(input: {pullRequestId: $id}) { pullRequest { isDraft } } }' -f id="${node_id}"
+            gh api -X DELETE "repos/argoproj/argo-helm/issues/${pr}/labels/${MARKER_LABEL}"
+            echo "PR #${pr} back to ready."
+          else
+            echo "Conclusion ${CONCLUSION}; nothing to do."
+          fi
