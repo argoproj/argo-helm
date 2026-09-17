@@ -74,6 +74,12 @@ spec:
           {{- with (concat .Values.global.env .Values.commitServer.extraEnv) }}
             {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
+          - name: GRPC_ENABLE_TXT_SERVICE_CONFIG
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: commitserver.grpc.enable.txt.service.config
+                optional: true
           - name: ARGOCD_COMMIT_SERVER_LISTEN_ADDRESS
             valueFrom:
               configMapKeyRef:

@@ -1,3 +1,11 @@
 # Test Argo CD with optional component "commit-server"
 commitServer:
   enabled: true
+
+configs:
+  params:
+    controller.grpc.enable.txt.service.config: "true"
+    reposerver.grpc.enable.txt.service.config: "false"
+    server.grpc.enable.txt.service.config: "true"
+    applicationsetcontroller.grpc.enable.txt.service.config: "false"
+    commitserver.grpc.enable.txt.service.config: "true"

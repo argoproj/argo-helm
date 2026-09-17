@@ -82,6 +82,12 @@ spec:
           {{- with (concat .Values.global.env .Values.controller.env) }}
             {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
+          - name: GRPC_ENABLE_TXT_SERVICE_CONFIG
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.grpc.enable.txt.service.config
+                optional: true
           - name: ARGOCD_ENABLE_DYNAMIC_CLUSTER_DISTRIBUTION
             value: "true"
           - name: ARGOCD_CONTROLLER_HEARTBEAT_TIME
