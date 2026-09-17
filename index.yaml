@@ -32930,6 +32930,32 @@ entries:
   argo-rollouts:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Hash only the ConfigMap data in the checksum/cm annotation so a chart version bump no longer restarts the controller. Adopting this release recomputes the annotation once, so the controller rolls a single time on this specific upgrade.
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.10.0
+    created: "2026-09-17T09:47:32.180256971Z"
+    description: A Helm chart for Argo Rollouts
+    digest: 35da227813ffce73445e88cc70e30f474c316db784fe9913d2bd94fd40706679
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+    keywords:
+    - argoproj
+    - argo-rollouts
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-rollouts
+    sources:
+    - https://github.com/argoproj/argo-rollouts
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-rollouts-2.43.2/argo-rollouts-2.43.2.tgz
+    version: 2.43.2
+  - annotations:
+      artifacthub.io/changes: |
         - kind: security
           description: Harden the dashboard container security context by default
       artifacthub.io/signKey: |
@@ -45792,4 +45818,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-09-17T09:45:56.656841119Z"
+generated: "2026-09-17T09:47:32.182682232Z"
