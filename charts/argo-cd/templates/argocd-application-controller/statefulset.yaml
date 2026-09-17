@@ -80,6 +80,12 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.controller.image.imagePullPolicy }}
         name: {{ .Values.controller.name }}
         env:
+          - name: GRPC_ENABLE_TXT_SERVICE_CONFIG
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: controller.grpc.enable.txt.service.config
+                optional: true
           - name: ARGOCD_CONTROLLER_REPLICAS
             value: {{ .Values.controller.replicas | quote }}
           - name: ARGOCD_APPLICATION_CONTROLLER_NAME
