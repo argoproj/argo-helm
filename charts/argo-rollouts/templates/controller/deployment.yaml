@@ -32,7 +32,7 @@ spec:
         {{ $key }}: {{ $value | quote }}
         {{- end }}
         {{- end }}
-        checksum/cm: {{ include (print $.Template.BasePath "/controller/configmap.yaml") . | sha256sum }}
+        checksum/cm: {{ include "argo-rollouts.config.checksum" (dict "context" $ "path" "/controller/configmap.yaml") }}
       labels:
         {{- include "argo-rollouts.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ .Values.controller.component }}
