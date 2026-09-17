@@ -1562,10 +1562,9 @@ redis:
   # @default -- `""` (defaults to global.runtimeClassName)
   runtimeClassName: ""
 
-  # -- Existing Secret to use for Redis password. The key must be `auth`.
-  # When set and `redisSecretInit.enabled` is `false`, this secret name is used directly.
-  # Otherwise, the secret name defaults to `argocd-redis`.
-  # @default -- `""`
+  # -- Existing Secret name for the embedded Redis password. The Secret must contain the key `auth`.
+  # Only used when `redisSecretInit.enabled` is `false`, otherwise the secret name is `argocd-redis`.
+  # For external Redis use `externalRedis.existingSecret` instead.
   existingSecret: ""
 
   ## Redis Pod Disruption Budget

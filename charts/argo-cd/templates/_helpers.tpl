@@ -345,9 +345,10 @@ optional: false # Secret is not optional in this case !
 
     {{- else -}}
     {{- /* All other use cases (e.g. disabled pre-install Job) */ -}}
-name: "argocd-redis"
+    {{- /* Secret is required when specifying redis.existingSecret, otherwise it is optional */ -}}
+name: {{ default "argocd-redis" .Values.redis.existingSecret }}
 key: auth
-optional: true
+optional: {{ if .Values.redis.existingSecret }}false{{ else }}true{{ end }}
     {{- end -}}
 {{- end -}}
 

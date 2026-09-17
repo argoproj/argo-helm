@@ -1674,7 +1674,7 @@ NAME: my-release
 | redis.enabled | bool | `true` | Enable redis |
 | redis.env | list | `[]` | Environment variables to pass to the Redis server |
 | redis.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to the Redis server |
-| redis.existingSecret | string | `""` | Existing Secret name for Redis password (key must be `auth`). Used only when `redisSecretInit.enabled` is `false`. Falls back to `argocd-redis` otherwise. |
+| redis.existingSecret | string | `""` | Existing Secret name for the embedded Redis password. The Secret must contain the key `auth`. Only used when `redisSecretInit.enabled` is `false`, otherwise the secret name is `argocd-redis`. For external Redis use `externalRedis.existingSecret` instead. |
 | redis.exporter.containerSecurityContext | object | See [values.yaml] | Redis exporter security context |
 | redis.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
 | redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
