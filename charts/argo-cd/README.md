@@ -1044,6 +1044,7 @@ NAME: my-release
 | configs.cm."timeout.reconciliation.jitter" | string | `"60s"` | Maximum jitter added to the reconciliation timeout to spread out refreshes and reduce repo-server load |
 | configs.cm.annotations | object | `{}` | Annotations to be added to argocd-cm configmap |
 | configs.cm.create | bool | `true` | Create the argocd-cm configmap for [declarative setup] |
+| configs.cm.resourceExclusionsAdditional | list | `[]` | Additional resource exclusions to append to the default `resource.exclusions` list above, so that the defaults can be kept up to date without needing to duplicate/override them. These entries are always appended, never substituted: if you also set `resource.exclusions` yourself, they are appended to your value rather than to the chart defaults. |
 | configs.cmp.annotations | object | `{}` | Annotations to be added to argocd-cmp-cm configmap |
 | configs.cmp.create | bool | `false` | Create the argocd-cmp-cm configmap |
 | configs.cmp.plugins | object | `{}` | Plugin yaml files to be added to argocd-cmp-cm |
@@ -1110,6 +1111,13 @@ NAME: my-release
 | controller.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the application controller |
 | controller.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | controller.initContainers | list | `[]` | Init containers to add to the application controller pod |
+| controller.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Application controller |
+| controller.livenessProbe.failureThreshold | int | `5` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
+| controller.livenessProbe.httpPath | string | `"/healthz"` | Http path to use for the liveness probe |
+| controller.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds after the container has started before [probe] is initiated |
+| controller.livenessProbe.periodSeconds | int | `30` | How often (in seconds) to perform the [probe] |
+| controller.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
+| controller.livenessProbe.timeoutSeconds | int | `5` | Number of seconds after which the [probe] times out |
 | controller.metrics.applicationLabels.enabled | bool | `false` | Enables additional labels in argocd_app_labels metric |
 | controller.metrics.applicationLabels.labels | list | `[]` | Additional labels |
 | controller.metrics.enabled | bool | `false` | Deploy metrics service |
@@ -1145,6 +1153,7 @@ NAME: my-release
 | controller.pdb.labels | object | `{}` | Labels to be added to application controller pdb |
 | controller.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | controller.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| controller.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | controller.podAnnotations | object | `{}` | Annotations to be added to application controller pods |
 | controller.podLabels | object | `{}` | Labels to be added to application controller pods |
 | controller.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the application controller pods |
@@ -1183,6 +1192,7 @@ NAME: my-release
 | controller.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the application controller |
 | controller.vpa.labels | object | `{}` | Labels to be added to application controller vpa |
 | controller.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
+| controller.vpa.startupBoost | object | `{}` | Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set |
 | controller.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Argo Repo Server
@@ -1263,6 +1273,7 @@ NAME: my-release
 | repoServer.pdb.labels | object | `{}` | Labels to be added to repo server pdb |
 | repoServer.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | repoServer.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| repoServer.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | repoServer.podAnnotations | object | `{}` | Annotations to be added to repo server pods |
 | repoServer.podLabels | object | `{}` | Labels to be added to repo server pods |
 | repoServer.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the repo server pods |
@@ -1305,6 +1316,7 @@ NAME: my-release
 | repoServer.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the repo server |
 | repoServer.vpa.labels | object | `{}` | Labels to be added to repo server vpa |
 | repoServer.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
+| repoServer.vpa.startupBoost | object | `{}` | Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set |
 | repoServer.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Argo Server
@@ -1363,7 +1375,7 @@ NAME: my-release
 | server.extensions.extensionList | list | `[]` (See [values.yaml]) | Extensions for Argo CD |
 | server.extensions.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for extensions |
 | server.extensions.image.repository | string | `"quay.io/argoprojlabs/argocd-extension-installer"` | Repository to use for extension installer image |
-| server.extensions.image.tag | string | `"v1.0.1"` | Tag to use for extension installer image |
+| server.extensions.image.tag | string | `"v1.1.0"` | Tag to use for extension installer image |
 | server.extensions.resources | object | `{}` | Resource limits and requests for the argocd-extensions container |
 | server.extraArgs | list | `[]` | Additional command line arguments to pass to Argo CD server |
 | server.extraContainers | list | `[]` | Additional containers to be added to the server pod |
@@ -1466,6 +1478,7 @@ NAME: my-release
 | server.pdb.labels | object | `{}` | Labels to be added to Argo CD server pdb |
 | server.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | server.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| server.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | server.podAnnotations | object | `{}` | Annotations to be added to server pods |
 | server.podLabels | object | `{}` | Labels to be added to server pods |
 | server.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the Argo CD server pods |
@@ -1526,6 +1539,7 @@ NAME: my-release
 | server.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Argo CD server |
 | server.vpa.labels | object | `{}` | Labels to be added to Argo CD server vpa |
 | server.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
+| server.vpa.startupBoost | object | `{}` | Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set |
 | server.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Dex
@@ -1596,6 +1610,7 @@ NAME: my-release
 | dex.pdb.labels | object | `{}` | Labels to be added to Dex server pdb |
 | dex.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
 | dex.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| dex.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | dex.podAnnotations | object | `{}` | Annotations to be added to the Dex server pods |
 | dex.podLabels | object | `{}` | Labels to be added to the Dex server pods |
 | dex.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the dex pods |
@@ -1638,6 +1653,7 @@ NAME: my-release
 | dex.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Dex server |
 | dex.vpa.labels | object | `{}` | Labels to be added to Dex server vpa |
 | dex.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
+| dex.vpa.startupBoost | object | `{}` | Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set |
 | dex.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Redis
@@ -1664,7 +1680,7 @@ NAME: my-release
 | redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
 | redis.exporter.image.repository | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
-| redis.exporter.image.tag | string | `"v1.89.0"` | Tag to use for the redis-exporter |
+| redis.exporter.image.tag | string | `"v1.91.1"` | Tag to use for the redis-exporter |
 | redis.exporter.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis exporter |
 | redis.exporter.livenessProbe.failureThreshold | int | `5` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | redis.exporter.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |
@@ -1680,6 +1696,7 @@ NAME: my-release
 | redis.exporter.resources | object | `{}` | Resource limits and requests for redis-exporter sidecar |
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
+| redis.hostNetwork | bool | `false` | Host Network for redis pods |
 | redis.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Redis image pull policy |
 | redis.image.repository | string | `"ecr-public.aws.com/docker/library/redis"` | Redis repository |
 | redis.image.tag | string | `"8.6.4-alpine"` | Redis tag |
@@ -1717,6 +1734,7 @@ NAME: my-release
 | redis.pdb.labels | object | `{}` | Labels to be added to Redis pdb |
 | redis.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
 | redis.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| redis.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | redis.podAnnotations | object | `{}` | Annotations to be added to the Redis server pods |
 | redis.podLabels | object | `{}` | Labels to be added to the Redis server pods |
 | redis.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for redis pods |
@@ -1746,6 +1764,7 @@ NAME: my-release
 | redis.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the Redis |
 | redis.vpa.labels | object | `{}` | Labels to be added to Redis vpa |
 | redis.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
+| redis.vpa.startupBoost | object | `{}` | Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set |
 | redis.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ### Option 2 - Redis HA
@@ -1776,11 +1795,12 @@ The main options are listed here:
 | redis-ha.haproxy.tolerations | list | `[]` | [Tolerations] for use with node taints for haproxy pods. |
 | redis-ha.hardAntiAffinity | bool | `true` | Whether the Redis server pods should be forced to run on separate nodes. |
 | redis-ha.image.repository | string | `"ecr-public.aws.com/docker/library/redis"` | Redis repository |
-| redis-ha.image.tag | string | `"8.2.3-alpine"` | Redis tag |
+| redis-ha.image.tag | string | `"8.6.4-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistence on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
 | redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
 | redis-ha.redis.masterGroupName | string | `"argocd"` | Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated |
+| redis-ha.sentinel.lifecycle | object | See [values.yaml] | Sentinel container lifecycle hooks. The default `postStart` hook resets the sentinel state after a rolling update to prevent high CPU usage |
 | redis-ha.tolerations | list | `[]` | [Tolerations] for use with node taints for Redis pods. |
 | redis-ha.topologySpreadConstraints | object | `{"enabled":false,"maxSkew":"","topologyKey":"","whenUnsatisfiable":""}` | Assign custom [TopologySpreadConstraints] rules to the Redis pods. |
 | redis-ha.topologySpreadConstraints.enabled | bool | `false` | Enable Redis HA topology spread constraints |
@@ -1815,8 +1835,11 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 |-----|------|---------|-------------|
 | redisSecretInit.affinity | object | `{}` | Assign custom [affinity] rules to the Redis secret-init Job |
 | redisSecretInit.containerSecurityContext | object | See [values.yaml] | Application controller container-level security context |
+| redisSecretInit.dnsConfig | object | `{}` | [DNS configuration] |
+| redisSecretInit.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Redis secret-init Job |
 | redisSecretInit.enabled | bool | `true` | Enable Redis secret initialization. If disabled, secret must be provisioned by alternative methods |
 | redisSecretInit.extraArgs | list | `[]` | Additional command line arguments for the Redis secret-init Job |
+| redisSecretInit.hostNetwork | bool | `false` | Host Network for redis-secret-init pods |
 | redisSecretInit.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the Redis secret-init Job |
 | redisSecretInit.image.repository | string | `""` (defaults to global.image.repository) | Repository to use for the Redis secret-init Job |
 | redisSecretInit.image.tag | string | `""` (defaults to global.image.tag) | Tag to use for the Redis secret-init Job |
@@ -1942,6 +1965,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.pdb.labels | object | `{}` | Labels to be added to ApplicationSet controller pdb |
 | applicationSet.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | applicationSet.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| applicationSet.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | applicationSet.podAnnotations | object | `{}` | Annotations for the ApplicationSet controller pods |
 | applicationSet.podLabels | object | `{}` | Labels for the ApplicationSet controller pods |
 | applicationSet.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the ApplicationSet controller pods |
@@ -1978,6 +2002,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the ApplicationSet controller |
 | applicationSet.vpa.labels | object | `{}` | Labels to be added to ApplicationSet controller vpa |
 | applicationSet.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
+| applicationSet.vpa.startupBoost | object | `{}` | Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set |
 | applicationSet.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Notifications
@@ -2040,6 +2065,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.pdb.labels | object | `{}` | Labels to be added to notifications controller pdb |
 | notifications.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | notifications.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
+| notifications.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | notifications.podAnnotations | object | `{}` | Annotations to be applied to the notifications controller Pods |
 | notifications.podLabels | object | `{}` | Labels to be applied to the notifications controller Pods |
 | notifications.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for the notifications controller pods |
@@ -2078,6 +2104,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the notifications controller |
 | notifications.vpa.labels | object | `{}` | Labels to be added to notifications controller vpa |
 | notifications.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
+| notifications.vpa.startupBoost | object | `{}` | Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set |
 | notifications.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ## Commit server (Manifest Hydrator)
@@ -2155,6 +2182,7 @@ To read more about this component, please read [Argo CD Manifest Hydrator] and [
 | commitServer.vpa.enabled | bool | `false` | Deploy a [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/#scaling-workloads-vertically/) for the commit server |
 | commitServer.vpa.labels | object | `{}` | Labels to be added to commit server vpa |
 | commitServer.vpa.recommenders | list | `[]` | The recommenders that will provide recommendations for vertical scaling. Only relevant if a named VPA recommender (e.g. one started with a custom recommender name) is in use; leave unset to use the cluster's default recommender |
+| commitServer.vpa.startupBoost | object | `{}` | Configures a startup resource boost for faster cold-start (application boot) resource allocation. NOTE: startupBoost is currently a GKE-specific extension to the VPA API and is only honored on GKE clusters; it is rendered only when set |
 | commitServer.vpa.updateMode | string | `"Initial"` | One of the VPA operation modes |
 
 ----------------------------------------------

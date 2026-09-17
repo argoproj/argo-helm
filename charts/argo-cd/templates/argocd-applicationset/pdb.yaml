@@ -21,6 +21,9 @@ spec:
   {{- else }}
   minAvailable: {{ .Values.applicationSet.pdb.minAvailable | default 0 }}
   {{- end }}
+  {{- with .Values.applicationSet.pdb.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 6 }}

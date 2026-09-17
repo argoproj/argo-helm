@@ -211,8 +211,20 @@ Allows overriding it for multi-namespace deployments in combined charts.
 {{- end }}
 
 {{/*
-Insert helm/resource-policy annotations into the workflows CRDs
+Set helm.sh/resource-policy (crds.keep) and crds.annotations on the workflows CRDs
 */}}
-{{- define "argo-workflows.insertResourcePolicyAnnotation" -}}
-{{- regexReplaceAllLiteral "\n  annotations:\n    helm.sh/resource-policy: keep\n" .input (ternary "\n  annotations:\n    helm.sh/resource-policy: keep\n" "\n  annotations: {}\n" .value) -}}
+{{- define "argo-workflows.insertCRDAnnotations" -}}
+{{- $crd := fromYaml .input -}}
+{{- if $crd.Error -}}
+  {{- fail (printf "argo-workflows: failed to parse CRD as YAML: %s" $crd.Error) -}}
+{{- end -}}
+{{- $annotations := dict -}}
+{{- if .keep -}}
+  {{- $_ := set $annotations "helm.sh/resource-policy" "keep" -}}
+{{- end -}}
+{{- $annotations = merge $annotations (.annotations | default dict) -}}
+{{- $metadata := $crd.metadata | default dict -}}
+{{- $_ := set $metadata "annotations" $annotations -}}
+{{- $_ := set $crd "metadata" $metadata -}}
+{{- toYaml $crd -}}
 {{- end -}}

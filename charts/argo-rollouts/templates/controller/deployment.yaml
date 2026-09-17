@@ -90,8 +90,10 @@ spec:
           name: healthz
         livenessProbe:
           {{- toYaml .Values.controller.livenessProbe | nindent 10 }}
+        {{- with .Values.controller.readinessProbe }}
         readinessProbe:
-          {{- toYaml .Values.controller.readinessProbe | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         securityContext:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
         {{- with .Values.controller.lifecycle }}

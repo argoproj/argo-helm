@@ -14,6 +14,21 @@ Argo Helm is a collection of **community maintained** charts for [https://argopr
 helm repo add argo https://argoproj.github.io/argo-helm
 ```
 
+## Verifying Chart Provenance
+
+All charts published by this repository are signed with the Argo Helm maintainers' PGP key (fingerprint `2B8F22F57260EFA67BE1C5824B11F800CD9D2252`, also referenced in each chart's `artifacthub.io/signKey` annotation). To verify a chart before installing it:
+
+```bash
+# Download and convert our public key
+wget https://argoproj.github.io/argo-helm/pgp_keys.asc
+cat pgp_keys.asc | gpg --dearmor > pubring.asc
+
+# Pull the chart and verify it against our public key
+helm pull --verify oci://ghcr.io/argoproj/argo-helm/argo-cd --keyring pubring.asc
+```
+
+A successful verification prints the chart digest and `Signed by: Argo Helm maintainers`. The same `--verify --keyring pubring.asc` flags work with `helm install` and `helm upgrade`.
+
 ## Version Support Policy
 As our project is maintained by a small team, we must focus our limited resources on following upstream projects and ensuring the stability of the latest version.
 

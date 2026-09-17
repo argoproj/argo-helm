@@ -72,5 +72,13 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.redisSecretInit.hostNetwork }}
+      hostNetwork: {{ .Values.redisSecretInit.hostNetwork }}
+      {{- end }}
+      {{- with .Values.redisSecretInit.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.redisSecretInit.dnsPolicy }}
       serviceAccountName: {{ include "argo-cd.redisSecretInit.serviceAccountName" . }}
 {{- end }}

@@ -28,7 +28,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        checksum/cmd-params: {{ include "argo-cd.config.checksum" (dict "context" $ "path" "/argocd-configs/argocd-cmd-params-cm.yaml") }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.notifications.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
@@ -212,6 +212,7 @@ spec:
         - name: tls-certs
           configMap:
             name: argocd-tls-certs-cm
+            optional: true
         - name: argocd-repo-server-tls
           secret:
             secretName: argocd-repo-server-tls

@@ -101,6 +101,11 @@ configs:
     # Supported versions of JetStream eventbus
     versions:
       - version: latest
+        natsImage: nats:2.10.29
+        metricsExporterImage: natsio/prometheus-nats-exporter:0.14.0
+        configReloaderImage: natsio/nats-server-config-reloader:0.14.0
+        startCommand: /nats-server
+      - version: 2.10.10
         natsImage: nats:2.10.10
         metricsExporterImage: natsio/prometheus-nats-exporter:0.14.0
         configReloaderImage: natsio/nats-server-config-reloader:0.14.0
@@ -140,8 +145,8 @@ configs:
         metricsExporterImage: natsio/prometheus-nats-exporter:0.9.1
         configReloaderImage: natsio/nats-server-config-reloader:0.7.0
         startCommand: /nats-server
-      - version: 2.10.10
-        natsImage: nats:2.10.10
+      - version: 2.10.29
+        natsImage: nats:2.10.29
         metricsExporterImage: natsio/prometheus-nats-exporter:0.14.0
         configReloaderImage: natsio/nats-server-config-reloader:0.14.0
         startCommand: /nats-server
@@ -477,6 +482,12 @@ webhook:
   #  requests:
   #    cpu: 250m
   #    memory: 256Mi
+
+  # -- Additional containers to be added to the admission webhook pods
+  extraContainers: []
+
+  # -- Init containers to add to the admission webhook pods
+  initContainers: []
 
   serviceAccount:
     # -- Create a service account for the admission webhook

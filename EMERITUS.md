@@ -12,3 +12,4 @@ We thank them for their service to the project.
 | Yann Soubeyrand | [yann-soubeyrand](https://github.com/yann-soubeyrand) |
 | David J. M. Karlsen | [davidkarlsen](https://github.com/davidkarlsen) |
 | John Behling | [jbehling](https://github.com/jbehling) |
+| Petr Drastil | [pdrastil](https://github.com/pdrastil) |

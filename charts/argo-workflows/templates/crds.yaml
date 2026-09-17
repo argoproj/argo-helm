@@ -2,7 +2,7 @@
 {{- range $path, $_ :=  .Files.Glob  "files/crds/minimal/*.yaml" }}
 {{- if or (contains "clusterworkflowtemplates" $path | not) $.Values.server.clusterWorkflowTemplates.enabled $.Values.controller.clusterWorkflowTemplates.enabled }}
 ---
-{{ include "argo-workflows.insertResourcePolicyAnnotation" (dict "input" ($.Files.Get $path) "value" $.Values.crds.keep) }}
+{{ include "argo-workflows.insertCRDAnnotations" (dict "input" ($.Files.Get $path) "keep" $.Values.crds.keep "annotations" $.Values.crds.annotations) }}
 {{- end }}
 {{- end }}
 {{- end }}
