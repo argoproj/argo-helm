@@ -1,3 +1,5 @@
+{{- $insecure := index .Values.configs.params "server.insecure" | toString -}}
+{{- $probeScheme := eq $insecure "true" | ternary "HTTP" "HTTPS" -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -432,6 +434,7 @@ spec:
           httpGet:
             path: {{ .Values.server.livenessProbe.httpPath }}
             port: server
+            scheme: {{ $probeScheme }}
           initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.server.livenessProbe.timeoutSeconds }}
@@ -443,6 +446,7 @@ spec:
           httpGet:
             path: {{ .Values.server.readinessProbe.httpPath }}
             port: server
+            scheme: {{ $probeScheme }}
           initialDelaySeconds: {{ .Values.server.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
@@ -454,6 +458,7 @@ spec:
           httpGet:
             path: {{ .Values.server.startupProbe.httpPath }}
             port: server
+            scheme: {{ $probeScheme }}
           initialDelaySeconds: {{ .Values.server.startupProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.server.startupProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.server.startupProbe.timeoutSeconds }}
