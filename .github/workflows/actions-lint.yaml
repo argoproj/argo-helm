@@ -1,0 +1,81 @@
+## Lints the GitHub Actions workflows themselves plus repo shell scripts:
+## actionlint (workflow correctness + shellcheck of embedded run blocks),
+## shellcheck (scripts/*.sh), and zizmor (Actions security audit, config in
+## .github/zizmor.yml).
+name: Actions Lint
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - ".github/zizmor.yml"
+      - "scripts/*.sh"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/**"
+      - ".github/zizmor.yml"
+      - "scripts/*.sh"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions: {}
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # Clone the repository to lint workflow files
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        with:
+          egress-policy: audit
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Run actionlint
+        env:
+          # Embedded run-block shellcheck: enforce warning and above; info-level
+          # notes (e.g. SC2086 quoting style in pre-existing scripts) do not fail.
+          SHELLCHECK_OPTS: -S warning
+        run: |
+          bash <(curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash) 1.7.12
+          ./actionlint -color
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # Clone the repository to lint shell scripts
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        with:
+          egress-policy: audit
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Run shellcheck on repo scripts
+        run: shellcheck -S warning scripts/*.sh
+
+  zizmor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # Clone the repository to audit workflow files
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        with:
+          egress-policy: audit
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
+        with:
+          inputs: .github/workflows/
+          advanced-security: false

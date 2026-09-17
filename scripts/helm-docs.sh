@@ -7,5 +7,5 @@ echo "$REPO_ROOT"
 echo "Running Helm-Docs"
 docker run \
     -v "$REPO_ROOT:/helm-docs" \
-    -u $(id -u) \
+    -u "$(id -u)" \
     jnorwood/helm-docs:v1.9.1
