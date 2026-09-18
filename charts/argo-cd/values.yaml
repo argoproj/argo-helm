@@ -1967,6 +1967,11 @@ redis-ha:
     image:
       # -- HAProxy Image Repository
       repository: ecr-public.aws.com/docker/library/haproxy
+      # -- HAProxy Image Tag
+      ## Runs ahead of the upstream HA manifests' pin, as with the redis image above:
+      ## 3.3.10-alpine carries CVE-2026-63073 and CVE-2026-75803 (libcrypto3/libssl3)
+      ## and CVE-2026-56123 (socat); 3.3.14-alpine is the same 3.3 line rebuilt on Alpine 3.24.
+      tag: 3.3.14-alpine
     metrics:
       # -- HAProxy enable prometheus metric scraping
       enabled: true
