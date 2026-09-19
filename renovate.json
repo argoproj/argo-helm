@@ -105,8 +105,11 @@
       "matchDatasources": [
         "docker"
       ],
-      "allowedVersions": "<7.4.0 || >=8.0.0",
-      "description": ["Redis 7.4.x is not open source (RSAL/SSPL); Redis 8.0+ restored an OSI-approved option (AGPLv3), so only the 7.4-7.x line is excluded"],
+      "allowedVersions": "!/^7\\.[4-9]\\./",
+      "description": [
+        "Redis 7.4.x is not open source (RSAL/SSPL); Redis 8.0+ restored an OSI-approved option (AGPLv3), so only the 7.4-7.x line is excluded",
+        "This must be a regex rather than a semver range. The tags carry an -alpine suffix, which npm semver parses as a prerelease and excludes from any range that does not name it, so a range silently matched nothing"
+      ],
       "commitMessagePrefix": "chore({{parentDir}}):",
       "postUpgradeTasks": {
         "commands": [
