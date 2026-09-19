@@ -343,6 +343,12 @@ name: "argocd-redis" # hard-coded in Job command and embedded Redis deployments 
 key: auth
 optional: false # Secret is not optional in this case !
 
+    {{- else if (index .Values "redis-ha").enabled -}}
+    {{- /* Embedded redis-ha with disabled pre-install Job: follow the Secret used by the redis-ha subchart */ -}}
+name: {{ index .Values "redis-ha" "existingSecret" }}
+key: auth
+optional: true
+
     {{- else -}}
     {{- /* All other use cases (e.g. disabled pre-install Job) */ -}}
     {{- /* Secret is required when specifying redis.existingSecret, otherwise it is optional */ -}}
