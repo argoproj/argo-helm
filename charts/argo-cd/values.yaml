@@ -1562,6 +1562,12 @@ redis:
   # @default -- `""` (defaults to global.runtimeClassName)
   runtimeClassName: ""
 
+  # -- Existing Secret name for the embedded Redis password. The Secret must contain the key `auth`.
+  # Only used when `redisSecretInit.enabled` is `false`, otherwise the secret name is `argocd-redis`.
+  # Only applies to the single node Redis deployment. With `redis-ha.enabled` use `redis-ha.existingSecret` instead,
+  # and for external Redis use `externalRedis.existingSecret`.
+  existingSecret: ""
+
   ## Redis Pod Disruption Budget
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
   pdb:
