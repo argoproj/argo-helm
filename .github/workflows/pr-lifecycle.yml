@@ -23,13 +23,13 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
         with:
           egress-policy: audit
 
       - name: Get octo-sts token
         id: sts
-        uses: octo-sts/action@6177b4481c00308b3839969c3eca88c96a91775f # v1.0.0
+        uses: octo-sts/action@f603d3be9d8dd9871a265776e625a27b00effe05 # v1.1.1
         with:
           scope: argoproj/argo-helm
           identity: pr-lifecycle
