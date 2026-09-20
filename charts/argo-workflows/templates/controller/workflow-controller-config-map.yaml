@@ -135,6 +135,9 @@ data:
       modifiers:
         {{- toYaml . | nindent 8 }} 
       {{- end }}  
+      {{- with .Values.controller.metricsConfig.temporality }}
+      temporality: {{ . }}
+      {{- end }}
     {{- end }}
     {{- if .Values.controller.telemetryConfig.enabled }}
     telemetryConfig:
