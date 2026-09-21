@@ -28,9 +28,14 @@ spec:
         {{- with.Values.controller.podLabels }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.controller.podAnnotations }}
+      {{- if or .Values.controller.podAnnotations (and .Values.controller.configMap.create .Values.controller.configMap.restartOnChange) }}
       annotations:
+        {{- with .Values.controller.podAnnotations }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if and .Values.controller.configMap.create .Values.controller.configMap.restartOnChange }}
+        checksum/config: {{ include "argo-workflows.controller.config.checksum" (dict "context" $ "path" "/controller/workflow-controller-config-map.yaml") }}
+        {{- end }}
       {{- end }}
     spec:
       serviceAccountName: {{ template "argo-workflows.controllerServiceAccountName" . }}
