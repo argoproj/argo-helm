@@ -1780,7 +1780,7 @@ The main options are listed here:
 | redis-ha.auth | bool | `true` | Configures redis-ha with AUTH |
 | redis-ha.containerSecurityContext | object | See [values.yaml] | Redis HA statefulset container-level security context |
 | redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
-| redis-ha.existingSecret | string | `"argocd-redis"` | Existing Secret to use for redis-ha authentication. By default the redis-secret-init Job is generating this Secret. |
+| redis-ha.existingSecret | string | `"argocd-redis"` | Existing Secret to use for redis-ha authentication. By default the redis-secret-init Job is generating this Secret. When `redisSecretInit.enabled` is `false`, the Argo CD components read the Redis password from this Secret too (key `redis-ha.authKey`). |
 | redis-ha.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
 | redis-ha.exporter.image | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
 | redis-ha.exporter.tag | string | `"v1.75.0"` | Tag to use for the redis-exporter |

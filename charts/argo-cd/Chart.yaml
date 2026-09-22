@@ -27,4 +27,4 @@ annotations:
     url: https://argoproj.github.io/argo-helm/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: added
-      description: Add `redis.existingSecret` to use a custom Secret name for the embedded Redis password
+      description: Add `redis.existingSecret` to use a custom Secret name for the embedded Redis password and make the Redis clients follow `redis-ha.existingSecret` and `redis-ha.authKey` when redis-ha is enabled

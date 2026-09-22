@@ -1994,6 +1994,7 @@ redis-ha:
   auth: true
   # -- Existing Secret to use for redis-ha authentication.
   # By default the redis-secret-init Job is generating this Secret.
+  # When `redisSecretInit.enabled` is `false`, the Argo CD components read the Redis password from this Secret too (key `redis-ha.authKey`).
   existingSecret: argocd-redis
 
   # -- Whether the Redis server pods should be forced to run on separate nodes.

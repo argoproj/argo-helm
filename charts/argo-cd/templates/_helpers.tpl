@@ -344,9 +344,11 @@ key: auth
 optional: false # Secret is not optional in this case !
 
     {{- else if (index .Values "redis-ha").enabled -}}
-    {{- /* Embedded redis-ha with disabled pre-install Job: follow the Secret used by the redis-ha subchart */ -}}
-name: {{ index .Values "redis-ha" "existingSecret" }}
-key: auth
+    {{- /* Embedded redis-ha with disabled pre-install Job: resolve the Secret name and key the same way the redis-ha subchart does */ -}}
+    {{- $redisHa := (index .Values "redis-ha") -}}
+    {{- $redisHaContext := dict "Chart" (dict "Name" "redis-ha") "Release" .Release "Template" .Template "Values" $redisHa -}}
+name: {{ default (include "redis-ha.fullname" $redisHaContext) (tpl ($redisHa.existingSecret | default "") $redisHaContext) }}
+key: {{ $redisHa.authKey }}
 optional: true
 
     {{- else -}}
