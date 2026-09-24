@@ -32,7 +32,7 @@ spec:
     {{- end }}
   namespaceSelector:
     matchNames:
-    - {{ .Release.Namespace }}
+    - {{ include "argo-rollouts.namespace" . | quote }}
   selector:
     matchLabels:
       app.kubernetes.io/component: {{ .Values.controller.component }}
