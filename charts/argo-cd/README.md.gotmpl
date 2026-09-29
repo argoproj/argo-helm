@@ -1053,6 +1053,8 @@ This option uses the following third-party chart to bootstrap a clustered Redis:
 For all available configuration options, please read upstream README and/or chart source.
 The main options are listed here:
 
+Charts that alias a differently named Redis chart to the `redis-ha` dependency, eg. the Docker Hardened Images chart, need `redis-ha.fullnameOverride` set to the name of the Redis service their chart creates.
+
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 {{- range .Values }}

@@ -53,15 +53,32 @@ Create redis name and version as used by the chart label.
 */}}
 {{- define "argo-cd.redis.fullname" -}}
 {{- $redisHa := (index .Values "redis-ha") -}}
-{{- $redisHaContext := dict "Chart" (dict "Name" "redis-ha") "Release" .Release "Values" $redisHa -}}
 {{- if $redisHa.enabled -}}
+    {{- $fullname := include "argo-cd.redis.haFullname" . -}}
     {{- if $redisHa.haproxy.enabled -}}
-        {{- printf "%s-haproxy" (include "redis-ha.fullname" $redisHaContext) | trunc 63 | trimSuffix "-" -}}
+        {{- printf "%s-haproxy" $fullname | trunc 63 | trimSuffix "-" -}}
     {{- else -}}
-        {{- include "redis-ha.fullname" $redisHaContext | trunc 63 | trimSuffix "-" -}}
+        {{- $fullname -}}
     {{- end -}}
 {{- else -}}
 {{- printf "%s-%s" (include "argo-cd.fullname" .) .Values.redis.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the redis-ha subchart. Mirrors `redis-ha.fullname` instead of including it, so charts that alias a differently named subchart to the redis-ha dependency still render.
+*/}}
+{{- define "argo-cd.redis.haFullname" -}}
+{{- $redisHa := (index .Values "redis-ha") -}}
+{{- if $redisHa.fullnameOverride -}}
+{{- $redisHa.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "redis-ha" $redisHa.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
