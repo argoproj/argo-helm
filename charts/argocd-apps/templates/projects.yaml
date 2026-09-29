@@ -29,7 +29,7 @@ spec:
   permitOnlyProjectScopedClusters: {{ . }}
   {{- end }}
   {{- with $projectData.description }}
-  description: {{ . }}
+  description: {{ . | quote }}
   {{- end }}
   {{- with $projectData.sourceRepos }}
   sourceRepos:
