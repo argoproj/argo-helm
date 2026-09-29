@@ -193,7 +193,7 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.initImage.imagePullPolicy }}
         command:
         - /bin/cp
-        - -n
+        - -f
         - /usr/local/bin/argocd
         - /shared/argocd-dex
         volumeMounts:
