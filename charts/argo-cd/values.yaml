@@ -1915,6 +1915,8 @@ redis:
 redis-ha:
   # -- Enables the Redis HA subchart and disables the custom Redis single node deployment
   enabled: false
+  # -- Name of the Redis service created by the subchart. Only needed if the `redis-ha` dependency is a differently named chart, eg. the Docker Hardened Images chart
+  fullnameOverride: ""
   ## Redis image
   image:
     # -- Redis repository

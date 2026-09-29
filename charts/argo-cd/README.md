@@ -1772,6 +1772,8 @@ This option uses the following third-party chart to bootstrap a clustered Redis:
 For all available configuration options, please read upstream README and/or chart source.
 The main options are listed here:
 
+Charts that alias a differently named Redis chart to the `redis-ha` dependency, eg. the Docker Hardened Images chart, need `redis-ha.fullnameOverride` set to the name of the Redis service their chart creates.
+
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redis-ha.additionalAffinities | object | `{}` | Additional affinities to add to the Redis server pods. |
@@ -1783,6 +1785,7 @@ The main options are listed here:
 | redis-ha.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
 | redis-ha.exporter.image | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
 | redis-ha.exporter.tag | string | `"v1.75.0"` | Tag to use for the redis-exporter |
+| redis-ha.fullnameOverride | string | `""` | Name of the Redis service created by the subchart. Only needed if the `redis-ha` dependency is a differently named chart, eg. the Docker Hardened Images chart |
 | redis-ha.haproxy.additionalAffinities | object | `{}` | Additional affinities to add to the haproxy pods. |
 | redis-ha.haproxy.affinity | string | `""` | Assign custom [affinity] rules to the haproxy pods. |
 | redis-ha.haproxy.containerSecurityContext | object | See [values.yaml] | HAProxy container-level security context |
