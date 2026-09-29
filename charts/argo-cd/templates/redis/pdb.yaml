@@ -17,8 +17,8 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- with .Values.redis.pdb.maxUnavailable }}
-  maxUnavailable: {{ . }}
+  {{- if and (not (kindIs "invalid" .Values.redis.pdb.maxUnavailable)) (ne (toString .Values.redis.pdb.maxUnavailable) "") }}
+  maxUnavailable: {{ .Values.redis.pdb.maxUnavailable }}
   {{- else }}
   minAvailable: {{ .Values.redis.pdb.minAvailable | default 0 }}
   {{- end }}
