@@ -64,6 +64,26 @@ applicationSet:
   replicas: 2
 ```
 
+## Argo CD Core
+
+[Argo CD Core](https://argo-cd.readthedocs.io/en/stable/operator-manual/core/) is a headless installation without the API server, the UI, Dex and the notifications controller.
+It runs the same workloads as the upstream `core-install.yaml` manifest: application controller, repo server, Redis and ApplicationSet controller.
+
+```yaml
+server:
+  enabled: false
+
+dex:
+  enabled: false
+
+notifications:
+  enabled: false
+```
+
+Without the API server, use the CLI in core mode (`argocd login --core`) or `argocd admin` commands, with direct access to the Kubernetes API.
+
+Switching an existing release to `server.enabled: false` deletes the server Deployment, Services, Ingress or Routes and certificates. Shared resources such as `argocd-secret` and the ConfigMaps are kept.
+
 ## Ingress configuration
 
 Please refer to the [Operator Manual](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingress-configurationh) for details as the samples
@@ -1368,6 +1388,7 @@ NAME: my-release
 | server.dnsConfig | object | `{}` | [DNS configuration] |
 | server.dnsPolicy | string | `"ClusterFirst"` | Alternative DNS policy for Server pods |
 | server.emptyDir.sizeLimit | string | `""` (defaults not set if not specified i.e. no size limit) | EmptyDir size limit for the Argo CD server |
+| server.enabled | bool | `true` | Enable Argo CD server. Set to `false` for an Argo CD Core installation (see [Argo CD Core](#argo-cd-core)) |
 | server.env | list | `[]` | Environment variables to pass to Argo CD server |
 | server.envFrom | list | `[]` (See [values.yaml]) | envFrom to pass to Argo CD server |
 | server.extensions.containerSecurityContext | object | See [values.yaml] | Server UI extensions container-level security context |

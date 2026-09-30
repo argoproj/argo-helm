@@ -1,4 +1,4 @@
-{{- if .Values.server.certificate.enabled -}}
+{{- if and (include "argo-cd.server.enabled" .) .Values.server.certificate.enabled -}}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:

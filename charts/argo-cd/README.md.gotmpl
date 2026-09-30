@@ -63,6 +63,26 @@ applicationSet:
   replicas: 2
 ```
 
+## Argo CD Core
+
+[Argo CD Core](https://argo-cd.readthedocs.io/en/stable/operator-manual/core/) is a headless installation without the API server, the UI, Dex and the notifications controller.
+It runs the same workloads as the upstream `core-install.yaml` manifest: application controller, repo server, Redis and ApplicationSet controller.
+
+```yaml
+server:
+  enabled: false
+
+dex:
+  enabled: false
+
+notifications:
+  enabled: false
+```
+
+Without the API server, use the CLI in core mode (`argocd login --core`) or `argocd admin` commands, with direct access to the Kubernetes API.
+
+Switching an existing release to `server.enabled: false` deletes the server Deployment, Services, Ingress or Routes and certificates. Shared resources such as `argocd-secret` and the ConfigMaps are kept.
+
 ## Ingress configuration
 
 Please refer to the [Operator Manual](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingress-configurationh) for details as the samples
