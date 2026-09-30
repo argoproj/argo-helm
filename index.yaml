@@ -1588,6 +1588,41 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Add `redis.existingSecret` to use a custom Secret name for the embedded Redis password and make the Redis clients follow `redis-ha.existingSecret` and `redis-ha.authKey` when redis-ha is enabled
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.5.3
+    created: "2026-09-30T15:34:43.176766731Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.38.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: b9a29f84b533f5e519e6b9e6bc13a6c23d15103801b963b023f2467ea9962d58
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-cd
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-10.9.5/argo-cd-10.9.5.tgz
+    version: 10.9.5
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Overwrite partial argocd-dex binary on dex copyutil init container retry
       artifacthub.io/signKey: |
@@ -45961,4 +45996,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-09-29T14:18:36.598527867Z"
+generated: "2026-09-30T15:34:43.178178397Z"
