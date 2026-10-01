@@ -36152,6 +36152,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Keep maxUnavailable 0 in the controller and server PDBs instead of falling back to minAvailable 0
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v4.1.4
+    created: "2026-10-01T02:42:32.817459608Z"
+    description: A Helm chart for Argo Workflows
+    digest: 6c13950165f818c2b02e2cc1f965177b1b03ad1c663bfea5e4efd9d2096ddecf
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-2.0.9/argo-workflows-2.0.9.tgz
+    version: 2.0.9
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Add opt-in controller.configMap.restartOnChange to restart the workflow controller on ConfigMap changes via checksum annotation
       artifacthub.io/signKey: |
@@ -45996,4 +46020,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-09-30T15:34:43.178178397Z"
+generated: "2026-10-01T02:42:32.819538447Z"
