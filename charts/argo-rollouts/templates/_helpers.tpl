@@ -332,7 +332,9 @@ Return the rules for controller's Role and ClusterRole
   - delete
 {{- end }}
 {{- if .Values.providerRBAC.providers.awsLoadBalancerController }}
-# Endpoints and TargetGroupBindings needed for ALB target group verification when using AWS Load Balancer Controller
+# Endpoints and TargetGroupBindings needed for ALB target group verification.
+# elbv2.k8s.aws: AWS Load Balancer Controller on standard EKS.
+# eks.amazonaws.com: TargetGroupBinding resources created by EKS Auto Mode ALB.
 - apiGroups:
   - ""
   resources:
@@ -341,6 +343,13 @@ Return the rules for controller's Role and ClusterRole
   - get
 - apiGroups:
   - elbv2.k8s.aws
+  resources:
+  - targetgroupbindings
+  verbs:
+  - list
+  - get
+- apiGroups:
+  - eks.amazonaws.com
   resources:
   - targetgroupbindings
   verbs:
