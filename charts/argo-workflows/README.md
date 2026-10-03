@@ -349,6 +349,7 @@ Fields to note:
 | controller.metricsConfig.portName | string | `"metrics"` | Container metrics port name |
 | controller.metricsConfig.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping |
 | controller.metricsConfig.scheme | string | `"http"` | serviceMonitor scheme |
+| controller.metricsConfig.scrapeTimeout | string | `""` | Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used. |
 | controller.metricsConfig.secure | bool | `false` | Flag that use a self-signed cert for TLS |
 | controller.metricsConfig.servicePort | int | `8080` | Service metrics port |
 | controller.metricsConfig.servicePortName | string | `"metrics"` | Service metrics port name |
@@ -396,6 +397,7 @@ Fields to note:
 | controller.telemetryConfig.path | string | `"/telemetry"` | telemetry path |
 | controller.telemetryConfig.port | int | `8081` | telemetry container port |
 | controller.telemetryConfig.scheme | string | `"http"` | telemetry serviceMonitor scheme to use |
+| controller.telemetryConfig.scrapeTimeout | string | `""` | Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used. |
 | controller.telemetryConfig.secure | bool | `false` | Flag that use a self-signed cert for TLS |
 | controller.telemetryConfig.servicePort | int | `8081` | telemetry service port |
 | controller.telemetryConfig.servicePortName | string | `"telemetry"` | telemetry service port name |
