@@ -16,9 +16,9 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- if .Values.webhook.pdb.minAvailable }}
+  {{- if hasKey .Values.webhook.pdb "minAvailable" }}
   minAvailable: {{ .Values.webhook.pdb.minAvailable }}
-  {{- else if .Values.webhook.pdb.maxUnavailable }}
+  {{- else if hasKey .Values.webhook.pdb "maxUnavailable" }}
   maxUnavailable: {{ .Values.webhook.pdb.maxUnavailable }}
   {{- else }}
   minAvailable: 0
