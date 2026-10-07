@@ -1,4 +1,4 @@
-{{- if .Values.createClusterRoles }}
+{{- if and (include "argo-cd.server.enabled" .) .Values.createClusterRoles }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
