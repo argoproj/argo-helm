@@ -39,6 +39,10 @@ spec:
   destinations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with $projectData.destinationServiceAccounts }}
+  destinationServiceAccounts:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with $projectData.clusterResourceWhitelist }}
   clusterResourceWhitelist:
     {{- toYaml . | nindent 4 }}
