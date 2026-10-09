@@ -15,3 +15,9 @@ rules:
       # Renovate needs broad installation permissions to operate; scoping the
       # token via permission-* inputs is tracked as a follow-up.
       - renovate.yaml
+  unpinned-uses:
+    config:
+      policies:
+        # grc.store compares the signing certificate's workflow ref to this
+        # exact tag and rejects a SHA-pinned call to the publisher.
+        revanite-io/pvtr-publish-results/*: ref-pin
