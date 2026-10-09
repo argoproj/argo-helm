@@ -189,6 +189,18 @@ The linting can be invoked manually with the following command:
 ./scripts/lint.sh
 ```
 
+## Building Charts
+
+You need [Helm](https://helm.sh/docs/intro/install/) (CI uses v4.2.3, see `.github/workflows/lint-and-test.yml`). Charts with dependencies, such as `argo-cd`, also need the chart repositories listed in [ct-lint.yaml](./.github/configs/ct-lint.yaml).
+
+```shell
+helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
+helm dependency build charts/argo-cd
+helm package charts/argo-cd
+```
+
+Replace `argo-cd` with the chart you changed. `helm package` writes the chart archive to the current directory.
+
 ## Publishing Changes
 
 Changes are automatically publish whenever a commit is merged to the `main` branch by the CI job (see `./.github/workflows/publish.yml`).
