@@ -9,12 +9,11 @@ on:
         description: "Run the scan but publish nothing (bundles land in the pvtr-bundles artifact)"
         type: boolean
         default: false
-  push:
-    branches: [main]
   schedule:
     - cron: "17 6 * * 1" # Weekly, Mondays 06:17 UTC
-  # No pull_request trigger: the hub accepts one result per target and
-  # catalog every ten minutes.
+  # No push or pull_request trigger: the hub accepts one result per target
+  # and catalog every ten minutes, and back-to-back merges to main would
+  # turn the second run red.
 
 permissions: {}
 
@@ -33,7 +32,7 @@ jobs:
       security-events: write
     # By tag, not SHA, on purpose: the hub compares the signing certificate's
     # workflow ref to this exact tag and rejects a SHA-pinned call.
-    uses: revanite-io/pvtr-publish-results/.github/workflows/publish.yml@v1 # zizmor: ignore[unpinned-uses] the hub requires the tag
+    uses: revanite-io/pvtr-publish-results/.github/workflows/publish.yml@v1 # unpinned-uses policy in .github/zizmor.yml
     with:
       # The scan evaluates repository settings and files, not a chart
       # release, so results accumulate under one fixed version.
