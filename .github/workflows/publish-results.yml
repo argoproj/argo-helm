@@ -1,0 +1,59 @@
+# Publishes OSPS Baseline results for this repository to grc.store
+# (https://grc.store/targets/argo-helm/argo-helm).
+name: Publish OSPS Baseline results
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: "Run the scan but publish nothing (bundles land in the pvtr-bundles artifact)"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 6 * * 1" # Weekly, Mondays 06:17 UTC
+  # No pull_request trigger: the hub accepts one result per target and
+  # catalog every ten minutes.
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  results:
+    if: github.repository == 'argoproj/argo-helm'
+    permissions:
+      contents: read # The scanner reads this repository through the job token
+      id-token: write # Trusted publishing to the hub and the Sigstore signing identity
+      # The called workflow's report job declares it, and GitHub checks every
+      # called job at startup, even one that upload-sarif: false skips.
+      security-events: write
+    # By tag, not SHA, on purpose: the hub compares the signing certificate's
+    # workflow ref to this exact tag and rejects a SHA-pinned call.
+    uses: revanite-io/pvtr-publish-results/.github/workflows/publish.yml@v1 # zizmor: ignore[unpinned-uses] the hub requires the tag
+    with:
+      # The scan evaluates repository settings and files, not a chart
+      # release, so results accumulate under one fixed version.
+      target: argo-helm/argo-helm@0.0.0
+      license: CC0-1.0
+      dry-run: ${{ inputs.dry-run == true }}
+    secrets:
+      # Inline because the plugin reads its token only from these config vars.
+      # The job token is read-only and scoped to this repository; settings it
+      # cannot read (org MFA, some admin settings) report "Needs Review".
+      config: |
+        targets:
+          argo-helm:
+            plugin: openssf/github-repo
+            policy:
+              catalogs:
+                - osps-baseline
+              applicability:
+                - maturity-3
+            vars:
+              owner: argoproj
+              repo: argo-helm
+              token: ${{ secrets.GITHUB_TOKEN }}
