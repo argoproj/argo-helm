@@ -77,3 +77,6 @@ jobs:
         with:
           inputs: .github/workflows/
           advanced-security: false
+          # Pinned so a new zizmor release cannot fail this required check on
+          # unchanged workflows. Bump manually, like actionlint above.
+          version: 1.30.1
