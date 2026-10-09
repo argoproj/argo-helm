@@ -36379,6 +36379,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Bump argo-workflows to v4.1.5
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v4.1.5
+    created: "2026-10-09T15:26:55.949078149Z"
+    description: A Helm chart for Argo Workflows
+    digest: f95d89e43f81a000bd2da1cab7ab665f1e9ae3912d9aeb659fc79f90b7fbee4c
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-2.0.12/argo-workflows-2.0.12.tgz
+    version: 2.0.12
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Add configurable ServiceMonitor scrape timeouts for controller metrics and telemetry
       artifacthub.io/signKey: |
@@ -46271,4 +46295,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-10-09T14:36:53.936925954Z"
+generated: "2026-10-09T15:26:55.950640712Z"
