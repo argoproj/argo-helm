@@ -4,11 +4,9 @@
 ## .github/zizmor.yml).
 name: Actions Lint
 on:
+  # No path filter on pull requests: the zizmor job is a required status
+  # check, and a filtered-out required check never reports.
   pull_request:
-    paths:
-      - ".github/workflows/**"
-      - ".github/zizmor.yml"
-      - "scripts/*.sh"
   push:
     branches: [main]
     paths:
