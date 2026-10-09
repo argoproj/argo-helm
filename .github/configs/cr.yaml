@@ -2,10 +2,10 @@
 index-path: "./index.yaml"
 
 # PGP signing
+# Charts are signed with `helm package --sign` in the `package` job of
+# .github/workflows/publish.yml, which reads the key name below.
 sign: true
 key: Argo Helm maintainers
-# keyring:          # Set via env variable CR_KEYRING
-# passphrase-file:  # Set via env variable CR_PASSPHRASE_FILE
 
 # Enable automatic generation of release notes using GitHubs release notes generator.
 # see: https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes

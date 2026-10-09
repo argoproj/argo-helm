@@ -57,6 +57,9 @@ When selecting new application versions ensure you make the following changes:
 * `values.yaml`: Bump all instances of the container image version
 * `Chart.yaml`: Ensure `appVersion` matches the above container image and bump `version`
 
+When you bump a chart dependency such as `redis-ha`, also update its sha256 in `.github/configs/chart-dependencies.sha256`.
+CI runs `helm dependency build` and then `./scripts/verify-chart-dependencies.sh`, which fails until the digest matches.
+
 Please ensure chart version changes adhere to semantic versioning standards:
 
 * Major: Large chart rewrites, major non-backwards compatible or destructive changes
