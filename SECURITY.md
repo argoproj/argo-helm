@@ -36,7 +36,7 @@ Details stay private until a fix is released or TODO days have passed since conf
 
 <!-- TODO(maintainers): fill every TODO, then delete this comment. -->
 
-Renovate tracks upstream application versions, container images, and chart dependencies. Dependabot tracks GitHub Actions. Vulnerabilities in the upstream Argo applications follow that application's security policy, linked above.
+Renovate tracks upstream application versions and container images. Dependabot tracks GitHub Actions. Chart dependencies (argo-cd's redis-ha) are bumped by hand. Vulnerabilities in the upstream Argo applications follow that application's security policy, linked above.
 
 Vulnerabilities in dependencies this repository controls are fixed by upgrading, patching, or replacing the dependency within:
 
@@ -49,7 +49,7 @@ Vulnerabilities in dependencies this repository controls are fixed by upgrading,
 
 Dependencies must use an OSI-approved license. TODO: licenses that need maintainer review, and licenses that are disallowed.
 
-A chart release does not ship while it carries an unresolved TODO (for example, critical or high) finding or a disallowed license. A maintainer who did not author the change may approve a documented exception when the finding does not affect the chart.
+Releases are not gated automatically: `publish.yml` publishes every merge that touches `charts/`. Maintainers do not merge a change to a chart with a known unresolved TODO (for example, critical or high) finding or a disallowed license, unless a maintainer who did not author the change approves a documented exception in the pull request.
 
 <!-- Adapted from the Static Application Security Testing Policy template in the
      OpenSSF OSPS Templates (ORBIT Definitions SIG), CC BY 4.0: https://github.com/eddie-knight/osps-templates -->

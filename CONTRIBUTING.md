@@ -191,7 +191,7 @@ The linting can be invoked manually with the following command:
 
 ## Building Charts
 
-You need [Helm](https://helm.sh/docs/intro/install/) (CI uses v4.2.3, see `.github/workflows/lint-and-test.yml`). Charts with dependencies, such as `argo-cd`, also need the chart repositories listed in [ct-lint.yaml](./.github/configs/ct-lint.yaml).
+You need [Helm](https://helm.sh/docs/intro/install/) (CI's version is in `.github/workflows/lint-and-test.yml`). Charts with dependencies, such as `argo-cd`, also need the chart repositories listed in [ct-lint.yaml](./.github/configs/ct-lint.yaml).
 
 ```shell
 helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
