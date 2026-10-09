@@ -126,7 +126,13 @@ jobs:
           trap 'rm -rf "${key_dir}"' EXIT
           mkdir -m 700 "${key_dir}"
           printf '%s\n' "${PGP_PRIVATE_KEY}" | gpg --dearmor > "${key_dir}/secring.gpg"
-          printf '%s\n' "${PGP_PASSPHRASE}" > "${key_dir}/passphrase.txt"
+          # Only pass a passphrase file when the secret holds one: helm rejects
+          # an empty passphrase file.
+          sign_args=(--sign --key "${signing_key}" --keyring "${key_dir}/secring.gpg")
+          if [[ -n "${PGP_PASSPHRASE}" ]]; then
+            printf '%s\n' "${PGP_PASSPHRASE}" > "${key_dir}/passphrase.txt"
+            sign_args+=(--passphrase-file "${key_dir}/passphrase.txt")
+          fi
 
           rm -rf .cr-release-packages
           mkdir -p .cr-release-packages
@@ -135,10 +141,7 @@ jobs:
             echo "Packaging chart '${chart}'..."
             helm package "${chart}" \
               --destination .cr-release-packages \
-              --sign \
-              --key "${signing_key}" \
-              --keyring "${key_dir}/secring.gpg" \
-              --passphrase-file "${key_dir}/passphrase.txt"
+              "${sign_args[@]}"
           done
 
       - name: Remove signing material
