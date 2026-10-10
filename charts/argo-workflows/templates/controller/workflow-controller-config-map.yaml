@@ -121,9 +121,9 @@ data:
       {{- toYaml .Values.customArtifactRepository | nindent 6 }}
       {{- end }}
     {{- end }}
-    {{- if .Values.controller.metricsConfig.enabled }}
     metricsConfig:
       enabled: {{ .Values.controller.metricsConfig.enabled }}
+      {{- if .Values.controller.metricsConfig.enabled }}
       path: {{ .Values.controller.metricsConfig.path }}
       port: {{ .Values.controller.metricsConfig.port }}
       {{- if .Values.controller.metricsConfig.metricsTTL }}
@@ -135,7 +135,7 @@ data:
       modifiers:
         {{- toYaml . | nindent 8 }} 
       {{- end }}  
-    {{- end }}
+      {{- end }}
     {{- if .Values.controller.telemetryConfig.enabled }}
     telemetryConfig:
       enabled: {{ .Values.controller.telemetryConfig.enabled }}
