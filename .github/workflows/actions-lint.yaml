@@ -4,11 +4,9 @@
 ## .github/zizmor.yml).
 name: Actions Lint
 on:
+  # No path filter on pull requests: the zizmor job is a required status
+  # check, and a filtered-out required check never reports.
   pull_request:
-    paths:
-      - ".github/workflows/**"
-      - ".github/zizmor.yml"
-      - "scripts/*.sh"
   push:
     branches: [main]
     paths:
@@ -79,3 +77,6 @@ jobs:
         with:
           inputs: .github/workflows/
           advanced-security: false
+          # Pinned so a new zizmor release cannot fail this required check on
+          # unchanged workflows. Bump manually, like actionlint above.
+          version: 1.30.1
