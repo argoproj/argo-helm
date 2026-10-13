@@ -91,6 +91,23 @@ repository:
         results: {}
         comment: |
           Renovate is used for automated dependency updates.
+      - name: OSPS Baseline Scanner
+        type: other
+        rulesets:
+          - osps-baseline
+        integration:
+          adhoc: false
+          ci: true
+          release: false
+        results:
+          ci:
+            name: OSPS Baseline evaluation
+            predicate-uri: https://github.com/revanite-io/pvtr-publish-results
+            location: https://grc.store/targets/argo-helm/argo-helm
+        comment: |
+          The OpenSSF pvtr-github-repo-scanner evaluates this repository against
+          OSPS Baseline Level 3 weekly and on demand, and publishes
+          signed results to grc.store.
   documentation:
     contributing-guide: https://github.com/argoproj/argo-helm/blob/main/CONTRIBUTING.md
     dependency-management-policy: https://github.com/argoproj/argo-helm/blob/main/CONTRIBUTING.md#new-application-versions
