@@ -183,6 +183,10 @@ controller:
       enabled: false
       # -- Namespace to be used for the ServiceMonitor
       namespace: ""
+      # -- Prometheus ServiceMonitor interval; empty uses Prometheus's global one
+      interval: ""
+      # -- Prometheus ServiceMonitor scrapeTimeout; empty uses Prometheus's global one
+      scrapeTimeout: ""
       # -- Labels to be added to the ServiceMonitor
       additionalLabels: {}
       # -- Annotations to be added to the ServiceMonitor
