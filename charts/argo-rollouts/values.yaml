@@ -382,6 +382,9 @@ dashboard:
     pullPolicy: IfNotPresent
   # -- Set the root path of the dashboard (e.g. `/rollouts`). Useful when running behind a reverse proxy with a path prefix.
   rootPath: ""
+  # -- Address the dashboard listens on. Since v1.10.1 the dashboard binds to `127.0.0.1` unless told otherwise, which the Service cannot reach.
+  # Set to `""` to omit the flag for images older than v1.8.5, v1.9.2 or v1.10.1.
+  address: "0.0.0.0"
   # -- Additional command line arguments to pass to rollouts-dashboard. A list of flags.
   extraArgs: []
   # -- Additional environment variables for rollouts-dashboard. A list of name/value maps.
