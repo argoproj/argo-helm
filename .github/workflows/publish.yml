@@ -1,4 +1,8 @@
 ## Reference: https://github.com/helm/chart-releaser-action
+##
+## Charts are packaged and signed in the `package` job, which has read-only
+## repository access. The `release` job publishes the signed packages and
+## has no access to the signing key.
 name: Chart Publish
 on:
   push:
@@ -9,11 +13,157 @@ on:
 
 permissions: {}
 
+# One publish at a time, so index updates and registry pushes do not
+# interleave. A queued run picks up every chart changed since the last tag.
+concurrency:
+  group: chart-publish
+  cancel-in-progress: false
+
 jobs:
-  publish:
+  package:
     if: github.repository == 'argoproj/argo-helm'
     permissions:
-      contents: write  # for helm/chart-releaser-action to push chart release and create a release
+      contents: read  # to check out the repository and read release tags
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.list-changed.outputs.changed }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # Mirrors lookup_latest_tag / lookup_changed_charts from
+      # helm/chart-releaser-action's cr.sh (v1.7.0).
+      - name: List changed charts
+        id: list-changed
+        run: |
+          set -euo pipefail
+          git fetch --tags >/dev/null 2>&1 || true
+          if ! latest_tag=$(git describe --tags --abbrev=0 HEAD~ 2>/dev/null); then
+            latest_tag=$(git rev-list --max-parents=0 --first-parent HEAD)
+          fi
+          echo "Discovering changed charts since '${latest_tag}'..."
+
+          changed_charts=()
+          while IFS= read -r chart; do
+            [[ -n "${chart}" && -d "${chart}" ]] || continue
+            if [[ -f "${chart}/Chart.yaml" ]]; then
+              changed_charts+=("${chart}")
+            else
+              echo "WARNING: ${chart}/Chart.yaml is missing, assuming that '${chart}' is not a Helm chart. Skipping." >&2
+            fi
+          done < <(git diff --find-renames --name-only "${latest_tag}" -- charts | cut -d '/' -f 1-2 | uniq)
+
+          if [[ ${#changed_charts[@]} -eq 0 ]]; then
+            echo "Nothing to do. No chart changes detected."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Changed charts: ${changed_charts[*]}"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "charts=${changed_charts[*]}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Helm
+        if: steps.list-changed.outputs.changed == 'true'
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+        with:
+          version: v4.2.3 # Also update in lint-and-test.yaml
+
+      - name: Add dependency chart repos
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
+
+      - name: Build chart dependencies
+        if: steps.list-changed.outputs.changed == 'true'
+        env:
+          CHARTS: ${{ steps.list-changed.outputs.charts }}
+        run: |
+          set -euo pipefail
+          read -ra charts <<< "${CHARTS}"
+          for chart in "${charts[@]}"; do
+            helm dependency build "${chart}"
+          done
+
+      - name: Verify subchart digests
+        if: steps.list-changed.outputs.changed == 'true'
+        env:
+          CHARTS: ${{ steps.list-changed.outputs.charts }}
+        run: |
+          set -euo pipefail
+          read -ra charts <<< "${CHARTS}"
+          ./scripts/verify-chart-dependencies.sh "${charts[@]}"
+
+      # Packages the verified dependencies as-is (no --dependency-update), so
+      # only checked archives are signed. The signing key name comes from
+      # .github/configs/cr.yaml.
+      # The GitHub repository secret `PGP_PRIVATE_KEY` contains the private key
+      # in ASCII-armored format. To export a (new) key, run this command:
+      # `gpg --armor --export-secret-key <my key>`
+      # The key only exists on disk for the duration of this step.
+      - name: Package and sign charts
+        if: steps.list-changed.outputs.changed == 'true'
+        env:
+          CHARTS: ${{ steps.list-changed.outputs.charts }}
+          PGP_PRIVATE_KEY: "${{ secrets.PGP_PRIVATE_KEY }}"
+          PGP_PASSPHRASE: "${{ secrets.PGP_PASSPHRASE }}"
+        run: |
+          set -euo pipefail
+          signing_key=$(yq '.key' ./.github/configs/cr.yaml)
+          if [[ -z "${signing_key}" || "${signing_key}" == "null" ]]; then
+            echo "::error::No signing key name set in .github/configs/cr.yaml"
+            exit 1
+          fi
+
+          key_dir="${RUNNER_TEMP}/signing"
+          trap 'rm -rf "${key_dir}"' EXIT
+          mkdir -m 700 "${key_dir}"
+          printf '%s\n' "${PGP_PRIVATE_KEY}" | gpg --dearmor > "${key_dir}/secring.gpg"
+          # Only pass a passphrase file when the secret holds one: helm rejects
+          # an empty passphrase file.
+          sign_args=(--sign --key "${signing_key}" --keyring "${key_dir}/secring.gpg")
+          if [[ -n "${PGP_PASSPHRASE}" ]]; then
+            printf '%s\n' "${PGP_PASSPHRASE}" > "${key_dir}/passphrase.txt"
+            sign_args+=(--passphrase-file "${key_dir}/passphrase.txt")
+          fi
+
+          rm -rf .cr-release-packages
+          mkdir -p .cr-release-packages
+          read -ra charts <<< "${CHARTS}"
+          for chart in "${charts[@]}"; do
+            echo "Packaging chart '${chart}'..."
+            helm package "${chart}" \
+              --destination .cr-release-packages \
+              "${sign_args[@]}"
+          done
+
+      - name: Remove signing material
+        if: always()
+        run: |
+          rm -rf "${RUNNER_TEMP}/signing"
+
+      - name: Upload chart packages
+        if: steps.list-changed.outputs.changed == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: chart-packages
+          path: .cr-release-packages/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  release:
+    needs: package
+    if: needs.package.outputs.changed == 'true'
+    permissions:
+      contents: write  # for chart-releaser to create releases and push the index to gh-pages
       packages: write  # to push OCI chart package to GitHub Registry
     runs-on: ubuntu-latest
     steps:
@@ -33,10 +183,6 @@ jobs:
         with:
           version: v4.2.3 # Also update in lint-and-test.yaml
 
-      - name: Add dependency chart repos
-        run: |
-          helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
-
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
@@ -47,28 +193,32 @@ jobs:
         run: |
           git checkout origin/gh-pages index.yaml
 
-      # The GitHub repository secret `PGP_PRIVATE_KEY` contains the private key
-      # in ASCII-armored format. To export a (new) key, run this command:
-      # `gpg --armor --export-secret-key <my key>`
-      - name: Prepare PGP key
-        run: |
-          IFS=""
-          echo "$PGP_PRIVATE_KEY" | gpg --dearmor > $HOME/secring.gpg
-          echo "$PGP_PASSPHRASE" > $HOME/passphrase.txt
-
-          # Tell chart-releaser-action where to find the key and its passphrase
-          echo "CR_KEYRING=$HOME/secring.gpg" >> "$GITHUB_ENV"
-          echo "CR_PASSPHRASE_FILE=$HOME/passphrase.txt" >> "$GITHUB_ENV"
-        env:
-          PGP_PRIVATE_KEY: "${{ secrets.PGP_PRIVATE_KEY }}"
-          PGP_PASSPHRASE: "${{ secrets.PGP_PASSPHRASE }}"
-
-      - name: Run chart-releaser
+      - name: Install chart-releaser
         uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
         with:
-          config: "./.github/configs/cr.yaml"
+          install_only: true
+
+      - name: Download chart packages
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: chart-packages
+          path: .cr-release-packages
+
+      # Same `cr upload` / `cr index` invocations as release_charts and
+      # update_index in helm/chart-releaser-action's cr.sh (v1.7.0).
+      - name: Run chart-releaser
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        run: |
+          set -euo pipefail
+          owner="${GITHUB_REPOSITORY%%/*}"
+          repo="${GITHUB_REPOSITORY#*/}"
+
+          echo 'Releasing charts...'
+          cr upload -o "${owner}" -r "${repo}" -c "$(git rev-parse HEAD)" --config ./.github/configs/cr.yaml
+
+          echo 'Updating charts repo index...'
+          cr index -o "${owner}" -r "${repo}" --push --config ./.github/configs/cr.yaml
 
       - name: Login to GHCR
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
@@ -78,11 +228,13 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push chart to GHCR
+        env:
+          REPOSITORY: ${{ github.repository }}
         run: |
           shopt -s nullglob
           for pkg in .cr-release-packages/*.tgz; do
             if [ -z "${pkg:-}" ]; then
               break
             fi
-            helm push "${pkg}" oci://ghcr.io/${{ github.repository }}
+            helm push "${pkg}" "oci://ghcr.io/${REPOSITORY}"
           done

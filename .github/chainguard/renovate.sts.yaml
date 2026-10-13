@@ -1,0 +1,14 @@
+# octo-sts trust policy for the scheduled Renovate workflow.
+# Exchanges the workflow's OIDC identity for a short-lived GitHub App token,
+# replacing the long-lived Renovate App private key.
+# Ref: https://github.com/octo-sts/app and https://docs.renovatebot.com/modules/platform/github/
+issuer: https://token.actions.githubusercontent.com
+subject_pattern: repo:argoproj/argo-helm:ref:refs/heads/main
+claim_pattern:
+  job_workflow_ref: argoproj/argo-helm/\.github/workflows/renovate\.yaml@refs/heads/main
+permissions:
+  contents: write       # push update branches
+  pull_requests: write  # open and update PRs
+  issues: write         # dependency dashboard issue and labels
+  workflows: write      # renovate.yaml is in includePaths
+  statuses: write       # renovate/artifacts status when a postUpgradeTask fails

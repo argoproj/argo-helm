@@ -10,8 +10,3 @@ rules:
       # Metadata-only draft lifecycle; makes API calls with a scoped octo-sts
       # token and never checks out fork code (see #4083 / #4084).
       - pr-lifecycle.yml
-  github-app:
-    ignore:
-      # Renovate needs broad installation permissions to operate; scoping the
-      # token via permission-* inputs is tracked as a follow-up.
-      - renovate.yaml
