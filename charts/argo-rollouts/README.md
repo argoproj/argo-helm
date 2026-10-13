@@ -154,6 +154,7 @@ For full list of changes please check ArtifactHub [changelog].
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| dashboard.address | string | `"0.0.0.0"` | Address the dashboard listens on. Since v1.10.1 the dashboard binds to `127.0.0.1` unless told otherwise, which the Service cannot reach. Set to `""` to omit the flag for images older than v1.8.5, v1.9.2 or v1.10.1. |
 | dashboard.affinity | object | `{}` | Assign custom [affinity] rules to the deployment |
 | dashboard.component | string | `"rollouts-dashboard"` | Value of label `app.kubernetes.io/component` |
 | dashboard.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Security Context to set on container level |
