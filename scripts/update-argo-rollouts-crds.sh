@@ -9,13 +9,20 @@
 set -euo pipefail
 
 if ! command -v jq &> /dev/null; then
-    echo "Error: jq is required but not installed"
+    echo "Error: jq is required but not installed" >&2
     exit 1
 fi
 
+# The Renovate container has docker but no yq, so fall back to the yq image.
+# Renovate does not watch scripts/, so bump this pin by hand.
+YQ_IMAGE="docker.io/mikefarah/yq:4.54.1@sha256:4b3d9475d65571d28cbb19544d3820ec2945e4c8b2f18279394282b8dc3a592e"
+
 if ! command -v yq &> /dev/null; then
-    echo "Error: yq is required but not installed"
-    exit 1
+    if ! command -v docker &> /dev/null; then
+        echo "Error: yq (or docker to run it) is required but not installed" >&2
+        exit 1
+    fi
+    yq() { docker run --rm -i "$YQ_IMAGE" "$@"; }
 fi
 
 VERSION="${1:-}"
@@ -69,7 +76,7 @@ HEADER
         # escape Go template syntax that may appear in upstream CRD content
         # (e.g. "{{args.foo}}" examples, which Helm would otherwise try to
         # parse), then process the YAML
-        yq 'del(.. | .description? | select(tag == "!!str"))' "$src_file" | sed '/^---$/d' | sed 's/{{/{{ "{{" }}/g' | awk -v crd_name="$crd_name" '
+        yq 'del(.. | .description? | select(tag == "!!str"))' - < "$src_file" | sed '/^---$/d' | sed 's/{{/{{ "{{" }}/g' | awk -v crd_name="$crd_name" '
         BEGIN { state = "init" }
 
         state == "init" && /^metadata:$/ {
@@ -136,7 +143,7 @@ rm -f "$CRD_DIR"/*-crd.yaml
 crd_files=$(get_crd_files)
 
 if [[ -z "$crd_files" ]]; then
-    echo "  Error: Failed to fetch CRD file list"
+    echo "  Error: Failed to fetch CRD file list" >&2
     exit 1
 fi
 
@@ -150,7 +157,7 @@ while IFS= read -r crd_file; do
 
     echo "  Downloading $crd_file..."
     if ! curl -sSfL "$url" -o "$tmp_file"; then
-        echo "    Warning: Failed to download $crd_file"
+        echo "    Warning: Failed to download $crd_file" >&2
         continue
     fi
 

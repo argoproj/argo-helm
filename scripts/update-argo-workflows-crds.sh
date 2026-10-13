@@ -9,7 +9,7 @@
 set -euo pipefail
 
 if ! command -v jq &> /dev/null; then
-    echo "Error: jq is required but not installed"
+    echo "Error: jq is required but not installed" >&2
     exit 1
 fi
 
@@ -92,7 +92,7 @@ download_crds() {
     crd_files=$(get_crd_files)
 
     if [[ -z "$crd_files" ]]; then
-        echo "  Error: Failed to fetch CRD file list"
+        echo "  Error: Failed to fetch CRD file list" >&2
         return 1
     fi
 
@@ -102,7 +102,7 @@ download_crds() {
 
         echo "  Downloading $crd_file..."
         if ! curl -sSfL "$url" -o "$dest"; then
-            echo "    Warning: Failed to download $crd_file"
+            echo "    Warning: Failed to download $crd_file" >&2
             rm -f "$dest"
             continue
         fi
