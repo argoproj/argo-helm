@@ -24,6 +24,32 @@ A repository owner/maintainer will respond as fast as possible to coordinate con
 
 Thank you for helping to ensure this code stays secure.
 
+<!-- Adapted from the Coordinated Vulnerability Disclosure Policy template in the
+     OpenSSF OSPS Templates (ORBIT Definitions SIG), CC BY 4.0: https://github.com/eddie-knight/osps-templates -->
+## Response Timeframes
+
+Argo Helm is maintained by volunteers, so these are targets, not guarantees. We aim to acknowledge a report within 10 business days and to share an initial assessment (validity, severity, affected charts) within 10 business days of acknowledgement.
+
+Details stay private until a fix is released or 90 days have passed since confirmation, whichever comes first, unless the reporter and maintainers agree to a different timeline. We publish a GitHub Security Advisory with the affected chart versions and remediation steps, and credit the reporter unless they ask to stay anonymous.
+
+<!-- Adapted from the Software Composition Analysis Policy template in the
+     OpenSSF OSPS Templates (ORBIT Definitions SIG), CC BY 4.0: https://github.com/eddie-knight/osps-templates -->
+## Dependency Security
+
+Renovate tracks upstream application versions and container images. Dependabot tracks GitHub Actions. Chart dependencies (argo-cd's redis-ha) are bumped by hand. Vulnerabilities in the upstream Argo applications follow that application's security policy, linked above.
+
+Renovate opens a pull request when a container image it tracks publishes a new version, and maintainers merge those as review time allows. Nothing in CI scans dependencies for vulnerabilities, and releases are not gated on them. argo-cd's redis and HAProxy images aren't currently bumped by Renovate and can fall behind upstream fixes (see [#4098](https://github.com/argoproj/argo-helm/issues/4098)).
+
+Dependencies must use an OSI-approved license. A dependency with a disallowed license must be replaced or removed. Disallowed licenses are any license that is not OSI-approved, including source-available licenses such as SSPL-1.0, BUSL-1.1, and Elastic-2.0. A new dependency under a strong copyleft license, such as GPL or AGPL, needs maintainer review before it is added.
+
+<!-- Adapted from the Static Application Security Testing Policy template in the
+     OpenSSF OSPS Templates (ORBIT Definitions SIG), CC BY 4.0: https://github.com/eddie-knight/osps-templates -->
+## Static Analysis
+
+zizmor audits GitHub Actions workflows, and actionlint and shellcheck check workflows and scripts, on every pull request (see `.github/workflows/actions-lint.yaml`). All three are required status checks.
+
+Low, medium, and high severity findings must be fixed, or suppressed in `.github/zizmor.yml` with a documented reason, before the pull request merges.
+
 ## Secrets Management
 
 The workflows in this repository keep long-lived credentials to a minimum:
