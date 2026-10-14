@@ -38,7 +38,7 @@ Details stay private until a fix is released or 90 days have passed since confir
 
 Renovate tracks upstream application versions and container images. Dependabot tracks GitHub Actions. Chart dependencies (argo-cd's redis-ha) are bumped by hand. Vulnerabilities in the upstream Argo applications follow that application's security policy, linked above.
 
-Renovate opens a pull request when a container image it tracks publishes a new version, and maintainers merge those as review time allows. Nothing in CI scans dependencies for vulnerabilities, and releases are not gated on them. Images that come from argo-cd's redis-ha subchart and are not overridden in `values.yaml`, such as HAProxy, are not tracked and can fall behind upstream fixes (see [#4098](https://github.com/argoproj/argo-helm/issues/4098)).
+Renovate opens a pull request when a container image it tracks publishes a new version, and maintainers merge those as review time allows. Nothing in CI scans dependencies for vulnerabilities, and releases are not gated on them. argo-cd's redis and HAProxy images aren't currently bumped by Renovate and can fall behind upstream fixes (see [#4098](https://github.com/argoproj/argo-helm/issues/4098)).
 
 Dependencies must use an OSI-approved license. A dependency with a disallowed license must be replaced or removed. Disallowed licenses are any license that is not OSI-approved, including source-available licenses such as SSPL-1.0, BUSL-1.1, and Elastic-2.0. A new dependency under a strong copyleft license, such as GPL or AGPL, needs maintainer review before it is added.
 
