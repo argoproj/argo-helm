@@ -1,5 +1,9 @@
 # Security Policy
 
+## EU Cyber Resilience Act
+
+We do not anticipate this project being used in commercial products. See [LF-Supported Projects and CRA Readiness](https://openssf.org/wp-content/uploads/2026/09/LF-Supported-Projects-and-CRA-Readiness-2026-09-10.pdf) for more information.
+
 ## Supported Versions and Upstream Reporting
 
 Each helm chart currently supports the designated application version in the Chart.yaml. There is a chance a security issue you've discovered may not be with the helm chart but with the upstream application. Please visit that application's Security policy document to find out how to report the security issue.
@@ -47,3 +51,14 @@ Every merge that touches `charts/` publishes a release through `publish.yml`. Kn
 zizmor audits GitHub Actions workflows, and actionlint and shellcheck check workflows and scripts, on every pull request (see `.github/workflows/actions-lint.yaml`). All three are required status checks.
 
 Low, medium, and high severity findings must be fixed, or suppressed in `.github/zizmor.yml` with a documented reason, before the pull request merges.
+
+## Secrets Management
+
+The workflows in this repository keep long-lived credentials to a minimum:
+
+* Each job gets a GitHub token limited to the permissions that job declares.
+* Renovate and the PR lifecycle workflow trade the job's OIDC identity for a short-lived token through [octo-sts](https://github.com/octo-sts/app). Their trust policies live in [.github/chainguard](.github/chainguard).
+* Publishing OSPS Baseline results authenticates with the job's OIDC identity and stores no credential.
+* The PGP chart signing key and its passphrase are the only long-lived credentials the workflows use. They are GitHub Actions secrets, which only repository administrators can change. The publish workflow writes the key to a temporary directory and deletes it when the signing step ends.
+
+Maintainers rotate a credential when someone with access to it leaves the project or when it may have been exposed.
