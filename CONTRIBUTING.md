@@ -192,6 +192,18 @@ The linting can be invoked manually with the following command:
 ./scripts/lint.sh
 ```
 
+### When Tests Run
+
+CI runs on every pull request. The `chart-test` job lints each changed chart with chart-testing, then installs it on a kind cluster once for each values file in the chart's `ci/` directory. Other jobs validate the Artifact Hub metadata, the changelog annotation, the pull request title, and the workflows and scripts. A pull request cannot merge until the required checks pass.
+
+### Maintaining Tests
+
+A pull request that adds or changes chart behavior behind a value must add or update a values file in that chart's `ci/` directory, so `ct install` exercises the new behavior. Reviewers ask for one when it is missing.
+
 ## Publishing Changes
 
 Changes are automatically publish whenever a commit is merged to the `main` branch by the CI job (see `./.github/workflows/publish.yml`).
+
+## Becoming a Maintainer
+
+Argo Helm follows the [Argo membership process](https://github.com/argoproj/argoproj/blob/main/community/membership.md), which defines each role and what it takes to earn it. Write access to this repository is granted only after the existing maintainers review and approve the nomination.

@@ -36,7 +36,7 @@ trap 'rm -f "$TMP_FILE"' EXIT
 
 echo "  Downloading CRD from upstream..."
 if ! curl -sSfL "$UPSTREAM_URL" -o "$TMP_FILE"; then
-    echo "  Error: Failed to download CRD from $UPSTREAM_URL"
+    echo "  Error: Failed to download CRD from $UPSTREAM_URL" >&2
     exit 1
 fi
 
