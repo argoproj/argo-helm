@@ -313,6 +313,8 @@ Fields to note:
 | controller.cronWorkflowWorkers | string | `nil` | Number of cron workflow workers Only valid for 3.5+ |
 | controller.deploymentAnnotations | object | `{}` | deploymentAnnotations is an optional map of annotations to be applied to the controller Deployment |
 | controller.disableAgentPodCreation | bool | `false` | Disable the creation of agent pods, which are used for HTTP and Plugin templates. When enabled, HTTP and Plugin templates will not be processed by this controller. Only valid for 4.1+ |
+| controller.dnsConfig | object | `{}` | [DNS configuration](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config) for controller pods |
+| controller.dnsPolicy | string | `""` | Alternative DNS policy for controller pods |
 | controller.envFrom | list | `[]` | envFrom to pass to the controller container |
 | controller.extraArgs | list | `[]` | Extra arguments to be added to the controller |
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
@@ -464,6 +466,8 @@ Fields to note:
 | server.clusterWorkflowTemplates.enableEditing | bool | `true` | Give the server permissions to edit ClusterWorkflowTemplates. |
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
 | server.deploymentAnnotations | object | `{}` | optional map of annotations to be applied to the ui Deployment |
+| server.dnsConfig | object | `{}` | [DNS configuration](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config) for server pods |
+| server.dnsPolicy | string | `""` | Alternative DNS policy for server pods |
 | server.enabled | bool | `true` | Deploy the Argo Server |
 | server.envFrom | list | `[]` | envFrom to pass to the argo-server container |
 | server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary. |
