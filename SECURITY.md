@@ -24,45 +24,26 @@ Thank you for helping to ensure this code stays secure.
      OpenSSF OSPS Templates (ORBIT Definitions SIG), CC BY 4.0: https://github.com/eddie-knight/osps-templates -->
 ## Response Timeframes
 
-<!-- TODO(maintainers): replace every TODO below with a window the maintainers agree to keep, then delete this comment. -->
+Argo Helm is maintained by volunteers, so these are targets, not guarantees. We aim to acknowledge a report within 10 business days and to share an initial assessment (validity, severity, affected charts) within 10 business days of acknowledgement.
 
-We acknowledge a report within TODO business days and share an initial assessment (validity, severity, affected charts) within TODO business days of acknowledgement.
-
-Details stay private until a fix is released or TODO days have passed since confirmation, whichever comes first, unless the reporter and maintainers agree to a different timeline. We publish a GitHub Security Advisory with the affected chart versions and remediation steps, and credit the reporter unless they ask to stay anonymous.
+Details stay private until a fix is released or 90 days have passed since confirmation, whichever comes first, unless the reporter and maintainers agree to a different timeline. We publish a GitHub Security Advisory with the affected chart versions and remediation steps, and credit the reporter unless they ask to stay anonymous.
 
 <!-- Adapted from the Software Composition Analysis Policy template in the
      OpenSSF OSPS Templates (ORBIT Definitions SIG), CC BY 4.0: https://github.com/eddie-knight/osps-templates -->
 ## Dependency Security
 
-<!-- TODO(maintainers): fill every TODO, then delete this comment. -->
-
 Renovate tracks upstream application versions and container images. Dependabot tracks GitHub Actions. Chart dependencies (argo-cd's redis-ha) are bumped by hand. Vulnerabilities in the upstream Argo applications follow that application's security policy, linked above.
 
-Vulnerabilities in dependencies this repository controls are fixed by upgrading, patching, or replacing the dependency within:
+Critical and high severity vulnerabilities (CVSS 7.0 or higher) in dependencies this repository controls must be fixed by upgrading, patching, or replacing the dependency in the first chart release after a fixed version is available. Medium and low severity vulnerabilities are fixed through the regular Renovate and Dependabot updates.
 
-| Severity | CVSS score | Remediation window |
-| --- | --- | --- |
-| Critical | 9.0 or higher | TODO days |
-| High | 7.0 to 8.9 | TODO days |
-| Medium | 4.0 to 6.9 | TODO days |
-| Low | Below 4.0 | TODO |
+Dependencies must use an OSI-approved license. A dependency with a disallowed license must be replaced or removed. Disallowed licenses are any license that is not OSI-approved, including source-available licenses such as SSPL-1.0, BUSL-1.1, and Elastic-2.0. A new dependency under a strong copyleft license, such as GPL or AGPL, needs maintainer review before it is added.
 
-Dependencies must use an OSI-approved license. TODO: licenses that need maintainer review, and licenses that are disallowed.
-
-Releases are not gated automatically: `publish.yml` publishes every merge that touches `charts/`. Maintainers do not merge a change to a chart with a known unresolved TODO (for example, critical or high) finding or a disallowed license, unless a maintainer who did not author the change approves a documented exception in the pull request.
+Every merge that touches `charts/` publishes a release through `publish.yml`. Known critical or high SCA findings and disallowed licenses must be fixed before release, which means before the change merges, unless a maintainer who did not author the change approves a documented exception in the pull request.
 
 <!-- Adapted from the Static Application Security Testing Policy template in the
      OpenSSF OSPS Templates (ORBIT Definitions SIG), CC BY 4.0: https://github.com/eddie-knight/osps-templates -->
 ## Static Analysis
 
-<!-- TODO(maintainers): fill every TODO, then delete this comment. -->
+zizmor audits GitHub Actions workflows, and actionlint and shellcheck check workflows and scripts, on every pull request (see `.github/workflows/actions-lint.yaml`). All three are required status checks.
 
-zizmor audits GitHub Actions workflows, and actionlint and shellcheck check workflows and scripts, on every pull request and push that touches them (see `.github/workflows/actions-lint.yaml`).
-
-Findings are fixed, or suppressed in `.github/zizmor.yml` with a documented reason, within:
-
-| Severity | Remediation window |
-| --- | --- |
-| High | TODO days |
-| Medium | TODO days |
-| Low / Informational | TODO |
+Low, medium, and high severity findings must be fixed, or suppressed in `.github/zizmor.yml` with a documented reason, before the pull request merges.
