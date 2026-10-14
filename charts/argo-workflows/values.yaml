@@ -172,6 +172,10 @@ controller:
   podLabels: {}
   # -- SecurityContext to set on the controller pods
   podSecurityContext: {}
+  # -- [DNS configuration](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config) for controller pods
+  dnsConfig: {}
+  # -- Alternative DNS policy for controller pods
+  dnsPolicy: ""
   # podPortName: http
   metricsConfig:
     # -- Enables prometheus metrics server
@@ -613,6 +617,10 @@ server:
   podLabels: {}
   # -- SecurityContext to set on the server pods
   podSecurityContext: {}
+  # -- [DNS configuration](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config) for server pods
+  dnsConfig: {}
+  # -- Alternative DNS policy for server pods
+  dnsPolicy: ""
   rbac:
     # -- Adds Role and RoleBinding for the server.
     create: true
