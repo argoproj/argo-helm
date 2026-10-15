@@ -393,6 +393,18 @@ dashboard:
     #   value: bar
   # -- Resource limits and requests for the dashboard pods.
   resources: {}
+  # -- Configure liveness [probe] for the dashboard
+  livenessProbe: {}
+    # httpGet:
+    #   path: /
+    #   port: dashboard
+    # initialDelaySeconds: 10
+    # periodSeconds: 20
+  # -- Configure readiness [probe] for the dashboard
+  readinessProbe: {}
+    # tcpSocket:
+    #   port: dashboard
+    # periodSeconds: 10
   # -- Security Context to set on pod level
   podSecurityContext:
     runAsNonRoot: true
