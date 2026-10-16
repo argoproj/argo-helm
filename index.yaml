@@ -43454,6 +43454,31 @@ entries:
   argocd-apps:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Support destinationServiceAccounts in AppProjects
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    created: "2026-10-16T16:24:57.339347847Z"
+    description: A Helm chart for managing additional Argo CD Applications and Projects
+    digest: a4de21f7d35d8cba8d92b34d96260cd9451f18d174a2d37ca4c762af52836d4c
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-apps
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-apps-2.0.7/argocd-apps-2.0.7.tgz
+    version: 2.0.7
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Quote AppProject descriptions to preserve string values
       artifacthub.io/signKey: |
@@ -46442,4 +46467,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-10-15T06:37:46.030299716Z"
+generated: "2026-10-16T16:24:57.3412807Z"
