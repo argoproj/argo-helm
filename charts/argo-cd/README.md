@@ -1034,7 +1034,7 @@ NAME: my-release
 | global.priorityClassName | string | `""` | Default priority class for all components |
 | global.revisionHistoryLimit | int | `3` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
 | global.runtimeClassName | string | `""` | Runtime class name for all components |
-| global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
+| global.securityContext | object | See [values.yaml] | Toggle and define pod-level security context. |
 | global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
 | global.statefulsetLabels | object | `{}` | Labels for the all deployed Statefulsets |
 | global.tolerations | list | `[]` | Default tolerations for all components |
@@ -1873,7 +1873,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | redisSecretInit.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for Redis secret-init Job |
 | redisSecretInit.resources | object | `{}` | Resource limits and requests for Redis secret-init Job |
 | redisSecretInit.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the Redis secret-init Job |
-| redisSecretInit.securityContext | object | `{}` | Redis secret-init Job pod-level security context |
+| redisSecretInit.securityContext | object | See [values.yaml] | Redis secret-init Job pod-level security context |
 | redisSecretInit.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | redisSecretInit.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | redisSecretInit.serviceAccount.create | bool | `true` | Create a service account for the redis pod |
