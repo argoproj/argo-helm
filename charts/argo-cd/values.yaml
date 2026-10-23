@@ -2299,6 +2299,18 @@ server:
     #        value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension.tar.gz
     #      - name: EXTENSION_CHECKSUM_URL
     #        value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension_checksums.txt
+    ## Extensions from a private host can mount a headers file, such as a Secret listed in server.volumes
+    ## Ref: https://github.com/argoproj-labs/argocd-extension-installer#private-extensions
+    #  - name: private-extension
+    #    env:
+    #      - name: EXTENSION_URL
+    #        value: https://api.github.com/repos/some-org/some-repo/releases/assets/123456
+    #      - name: EXTENSION_HTTP_HEADERS_FILE
+    #        value: /etc/argocd-extension/headers
+    #    volumeMounts:
+    #      - name: extension-headers
+    #        mountPath: /etc/argocd-extension
+    #        readOnly: true
 
     # -- Server UI extensions container-level security context
     # @default -- See [values.yaml]
