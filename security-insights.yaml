@@ -27,6 +27,8 @@ project:
         Argo Helm is the repository for Argo project Helm charts.
   documentation:
     detailed-guide: https://github.com/argoproj/argo-helm/blob/main/README.md
+    signature-verification: https://github.com/argoproj/argo-helm/blob/main/README.md#verifying-chart-provenance
+    support-policy: https://github.com/argoproj/argo-helm/blob/main/README.md#version-support-policy
     code-of-conduct: https://github.com/cncf/foundation/blob/master/code-of-conduct.md
   vulnerability-reporting:
     reports-accepted: true
@@ -91,9 +93,28 @@ repository:
         results: {}
         comment: |
           Renovate is used for automated dependency updates.
+      - name: OSPS Baseline Scanner
+        type: other
+        rulesets:
+          - osps-baseline
+        integration:
+          adhoc: false
+          ci: true
+          release: false
+        results:
+          ci:
+            name: OSPS Baseline evaluation
+            predicate-uri: https://github.com/revanite-io/pvtr-publish-results
+            location: https://grc.store/targets/argo-helm/argo-helm
+        comment: |
+          The OpenSSF pvtr-github-repo-scanner evaluates this repository against
+          OSPS Baseline Level 3 weekly and on demand, and publishes
+          signed results to grc.store.
   documentation:
     contributing-guide: https://github.com/argoproj/argo-helm/blob/main/CONTRIBUTING.md
     dependency-management-policy: https://github.com/argoproj/argo-helm/blob/main/CONTRIBUTING.md#new-application-versions
+    governance: https://github.com/argoproj/argoproj/blob/main/community/membership.md
+    security-policy: https://github.com/argoproj/argo-helm/blob/main/SECURITY.md
   release:
     automated-pipeline: true
     distribution-points:

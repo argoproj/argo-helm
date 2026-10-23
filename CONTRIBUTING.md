@@ -57,6 +57,9 @@ When selecting new application versions ensure you make the following changes:
 * `values.yaml`: Bump all instances of the container image version
 * `Chart.yaml`: Ensure `appVersion` matches the above container image and bump `version`
 
+When you bump a chart dependency such as `redis-ha`, also update its sha256 in `.github/configs/chart-dependencies.sha256`.
+CI runs `helm dependency build` and then `./scripts/verify-chart-dependencies.sh`, which fails until the digest matches.
+
 Please ensure chart version changes adhere to semantic versioning standards:
 
 * Major: Large chart rewrites, major non-backwards compatible or destructive changes
@@ -189,6 +192,30 @@ The linting can be invoked manually with the following command:
 ./scripts/lint.sh
 ```
 
+### When Tests Run
+
+CI runs on every pull request. The `chart-test` job lints each changed chart with chart-testing, then installs it on a kind cluster once for each values file in the chart's `ci/` directory. Other jobs validate the Artifact Hub metadata, the changelog annotation, the pull request title, and the workflows and scripts. A pull request cannot merge until the required checks pass.
+
+### Maintaining Tests
+
+A pull request that adds or changes chart behavior behind a value must add or update a values file in that chart's `ci/` directory, so `ct install` exercises the new behavior. Reviewers ask for one when it is missing.
+
+## Building Charts
+
+You need [Helm](https://helm.sh/docs/intro/install/) (CI's version is in `.github/workflows/lint-and-test.yml`). Charts with dependencies, such as `argo-cd`, also need the chart repositories listed in [ct-lint.yaml](./.github/configs/ct-lint.yaml).
+
+```shell
+helm repo add dandydeveloper https://dandydeveloper.github.io/charts/
+helm dependency build charts/argo-cd
+helm package charts/argo-cd
+```
+
+Replace `argo-cd` with the chart you changed. `helm package` writes the chart archive to the current directory.
+
 ## Publishing Changes
 
 Changes are automatically publish whenever a commit is merged to the `main` branch by the CI job (see `./.github/workflows/publish.yml`).
+
+## Becoming a Maintainer
+
+Argo Helm follows the [Argo membership process](https://github.com/argoproj/argoproj/blob/main/community/membership.md), which defines each role and what it takes to earn it. Write access to this repository is granted only after the existing maintainers review and approve the nomination.

@@ -17,6 +17,12 @@ metadata:
 spec:
   endpoints:
   - port: {{ .Values.controller.metrics.service.portName }}
+    {{- with .Values.controller.metrics.serviceMonitor.interval }}
+    interval: {{ . }}
+    {{- end }}
+    {{- with .Values.controller.metrics.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ . }}
+    {{- end }}
     {{- with .Values.controller.metrics.serviceMonitor.tlsConfig }}
     scheme: https
     tlsConfig:
