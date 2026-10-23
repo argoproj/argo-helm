@@ -1965,12 +1965,12 @@ redis-ha:
             - |
               sleep 30
               c=/data/conf/sentinel.conf
-              v() { awk -v k="$1" '$1 == k { print $2 }' "$c"; }
+              v() { awk -v k="$1" '$1 == k { gsub(/"/, "", $2); print $2 }' "$c"; }
               if [ "$(v port)" = 0 ]; then
                 set -- -p "$(v tls-port)" --tls --cacert "$(v tls-ca-cert-file)"
                 [ "$(v tls-auth-clients)" = no ] || set -- "$@" --cert "$(v tls-cert-file)" --key "$(v tls-key-file)"
               else
-                set -- -p "$(v port)"
+                p=$(v port); set -- -p "${p:-26379}"
               fi
               redis-cli "$@" sentinel reset argocd
   ## Enables a HA Proxy for better LoadBalancing / Sentinel Master support. Automatically proxies to Redis master.
