@@ -2,7 +2,12 @@
 extraObjects:
   - |
     {{- $ca := genCA "argocd-redis-ha-ca" 1 }}
-    {{- $cert := genSignedCert "argocd-redis-ha" nil (list "localhost") 1 $ca }}
+    {{- $names := list "localhost" }}
+    {{- range $i := until 3 }}
+    {{- $n := printf "argocd-redis-ha-announce-%d" $i }}
+    {{- $names = concat $names (list $n (printf "%s.%s" $n $.Release.Namespace) (printf "%s.%s.svc" $n $.Release.Namespace) (printf "%s.%s.svc.cluster.local" $n $.Release.Namespace)) }}
+    {{- end }}
+    {{- $cert := genSignedCert "argocd-redis-ha" nil $names 1 $ca }}
     apiVersion: v1
     kind: Secret
     metadata:
@@ -30,6 +35,8 @@ redis-ha:
     port: 0
     tlsPort: 26379
     tlsReplication: true
+    resolveHostnames: true
+    announceHostnames: true
 
 controller:
   extraArgs: &redisClientExtraArgs
