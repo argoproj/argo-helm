@@ -86,7 +86,6 @@ spec:
                             This acts as the default if not overridden.
                           type: string
                         forceUpdate:
-                          default: false
                           description: |-
                             ForceUpdate specifies whether updates should be forced.
                             This acts as the default if not overridden.
@@ -113,10 +112,9 @@ spec:
                             This acts as the default if not overridden.
                           type: string
                         updateStrategy:
-                          default: semver
                           description: |-
                             UpdateStrategy defines the update strategy to apply.
-                            Examples: "semver", "latest", "digest", "name".
+                            Examples: "semver", "newest-build", "alphabetical", "digest", "calver".
                             This acts as the default if not overridden at a more specific level.
                           type: string
                       type: object
@@ -148,7 +146,6 @@ spec:
                                   This acts as the default if not overridden.
                                 type: string
                               forceUpdate:
-                                default: false
                                 description: |-
                                   ForceUpdate specifies whether updates should be forced.
                                   This acts as the default if not overridden.
@@ -175,10 +172,9 @@ spec:
                                   This acts as the default if not overridden.
                                 type: string
                               updateStrategy:
-                                default: semver
                                 description: |-
                                   UpdateStrategy defines the update strategy to apply.
-                                  Examples: "semver", "latest", "digest", "name".
+                                  Examples: "semver", "newest-build", "alphabetical", "digest", "calver".
                                   This acts as the default if not overridden at a more specific level.
                                 type: string
                             type: object
@@ -449,6 +445,14 @@ spec:
                                 When set, the controller opens a PR instead of pushing to the branch.
                                 If not specified write back config method is `git`.
                               properties:
+                                azuredevops:
+                                  description: AzureDevOps configures PR creation
+                                    via the Azure DevOps API.
+                                  type: object
+                                gitea:
+                                  description: Gitea configures PR creation via the
+                                    Gitea API (also used for Forgejo).
+                                  type: object
                                 github:
                                   description: GitHub configures PR creation via the
                                     GitHub API.
@@ -457,10 +461,24 @@ spec:
                                   description: GitLab configures MR creation via the
                                     GitLab API.
                                   type: object
+                                labels:
+                                  description: |-
+                                    Labels to apply to the created pull/merge request.
+                                    GitLab sets them on creation; GitHub, Azure DevOps and Gitea apply them
+                                    in follow-up API calls, so a labelling failure does not fail the update.
+                                  items:
+                                    maxLength: 255
+                                    minLength: 1
+                                    type: string
+                                  maxItems: 100
+                                  type: array
+                                  x-kubernetes-list-type: atomic
                               type: object
                               x-kubernetes-validations:
-                              - message: Exactly one of github or gitlab must be set
+                              - message: Exactly one of github, gitlab, azuredevops,
+                                  or gitea must be set
                                 rule: '(has(self.github) ? 1 : 0) + (has(self.gitlab)
+                                  ? 1 : 0) + (has(self.azuredevops) ? 1 : 0) + (has(self.gitea)
                                   ? 1 : 0) == 1'
                             repository:
                               description: |-
@@ -509,7 +527,6 @@ spec:
                       This acts as the default if not overridden.
                     type: string
                   forceUpdate:
-                    default: false
                     description: |-
                       ForceUpdate specifies whether updates should be forced.
                       This acts as the default if not overridden.
@@ -536,10 +553,9 @@ spec:
                       This acts as the default if not overridden.
                     type: string
                   updateStrategy:
-                    default: semver
                     description: |-
                       UpdateStrategy defines the update strategy to apply.
-                      Examples: "semver", "latest", "digest", "name".
+                      Examples: "semver", "newest-build", "alphabetical", "digest", "calver".
                       This acts as the default if not overridden at a more specific level.
                     type: string
                 type: object
@@ -601,6 +617,14 @@ spec:
                           When set, the controller opens a PR instead of pushing to the branch.
                           If not specified write back config method is `git`.
                         properties:
+                          azuredevops:
+                            description: AzureDevOps configures PR creation via the
+                              Azure DevOps API.
+                            type: object
+                          gitea:
+                            description: Gitea configures PR creation via the Gitea
+                              API (also used for Forgejo).
+                            type: object
                           github:
                             description: GitHub configures PR creation via the GitHub
                               API.
@@ -609,11 +633,25 @@ spec:
                             description: GitLab configures MR creation via the GitLab
                               API.
                             type: object
+                          labels:
+                            description: |-
+                              Labels to apply to the created pull/merge request.
+                              GitLab sets them on creation; GitHub, Azure DevOps and Gitea apply them
+                              in follow-up API calls, so a labelling failure does not fail the update.
+                            items:
+                              maxLength: 255
+                              minLength: 1
+                              type: string
+                            maxItems: 100
+                            type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                         x-kubernetes-validations:
-                        - message: Exactly one of github or gitlab must be set
+                        - message: Exactly one of github, gitlab, azuredevops, or
+                            gitea must be set
                           rule: '(has(self.github) ? 1 : 0) + (has(self.gitlab) ?
-                            1 : 0) == 1'
+                            1 : 0) + (has(self.azuredevops) ? 1 : 0) + (has(self.gitea)
+                            ? 1 : 0) == 1'
                       repository:
                         description: |-
                           Repository URL to commit changes to.
