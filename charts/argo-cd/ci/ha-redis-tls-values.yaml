@@ -1,0 +1,68 @@
+# Test High Availability with TLS-only Redis and Sentinel
+extraObjects:
+  - |
+    {{- $ca := genCA "argocd-redis-ha-ca" 1 }}
+    {{- $names := list "localhost" }}
+    {{- range $i := until 3 }}
+    {{- $n := printf "argocd-redis-ha-announce-%d" $i }}
+    {{- $names = concat $names (list $n (printf "%s.%s" $n $.Release.Namespace) (printf "%s.%s.svc" $n $.Release.Namespace) (printf "%s.%s.svc.cluster.local" $n $.Release.Namespace)) }}
+    {{- end }}
+    {{- $cert := genSignedCert "argocd-redis-ha" nil $names 1 $ca }}
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: argocd-redis-ha-tls
+    data:
+      ca.crt: {{ $ca.Cert | b64enc }}
+      tls.crt: {{ $cert.Cert | b64enc }}
+      tls.key: {{ $cert.Key | b64enc }}
+
+redis-ha:
+  enabled: true
+  fullnameOverride: argocd-redis-ha
+  haproxy:
+    enabled: false
+  tls:
+    secretName: argocd-redis-ha-tls
+    certFile: tls.crt
+    keyFile: tls.key
+    caCertFile: ca.crt
+  redis:
+    port: 0
+    tlsPort: 6379
+    tlsReplication: true
+  sentinel:
+    port: 0
+    tlsPort: 26379
+    tlsReplication: true
+    resolveHostnames: true
+    announceHostnames: true
+
+controller:
+  extraArgs: &redisClientExtraArgs
+    - --sentinel=argocd-redis-ha-announce-0:26379
+    - --sentinel=argocd-redis-ha-announce-1:26379
+    - --sentinel=argocd-redis-ha-announce-2:26379
+    - --sentinelmaster=argocd
+    - --redis-use-tls
+    - --redis-ca-certificate=/app/config/redis/ca.crt
+    - --redis-client-certificate=/app/config/redis/tls.crt
+    - --redis-client-key=/app/config/redis/tls.key
+  volumeMounts: &redisClientVolumeMounts
+    - name: redis-tls
+      mountPath: /app/config/redis
+      readOnly: true
+  volumes: &redisClientVolumes
+    - name: redis-tls
+      secret:
+        secretName: argocd-redis-ha-tls
+
+server:
+  extraArgs: *redisClientExtraArgs
+  volumeMounts: *redisClientVolumeMounts
+  volumes: *redisClientVolumes
+
+repoServer:
+  extraArgs: *redisClientExtraArgs
+  volumeMounts: *redisClientVolumeMounts
+  volumes: *redisClientVolumes
