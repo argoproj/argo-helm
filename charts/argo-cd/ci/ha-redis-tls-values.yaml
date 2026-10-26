@@ -1,4 +1,7 @@
 # Test High Availability with TLS-only Redis and Sentinel
+crds:
+  keep: false
+
 extraObjects:
   - |
     {{- $ca := genCA "argocd-redis-ha-ca" 1 }}
