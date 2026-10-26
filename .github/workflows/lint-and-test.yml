@@ -9,9 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    container:
-      image: ecr-public.aws.com/artifacthub/ah:v1.14.0@sha256:3773afcdeb5662c31576f1a9a0ee10bced7af2e80842ca06a186a50497e149a5
-      options: --user 1001
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
@@ -22,9 +19,18 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      # The digest is the same on ECR Public and on the mirror.gcr.io fallback.
+      - name: Pull ah image
+        id: ah
+        env:
+          AH_IMAGE: ecr-public.aws.com/artifacthub/ah:v1.14.0@sha256:3773afcdeb5662c31576f1a9a0ee10bced7af2e80842ca06a186a50497e149a5
+        run: echo "image=$(./scripts/ci-pull-image.sh "${AH_IMAGE}")" >> "${GITHUB_OUTPUT}"
+
       - name: Run ah lint
-        working-directory: ./charts
-        run: ah lint
+        env:
+          AH_IMAGE: ${{ steps.ah.outputs.image }}
+        run: docker run --rm --user 1001 --volume "${GITHUB_WORKSPACE}:/work:ro" --workdir /work/charts "${AH_IMAGE}" ah lint
 
   chart-test:
     runs-on: ubuntu-latest
@@ -99,6 +105,12 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         with:
           config: .github/configs/kind-config.yaml
+
+      - name: Preload ECR Public images into kind
+        if: |
+          steps.list-changed.outputs.changed == 'true' &&
+          contains(steps.list-changed.outputs.changed_charts, 'argo-cd')
+        run: ./scripts/ci-preload-images.sh chart-testing
 
       - name: Deploy latest ArgoCD CRDs when testing ArgoCD extensions
         if: |
