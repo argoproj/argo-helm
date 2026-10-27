@@ -1,7 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "kubernetes": {
-    "fileMatch": ["\\.yaml$", "\\.yml$"]
+    "managerFilePatterns": [
+      "/\\.yaml$/",
+      "/\\.yml$/"
+    ]
   },
   "extends": [
     "config:recommended",
@@ -22,7 +25,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["charts/argo-workflows/Chart.yaml$"],
+      "managerFilePatterns": [
+        "/charts/argo-workflows/Chart.yaml$/"
+      ],
       "matchStrings": [
         "\\sappVersion: (?<currentValue>.*)\\s"
       ],
@@ -32,7 +37,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["charts/argo-cd/Chart.yaml$"],
+      "managerFilePatterns": [
+        "/charts/argo-cd/Chart.yaml$/"
+      ],
       "matchStrings": [
         "\\sappVersion: (?<currentValue>.*)\\s"
       ],
@@ -42,7 +49,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["charts/argo-events/Chart.yaml$"],
+      "managerFilePatterns": [
+        "/charts/argo-events/Chart.yaml$/"
+      ],
       "matchStrings": [
         "\\sappVersion: (?<currentValue>.*)\\s"
       ],
@@ -52,7 +61,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["charts/argo-rollouts/Chart.yaml$"],
+      "managerFilePatterns": [
+        "/charts/argo-rollouts/Chart.yaml$/"
+      ],
       "matchStrings": [
         "\\sappVersion: (?<currentValue>.*)\\s"
       ],
@@ -62,7 +73,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["charts/argocd-image-updater/Chart.yaml$"],
+      "managerFilePatterns": [
+        "/charts/argocd-image-updater/Chart.yaml$/"
+      ],
       "matchStrings": [
         "\\sappVersion: (?<currentValue>.*)\\s"
       ],
@@ -72,7 +85,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["^\\.github/workflows/[^/]+\\.ya?ml$"],
+      "managerFilePatterns": [
+        "/^\\.github/workflows/[^/]+\\.ya?ml$/"
+      ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s+.+version: (?<currentValue>.*)"
       ]
@@ -80,23 +95,23 @@
   ],
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "argoproj/argo-workflows",
-        "argoproj/argo-cd",
-        "argoproj/argo-events",
-        "argoproj/argo-rollouts",
-        "argoproj-labs/argocd-image-updater",
-        "argoprojlabs/argocd-extension-installer",
-        "ghcr.io/dexidp/dex",
-        "ghcr.io/oliver006/redis_exporter"
-      ],
       "commitMessagePrefix": "chore({{parentDir}}):",
       "postUpgradeTasks": {
         "commands": [
           "./scripts/renovate-bump-version.sh -c {{parentDir}} -d {{depName}} -v {{newVersion}} -t {{updateType}}",
           "./scripts/helm-docs.sh"
         ]
-      }
+      },
+      "matchPackageNames": [
+        "/argoproj/argo-workflows/",
+        "/argoproj/argo-cd/",
+        "/argoproj/argo-events/",
+        "/argoproj/argo-rollouts/",
+        "/argoproj-labs/argocd-image-updater/",
+        "/argoprojlabs/argocd-extension-installer/",
+        "/ghcr.io/dexidp/dex/",
+        "/ghcr.io/oliver006/redis_exporter/"
+      ]
     },
     {
       "matchPackageNames": [
@@ -116,8 +131,10 @@
       }
     },
     {
-      "matchPackagePatterns": ["redis-ha"],
-      "enabled": false
+      "enabled": false,
+      "matchPackageNames": [
+        "/redis-ha/"
+      ]
     },
     {
       "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
