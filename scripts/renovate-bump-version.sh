@@ -20,7 +20,6 @@ if [ -z "${dependency_name}" ] || [ -z "${dependency_version}" ] || [ -z "${char
   exit 1
 fi
 
-chart_yaml_path="charts/${chart}/Chart.yaml"
 # Split dependency by '/' and only use last element
 # This way we can drop prefixes like "argoproj/..." , "argoproj-labs/..." , "quay.io/foo/..."
 dependency_name="${dependency_name##*/}"
@@ -34,25 +33,19 @@ if [[ " ${main_apps} " != *" ${dependency_name} "* ]]; then
   update_type='patch'
 fi
 
-# Bump the chart version according to the update type
-version=$(grep '^version:' "${chart_yaml_path}" | awk '{print $2}')
-major=$(echo "${version}" | cut -d. -f1)
-minor=$(echo "${version}" | cut -d. -f2)
-patch=$(echo "${version}" | cut -d. -f3)
+# Write a change fragment; publish.yml bumps the chart version when the PR merges
 case "${update_type}" in
-  major|minor) minor=$((minor + 1)); patch=0 ;;
-  *) patch=$((patch + 1)) ;;
+  major|minor) bump='minor' ;;
+  *) bump='patch' ;;
 esac
-sed -i "s/^version:.*/version: ${major}.${minor}.${patch}/g" "${chart_yaml_path}"
-
-# Add a changelog entry
-sed -i -e '/^  artifacthub.io\/changes: |/,$ d' "${chart_yaml_path}"
+fragment="charts/${chart}/changes/renovate-${dependency_name}.yaml"
+mkdir -p "$(dirname "${fragment}")"
 {
-  echo "  artifacthub.io/changes: |"
-  echo "    - kind: changed"
-  echo "      description: Bump ${dependency_name} to ${dependency_version}"
-} >> "${chart_yaml_path}"
-cat "${chart_yaml_path}"
+  echo "bump: ${bump}"
+  echo "kind: changed"
+  echo "description: Bump ${dependency_name} to ${dependency_version}"
+} > "${fragment}"
+cat "${fragment}"
 
 # Update CRDs if a matching script exists
 crd_script="$(dirname "$0")/update-${dependency_name}-crds.sh"

@@ -88,6 +88,10 @@ jobs:
       - name: Run chart-testing (lint)
         run: ct lint --debug --config ./.github/configs/ct-lint.yaml --lint-conf ./.github/configs/lintconf.yaml
 
+      # Stands in for ct's version check, which ct-lint.yaml turns off: publish.yml bumps versions after merge.
+      - name: Check change fragments
+        run: ./scripts/lint-changelog.sh
+
       - name: Run docs-testing (helm-docs)
         id: helm-docs
         run: |

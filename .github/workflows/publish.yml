@@ -20,8 +20,74 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  package:
+  ## Folds change fragments into chart versions and pushes the result to main,
+  ## and that push starts the run that releases. Works from main's tip rather
+  ## than the pushed commit, so a run that waited in the queue sees every merge.
+  fold:
     if: github.repository == 'argoproj/argo-helm'
+    permissions:
+      contents: read  # pushes go through the release App's token
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.fold.outputs.sha }}
+      folded: ${{ steps.fold.outputs.folded }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Fold change fragments
+        id: fold
+        run: |
+          set -euo pipefail
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          ./scripts/fold-changes.sh | tee "${RUNNER_TEMP}/folded.txt"
+          if [[ -s "${RUNNER_TEMP}/folded.txt" ]]; then
+            echo "folded=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "folded=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Get release App token
+        if: steps.fold.outputs.folded == 'true'
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+
+      # The release App is a bypass actor on main's ruleset.
+      - name: Push version bumps
+        if: steps.fold.outputs.folded == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          set -euo pipefail
+          user_id=$(gh api "/users/${APP_SLUG}[bot]" --jq .id)
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
+          git add -A charts
+          git commit -s -m "chore(release): fold change fragments" -m "$(cat "${RUNNER_TEMP}/folded.txt")"
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          # A merge can land after checkout. If the rebase conflicts, that merge's own run folds again.
+          for _ in 1 2 3; do
+            git push "${remote}" HEAD:main && exit 0
+            git pull --rebase "${remote}" main
+          done
+          exit 1
+
+  package:
+    needs: fold
+    if: needs.fold.outputs.folded == 'false'
     permissions:
       contents: read  # to check out the repository and read release tags
     runs-on: ubuntu-latest
@@ -36,6 +102,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ needs.fold.outputs.sha }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -160,7 +227,7 @@ jobs:
           retention-days: 1
 
   release:
-    needs: package
+    needs: [fold, package]
     if: needs.package.outputs.changed == 'true'
     permissions:
       contents: write  # for chart-releaser to create releases and push the index to gh-pages
@@ -175,6 +242,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ needs.fold.outputs.sha }}
           fetch-depth: 0
           persist-credentials: false
 
