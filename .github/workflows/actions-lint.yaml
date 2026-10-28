@@ -4,11 +4,9 @@
 ## .github/zizmor.yml).
 name: Actions Lint
 on:
+  # No path filter on pull requests: the zizmor job is a required status
+  # check, and a filtered-out required check never reports.
   pull_request:
-    paths:
-      - ".github/workflows/**"
-      - ".github/zizmor.yml"
-      - "scripts/*.sh"
   push:
     branches: [main]
     paths:
@@ -29,7 +27,7 @@ jobs:
       contents: read # Clone the repository to lint workflow files
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
         with:
           egress-policy: audit
       - name: Checkout
@@ -51,7 +49,7 @@ jobs:
       contents: read # Clone the repository to lint shell scripts
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
         with:
           egress-policy: audit
       - name: Checkout
@@ -67,7 +65,7 @@ jobs:
       contents: read # Clone the repository to audit workflow files
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
         with:
           egress-policy: audit
       - name: Checkout
@@ -75,7 +73,10 @@ jobs:
         with:
           persist-credentials: false
       - name: Run zizmor
-        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
+        uses: zizmorcore/zizmor-action@85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e # v0.7.1
         with:
           inputs: .github/workflows/
           advanced-security: false
+          # Pinned so a new zizmor release cannot fail this required check on
+          # unchanged workflows. Bump manually, like actionlint above.
+          version: 1.30.1

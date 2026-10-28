@@ -16,8 +16,8 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- with .Values.notifications.pdb.maxUnavailable }}
-  maxUnavailable: {{ . }}
+  {{- if and (not (kindIs "invalid" .Values.notifications.pdb.maxUnavailable)) (ne (toString .Values.notifications.pdb.maxUnavailable) "") }}
+  maxUnavailable: {{ .Values.notifications.pdb.maxUnavailable }}
   {{- else }}
   minAvailable: {{ .Values.notifications.pdb.minAvailable | default 0 }}
   {{- end }}

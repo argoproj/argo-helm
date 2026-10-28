@@ -172,6 +172,10 @@ controller:
   podLabels: {}
   # -- SecurityContext to set on the controller pods
   podSecurityContext: {}
+  # -- [DNS configuration](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config) for controller pods
+  dnsConfig: {}
+  # -- Alternative DNS policy for controller pods
+  dnsPolicy: ""
   # podPortName: http
   metricsConfig:
     # -- Enables prometheus metrics server
@@ -180,6 +184,8 @@ controller:
     path: /metrics
     # -- Frequency at which prometheus scrapes metrics
     interval: 30s
+    # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+    scrapeTimeout: ""
     # -- Port is the port where metrics are emitted
     port: 9090
     # -- How often custom metrics are cleared from memory
@@ -305,6 +311,8 @@ controller:
     path: /telemetry
     # -- Frequency at which prometheus scrapes telemetry data
     interval: 30s
+    # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+    scrapeTimeout: ""
     # -- telemetry container port
     port: 8081
     # -- How often custom metrics are cleared from memory
@@ -609,6 +617,10 @@ server:
   podLabels: {}
   # -- SecurityContext to set on the server pods
   podSecurityContext: {}
+  # -- [DNS configuration](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config) for server pods
+  dnsConfig: {}
+  # -- Alternative DNS policy for server pods
+  dnsPolicy: ""
   rbac:
     # -- Adds Role and RoleBinding for the server.
     create: true

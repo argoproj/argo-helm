@@ -313,6 +313,8 @@ Fields to note:
 | controller.cronWorkflowWorkers | string | `nil` | Number of cron workflow workers Only valid for 3.5+ |
 | controller.deploymentAnnotations | object | `{}` | deploymentAnnotations is an optional map of annotations to be applied to the controller Deployment |
 | controller.disableAgentPodCreation | bool | `false` | Disable the creation of agent pods, which are used for HTTP and Plugin templates. When enabled, HTTP and Plugin templates will not be processed by this controller. Only valid for 4.1+ |
+| controller.dnsConfig | object | `{}` | [DNS configuration](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config) for controller pods |
+| controller.dnsPolicy | string | `""` | Alternative DNS policy for controller pods |
 | controller.envFrom | list | `[]` | envFrom to pass to the controller container |
 | controller.extraArgs | list | `[]` | Extra arguments to be added to the controller |
 | controller.extraContainers | list | `[]` | Extra containers to be added to the controller deployment |
@@ -349,6 +351,7 @@ Fields to note:
 | controller.metricsConfig.portName | string | `"metrics"` | Container metrics port name |
 | controller.metricsConfig.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping |
 | controller.metricsConfig.scheme | string | `"http"` | serviceMonitor scheme |
+| controller.metricsConfig.scrapeTimeout | string | `""` | Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used. |
 | controller.metricsConfig.secure | bool | `false` | Flag that use a self-signed cert for TLS |
 | controller.metricsConfig.servicePort | int | `8080` | Service metrics port |
 | controller.metricsConfig.servicePortName | string | `"metrics"` | Service metrics port name |
@@ -396,6 +399,7 @@ Fields to note:
 | controller.telemetryConfig.path | string | `"/telemetry"` | telemetry path |
 | controller.telemetryConfig.port | int | `8081` | telemetry container port |
 | controller.telemetryConfig.scheme | string | `"http"` | telemetry serviceMonitor scheme to use |
+| controller.telemetryConfig.scrapeTimeout | string | `""` | Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used. |
 | controller.telemetryConfig.secure | bool | `false` | Flag that use a self-signed cert for TLS |
 | controller.telemetryConfig.servicePort | int | `8081` | telemetry service port |
 | controller.telemetryConfig.servicePortName | string | `"telemetry"` | telemetry service port name |
@@ -462,6 +466,8 @@ Fields to note:
 | server.clusterWorkflowTemplates.enableEditing | bool | `true` | Give the server permissions to edit ClusterWorkflowTemplates. |
 | server.clusterWorkflowTemplates.enabled | bool | `true` | Create a ClusterRole and CRB for the server to access ClusterWorkflowTemplates. |
 | server.deploymentAnnotations | object | `{}` | optional map of annotations to be applied to the ui Deployment |
+| server.dnsConfig | object | `{}` | [DNS configuration](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config) for server pods |
+| server.dnsPolicy | string | `""` | Alternative DNS policy for server pods |
 | server.enabled | bool | `true` | Deploy the Argo Server |
 | server.envFrom | list | `[]` | envFrom to pass to the argo-server container |
 | server.extraArgs | list | `[]` | Extra arguments to provide to the Argo server binary. |

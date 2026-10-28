@@ -14,9 +14,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.controller.pdb.minAvailable }}
+  {{- if not (kindIs "invalid" .Values.controller.pdb.minAvailable) }}
   minAvailable: {{ .Values.controller.pdb.minAvailable }}
-  {{- else if .Values.controller.pdb.maxUnavailable }}
+  {{- else if not (kindIs "invalid" .Values.controller.pdb.maxUnavailable) }}
   maxUnavailable: {{ .Values.controller.pdb.maxUnavailable }}
   {{- else }}
   minAvailable: 0

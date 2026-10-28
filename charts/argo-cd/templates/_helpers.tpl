@@ -108,6 +108,17 @@ Create the name of the Redis secret-init service account to use
 {{- end -}}
 
 {{/*
+Return "true" when the Argo CD server is enabled.
+A missing value (for example after `helm upgrade --reuse-values` from a chart
+version without `server.enabled`) is treated as enabled.
+*/}}
+{{- define "argo-cd.server.enabled" -}}
+{{- if ne (toString .Values.server.enabled) "false" -}}
+true
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create argocd server name and version as used by the chart label.
 */}}
 {{- define "argo-cd.server.fullname" -}}

@@ -10,6 +10,20 @@ DEPRECATED option dex.logLevel - Use `configs.params."dexserver.log.level"`
 {{- if .Values.dex.logFormat }}
 DEPRECATED option dex.logFormat - Use `configs.params."dexserver.log.format"`
 {{- end }}
+{{- if not (include "argo-cd.server.enabled" .) }}
+Argo CD server is disabled (Argo CD Core installation): there is no UI or API server.
+Use the CLI in core mode against the cluster instead:
+
+  kubectl config set-context --current --namespace={{ include "argo-cd.namespace" . }}
+  argocd login --core
+  argocd app list
+
+See https://argo-cd.readthedocs.io/en/stable/operator-manual/core/
+{{- if .Values.dex.enabled }}
+
+WARNING: Dex is enabled but is not used without the Argo CD server. Consider setting `dex.enabled: false`.
+{{- end }}
+{{- else }}
 In order to access the server UI you have the following options:
 
 {{ $rootpath := default "" (index .Values "configs" "params" "server.rootpath") -}}
@@ -35,3 +49,4 @@ After reaching the UI the first time you can login using Dex or OIDC.
 {{ else -}}
 After reaching the UI the first time you cannot login with username and password since you've disabled it. You should enable admin back or configure Dex via `configs.cm.dex.config` or OIDC via `configs.cm.oidc.config`.
 {{ end -}}
+{{- end }}
