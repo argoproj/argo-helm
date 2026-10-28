@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Validates the change fragment of every chart a branch changes: exactly one new
-# charts/<chart>/changes/*.yaml with a valid bump, kind and description. The
-# version, the artifacthub.io/changes annotation and numbered Upgrading headings
-# are written by publish.yml after merge, so editing them by hand fails here.
 # Usage: ./scripts/lint-changelog.sh [base ref, default origin/main]
 
 base="${1:-origin/main}"

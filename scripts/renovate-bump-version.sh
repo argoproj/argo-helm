@@ -33,7 +33,6 @@ if [[ " ${main_apps} " != *" ${dependency_name} "* ]]; then
   update_type='patch'
 fi
 
-# Write a change fragment; publish.yml bumps the chart version when the PR merges
 case "${update_type}" in
   major|minor) bump='minor' ;;
   *) bump='patch' ;;

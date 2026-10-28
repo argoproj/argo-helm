@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Folds each chart's change fragments (charts/<chart>/changes/*.yaml) into its
-# Chart.yaml: bumps the version by the largest bump in the fragments, rewrites
-# artifacthub.io/changes from them, renames a "### NEXT" Upgrading heading to the
-# new version and deletes the fragments. publish.yml runs this after a merge.
-
 shopt -s nullglob
 
 for changes_dir in charts/*/changes; do

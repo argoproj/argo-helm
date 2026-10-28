@@ -20,9 +20,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  ## Folds change fragments into chart versions and pushes the result to main,
-  ## and that push starts the run that releases. Works from main's tip rather
-  ## than the pushed commit, so a run that waited in the queue sees every merge.
+  ## Its push to main starts the run that releases. It checks out main's tip, not
+  ## the pushed commit, so a run that waited in the queue sees every merge.
   fold:
     if: github.repository == 'argoproj/argo-helm'
     permissions:
