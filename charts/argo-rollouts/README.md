@@ -165,6 +165,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.deploymentLabels | object | `{}` | Labels to be added to the dashboard deployment |
 | dashboard.enabled | bool | `false` | Deploy dashboard server |
 | dashboard.extraArgs | list | `[]` | Additional command line arguments to pass to rollouts-dashboard. A list of flags. |
+| dashboard.extraContainers | list | `[]` | Literal yaml for extra containers to be added to dashboard deployment. |
 | dashboard.extraEnv | list | `[]` | Additional environment variables for rollouts-dashboard. A list of name/value maps. |
 | dashboard.httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
 | dashboard.httproute.enabled | bool | `false` | Enable HTTPRoute resource for the dashboard (Gateway API) |
@@ -185,6 +186,9 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.ingress.pathType | string | `"Prefix"` | Dashboard ingress path type |
 | dashboard.ingress.paths | list | `["/"]` | Dashboard ingress paths |
 | dashboard.ingress.tls | list | `[]` | Dashboard ingress tls |
+| dashboard.initContainers | list | `[]` | Init containers to add to the rollouts dashboard pod |
+| dashboard.lifecycle | object | `{}` | Specify lifecycle hooks for the dashboard |
+| dashboard.livenessProbe | object | `{}` | Configure liveness [probe] for the dashboard |
 | dashboard.logging.kloglevel | string | `"0"` | Set the klog logging level |
 | dashboard.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | dashboard.nodeSelector | object | `{}` | [Node selector] |
@@ -197,6 +201,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.podLabels | object | `{}` | Labels to be added to the application dashboard pods |
 | dashboard.podSecurityContext | object | `{"runAsNonRoot":true}` | Security Context to set on pod level |
 | dashboard.priorityClassName | string | `""` | [priorityClassName] for the dashboard server |
+| dashboard.readinessProbe | object | `{}` | Configure readiness [probe] for the dashboard |
 | dashboard.readonly | bool | `false` | Set cluster role to readonly |
 | dashboard.replicas | int | `1` | The number of dashboard pods to run |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
@@ -215,6 +220,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.serviceAccount.annotations | object | `{}` | Annotations to add to the dashboard service account |
 | dashboard.serviceAccount.create | bool | `true` | Specifies whether a dashboard service account should be created |
 | dashboard.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| dashboard.terminationGracePeriodSeconds | int | `nil` | terminationGracePeriodSeconds for container lifecycle hook |
 | dashboard.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | dashboard.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the dashboard server |
 | dashboard.volumeMounts | list | `[]` | Additional volumeMounts to add to the dashboard container |
