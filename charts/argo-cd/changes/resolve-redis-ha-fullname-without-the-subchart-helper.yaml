@@ -1,0 +1,3 @@
+bump: patch
+kind: fixed
+description: Resolve the Redis HA service name without including the subchart's `redis-ha.fullname` helper, so charts that alias a differently named Redis HA subchart (eg. Docker Hardened Images) render with `redis-ha.enabled=true`
