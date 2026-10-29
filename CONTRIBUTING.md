@@ -45,8 +45,8 @@ New charts should start at version `1.0.0`, if it's considered stable. If it isn
 
 Any breaking changes to a chart (backwards incompatible) require:
 
-* Bump of the current Major version of the chart
-* State possible manual changes for this chart version in the `Upgrading` section of the chart's `README.md.gotmpl`
+* A change fragment with `bump: major`
+* State possible manual changes in the `Upgrading` section of the chart's `README.md.gotmpl`, under a `### NEXT` heading
 
 ### New Application Versions
 
@@ -55,12 +55,13 @@ Helm charts are intended to be created for all non-patched releases of Argo CD, 
 When selecting new application versions ensure you make the following changes:
 
 * `values.yaml`: Bump all instances of the container image version
-* `Chart.yaml`: Ensure `appVersion` matches the above container image and bump `version`
+* `Chart.yaml`: Ensure `appVersion` matches the above container image
+* A change fragment, with the `bump` picked by the rules below
 
 When you bump a chart dependency such as `redis-ha`, also update its sha256 in `.github/configs/chart-dependencies.sha256`.
 CI runs `helm dependency build` and then `./scripts/verify-chart-dependencies.sh`, which fails until the digest matches.
 
-Please ensure chart version changes adhere to semantic versioning standards:
+Pick the change fragment's `bump` by these rules:
 
 * Major: Large chart rewrites, major non-backwards compatible or destructive changes
 * Minor: New chart functionality (sidecars), major application updates or minor non-backwards compatible changes
@@ -68,11 +69,11 @@ Please ensure chart version changes adhere to semantic versioning standards:
 
 ### Immutability
 
-Each release for each chart must be immutable. Any change to a chart (even just documentation) requires a version bump. Trying to release the same version twice will result in an error.
+Each release for each chart must be immutable. Any change to a chart (even just documentation) needs a change fragment, which gives it a new version. Trying to release the same version twice will result in an error.
 
 ### Chart Versioning
 
-Currently we require a chart version bump for every change to a chart, including updating information for older versions.  This may change in the future.
+Currently we require a change fragment for every change to a chart, including updating information for older versions.  This may change in the future.
 
 ### Artifact Hub Annotations
 
@@ -84,40 +85,21 @@ Since we release our charts on Artifact Hub we encourage making use of the provi
 
 We want to deliver transparent chart releases for our chart consumers. Therefore we require a changelog per new chart release.
 
-Changes on a chart must be documented in a chart specific changelog in the `Chart.yaml` [Annotation Section](https://helm.sh/docs/topics/charts/#the-chartyaml-file).
-
-A new `artifacthub.io/changes` needs to be written covering only the changes since the previous release.
-
-Each change requires a new bullet point following the pattern. See more information [Artifact Hub annotations in Helm Chart.yaml file](https://artifacthub.io/docs/topics/annotations/helm/).
+Describe your change in a change fragment: a new file in the chart's `changes/` directory named after your change, for example `charts/argo-cd/changes/extension-volume-mounts.yaml`. Add one per pull request.
 
 ```yaml
-- kind: {type}
-  description: {description}
+bump: minor
+kind: added
+description: Support custom volumeMounts on extensionList entries
 ```
 
-You can use the following template:
+* `bump` is `major`, `minor` or `patch`. See [Versioning](#versioning).
+* `kind` is one of the [Artifact Hub change kinds](https://artifacthub.io/docs/topics/annotations/helm/): `added`, `changed`, `deprecated`, `removed`, `fixed` or `security`.
+* `description` is one line. Quote it if it contains `: ` or ` #`.
 
-```yaml
-name: argo-cd
-version: 5.19.12
-...
-annotations:
-  artifacthub.io/changes: |
-    - kind: added
-      description: Something New was added
-    - kind: changed
-      description: Changed Something within this chart
-    - kind: changed
-      description: Changed Something else within this chart
-    - kind: deprecated
-      description: Something deprecated
-    - kind: removed
-      description: Something was removed
-    - kind: fixed
-      description: Something was fixed
-    - kind: security
-      description: Some Security Patch was included
-```
+Leave `version` and the `artifacthub.io/changes` annotation in `Chart.yaml` alone. When a pull request merges, the publish workflow bumps the chart's `version` by the largest `bump` among its fragments, writes the fragments into `artifacthub.io/changes`, renames a `### NEXT` heading in `README.md.gotmpl` to the new version, and deletes the fragments. Since no two pull requests touch the same lines, merging one doesn't force a rebase of the others.
+
+`./scripts/lint-changelog.sh` checks your fragment. It needs `git` and [yq](https://github.com/mikefarah/yq).
 
 ## Testing
 
@@ -194,7 +176,7 @@ The linting can be invoked manually with the following command:
 
 ### When Tests Run
 
-CI runs on every pull request. The `chart-test` job lints each changed chart with chart-testing, then installs it on a kind cluster once for each values file in the chart's `ci/` directory. Other jobs validate the Artifact Hub metadata, the changelog annotation, the pull request title, and the workflows and scripts. A pull request cannot merge until the required checks pass.
+CI runs on every pull request. The `chart-test` job lints each changed chart with chart-testing, checks its change fragment, then installs it on a kind cluster once for each values file in the chart's `ci/` directory. Other jobs validate the Artifact Hub metadata, the pull request title, and the workflows and scripts. A pull request cannot merge until the required checks pass.
 
 ### Maintaining Tests
 
@@ -214,7 +196,7 @@ Replace `argo-cd` with the chart you changed. `helm package` writes the chart ar
 
 ## Publishing Changes
 
-Changes are automatically publish whenever a commit is merged to the `main` branch by the CI job (see `./.github/workflows/publish.yml`).
+Changes are automatically publish whenever a commit is merged to the `main` branch by the CI job (see `./.github/workflows/publish.yml`). The workflow first turns the change fragments into new chart versions and pushes that to `main`, and that push releases the charts.
 
 ## Becoming a Maintainer
 

@@ -23,14 +23,14 @@ Argo Helm is community maintained. A small group of volunteers reads every pull 
 
 Every change to a chart needs all of the following, including a change that only touches documentation:
 
-- Bump `version` in that chart's `Chart.yaml`. Patch for backwards compatible fixes and app patch bumps, minor for new chart features, major for anything that breaks existing values.
-- Add an `artifacthub.io/changes` entry to `Chart.yaml` describing what you changed.
+- Add a change fragment in `charts/<chart>/changes/`, as described in [CONTRIBUTING.md](CONTRIBUTING.md#changelog). Its `bump` is patch for backwards compatible fixes and app patch bumps, minor for new chart features, major for anything that breaks existing values.
+- Don't edit `version` or `artifacthub.io/changes` in `Chart.yaml`. The publish workflow writes both after the pull request merges. Title a new Upgrading section in `README.md.gotmpl` `### NEXT`, not with a version number.
 - Run `./scripts/helm-docs.sh` if you touched `values.yaml` or `README.md.gotmpl`. Never hand-edit a chart's `README.md`, it is generated. If the script changes README files in charts you did not touch, revert those.
 - Keep new values backwards compatible. A new value needs a default that leaves existing installations rendering exactly as before.
 
 Run `helm template` on the chart before and after your change and read the diff. If it shows anything you did not intend, fix that before opening the pull request.
 
-Run `./scripts/lint.sh` before you open the pull request. It takes no arguments and runs chart-testing in Docker over the charts you changed, the same lint CI runs, so it is what catches a missing version bump. Run `./scripts/lint-changelog.sh` too. That one needs only bash and checks that `artifacthub.io/changes` holds exactly one entry. Both are quicker than waiting for CI to fail.
+Run `./scripts/lint.sh` before you open the pull request. It takes no arguments and runs chart-testing in Docker over the charts you changed, the same lint CI runs. Run `./scripts/lint-changelog.sh` too. It needs bash and yq, and it is what catches a missing or malformed change fragment. Both are quicker than waiting for CI to fail.
 
 The full rules are in [CONTRIBUTING.md](CONTRIBUTING.md). Read it before your first change here.
 
