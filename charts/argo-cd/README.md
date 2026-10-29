@@ -87,7 +87,7 @@ Switching an existing release to `server.enabled: false` deletes the server Depl
 ## Ingress configuration
 
 Please refer to the [Operator Manual](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingress-configurationh) for details as the samples
-below corespond to their respective sections.
+below correspond to their respective sections.
 
 ### SSL-Passthrough
 
@@ -727,7 +727,7 @@ This version adds `global.affinity` options that are used as a presets. Override
 ### 5.19.0
 
 This version consolidates config for custom repository TLS certificates and SSH known hosts. If you provided these values (`configs.knownHosts.*`, `configs.knownHostsAnnotations`, `configs.tlsCerts`, `configs.tlsCertsAnnotations`) please move them into new `configs.ssh` and `configs.tls` sections.
-You can also use new option `configs.ssh.extraHosts` to configure your SSH keys without maintaing / overwritting keys for public Git repositories.
+You can also use new option `configs.ssh.extraHosts` to configure your SSH keys without maintaining / overwriting keys for public Git repositories.
 
 ### 5.13.0
 
@@ -1629,7 +1629,7 @@ NAME: my-release
 | dex.pdb.annotations | object | `{}` | Annotations to be added to Dex server pdb |
 | dex.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Dex server |
 | dex.pdb.labels | object | `{}` | Labels to be added to Dex server pdb |
-| dex.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| dex.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | dex.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | dex.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | dex.podAnnotations | object | `{}` | Annotations to be added to the Dex server pods |
@@ -1753,7 +1753,7 @@ NAME: my-release
 | redis.pdb.annotations | object | `{}` | Annotations to be added to Redis pdb |
 | redis.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Redis |
 | redis.pdb.labels | object | `{}` | Labels to be added to Redis pdb |
-| redis.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| redis.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | redis.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | redis.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | redis.podAnnotations | object | `{}` | Annotations to be added to the Redis server pods |
