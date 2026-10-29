@@ -76,7 +76,7 @@ app.kubernetes.io/component: {{ .component }}
 Common affinity definition
 Pod affinity
   - Soft prefers different nodes
-  - Hard requires different nodes and prefers different availibility zones
+  - Hard requires different nodes and prefers different availability zones
 Node affinity
   - Soft prefers given user expressions
   - Hard requires given user expressions
