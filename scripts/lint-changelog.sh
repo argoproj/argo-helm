@@ -14,6 +14,8 @@ error() {
 for chart in $(git diff --name-only "${base}...HEAD" -- charts | cut -d / -f 2 | sort -u); do
   dir="charts/${chart}"
   [[ -f "${dir}/Chart.yaml" ]] || continue
+  # A new chart is released at the version its Chart.yaml sets.
+  git diff --quiet --diff-filter=A "${base}...HEAD" -- "${dir}/Chart.yaml" || continue
 
   mapfile -t fragments < <(git diff --name-only --diff-filter=A "${base}...HEAD" -- "${dir}/changes/*.yaml")
   if [[ ${#fragments[@]} -ne 1 ]]; then
