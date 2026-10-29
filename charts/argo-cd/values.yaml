@@ -98,7 +98,6 @@ global:
   # -- Toggle and define pod-level security context.
   # @default -- See [values.yaml]
   securityContext:
-    runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
   #  runAsUser: 999
@@ -2111,7 +2110,6 @@ redisSecretInit:
   # -- Redis secret-init Job pod-level security context
   # @default -- See [values.yaml]
   securityContext:
-    runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
 
