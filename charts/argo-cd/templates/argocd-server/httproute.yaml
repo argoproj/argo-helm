@@ -25,14 +25,13 @@ spec:
       kind: ListenerSet
       name: {{ $fullName }}
       namespace: {{ include "argo-cd.namespace" . }}
+      {{- if not .Values.server.listenerset.listeners }}
       sectionName: {{ .Values.server.listenerset.listenerName }}
+      {{- end }}
     {{- end }}
   {{- if .Values.server.httproute.hostnames }}
   hostnames:
     {{- toYaml .Values.server.httproute.hostnames | nindent 4 }}
-  {{- else if .Values.server.listenerset.enabled }}
-  hostnames:
-    - {{ tpl (.Values.server.listenerset.hostname | default .Values.global.domain) $ | quote }}
   {{- end }}
   rules:
   {{- range .Values.server.httproute.rules }}

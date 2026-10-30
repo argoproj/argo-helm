@@ -3012,8 +3012,8 @@ server:
   # Gateway API ListenerSet configuration
   # NOTE: Gateway API support is in EXPERIMENTAL status
   # ListenerSet allows attaching additional listeners to an existing Gateway
-  # Requires Gateway API v1alpha2 and a controller that supports ListenerSet
-  # Refer to https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1alpha2.ListenerSet
+  # Requires Gateway API v1.5+ and a controller that supports ListenerSet
+  # Refer to https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ListenerSet
   listenerset:
     # -- Enable ListenerSet resource for Argo CD server (Gateway API)
     enabled: false
@@ -3029,7 +3029,7 @@ server:
       # namespace: example-gateway-namespace
     # -- Hostname for the synthesized listener. Defaults to global.domain when empty.
     hostname: ""
-    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs.
+    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs (omitted when `listeners` is set).
     listenerName: https
     # -- Port for the synthesized listener
     port: 443
@@ -4027,8 +4027,8 @@ applicationSet:
   ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration
   # NOTE: Gateway API support is in EXPERIMENTAL status
   # ListenerSet allows attaching additional listeners to an existing Gateway
-  # Requires Gateway API v1alpha2 and a controller that supports ListenerSet
-  # Refer to https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1alpha2.ListenerSet
+  # Requires Gateway API v1.5+ and a controller that supports ListenerSet
+  # Refer to https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ListenerSet
   listenerset:
     # -- Enable ListenerSet resource for Argo CD ApplicationSet webhook (Gateway API)
     enabled: false
@@ -4044,7 +4044,7 @@ applicationSet:
       # namespace: example-gateway-namespace
     # -- Hostname for the synthesized listener. Defaults to global.domain when empty.
     hostname: ""
-    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs.
+    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs (omitted when `listeners` is set).
     listenerName: https
     # -- Port for the synthesized listener
     port: 443

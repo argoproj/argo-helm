@@ -400,7 +400,7 @@ server:
       namespace: gateway-system
 ```
 
-Combined with an HTTPRoute to route traffic through the listener to the Argo CD server. The HTTPRoute automatically targets the ListenerSet and inherits the hostname from `global.domain` — no extra configuration needed:
+Combined with an HTTPRoute to route traffic through the listener to the Argo CD server. The HTTPRoute automatically targets the ListenerSet and, when `httproute.hostnames` is empty, inherits the hostnames of the matched listener(s) — no extra configuration needed. Set `httproute.hostnames` only to narrow the route further. When `listeners` is provided, the route attaches to all listeners of the ListenerSet unless you set `httproute.parentRefs` with a `sectionName`:
 
 ```yaml
 global:
@@ -1456,7 +1456,7 @@ NAME: my-release
 | server.listenerset.enabled | bool | `false` | Enable ListenerSet resource for Argo CD server (Gateway API) |
 | server.listenerset.hostname | string | `""` | Hostname for the synthesized listener. Defaults to global.domain when empty. |
 | server.listenerset.labels | object | `{}` | Additional ListenerSet labels |
-| server.listenerset.listenerName | string | `"https"` | Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs. |
+| server.listenerset.listenerName | string | `"https"` | Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs (omitted when `listeners` is set). |
 | server.listenerset.listeners | list | `[]` (See [values.yaml]) | Listeners to attach to the parent Gateway. When non-empty, used verbatim and all synthesized listener fields above are ignored. |
 | server.listenerset.parentRef | object | `{}` (See [values.yaml]) | Gateway API parentRef for the ListenerSet |
 | server.listenerset.port | int | `443` | Port for the synthesized listener |
@@ -1944,7 +1944,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | applicationSet.listenerset.enabled | bool | `false` | Enable ListenerSet resource for Argo CD ApplicationSet webhook (Gateway API) |
 | applicationSet.listenerset.hostname | string | `""` | Hostname for the synthesized listener. Defaults to global.domain when empty. |
 | applicationSet.listenerset.labels | object | `{}` | Additional ListenerSet labels |
-| applicationSet.listenerset.listenerName | string | `"https"` | Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs. |
+| applicationSet.listenerset.listenerName | string | `"https"` | Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs (omitted when `listeners` is set). |
 | applicationSet.listenerset.listeners | list | `[]` (See [values.yaml]) | Listeners to attach to the parent Gateway. When non-empty, used verbatim and all synthesized listener fields above are ignored. |
 | applicationSet.listenerset.parentRef | object | `{}` (See [values.yaml]) | Gateway API parentRef for the ListenerSet |
 | applicationSet.listenerset.port | int | `443` | Port for the synthesized listener |
