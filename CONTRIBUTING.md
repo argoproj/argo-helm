@@ -97,6 +97,8 @@ description: Support custom volumeMounts on extensionList entries
 * `kind` is one of the [Artifact Hub change kinds](https://artifacthub.io/docs/topics/annotations/helm/): `added`, `changed`, `deprecated`, `removed`, `fixed` or `security`.
 * `description` is one line. Quote it if it contains `: ` or ` #`.
 
+A pull request that adds a new chart needs no fragment. The chart is released at the `version` and with the `artifacthub.io/changes` its `Chart.yaml` sets.
+
 Leave `version` and the `artifacthub.io/changes` annotation in `Chart.yaml` alone. When a pull request merges, the publish workflow bumps the chart's `version` by the largest `bump` among its fragments, writes the fragments into `artifacthub.io/changes`, renames a `### NEXT` heading in `README.md.gotmpl` to the new version, and deletes the fragments. Since no two pull requests touch the same lines, merging one doesn't force a rebase of the others.
 
 `./scripts/lint-changelog.sh` checks your fragment. It needs `git` and [yq](https://github.com/mikefarah/yq).
