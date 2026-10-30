@@ -1,3 +1,4 @@
+{{- if .Values.applicationSet.enabled }}
 {{- if .Values.applicationSet.certificate.enabled -}}
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -36,4 +37,5 @@ spec:
   privateKey:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+{{- end }}
 {{- end }}

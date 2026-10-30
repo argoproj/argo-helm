@@ -1,3 +1,4 @@
+{{- if .Values.applicationSet.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -94,3 +95,4 @@ rules:
     - get
     - update
     - create
+{{- end }}

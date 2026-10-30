@@ -1,3 +1,4 @@
+{{- if .Values.applicationSet.enabled }}
 {{- if .Values.applicationSet.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -27,4 +28,5 @@ spec:
   selector:
     matchLabels:
       {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 6 }}
+{{- end }}
 {{- end }}
