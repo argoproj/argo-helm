@@ -1,4 +1,4 @@
-{{- if and .Values.redisSecretInit.enabled (not .Values.externalRedis.host) }}
+{{- if and .Values.redisSecretInit.enabled (not (include "argo-cd.externalRedis.inUse" .)) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
