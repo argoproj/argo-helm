@@ -96,8 +96,10 @@ global:
   addPrometheusAnnotations: false
 
   # -- Toggle and define pod-level security context.
-  # @default -- `{}` (See [values.yaml])
-  securityContext: {}
+  # @default -- See [values.yaml]
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
   #  runAsUser: 999
   #  runAsGroup: 999
   #  fsGroup: 999
@@ -2106,7 +2108,10 @@ redisSecretInit:
       type: RuntimeDefault
 
   # -- Redis secret-init Job pod-level security context
-  securityContext: {}
+  # @default -- See [values.yaml]
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
 
   serviceAccount:
     # -- Create a service account for the redis pod
