@@ -163,6 +163,9 @@ data:
         name: {{ .Values.server.sso.clientSecret.name }}
         key: {{ .Values.server.sso.clientSecret.key }}
       redirectUrl: {{ .Values.server.sso.redirectUrl | quote }}
+      {{- with .Values.server.sso.logoutRedirectUrl }}
+      logoutRedirectUrl: {{ . | quote }}
+      {{- end }}
       rbac:
         enabled: {{ .Values.server.sso.rbac.enabled }}
       {{- with .Values.server.sso.scopes }}
