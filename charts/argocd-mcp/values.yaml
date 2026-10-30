@@ -1,0 +1,152 @@
+# -- Number of desired pods
+replicaCount: 1
+
+image:
+  # -- Default image repository
+  repository: quay.io/argoprojlabs/mcp-for-argocd
+  # -- Default image pull policy
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag whose default is the chart appVersion
+  tag: ""
+
+# -- Image pull secrets for the deployment
+imagePullSecrets: []
+
+# -- Global name override
+nameOverride: ""
+# -- Global fullname override
+fullnameOverride: ""
+# -- Global namespace override
+namespaceOverride: ""
+
+# -- Extra arguments to pass to the MCP server container
+extraArgs: []
+
+# -- Extra environment variables for the MCP server container
+extraEnv: []
+
+# -- Extra envFrom to pass to the MCP server container
+extraEnvFrom: []
+
+# -- Extra volumes to add to the pod
+extraVolumes: []
+
+# -- Extra volume mounts to add to the container
+extraVolumeMounts: []
+
+# -- Extra Kubernetes manifests to deploy with the chart
+extraObjects: []
+
+argocd:
+  # -- Default Argo CD base URL used by the MCP server
+  baseUrl: ""
+
+  apiToken:
+    # -- Name of an existing Secret containing the Argo CD API token
+    existingSecret: ""
+    # -- Key in the existing Secret containing the Argo CD API token
+    key: token
+
+mcp:
+  # -- Transport protocol used by the MCP server
+  transport: http
+
+  # -- Port exposed by the MCP HTTP server
+  port: 3000
+
+  # -- Run the MCP server in read-only mode
+  readOnly: false
+
+  # -- Run the HTTP transport without session affinity requirements
+  stateless: false
+
+  # -- Allow non-loopback HTTP access without MCP_AUTH_TOKEN.
+  # Use only when an external proxy or service mesh authenticates callers.
+  allowUnauthenticated: false
+
+  # -- Additional Host headers accepted by the MCP HTTP server
+  allowedHosts: []
+
+  # -- Additional browser origins accepted by the MCP HTTP server
+  allowedOrigins: []
+
+  authToken:
+    # -- Name of an existing Secret containing the inbound MCP authentication token
+    existingSecret: ""
+    # -- Key in the existing Secret containing the inbound MCP authentication token
+    key: token
+
+service:
+  # -- Enable a Service for the MCP server
+  enabled: false
+  # -- Kubernetes service type
+  type: ClusterIP
+  # -- Kubernetes port where service is exposed
+  port: 3000
+  # -- Annotations to add to the Service
+  annotations: {}
+  # -- Labels to add to the Service
+  labels: {}
+
+ingress:
+  # -- Enable an Ingress for the MCP server
+  enabled: false
+
+  # -- Ingress class name
+  className: ""
+
+  # -- Additional annotations for the Ingress
+  annotations: {}
+
+  # -- Additional labels for the Ingress
+  labels: {}
+
+  # -- Ingress hosts configuration
+  hosts:
+    - host: argocd-mcp.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+  # -- Ingress TLS configuration
+  tls: []
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- Labels to add to the service account
+  labels: {}
+  # -- The name of the service account to use. If not set, a name is generated using the fullname template
+  name: ""
+
+# -- Annotations to be added to pods
+podAnnotations: {}
+# -- Labels to be added to pods
+podLabels: {}
+
+# -- Pod security context settings
+podSecurityContext:
+  runAsNonRoot: true
+
+# -- Container security context settings
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+
+# -- Resource limits and requests for the container
+resources: {}
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Tolerations for pod assignment
+tolerations: []
+
+# -- Affinity settings for pod assignment
+affinity: {}
