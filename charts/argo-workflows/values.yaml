@@ -179,7 +179,8 @@ controller:
   # podPortName: http
   metricsConfig:
     # -- Enables prometheus metrics server
-    enabled: false
+    # @default -- `true`  (Argo Workflows default)
+    enabled:
     # -- Path is the path where metrics are emitted. Must start with a "/".
     path: /metrics
     # -- Frequency at which prometheus scrapes metrics
