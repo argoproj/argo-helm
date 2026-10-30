@@ -1,0 +1,3 @@
+bump: patch
+kind: changed
+description: HTTPRoute now defaults spec.hostnames to global.domain when httproute.hostnames is unset. This changes behavior — an omitted hostnames previously matched all hostnames of the bound listener, and now narrows to global.domain (default placeholder argocd.example.com). To restore match-all, set httproute.hostnames explicitly or set global.domain to "".
