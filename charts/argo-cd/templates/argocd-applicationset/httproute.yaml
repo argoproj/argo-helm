@@ -23,14 +23,17 @@ spec:
       kind: ListenerSet
       name: {{ $fullName }}
       namespace: {{ include "argo-cd.namespace" . }}
+      {{- $listenerNames := list }}
+      {{- range .Values.applicationSet.listenerset.listeners }}
+      {{- $listenerNames = append $listenerNames .name }}
+      {{- end }}
+      {{- if or (not .Values.applicationSet.listenerset.listeners) (has .Values.applicationSet.listenerset.listenerName $listenerNames) }}
       sectionName: {{ .Values.applicationSet.listenerset.listenerName }}
+      {{- end }}
     {{- end }}
   {{- if .Values.applicationSet.httproute.hostnames }}
   hostnames:
     {{- toYaml .Values.applicationSet.httproute.hostnames | nindent 4 }}
-  {{- else if .Values.applicationSet.listenerset.enabled }}
-  hostnames:
-    - {{ tpl (.Values.applicationSet.listenerset.hostname | default .Values.global.domain) $ | quote }}
   {{- end }}
   rules:
     {{- range .Values.applicationSet.httproute.rules }}

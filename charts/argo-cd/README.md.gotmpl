@@ -399,7 +399,7 @@ server:
       namespace: gateway-system
 ```
 
-Combined with an HTTPRoute to route traffic through the listener to the Argo CD server. The HTTPRoute automatically targets the ListenerSet and inherits the hostname from `global.domain` — no extra configuration needed:
+Combined with an HTTPRoute to route traffic through the listener to the Argo CD server. The HTTPRoute automatically targets the ListenerSet and, when `httproute.hostnames` is empty, inherits the hostnames of the matched listener(s) — no extra configuration needed. Set `httproute.hostnames` only to narrow the route further. When `listeners` is provided, the route targets the listener named `listenerName` (default `https`) if one exists, and otherwise attaches to all listeners of the ListenerSet. Set `httproute.parentRefs` with a `sectionName` to choose explicitly:
 
 ```yaml
 global:
