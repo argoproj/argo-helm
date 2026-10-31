@@ -23,7 +23,11 @@ spec:
       kind: ListenerSet
       name: {{ $fullName }}
       namespace: {{ include "argo-cd.namespace" . }}
-      {{- if not .Values.applicationSet.listenerset.listeners }}
+      {{- $listenerNames := list }}
+      {{- range .Values.applicationSet.listenerset.listeners }}
+      {{- $listenerNames = append $listenerNames .name }}
+      {{- end }}
+      {{- if or (not .Values.applicationSet.listenerset.listeners) (has .Values.applicationSet.listenerset.listenerName $listenerNames) }}
       sectionName: {{ .Values.applicationSet.listenerset.listenerName }}
       {{- end }}
     {{- end }}

@@ -3029,7 +3029,7 @@ server:
       # namespace: example-gateway-namespace
     # -- Hostname for the synthesized listener. Defaults to global.domain when empty.
     hostname: ""
-    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs (omitted when `listeners` is set).
+    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs. When `listeners` is set, sectionName is only kept if one of the listeners has this name.
     listenerName: https
     # -- Port for the synthesized listener
     port: 443
@@ -4044,7 +4044,7 @@ applicationSet:
       # namespace: example-gateway-namespace
     # -- Hostname for the synthesized listener. Defaults to global.domain when empty.
     hostname: ""
-    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs (omitted when `listeners` is set).
+    # -- Name of the synthesized listener. Also used as sectionName in auto-derived httproute parentRefs. When `listeners` is set, sectionName is only kept if one of the listeners has this name.
     listenerName: https
     # -- Port for the synthesized listener
     port: 443

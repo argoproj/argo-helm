@@ -1,0 +1,32 @@
+crds:
+  keep: false
+
+server:
+  listenerset:
+    enabled: true
+    parentRef:
+      name: example-gateway
+      namespace: example-gateway-namespace
+    listeners:
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: argocd.example.com
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - group: ""
+              kind: Secret
+              name: argocd-server-tls
+        allowedRoutes:
+          namespaces:
+            from: Same
+      - name: http
+        port: 80
+        protocol: HTTP
+        hostname: argocd.example.com
+        allowedRoutes:
+          namespaces:
+            from: Same
+  httproute:
+    enabled: true
