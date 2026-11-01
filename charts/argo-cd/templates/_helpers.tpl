@@ -108,6 +108,17 @@ Create the name of the Redis secret-init service account to use
 {{- end -}}
 
 {{/*
+Return "true" when the Argo CD server is enabled.
+A missing value (for example after `helm upgrade --reuse-values` from a chart
+version without `server.enabled`) is treated as enabled.
+*/}}
+{{- define "argo-cd.server.enabled" -}}
+{{- if ne (toString .Values.server.enabled) "false" -}}
+true
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create argocd server name and version as used by the chart label.
 */}}
 {{- define "argo-cd.server.fullname" -}}
@@ -343,11 +354,20 @@ name: "argocd-redis" # hard-coded in Job command and embedded Redis deployments 
 key: auth
 optional: false # Secret is not optional in this case !
 
+    {{- else if (index .Values "redis-ha").enabled -}}
+    {{- /* Embedded redis-ha with disabled pre-install Job: resolve the Secret name and key the same way the redis-ha subchart does */ -}}
+    {{- $redisHa := (index .Values "redis-ha") -}}
+    {{- $redisHaContext := dict "Chart" (dict "Name" "redis-ha") "Release" .Release "Template" .Template "Values" $redisHa -}}
+name: {{ default (include "redis-ha.fullname" $redisHaContext) (tpl ($redisHa.existingSecret | default "") $redisHaContext) }}
+key: {{ $redisHa.authKey }}
+optional: true
+
     {{- else -}}
     {{- /* All other use cases (e.g. disabled pre-install Job) */ -}}
-name: "argocd-redis"
+    {{- /* Secret is required when specifying redis.existingSecret, otherwise it is optional */ -}}
+name: {{ default "argocd-redis" .Values.redis.existingSecret }}
 key: auth
-optional: true
+optional: {{ if .Values.redis.existingSecret }}false{{ else }}true{{ end }}
     {{- end -}}
 {{- end -}}
 

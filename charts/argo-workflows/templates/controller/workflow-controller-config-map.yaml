@@ -134,10 +134,13 @@ data:
       {{- with .Values.controller.metricsConfig.modifiers }}
       modifiers:
         {{- toYaml . | nindent 8 }} 
-      {{- end }}  
+      {{- end }}
       {{- with .Values.controller.metricsConfig.temporality }}
       temporality: {{ . }}
       {{- end }}
+    {{- else if kindIs "bool" .Values.controller.metricsConfig.enabled }}
+    metricsConfig:
+      enabled: false
     {{- end }}
     {{- if .Values.controller.telemetryConfig.enabled }}
     telemetryConfig:

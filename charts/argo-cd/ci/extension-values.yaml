@@ -3,6 +3,10 @@ crds:
   keep: false
 # Ref: https://github.com/argoproj-labs/argocd-extension-metrics?tab=readme-ov-file#install-ui-extension
 server:
+  volumes:
+    - name: extension-headers
+      secret:
+        secretName: argocd-extension-headers
   extensions:
     enabled: true
     extensionList:
@@ -12,3 +16,17 @@ server:
             value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension.tar.gz
           - name: EXTENSION_CHECKSUM_URL
             value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension_checksums.txt
+          - name: EXTENSION_HTTP_HEADERS_FILE
+            value: /etc/argocd-extension/headers
+        volumeMounts:
+          - name: extension-headers
+            mountPath: /etc/argocd-extension
+            readOnly: true
+extraObjects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: argocd-extension-headers
+    stringData:
+      headers: |
+        Accept: application/octet-stream

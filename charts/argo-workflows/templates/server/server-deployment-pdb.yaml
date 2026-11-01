@@ -7,9 +7,9 @@ metadata:
   labels:
     {{- include "argo-workflows.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
 spec:
-  {{- if .Values.server.pdb.minAvailable }}
+  {{- if not (kindIs "invalid" .Values.server.pdb.minAvailable) }}
   minAvailable: {{ .Values.server.pdb.minAvailable }}
-  {{- else if .Values.server.pdb.maxUnavailable }}
+  {{- else if not (kindIs "invalid" .Values.server.pdb.maxUnavailable) }}
   maxUnavailable: {{ .Values.server.pdb.maxUnavailable }}
   {{- else }}
   minAvailable: 0

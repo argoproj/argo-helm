@@ -16,8 +16,8 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- with .Values.controller.pdb.maxUnavailable }}
-  maxUnavailable: {{ . }}
+  {{- if and (not (kindIs "invalid" .Values.controller.pdb.maxUnavailable)) (ne (toString .Values.controller.pdb.maxUnavailable) "") }}
+  maxUnavailable: {{ .Values.controller.pdb.maxUnavailable }}
   {{- else }}
   minAvailable: {{ .Values.controller.pdb.minAvailable | default 0 }}
   {{- end }}

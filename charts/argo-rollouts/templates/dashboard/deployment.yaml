@@ -55,6 +55,9 @@ spec:
         {{- with .Values.dashboard.rootPath }}
         - "--root-path={{ . }}"
         {{- end }}
+        {{- with .Values.dashboard.address }}
+        - "--address={{ . }}"
+        {{- end }}
         {{- with .Values.dashboard.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

@@ -16,6 +16,9 @@ spec:
     - port: {{ .Values.controller.metricsConfig.servicePortName }}
       path: {{ .Values.controller.metricsConfig.path }}
       interval: {{ .Values.controller.metricsConfig.interval }}
+      {{- with .Values.controller.metricsConfig.scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+      {{- end }}
       {{- with .Values.controller.metricsConfig.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}
@@ -31,6 +34,9 @@ spec:
     - port: telemetry
       path: {{ .Values.controller.telemetryConfig.path }}
       interval: {{ .Values.controller.telemetryConfig.interval }}
+      {{- with .Values.controller.telemetryConfig.scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+      {{- end }}
       {{- with .Values.controller.metricsConfig.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}

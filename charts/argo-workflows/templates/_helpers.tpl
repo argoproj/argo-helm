@@ -228,3 +228,12 @@ Set helm.sh/resource-policy (crds.keep) and crds.annotations on the workflows CR
 {{- $_ := set $crd "metadata" $metadata -}}
 {{- toYaml $crd -}}
 {{- end -}}
+
+{{/*
+Compute checksum of controller config ConfigMap data for pod restart annotation.
+*/}}
+{{- define "argo-workflows.controller.config.checksum" -}}
+{{- $rendered := include (print .context.Template.BasePath .path) .context | fromYaml -}}
+{{- $data := merge (dict) (dig "data" dict $rendered) (dig "stringData" dict $rendered) -}}
+{{- $data | toYaml | sha256sum -}}
+{{- end -}}
