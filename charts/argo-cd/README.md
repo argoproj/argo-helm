@@ -525,6 +525,12 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### NEXT
+
+HTTPRoutes (`server.httproute` and `applicationSet.httproute`) without `hostnames` set now default `spec.hostnames` to `global.domain`.
+Previously, an omitted `hostnames` matched all hostnames of the bound listener; with the default `global.domain` the route now only matches `argocd.example.com`.
+To restore the match-all behavior, set `httproute.hostnames` explicitly or set `global.domain: ""`.
+
 ### 10.0.0
 
 In this chart version we changed the parameter `global.networkPolicy.create` from `false` to `true` to align with the upstream manifests and apply
