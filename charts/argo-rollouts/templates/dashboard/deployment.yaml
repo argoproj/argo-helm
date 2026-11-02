@@ -69,20 +69,41 @@ spec:
         ports:
         - containerPort: {{ .Values.dashboard.service.targetPort }}
           name: dashboard
+        {{- with .Values.dashboard.livenessProbe }}
+        livenessProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.dashboard.readinessProbe }}
+        readinessProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         securityContext:
           {{- toYaml .Values.dashboard.containerSecurityContext | nindent 10 }}
+        {{- with .Values.dashboard.lifecycle }}
+        lifecycle: {{ toYaml . | nindent 10 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.dashboard.resources | nindent 10 }}
         {{- with .Values.dashboard.volumeMounts }}
         volumeMounts:
           {{- toYaml . | nindent 8 }}
         {{- end }}
+      {{- with .Values.dashboard.extraContainers }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with .Values.dashboard.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- if .Values.dashboard.nodeSelector }}
       nodeSelector:
         {{- toYaml .Values.dashboard.nodeSelector | nindent 8 }}
       {{- end }}
       securityContext:
         {{- toYaml .Values.dashboard.podSecurityContext | nindent 8 }}
+      {{- with .Values.dashboard.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
       {{- if .Values.dashboard.tolerations }}
       tolerations:
         {{- toYaml .Values.dashboard.tolerations | nindent 8 }}

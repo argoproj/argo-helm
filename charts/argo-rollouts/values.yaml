@@ -367,6 +367,10 @@ dashboard:
   #   topologyKey: topology.kubernetes.io/zone
   #   whenUnsatisfiable: DoNotSchedule
 
+  # -- (int) terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds:
+  # -- Specify lifecycle hooks for the dashboard
+  lifecycle: {}
   # -- [priorityClassName] for the dashboard server
   priorityClassName: ""
 
@@ -395,8 +399,27 @@ dashboard:
   extraEnv: []
     # - name: FOO
     #   value: bar
+  # -- Literal yaml for extra containers to be added to dashboard deployment.
+  ## Additional containers to add to the rollouts dashboard deployment
+  ## This will be rendered as the literal yaml
+  extraContainers: []
+
+  # -- Init containers to add to the rollouts dashboard pod
+  ## This will be rendered as the literal yaml
+  initContainers: []
+  #  - name: download-tools
+  #    image: alpine:3.8
+  #    command: [sh, -c]
+  #    args:
+  #      -  ls
+
   # -- Resource limits and requests for the dashboard pods.
   resources: {}
+  # -- Configure liveness [probe] for the dashboard
+  livenessProbe: {}
+
+  # -- Configure readiness [probe] for the dashboard
+  readinessProbe: {}
   # -- Security Context to set on pod level
   podSecurityContext:
     runAsNonRoot: true
