@@ -1,0 +1,31 @@
+apiVersion: iac-guard-v.io/v1alpha1
+kind: InfrastructureContract
+metadata:
+  name: argo-cd-metrics-scrape-relationships
+spec:
+  artifactClass: kubernetes_rendered
+  subjects:
+    include:
+      identities:
+        - monitoring.coreos.com/v1/ServiceMonitor/argocd/argorel-argocd-application-controller
+        - monitoring.coreos.com/v1/ServiceMonitor/argocd/argorel-argocd-applicationset-controller
+        - monitoring.coreos.com/v1/ServiceMonitor/argocd/argorel-argocd-notifications-controller
+        - monitoring.coreos.com/v1/ServiceMonitor/argocd/argorel-argocd-repo-server
+        - monitoring.coreos.com/v1/ServiceMonitor/argocd/argorel-argocd-server
+    cardinality:
+      min: 5
+      max: 5
+  responsibility:
+    class: PROJECT_MANAGED
+    reason: Each enabled Argo CD ServiceMonitor endpoint should resolve through its metrics Service to a workload container port.
+  expect:
+    - id: metrics-endpoint-resolves
+      property:
+        namespace: iac_guard_v
+        id: IACGV_PROM_SERVICEMONITOR_RESOLVES_SERVICE_PORT_V1
+        version: "1"
+      parameters:
+        endpoint_index: 0
+      relationCardinality:
+        targetMin: 5
+        targetMax: 5
