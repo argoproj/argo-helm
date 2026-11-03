@@ -36676,6 +36676,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Support setting unhealthyPodEvictionPolicy on the controller and server PodDisruptionBudgets
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v4.1.6
+    created: "2026-11-03T00:41:53.729012667Z"
+    description: A Helm chart for Argo Workflows
+    digest: 804416905bae672a6dc3834cd3c8319cb0f3f60052d9b066c08fa839fa717c8d
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-2.0.16/argo-workflows-2.0.16.tgz
+    version: 2.0.16
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: respect controller.metricsConfig.enabled set to false
       artifacthub.io/signKey: |
@@ -46743,4 +46767,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-10-30T02:23:48.238081448Z"
+generated: "2026-11-03T00:41:53.731085412Z"
