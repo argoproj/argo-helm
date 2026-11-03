@@ -32,6 +32,10 @@ if [[ ${#refs[@]} -eq 0 ]]; then
   exit 1
 fi
 
+platform="$(docker version --format '{{.Server.Os}}/{{.Server.Arch}}')"
+archive="$(mktemp)"
+trap 'rm -f "${archive}"' EXIT
+
 for ref in "${refs[@]}"; do
   echo "Preloading ${ref}"
   pulled="$(scripts/ci-pull-image.sh "${ref}")"
@@ -39,5 +43,9 @@ for ref in "${refs[@]}"; do
     echo "::error::${ref} was pulled as ${pulled}. The cluster can only use it under its original name."
     exit 1
   fi
-  kind load docker-image "${ref}" --name "${cluster}"
+  # With Docker's containerd image store, `kind load docker-image` exports the
+  # whole multi-arch index, but only this platform's content was pulled, so the
+  # import into the nodes fails. Save just this platform and load the archive.
+  docker save --platform "${platform}" --output "${archive}" "${ref}"
+  kind load image-archive "${archive}" --name "${cluster}"
 done
