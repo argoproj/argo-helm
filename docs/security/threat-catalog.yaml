@@ -1,0 +1,162 @@
+# Threats to the Argo Helm chart release pipeline. Each threat links to the
+# capabilities in capability-catalog.yaml (or FINOS CCC Core) it abuses, and
+# names the files that mitigate it. Grouped by STRIDE.
+#
+# This assessment lists threats with mitigations in place. The maintainers are
+# remediating further findings and track them privately under the security
+# policy in SECURITY.md. They will be added here once fixed.
+#
+# Validate with:
+#   cue vet -c -d '#ThreatCatalog' github.com/gemaraproj/gemara@v1.6.0 docs/security/threat-catalog.yaml
+metadata:
+  id: ARGO.HELM.RELEASE.THREATS
+  type: ThreatCatalog
+  gemara-version: "1.6.0"
+  version: "1.0.0"
+  date: "2026-11-03T00:00:00Z"
+  description: |
+    Threats to the Argo Helm chart release pipeline and the repository
+    automation that feeds it. This assessment lists threats with mitigations
+    in place. The maintainers are remediating further findings and track them
+    privately under the security policy in SECURITY.md. They will be added
+    here once fixed.
+  author:
+    id: argo-helm-maintainers
+    name: Argo Helm Maintainers
+    type: Human
+  mapping-references:
+    - id: CCC
+      title: Common Cloud Controls Core
+      version: v2025.10
+      url: https://github.com/finos/common-cloud-controls/releases
+    - id: ARGO.HELM.RELEASE.CAPS
+      title: Argo Helm Chart Release Pipeline Capabilities
+      version: "1.0.0"
+      url: https://github.com/argoproj/argo-helm/blob/main/docs/security/capability-catalog.yaml
+
+title: Argo Helm Chart Release Pipeline Threats
+
+groups:
+  - id: tampering
+    title: Tampering
+    description: Modifying charts, release metadata, or packages without authorization
+  - id: elevation-of-privilege
+    title: Elevation of Privilege
+    description: Gaining a workflow's write access without being granted it
+
+threats:
+  - id: ARGO.HELM.RELEASE.THR01
+    title: Subchart Substitution Signed as Argo
+    description: |
+      If the third-party chart repository serving redis-ha is compromised, the
+      package job could download a substituted archive, bundle it into argo-cd,
+      and sign it with the maintainers' key. Users who verify the signature
+      would see a valid Argo signature over code the maintainers never
+      reviewed.
+
+      Mitigation: scripts/verify-chart-dependencies.sh checks every downloaded
+      archive against the sha256 pinned in
+      .github/configs/chart-dependencies.sha256 and fails on a missing or
+      mismatched digest. .github/workflows/publish.yml runs it in the "Verify
+      subchart digests" step, before "Package and sign charts", and packages
+      without --dependency-update so only the checked archives are signed.
+      .github/workflows/lint-and-test.yml runs the same check on every pull
+      request.
+    group: tampering
+    capabilities:
+      - reference-id: CCC
+        entries:
+          - reference-id: CCC.Core.CP29
+      - reference-id: ARGO.HELM.RELEASE.CAPS
+        entries:
+          - reference-id: ARGO.HELM.RELEASE.CAP02
+          - reference-id: ARGO.HELM.RELEASE.CAP03
+    actors:
+      - id: upstream-chart-repository
+        name: Compromised Upstream Chart Repository
+        type: Human
+
+  - id: ARGO.HELM.RELEASE.THR02
+    title: Change Fragment Text Injected Into Release Metadata
+    description: |
+      The fold job copies text from change fragments into Chart.yaml and the
+      fold commit. A crafted bump, kind, or description value
+      could break out of the artifacthub.io/changes annotation and rewrite
+      other chart fields such as version, or run as shell code in the fold job.
+
+      Mitigation: scripts/lint-changelog.sh runs in the chart-test job of
+      .github/workflows/lint-and-test.yml on every pull request. It requires
+      bump to be major, minor, or patch, kind to be one of six fixed values, and
+      description to be a string. It also rejects pull requests that edit
+      version or artifacthub.io/changes in Chart.yaml. scripts/fold-changes.sh
+      never evaluates fragment text as code: it matches bump with grep -x,
+      re-serializes kind and description with yq, and indents that output under
+      the annotation's block scalar. The commit message holds only chart paths
+      and computed versions. The fold job in .github/workflows/publish.yml runs
+      the script with a contents: read token and persist-credentials: false.
+    group: tampering
+    capabilities:
+      - reference-id: ARGO.HELM.RELEASE.CAPS
+        entries:
+          - reference-id: ARGO.HELM.RELEASE.CAP01
+    actors:
+      - id: external-contributor
+        name: External Contributor
+        type: Human
+
+  - id: ARGO.HELM.RELEASE.THR03
+    title: Injection Through Privileged Pull Request Workflows
+    description: |
+      pull_request_target and workflow_run workflows run with write tokens on
+      events a fork can trigger. If one checked out pull request code, or
+      expanded pull request fields into a run step, a fork could take over its
+      token.
+
+      Mitigation: .github/workflows/pr-title.yml, pr-sizing.yml, and
+      pr-lifecycle.yml never check out pull request code. pr-lifecycle.yml
+      passes event fields to its script through environment variables, not
+      template expansion. Its octo-sts trust policy
+      (.github/chainguard/pr-lifecycle.sts.yaml) accepts only that workflow on
+      main and grants pull request and issue write, nothing else. Workflows that
+      do run pull request code (lint-and-test.yml, actions-lint.yaml) use
+      pull_request with contents: read. zizmor audits every pull request's
+      workflows in .github/workflows/actions-lint.yaml as a required check, and
+      .github/zizmor.yml records why each privileged trigger is acceptable.
+    group: elevation-of-privilege
+    capabilities:
+      - reference-id: ARGO.HELM.RELEASE.CAPS
+        entries:
+          - reference-id: ARGO.HELM.RELEASE.CAP04
+          - reference-id: ARGO.HELM.RELEASE.CAP05
+    actors:
+      - id: external-contributor
+        name: External Contributor
+        type: Human
+
+  - id: ARGO.HELM.RELEASE.THR04
+    title: Dependency Metadata Injected Into Post-Upgrade Commands
+    description: |
+      Renovate templates the dependency name and new version, which come from
+      upstream release data, into the post-upgrade commands in renovate.json. A
+      crafted upstream release name or tag could inject shell commands that run
+      in the Renovate job.
+
+      Mitigation: allowedPostUpgradeCommands in
+      .github/configs/renovate-config.js allows exactly two anchored patterns,
+      matched after templating. Their character classes reject whitespace and
+      shell metacharacters in each substituted value.
+      scripts/renovate-bump-version.sh strips everything up to the last slash
+      from the dependency name before building file paths, so it can only run
+      an existing scripts/update-*-crds.sh.
+    group: elevation-of-privilege
+    capabilities:
+      - reference-id: CCC
+        entries:
+          - reference-id: CCC.Core.CP29
+      - reference-id: ARGO.HELM.RELEASE.CAPS
+        entries:
+          - reference-id: ARGO.HELM.RELEASE.CAP06
+    actors:
+      - id: upstream-project
+        name: Compromised Upstream Project
+        type: Human

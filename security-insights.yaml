@@ -1,6 +1,6 @@
 header:
   schema-version: 2.2.0
-  last-updated: "2026-10-08"
+  last-updated: "2026-11-03"
   last-reviewed: "2026-10-08"
   url: https://raw.githubusercontent.com/argoproj/argo-helm/main/security-insights.yaml
 
@@ -68,8 +68,15 @@ repository:
   security:
     assessments:
       self:
+        evidence: https://github.com/argoproj/argo-helm/blob/main/docs/security/threat-catalog.yaml
+        date: "2026-11-03"
         comment: |
-          Self assessment has not yet been completed.
+          Gemara threat assessment of the chart release pipeline (publish.yml),
+          the pull request workflows, and Renovate. Capabilities are in
+          docs/security/capability-catalog.yaml. This assessment lists threats
+          with mitigations in place. The maintainers are remediating further
+          findings and track them privately under the security policy in
+          SECURITY.md. They will be added here once fixed.
     tools:
       - name: Dependabot
         type: SCA
