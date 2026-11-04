@@ -38,9 +38,9 @@ Details stay private until a fix is released or 90 days have passed since confir
 
 Renovate tracks upstream application versions and container images. Dependabot tracks GitHub Actions. Chart dependencies (argo-cd's redis-ha) are bumped by hand. Vulnerabilities in the upstream Argo applications follow that application's security policy, linked above.
 
-Renovate opens a pull request when a container image it tracks publishes a new version, and maintainers merge those as review time allows. Nothing in CI scans dependencies for vulnerabilities, and releases are not gated on them. argo-cd's redis and HAProxy images aren't currently bumped by Renovate and can fall behind upstream fixes (see [#4098](https://github.com/argoproj/argo-helm/issues/4098)).
+Renovate opens a pull request when a container image it tracks publishes a new version, and maintainers merge those as review time allows. There are no severity thresholds or remediation windows. Nothing in CI scans dependencies for vulnerabilities, and every merge to `main` publishes a release, so releases are not gated on them. argo-cd's redis and HAProxy images aren't currently bumped by Renovate and can fall behind upstream fixes (see [#4098](https://github.com/argoproj/argo-helm/issues/4098)).
 
-Dependencies must use an OSI-approved license. A dependency with a disallowed license must be replaced or removed. Disallowed licenses are any license that is not OSI-approved, including source-available licenses such as SSPL-1.0, BUSL-1.1, and Elastic-2.0. A new dependency under a strong copyleft license, such as GPL or AGPL, needs maintainer review before it is added.
+Dependency licenses follow the upstream Argo manifests, which is the upstream project's call. Renovate skips versions whose license is not OSI-approved, such as Redis 7.4.x. A dependency that the upstream manifests do not ship must use an OSI-approved license, and one under a strong copyleft license, such as GPL or AGPL, needs maintainer review before it is added.
 
 <!-- Adapted from the Static Application Security Testing Policy template in the
      OpenSSF OSPS Templates (ORBIT Definitions SIG), CC BY 4.0: https://github.com/eddie-knight/osps-templates -->
@@ -57,6 +57,6 @@ The workflows in this repository keep long-lived credentials to a minimum:
 * Each job gets a GitHub token limited to the permissions that job declares.
 * Renovate and the PR lifecycle workflow trade the job's OIDC identity for a short-lived token through [octo-sts](https://github.com/octo-sts/app). Their trust policies live in [.github/chainguard](.github/chainguard).
 * Publishing OSPS Baseline results authenticates with the job's OIDC identity and stores no credential.
-* The PGP chart signing key and its passphrase are the only long-lived credentials the workflows use. They are GitHub Actions secrets, which only repository administrators can change. The publish workflow writes the key to a temporary directory and deletes it when the signing step ends.
+* The workflows use two long-lived credentials: the PGP chart signing key with its passphrase, and the private key of the GitHub App that pushes folded release changes to `main`. They are GitHub Actions secrets, which only repository administrators can change. The publish workflow writes the PGP key to a temporary directory and deletes it when the signing step ends.
 
 Maintainers rotate a credential when someone with access to it leaves the project or when it may have been exposed.
