@@ -525,6 +525,14 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### NEXT
+
+The chart now creates a headless Service for the application controller, named like the controller StatefulSet. If you created that Service yourself, Helm cannot adopt it and the upgrade fails. Delete it before upgrading:
+
+```bash
+kubectl delete service <application-controller-statefulset-name> --namespace <namespace>
+```
+
 ### 10.0.0
 
 In this chart version we changed the parameter `global.networkPolicy.create` from `false` to `true` to align with the upstream manifests and apply
