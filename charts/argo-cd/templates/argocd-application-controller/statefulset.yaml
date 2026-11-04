@@ -425,6 +425,9 @@ spec:
           mountPath: /home/argocd/params
         - name: argocd-application-controller-tmp
           mountPath: /tmp
+        # CA for the OTLP collector, looked up by --otlp-address host.
+        - name: tls-certs
+          mountPath: /app/config/tls
       {{- with .Values.controller.extraContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
@@ -491,6 +494,10 @@ spec:
           items:
           - key: controller.profile.enabled
             path: profiler.enabled
+      - name: tls-certs
+        configMap:
+          name: argocd-tls-certs-cm
+          optional: true
       {{- if .Values.controller.hostNetwork }}
       hostNetwork: {{ .Values.controller.hostNetwork }}
       {{- end }}
