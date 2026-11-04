@@ -276,6 +276,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: redis.db
                 optional: true
+          - name: ARGOCD_REDIS_KEY_PREFIX
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.key.prefix
+                optional: true
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:
