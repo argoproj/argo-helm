@@ -94,11 +94,11 @@ The `config.registries` value can be used exactly as it looks in the documentati
 | authScripts.enabled | bool | `false` | Whether to mount the defined scripts that can be used to authenticate with a registry, the scripts will be mounted at `/scripts` |
 | authScripts.name | string | `"argocd-image-updater-authscripts"` | Name of the authentication scripts ConfigMap |
 | authScripts.scripts | object | `{}` | Map of key-value pairs where the key consists of the name of the script and the value the contents. |
-| certificateSecret.annotations | object | `{}` | Annotations to be added to argocd-repo-server-tls secret |
-| certificateSecret.crt | string | `""` | Certificate data. Must contain SANs of Repo service (ie: argocd-repo-server, argocd-repo-server.argo-cd.svc) |
-| certificateSecret.enabled | bool | `false` | Create argocd-repo-server-tls secret |
+| certificateSecret.annotations | object | `{}` | Annotations to be added to the webhook TLS secret |
+| certificateSecret.crt | string | `""` | Certificate data. Must contain the hostnames webhook senders use to reach the webhook Service or Ingress |
+| certificateSecret.enabled | bool | `false` | Create the `<fullname>-tls` secret with the webhook TLS keypair and mount it instead of `argocd-image-updater-tls` |
 | certificateSecret.key | string | `""` | Certificate private key |
-| certificateSecret.labels | object | `{}` | Labels to be added to argocd-repo-server-tls secret |
+| certificateSecret.labels | object | `{}` | Labels to be added to the webhook TLS secret |
 | config."git.commit-message-template" | string | `""` | Changing the Git commit message |
 | config."git.commit-sign-off" | bool | `false` | Enables sign off on commits |
 | config."git.commit-signing-key" | string | `""` | Path to public SSH key mounted in container, or GPG key ID used to sign commits |
