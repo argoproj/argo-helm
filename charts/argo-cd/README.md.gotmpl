@@ -525,6 +525,18 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### NEXT
+
+Pod templates no longer carry the `helm.sh/chart` label. It changed on every chart
+release, and because it sat inside the pod template every component was recreated on
+`helm upgrade` even when neither the image nor the configuration had changed. The label
+remains on the objects themselves, so `kubectl get deploy -L helm.sh/chart` is unaffected.
+
+**Upgrading rolls every Argo CD pod once**, as the pod templates change for the last
+time. After that a chart release on its own no longer restarts anything. If you select
+pods on `helm.sh/chart` (a `kube_pod_labels` join, a NetworkPolicy, a policy engine),
+move to the object-level label or add your own through `global.podLabels`.
+
 ### 10.13.0
 
 The chart now creates a headless Service for the application controller, named like the controller StatefulSet. If you created that Service yourself, Helm cannot adopt it and the upgrade fails. Delete it before upgrading:

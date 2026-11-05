@@ -60,6 +60,17 @@ app.kubernetes.io/version: {{ include "argo-cd.versionLabelValue" .context }}
 {{- end }}
 
 {{/*
+Pod labels: the common labels without helm.sh/chart. That label carries the chart version, so
+including it in a pod template recreates the pod on every chart upgrade, even when neither the
+image nor the configuration changed. app.kubernetes.io/version stays, since
+argo-cd.versionLabelValue tracks the image tag rather than chart metadata.
+*/}}
+{{- define "argo-cd.podLabels" -}}
+{{- $labels := include "argo-cd.labels" (dict "context" .context "component" .component "name" .name) | fromYaml -}}
+{{- omit $labels "helm.sh/chart" | toYaml -}}
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "argo-cd.selectorLabels" -}}
