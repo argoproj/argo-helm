@@ -1,6 +1,6 @@
 # Architecture
 
-This repository holds the community Helm charts for the Argo projects. It has no application code of its own. Each chart packages the container images that the upstream Argo project releases.
+This repository holds the community Helm charts for the Argo projects. It has no application code of its own. The charts reference the container images that the upstream projects publish and don't contain them.
 
 ## Repository Layout
 
@@ -23,7 +23,7 @@ The applications themselves, their APIs, and their command line tools belong to 
 
 1. A contributor opens a pull request that changes a chart and adds a change fragment to `changes/`. Renovate opens the same kind of pull request for new upstream versions.
 2. CI lints and installs each changed chart on a kind cluster, and checks the workflows and scripts. [CONTRIBUTING.md](CONTRIBUTING.md#when-tests-run) describes the checks.
-3. A maintainer reviews and merges the pull request into `main`.
+3. Two reviewers approve the pull request, one of them a code owner, and a maintainer merges it into `main`.
 4. The publish workflow (`.github/workflows/publish.yml`) runs on every push to `main` that touches `charts/`:
    1. `fold` turns the change fragments into a version bump and changelog entry in `Chart.yaml`, and pushes that commit to `main`. That push starts the run that releases.
    2. `package` builds chart dependencies, verifies subchart digests, then packages and signs each changed chart.
@@ -31,4 +31,4 @@ The applications themselves, their APIs, and their command line tools belong to 
 
 ## Software Bill of Materials
 
-A chart package contains templates and values, plus the vendored `redis-ha` subchart in argo-cd. It contains no compiled software, and releases do not include an SBOM. The images a chart deploys come from their upstream projects, which publish their own SBOMs and vulnerability information. This project publishes no VEX documents.
+A chart package contains templates and values. The argo-cd package also bundles the third-party `redis-ha` subchart, which the publish workflow fetches from `https://dandydeveloper.github.io/charts/` at packaging time and checks against the digest pinned in `.github/configs/chart-dependencies.sha256`. No package contains compiled software, and releases do not include an SBOM. The images a chart deploys come from their upstream projects, which publish their own SBOMs and vulnerability information. This project publishes no VEX documents.
