@@ -38,9 +38,9 @@ Details stay private until a fix is released or 90 days have passed since confir
 
 Renovate tracks upstream application versions and container images. Dependabot tracks GitHub Actions. Chart dependencies (argo-cd's redis-ha) are bumped by hand. Vulnerabilities in the upstream Argo applications follow that application's security policy, linked above.
 
-Renovate opens a pull request when a container image it tracks publishes a new version, and maintainers merge those as review time allows. There are no severity thresholds or remediation windows. Nothing in CI scans dependencies for vulnerabilities, and every merge to `main` publishes a release, so releases are not gated on them. argo-cd's redis and HAProxy images aren't currently bumped by Renovate and can fall behind upstream fixes (see [#4098](https://github.com/argoproj/argo-helm/issues/4098)).
+Renovate opens a pull request when a container image it tracks publishes a new version, and maintainers merge those as review time allows. There are no severity thresholds or remediation windows. Nothing in CI scans dependencies for vulnerabilities, and every merge to `main` that changes a chart publishes a release, so releases are not gated on them. argo-cd's redis and HAProxy images aren't currently bumped by Renovate and can fall behind upstream fixes (see [#4098](https://github.com/argoproj/argo-helm/issues/4098)).
 
-Dependency licenses follow the upstream Argo manifests, which is the upstream project's call. Renovate skips versions whose license is not OSI-approved, such as Redis 7.4.x. A dependency that the upstream manifests do not ship must use an OSI-approved license, and one under a strong copyleft license, such as GPL or AGPL, needs maintainer review before it is added.
+Dependency licenses follow the upstream Argo manifests, which is the upstream project's call. `renovate.json` has one rule for this: it skips Redis 7.4.x, whose license is not OSI-approved. A dependency that the upstream manifests do not ship must use an OSI-approved license, and one under a strong copyleft license, such as GPL or AGPL, needs maintainer review before it is added.
 
 <!-- Adapted from the Static Application Security Testing Policy template in the
      OpenSSF OSPS Templates (ORBIT Definitions SIG), CC BY 4.0: https://github.com/eddie-knight/osps-templates -->
