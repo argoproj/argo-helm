@@ -525,7 +525,7 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
-### NEXT
+### 10.13.0
 
 The chart now creates a headless Service for the application controller, named like the controller StatefulSet. If you created that Service yourself, Helm cannot adopt it and the upgrade fails. Delete it before upgrading:
 
