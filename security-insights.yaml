@@ -1,6 +1,6 @@
 header:
   schema-version: 2.2.0
-  last-updated: "2026-11-03"
+  last-updated: "2026-11-04"
   last-reviewed: "2026-10-08"
   url: https://raw.githubusercontent.com/argoproj/argo-helm/main/security-insights.yaml
 
@@ -71,8 +71,9 @@ repository:
         evidence: https://github.com/argoproj/argo-helm/blob/main/docs/security/threat-catalog.yaml
         date: "2026-11-03"
         comment: |
-          Gemara threat assessment of the chart release pipeline (publish.yml),
-          the pull request workflows, and Renovate. Capabilities are in
+          Gemara threat model of the chart release pipeline (publish.yml),
+          the pull request workflows, and Renovate. The attack surface
+          analysis is the capability catalog in
           docs/security/capability-catalog.yaml. This assessment lists threats
           with mitigations in place. The maintainers are remediating further
           findings and track them privately under the security policy in
@@ -100,6 +101,19 @@ repository:
         results: {}
         comment: |
           Renovate is used for automated dependency updates.
+      - name: GitHub Secret Scanning
+        type: secret
+        rulesets:
+          - built-in
+        integration:
+          adhoc: false
+          ci: true
+          release: false
+        results: {}
+        comment: |
+          GitHub secret scanning and push protection are enabled on this
+          repository. Push protection blocks pushes that contain detected
+          secrets.
       - name: OSPS Baseline Scanner
         type: other
         rulesets:
@@ -119,8 +133,9 @@ repository:
           signed results to grc.store.
   documentation:
     contributing-guide: https://github.com/argoproj/argo-helm/blob/main/CONTRIBUTING.md
-    dependency-management-policy: https://github.com/argoproj/argo-helm/blob/main/CONTRIBUTING.md#new-application-versions
+    dependency-management-policy: https://github.com/argoproj/argo-helm/blob/main/SECURITY.md#dependency-security
     governance: https://github.com/argoproj/argoproj/blob/main/community/membership.md
+    review-policy: https://github.com/argoproj/argo-helm/blob/main/CONTRIBUTING.md#pull-requests
     security-policy: https://github.com/argoproj/argo-helm/blob/main/SECURITY.md
   release:
     automated-pipeline: true
