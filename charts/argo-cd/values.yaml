@@ -318,7 +318,9 @@ configs:
       jqPathExpressions:
         - '.metadata.annotations."notified.notifications.argoproj.io"'
         - '.metadata.annotations."argocd.argoproj.io/refresh"'
+        - '.metadata.annotations."argocd.argoproj.io/refresh-timestamp"'
         - '.metadata.annotations."argocd.argoproj.io/hydrate"'
+        - '.metadata.annotations."argocd.argoproj.io/hydrate-timestamp"'
         - '.operation'
     # -- Ignore Argo Rollouts generated fields
     # @default -- See [values.yaml]
