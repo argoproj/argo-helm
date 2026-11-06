@@ -1,0 +1,156 @@
+{{- include "argocd-mcp.validateNetworkExposure" . }}
+{{- include "argocd-mcp.validateIngress" . }}
+{{- include "argocd-mcp.validateTransport" . }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "argocd-mcp.fullname" . }}
+  namespace: {{ include "argocd-mcp.namespace" . | quote }}
+  labels:
+    {{- include "argocd-mcp.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "argocd-mcp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "argocd-mcp.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ include "argocd-mcp.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: argocd-mcp
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - {{ .Values.mcp.transport | quote }}
+            - --port
+            - {{ .Values.mcp.port | quote }}
+            {{- if .Values.mcp.stateless }}
+            - --stateless
+            {{- end }}
+            {{- if .Values.mcp.allowUnauthenticated }}
+            - --allow-unauthenticated
+            {{- end }}
+            {{- range .Values.mcp.allowedHosts }}
+            - --allowed-host-header
+            - {{ . | quote }}
+            {{- end }}
+            {{- range .Values.mcp.allowedOrigins }}
+            - --allowed-origin
+            - {{ . | quote }}
+            {{- end }}
+            {{- with .Values.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.service.enabled .Values.mcp.authToken.existingSecret .Values.mcp.allowUnauthenticated .Values.argocd.baseUrl .Values.argocd.apiToken.existingSecret .Values.mcp.readOnly .Values.extraEnv }}
+          env:
+            {{- if or .Values.service.enabled .Values.mcp.authToken.existingSecret .Values.mcp.allowUnauthenticated }}
+            - name: MCP_BIND_ADDRESS
+              value: "0.0.0.0"
+            {{- end }}
+            {{- if .Values.argocd.baseUrl }}
+            - name: ARGOCD_BASE_URL
+              value: {{ .Values.argocd.baseUrl | quote }}
+            {{- end }}
+            {{- if .Values.argocd.apiToken.existingSecret }}
+            - name: ARGOCD_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.argocd.apiToken.existingSecret }}
+                  key: {{ .Values.argocd.apiToken.key }}
+            {{- end }}
+            {{- if .Values.mcp.authToken.existingSecret }}
+            - name: MCP_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mcp.authToken.existingSecret }}
+                  key: {{ .Values.mcp.authToken.key }}
+            {{- end }}
+            {{- if .Values.mcp.readOnly }}
+            - name: MCP_READ_ONLY
+              value: "true"
+            {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.mcp.port }}
+              protocol: TCP
+          livenessProbe:
+            {{- if or .Values.service.enabled .Values.mcp.authToken.existingSecret .Values.mcp.allowUnauthenticated }}
+            httpGet:
+              path: /healthz
+              port: http
+            {{- else }}
+            exec:
+              command:
+                - /usr/local/bin/node
+                - -e
+                - "fetch('http://127.0.0.1:{{ .Values.mcp.port }}/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
+            {{- end }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            {{- if or .Values.service.enabled .Values.mcp.authToken.existingSecret .Values.mcp.allowUnauthenticated }}
+            httpGet:
+              path: /healthz
+              port: http
+            {{- else }}
+            exec:
+              command:
+                - /usr/local/bin/node
+                - -e
+                - "fetch('http://127.0.0.1:{{ .Values.mcp.port }}/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
+            {{- end }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.extraVolumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
