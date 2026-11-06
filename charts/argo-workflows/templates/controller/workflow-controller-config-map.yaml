@@ -207,7 +207,7 @@ data:
     columns: {{- toYaml . | nindent 6 }}
     {{- end }}
     {{- with .Values.controller.navColor }}
-    navColor: {{ . }}
+    navColor: {{ . | trimAll "'\"" | quote }}
     {{- end }}
     {{- with .Values.controller.retentionPolicy }}
     retentionPolicy: {{- toYaml . | nindent 6 }}
