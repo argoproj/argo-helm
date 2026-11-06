@@ -33,7 +33,7 @@ spec:
         {{- end }}
         {{- end }}
       labels:
-        {{- include "argo-cd.labels" (dict "context" . "component" .Values.commitServer.name "name" .Values.commitServer.name) | nindent 8 }}
+        {{- include "argo-cd.podLabels" (dict "context" . "component" .Values.commitServer.name "name" .Values.commitServer.name) | nindent 8 }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.commitServer.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
