@@ -36915,6 +36915,30 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: fixed
+          description: Honor controller.telemetryConfig.servicePortName in the controller ServiceMonitor
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v4.1.6
+    created: "2026-11-06T17:13:28.686130286Z"
+    description: A Helm chart for Argo Workflows
+    digest: f8626de065fc597be16919b97f93226c23fea95a6c9f21d1f56951bb3259f24c
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-2.0.18/argo-workflows-2.0.18.tgz
+    version: 2.0.18
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: fixed
           description: Quote controller.navColor in the generated controller configuration
       artifacthub.io/signKey: |
         fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
@@ -44654,6 +44678,33 @@ entries:
   argocd-image-updater:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Mount the secret created by certificateSecret.enabled when the release name is not argocd-image-updater
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.4.0
+    created: "2026-11-06T17:13:28.857361803Z"
+    description: A Helm chart for Argo CD Image Updater, a tool to automatically update
+      the container images of Kubernetes workloads which are managed by Argo CD
+    digest: 02d4bf2b5d6d9ec5f0735cfd87c0eedd390f5758f49b024912ad0fe234b6f83c
+    home: https://github.com/argoproj-labs/argocd-image-updater
+    icon: https://argocd-image-updater.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-image-updater
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-image-updater-1.4.1/argocd-image-updater-1.4.1.tgz
+    version: 1.4.1
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Bump argocd-image-updater to v1.4.0
       artifacthub.io/signKey: |
@@ -47029,4 +47080,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-11-06T17:10:38.127937654Z"
+generated: "2026-11-06T17:13:28.860343063Z"
