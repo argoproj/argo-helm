@@ -156,6 +156,9 @@ config:
   # -- Argo CD Image Update log level
   log.level: "info"
 
+  # Namespaces to watch, e.g. "*" for all. Defaults to the release namespace.
+  # watch.namespaces: "*"
+
   # -- Argo CD Image Updater registries list configuration. More information [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/).
   registries: []
     # - name: Docker Hub
