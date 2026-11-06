@@ -39,7 +39,7 @@ spec:
   - ports:
     - port: metrics
       protocol: TCP
-    {{- if .Values.ingress.enabled }}
+    {{- if or .Values.ingress.enabled .Values.service.enabled }}
     - port: webhook
       protocol: TCP
     {{- end }}
