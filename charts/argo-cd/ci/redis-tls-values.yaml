@@ -1,0 +1,28 @@
+# Test the single node Redis served over TLS
+crds:
+  keep: false
+
+redis:
+  exporter:
+    enabled: true
+  tls:
+    enabled: true
+    secretName: argocd-redis-tls
+
+# A throwaway CA and Redis certificate for the test install
+extraObjects:
+  - |
+    {{- $name := include "argo-cd.redis.fullname" . }}
+    {{- $namespace := include "argo-cd.namespace" . }}
+    {{- $ca := genCA "argocd-redis-ca" 7 }}
+    {{- $cert := genSignedCert $name nil (list $name (printf "%s.%s.svc" $name $namespace)) 7 $ca }}
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: argocd-redis-tls
+      namespace: {{ $namespace }}
+    type: kubernetes.io/tls
+    data:
+      tls.crt: {{ $cert.Cert | b64enc }}
+      tls.key: {{ $cert.Key | b64enc }}
+      ca.crt: {{ $ca.Cert | b64enc }}

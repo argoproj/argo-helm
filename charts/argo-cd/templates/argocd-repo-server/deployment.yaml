@@ -81,6 +81,9 @@ spec:
         - /usr/local/bin/argocd-repo-server
         - --port={{ .Values.repoServer.containerPorts.server }}
         - --metrics-port={{ .Values.repoServer.containerPorts.metrics }}
+        {{- with include "argo-cd.redis.tlsArgs" . }}
+          {{- . | nindent 8 }}
+        {{- end }}
         {{- with .Values.repoServer.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -394,6 +397,9 @@ spec:
         {{- with (concat .Values.global.extraVolumeMounts .Values.repoServer.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- with include "argo-cd.redis.tlsCaVolumeMount" . }}
+          {{- . | nindent 8 }}
+        {{- end }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
         - mountPath: /app/config/tls
@@ -512,6 +518,9 @@ spec:
       volumes:
       {{- with (concat .Values.global.extraVolumes .Values.repoServer.volumes) }}
         {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with include "argo-cd.redis.tlsCaVolume" . }}
+        {{- . | nindent 6 }}
       {{- end }}
       {{- if .Values.repoServer.useEphemeralHelmWorkingDir }}
       - name: helm-working-dir

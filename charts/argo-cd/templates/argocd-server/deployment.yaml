@@ -76,6 +76,9 @@ spec:
         - /usr/local/bin/argocd-server
         - --port={{ .Values.server.containerPorts.server }}
         - --metrics-port={{ .Values.server.containerPorts.metrics }}
+        {{- with include "argo-cd.redis.tlsArgs" . }}
+          {{- . | nindent 8 }}
+        {{- end }}
         {{- with .Values.server.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -437,6 +440,9 @@ spec:
         {{- with (concat .Values.global.extraVolumeMounts .Values.server.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- with include "argo-cd.redis.tlsCaVolumeMount" . }}
+          {{- . | nindent 8 }}
+        {{- end }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
         - mountPath: /app/config/tls
@@ -569,6 +575,9 @@ spec:
       volumes:
       {{- with (concat .Values.global.extraVolumes .Values.server.volumes) }}
         {{- toYaml . | nindent 6}}
+      {{- end }}
+      {{- with include "argo-cd.redis.tlsCaVolume" . }}
+        {{- . | nindent 6 }}
       {{- end }}
       {{- if .Values.server.extensions.enabled }}
       - name: extensions

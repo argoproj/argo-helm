@@ -1573,6 +1573,23 @@ redis:
   # and for external Redis use `externalRedis.existingSecret`.
   existingSecret: ""
 
+  ## TLS for the single node Redis deployment
+  ## Ref: https://redis.io/docs/latest/operate/oss_and_stack/management/security/encryption/
+  tls:
+    # -- Serve Redis over TLS only, and connect the Argo CD server, repo server and application controller to it over TLS.
+    # Only applies to the single node Redis deployment.
+    enabled: false
+    # -- Name of the Secret holding the Redis server certificate and key, such as one cert-manager creates.
+    # The certificate must name the Redis Service, which the Argo CD components connect to.
+    secretName: ""
+    # -- Key of the server certificate in that Secret
+    certFile: tls.crt
+    # -- Key of the server private key in that Secret
+    keyFile: tls.key
+    # -- Key of the CA certificate in that Secret, which the Argo CD components verify Redis with.
+    # Leave empty to verify Redis against the system CAs.
+    caCertFile: ca.crt
+
   ## Redis Pod Disruption Budget
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
   pdb:
