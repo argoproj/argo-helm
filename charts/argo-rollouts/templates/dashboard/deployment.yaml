@@ -69,6 +69,14 @@ spec:
         ports:
         - containerPort: {{ .Values.dashboard.service.targetPort }}
           name: dashboard
+        {{- with .Values.dashboard.livenessProbe }}
+        livenessProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.dashboard.readinessProbe }}
+        readinessProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         securityContext:
           {{- toYaml .Values.dashboard.containerSecurityContext | nindent 10 }}
         resources:
