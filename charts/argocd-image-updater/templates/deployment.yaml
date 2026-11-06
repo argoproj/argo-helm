@@ -282,7 +282,11 @@ spec:
           optional: true
       - name: argocd-image-updater-tls
         secret:
+          {{- if .Values.certificateSecret.enabled }}
+          secretName: {{ include "argocd-image-updater.fullname" . }}-tls
+          {{- else }}
           secretName: argocd-image-updater-tls
+          {{- end }}
           optional: true
           items:
             - key: tls.crt
