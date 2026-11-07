@@ -19,7 +19,8 @@ spec:
   type: {{ .Values.service.type }}
   {{- include "argocd-image-updater.dualStack" . | indent 2 }}
   {{- with .Values.service.externalIPs }}
-  externalIPs: {{ . }}
+  externalIPs:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- if or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
