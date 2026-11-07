@@ -20,7 +20,8 @@ spec:
   type: {{ .Values.server.service.type }}
   {{- include "argo-cd.dualStack" . | indent 2 }}
   {{- with .Values.server.service.externalIPs }}
-  externalIPs: {{ . }}
+  externalIPs:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- if or (eq .Values.server.service.type "LoadBalancer") (eq .Values.server.service.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.server.service.externalTrafficPolicy }}
