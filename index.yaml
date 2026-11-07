@@ -1588,6 +1588,43 @@ entries:
   argo-cd:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Serve the single node Redis over TLS with redis.tls, and connect the Argo CD components to it over TLS
+        - kind: fixed
+          description: Render server.service.externalIPs as a list so more than one IP works. A string value no longer renders, so set it as a list
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v3.6.1
+    created: "2026-11-07T16:56:17.313945372Z"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.38.0
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 102074e086725aed898056dda9cc8d91fb7fb50516d423591c716374854b284e
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-cd
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-cd-10.15.0/argo-cd-10.15.0.tgz
+    version: 10.15.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: "HTTPRoute no longer derives hostnames from the ListenerSet and inherits them from the attached listener; a wildcard listener now matches all its hosts instead of only global.domain"
       artifacthub.io/signKey: |
@@ -47107,4 +47144,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-11-06T17:15:58.691819553Z"
+generated: "2026-11-07T16:56:17.318054391Z"
