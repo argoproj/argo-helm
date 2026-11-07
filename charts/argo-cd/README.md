@@ -84,6 +84,33 @@ Without the API server, use the CLI in core mode (`argocd login --core`) or `arg
 
 Switching an existing release to `server.enabled: false` deletes the server Deployment, Services, Ingress or Routes and certificates. Shared resources such as `argocd-secret` and the ConfigMaps are kept.
 
+## Redis TLS
+
+With `redis.tls`, the single node Redis serves TLS only. The Argo CD server, repo server and application controller then connect to it with `--redis-use-tls`, and verify its certificate with the CA stored in the same Secret under `redis.tls.caCertFile`, or with the system CAs when `caCertFile` is empty. The Secret's keys default to those of a `kubernetes.io/tls` Secret (`tls.crt`, `tls.key`, `ca.crt`); `certFile`, `keyFile` and `caCertFile` rename them, as in the `tls` values of `redis-ha`. The certificate must name the Redis Service, `argocd-redis` for a release named `argocd`. For example, with a [cert-manager](https://cert-manager.io/) CA issuer:
+
+```yaml
+redis:
+  tls:
+    enabled: true
+    secretName: argocd-redis-tls
+
+extraObjects:
+  - apiVersion: cert-manager.io/v1
+    kind: Certificate
+    metadata:
+      name: argocd-redis
+    spec:
+      secretName: argocd-redis-tls
+      dnsNames:
+        - argocd-redis
+        - argocd-redis.argocd.svc
+      issuerRef:
+        kind: ClusterIssuer
+        name: my-ca-issuer
+```
+
+Redis reads its certificate when it starts, so restart it after a renewal, for example with [Reloader](https://github.com/stakater/Reloader). `redis.tls` does not apply to `redis-ha` or to an external Redis.
+
 ## Ingress configuration
 
 Please refer to the [Operator Manual](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingress-configurationh) for details as the samples
@@ -1784,6 +1811,11 @@ NAME: my-release
 | redis.serviceAccount.name | string | `""` | Service account name for redis pod |
 | redis.servicePort | int | `6379` | Redis service port |
 | redis.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
+| redis.tls.caCertFile | string | `"ca.crt"` | Key of the CA certificate in that Secret, which the Argo CD components verify Redis with. Leave empty to verify Redis against the system CAs. |
+| redis.tls.certFile | string | `"tls.crt"` | Key of the server certificate in that Secret |
+| redis.tls.enabled | bool | `false` | Serve Redis over TLS only, and connect the Argo CD server, repo server and application controller to it over TLS. Only applies to the single node Redis deployment. |
+| redis.tls.keyFile | string | `"tls.key"` | Key of the server private key in that Secret |
+| redis.tls.secretName | string | `""` | Name of the Secret holding the Redis server certificate and key, such as one cert-manager creates. The certificate must name the Redis Service, which the Argo CD components connect to. |
 | redis.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | redis.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to redis |
 | redis.volumeMounts | list | `[]` | Additional volumeMounts to the redis container |
