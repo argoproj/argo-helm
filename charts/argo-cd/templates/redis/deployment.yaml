@@ -1,5 +1,8 @@
 {{- $redisHa := index .Values "redis-ha" -}}
 {{- if and .Values.redis.enabled (not $redisHa.enabled) -}}
+{{- if and .Values.redis.tls.enabled (not .Values.redis.tls.secretName) }}
+{{- fail "redis.tls.enabled needs redis.tls.secretName, the Secret holding the Redis server certificate" }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -72,6 +75,18 @@ spec:
         - --appendonly
         - "no"
         - --requirepass $(REDIS_PASSWORD)
+        {{- if .Values.redis.tls.enabled }}
+        - --port
+        - "0"
+        - --tls-port
+        - {{ .Values.redis.containerPorts.redis | quote }}
+        - --tls-cert-file
+        - /app/config/redis-tls/{{ .Values.redis.tls.certFile }}
+        - --tls-key-file
+        - /app/config/redis-tls/{{ .Values.redis.tls.keyFile }}
+        - --tls-auth-clients
+        - "no"
+        {{- end }}
         env:
         - name: REDIS_PASSWORD
           valueFrom:
@@ -128,6 +143,11 @@ spec:
         volumeMounts:
           - mountPath: /health
             name: health
+        {{- if .Values.redis.tls.enabled }}
+          - mountPath: /app/config/redis-tls
+            name: redis-tls
+            readOnly: true
+        {{- end }}
         {{- with .Values.redis.volumeMounts }}
           {{- toYaml . | nindent 10 }}
         {{- end }}
@@ -137,7 +157,12 @@ spec:
         imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.redis.exporter.image.imagePullPolicy }}
         env:
         - name: REDIS_ADDR
-          value: {{ printf "redis://localhost:%v" .Values.redis.containerPorts.redis }}
+          value: {{ printf "%s://localhost:%v" (ternary "rediss" "redis" .Values.redis.tls.enabled) .Values.redis.containerPorts.redis }}
+        {{- if .Values.redis.tls.enabled }}
+        {{- /* The exporter reaches Redis over the pod's loopback, a name the certificate does not hold. */}}
+        - name: REDIS_EXPORTER_SKIP_TLS_VERIFICATION
+          value: "true"
+        {{- end }}
         - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS
           value: {{ printf "0.0.0.0:%v" .Values.redis.containerPorts.metrics }}
         - name: REDIS_PASSWORD
@@ -220,6 +245,11 @@ spec:
           configMap:
             name: {{ include "argo-cd.redis.fullname" . }}-health-configmap
             defaultMode: 493
+        {{- if .Values.redis.tls.enabled }}
+        - name: redis-tls
+          secret:
+            secretName: {{ .Values.redis.tls.secretName }}
+        {{- end }}
       {{- with .Values.redis.volumes }}
         {{- toYaml . | nindent 8}}
       {{- end }}

@@ -73,6 +73,9 @@ spec:
         - {{ . }}
         {{- end }}
         {{- end }}
+        {{- with include "argo-cd.redis.tlsArgs" . }}
+          {{- . | nindent 8 }}
+        {{- end }}
         {{- with .Values.controller.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -459,6 +462,9 @@ spec:
         {{- with (concat .Values.global.extraVolumeMounts .Values.controller.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- with include "argo-cd.redis.tlsCaVolumeMount" . }}
+          {{- . | nindent 8 }}
+        {{- end }}
         - mountPath: /app/config/controller/tls
           name: argocd-repo-server-tls
         - mountPath: /home/argocd
@@ -503,6 +509,9 @@ spec:
       volumes:
       {{- with (concat .Values.global.extraVolumes .Values.controller.volumes) }}
         {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with include "argo-cd.redis.tlsCaVolume" . }}
+        {{- . | nindent 6 }}
       {{- end }}
       - name: argocd-home
         {{- if .Values.controller.emptyDir.sizeLimit }}
