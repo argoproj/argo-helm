@@ -113,6 +113,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: {{ .Values.controller.rbac.namespaced | ternary "RoleBinding" "ClusterRoleBinding" }}
 metadata:
   name: {{ include "argo-events.controller.fullname" . }}
+  {{- if .Values.controller.rbac.namespaced }}
+  namespace: {{ include "argo-events.namespace" . | quote }}
+  {{- end }}
   labels:
     {{- include "argo-events.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
 roleRef:
