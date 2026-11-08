@@ -552,7 +552,7 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
-### NEXT
+### 10.17.0
 
 Pod templates no longer carry the `helm.sh/chart` label. It changed on every chart
 release, and because it sat inside the pod template every component was recreated on
