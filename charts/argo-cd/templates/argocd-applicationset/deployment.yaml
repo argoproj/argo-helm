@@ -34,7 +34,7 @@ spec:
         {{- end }}
         {{- end }}
       labels:
-        {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 8 }}
+        {{- include "argo-cd.podLabels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 8 }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.applicationSet.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
