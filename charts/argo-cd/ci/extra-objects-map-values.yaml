@@ -1,0 +1,16 @@
+# extraObjects as a map
+extraObjects:
+  example-configmap:
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: extra-objects-map-example
+    data:
+      key: value
+  example-template: |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: {{ include "argo-cd.fullname" . }}-extra-objects-map-template
+    data:
+      key: value
