@@ -185,6 +185,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.ingress.pathType | string | `"Prefix"` | Dashboard ingress path type |
 | dashboard.ingress.paths | list | `["/"]` | Dashboard ingress paths |
 | dashboard.ingress.tls | list | `[]` | Dashboard ingress tls |
+| dashboard.livenessProbe | object | `{}` | Configure liveness [probe] for the dashboard |
 | dashboard.logging.kloglevel | string | `"0"` | Set the klog logging level |
 | dashboard.logging.level | string | `"info"` | Set the logging level (one of: `debug`, `info`, `warn`, `error`) |
 | dashboard.nodeSelector | object | `{}` | [Node selector] |
@@ -197,6 +198,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.podLabels | object | `{}` | Labels to be added to the application dashboard pods |
 | dashboard.podSecurityContext | object | `{"runAsNonRoot":true}` | Security Context to set on pod level |
 | dashboard.priorityClassName | string | `""` | [priorityClassName] for the dashboard server |
+| dashboard.readinessProbe | object | `{}` | Configure readiness [probe] for the dashboard |
 | dashboard.readonly | bool | `false` | Set cluster role to readonly |
 | dashboard.replicas | int | `1` | The number of dashboard pods to run |
 | dashboard.resources | object | `{}` | Resource limits and requests for the dashboard pods. |
