@@ -113,7 +113,19 @@ Redis reads its certificate when it starts, so restart it after a renewal, for e
 
 ## Extra objects
 
-`extraObjects` takes a list or a map. With a map, each values file can add its own objects, because Helm merges maps but replaces lists. For example, plain manifests in `values.yaml` and a Secret in an encrypted `secrets.yaml`:
+`extraObjects` takes a list or a map. A list is enough when all objects are in one values file:
+
+```yaml
+extraObjects:
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: my-config
+    data:
+      key: value
+```
+
+With a map, each values file can add its own objects, because Helm merges maps but replaces lists. For example, plain manifests in `values.yaml` and a Secret in an encrypted `secrets.yaml`:
 
 ```yaml
 # values.yaml
