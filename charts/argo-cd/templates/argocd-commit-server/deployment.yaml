@@ -122,7 +122,7 @@ spec:
                 name: argocd-cmd-params-cm
                 key: commitserver.signing.key.passphrase.file
                 optional: true
-        {{- with .Values.commitServer.envFrom }}
+        {{- with .Values.commitServer.extraEnvFrom | default .Values.commitServer.envFrom }}
         envFrom:
           {{- toYaml . | nindent 10 }}
         {{- end }}
