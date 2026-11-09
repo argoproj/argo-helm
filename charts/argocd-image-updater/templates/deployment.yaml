@@ -242,6 +242,9 @@ spec:
             readOnly: true
             subPath: sshPrivateKey
           - name: argocd-image-updater-tls
+            mountPath: /app/config/webhook/tls
+            readOnly: true
+          - name: argocd-tls-certs
             mountPath: /app/config/tls
             readOnly: true
           {{- if .Values.authScripts.enabled }}
@@ -293,6 +296,10 @@ spec:
               path: tls.crt
             - key: tls.key
               path: tls.key
+      - configMap:
+          name: argocd-tls-certs-cm
+          optional: true
+        name: argocd-tls-certs
       - emptyDir: {}
         name: tmp
       {{- with .Values.volumes }}
