@@ -44,7 +44,7 @@ Dependency licenses follow the upstream Argo manifests, which is the upstream pr
 
 ## Software Bill of Materials
 
-A chart package contains templates and values, not compiled software, so releases do not include an SBOM. The argo-cd package also bundles the third-party `redis-ha` subchart, which the publish workflow checks against the digest pinned in `.github/configs/chart-dependencies.sha256`. The images a chart deploys come from their upstream projects, which publish their own SBOMs and vulnerability information. This project publishes no VEX documents. [ARCHITECTURE.md](ARCHITECTURE.md#software-bill-of-materials) describes what a chart package contains.
+A chart package contains templates and values, not compiled software, so releases do not include an SBOM. The container images a chart deploys come from their upstream projects, some of which publish SBOMs for their images. This project publishes no VEX documents. [ARCHITECTURE.md](ARCHITECTURE.md#software-bill-of-materials) describes what a package contains, including the bundled `redis-ha` subchart.
 
 <!-- Adapted from the Static Application Security Testing Policy template in the
      OpenSSF OSPS Templates (ORBIT Definitions SIG), CC BY 4.0: https://github.com/eddie-knight/osps-templates -->
