@@ -31576,6 +31576,33 @@ entries:
   argo-events:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Render maxUnavailable 0 correctly in the controller and webhook PodDisruptionBudget templates
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v1.9.11
+    created: "2026-11-09T02:16:06.438677567Z"
+    description: A Helm chart for Argo Events, the event-driven workflow automation
+      framework
+    digest: 8543df4a2f8e3a80ed40db5bd4ebc400d37b82221ee6939a489831bab0de2202
+    home: https://github.com/argoproj/argo-helm
+    icon: https://avatars.githubusercontent.com/u/30269780?s=200&v=4
+    keywords:
+    - argoproj
+    - argo-events
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-events
+    sources:
+    - https://github.com/argoproj/argo-events
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-events-2.4.28/argo-events-2.4.28.tgz
+    version: 2.4.28
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Add initContainers and extraContainers to the admission webhook
       artifacthub.io/signKey: |
@@ -47266,4 +47293,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-11-08T17:57:57.916445776Z"
+generated: "2026-11-09T02:16:06.441562093Z"
