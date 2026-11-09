@@ -1,0 +1,95 @@
+# Capabilities of the Argo Helm chart release pipeline and the repository
+# automation that feeds it. Paired with threat-catalog.yaml.
+# Scope: .github/workflows/publish.yml, the pull request workflows, and the
+# Renovate workflow. Validate with:
+#   cue vet -c -d '#CapabilityCatalog' github.com/gemaraproj/gemara@v1.6.0 docs/security/capability-catalog.yaml
+metadata:
+  id: ARGO.HELM.RELEASE.CAPS
+  type: CapabilityCatalog
+  gemara-version: "1.6.0"
+  version: "1.0.0"
+  date: "2026-11-03T00:00:00Z"
+  description: Capabilities of the Argo Helm chart release pipeline and the repository automation that feeds it
+  author:
+    id: argo-helm-maintainers
+    name: Argo Helm Maintainers
+    type: Human
+  mapping-references:
+    - id: CCC
+      title: Common Cloud Controls Core
+      version: v2025.10
+      url: https://github.com/finos/common-cloud-controls/releases
+      description: Reusable security controls, capabilities, and threats maintained by FINOS.
+
+title: Argo Helm Chart Release Pipeline Capabilities
+
+groups:
+  - id: signing
+    title: Signing
+    description: Producing chart provenance that users verify
+  - id: dependencies
+    title: Dependencies
+    description: Third-party code and charts the pipeline pulls in
+  - id: automation
+    title: Automation
+    description: Workflows that act on pull requests or the repository with a token
+
+imports:
+  - reference-id: CCC
+    entries:
+      - reference-id: CCC.Core.CP29
+        remarks: Active Ingestion. The publish workflow fetches the redis-ha subchart and the current index.yaml.
+
+capabilities:
+  - id: ARGO.HELM.RELEASE.CAP01
+    title: Change Fragment Folding
+    description: |
+      Pull requests describe chart changes in charts/<chart>/changes/*.yaml
+      fragments with bump, kind, and description fields. After merge,
+      scripts/fold-changes.sh folds them into each chart's version,
+      artifacthub.io/changes annotation, and README, then deletes the fragments.
+    group: automation
+
+  - id: ARGO.HELM.RELEASE.CAP02
+    title: Chart Signing With the Maintainers' PGP Key
+    description: |
+      Published chart packages are signed as "Argo Helm maintainers"
+      (.github/configs/cr.yaml). Users verify charts against this key with
+      helm --verify, as README.md describes.
+    group: signing
+
+  - id: ARGO.HELM.RELEASE.CAP03
+    title: Subchart Bundling at Publish Time
+    description: |
+      The argo-cd chart depends on redis-ha from https://dandydeveloper.github.io/charts/.
+      The package job downloads that subchart with helm dependency build and
+      bundles it into the signed argo-cd package.
+    group: dependencies
+
+  - id: ARGO.HELM.RELEASE.CAP04
+    title: Pull Request CI on Contributor Code
+    description: |
+      .github/workflows/lint-and-test.yml and .github/workflows/actions-lint.yaml
+      run on pull_request, including pull requests from forks. They check out
+      and run the pull request's code to lint and install the charts. Each job
+      holds contents: read and no repository secrets.
+    group: automation
+
+  - id: ARGO.HELM.RELEASE.CAP05
+    title: Privileged Pull Request Automation
+    description: |
+      pr-title.yml and pr-sizing.yml run on pull_request_target with write
+      access to statuses or pull requests. pr-lifecycle.yml runs on
+      workflow_run and exchanges its OIDC identity for an octo-sts token
+      (.github/chainguard/pr-lifecycle.sts.yaml) that can edit pull requests
+      and issues. All three act on pull request metadata from forks.
+    group: automation
+
+  - id: ARGO.HELM.RELEASE.CAP06
+    title: Automated Dependency Updates
+    description: |
+      .github/workflows/renovate.yaml runs Renovate every hour. Renovate reads upstream
+      release data, opens update pull requests, and runs post-upgrade commands
+      from renovate.json that template the chart name, dependency name, and new
+      version into a shell command line.
+    group: automation

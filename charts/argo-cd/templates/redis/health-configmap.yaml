@@ -12,6 +12,9 @@ data:
     response=$(
       redis-cli \
         -a "${REDIS_PASSWORD}" --no-auth-warning \
+        {{- if .Values.redis.tls.enabled }}
+        --tls --insecure \
+        {{- end }}
         -h localhost \
         -p {{ .Values.redis.containerPorts.redis }} \
         ping
@@ -25,6 +28,9 @@ data:
     response=$(
       redis-cli \
         -a "${REDIS_PASSWORD}" --no-auth-warning \
+        {{- if .Values.redis.tls.enabled }}
+        --tls --insecure \
+        {{- end }}
         -h localhost \
         -p {{ .Values.redis.containerPorts.redis }} \
         ping

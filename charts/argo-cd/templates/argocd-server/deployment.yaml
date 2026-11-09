@@ -40,7 +40,7 @@ spec:
         {{- end }}
         {{- end }}
       labels:
-        {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 8 }}
+        {{- include "argo-cd.podLabels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 8 }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.server.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -76,6 +76,9 @@ spec:
         - /usr/local/bin/argocd-server
         - --port={{ .Values.server.containerPorts.server }}
         - --metrics-port={{ .Values.server.containerPorts.metrics }}
+        {{- with include "argo-cd.redis.tlsArgs" . }}
+          {{- . | nindent 8 }}
+        {{- end }}
         {{- with .Values.server.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -138,6 +141,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: server.disable.auth
+                optional: true
+          - name: ARGOCD_SERVER_DISABLE_SWAGGER_UI
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.disable.swagger.ui
                 optional: true
           - name: ARGOCD_SERVER_ENABLE_GZIP
             valueFrom:
@@ -205,6 +214,12 @@ spec:
                 name: argocd-cmd-params-cm
                 key: server.tls.ciphers
                 optional: true
+          - name: ARGOCD_TLS_CURVE_PREFERENCES
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: server.tls.curvepreferences
+                optional: true
           - name: ARGOCD_SERVER_CONNECTION_STATUS_CACHE_EXPIRATION
             valueFrom:
               configMapKeyRef:
@@ -235,6 +250,18 @@ spec:
                 name: argocd-cmd-params-cm
                 key: redis.server
                 optional: true
+          - name: REDIS_SENTINEL_HOSTS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.sentinel.hosts
+                optional: true
+          - name: REDIS_SENTINEL_MASTER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.sentinel.master
+                optional: true
           - name: REDIS_COMPRESSION
             valueFrom:
               configMapKeyRef:
@@ -246,6 +273,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: redis.db
+                optional: true
+          - name: ARGOCD_REDIS_KEY_PREFIX
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.key.prefix
                 optional: true
           - name: REDIS_USERNAME
             valueFrom:
@@ -314,6 +347,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: otlp.attrs
+                optional: true
+          - name: ARGOCD_SERVER_OTLP_SAMPLE_RATIO
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.sample.ratio
                 optional: true
           - name: ARGOCD_APPLICATION_NAMESPACES
             valueFrom:
@@ -400,6 +439,9 @@ spec:
         volumeMounts:
         {{- with (concat .Values.global.extraVolumeMounts .Values.server.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with include "argo-cd.redis.tlsCaVolumeMount" . }}
+          {{- . | nindent 8 }}
         {{- end }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
@@ -533,6 +575,9 @@ spec:
       volumes:
       {{- with (concat .Values.global.extraVolumes .Values.server.volumes) }}
         {{- toYaml . | nindent 6}}
+      {{- end }}
+      {{- with include "argo-cd.redis.tlsCaVolume" . }}
+        {{- . | nindent 6 }}
       {{- end }}
       {{- if .Values.server.extensions.enabled }}
       - name: extensions

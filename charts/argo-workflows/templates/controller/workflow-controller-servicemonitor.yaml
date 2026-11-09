@@ -31,7 +31,7 @@ spec:
       scheme: {{ .Values.controller.metricsConfig.scheme}}
   {{- end }}
   {{- if .Values.controller.telemetryConfig.enabled }}
-    - port: telemetry
+    - port: {{ .Values.controller.telemetryConfig.servicePortName }}
       path: {{ .Values.controller.telemetryConfig.path }}
       interval: {{ .Values.controller.telemetryConfig.interval }}
       {{- with .Values.controller.telemetryConfig.scrapeTimeout }}

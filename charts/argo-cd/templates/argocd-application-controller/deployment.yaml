@@ -34,7 +34,7 @@ spec:
         {{- end }}
         {{- end }}
       labels:
-        {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
+        {{- include "argo-cd.podLabels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 8 }}
         {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.controller.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -71,6 +71,9 @@ spec:
         - --metrics-application-labels
         - {{ . }}
         {{- end }}
+        {{- end }}
+        {{- with include "argo-cd.redis.tlsArgs" . }}
+          {{- . | nindent 8 }}
         {{- end }}
         {{- with .Values.controller.extraArgs }}
           {{- toYaml . | nindent 8 }}
@@ -238,6 +241,18 @@ spec:
                 name: argocd-cmd-params-cm
                 key: redis.server
                 optional: true
+          - name: REDIS_SENTINEL_HOSTS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.sentinel.hosts
+                optional: true
+          - name: REDIS_SENTINEL_MASTER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.sentinel.master
+                optional: true
           - name: REDIS_COMPRESSION
             valueFrom:
               configMapKeyRef:
@@ -249,6 +264,12 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: redis.db
+                optional: true
+          - name: ARGOCD_REDIS_KEY_PREFIX
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.key.prefix
                 optional: true
           - name: REDIS_USERNAME
             valueFrom:
@@ -293,6 +314,18 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: otlp.headers
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_OTLP_ATTRS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.attrs
+                optional: true
+          - name: ARGOCD_APPLICATION_CONTROLLER_OTLP_SAMPLE_RATIO
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.sample.ratio
                 optional: true
           - name: ARGOCD_APPLICATION_NAMESPACES
             valueFrom:
@@ -399,12 +432,18 @@ spec:
         {{- with (concat .Values.global.extraVolumeMounts .Values.controller.volumeMounts) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- with include "argo-cd.redis.tlsCaVolumeMount" . }}
+          {{- . | nindent 8 }}
+        {{- end }}
         - mountPath: /app/config/controller/tls
           name: argocd-repo-server-tls
         - mountPath: /home/argocd
           name: argocd-home
         - name: argocd-cmd-params-cm
           mountPath: /home/argocd/params
+        # CA for the OTLP collector, looked up by --otlp-address host.
+        - name: tls-certs
+          mountPath: /app/config/tls
       {{- with .Values.controller.extraContainers }}
         {{- tpl (toYaml .) $ | nindent 6 }}
       {{- end }}
@@ -439,6 +478,9 @@ spec:
       {{- with (concat .Values.global.extraVolumes .Values.controller.volumes) }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- with include "argo-cd.redis.tlsCaVolume" . }}
+        {{- . | nindent 6 }}
+      {{- end }}
       - name: argocd-home
         {{- if .Values.controller.emptyDir.sizeLimit }}
         emptyDir:
@@ -465,6 +507,10 @@ spec:
           items:
           - key: controller.profile.enabled
             path: profiler.enabled
+      - name: tls-certs
+        configMap:
+          name: argocd-tls-certs-cm
+          optional: true
       {{- if .Values.controller.hostNetwork }}
       hostNetwork: {{ .Values.controller.hostNetwork }}
       {{- end }}
