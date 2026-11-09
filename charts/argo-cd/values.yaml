@@ -742,9 +742,10 @@ configs:
   #    background: linear-gradient(to bottom, #999, #777, #333, #222, #111);
   #  }
 
-# -- Extra K8s manifests to deploy, as a list or a map. A map can be split over several values files, because Helm merges maps but replaces lists.
+# -- (list) Extra K8s manifests to deploy, as a list or a map. A map can be split over several values files, because Helm merges maps but replaces lists.
+# @default -- `[]`
 ## Note: Supports use of custom Helm templates
-extraObjects: {}
+extraObjects:
   # - apiVersion: secrets-store.csi.x-k8s.io/v1
   #   kind: SecretProviderClass
   #   metadata:
