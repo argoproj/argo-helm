@@ -42,6 +42,10 @@ Renovate opens a pull request when a container image it tracks publishes a new v
 
 Dependency licenses follow the upstream Argo manifests, which is the upstream project's call. `renovate.json` has one rule for this: it skips Redis 7.4.x, whose license is not OSI-approved. A dependency that the upstream manifests do not ship must use an OSI-approved license, and one under a strong copyleft license, such as GPL or AGPL, needs maintainer review before it is added.
 
+## Software Bill of Materials
+
+A chart package contains templates and values, not compiled software, so releases do not include an SBOM. The container images a chart deploys come from their upstream projects, some of which publish SBOMs for their images. This project publishes no VEX documents. [ARCHITECTURE.md](ARCHITECTURE.md#software-bill-of-materials) describes what a package contains, including the bundled `redis-ha` subchart.
+
 <!-- Adapted from the Static Application Security Testing Policy template in the
      OpenSSF OSPS Templates (ORBIT Definitions SIG), CC BY 4.0: https://github.com/eddie-knight/osps-templates -->
 ## Static Analysis
