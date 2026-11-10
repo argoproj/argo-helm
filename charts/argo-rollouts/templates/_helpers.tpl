@@ -451,3 +451,87 @@ Expand the namespace of the release.
 {{- define "argo-rollouts.namespace" -}}
 {{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
 {{- end }}
+
+{{/*
+Return the rules for dashboard's Role and ClusterRole
+*/}}
+{{- define "argo-rollouts.dashboard.roleRules" -}}
+- apiGroups:
+    - argoproj.io
+  resources:
+    - rollouts
+    - rollouts/status
+    - rollouts/finalizers
+  verbs:
+    - get
+    - list
+    - watch
+    {{- if not .Values.dashboard.readonly }}
+    - update
+    - patch
+    {{- end }}
+- apiGroups:
+    - argoproj.io
+  resources:
+    - analysisruns
+    - analysisruns/finalizers
+    - experiments
+    - experiments/finalizers
+  verbs:
+    {{- if not .Values.dashboard.readonly }}
+    - create
+    {{- end }}
+    - get
+    - list
+    - watch
+- apiGroups:
+    - argoproj.io
+  resources:
+    - analysistemplates
+    - clusteranalysistemplates
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
+    - apps
+  resources:
+    - deployments
+  verbs:
+    - get
+    - list
+    - watch
+    {{- if not .Values.dashboard.readonly }}
+    - update
+    - patch
+    {{- end }}
+- apiGroups:
+    - apps
+  resources:
+    - replicasets
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
+    - ""
+  resources:
+    - pods
+  verbs:
+    - list
+    - watch
+- apiGroups:
+    - ""
+  resources:
+    - configmaps
+  verbs:
+    - get
+- apiGroups:
+    - coordination.k8s.io
+  resources:
+    - leases
+  verbs:
+    - create
+    - get
+    - update
+{{- end }}
