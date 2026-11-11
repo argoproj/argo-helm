@@ -20,7 +20,10 @@ spec:
   strategy:
     {{- trim . | nindent 4 }}
   {{- end }}
-  replicas: 1
+  {{- if and (gt (int .Values.dex.replicas) 1) (eq (include "argo-cd.dex.storageType" .) "memory") }}
+  {{- fail "dex.replicas > 1 needs a persistent Dex storage backend: set storage.type (for example kubernetes) in configs.cm.\"dex.config\"" }}
+  {{- end }}
+  replicas: {{ .Values.dex.replicas }}
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
   selector:
     matchLabels:
