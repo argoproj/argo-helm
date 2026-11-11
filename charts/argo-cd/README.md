@@ -1740,6 +1740,7 @@ NAME: my-release
 | dex.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | dex.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | dex.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
+| dex.replicas | int | `1` | The number of Dex server pods to run |
 | dex.resources | object | `{}` | Resource limits and requests for dex |
 | dex.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for Dex |
 | dex.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
@@ -1760,6 +1761,7 @@ NAME: my-release
 | dex.startupProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | dex.startupProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | dex.startupProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
+| dex.storage.type | string | `""` (read from `storage.type` in `configs.cm."dex.config"`, `memory` when unset) | Dex storage type. Renders the RBAC for `kubernetes` storage and validates `dex.replicas`. |
 | dex.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | dex.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | dex.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to dex |

@@ -1199,6 +1199,16 @@ dex:
   # @default -- `""` (defaults to global.runtimeClassName)
   runtimeClassName: ""
 
+  # -- The number of Dex server pods to run
+  ## Values above 1 need a persistent storage backend in `configs.cm."dex.config"`, the in-memory default does not share state.
+  replicas: 1
+
+  storage:
+    # -- Dex storage type. Renders the RBAC for `kubernetes` storage and validates `dex.replicas`.
+    ## Only set it when `configs.cm.create` is false, so the chart cannot read `configs.cm."dex.config"`.
+    # @default -- `""` (read from `storage.type` in `configs.cm."dex.config"`, `memory` when unset)
+    type: ""
+
   metrics:
     # -- Deploy metrics service
     enabled: false

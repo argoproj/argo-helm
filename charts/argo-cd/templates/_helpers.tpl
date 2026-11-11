@@ -38,6 +38,14 @@ Create Dex server endpoint
 {{- end }}
 
 {{/*
+Dex storage type: dex.storage.type, else storage.type from configs.cm."dex.config", else memory
+*/}}
+{{- define "argo-cd.dex.storageType" -}}
+{{- $config := dig "dex.config" "" .Values.configs.cm | fromYaml | default dict -}}
+{{- .Values.dex.storage.type | default (dig "storage" "type" "memory" $config) -}}
+{{- end -}}
+
+{{/*
 Create the name of the dex service account to use
 */}}
 {{- define "argo-cd.dex.serviceAccountName" -}}

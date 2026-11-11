@@ -16,4 +16,27 @@ rules:
   - get
   - list
   - watch
+{{- if eq (include "argo-cd.dex.storageType" .) "kubernetes" }}
+- apiGroups:
+  - dex.coreos.com
+  resources:
+  - authcodes
+  - authrequests
+  - authsessions
+  - connectors
+  - devicerequests
+  - devicetokens
+  - oauth2clients
+  - offlinesessionses
+  - passwords
+  - refreshtokens
+  - signingkeies
+  - useridentities
+  verbs:
+  - get
+  - list
+  - create
+  - update
+  - delete
+{{- end }}
 {{- end }}
