@@ -111,6 +111,55 @@ extraObjects:
 
 Redis reads its certificate when it starts, so restart it after a renewal, for example with [Reloader](https://github.com/stakater/Reloader). `redis.tls` does not apply to `redis-ha` or to an external Redis.
 
+## Extra objects
+
+`extraObjects` takes a list or a map. A list is enough when all objects are in one values file:
+
+```yaml
+extraObjects:
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: my-config
+    data:
+      key: value
+```
+
+With a map, each values file can add its own objects, because Helm merges maps but replaces lists. For example, plain manifests in `values.yaml` and a Secret in an encrypted `secrets.yaml`:
+
+```yaml
+# values.yaml
+extraObjects:
+  argocd-network-policy:
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: argocd
+    spec:
+      podSelector: {}
+      policyTypes: [Ingress]
+      ingress:
+        - from:
+            - podSelector: {}
+```
+
+```yaml
+# secrets.yaml
+extraObjects:
+  repo-credentials:
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: repo-credentials
+      labels:
+        argocd.argoproj.io/secret-type: repository
+    stringData:
+      url: https://github.com/example/repo.git
+      password: my-token
+```
+
+The map keys are only names. Use a unique key for each object.
+
 ## Ingress configuration
 
 Please refer to the [Operator Manual](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingress-configurationh) for details as the samples
@@ -1037,7 +1086,7 @@ NAME: my-release
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `false` | Create aggregated roles that extend existing cluster roles to interact with argo-cd resources |
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
-| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
+| extraObjects | list | `[]` | Extra K8s manifests to deploy, as a list or a map. A map can be split over several values files, because Helm merges maps but replaces lists. |
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
