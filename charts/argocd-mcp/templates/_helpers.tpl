@@ -93,4 +93,7 @@ Validate MCP transport.
 {{- if not (has .Values.mcp.transport (list "http" "sse")) }}
 {{- fail "mcp.transport must be one of: http, sse" }}
 {{- end }}
+{{- if and .Values.mcp.stateless (ne .Values.mcp.transport "http") }}
+{{- fail "mcp.stateless=true is only supported when mcp.transport is 'http'" }}
+{{- end }}
 {{- end }}

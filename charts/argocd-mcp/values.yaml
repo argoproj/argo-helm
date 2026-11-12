@@ -64,7 +64,10 @@ mcp:
   # Use only when an external proxy or service mesh authenticates callers.
   allowUnauthenticated: false
 
-  # -- Additional Host headers accepted by the MCP HTTP server
+  # -- Additional Host headers accepted by the MCP HTTP server.
+  # Setting any entry enables Host header validation, allowing only loopback
+  # plus these entries. List every hostname clients use, including in-cluster
+  # Service DNS names when applicable.
   allowedHosts: []
 
   # -- Additional browser origins accepted by the MCP HTTP server
@@ -114,6 +117,8 @@ ingress:
 serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
+  # -- Automount API credentials for the Service Account into the pod
+  automountServiceAccountToken: false
   # -- Annotations to add to the service account
   annotations: {}
   # -- Labels to add to the service account

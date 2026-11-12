@@ -27,6 +27,7 @@ spec:
       {{- end }}
     spec:
       serviceAccountName: {{ include "argocd-mcp.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -75,14 +76,14 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.argocd.apiToken.existingSecret }}
-                  key: {{ .Values.argocd.apiToken.key }}
+                  key: {{ .Values.argocd.apiToken.key | quote }}
             {{- end }}
             {{- if .Values.mcp.authToken.existingSecret }}
             - name: MCP_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.mcp.authToken.existingSecret }}
-                  key: {{ .Values.mcp.authToken.key }}
+                  key: {{ .Values.mcp.authToken.key | quote }}
             {{- end }}
             {{- if .Values.mcp.readOnly }}
             - name: MCP_READ_ONLY

@@ -46,7 +46,7 @@ The Argo CD API token authenticates the MCP server to Argo CD. It does not authe
 
 ### Exposing the MCP server
 
-The Kubernetes Service is disabled by default. When the Service is enabled, the MCP server binds to `0.0.0.0` and inbound authentication must be configured.
+The Kubernetes Service is disabled by default. The MCP server binds to `0.0.0.0` whenever `service.enabled` is `true`, or when `mcp.authToken.existingSecret` or `mcp.allowUnauthenticated` is set (even with the Service disabled). When `service.enabled` is `true`, inbound authentication (or `mcp.allowUnauthenticated: true`) must be configured. Setting `mcp.allowUnauthenticated: true` without an authenticating proxy, service mesh, or network policy leaves the pod reachable unauthenticated on its pod IP.
 
 Create a Secret containing the inbound MCP authentication token:
 
@@ -108,8 +108,11 @@ The HTTP transport normally maintains client sessions in memory. For deployments
 
 ```yaml
 mcp:
+  transport: http
   stateless: true
 ```
+
+Stateless mode is supported only with the `http` transport.
 
 ### Ingress
 
@@ -162,7 +165,7 @@ ingress:
 | ingress.labels | object | `{}` | Additional labels for the Ingress |
 | ingress.tls | list | `[]` | Ingress TLS configuration |
 | mcp.allowUnauthenticated | bool | `false` | Allow non-loopback HTTP access without MCP_AUTH_TOKEN. Use only when an external proxy or service mesh authenticates callers. |
-| mcp.allowedHosts | list | `[]` | Additional Host headers accepted by the MCP HTTP server |
+| mcp.allowedHosts | list | `[]` | Additional Host headers accepted by the MCP HTTP server. Setting any entry enables Host header validation, allowing only loopback plus these entries. List every hostname clients use, including in-cluster Service DNS names when applicable. |
 | mcp.allowedOrigins | list | `[]` | Additional browser origins accepted by the MCP HTTP server |
 | mcp.authToken.existingSecret | string | `""` | Name of an existing Secret containing the inbound MCP authentication token |
 | mcp.authToken.key | string | `"token"` | Key in the existing Secret containing the inbound MCP authentication token |
@@ -185,6 +188,7 @@ ingress:
 | service.port | int | `3000` | Kubernetes port where service is exposed |
 | service.type | string | `"ClusterIP"` | Kubernetes service type |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account into the pod |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.labels | object | `{}` | Labels to add to the service account |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set, a name is generated using the fullname template |
