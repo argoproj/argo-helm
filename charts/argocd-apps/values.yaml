@@ -126,6 +126,12 @@ applicationsets: {}
 #    ignoreApplicationDifferences:
 #    - jsonPointers:
 #      - /spec/syncPolicy
+#    # Ref https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Controlling-Resource-Modification/#preserving-changes-made-to-an-applications-annotations-and-labels
+#    preservedFields:
+#      annotations:
+#      - notifications.argoproj.io/subscribe.on-sync-succeeded.slack
+#      labels:
+#      - team
 #    # Progressive Syncs is an experimental feature and it must be explicitly enabled
 #    # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Progressive-Syncs/#enabling-progressive-syncs
 #    strategy:
@@ -162,6 +168,7 @@ applicationsets: {}
 #          automated:
 #            prune: false
 #            selfHeal: false
+#        revisionHistoryLimit: 10
 #        ignoreDifferences:
 #        - group: apps
 #          kind: Deployment
