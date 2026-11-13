@@ -1,0 +1,13 @@
+service:
+  enabled: true
+
+mcp:
+  allowUnauthenticated: true
+
+ingress:
+  enabled: true
+  hosts:
+    - host: argocd-mcp.example.com
+      paths:
+        - path: /
+          pathType: Prefix
