@@ -12,6 +12,6 @@ roleRef:
   name: {{ include "argo-rollouts.fullname" . }}-dashboard
 subjects:
 - kind: ServiceAccount
-  name: {{ include "argo-rollouts.serviceAccountName" . }}-dashboard
+  name: {{ include "argo-rollouts.dashboard.serviceAccountName" . }}
   namespace: {{ include "argo-rollouts.namespace" . | quote }}
 {{- end }}

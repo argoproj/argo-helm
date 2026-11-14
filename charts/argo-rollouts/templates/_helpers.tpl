@@ -96,6 +96,13 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Create the name of the dashboard service account to use
+*/}}
+{{- define "argo-rollouts.dashboard.serviceAccountName" -}}
+{{- default (printf "%s-dashboard" (include "argo-rollouts.serviceAccountName" .)) .Values.dashboard.serviceAccount.name }}
+{{- end }}
+
+{{/*
 Return the appropriate apiVersion for ingress
 */}}
 {{- define "argo-rollouts.ingress.apiVersion" -}}
