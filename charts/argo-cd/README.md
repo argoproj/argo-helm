@@ -1284,6 +1284,8 @@ NAME: my-release
 | controller.revisionHistoryLimit | int | `5` | Maximum number of controller revisions that will be maintained in StatefulSet history |
 | controller.roleRules | list | `[]` | List of custom rules for the application controller's Role resource |
 | controller.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the application controller |
+| controller.service.annotations | object | `{}` | Application controller service annotations |
+| controller.service.labels | object | `{}` | Application controller service labels |
 | controller.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | controller.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | controller.serviceAccount.create | bool | `true` | Create a service account for the application controller |

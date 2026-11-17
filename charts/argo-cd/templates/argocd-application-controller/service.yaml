@@ -3,8 +3,17 @@ kind: Service
 metadata:
   name: {{ include "argo-cd.controller.fullname" . }}
   namespace: {{ include "argo-cd.namespace" . }}
+{{- if .Values.controller.service.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.controller.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
   labels:
     {{- include "argo-cd.labels" (dict "context" . "component" .Values.controller.name "name" .Values.controller.name) | nindent 4 }}
+{{- with .Values.controller.service.labels }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
 spec:
   clusterIP: None
   selector:

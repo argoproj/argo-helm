@@ -1,0 +1,11 @@
+# Test annotations and labels on the application controller headless Service
+crds:
+  keep: false
+
+controller:
+  service:
+    annotations:
+      example.com/owner: platform-team
+      example.com/numeric: 123
+    labels:
+      example.com/team: platform
