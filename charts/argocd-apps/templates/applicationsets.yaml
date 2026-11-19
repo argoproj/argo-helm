@@ -48,6 +48,10 @@ spec:
   syncPolicy:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with $appSetData.preservedFields }}
+  preservedFields:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with $appSetData.template }}
   template:
     {{- with .metadata }}
@@ -83,6 +87,9 @@ spec:
       {{- with .syncPolicy }}
       syncPolicy:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .revisionHistoryLimit }}
+      revisionHistoryLimit: {{ . }}
       {{- end }}
       {{- with .ignoreDifferences }}
       ignoreDifferences:

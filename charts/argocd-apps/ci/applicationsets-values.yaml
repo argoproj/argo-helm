@@ -37,6 +37,7 @@ applicationsets:
           automated:
             prune: false
             selfHeal: false
+        revisionHistoryLimit: 5
         ignoreDifferences:
         - group: apps
           kind: Deployment
@@ -48,6 +49,11 @@ applicationsets:
     syncPolicy:
       # Set Application finalizer
       preserveResourcesOnDeletion: false
+    preservedFields:
+      annotations:
+      - notifications.argoproj.io/subscribe.on-sync-succeeded.slack
+      labels:
+      - team
     templatePatch: |
       spec:
         source:
