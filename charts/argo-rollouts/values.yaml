@@ -449,8 +449,8 @@ dashboard:
     create: true
     # -- Annotations to add to the dashboard service account
     annotations: {}
-    # -- The name of the service account to use.
-    # If not set and create is true, a name is generated using the fullname template
+    # -- The name of the dashboard service account to use.
+    # If not set, the controller service account name with a `-dashboard` suffix is used
     name: ""
 
   ## Configure Pod Disruption Budget for the dashboard

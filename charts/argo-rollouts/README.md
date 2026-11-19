@@ -216,7 +216,7 @@ For full list of changes please check ArtifactHub [changelog].
 | dashboard.service.type | string | `"ClusterIP"` | Sets the type of the Service |
 | dashboard.serviceAccount.annotations | object | `{}` | Annotations to add to the dashboard service account |
 | dashboard.serviceAccount.create | bool | `true` | Specifies whether a dashboard service account should be created |
-| dashboard.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| dashboard.serviceAccount.name | string | `""` | The name of the dashboard service account to use. If not set, the controller service account name with a `-dashboard` suffix is used |
 | dashboard.tolerations | list | `[]` | [Tolerations] for use with node taints |
 | dashboard.topologySpreadConstraints | list | `[]` | Assign custom [TopologySpreadConstraints] rules to the dashboard server |
 | dashboard.volumeMounts | list | `[]` | Additional volumeMounts to add to the dashboard container |
