@@ -601,6 +601,10 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### NEXT
+
+The notifications controller no longer creates a cluster-wide `ClusterRole` and `ClusterRoleBinding` by default. This matches the upstream Argo CD manifests and avoids granting `list`/`watch` on secrets and ConfigMaps in every namespace. If you run notifications for applications in other namespaces (self-service notifications), set `notifications.clusterRoleRules.enabled=true` to restore the previous permissions.
+
 ### 10.17.0
 
 Pod templates no longer carry the `helm.sh/chart` label. It changed on every chart

@@ -601,6 +601,10 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### NEXT
+
+The notifications controller no longer creates a cluster-wide `ClusterRole` and `ClusterRoleBinding` by default. This matches the upstream Argo CD manifests and avoids granting `list`/`watch` on secrets and ConfigMaps in every namespace. If you run notifications for applications in other namespaces (self-service notifications), set `notifications.clusterRoleRules.enabled=true` to restore the previous permissions.
+
 ### 10.17.0
 
 Pod templates no longer carry the `helm.sh/chart` label. It changed on every chart
@@ -2138,6 +2142,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
 | notifications.argocdUrl | string | `""` (defaults to https://`global.domain`) | Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates |
 | notifications.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
+| notifications.clusterRoleRules.enabled | bool | `false` | Create the notifications controller's ClusterRole and ClusterRoleBinding |
 | notifications.clusterRoleRules.rules | list | `[]` | List of custom rules for the notifications controller's ClusterRole resource |
 | notifications.cm.create | bool | `true` | Whether helm chart creates notifications controller config map |
 | notifications.containerPorts.metrics | int | `9001` | Metrics container port |
