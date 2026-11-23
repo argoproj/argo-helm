@@ -84,6 +84,9 @@ spec:
       syncPolicy:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if not (kindIs "invalid" .revisionHistoryLimit) }}
+      revisionHistoryLimit: {{ .revisionHistoryLimit }}
+      {{- end }}
       {{- with .ignoreDifferences }}
       ignoreDifferences:
         {{- toYaml . | nindent 8 }}
