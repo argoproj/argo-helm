@@ -66,6 +66,10 @@ spec:
       {{- with .namespace }}
       namespace: {{ . | squote }}
       {{- end }}
+      {{- with .finalizers }}
+      finalizers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     {{- end }}
     {{- with .spec }}
     spec:

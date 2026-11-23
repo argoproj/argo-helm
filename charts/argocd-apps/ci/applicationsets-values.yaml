@@ -24,6 +24,8 @@ applicationsets:
         name: '{{path.basename}}'
         labels: {}
         annotations: {}
+        finalizers:
+        - resources-finalizer.argocd.argoproj.io
       spec:
         project: default
         source:
