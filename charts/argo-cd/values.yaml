@@ -1889,7 +1889,7 @@ redis:
   terminationGracePeriodSeconds: 30
 
   # -- Automount API credentials for the Service Account into the pod.
-  automountServiceAccountToken: true
+  automountServiceAccountToken: false
 
   serviceAccount:
     # -- Create a service account for the redis pod
@@ -3569,7 +3569,8 @@ repoServer:
     rules: []
 
   # -- Automount API credentials for the Service Account into the pod.
-  automountServiceAccountToken: true
+  # Always mounted when `repoServer.rbac` is not empty or `repoServer.clusterRoleRules.enabled` is true.
+  automountServiceAccountToken: false
 
   ## Repo server service account
   ## If create is set to true, make sure to uncomment the name and update the rbac section below
@@ -3583,7 +3584,7 @@ repoServer:
     # -- Labels applied to created service account
     labels: {}
     # -- Automount API credentials for the Service Account
-    automountServiceAccountToken: true
+    automountServiceAccountToken: false
 
   # -- Repo server rbac rules
   rbac: []
