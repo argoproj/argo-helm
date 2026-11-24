@@ -1,0 +1,13 @@
+# Test automatic cluster-wide RBAC when custom rules are configured
+crds:
+  keep: false
+
+notifications:
+  clusterRoleRules:
+    rules:
+      - apiGroups:
+          - example.com
+        resources:
+          - widgets
+        verbs:
+          - get

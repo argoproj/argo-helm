@@ -4476,10 +4476,11 @@ notifications:
     create: true
 
   ## Create a ClusterRole and ClusterRoleBinding for the notifications controller.
-  ## Only needed when notifications are configured for applications in other namespaces.
-  ## Defaults to off so the controller only gets namespace-scoped permissions.
+  ## It is created automatically when `configs.params.application\.namespaces` or
+  ## `configs.params.notificationscontroller\.selfservice\.enabled` is enabled, or when custom rules are set.
+  ## Defaults to off otherwise, so the controller only gets namespace-scoped permissions.
   clusterRoleRules:
-    # -- Create the notifications controller's ClusterRole and ClusterRoleBinding
+    # -- Create the notifications controller's ClusterRole and ClusterRoleBinding when no automatic condition applies
     enabled: false
     # -- List of custom rules for the notifications controller's ClusterRole resource
     rules: []
