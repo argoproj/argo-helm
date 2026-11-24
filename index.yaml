@@ -44435,6 +44435,31 @@ entries:
   argocd-apps:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Support revisionHistoryLimit in the template spec of ApplicationSets
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    created: "2026-11-24T12:20:44.256168758Z"
+    description: A Helm chart for managing additional Argo CD Applications and Projects
+    digest: ab9d46312de89bcebe571a087382fb9a5bd70cdee40ae1b4deb42e74dcc8687d
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argocd-apps
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argocd-apps-2.0.9/argocd-apps-2.0.9.tgz
+    version: 2.0.9
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Fix "unstability" typo in the extensions value comment
       artifacthub.io/signKey: |
@@ -47581,4 +47606,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-11-23T20:12:24.441345534Z"
+generated: "2026-11-24T12:20:44.25848689Z"
