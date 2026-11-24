@@ -1,4 +1,4 @@
-{{- if and .Values.notifications.enabled .Values.createClusterRoles }}
+{{- if and .Values.notifications.enabled .Values.createClusterRoles (or .Values.notifications.clusterRoleRules.enabled (index .Values.configs.params "application.namespaces") (eq (toString (index .Values.configs.params "notificationscontroller.selfservice.enabled")) "true") .Values.notifications.clusterRoleRules.rules) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:

@@ -4475,9 +4475,13 @@ notifications:
     # -- Whether helm chart creates notifications controller config map
     create: true
 
-  ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.
-  ## Defaults to off
+  ## Create a ClusterRole and ClusterRoleBinding for the notifications controller.
+  ## It is created automatically when `configs.params.application\.namespaces` or
+  ## `configs.params.notificationscontroller\.selfservice\.enabled` is enabled, or when custom rules are set.
+  ## Defaults to off otherwise, so the controller only gets namespace-scoped permissions.
   clusterRoleRules:
+    # -- Create the notifications controller's ClusterRole and ClusterRoleBinding when no automatic condition applies
+    enabled: false
     # -- List of custom rules for the notifications controller's ClusterRole resource
     rules: []
 

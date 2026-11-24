@@ -2138,6 +2138,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | notifications.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
 | notifications.argocdUrl | string | `""` (defaults to https://`global.domain`) | Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates |
 | notifications.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
+| notifications.clusterRoleRules.enabled | bool | `false` | Create the notifications controller's ClusterRole and ClusterRoleBinding when no automatic condition applies |
 | notifications.clusterRoleRules.rules | list | `[]` | List of custom rules for the notifications controller's ClusterRole resource |
 | notifications.cm.create | bool | `true` | Whether helm chart creates notifications controller config map |
 | notifications.containerPorts.metrics | int | `9001` | Metrics container port |
