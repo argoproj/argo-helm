@@ -1,0 +1,12 @@
+# Test that custom repo server RBAC mounts the service account token
+crds:
+  keep: false
+
+repoServer:
+  rbac:
+    - apiGroups:
+        - ""
+      resources:
+        - configmaps
+      verbs:
+        - get

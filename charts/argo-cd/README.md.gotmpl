@@ -601,6 +601,35 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### NEXT
+
+The repo server and Redis pods no longer mount a Kubernetes service account token by default.
+Neither component calls the Kubernetes API, and the upstream repo server manifest already sets
+`automountServiceAccountToken: false`. Both pods roll once on upgrade.
+
+The repo server still mounts the token when `repoServer.rbac` is not empty or
+`repoServer.clusterRoleRules.enabled` is `true`, so installs that grant it RBAC keep working.
+
+If anything else in these pods uses the in-cluster token, set the pod-level value back to `true`.
+Examples are a config management plugin sidecar or an extra container that authenticates to
+Vault with the Kubernetes auth method (such as argocd-vault-plugin with `AVP_AUTH_TYPE=k8s`),
+or a Redis `initContainers`/`extraContainers` entry that calls the API.
+Without it they fail with a missing token file at `/var/run/secrets/kubernetes.io/serviceaccount/token`.
+
+```yaml
+repoServer:
+  automountServiceAccountToken: true
+redis:
+  automountServiceAccountToken: true
+```
+
+The pod-level value overrides the service account's, so setting only
+`repoServer.serviceAccount.automountServiceAccountToken` has no effect.
+
+Cloud workload identity on the repo server service account (EKS IRSA or Pod Identity, Azure
+Workload Identity, GKE Workload Identity) is not affected. It uses its own projected token volume
+or the node metadata server, not the automounted token.
+
 ### 10.17.0
 
 Pod templates no longer carry the `helm.sh/chart` label. It changed on every chart

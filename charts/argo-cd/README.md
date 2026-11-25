@@ -601,6 +601,35 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### NEXT
+
+The repo server and Redis pods no longer mount a Kubernetes service account token by default.
+Neither component calls the Kubernetes API, and the upstream repo server manifest already sets
+`automountServiceAccountToken: false`. Both pods roll once on upgrade.
+
+The repo server still mounts the token when `repoServer.rbac` is not empty or
+`repoServer.clusterRoleRules.enabled` is `true`, so installs that grant it RBAC keep working.
+
+If anything else in these pods uses the in-cluster token, set the pod-level value back to `true`.
+Examples are a config management plugin sidecar or an extra container that authenticates to
+Vault with the Kubernetes auth method (such as argocd-vault-plugin with `AVP_AUTH_TYPE=k8s`),
+or a Redis `initContainers`/`extraContainers` entry that calls the API.
+Without it they fail with a missing token file at `/var/run/secrets/kubernetes.io/serviceaccount/token`.
+
+```yaml
+repoServer:
+  automountServiceAccountToken: true
+redis:
+  automountServiceAccountToken: true
+```
+
+The pod-level value overrides the service account's, so setting only
+`repoServer.serviceAccount.automountServiceAccountToken` has no effect.
+
+Cloud workload identity on the repo server service account (EKS IRSA or Pod Identity, Azure
+Workload Identity, GKE Workload Identity) is not affected. It uses its own projected token volume
+or the node metadata server, not the automounted token.
+
 ### 10.17.0
 
 Pod templates no longer carry the `helm.sh/chart` label. It changed on every chart
@@ -1318,7 +1347,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | repoServer.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
-| repoServer.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
+| repoServer.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account into the pod. Always mounted when `repoServer.rbac` is not empty or `repoServer.clusterRoleRules.enabled` is true. |
 | repoServer.autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. |
 | repoServer.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the repo server |
 | repoServer.autoscaling.maxReplicas | int | `5` | Maximum number of replicas for the repo server [HPA] |
@@ -1412,7 +1441,7 @@ NAME: my-release
 | repoServer.service.portName | string | `"tcp-repo-server"` | Repo server service port name |
 | repoServer.service.trafficDistribution | string | `""` | Traffic distribution preference for the repo server service. If the field is not set, the implementation will apply its default routing strategy. |
 | repoServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
-| repoServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
+| repoServer.serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account |
 | repoServer.serviceAccount.create | bool | `true` | Create repo server service account |
 | repoServer.serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | repoServer.serviceAccount.name | string | `""` | Repo server service account name |
@@ -1784,7 +1813,7 @@ NAME: my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redis.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules to the deployment |
-| redis.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
+| redis.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account into the pod. |
 | redis.containerPorts.metrics | int | `9121` | Metrics container port |
 | redis.containerPorts.redis | int | `6379` | Redis container port |
 | redis.containerSecurityContext | object | See [values.yaml] | Redis container-level security context |
