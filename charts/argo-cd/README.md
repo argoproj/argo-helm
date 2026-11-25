@@ -601,7 +601,7 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
-### NEXT
+### 10.20.0
 
 The repo server and Redis pods no longer mount a Kubernetes service account token by default.
 Neither component calls the Kubernetes API, and the upstream repo server manifest already sets
