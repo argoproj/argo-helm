@@ -1,3 +1,4 @@
+{{- if .Values.applicationSet.enabled }}
 {{- if .Values.applicationSet.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -59,4 +60,5 @@ spec:
       {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- end }}
+{{- end }}
 {{- end }}
