@@ -37476,6 +37476,30 @@ entries:
   argo-workflows:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Bump argo-workflows to v4.1.7
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v4.1.7
+    created: "2026-11-26T07:22:44.764559159Z"
+    description: A Helm chart for Argo Workflows
+    digest: ee4569eeb1fe8d6efcd908ff6f59f18411d1d4dbd491d999f005c1687018a17a
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-workflows.readthedocs.io/en/stable/assets/logo.png
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-workflows
+    sources:
+    - https://github.com/argoproj/argo-workflows
+    type: application
+    urls:
+    - https://github.com/argoproj/argo-helm/releases/download/argo-workflows-2.0.19/argo-workflows-2.0.19.tgz
+    version: 2.0.19
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Honor controller.telemetryConfig.servicePortName in the controller ServiceMonitor
       artifacthub.io/signKey: |
@@ -47771,4 +47795,4 @@ entries:
     urls:
     - argocd-notifications-1.0.0.tgz
     version: 1.0.0
-generated: "2026-11-25T09:39:47.202032629Z"
+generated: "2026-11-26T07:22:44.76664794Z"
