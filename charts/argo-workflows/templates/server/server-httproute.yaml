@@ -26,8 +26,14 @@ spec:
   {{- end }}
   rules:
     {{- range .Values.server.httproute.rules }}
+    - backendRefs:
+        - group: ''
+          kind: Service
+          name: {{ $fullName }}
+          port: {{ $servicePort }}
+          weight: 1
     {{- with .matches }}
-    - matches:
+      matches:
       {{- toYaml . | nindent 8 }}
     {{- end }}
     {{- with .filters }}
@@ -38,11 +44,5 @@ spec:
       timeouts:
       {{- toYaml . | nindent 8 }}
     {{- end }}
-      backendRefs:
-        - group: ''
-          kind: Service
-          name: {{ $fullName }}
-          port: {{ $servicePort }}
-          weight: 1
     {{- end }}
 {{- end }}
