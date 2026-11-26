@@ -1,0 +1,17 @@
+applicationSet:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: example-gateway
+    rules:
+      - matches: []
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /api/webhook
+      - filters:
+          - type: RequestHeaderModifier
+            requestHeaderModifier:
+              set:
+                - name: X-Rule
+                  value: filters-only
