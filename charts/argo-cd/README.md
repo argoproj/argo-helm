@@ -533,6 +533,17 @@ server:
             from: Same
 ```
 
+## Prometheus Operator resources
+
+The ServiceMonitors and the application controller PrometheusRule render only when Helm knows the Prometheus Operator API (`monitoring.coreos.com/v1`) exists.
+`helm install` and `helm upgrade` learn this from the cluster, but `helm template` and kustomize's Helm support don't, so they skip these resources without an error.
+Pass the API version explicitly:
+
+- Helm: `helm template ... --api-versions monitoring.coreos.com/v1`
+- kustomize: add `apiVersions: [monitoring.coreos.com/v1]` to the `helmCharts` entry, or pass `--helm-api-versions monitoring.coreos.com/v1` together with `--enable-helm`
+
+`apiVersionOverrides.monitoring` only selects the `apiVersion` these resources use. It doesn't skip the check.
+
 ## Setting the initial admin password via Argo CD Application CR
 
 > **Note:** When deploying the `argo-cd` chart via an Argo CD `Application` CR, define your bcrypt-hashed admin password under `helm.values`—not `helm.parameters`—because Argo CD performs variable substitution on `parameters`, which will mangle any `$…` in your hash.
