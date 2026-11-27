@@ -1,0 +1,19 @@
+# Test with extraObjects enabled, as a mapping and as a templated string
+
+crds:
+  keep: false
+
+extraObjects:
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: extra-objects-map-example
+    data:
+      key: value
+  - |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: {{ .Release.Name }}-extra-objects-template-example
+    data:
+      key: value
