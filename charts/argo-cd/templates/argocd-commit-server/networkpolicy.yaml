@@ -19,7 +19,7 @@ spec:
         - protocol: TCP
           port: 8086
     - from:
-        - namespaceSelector: { }
+        - namespaceSelector: {{- toYaml .Values.global.networkPolicy.metricsNamespaceSelector | nindent 12 }}
       ports:
         - port: 8087
 {{- end }}

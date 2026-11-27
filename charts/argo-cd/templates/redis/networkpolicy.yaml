@@ -24,7 +24,7 @@ spec:
       protocol: TCP
   {{- if .Values.redis.exporter.enabled }}
   - from:
-    - namespaceSelector: {}
+    - namespaceSelector: {{- toYaml .Values.global.networkPolicy.metricsNamespaceSelector | nindent 8 }}
     ports:
     - port: metrics
       protocol: TCP
