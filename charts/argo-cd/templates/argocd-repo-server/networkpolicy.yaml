@@ -27,7 +27,7 @@ spec:
     - port: repo-server
       protocol: TCP
   - from:
-    - namespaceSelector: {}
+    - namespaceSelector: {{- toYaml .Values.global.networkPolicy.metricsNamespaceSelector | nindent 8 }}
     ports:
     - port: metrics
   podSelector:
