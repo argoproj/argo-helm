@@ -1,0 +1,18 @@
+global:
+  networkPolicy:
+    create: true
+    metricsNamespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: monitoring
+
+redis:
+  enabled: true
+  exporter:
+    enabled: true
+
+applicationSet:
+  metrics:
+    enabled: true
+
+commitServer:
+  enabled: true
