@@ -81,7 +81,7 @@ Releases are managed independently for each helm chart, and changelogs are track
 
 Our charts make use of the Helm built-in object "Capabilities":
 > This provides information about what capabilities the Kubernetes cluster supports.  
-> *Source: https://helm.sh/docs/chart_template_guide/builtin_objects/*
+> Source: https://helm.sh/docs/chart_template_guide/builtin_objects/
 
 Today we use:
 
